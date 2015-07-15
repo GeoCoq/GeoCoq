@@ -1,6 +1,8 @@
 # GeoCoq
 A formalization of geometry in Coq based on Tarski's axiom system
 
+## About
+
 This is a formalization of geometry using a simplified version of Tarski's axiom system. The development contains a formalization of the chapters 1-15 of the book "Metamathematische Methoden in der Geometrie" by W. Schwabhäuser, W. Szmielew and A. Tarski. The development focus on 2D geometry although results up to chapter 9  included are formalized in any dimension.
 The first eleven chapters and a large part of Chapter 13 are developed without the parallel postulate and hence constitute a library for neutral geometry.
 
@@ -30,7 +32,13 @@ This development can serve as a base for studying axiomatic foundations of geome
 We have removed classical logic from the developpement. 
 We also have proven the equivalence between 10 versions of the parallel postulate.
 
-Related publications:
+## Members:
+
+- Pierre Boutry
+- Gabriel Braun
+- Julien Narboux
+
+## Related publications:
 - Mechanical Theorem Proving in Tarski's geometry in the post-proceeding of ADG 2006, F. Botana and T. Recio (Eds.), LNAI 4869, pages 139-156, 2007.
 http://hal.inria.fr/inria-00118812/PDF/adg06-narboux.pdf
 - From Tarski to Hilbert, Sep 2012, Edinburgh, United Kingdom. Springer, Proceedings of ADG 2012, 7993, pp. 89-109, LNCS. 
