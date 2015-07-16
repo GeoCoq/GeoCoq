@@ -28,18 +28,43 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h3>
-	    <a class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>About.</h3>
+          <h1>
+	    <a class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>About.</h1>
 
 	  In the early 60s, Wanda Szmielew and <a href="http://en.wikipedia.org/wiki/Alfred_Tarski">Alfred Tarski</a> started the project of a treaty about the foundations of geometry. A systematic development of <a href="http://en.wikipedia.org/wiki/Euclidean_geometry">euclidean geometry</a> based on <a href="http://en.wikipedia.org/wiki/Tarski%27s_axioms">Tarski's axioms</a> was supposed to constitute the first part, but the early death of Wanda Szmielew&nbsp; put an end to this project. Finally, Wolfram Schwabh&auml;user continued the project of Wanda Szmielew and Alfred Tarski. He published the treaty in 1983 in German : <span style="font-style: italic;">Metamathematische Methoden in der Geometrie</span>.
 
-	  <h3>Content</h3>
+	  <h1>Content</h1>
 	  
-	  You can browse the Coq files from the <a href="Tarski/html/index.html">index</a> or you can have a look at one of the following chapters :
+	  You can browse the Coq files from the <a href="Tarski/html/index.html">index</a> of everything, or you can see some specific parts :
 	  <br>      
-      
+	<h2>The axiom systems</h2>
+
+	There are several ways to define the foundations of geomety, a
+	synthetic approach (starting with point and lines and some
+	predicates), an analytic approach (starting from a given field F
+	and defining the plane as F^n), there are mixed approaches
+	assuming a field and some geometric axioms (Area method,
+	metric axioms), ...
+	We use here a synthetic approach but we prove that we can
+	define coordinates. Our main axiom system is the one of
+	Tarski, but we define also Hilbert's axiom system because we
+	prove that Tarski's axiom (except continuity) imply Hilbert's
+	axioms (except continuity).
+	
+	<ul>
+	  <li><a href="html/tarski_axioms.html">Tarski axioms</a></li>
+	  <li><a href="html/hilbert_axioms.html">Hilbert axioms</a> </li>
+	</ul>
+	
+	<h2>The formalization of the book</h2>
+	The main part of this development consists in the
+	formalization of the first part of the book <span
+	style="font-style: italic;">Metamathematische Methoden in der
+	Geometrie</span>.
+
+	
+	
 	  <ul>
-            <li><a href="html/tarski_axioms.html">Tarski_axioms</a></li>
             <li><a href="html/Ch02_cong.html">Ch02 congruence properties</a></li>
             <li><a href="html/Ch03_bet.html">Ch03 between properties</a></li>
             <li><a href="html/Ch04_cong_bet.html">Ch04 congruence between properties</a>&nbsp;</li>
@@ -64,15 +89,44 @@
             <li><a href="html/Ch14_prod.html">Ch14.2 Product</a>Geometric definition of the product </li>
 	    <li><a href="html/Ch14_order.html">Ch14.3 Ordered field</a>All proofs necessary to obtain an ordered field</li>
 	    <li><a href="html/Ch15_lengths.html">Ch15 Lengths</a> Definition of the length of a segment using coordinates, Definition of length comparison using coordinates, proof that these definitions corresponds to their geometric counterparts, Pythagoras theorem, Thales theorem, triangle inequality </li>
-            <li><a href="html/hilbert_axioms.html">Hilbert axioms</a> </li>
-            <li><a href="html/tarski_to_hilbert.html">Tarski to Hilbert</a> A proof that Hilbert's axioms (without continuity) follows from Tarski's axioms.</li>
-	    <li><a href="html/tarski_to_makarios.html">Tarski to Makarios</a> The formalization of a short paper by makarios which shows that by slightly changing an axiom we can delete another axiom.</li>
-	    <li><a href="html/tarski_to_beeson.html">Tarski to Beeson</a> The proof that the constructive axiom system proposed by Beeson is classicaly equivalent to Tarski's axiom system.</li>
+	  </ul>
+	  <h2>Proving Hilbert's axioms</h2>
+	  
+	  <ul>
+            <li><a href="html/tarski_to_hilbert.html">Tarski to
+            Hilbert</a> A proof that Hilbert's axioms (without
+	    continuity) follows from Tarski's axioms.</li>
+	  </ul>
+	  <h2>Variants of the axiom system</h2>
+	  <ul>
+	    <li><a href="html/tarski_to_makarios.html">Tarski to
+            Makarios</a> The formalization of a <a href="http://arxiv.org/abs/1306.0066">short paper</a> by Makarios which shows that by slightly changing an axiom we can delete another axiom.</li>
+	    <li><a href="html/tarski_to_beeson.html">Tarski to
+            Beeson</a> The proof that the constructive axiom system
+            proposed by Beeson is classicaly equivalent to Tarski's
+	    axiom system.</li>
+	  </ul>
+	  <h2>Euclid's postulate </h2>
+
+	  The version of Euclid's postulate as given in the book is
+	  not intuitive. We prove the equivalence between 10 versions
+	  of Euclid's postulate including the well known Playfair's
+	  postulate, and Euclid's 5th postulate.
+	  
+	  <ul>
+	    <li><a href="html/Euclid1.html"> </li>
+	    
+	  </ul>
+	  
+	  <h2>High level theorems</h2>
+	  
+	  To demonstrate that the library, we prove some classical results of High-school geometry.
+	  <ul>
             <li><a href="html/triangle_midpoints_theorems.html">Midpoints theorems</a> </li>
 	    <li><a href="html/quadrilaterals.html">Quadrilaterals</a> Definition of some quadrilaterals and their properties</li>      
 	  </ul>
 
-	  <h3>Contributors</h3>
+	  <h1>Contributors</h1>
 	  
 	  <ul>
 	    <li>Pierre Boutry</li>
@@ -80,7 +134,7 @@
 	    <li><a href="http://dpt-info.u-strasbg.fr/~narboux/">Julien Narboux</a></li>
 	  </ul>
 
-	  <h3>Related papers</h3>
+	  <h1>Related papers</h1>
 
 	  <ul>
 	    <li> Julien Narboux, <a href="https://hal.inria.fr/inria-00118812">Mechanical Theorem Proving in Tarski's geometry</a>, Automated Deduction in Geometry 2006, Aug 2006, Pontevedra, Spain. Springer, Automated Deduction in Geometry, 4869, pp. 139-156, 2007, LNCS, DOI : 10.1007/978-3-540-77356-6.</li>
@@ -92,11 +146,11 @@
 	    <li>Pierre Boutry, Julien Narboux, Pascal Schreck, <a href="">Parallel postulates and decidability of intersection of lines: a mechanized study within Tarski's system of geometry</a>, submitted to a journal, pp.50, July 2015.</li>
 	  </ul>
 
-	  <h3>Licence </h3>
+	  <h1>Licence </h1>
 	  
 	  The code is released under the terms of the LGPL version 3.0.
 
-	  <h3>How to</h3>
+	  <h1>How to</h1>
 	  
 	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.
           Then unpack the files, it will create a GeoCoq directory. In this directory, type make to compile the files.
