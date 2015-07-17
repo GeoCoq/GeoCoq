@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Edukera</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Edukera</h1>
+
+<div class="code">
+<span class="id" type="keyword">Class</span> <span class="id" type="var">midpoint_theorem</span> :=<br/>
+{<br/>
+&nbsp;&nbsp;<span class="id" type="var">Point</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Line</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Segment</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">UnorderedPair</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">UnorderedTriple</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Quadrilateral4Uple</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Expr</span> : <span class="id" type="keyword">Set</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">VExpr</span> : <span class="id" type="keyword">Set</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset2</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">UnorderedPair</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset2_prop</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>, <span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset3</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">UnorderedTriple</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset3_prop1</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> = <span class="id" type="var">pset3</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">A</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset3_prop2</span> : <span class="id" type="keyword">forall</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> = <span class="id" type="var">pset3</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">pset4</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Quadrilateral4Uple</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">linePP</span> : <span class="id" type="var">UnorderedPair</span> -&gt; <span class="id" type="var">Line</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">segPP</span> : <span class="id" type="var">UnorderedPair</span> -&gt; <span class="id" type="var">Segment</span>;<br/>
+&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;<span class="id" type="var">zero</span> : <span class="id" type="var">Expr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">nvar</span> :&gt; <span class="id" type="var">nat</span> -&gt; <span class="id" type="var">Expr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> : <span class="id" type="var">UnorderedPair</span> -&gt; <span class="id" type="var">Expr</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">dot</span> : <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">Expr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">zerovect</span> : <span class="id" type="var">VExpr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">VExpr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vplus</span> : <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vminus</span> : <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vuminus</span> : <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vmult</span> : <span class="id" type="var">Expr</span> -&gt; <span class="id" type="var">VExpr</span> -&gt; <span class="id" type="var">VExpr</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Segment</span> -&gt; <span class="id" type="keyword">Prop</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> : <span class="id" type="var">Quadrilateral4Uple</span> -&gt; <span class="id" type="keyword">Prop</span>; <br/>
+&nbsp;&nbsp;<span class="id" type="var">is_crossed</span> : <span class="id" type="var">Quadrilateral4Uple</span> -&gt; <span class="id" type="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> : <span class="id" type="var">Line</span> -&gt; <span class="id" type="var">Line</span> -&gt; <span class="id" type="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> : <span class="id" type="var">UnorderedTriple</span> -&gt; <span class="id" type="keyword">Prop</span>; <br/>
+&nbsp;&nbsp;<span class="id" type="var">is_symmetric</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="keyword">Prop</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_projected_on</span> : <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Point</span> -&gt; <span class="id" type="var">Line</span> -&gt; <span class="id" type="keyword">Prop</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_intro_sym</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_symmetric</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">B</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span>));<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_dist_parallel_parallelogram_1</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;~ <span class="id" type="var">is_crossed</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_dist_parallel_parallelogram_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;~ <span class="id" type="var">is_crossed</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_middle_parallelogram</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_middle_parallelogram_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">parallel_opp_lines_parallelogram_1</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>));<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">parallel_opp_lines_parallelogram_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">D</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>));<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_length_opp_parallelogram_1</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">same_length_opp_parallelogram_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">D</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">equal_vect_parallelogram</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vect</span> <span class="id" type="var">D</span> <span class="id" type="var">C</span>;<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">equal_vect_parallelogram_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_parallelogram</span> (<span class="id" type="var">pset4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> = <span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">D</span>;<br/>
+<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_is_aligned</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_is_aligned_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">A</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_is_aligned_3</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">B</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">A</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_same_dist</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_same_dist_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">A</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_same_dist_3</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_same_dist_4</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">M</span> <span class="id" type="var">A</span>) = <span class="id" type="var">dist</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>);<br/>
+<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_double_vect</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vmult</span> (<span class="id" type="var">nvar</span> 2) (<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_double_vect_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vmult</span> (<span class="id" type="var">nvar</span> 2) (<span class="id" type="var">vect</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_double_vect_3</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> = <span class="id" type="var">vmult</span> (<span class="id" type="var">nvar</span> 2) (<span class="id" type="var">vect</span> <span class="id" type="var">M</span> <span class="id" type="var">A</span>);<br/>
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">middle_double_vect_4</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle_segment</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> = <span class="id" type="var">vmult</span> (<span class="id" type="var">nvar</span> 2) (<span class="id" type="var">vect</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>);<br/>
+<br/>
+<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_sym</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>));<br/>
+<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_trans_1</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>));<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_trans_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">E</span>));<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_trans_3</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">E</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">B</span> <span class="id" type="var">E</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>));<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_trans_4</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>:<span class="id" type="var">Point</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear</span> (<span class="id" type="var">pset3</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">E</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">E</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>));<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_collinear</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>) (<span class="id" type="var">a</span>:<span class="id" type="var">Expr</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">a</span> &lt;&gt; <span class="id" type="var">zero</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vmult</span> <span class="id" type="var">a</span> (<span class="id" type="var">vect</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>));<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_collinear_2</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>) (<span class="id" type="var">a</span>:<span class="id" type="var">Expr</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vect</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>));<br/>
+<br/>
+<br/>
+&nbsp;<span class="id" type="var">parallel_collinear_3</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Point</span>) (<span class="id" type="var">a</span>:<span class="id" type="var">Expr</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">vect</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> = <span class="id" type="var">vmult</span> <span class="id" type="var">a</span> (<span class="id" type="var">vect</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel</span> (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePP</span> (<span class="id" type="var">pset2</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>))<br/>
+<br/>
+}.<br/>
+
+<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <span class="id" type="var">Euler_line</span>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <span class="id" type="var">Ch12_parallel</span>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <span class="id" type="var">aux</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Section</span> <span class="id" type="var">T10</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<span class="id" type="var">Tarski_2D</span>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<span class="id" type="var">EqDecidability</span> <span class="id" type="var">Tpoint</span>}.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">pset2_impl</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span>:<span class="id" type="var">Tpoint</span>) := (<span class="id" type="var">A</span>,<span class="id" type="var">B</span>).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">psets_eq</span> (<span class="id" type="var">ps1</span> <span class="id" type="var">ps2</span>: <span class="id" type="var">Tpoint</span>*<span class="id" type="var">Tpoint</span>) := <br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">ps1</span>,<span class="id" type="var">ps2</span> <span class="id" type="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" type="var">x1</span>,<span class="id" type="var">y1</span>),(<span class="id" type="var">x2</span>,<span class="id" type="var">y2</span>) =&gt; <span class="id" type="var">x1</span>=<span class="id" type="var">x2</span> \/ <span class="id" type="var">y1</span>=<span class="id" type="var">y2</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">LineImpl</span> := (<span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span>)%<span class="id" type="var">type</span>. <span class="id" type="keyword">Definition</span> <span class="id" type="var">linePPImpl</span> (<span class="id" type="var">w</span>:(<span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span>)%<span class="id" type="var">type</span>) := <span class="id" type="var">w</span>.<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">SegmentImpl</span> := (<span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span>)%<span class="id" type="var">type</span>.<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">segPPImpl</span> (<span class="id" type="var">w</span>:(<span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span>)%<span class="id" type="var">type</span>) := <span class="id" type="var">w</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">are_parallel_impl</span> <span class="id" type="var">L</span> <span class="id" type="var">M</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">L</span>,<span class="id" type="var">M</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" type="var">A</span>,<span class="id" type="var">B</span>), (<span class="id" type="var">C</span>,<span class="id" type="var">D</span>) =&gt; <span class="id" type="var">Par</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">parallel_sym_impl</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>:<span class="id" type="var">Tpoint</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel_impl</span> (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel_impl</span> ((<span class="id" type="var">pset2_impl</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) ( (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">are_parallel_impl</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">Par</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">pset3_impl</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>:<span class="id" type="var">Tpoint</span>) := (<span class="id" type="var">A</span>,<span class="id" type="var">B</span>,<span class="id" type="var">C</span>).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">triple_eq</span> (<span class="id" type="var">t1</span> <span class="id" type="var">t2</span>: <span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span> * <span class="id" type="var">Tpoint</span>) :=<br/>
+&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">t1</span>,<span class="id" type="var">t2</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;(<span class="id" type="var">X</span>,<span class="id" type="var">Y</span>,<span class="id" type="var">Z</span>),(<span class="id" type="var">U</span>,<span class="id" type="var">V</span>,<span class="id" type="var">W</span>) =&gt; (<span class="id" type="var">X</span>=<span class="id" type="var">U</span> /\ <span class="id" type="var">Y</span>=<span class="id" type="var">V</span> /\ <span class="id" type="var">Z</span>=<span class="id" type="var">W</span>) \/<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" type="var">X</span>=<span class="id" type="var">V</span> /\ <span class="id" type="var">Y</span>=<span class="id" type="var">U</span> /\ <span class="id" type="var">Z</span>=<span class="id" type="var">W</span>) <br/>
+&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">is_middle</span> <span class="id" type="var">P</span> <span class="id" type="var">s</span> := <span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span> (<span class="id" type="var">X</span>,<span class="id" type="var">Y</span>) =&gt; <span class="id" type="var">is_midpoint</span> <span class="id" type="var">P</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">are_collinear_impl</span> <span class="id" type="var">s</span> := <span class="id" type="keyword">match</span> <span class="id" type="var">s</span> <span class="id" type="keyword">with</span> (<span class="id" type="var">X</span>,<span class="id" type="var">Y</span>,<span class="id" type="var">Z</span>) =&gt; <span class="id" type="var">Col</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> <span class="id" type="var">Z</span> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">middle_is_aligned_impl</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">M</span>:<span class="id" type="var">Tpoint</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">is_middle</span> <span class="id" type="var">M</span> (<span class="id" type="var">segPPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear_impl</span> (<span class="id" type="var">pset3_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">M</span> <span class="id" type="var">B</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">assert_cols</span>.<br/>
+<span class="id" type="var">Col</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">parallel_trans_1_impl</span> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>:<span class="id" type="var">Tpoint</span>),<br/>
+&nbsp;&nbsp;<span class="id" type="var">D</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel_impl</span> (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>)) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_collinear_impl</span> (<span class="id" type="var">pset3_impl</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">are_parallel_impl</span> (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)) (<span class="id" type="var">linePPImpl</span> (<span class="id" type="var">pset2_impl</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>)).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">par_col_par</span> <span class="id" type="keyword">with</span> <span class="id" type="var">C</span>;<span class="id" type="var">Par</span>;<span class="id" type="var">Col</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

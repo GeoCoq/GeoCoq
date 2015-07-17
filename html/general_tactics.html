@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>general_tactics</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library general_tactics</h1>
+
+<div class="code">
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">ex_elim</span> <span class="id" type="var">H</span> <span class="id" type="var">x</span> := <span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intros</span> <span class="id" type="var">x</span> ; <span class="id" type="tactic">intro</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">DecompEx</span> <span class="id" type="var">H</span> <span class="id" type="var">P</span> := <span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">intro</span> <span class="id" type="var">P</span>;<span class="id" type="tactic">intro</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">DecompExAnd</span> <span class="id" type="var">H</span> <span class="id" type="var">P</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">intro</span> <span class="id" type="var">P</span>;<span class="id" type="keyword">let</span> <span class="id" type="var">id</span>:=<span class="id" type="tactic">fresh</span> <span class="id" type="keyword">in</span><br/>
+(<span class="id" type="tactic">intro</span> <span class="id" type="var">id</span>;<span class="id" type="var">decompose</span> [<span class="id" type="var">and</span>] <span class="id" type="var">id</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">id</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>).
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">exist_hyp</span> <span class="id" type="var">t</span> := <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" type="var">H1</span>:<span class="id" type="var">t</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">idtac</span><br/>
+&nbsp;<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">hyp_of_type</span> <span class="id" type="var">t</span> := <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" type="var">H1</span>:<span class="id" type="var">t</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="var">H1</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">clean_duplicated_hyps</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:?<span class="id" type="var">X1</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>; <span class="id" type="var">exist_hyp</span> <span class="id" type="var">X1</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">suppose</span> <span class="id" type="var">H</span> := <span class="id" type="tactic">cut</span> <span class="id" type="var">H</span>;[<span class="id" type="tactic">intro</span>|<span class="id" type="tactic">idtac</span>].
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">not_exist_hyp</span> <span class="id" type="var">t</span> := <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" type="var">H1</span>:<span class="id" type="var">t</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">fail</span> 2<br/>
+&nbsp;<span class="id" type="keyword">end</span> || <span class="id" type="tactic">idtac</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">DecompAndAll</span> := <br/>
+&nbsp;<span class="id" type="tactic">repeat</span>  <br/>
+&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(?<span class="id" type="var">X1</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="var">decompose</span> [<span class="id" type="var">and</span>] <span class="id" type="var">H</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">assert_if_not_exist</span> <span class="id" type="var">H</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="var">not_exist_hyp</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">assert</span> <span class="id" type="var">H</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">absurde</span> := <br/>
+<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;|<span class="id" type="var">H</span> : (?<span class="id" type="var">X</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">X</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#False_ind"><span class="id" type="definition">False_ind</span></a>; <span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">reflexivity</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">spliter</span> := <span class="id" type="tactic">repeat</span><br/>
+<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(?<span class="id" type="var">X1</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">ex_and</span> <span class="id" type="var">H</span> <span class="id" type="var">x</span> := <span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">x</span>; <span class="id" type="tactic">intros</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>;<span class="id" type="var">spliter</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">use</span> <span class="id" type="var">H</span> := <span class="id" type="var">decompose</span> [<span class="id" type="var">and</span>] <span class="id" type="var">H</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">try_or</span> <span class="id" type="var">T</span> :=<br/>
+&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;| |- ?<span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">B</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" type="tactic">left</span>; <span class="id" type="var">try_or</span> <span class="id" type="var">T</span>) || (<span class="id" type="tactic">right</span>;<span class="id" type="var">try_or</span> <span class="id" type="var">T</span>)<br/>
+&nbsp;| |- <span class="id" type="var">_</span> =&gt; <span class="id" type="var">T</span><br/>
+&nbsp;<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "generalizes" <span class="id" type="var">hyp</span>(<span class="id" type="var">X</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="var">X</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">X</span>.<br/>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">sort_tactic</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">try</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span> <span class="id" type="var">H</span>: ?<span class="id" type="var">T</span> |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">type</span> <span class="id" type="var">of</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span> <span class="id" type="keyword">Prop</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">generalizes</span> <span class="id" type="var">H</span>; (<span class="id" type="tactic">try</span> <span class="id" type="var">sort_tactic</span>); <span class="id" type="tactic">intro</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span> <span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "sort" :=<br/>
+&nbsp;&nbsp;<span class="id" type="var">sort_tactic</span>.<br/>
+
+<br/>
+<div class="def"> <a name="ltac_something"><span class="id" type="definition">ltac_something</span></a> (<span class="id" type="var">P</span>:<span class="id" type="keyword">Type</span>) (<span class="id" type="var">e</span>:<a class="idref" href="general_tactics.html#P"><span class="id" type="variable">P</span></a>) := <a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></div><br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> <a name="::'Something'"><span class="id" type="notation">"</span></a>'Something'" := <br/>
+&nbsp;&nbsp;(@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span>).<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="ltac_something_eq"><span class="id" type="lemma">ltac_something_eq</span></a> : <span class="id" type="keyword">&forall;</span> (<span class="id" type="var">e</span>:<span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;<a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">(</span></a>@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">)</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="ltac_something_hide"><span class="id" type="lemma">ltac_something_hide</span></a> : <span class="id" type="keyword">&forall;</span> (<span class="id" type="var">e</span>:<span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;<a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a> -&gt; (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>. <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="ltac_something_show"><span class="id" type="lemma">ltac_something_show</span></a> : <span class="id" type="keyword">&forall;</span> (<span class="id" type="var">e</span>:<span class="id" type="keyword">Type</span>),<br/>
+&nbsp;&nbsp;(@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a>) -&gt; <a class="idref" href="general_tactics.html#e"><span class="id" type="variable">e</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>. <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_def" <span class="id" type="var">hyp</span>(<span class="id" type="var">x</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">x'</span> := <span class="id" type="keyword">constr</span>:(<span class="id" type="var">x</span>) <span class="id" type="keyword">in</span> <br/>
+&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">T</span> := <span class="id" type="tactic">eval</span> <span class="id" type="tactic">unfold</span> <span class="id" type="var">x</span> <span class="id" type="keyword">in</span> <span class="id" type="var">x'</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;<span class="id" type="tactic">change</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">T</span>) <span class="id" type="keyword">in</span> <span class="id" type="var">x</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_def" <span class="id" type="var">hyp</span>(<span class="id" type="var">x</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">x'</span> := <span class="id" type="keyword">constr</span>:(<span class="id" type="var">x</span>) <span class="id" type="keyword">in</span> <br/>
+&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">U</span> := <span class="id" type="tactic">eval</span> <span class="id" type="tactic">unfold</span> <span class="id" type="var">x</span> <span class="id" type="keyword">in</span> <span class="id" type="var">x'</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">U</span> <span class="id" type="keyword">with</span> @<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> ?<span class="id" type="var">T</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">change</span> <span class="id" type="var">U</span> <span class="id" type="keyword">with</span> <span class="id" type="var">T</span> <span class="id" type="keyword">in</span> <span class="id" type="var">x</span> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_def" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_def" "in" "*" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="keyword">in</span> *.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_defs" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span> <span class="id" type="var">H</span> := ?<span class="id" type="var">T</span> |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| @<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">fail</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">change</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">T</span>) <span class="id" type="keyword">in</span> <span class="id" type="var">H</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_defs" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span> <span class="id" type="var">H</span> := (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> ?<span class="id" type="var">T</span>) |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">change</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">T</span>) <span class="id" type="keyword">with</span> <span class="id" type="var">T</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_hyp" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="general_tactics.html#ltac_something_show"><span class="id" type="lemma">ltac_something_show</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_hyp" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="general_tactics.html#ltac_something_hide"><span class="id" type="lemma">ltac_something_hide</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_hyps" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">H</span>: @<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="var">show_hyp</span> <span class="id" type="var">H</span> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_hyps" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span> <span class="id" type="var">H</span>: ?<span class="id" type="var">T</span> |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">type</span> <span class="id" type="var">of</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="keyword">Prop</span> =&gt; <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="var">T</span> <span class="id" type="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| @<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">fail</span> 2<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span> =&gt; <span class="id" type="var">hide_hyp</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">fail</span> 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">first</span> [<span class="id" type="var">hide_def</span> <span class="id" type="var">H</span> | <span class="id" type="var">hide_hyp</span> <span class="id" type="var">H</span>].<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">first</span> [<span class="id" type="var">show_def</span> <span class="id" type="var">H</span> | <span class="id" type="var">show_hyp</span> <span class="id" type="var">H</span>].<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_all" :=<br/>
+&nbsp;&nbsp;<span class="id" type="var">hide_hyps</span>; <span class="id" type="var">hide_defs</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_all" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="keyword">in</span> *.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_term" <span class="id" type="keyword">constr</span>(<span class="id" type="var">E</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">change</span> <span class="id" type="var">E</span> <span class="id" type="keyword">with</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">E</span>).<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_term" <span class="id" type="keyword">constr</span>(<span class="id" type="var">E</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">change</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">E</span>) <span class="id" type="keyword">with</span> <span class="id" type="var">E</span>.<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_term" :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Tactic Notation</span> "hide_term" <span class="id" type="keyword">constr</span>(<span class="id" type="var">E</span>) "in" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">change</span> <span class="id" type="var">E</span> <span class="id" type="keyword">with</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">E</span>) <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_term" <span class="id" type="keyword">constr</span>(<span class="id" type="var">E</span>) "in" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">change</span> (@<a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="var">_</span> <span class="id" type="var">E</span>) <span class="id" type="keyword">with</span> <span class="id" type="var">E</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="keyword">Tactic Notation</span> "show_term" "in" <span class="id" type="var">hyp</span>(<span class="id" type="var">H</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="general_tactics.html#ltac_something"><span class="id" type="definition">ltac_something</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

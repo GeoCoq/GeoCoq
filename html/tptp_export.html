@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>tptp_export</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library tptp_export</h1>
+
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Notation</span> "A =&gt; B" := (<span class="id" type="keyword">forall</span> (<span class="id" type="var">_</span>:<span class="id" type="var">A</span>), <span class="id" type="var">B</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 99, <span class="id" type="keyword">no</span> <span class="id" type="keyword">associativity</span>, <span class="id" type="var">y</span> <span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 200) :  <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> "A &lt;=&gt; B" := (<span class="id" type="var">iff</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 95, <span class="id" type="keyword">no</span> <span class="id" type="keyword">associativity</span>): <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> "A &amp; B" := (<span class="id" type="var">and</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 80, <span class="id" type="tactic">right</span> <span class="id" type="keyword">associativity</span>): <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> "A | B" := (<span class="id" type="var">or</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 85, <span class="id" type="tactic">right</span> <span class="id" type="keyword">associativity</span>): <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> "A != B" := (~ <span class="id" type="var">eq</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>)  (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 95, <span class="id" type="keyword">no</span> <span class="id" type="keyword">associativity</span>): <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> " '?' '[' x ']' : p" := (<span class="id" type="var">ex</span> (<span class="id" type="keyword">fun</span> <span class="id" type="var">x</span> =&gt; <span class="id" type="var">p</span>))<br/>
+&nbsp;&nbsp;(<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 200,  <span class="id" type="keyword">no</span> <span class="id" type="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;: <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Open</span> <span class="id" type="keyword">Scope</span> <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <span class="id" type="var">Ch12_parallel</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Section</span> <span class="id" type="var">Tptp</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MT</span>:<span class="id" type="var">Tarski_2D_euclidean</span>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<span class="id" type="var">EqDecidability</span> <span class="id" type="var">Tpoint</span>}.<br/>
+
+<br/>
+<span class="id" type="keyword">Notation</span> "bet( A , B , C )" := (<span class="id" type="var">Bet</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "bet_4( A , B , C , D )" := (<span class="id" type="var">Bet_4</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "cong( A , B , C , D )" := (<span class="id" type="var">Cong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "cong_3( A , B , C , D , E , F )" := (<span class="id" type="var">Cong_3</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "per( A , B , C )" := (<span class="id" type="var">Per</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "col( A , B , C )" := (<span class="id" type="var">Col</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_midpoint( A , B , C )" := (<span class="id" type="var">is_midpoint</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "perp( A , B , C , D )" := (<span class="id" type="var">Perp</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "perp_in( A , B , C , D , E )" := (<span class="id" type="var">Perp_in</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "one_side( A , B , C , D )" := (<span class="id" type="var">one_side</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "obtuse( A , B , C )" := (<span class="id" type="var">obtuse</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "acute( A , B , C )" := (<span class="id" type="var">acute</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "lt( A , B , C , D )" := (<span class="id" type="var">lt</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "le( A , B , C , D )" := (<span class="id" type="var">le</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "gt( A , B , C , D )" := (<span class="id" type="var">gt</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "ge( A , B , C , D )" := (<span class="id" type="var">ge</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "Distincts( A , B , C )" := (<span class="id" type="var">Distincts</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "lta( A , B , C , D , E , F )" := (<span class="id" type="var">lta</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "Par( A , B , C , D )" := (<span class="id" type="var">Par</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "ofsc( A , B , C , D , E , F , G , H )" := (<span class="id" type="var">OFSC</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span> <span class="id" type="var">G</span> <span class="id" type="var">H</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "fsc( A , B , C , D , E , F , G , H )" := (<span class="id" type="var">FSC</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span> <span class="id" type="var">G</span> <span class="id" type="var">H</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "ifsc( A , B , C , D , E , F , G , H )" := (<span class="id" type="var">IFSC</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span> <span class="id" type="var">G</span> <span class="id" type="var">H</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "conga( A , B , C , D , E , F )" := (<span class="id" type="var">Conga</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "lea( A , B , C , D , E , F )" := (<span class="id" type="var">lea</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "lta( A , B , C , D , E , F )" := (<span class="id" type="var">lta</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "gta( A , B , C , D , E , F )" := (<span class="id" type="var">gta</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "gea( A , B , C , D , E , F )" := (<span class="id" type="var">gea</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span> <span class="id" type="var">F</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "par( A , B , C , D )" := (<span class="id" type="var">Par</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "par_strict( A , B , C , D )" := (<span class="id" type="var">Par_strict</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "coplanar( A , B , C , D )" := (<span class="id" type="var">coplanar</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "out( A , B , C )" := (<span class="id" type="var">out</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "two_sides( A , B , C , D )" := (<span class="id" type="var">two_sides</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_symmetric( A , B , C )" := (<span class="id" type="var">is_symmetric</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "one_side( A , B , C , D )" := (<span class="id" type="var">one_side</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_image( A , B , C , D )" := (<span class="id" type="var">is_image</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_image_spec_in( A , B , C , D , E )" := (<span class="id" type="var">is_image_spec_in</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "inangle( A , B , C , D )" := (<span class="id" type="var">InAngle</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "inter( A , B , C , D , E )" := (<span class="id" type="var">inter</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_image_spec( A , B , C , D )" := (<span class="id" type="var">is_image_spec</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+<span class="id" type="keyword">Notation</span> "is_image_spec_in_gen( A , B , C , D , E )" := (<span class="id" type="var">is_image_spec_in_gen</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>) : <span class="id" type="var">tptp_fol_scope</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

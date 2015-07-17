@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Ch15_lengths1</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Ch15_lengths1</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <span class="id" type="var">Ch14_order</span>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <span class="id" type="var">Ch14_sum</span>.<br/>
+<span class="id" type="keyword">Section</span> <span class="id" type="var">T15</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MT</span>:<span class="id" type="var">Tarski_2D_euclidean</span>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<span class="id" type="var">EqDecidability</span> <span class="id" type="var">Tpoint</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Definition 15.1.  Length of a segment.
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">L</span> :=<br/>
+&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> /\ <span class="id" type="var">Col</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">L</span> /\ <span class="id" type="var">leP</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">O</span> <span class="id" type="var">L</span> /\ <span class="id" type="var">Cong</span> <span class="id" type="var">O</span> <span class="id" type="var">L</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <span class="id" type="var">is_length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">L</span> :=<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">L</span> \/ (<span class="id" type="var">O</span>=<span class="id" type="var">E</span> /\ <span class="id" type="var">O</span>=<span class="id" type="var">L</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lemma 15.2  Cong corresponds to length equality. Le corresponds to length inequality.
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_pos</span> : <br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">L</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">L</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">leP</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">O</span> <span class="id" type="var">L</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_id_1</span> : <br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">O</span> -&gt; <span class="id" type="var">A</span>=<span class="id" type="var">B</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="var">treat_equalities</span>.<br/>
+<span class="id" type="tactic">reflexivity</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_id_2</span> : <br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span>,<br/>
+&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">A</span> <span class="id" type="var">O</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span>.<br/>
+<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="var">Col</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">leP</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="var">Cong</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_id</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">O</span> &lt;-&gt; (<span class="id" type="var">A</span>=<span class="id" type="var">B</span> /\ <span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">eauto</span> <span class="id" type="keyword">using</span> <span class="id" type="var">length_id_1</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">spliter</span>. <span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">length_id_2</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_eq_cong_1</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">Cong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">cong_transitivity</span> <span class="id" type="keyword">with</span> <span class="id" type="var">O</span> <span class="id" type="var">AB</span>;<span class="id" type="var">Cong</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_eq_cong_2</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">Cong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">split</span>;<span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">cong_transitivity</span> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>;<span class="id" type="var">Cong</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span>   :<br/>
+<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span> <span class="id" type="var">CD</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">CD</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">leP</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AB</span> <span class="id" type="var">CD</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">le</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">length</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">le</span>.<br/>
+<span class="id" type="var">prolong</span> <span class="id" type="var">O</span> <span class="id" type="var">C</span> <span class="id" type="var">M</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">exists</span> <span class="id" type="var">M</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">leP</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H3</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H3</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">ltP</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H3</span>.<br/>
+<span class="id" type="var">ex_and</span> <span class="id" type="var">H3</span> <span class="id" type="var">P</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">diff</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H3</span>.<br/>
+<span class="id" type="var">ex_and</span> <span class="id" type="var">H3</span> <span class="id" type="var">Q</span>.<br/>
+<span class="id" type="tactic">assert</span>(<span class="id" type="var">not</span>(<span class="id" type="var">Col</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span>)).<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">sum</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H11</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">Ar2</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H11</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">assert</span>(<span class="id" type="var">Q</span>=<span class="id" type="var">O</span>).<br/>
+<span class="id" type="tactic">apply</span> (<span class="id" type="var">opp0_unicity</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span>); <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span> <span class="id" type="var">Q</span>.<br/>
+<span class="id" type="tactic">assert</span>(<span class="id" type="var">HH</span>:=<span class="id" type="var">sum_A_O</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">H12</span> <span class="id" type="var">CD</span> <span class="id" type="var">H2</span>).<br/>
+<span class="id" type="tactic">assert</span>(<span class="id" type="var">CD</span>=<span class="id" type="var">P</span>).<br/>
+<span class="id" type="tactic">apply</span> (<span class="id" type="var">sum_unicity</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">C</span> <span class="id" type="var">O</span>); <span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Check</span> <span class="id" type="var">sum_A_O</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">leP</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">ltP</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">X</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">diff</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">Y</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">opp</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">sum_plg</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H11</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Check</span> <span class="id" type="var">sum_plg</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Print</span> <span class="id" type="var">sum</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">sum</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H11</span>.<br/>
+
+<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">length_leP_le_2</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">AB</span> <span class="id" type="var">CD</span>,<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">CD</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">le</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> -&gt;<br/>
+&nbsp;<span class="id" type="var">leP</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AB</span> <span class="id" type="var">CD</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lemma 15.3 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">l15_3</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>,<br/>
+&nbsp;&nbsp;<span class="id" type="var">sum</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Cong</span> <span class="id" type="var">O</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">sum</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">ex</span> <span class="id" type="var">and</span>] <span class="id" type="var">H0</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">Pj</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">unfold</span> <span class="id" type="var">Ar2</span> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lemma 15.4.  Triangular equality. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">triangular_equality</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">AB</span> <span class="id" type="var">BC</span> <span class="id" type="var">AC</span>,<br/>
+&nbsp;&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Bet</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">BC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">AC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">sum</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AB</span> <span class="id" type="var">BC</span> <span class="id" type="var">AC</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lemma 15.5.  Known as Thales theorem or intercept theorem. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">thales</span> : <br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">P</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">PA</span> <span class="id" type="var">PB</span> <span class="id" type="var">PC</span> <span class="id" type="var">PD</span> <span class="id" type="var">PAD</span>,<br/>
+&nbsp;&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Col</span> <span class="id" type="var">P</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Col</span> <span class="id" type="var">P</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> -&gt;<br/>
+&nbsp;&nbsp;~ <span class="id" type="var">Col</span> <span class="id" type="var">P</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> -&gt; <br/>
+&nbsp;&nbsp;<span class="id" type="var">Pj</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">B</span> <span class="id" type="var">D</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">P</span> <span class="id" type="var">A</span> <span class="id" type="var">PA</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">P</span> <span class="id" type="var">B</span> <span class="id" type="var">PB</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">P</span> <span class="id" type="var">C</span> <span class="id" type="var">PC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">P</span> <span class="id" type="var">D</span> <span class="id" type="var">PD</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">PA</span> <span class="id" type="var">PD</span> <span class="id" type="var">PAD</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">PC</span> <span class="id" type="var">PB</span> <span class="id" type="var">PAD</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Lemma 15.7  Known as Euklid 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">l15_7</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">H</span> <span class="id" type="var">AB</span> <span class="id" type="var">AC</span> <span class="id" type="var">AH</span> <span class="id" type="var">AC2</span>,<br/>
+&nbsp;&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Per</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">B</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Perp_in</span> <span class="id" type="var">H</span> <span class="id" type="var">C</span> <span class="id" type="var">H</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">AC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">H</span> <span class="id" type="var">AH</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AB</span> <span class="id" type="var">AH</span> <span class="id" type="var">AC2</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AC</span> <span class="id" type="var">AC</span> <span class="id" type="var">AC2</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <span class="id" type="var">pythagoras</span> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">AC</span> <span class="id" type="var">BC</span> <span class="id" type="var">AB</span> <span class="id" type="var">AC2</span> <span class="id" type="var">BC2</span> <span class="id" type="var">AB2</span>, <br/>
+&nbsp;&nbsp;<span class="id" type="var">O</span>&lt;&gt;<span class="id" type="var">E</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">Per</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">B</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">AB</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">AC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">length</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">BC</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AC</span> <span class="id" type="var">AC</span> <span class="id" type="var">AC2</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">BC</span> <span class="id" type="var">BC</span> <span class="id" type="var">BC2</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">prod</span> <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AB</span> <span class="id" type="var">AB</span> <span class="id" type="var">AB2</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" type="var">sum</span>  <span class="id" type="var">O</span> <span class="id" type="var">E</span> <span class="id" type="var">E'</span> <span class="id" type="var">AC2</span> <span class="id" type="var">BC2</span> <span class="id" type="var">AB2</span>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">End</span> <span class="id" type="var">T15</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

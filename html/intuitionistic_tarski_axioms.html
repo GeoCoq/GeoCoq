@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>intuitionistic_tarski_axioms</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library intuitionistic_tarski_axioms</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="tarski_axioms.html#"><span class="id" type="library">tarski_axioms</span></a>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Play"><span class="id" type="section">Play</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>: <a class="idref" href="tarski_axioms.html#intuitionistic_Tarski_neutral_dimensionless"><span class="id" type="class">intuitionistic_Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span>  <a name="bet_diff"><span class="id" type="lemma">bet_diff</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#Ibetween_identity"><span class="id" type="method">Ibetween_identity</span></a> <span class="id" type="var">C</span> <span class="id" type="var">B</span> <span class="id" type="var">H</span>).<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Ibet_diff"><span class="id" type="lemma">Ibet_diff</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">T</span>:=<a class="idref" href="tarski_axioms.html#Ibetween_inner_transitivity"><span class="id" type="method">Ibetween_inner_transitivity</span></a> <span class="id" type="var">B</span> <span class="id" type="var">B</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">H</span> <span class="id" type="var">H</span>).<br/>
+<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#Ibetween_identity"><span class="id" type="method">Ibetween_identity</span></a> <span class="id" type="var">B</span> <span class="id" type="var">B</span>).<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Ibet_diff_2"><span class="id" type="lemma">Ibet_diff_2</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="intuitionistic_tarski_axioms.html#Ibet_diff"><span class="id" type="lemma">Ibet_diff</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="nnbet_diff"><span class="id" type="lemma">nnbet_diff</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="intuitionistic_tarski_axioms.html#C"><span class="id" type="variable">C</span></a>  -&gt; <a class="idref" href="intuitionistic_tarski_axioms.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="intuitionistic_tarski_axioms.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="intuitionistic_tarski_axioms.html#Ibet_diff"><span class="id" type="lemma">Ibet_diff</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="intuitionistic_tarski_axioms.html#Play"><span class="id" type="section">Play</span></a>.</p>
+</div><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Euclid_aux</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Euclid_aux</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Euclid_aux_1.html#"><span class="id" type="library">Euclid_aux_1</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Euclid_aux_2.html#"><span class="id" type="library">Euclid_aux_2</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Euclid_aux_3.html#"><span class="id" type="library">Euclid_aux_3</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Euclid_aux_4.html#"><span class="id" type="library">Euclid_aux_4</span></a>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Euclid_aux"><span class="id" type="section">Euclid_aux</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MT</span>:<a class="idref" href="tarski_axioms.html#Tarski_2D"><span class="id" type="class">Tarski_2D</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="euclid_5_implies_strong_parallel_postulate_aux"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#euclid_5"><span class="id" type="definition">euclid_5</span></a> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">R</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">U</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#U"><span class="id" type="variable">U</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Coplanar_perm.html#coplanar"><span class="id" type="definition">coplanar</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#U"><span class="id" type="variable">U</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Ch09_plane.html#one_side"><span class="id" type="definition">one_side</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#U"><span class="id" type="variable">U</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Ch09_plane.html#one_side"><span class="id" type="definition">one_side</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#U"><span class="id" type="variable">U</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">I</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#U"><span class="id" type="variable">U</span></a> <a class="idref" href="Euclid_aux.html#I"><span class="id" type="variable">I</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">HE5</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">R</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">U</span> <span class="id" type="var">HPTQ</span> <span class="id" type="var">HRTS</span> <span class="id" type="var">HNC</span> <span class="id" type="var">HCop</span> <span class="id" type="var">HCong1</span> <span class="id" type="var">HCong2</span> <span class="id" type="var">HOS1</span> <span class="id" type="var">HOS2</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Col_dec"><span class="id" type="lemma">Col_dec</span></a> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">S</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HPQS</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">HCop</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">X</span> <span class="id" type="var">H</span>]; <span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">H1</span> <span class="id" type="var">H2</span>]);<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">try</span> (<span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">H1</span> <span class="id" type="var">H2</span>]).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">elim</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">elim</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H1</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_1.html#euclid_5_implies_strong_parallel_postulate_aux_1_1"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux_1_1</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">R</span> <span class="id" type="var">T</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_2.html#euclid_5_implies_strong_parallel_postulate_aux_1_2"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux_1_2</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">R</span> <span class="id" type="var">T</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_4.html#euclid_5_implies_strong_parallel_postulate_aux_1_3"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux_1_3</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">R</span> <span class="id" type="var">T</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_3.html#euclid_5_implies_strong_parallel_postulate_aux_2"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux_2</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">R</span> <span class="id" type="var">T</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_3.html#euclid_5_implies_strong_parallel_postulate_aux_3"><span class="id" type="lemma">euclid_5_implies_strong_parallel_postulate_aux_3</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">R</span> <span class="id" type="var">T</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="euclid_5_both_sides"><span class="id" type="lemma">euclid_5_both_sides</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#euclid_5"><span class="id" type="definition">euclid_5</span></a> -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span>,<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> <a class="idref" href="Euclid_aux.html#Q'"><span class="id" type="variable">Q'</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#R'"><span class="id" type="variable">R'</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#Q'"><span class="id" type="variable">Q'</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> <a class="idref" href="Euclid_aux.html#Q'"><span class="id" type="variable">Q'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#T"><span class="id" type="variable">T</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Euclid_aux.html#R'"><span class="id" type="variable">R'</span></a> <a class="idref" href="Euclid_aux.html#T'"><span class="id" type="variable">T'</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> <a class="idref" href="Euclid_aux.html#Q'"><span class="id" type="variable">Q'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Euclid_aux.html#S"><span class="id" type="variable">S</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Euclid_aux.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Euclid_aux.html#R"><span class="id" type="variable">R</span></a> <a class="idref" href="Euclid_aux.html#R'"><span class="id" type="variable">R'</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">HE5</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">Hcong1</span> <span class="id" type="var">HCong2</span> <span class="id" type="var">HCong3</span> <span class="id" type="var">HCong4</span> <span class="id" type="var">HCong5</span> <span class="id" type="var">HPTQ</span> <span class="id" type="var">HPT'Q'</span> <span class="id" type="var">HRTS</span> <span class="id" type="var">HR'T'S</span> <span class="id" type="var">HQSQ'</span> <span class="id" type="var">HPQS</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Col_dec"><span class="id" type="lemma">Col_dec</span></a> <span class="id" type="var">P</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HPRR'</span>; <span class="id" type="var">Col</span>; <span class="id" type="var">exfalso</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HPQ'S</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <span class="id" type="var">P</span> <span class="id" type="var">Q'</span> <span class="id" type="var">S</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="keyword">in</span> *; <span class="id" type="var">spliter</span>; <span class="id" type="var">show_distinct</span> <span class="id" type="var">Q'</span> <span class="id" type="var">S</span>; <span class="id" type="var">Col</span>; <span class="id" type="tactic">intro</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HPQS</span>; <span class="id" type="var">assert_cols</span>; <span class="id" type="var">ColR</span>.<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">H</span> : <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="var">P</span> <span class="id" type="var">T'</span> <span class="id" type="var">Q'</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="keyword">in</span> *; <span class="id" type="var">spliter</span>; <span class="id" type="tactic">split</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">intro</span>; <span class="id" type="var">treat_equalities</span>; <span class="id" type="var">Col</span>).<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="tactic">clear</span> <span class="id" type="var">HPT'Q'</span>; <span class="id" type="tactic">rename</span> <span class="id" type="var">H</span> <span class="id" type="var">into</span> <span class="id" type="var">HPT'Q'</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">H</span> : <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="var">R'</span> <span class="id" type="var">T'</span> <span class="id" type="var">S</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="keyword">in</span> *; <span class="id" type="var">spliter</span>; <span class="id" type="var">assert_cols</span>; <span class="id" type="tactic">split</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">intro</span>; <span class="id" type="var">treat_equalities</span>; <span class="id" type="var">Col</span>).<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="tactic">clear</span> <span class="id" type="var">HR'T'S</span>; <span class="id" type="tactic">rename</span> <span class="id" type="var">H</span> <span class="id" type="var">into</span> <span class="id" type="var">HR'T'S</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">H</span> : <a class="idref" href="Euclid_def.html#BetS"><span class="id" type="definition">BetS</span></a> <span class="id" type="var">Q</span> <span class="id" type="var">S</span> <span class="id" type="var">Q'</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">intro</span>; <span class="id" type="var">treat_equalities</span>; <span class="id" type="var">Col</span>).<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="tactic">clear</span> <span class="id" type="var">HQSQ'</span>; <span class="id" type="tactic">rename</span> <span class="id" type="var">H</span> <span class="id" type="var">into</span> <span class="id" type="var">HQSQ'</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HCop</span> : <a class="idref" href="Coplanar_perm.html#coplanar"><span class="id" type="definition">coplanar</span></a> <span class="id" type="var">P</span> <span class="id" type="var">S</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span>) <span class="id" type="tactic">by</span> <span class="id" type="tactic">apply</span> <a class="idref" href="Ch11_angles.html#all_coplanar"><span class="id" type="lemma">all_coplanar</span></a>.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HCop</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">X</span> <span class="id" type="var">H</span>]; <span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">H1</span> <span class="id" type="var">H2</span>]);<br/>
+<span class="id" type="tactic">try</span> (<span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">H1</span> <span class="id" type="var">H2</span>]).<br/>
+
+<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_1.html#euclid_5_both_sides_1"><span class="id" type="lemma">euclid_5_both_sides_1</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">elim</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">elim</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H2</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_2.html#euclid_5_both_sides_2_1"><span class="id" type="lemma">euclid_5_both_sides_2_1</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_2.html#euclid_5_both_sides_2_2"><span class="id" type="lemma">euclid_5_both_sides_2_2</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_2.html#euclid_5_both_sides_2_3"><span class="id" type="lemma">euclid_5_both_sides_2_3</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">elim</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">try</span> (<span class="id" type="tactic">elim</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">H2</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_3.html#euclid_5_both_sides_3_1"><span class="id" type="lemma">euclid_5_both_sides_3_1</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_3.html#euclid_5_both_sides_3_2"><span class="id" type="lemma">euclid_5_both_sides_3_2</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Euclid_aux_3.html#euclid_5_both_sides_3_3"><span class="id" type="lemma">euclid_5_both_sides_3_3</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">Q'</span> <span class="id" type="var">R</span> <span class="id" type="var">R'</span> <span class="id" type="var">S</span> <span class="id" type="var">T</span> <span class="id" type="var">T'</span> <span class="id" type="var">X</span>; <span class="id" type="var">Col</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;}<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Euclid_aux.html#Euclid_aux"><span class="id" type="section">Euclid_aux</span></a>.</p>
+</div><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

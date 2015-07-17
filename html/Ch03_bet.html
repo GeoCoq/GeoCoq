@@ -1,0 +1,596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Ch03_bet</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Ch03_bet</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Ch02_cong.html#"><span class="id" type="library">Ch02_cong</span></a>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="T2_1"><span class="id" type="section">T2_1</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<div class="def"> <a name="Col"><span class="id" type="definition">Col</span></a> (<span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>) : <span class="id" type="keyword">Prop</span> := <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="bet_col"><span class="id" type="lemma">bet_col</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>;<span class="id" type="tactic">unfold</span> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_trivial"><span class="id" type="lemma">between_trivial</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">prolong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">B</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <span class="id" type="var">B</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> <a class="idref" href="Ch02_cong.html#cong_reverse_identity"><span class="id" type="lemma">cong_reverse_identity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">B</span>; <span class="id" type="var">Cong</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="bet_dec_eq_dec"><span class="id" type="lemma">bet_dec_eq_dec</span></a> :<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>) -&gt;<br/>
+&nbsp;&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>:<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">induction</span> (<span class="id" type="var">H</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">right</span>; <span class="id" type="tactic">intro</span>; <span class="id" type="tactic">subst</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">H0</span>;  <span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_symmetry"><span class="id" type="lemma">between_symmetry</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">C</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span>(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">C</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">A</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a>;<span class="id" type="tactic">eauto</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>; <span class="id" type="tactic">subst</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="doc">
+This lemma is used by tactics for trying several permutations. 
+</p>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Bet_cases"><span class="id" type="lemma">Bet_cases</span></a> :<br/>
+&nbsp;<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> -&gt;<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">decompose</span> [<span class="id" type="var">or</span>] <span class="id" type="var">H</span>; <span class="id" type="tactic">auto</span> <span class="id" type="keyword">using</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Bet_perm"><span class="id" type="lemma">Bet_perm</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">auto</span> <span class="id" type="keyword">using</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_trivial2"><span class="id" type="lemma">between_trivial2</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_egality"><span class="id" type="lemma">between_egality</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">A</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">A</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>);<span class="id" type="tactic">assumption</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H2</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">congruence</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#T2_1"><span class="id" type="section">T2_1</span></a>.</p>
+</div><br/>
+
+<br/>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">assert_cols</span> :=<br/>
+<span class="id" type="tactic">repeat</span><br/>
+&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X3</span> |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">not_exist_hyp</span> (<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <span class="id" type="var">X1</span> <span class="id" type="var">X2</span> <span class="id" type="var">X3</span>);<span class="id" type="tactic">assert</span> (<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <span class="id" type="var">X1</span> <span class="id" type="var">X2</span> <span class="id" type="var">X3</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#bet_col"><span class="id" type="lemma">bet_col</span></a>;<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>)<br/>
+&nbsp;<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">clean_trivial_hyps</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X1</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X1</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">clean_reap_hyps</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">B</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">A</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">C</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> ?<span class="id" type="var">C</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">C</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">D</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">D</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">D</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">A</span> ?<span class="id" type="var">B</span> ?<span class="id" type="var">C</span> ?<span class="id" type="var">D</span>), <span class="id" type="var">H2</span> : <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">B</span> ?<span class="id" type="var">A</span> ?<span class="id" type="var">D</span> ?<span class="id" type="var">C</span> |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(?<span class="id" type="var">A</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;?</span></a><span class="id" type="var">B</span>), <span class="id" type="var">H2</span> : (?<span class="id" type="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;?</span></a><span class="id" type="var">A</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(?<span class="id" type="var">A</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;?</span></a><span class="id" type="var">B</span>), <span class="id" type="var">H2</span> : (?<span class="id" type="var">A</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;?</span></a><span class="id" type="var">B</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">clear</span> <span class="id" type="var">H2</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">clean</span> := <span class="id" type="var">clean_trivial_hyps</span>;<span class="id" type="var">clean_duplicated_hyps</span>;<span class="id" type="var">clean_reap_hyps</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">smart_subst</span> <span class="id" type="var">X</span> := <span class="id" type="tactic">subst</span> <span class="id" type="var">X</span>;<span class="id" type="var">clean</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">treat_equalities_aux</span> :=<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(?<span class="id" type="var">X1</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">?</span></a><span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="var">smart_subst</span> <span class="id" type="var">X2</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">treat_equalities</span> :=<br/>
+<span class="id" type="tactic">try</span> <span class="id" type="var">treat_equalities_aux</span>;<br/>
+<span class="id" type="tactic">repeat</span><br/>
+&nbsp;&nbsp;<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">X3</span> ?<span class="id" type="var">X3</span> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span>) |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch02_cong.html#cong_symmetry"><span class="id" type="lemma">cong_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>;<span class="id" type="var">smart_subst</span> <span class="id" type="var">X2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X3</span> ?<span class="id" type="var">X3</span>) |- <span class="id" type="var">_</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>;<span class="id" type="var">smart_subst</span> <span class="id" type="var">X2</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" type="var">H</span>:(<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> ?<span class="id" type="var">X1</span> ?<span class="id" type="var">X2</span> ?<span class="id" type="var">X1</span>) |- <span class="id" type="var">_</span> =&gt; <span class="id" type="tactic">apply</span>  <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>;<span class="id" type="var">smart_subst</span> <span class="id" type="var">X2</span><br/>
+<span class="id" type="keyword">end</span>.
+</div>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">show_distinct</span> <span class="id" type="var">X</span> <span class="id" type="var">Y</span> := <span class="id" type="tactic">assert</span> (<span class="id" type="var">X</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><span class="id" type="var">Y</span>);[<span class="id" type="tactic">unfold</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#not"><span class="id" type="definition">not</span></a>;<span class="id" type="tactic">intro</span>;<span class="id" type="var">treat_equalities</span>|<span class="id" type="tactic">idtac</span>].
+</div>
+
+<br/>
+<span class="id" type="keyword">Hint Resolve</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a> <a class="idref" href="Ch03_bet.html#bet_col"><span class="id" type="lemma">bet_col</span></a> : <span class="id" type="var">between</span>.<br/>
+<span class="id" type="keyword">Hint Resolve</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a> <a class="idref" href="Ch03_bet.html#between_trivial2"><span class="id" type="lemma">between_trivial2</span></a> : <span class="id" type="var">between_no_eauto</span>.<br/>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">eBetween</span> := <span class="id" type="var">treat_equalities</span>;<span class="id" type="tactic">eauto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">between</span>.
+</div>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">Between</span> := <span class="id" type="var">treat_equalities</span>;<span class="id" type="tactic">auto</span> <span class="id" type="keyword">with</span> <span class="id" type="var">between</span> <span class="id" type="var">between_no_eauto</span>.
+</div>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="T2_2"><span class="id" type="section">T2_2</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_inner_transitivity"><span class="id" type="lemma">between_inner_transitivity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">C</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">A</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a>;<span class="id" type="tactic">eauto</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">Between</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_exchange3"><span class="id" type="lemma">between_exchange3</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">C</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">C</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <a class="idref" href="Ch03_bet.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">D</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a>;<span class="id" type="var">eBetween</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">Between</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="outer_transitivity_between2"><span class="id" type="lemma">outer_transitivity_between2</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">prolong</span> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">x</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <span class="id" type="var">D</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> (<a class="idref" href="Ch02_cong.html#construction_unicity"><span class="id" type="lemma">construction_unicity</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>); <span class="id" type="tactic">try</span> <span class="id" type="tactic">apply</span> (<a class="idref" href="Ch03_bet.html#between_exchange3"><span class="id" type="lemma">between_exchange3</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">x</span>); <span class="id" type="var">Cong</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span> <span class="id" type="var">x</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#T2_2"><span class="id" type="section">T2_2</span></a>.</p>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Hint Resolve</span> <a class="idref" href="Ch03_bet.html#outer_transitivity_between2"><span class="id" type="lemma">outer_transitivity_between2</span></a> <a class="idref" href="Ch03_bet.html#between_inner_transitivity"><span class="id" type="lemma">between_inner_transitivity</span></a> <a class="idref" href="Ch03_bet.html#between_exchange3"><span class="id" type="lemma">between_exchange3</span></a> : <span class="id" type="var">between</span>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="T2_3"><span class="id" type="section">T2_3</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_exchange2"><span class="id" type="lemma">between_exchange2</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">induction</span> (<a class="idref" href="tarski_axioms.html#eq_dec_points"><span class="id" type="method">eq_dec_points</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span>);<span class="id" type="var">eBetween</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="outer_transitivity_between"><span class="id" type="lemma">outer_transitivity_between</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">eBetween</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#T2_3"><span class="id" type="section">T2_3</span></a>.</p>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Hint Resolve</span> <a class="idref" href="Ch03_bet.html#between_exchange2"><span class="id" type="lemma">between_exchange2</span></a> : <span class="id" type="var">between</span>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="T2_4"><span class="id" type="section">T2_4</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_exchange4"><span class="id" type="lemma">between_exchange4</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">eBetween</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#T2_4"><span class="id" type="section">T2_4</span></a>.</p>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Hint Resolve</span> <a class="idref" href="Ch03_bet.html#outer_transitivity_between"><span class="id" type="lemma">outer_transitivity_between</span></a> <a class="idref" href="Ch03_bet.html#between_exchange4"><span class="id" type="lemma">between_exchange4</span></a> : <span class="id" type="var">between</span>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="T2_5"><span class="id" type="section">T2_5</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="def"> <a name="Bet_4"><span class="id" type="definition">Bet_4</span></a> := <span class="id" type="keyword">fun</span> <span class="id" type="var">A1</span> <span class="id" type="var">A2</span> <span class="id" type="var">A3</span> <span class="id" type="var">A4</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A1"><span class="id" type="variable">A1</span></a> <a class="idref" href="Ch03_bet.html#A2"><span class="id" type="variable">A2</span></a> <a class="idref" href="Ch03_bet.html#A3"><span class="id" type="variable">A3</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A2"><span class="id" type="variable">A2</span></a> <a class="idref" href="Ch03_bet.html#A3"><span class="id" type="variable">A3</span></a> <a class="idref" href="Ch03_bet.html#A4"><span class="id" type="variable">A4</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A1"><span class="id" type="variable">A1</span></a> <a class="idref" href="Ch03_bet.html#A3"><span class="id" type="variable">A3</span></a> <a class="idref" href="Ch03_bet.html#A4"><span class="id" type="variable">A4</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A1"><span class="id" type="variable">A1</span></a> <a class="idref" href="Ch03_bet.html#A2"><span class="id" type="variable">A2</span></a> <a class="idref" href="Ch03_bet.html#A4"><span class="id" type="variable">A4</span></div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="l_3_9_4"><span class="id" type="lemma">l_3_9_4</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A1</span> <span class="id" type="var">A2</span> <span class="id" type="var">A3</span> <span class="id" type="var">A4</span>, <a class="idref" href="Ch03_bet.html#Bet_4"><span class="id" type="definition">Bet_4</span></a> <a class="idref" href="Ch03_bet.html#A1"><span class="id" type="variable">A1</span></a> <a class="idref" href="Ch03_bet.html#A2"><span class="id" type="variable">A2</span></a> <a class="idref" href="Ch03_bet.html#A3"><span class="id" type="variable">A3</span></a> <a class="idref" href="Ch03_bet.html#A4"><span class="id" type="variable">A4</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Bet_4"><span class="id" type="definition">Bet_4</span></a> <a class="idref" href="Ch03_bet.html#A4"><span class="id" type="variable">A4</span></a> <a class="idref" href="Ch03_bet.html#A3"><span class="id" type="variable">A3</span></a> <a class="idref" href="Ch03_bet.html#A2"><span class="id" type="variable">A2</span></a> <a class="idref" href="Ch03_bet.html#A1"><span class="id" type="variable">A1</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Ch03_bet.html#Bet_4"><span class="id" type="definition">Bet_4</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>;<span class="id" type="var">spliter</span>;<span class="id" type="var">Between</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="l3_17"><span class="id" type="lemma">l3_17</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">A'</span> <span class="id" type="var">B'</span> <span class="id" type="var">P</span>,<br/>
+&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="Ch03_bet.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Ch03_bet.html#A'"><span class="id" type="variable">A'</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">Q</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Ch03_bet.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="Ch03_bet.html#B'"><span class="id" type="variable">B'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">Q'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B'</span> <a class="idref" href="Ch03_bet.html#Q'"><span class="id" type="variable">Q'</span></a> <span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">P</span> <a class="idref" href="Ch03_bet.html#Q'"><span class="id" type="variable">Q'</span></a> <span class="id" type="var">C</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a>;<span class="id" type="var">eBetween</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H2</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">x</span> <a class="idref" href="Ch03_bet.html#y"><span class="id" type="variable">y</span></a> <span class="id" type="var">C</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <span class="id" type="var">B</span> <a class="idref" href="Ch03_bet.html#y"><span class="id" type="variable">y</span></a> <span class="id" type="var">B'</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a>;<span class="id" type="var">eBetween</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">H4</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">y</span>;<span class="id" type="var">eBetween</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="two_distinct_points"><span class="id" type="lemma">two_distinct_points</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">X</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">Y</span>: <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Ch03_bet.html#X"><span class="id" type="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="Ch03_bet.html#Y"><span class="id" type="variable">Y</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">ld</span>:=<a class="idref" href="tarski_axioms.html#lower_dim"><span class="id" type="method">lower_dim</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_elim</span> <span class="id" type="var">ld</span> <span class="id" type="var">A</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_elim</span> <span class="id" type="var">H</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_elim</span> <span class="id" type="var">H0</span> <span class="id" type="var">C</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">induction</span> (<a class="idref" href="tarski_axioms.html#eq_dec_points"><span class="id" type="method">eq_dec_points</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span> <span class="id" type="var">A</span>; <span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>; <span class="id" type="tactic">&exist;</span> <span class="id" type="var">C</span>; <span class="id" type="var">Between</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">A</span>; <span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="point_construction_different"><span class="id" type="lemma">point_construction_different</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">C</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">tdp</span> := <a class="idref" href="Ch03_bet.html#two_distinct_points"><span class="id" type="lemma">two_distinct_points</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_elim</span> <span class="id" type="var">tdp</span> <span class="id" type="var">x</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_elim</span> <span class="id" type="var">H</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">prolong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">F</span> <span class="id" type="var">x</span> <span class="id" type="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">F</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">show_distinct</span> <span class="id" type="var">B</span> <span class="id" type="var">F</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intuition</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="another_point"><span class="id" type="lemma">another_point</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span>: <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">pcd</span> := <a class="idref" href="Ch03_bet.html#point_construction_different"><span class="id" type="lemma">point_construction_different</span></a> <span class="id" type="var">A</span> <span class="id" type="var">A</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">pcd</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#T2_5"><span class="id" type="section">T2_5</span></a>.</p>
+</div><br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Beeson_1"><span class="id" type="section">Beeson_1</span></a>.</p><br/>
+
+<br/>
+<p class="doc">
+Another proof of l2_11 without eq_dec_points but using Cong stability
+inspired by Micheal Beeson. <a href="http://www.michaelbeeson.com/research/papers/AxiomatizingConstructiveGeometry.pdf"></a>  
+</p>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<span class="id" type="keyword">Variable</span> <a name="Beeson_1.Cong_stability"><span class="id" type="variable">Cong_stability</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#D"><span class="id" type="variable">D</span></a>.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="l2_11_b"><span class="id" type="lemma">l2_11_b</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">A'</span> <span class="id" type="var">B'</span> <span class="id" type="var">C'</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="Ch03_bet.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="Ch03_bet.html#C'"><span class="id" type="variable">C'</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="Ch03_bet.html#B'"><span class="id" type="variable">B'</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="Ch03_bet.html#C'"><span class="id" type="variable">C'</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="Ch03_bet.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="Ch03_bet.html#C'"><span class="id" type="variable">C'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#Beeson_1.Cong_stability"><span class="id" type="variable">Cong_stability</span></a>; <span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">A</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><span class="id" type="var">B</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>; <span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">A'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><span class="id" type="var">B'</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a> <span class="id" type="var">A'</span> <span class="id" type="var">B'</span> <span class="id" type="var">B</span>); <span class="id" type="var">Cong</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>; <span class="id" type="tactic">tauto</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <span class="id" type="var">C</span> <span class="id" type="var">A</span> <span class="id" type="var">C'</span> <span class="id" type="var">A'</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#five_segments"><span class="id" type="method">five_segments</span></a> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">_</span> <span class="id" type="var">H1</span> );<span class="id" type="tactic">auto</span> <span class="id" type="keyword">using</span> <a class="idref" href="Ch02_cong.html#cong_trivial_identity"><span class="id" type="lemma">cong_trivial_identity</span></a>, <a class="idref" href="Ch02_cong.html#cong_commutativity"><span class="id" type="lemma">cong_commutativity</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">H3</span>; <span class="id" type="var">Cong</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_dec_eq_dec_b"><span class="id" type="lemma">cong_dec_eq_dec_b</span></a> :<br/>
+&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>:<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">HAB</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#Beeson_1.Cong_stability"><span class="id" type="variable">Cong_stability</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HNCong</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HAB</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HEq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNCong</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_pseudo_reflexivity"><span class="id" type="method">cong_pseudo_reflexivity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#Beeson_1"><span class="id" type="section">Beeson_1</span></a>.</p>
+</div><br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Beeson_2"><span class="id" type="section">Beeson_2</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<span class="id" type="keyword">Variable</span> <a name="Beeson_2.Bet_stability"><span class="id" type="variable">Bet_stability</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="Ch03_bet.html#C"><span class="id" type="variable">C</span></a>.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="bet_dec_eq_dec_b"><span class="id" type="lemma">bet_dec_eq_dec_b</span></a> :<br/>
+&nbsp;(<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>:<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch03_bet.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Ch03_bet.html#B"><span class="id" type="variable">B</span></a>).<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">HAB</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#Beeson_2.Bet_stability"><span class="id" type="variable">Bet_stability</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HNBet</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HAB</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HEq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="Ch03_bet.html#Beeson_2"><span class="id" type="section">Beeson_2</span></a>.</p>
+</div><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

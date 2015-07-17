@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>tarski_to_makarios</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library tarski_to_makarios</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="tarski_axioms.html#"><span class="id" type="library">tarski_axioms</span></a>.<br/>
+
+<br/>
+<p class="doc">
+In this file we formalize the result given in T. J. M. Makarios:
+ A further simplification of Tarski's axioms of geometry, June 2013. 
+</p>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Tarski83_to_Makarios_variant"><span class="id" type="section">Tarski83_to_Makarios_variant</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_reflexivity"><span class="id" type="lemma">cong_reflexivity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">apply</span> (<a class="idref" href="tarski_axioms.html#cong_inner_transitivity"><span class="id" type="method">cong_inner_transitivity</span></a> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>);<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_pseudo_reflexivity"><span class="id" type="method">cong_pseudo_reflexivity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_symmetry"><span class="id" type="lemma">cong_symmetry</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#cong_inner_transitivity"><span class="id" type="method">cong_inner_transitivity</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#cong_reflexivity"><span class="id" type="lemma">cong_reflexivity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_left_commutativity"><span class="id" type="lemma">cong_left_commutativity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#cong_inner_transitivity"><span class="id" type="method">cong_inner_transitivity</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#cong_symmetry"><span class="id" type="lemma">cong_symmetry</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#cong_pseudo_reflexivity"><span class="id" type="method">cong_pseudo_reflexivity</span></a>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="five_segments'"><span class="id" type="lemma">five_segments'</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span> <span class="id" type="var">C</span> <span class="id" type="var">C'</span> <span class="id" type="var">D</span> <span class="id" type="var">D'</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> -&gt; <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#cong_left_commutativity"><span class="id" type="lemma">cong_left_commutativity</span></a>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#five_segments"><span class="id" type="method">five_segments</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Instance</span> <a name="Makarios_Variant_follows_from_Tarski"><span class="id" type="instance">Makarios_Variant_follows_from_Tarski</span></a> : <a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless_variant"><span class="id" type="class">Tarski_neutral_dimensionless_variant</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">exact</span> (<a class="idref" href="tarski_axioms.html#Build_Tarski_neutral_dimensionless_variant"><span class="id" type="constructor">Build_Tarski_neutral_dimensionless_variant</span></a> <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#cong_inner_transitivity"><span class="id" type="method">cong_inner_transitivity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_makarios.html#five_segments'"><span class="id" type="lemma">five_segments'</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#segment_construction"><span class="id" type="method">segment_construction</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#lower_dim"><span class="id" type="method">lower_dim</span></a>).<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="tarski_to_makarios.html#Tarski83_to_Makarios_variant"><span class="id" type="section">Tarski83_to_Makarios_variant</span></a>.</p>
+</div><br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Makarios_variant_to_Tarski83"><span class="id" type="section">Makarios_variant_to_Tarski83</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless_variant"><span class="id" type="class">Tarski_neutral_dimensionless_variant</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a>}.<br/>
+
+<br/>
+<div class="tac"><span class="id" type="keyword">Ltac</span> <span class="id" type="var">prolong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> :=<br/>
+&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">sg</span>:= <a class="idref" href="tarski_axioms.html#Msegment_construction"><span class="id" type="method">Msegment_construction</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<br/>
+&nbsp;<span class="id" type="var">ex_and</span> <span class="id" type="var">sg</span> <span class="id" type="var">x</span>.
+</div>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Mcong_reflexivity"><span class="id" type="lemma">Mcong_reflexivity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">prolong</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#Mcong_inner_transitivity"><span class="id" type="method">Mcong_inner_transitivity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Mcong_symmetry"><span class="id" type="lemma">Mcong_symmetry</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> ,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#Mcong_inner_transitivity"><span class="id" type="method">Mcong_inner_transitivity</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_reflexivity"><span class="id" type="lemma">Mcong_reflexivity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_trivial"><span class="id" type="lemma">between_trivial</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a>, <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">prolong</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">x</span> <span class="id" type="var">B</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <span class="id" type="var">B</span>)<br/>
+&nbsp;<span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Mcong_identity"><span class="id" type="method">Mcong_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>;<span class="id" type="tactic">auto</span>).<br/>
+<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_symmetry"><span class="id" type="lemma">between_symmetry</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a>, <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">C</span>).<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>.<br/>
+<span class="id" type="tactic">assert</span>(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <span class="id" type="var">B</span> <a class="idref" href="tarski_to_makarios.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <span class="id" type="var">C</span> <a class="idref" href="tarski_to_makarios.html#x"><span class="id" type="variable">x</span></a> <span class="id" type="var">A</span>)<br/>
+&nbsp;<span class="id" type="tactic">by</span> (<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#Minner_pasch"><span class="id" type="method">Minner_pasch</span></a>;<span class="id" type="tactic">eauto</span>).<br/>
+<span class="id" type="var">ex_and</span> <span class="id" type="var">H1</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Mbetween_identity"><span class="id" type="method">Mbetween_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_pseudo_reflexivity"><span class="id" type="lemma">cong_pseudo_reflexivity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a>, <a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">prolong</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="tactic">induction</span> (<a class="idref" href="tarski_axioms.html#eq_dec_points"><span class="id" type="method">eq_dec_points</span></a> <span class="id" type="var">x</span> <span class="id" type="var">A</span>).<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_symmetry"><span class="id" type="lemma">Mcong_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><span class="id" type="var">A</span>)<br/>
+&nbsp;<span class="id" type="tactic">by</span> (<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Mcong_identity"><span class="id" type="method">Mcong_identity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span>;<span class="id" type="tactic">assumption</span>).<br/>
+<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <span class="id" type="var">x</span> <span class="id" type="var">A</span> <span class="id" type="var">x</span> <span class="id" type="var">A</span>) <span class="id" type="tactic">by</span> ( <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_reflexivity"><span class="id" type="lemma">Mcong_reflexivity</span></a>;<span class="id" type="tactic">auto</span>).<br/>
+<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>) <span class="id" type="tactic">by</span> ( <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_reflexivity"><span class="id" type="lemma">Mcong_reflexivity</span></a>;<span class="id" type="tactic">auto</span>).<br/>
+<span class="id" type="tactic">assert</span> (<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <span class="id" type="var">A</span> <span class="id" type="var">A</span> <span class="id" type="var">A</span> <span class="id" type="var">A</span>) <span class="id" type="tactic">by</span> ( <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_reflexivity"><span class="id" type="lemma">Mcong_reflexivity</span></a>;<span class="id" type="tactic">auto</span>).<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Mfive_segments"><span class="id" type="method">Mfive_segments</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x</span> <span class="id" type="var">x</span> <span class="id" type="var">A</span> <span class="id" type="var">A</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Mcong_left_commutativity"><span class="id" type="lemma">Mcong_left_commutativity</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_axioms.html#Mcong_inner_transitivity"><span class="id" type="method">Mcong_inner_transitivity</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_symmetry"><span class="id" type="lemma">Mcong_symmetry</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#cong_pseudo_reflexivity"><span class="id" type="lemma">cong_pseudo_reflexivity</span></a>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="five_segments"><span class="id" type="lemma">five_segments</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span> <span class="id" type="var">C</span> <span class="id" type="var">C'</span> <span class="id" type="var">D</span> <span class="id" type="var">D'</span> : <a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_to_makarios.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_makarios.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> -&gt; <a class="idref" href="tarski_to_makarios.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_makarios.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <a class="idref" href="tarski_to_makarios.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_makarios.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_makarios.html#C'"><span class="id" type="variable">C'</span></a> <a class="idref" href="tarski_to_makarios.html#D'"><span class="id" type="variable">D'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_makarios.html#Mcong_left_commutativity"><span class="id" type="lemma">Mcong_left_commutativity</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Mfive_segments"><span class="id" type="method">Mfive_segments</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Instance</span> <a name="Tarski_follows_from_Makarios_Variant"><span class="id" type="instance">Tarski_follows_from_Makarios_Variant</span></a> : <a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">exact</span> (<a class="idref" href="tarski_axioms.html#Build_Tarski_neutral_dimensionless"><span class="id" type="constructor">Build_Tarski_neutral_dimensionless</span></a> <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#MTpoint"><span class="id" type="method">MTpoint</span></a> <a class="idref" href="tarski_axioms.html#BetM"><span class="id" type="method">BetM</span></a> <a class="idref" href="tarski_axioms.html#CongM"><span class="id" type="method">CongM</span></a> <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Mbetween_identity"><span class="id" type="method">Mbetween_identity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_makarios.html#cong_pseudo_reflexivity"><span class="id" type="lemma">cong_pseudo_reflexivity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Mcong_identity"><span class="id" type="method">Mcong_identity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Mcong_inner_transitivity"><span class="id" type="method">Mcong_inner_transitivity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Minner_pasch"><span class="id" type="method">Minner_pasch</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_makarios.html#five_segments"><span class="id" type="lemma">five_segments</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Msegment_construction"><span class="id" type="method">Msegment_construction</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Mlower_dim"><span class="id" type="method">Mlower_dim</span></a>).<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="tarski_to_makarios.html#Makarios_variant_to_Tarski83"><span class="id" type="section">Makarios_variant_to_Tarski83</span></a>.</p>
+</div><br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

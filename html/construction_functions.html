@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>construction_functions</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library construction_functions</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Epsilon.html#"><span class="id" type="library">Epsilon</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="gravityCenter.html#"><span class="id" type="library">gravityCenter</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Section</span> <a name="T"><span class="id" type="section">T</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MT</span>:<a class="idref" href="tarski_axioms.html#Tarski_2D_euclidean"><span class="id" type="class">Tarski_2D_euclidean</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="symmetric_point_ex_unicity"><span class="id" type="lemma">symmetric_point_ex_unicity</span></a> :<br/>
+&nbsp;<span class="id" type="keyword">forall</span> <span class="id" type="var">I</span> <span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_'!'_x_'..'_x_','_x"><span class="id" type="notation">exists</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_'!'_x_'..'_x_','_x"><span class="id" type="notation">!</span></a> <span class="id" type="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_'!'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="construction_functions.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="construction_functions.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="construction_functions.html#B"><span class="id" type="variable">B</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch07_midpoint.html#symmetric_point_construction"><span class="id" type="lemma">symmetric_point_construction</span></a> <span class="id" type="var">A</span> <span class="id" type="var">I</span>).<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">B</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">exists</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#unique"><span class="id" type="definition">unique</span></a>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">eauto</span> <span class="id" type="keyword">using</span> <a class="idref" href="Ch07_midpoint.html#symmetric_point_unicity"><span class="id" type="lemma">symmetric_point_unicity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="symmetric_point"><span class="id" type="definition">symmetric_point</span></a> <span class="id" type="var">I</span> <span class="id" type="var">A</span> := <a class="idref" href="Epsilon.html#select_the"><span class="id" type="definition">select_the</span></a> (<a class="idref" href="construction_functions.html#symmetric_point_ex_unicity"><span class="id" type="lemma">symmetric_point_ex_unicity</span></a> <a class="idref" href="construction_functions.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="construction_functions.html#A"><span class="id" type="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="gravity_center"><span class="id" type="definition">gravity_center</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> (<span class="id" type="var">H</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="construction_functions.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="construction_functions.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="construction_functions.html#C"><span class="id" type="variable">C</span></a> ) := <a class="idref" href="Epsilon.html#select_the"><span class="id" type="definition">select_the</span></a> (<a class="idref" href="gravityCenter.html#is_gravity_center_exist_unique"><span class="id" type="lemma">is_gravity_center_exist_unique</span></a> <a class="idref" href="construction_functions.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="construction_functions.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="construction_functions.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="construction_functions.html#H"><span class="id" type="variable">H</span></a>).<br/>
+
+<br/>
+<span class="id" type="keyword">End</span> <a class="idref" href="construction_functions.html#T"><span class="id" type="section">T</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

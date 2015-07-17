@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>unit_tests</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library unit_tests</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="quadrilaterals_inter_dec.html#"><span class="id" type="library">quadrilaterals_inter_dec</span></a>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="UnitTests"><span class="id" type="section">UnitTests</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MT</span>:<a class="idref" href="tarski_axioms.html#Tarski_2D_euclidean"><span class="id" type="class">Tarski_2D_euclidean</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>:<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">not_exist_hyp_comm</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> ||<br/>
+<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="var">not_exist_hyp_comm</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> ||<br/>
+<span class="id" type="tactic">clear</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="var">not_exist_hyp_comm</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">Q</span>, <br/>
+&nbsp;<a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <br/>
+&nbsp;<a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <br/>
+&nbsp;<a class="idref" href="unit_tests.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch08_orthogonality.html#Perp"><span class="id" type="definition">Perp</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">X</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="Ch08_orthogonality.html#Perp_in"><span class="id" type="definition">Perp_in</span></a> <a class="idref" href="unit_tests.html#X"><span class="id" type="variable">X</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="Ch12_parallel.html#Par"><span class="id" type="definition">Par</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="Ch12_parallel.html#Par_strict"><span class="id" type="definition">Par_strict</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="Ch06_out_lines.html#out"><span class="id" type="definition">out</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="Ch06_out_lines.html#out"><span class="id" type="definition">out</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_cols</span>.<br/>
+<span class="id" type="var">Col</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt;<br/>
+&nbsp;&nbsp;<a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">I</span>, <br/>
+&nbsp;&nbsp;<a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch12_parallel.html#Par"><span class="id" type="definition">Par</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">I</span>, <br/>
+&nbsp;&nbsp;<a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch12_parallel.html#Par"><span class="id" type="definition">Par</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>,<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="unit_tests.html#E"><span class="id" type="variable">E</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt;<br/>
+&nbsp;&nbsp;<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#E"><span class="id" type="variable">E</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">search_contradiction</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span>  <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">E</span>,<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="unit_tests.html#E"><span class="id" type="variable">E</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt;<br/>
+&nbsp;&nbsp;<a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#E"><span class="id" type="variable">E</span></a> -&gt; <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="var">assert_all_diffs_by_contradiction'</span>.<br/>
+<span class="id" type="var">finish</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span>  <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>,<br/>
+&nbsp;<a class="idref" href="Ch12_parallel.html#Par_strict"><span class="id" type="definition">Par_strict</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt;<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="var">Col</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, (<a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>) -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs_by_cases</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="var">assert_all_not_cols_by_contradiction</span>.<br/>
+<span class="id" type="var">finish</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">I</span>, <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#I"><span class="id" type="variable">I</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt;  <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_diffs</span>.<br/>
+<span class="id" type="var">assert_all_diffs_by_contradiction'</span>.<br/>
+<span class="id" type="var">finish</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="quadrilaterals.html#Parallelogram"><span class="id" type="definition">Parallelogram</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_congs_perm</span>.<br/>
+<span class="id" type="var">finish</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Goal</span> <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="Ch07_midpoint.html#is_midpoint"><span class="id" type="definition">is_midpoint</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="unit_tests.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="unit_tests.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="unit_tests.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">assert_congs_perm</span>.<br/>
+<span class="id" type="var">finish</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="unit_tests.html#UnitTests"><span class="id" type="section">UnitTests</span></a>.</p>
+</div><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

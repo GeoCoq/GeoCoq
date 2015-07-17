@@ -1,0 +1,1063 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="interact.js"></script>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>tarski_to_beeson</title>
+</head>
+
+<body onload="init()">
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library tarski_to_beeson</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Export</span> <a class="idref" href="Ch08_orthogonality.html#"><span class="id" type="library">Ch08_orthogonality</span></a>.<br/>
+
+<br/>
+<p class="doc">
+In this file we formalize the connection between Beeson's axiom system
+    and Tarski's axiom system. 
+    We also have a proof that stability of equality follows from stability of Cong.
+
+
+
+
+</p>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Tarski_to_intuitionistic_Tarski"><span class="id" type="section">Tarski_to_intuitionistic_Tarski</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">M</span>:<a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>}.<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">EqDec</span>:<a class="idref" href="tarski_axioms.html#EqDecidability"><span class="id" type="class">EqDecidability</span></a> <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_stability"><span class="id" type="lemma">cong_stability</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Cong_dec"><span class="id" type="lemma">Cong_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HCong</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HCong</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="def"> <a name="BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <span class="id" type="keyword">Prop</span> := <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="bet_stability"><span class="id" type="lemma">bet_stability</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HNNBet</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Bet_dec"><span class="id" type="lemma">Bet_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_axioms.html#eq_dec_points"><span class="id" type="method">eq_dec_points</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HAB</span>; <span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_axioms.html#eq_dec_points"><span class="id" type="method">eq_dec_points</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HBC</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">split</span>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNNBet</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="def"> <a name="T"><span class="id" type="definition">T</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <span class="id" type="keyword">Prop</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(</span></a><a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></div><br/>
+
+<br/>
+<div class="def"> <a name="ColB"><span class="id" type="definition">ColB</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_identity_B"><span class="id" type="lemma">between_identity_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">HNBet</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HNBet</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">HBet</span> [<span class="id" type="var">HAB</span> <span class="id" type="var">HBA</span>]].<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#between_identity"><span class="id" type="method">between_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Bet_T"><span class="id" type="lemma">Bet_T</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HBet</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HT</span>.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HT</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">HAB</span> [<span class="id" type="var">HBC</span> <span class="id" type="var">HNBet</span>]].<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="BetH_Bet"><span class="id" type="lemma">BetH_Bet</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="T_Bet"><span class="id" type="lemma">T_Bet</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HT</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Bet_dec"><span class="id" type="lemma">Bet_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HBet</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HT</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>; <span class="id" type="tactic">subst</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial2"><span class="id" type="lemma">between_trivial2</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>; <span class="id" type="tactic">subst</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_trivial"><span class="id" type="lemma">between_trivial</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HBetH</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetH_Bet"><span class="id" type="lemma">BetH_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBetH</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="NT_NBet"><span class="id" type="lemma">NT_NBet</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#Bet"><span class="id" type="method">Bet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HNT</span>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HNBet</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">HNT</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#Bet_T"><span class="id" type="lemma">Bet_T</span></a>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="T_dec"><span class="id" type="lemma">T_dec</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="Ch05_bet_le.html#Bet_dec"><span class="id" type="lemma">Bet_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HBet</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#Bet_T"><span class="id" type="lemma">Bet_T</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">right</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">HT</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_inner_transitivity_B"><span class="id" type="lemma">between_inner_transitivity_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>, <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">HBet1</span> <span class="id" type="var">HBet2</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a>.<br/>
+<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetH_Bet"><span class="id" type="lemma">BetH_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet1</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetH_Bet"><span class="id" type="lemma">BetH_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet2</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_inner_transitivity"><span class="id" type="lemma">between_inner_transitivity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">D</span>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet1</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet2</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">spliter</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="ColB_Col"><span class="id" type="lemma">ColB_Col</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HCol</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HCol</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT1</span>;<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">B</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT2</span>;<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">C</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT3</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT1</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT1</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT1</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT1</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT2</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT2</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HT3</span>; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HCol</span>; <span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Diff_Col_ColB"><span class="id" type="lemma">Diff_Col_ColB</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HColB</span>.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HColB</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">HNT1</span> [<span class="id" type="var">HNT2</span> <span class="id" type="var">HNT3</span>]].<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#NT_NBet"><span class="id" type="lemma">NT_NBet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HNT1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#NT_NBet"><span class="id" type="lemma">NT_NBet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HNT2</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#NT_NBet"><span class="id" type="lemma">NT_NBet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HNT3</span>.<br/>
+<span class="id" type="tactic">elim</span> <span class="id" type="var">H</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HBet</span>; <span class="id" type="var">contradiction</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intro</span> <span class="id" type="var">HColAux</span>; <span class="id" type="tactic">elim</span> <span class="id" type="var">HColAux</span>; <span class="id" type="tactic">intro</span> <span class="id" type="var">HBet</span>; <span class="id" type="tactic">clear</span> <span class="id" type="var">HColAux</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">contradiction</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="NColB_NDiffCol"><span class="id" type="lemma">NColB_NDiffCol</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HNCB</span>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HNC</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">HNCB</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#Diff_Col_ColB"><span class="id" type="lemma">Diff_Col_ColB</span></a>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="NColB_NColOrEq"><span class="id" type="lemma">NColB_NColOrEq</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="Ch03_bet.html#Col"><span class="id" type="definition">Col</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HNCB</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#NColB_NDiffCol"><span class="id" type="lemma">NColB_NDiffCol</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HNCB</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="inner_pasch_B"><span class="id" type="lemma">inner_pasch_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span>,<br/>
+&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#ColB"><span class="id" type="definition">ColB</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">HBetH1</span> <span class="id" type="var">HBetH2</span> <span class="id" type="var">HNC</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBetH1</span>.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HBetH1</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">HBet1</span> [<span class="id" type="var">HAP</span> <span class="id" type="var">HPC</span>]].<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBetH2</span>.<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HBetH2</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">HBet2</span> [<span class="id" type="var">HBQ</span> <span class="id" type="var">HQC</span>]].<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#NColB_NColOrEq"><span class="id" type="lemma">NColB_NColOrEq</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HNC</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HIP</span> := <a class="idref" href="tarski_axioms.html#inner_pasch"><span class="id" type="method">inner_pasch</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">HBet1</span> <span class="id" type="var">HBet2</span>).<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HIP</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">x</span> [<span class="id" type="var">HBet3</span> <span class="id" type="var">HBet4</span>]].<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNC</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">assert_cols</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ColR</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNC</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">assert_cols</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ColR</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNC</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">assert_cols</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ColR</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">HNC</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">assert_cols</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="var">ColR</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="between_symmetry_B"><span class="id" type="lemma">between_symmetry_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">HBet</span>.<br/>
+<span class="id" type="tactic">repeat</span> <span class="id" type="tactic">split</span>; <span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="five_segments_B"><span class="id" type="lemma">five_segments_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span> <span class="id" type="var">C</span> <span class="id" type="var">C'</span> <span class="id" type="var">D</span> <span class="id" type="var">D'</span> : <a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(</span></a><a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(</span></a><a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HBet1</span> : <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a>; <span class="id" type="tactic">assumption</span>).<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HBet2</span> : <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <span class="id" type="var">A'</span> <span class="id" type="var">B'</span> <span class="id" type="var">C'</span>) <span class="id" type="tactic">by</span> (<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a>; <span class="id" type="tactic">assumption</span>).<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H3</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H4</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#five_segments"><span class="id" type="method">five_segments</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="segment_construction_B"><span class="id" type="lemma">segment_construction_B</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>, <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">E</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#E"><span class="id" type="variable">E</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#E"><span class="id" type="variable">E</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">HDiff</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">T</span> := <a class="idref" href="tarski_axioms.html#segment_construction"><span class="id" type="method">segment_construction</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>).<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">T</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">E</span> [<span class="id" type="var">HBet</span> <span class="id" type="var">HCong</span>]].<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#Bet_T"><span class="id" type="lemma">Bet_T</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">HBet</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">E</span>; <span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="lower_dim_B"><span class="id" type="lemma">lower_dim_B</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">A</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">C</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#T"><span class="id" type="definition">T</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">HLD</span> := <a class="idref" href="tarski_axioms.html#lower_dim"><span class="id" type="method">lower_dim</span></a>).<br/>
+<span class="id" type="tactic">destruct</span> <span class="id" type="var">HLD</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">A</span> [<span class="id" type="var">B</span> [<span class="id" type="var">C</span> <span class="id" type="var">HNBet</span>]]].<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">A</span>; <span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>; <span class="id" type="tactic">&exist;</span> <span class="id" type="var">C</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">C</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT1</span>; <span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">C</span> <span class="id" type="var">B</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT2</span>; <span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#T_dec"><span class="id" type="lemma">T_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>); <span class="id" type="tactic">intro</span> <span class="id" type="var">HT3</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">right</span>; <span class="id" type="tactic">right</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">right</span>; <span class="id" type="tactic">right</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">right</span>; <span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="Ch03_bet.html#between_symmetry"><span class="id" type="lemma">between_symmetry</span></a>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="var">exfalso</span>; <span class="id" type="tactic">apply</span> <span class="id" type="var">HNBet</span>; <span class="id" type="tactic">left</span>; <span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#T_Bet"><span class="id" type="lemma">T_Bet</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Instance</span> <a name="Beeson_follows_from_Tarski"><span class="id" type="instance">Beeson_follows_from_Tarski</span></a> : <a class="idref" href="tarski_axioms.html#intuitionistic_Tarski_neutral_dimensionless"><span class="id" type="class">intuitionistic_Tarski_neutral_dimensionless</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">exact</span> (<a class="idref" href="tarski_axioms.html#Build_intuitionistic_Tarski_neutral_dimensionless"><span class="id" type="constructor">Build_intuitionistic_Tarski_neutral_dimensionless</span></a> <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#Tpoint"><span class="id" type="method">Tpoint</span></a> <a class="idref" href="tarski_to_beeson.html#BetH"><span class="id" type="definition">BetH</span></a> <a class="idref" href="tarski_axioms.html#Cong"><span class="id" type="method">Cong</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#cong_stability"><span class="id" type="lemma">cong_stability</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#bet_stability"><span class="id" type="lemma">bet_stability</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#between_identity_B"><span class="id" type="lemma">between_identity_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#cong_identity"><span class="id" type="method">cong_identity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#cong_pseudo_reflexivity"><span class="id" type="method">cong_pseudo_reflexivity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#cong_inner_transitivity"><span class="id" type="method">cong_inner_transitivity</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#inner_pasch_B"><span class="id" type="lemma">inner_pasch_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#between_symmetry_B"><span class="id" type="lemma">between_symmetry_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#between_inner_transitivity_B"><span class="id" type="lemma">between_inner_transitivity_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#five_segments_B"><span class="id" type="lemma">five_segments_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#segment_construction_B"><span class="id" type="lemma">segment_construction_B</span></a><br/>
+&nbsp;<a class="idref" href="tarski_to_beeson.html#lower_dim_B"><span class="id" type="lemma">lower_dim_B</span></a>).<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="tarski_to_beeson.html#Tarski_to_intuitionistic_Tarski"><span class="id" type="section">Tarski_to_intuitionistic_Tarski</span></a>.</p>
+</div><br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Proof_of_eq_stability_in_IT"><span class="id" type="section">Proof_of_eq_stability_in_IT</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MIT</span>:<a class="idref" href="tarski_axioms.html#intuitionistic_Tarski_neutral_dimensionless"><span class="id" type="class">intuitionistic_Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="cong_stability_eq_stability"><span class="id" type="lemma">cong_stability_eq_stability</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">HAB</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Icong_identity"><span class="id" type="method">Icong_identity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Cong_stability"><span class="id" type="method">Cong_stability</span></a>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HNCong</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">HAB</span>.<br/>
+<span class="id" type="tactic">intro</span> <span class="id" type="var">HEq</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">HNCong</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Icong_pseudo_reflexivity"><span class="id" type="method">Icong_pseudo_reflexivity</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="tarski_to_beeson.html#Proof_of_eq_stability_in_IT"><span class="id" type="section">Proof_of_eq_stability_in_IT</span></a>.</p>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical.html#"><span class="id" type="library">Classical</span></a>.<br/>
+
+<br/>
+<div class="sect">
+<p><span class="id" type="keyword">Section</span> <a name="Intuitionistic_Tarski_to_Tarski"><span class="id" type="section">Intuitionistic_Tarski_to_Tarski</span></a>.</p><br/>
+
+<br/>
+<span class="id" type="keyword">Context</span> `{<span class="id" type="var">MIT</span>:<a class="idref" href="tarski_axioms.html#intuitionistic_Tarski_neutral_dimensionless"><span class="id" type="class">intuitionistic_Tarski_neutral_dimensionless</span></a>}.<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="Col_dec"><span class="id" type="lemma">Col_dec</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_axioms.html#ICol"><span class="id" type="method">ICol</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="tarski_axioms.html#ICol"><span class="id" type="method">ICol</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="eq_dec"><span class="id" type="lemma">eq_dec</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> :<a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>, <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="def"> <a name="BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> := <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="bet_id"><span class="id" type="lemma">bet_id</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>, <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">or</span>] <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_identity"><span class="id" type="method">Ibetween_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">elim</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="IT_chara"><span class="id" type="lemma">IT_chara</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <br/>
+&nbsp;<a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_axioms.html#IBet"><span class="id" type="method">IBet</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a>.<br/>
+<span class="id" type="tactic">tauto</span>. <span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="BetT_symmetry"><span class="id" type="lemma">BetT_symmetry</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>, <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="BetT_id"><span class="id" type="lemma">BetT_id</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>, <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_identity"><span class="id" type="method">Ibetween_identity</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">elim</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="pasch_col_case"><span class="id" type="lemma">pasch_col_case</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_axioms.html#ICol"><span class="id" type="method">ICol</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">C</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_id"><span class="id" type="lemma">BetT_id</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">B</span> <span class="id" type="var">C</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_id"><span class="id" type="lemma">BetT_id</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">B</span> <span class="id" type="var">Q</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">C</span> <span class="id" type="var">Q</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>.<br/>
+&nbsp;<span class="id" type="tactic">split</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_symmetry"><span class="id" type="lemma">BetT_symmetry</span></a>.<br/>
+&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">P</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">C</span> <span class="id" type="var">P</span>);<span class="id" type="tactic">intro</span>.<br/>
+&nbsp;<span class="id" type="tactic">subst</span>.<br/>
+&nbsp;<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>.<br/>
+&nbsp;<span class="id" type="tactic">split</span>.<br/>
+&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_symmetry"><span class="id" type="lemma">BetT_symmetry</span></a>.<br/>
+&nbsp;<span class="id" type="tactic">auto</span>.<br/>
+&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#ICol"><span class="id" type="method">ICol</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">T</span>:=<a class="idref" href="tarski_axioms.html#Ibetween_inner_transitivity"><span class="id" type="method">Ibetween_inner_transitivity</span></a> <span class="id" type="var">B</span> <span class="id" type="var">A</span> <span class="id" type="var">P</span> <span class="id" type="var">C</span> <span class="id" type="var">H1</span> <span class="id" type="var">H</span>).<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">C</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">induction</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_symmetry"><span class="id" type="lemma">BetT_symmetry</span></a>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_inner_transitivity"><span class="id" type="method">Ibetween_inner_transitivity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#BetT_symmetry"><span class="id" type="lemma">BetT_symmetry</span></a>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_inner_transitivity"><span class="id" type="method">Ibetween_inner_transitivity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H0</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">induction</span> <span class="id" type="var">H0</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">B</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>;<span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_inner_transitivity"><span class="id" type="method">Ibetween_inner_transitivity</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">C</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#not_and_or"><span class="id" type="lemma">not_and_or</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Logic.Classical_Prop.html#NNPP"><span class="id" type="lemma">NNPP</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H0</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<span class="id" type="tactic">subst</span>;<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="pasch"><span class="id" type="lemma">pasch</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">x</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="tarski_to_beeson.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">induction</span> (<a class="idref" href="tarski_to_beeson.html#Col_dec"><span class="id" type="lemma">Col_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span>).<br/>
+<span class="id" type="tactic">eapply</span> <a class="idref" href="tarski_to_beeson.html#pasch_col_case"><span class="id" type="lemma">pasch_col_case</span></a>;<span class="id" type="tactic">eauto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">or</span>] <span class="id" type="var">H</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">or</span>] <span class="id" type="var">H0</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H0</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_axioms.html#Iinner_pasch"><span class="id" type="method">Iinner_pasch</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">P</span> <span class="id" type="var">Q</span> <span class="id" type="var">H2</span> <span class="id" type="var">H</span> <span class="id" type="var">H1</span>).<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">P</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">or</span>] <span class="id" type="var">H0</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">H0</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">left</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ibetween_symmetry"><span class="id" type="method">Ibetween_symmetry</span></a>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">Q</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">C</span>;<span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="five_segments"><span class="id" type="lemma">five_segments</span></a>:<br/>
+&nbsp;<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span> <span class="id" type="var">C</span> <span class="id" type="var">C'</span> <span class="id" type="var">D</span> <span class="id" type="var">D'</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A'"><span class="id" type="variable">A'</span></a> <a class="idref" href="tarski_to_beeson.html#B'"><span class="id" type="variable">B'</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> -&gt; <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> -&gt; <a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a> <a class="idref" href="tarski_to_beeson.html#C'"><span class="id" type="variable">C'</span></a> <a class="idref" href="tarski_to_beeson.html#D'"><span class="id" type="variable">D'</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_axioms.html#Ifive_segments"><span class="id" type="method">Ifive_segments</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">A</span> <span class="id" type="var">A'</span> <span class="id" type="var">B</span> <span class="id" type="var">B'</span> ;<span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="IT_trivial"><span class="id" type="lemma">IT_trivial</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span>, <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a>.<br/>
+<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="another_point"><span class="id" type="lemma">another_point</span></a> : <span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">B</span>:<a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'<>'_x"><span class="id" type="notation">&lt;&gt;</span></a><a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">T</span>:=<a class="idref" href="tarski_axioms.html#Ilower_dim"><span class="id" type="method">Ilower_dim</span></a>).<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">ex</span>] <span class="id" type="var">T</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">x</span>);<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">x</span> <span class="id" type="var">x0</span>);<span class="id" type="tactic">intro</span>.<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="var">exfalso</span>.<br/>
+<span class="id" type="tactic">apply</span> <span class="id" type="var">H</span>.<br/>
+<span class="id" type="tactic">apply</span> <a class="idref" href="tarski_to_beeson.html#IT_trivial"><span class="id" type="lemma">IT_trivial</span></a>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x0</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="segment_construction"><span class="id" type="lemma">segment_construction</span></a> :<br/>
+&nbsp;<span class="id" type="keyword">&forall;</span> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">E</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#E"><span class="id" type="variable">E</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#E"><span class="id" type="variable">E</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#D"><span class="id" type="variable">D</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">induction</span> (<a class="idref" href="tarski_to_beeson.html#eq_dec"><span class="id" type="lemma">eq_dec</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span>).<br/>
+<span class="id" type="tactic">subst</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_to_beeson.html#another_point"><span class="id" type="lemma">another_point</span></a> <span class="id" type="var">B</span>);<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_axioms.html#Isegment_construction"><span class="id" type="method">Isegment_construction</span></a> <span class="id" type="var">x</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span>);<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x0</span>.<br/>
+<span class="id" type="tactic">split</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="tactic">elim</span> (<a class="idref" href="tarski_axioms.html#Isegment_construction"><span class="id" type="method">Isegment_construction</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> <span class="id" type="var">D</span> <span class="id" type="var">H</span>).<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="var">spliter</span>.<br/>
+<span class="id" type="tactic">split</span>;<span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a>.<br/>
+<span class="id" type="tactic">tauto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<div class="lemma">
+    <div class="expr">
+        <span class="id" type="keyword">Lemma</span> <a name="lower_dim"><span class="id" type="lemma">lower_dim</span></a> :<br/>
+&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">&exist;</span></a> <span class="id" type="var">A</span> <span class="id" type="var">B</span> <span class="id" type="var">C</span> : <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(</span></a><a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_to_beeson.html#C"><span class="id" type="variable">C</span></a> <a class="idref" href="tarski_to_beeson.html#A"><span class="id" type="variable">A</span></a> <a class="idref" href="tarski_to_beeson.html#B"><span class="id" type="variable">B</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl5/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a>.<br/>
+</div>
+<div class="proof">
+        <span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">assert</span> (<span class="id" type="var">T</span>:=<a class="idref" href="tarski_axioms.html#Ilower_dim"><span class="id" type="method">Ilower_dim</span></a>).<br/>
+<span class="id" type="var">decompose</span> [<span class="id" type="var">ex</span>] <span class="id" type="var">T</span>;<span class="id" type="tactic">clear</span> <span class="id" type="var">T</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x0</span>.<br/>
+<span class="id" type="tactic">&exist;</span> <span class="id" type="var">x1</span>.<br/>
+
+<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#ICol"><span class="id" type="method">ICol</span></a> <span class="id" type="keyword">in</span>  *.<br/>
+<span class="id" type="tactic">unfold</span> <a class="idref" href="tarski_axioms.html#IT"><span class="id" type="method">IT</span></a> <span class="id" type="keyword">in</span> *.<br/>
+<span class="id" type="tactic">firstorder</span> <span class="id" type="keyword">using</span> <span class="id" type="var">Ibetween_symmetry</span>.<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<span class="id" type="keyword">Instance</span> <a name="IT_to_T"><span class="id" type="instance">IT_to_T</span></a> : <a class="idref" href="tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" type="class">Tarski_neutral_dimensionless</span></a>.<br/>
+<span class="id" type="tactic">exact</span> <br/>
+(<a class="idref" href="tarski_axioms.html#Build_Tarski_neutral_dimensionless"><span class="id" type="constructor">Build_Tarski_neutral_dimensionless</span></a> <a class="idref" href="tarski_axioms.html#ITpoint"><span class="id" type="method">ITpoint</span></a> <a class="idref" href="tarski_to_beeson.html#BetT"><span class="id" type="definition">BetT</span></a> <a class="idref" href="tarski_axioms.html#ICong"><span class="id" type="method">ICong</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#bet_id"><span class="id" type="lemma">bet_id</span></a> <a class="idref" href="tarski_axioms.html#Icong_pseudo_reflexivity"><span class="id" type="method">Icong_pseudo_reflexivity</span></a> <a class="idref" href="tarski_axioms.html#Icong_identity"><span class="id" type="method">Icong_identity</span></a> <a class="idref" href="tarski_axioms.html#Icong_inner_transitivity"><span class="id" type="method">Icong_inner_transitivity</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="tarski_to_beeson.html#pasch"><span class="id" type="lemma">pasch</span></a> <a class="idref" href="tarski_to_beeson.html#five_segments"><span class="id" type="lemma">five_segments</span></a> <a class="idref" href="tarski_to_beeson.html#segment_construction"><span class="id" type="lemma">segment_construction</span></a> <a class="idref" href="tarski_to_beeson.html#lower_dim"><span class="id" type="lemma">lower_dim</span></a>).<br/>
+<span class="id" type="keyword">Qed</span>.
+</div>
+</div><br/>
+
+<br/>
+<p class="end"><span class="id" type="keyword">End</span> <a class="idref" href="tarski_to_beeson.html#Intuitionistic_Tarski_to_Tarski"><span class="id" type="section">Intuitionistic_Tarski_to_Tarski</span></a>.</p>
+</div><br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
