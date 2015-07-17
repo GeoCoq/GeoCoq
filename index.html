@@ -34,7 +34,11 @@
           <h1>
 	    <a class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>About.</h1>
 
-	  In the early 60s, Wanda Szmielew and <a href="http://en.wikipedia.org/wiki/Alfred_Tarski">Alfred Tarski</a> started the project of a treaty about the foundations of geometry. A systematic development of <a href="http://en.wikipedia.org/wiki/Euclidean_geometry">euclidean geometry</a> based on <a href="http://en.wikipedia.org/wiki/Tarski%27s_axioms">Tarski's axioms</a> was supposed to constitute the first part, but the early death of Wanda Szmielew&nbsp; put an end to this project. Finally, Wolfram Schwabh&auml;user continued the project of Wanda Szmielew and Alfred Tarski. He published the treaty in 1983 in German : <span style="font-style: italic;">Metamathematische Methoden in der Geometrie</span>.
+	This page describe a formalization of geometry using the Coq
+	proof assistant based on
+	Tarski's axiom system. It contains both proofs about the
+	foundations of geometry and high level proof in the same style
+	as in highschool.
 
 	  <h1>Content</h1>
 	  
@@ -42,14 +46,20 @@
 	  <br>      
 	<h2>The axiom systems</h2>
 
-	There are several ways to define the foundations of geomety, a
-	synthetic approach (starting with point and lines and some
-	predicates), an analytic approach (starting from a given field F
-	and defining the plane as F^n), there are mixed approaches
-	assuming a field and some geometric axioms (Area method,
-	metric axioms), ...
-	We use here a synthetic approach but we prove that we can
-	define coordinates. Our main axiom system is the one of
+	There are several ways to define the foundations of geomety:
+	<ul>
+	  <li>a	synthetic approach (starting with point and lines and some
+	  predicates),</li>
+	  <li>an analytic approach (starting from a given field F
+	  and defining the plane as F<sup>n</sup>), </li>
+	  <li>mixed approaches assuming a field and some geometric axioms (Area method,
+	  metric axioms),</li>
+	  <li>approaches based on group of transformations...</li>
+	</ul>
+	We use here a synthetic approach but following Descartes and
+	Tarski we prove that we can
+	define coordinates.</br>
+	Our main axiom system is the one of
 	Tarski, but we define also Hilbert's axiom system because we
 	prove that Tarski's axiom (except continuity) imply Hilbert's
 	axioms (except continuity).
@@ -60,12 +70,31 @@
 	</ul>
 	
 	<h2>The formalization of the book</h2>
-	The main part of this development consists in the
-	formalization of the first part of the book <span
-	style="font-style: italic;">Metamathematische Methoden in der
-	Geometrie</span>.
 
+      <div style="padding:10px; float:right">
+	<img width="200" src="images/sst.png"
+	alt="SST Book" />
+      </div>
 	
+
+	In the early 60s, Wanda Szmielew and <a
+	href="http://en.wikipedia.org/wiki/Alfred_Tarski">Alfred
+	Tarski</a> started the project of a treaty about the
+	foundations of geometry. A systematic development of <a
+	href="http://en.wikipedia.org/wiki/Euclidean_geometry">euclidean
+	geometry</a> based on <a
+	href="http://en.wikipedia.org/wiki/Tarski%27s_axioms">Tarski's
+	axioms</a> was supposed to constitute the first part, but the
+	early death of Wanda Szmielew&nbsp; put an end to this
+	project. Finally, Wolfram Schwabh&auml;user continued the
+	project of Wanda Szmielew and Alfred Tarski. He published the
+	treaty in 1983 in German : <span style="font-style:
+	italic;">Metamathematische Methoden in der Geometrie</span>.<br>
+	The main part of this development consists in the
+	formalization of the first part of this book.
+	
+      
+	  
 	
 	  <ul>
             <li><a href="html/Ch02_cong.html">Ch02 congruence properties</a></li>
