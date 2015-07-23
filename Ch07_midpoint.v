@@ -1,5 +1,37 @@
 Require Export Ch06_out_lines.
 
+Ltac not_exist_hyp_comm A B := not_exist_hyp (A<>B);not_exist_hyp (B<>A).
+
+Ltac not_exist_hyp2 A B C D := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D].
+Ltac not_exist_hyp3 A B C D E F := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D | not_exist_hyp_comm E F].
+
+Ltac assert_diffs :=
+repeat
+ match goal with
+      | H:(~Col ?X1 ?X2 ?X3) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 X1 X2 X1 X3 X2 X3;
+      assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
+      | H:Cong ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= cong_diff_2 A B C D H2 H);clean_reap_hyps
+      | H:Cong ?A ?B ?C ?D, H2 : ?C <> ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A B);
+        assert (T:= cong_diff_3 A B C D H2 H);clean_reap_hyps
+      | H:Cong ?A ?B ?C ?D, H2 : ?D <> ?C |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A B);
+        assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
+
+      | H:out ?A ?B ?C |- _ =>
+      let T:= fresh in (not_exist_hyp2 A B A C);
+       assert (T:= out_distinct A B C H);
+       decompose [and] T;clear T;clean_reap_hyps
+ end.
+
 Section T7_1.
 
 Context `{MT:Tarski_neutral_dimensionless}.
@@ -283,6 +315,13 @@ Proof.
     treat_equalities;auto.
 Qed.
 
+Lemma l7_20_bis : forall M A B, A<>B ->
+  Col A M B -> Cong M A M B -> is_midpoint M A B.
+Proof.
+   intros.
+   induction (l7_20 M A B H0 H1);intuition.
+Qed.
+ 
 Lemma cong_col_mid : forall A B C,
  A <> C -> Col A B C -> Cong A B B C ->
  is_midpoint B A C.
@@ -300,72 +339,35 @@ Lemma l7_21 : forall A B C D P,
   is_midpoint P A C /\ is_midpoint P B D.
 Proof.
     intros.
+    assert_diffs.
     assert (exists P', Cong_3 B D P D B P').
       eapply l4_14.
         Col.
       Cong.
-    induction H5.
-    assert (Col D B x).
-      eapply l4_13.
-        2:apply H5.
-      Col.
+    induction H9.
+    assert (Col D B x) by
+      (apply l4_13 with B D P;Col).
     assert (FSC B D P A D B x C).
       unfold FSC.
-      unfold Cong_3 in H5.
+      unfold Cong_3 in *.
       spliter.
-      repeat split; try Cong.
-      Col.
+      repeat split; Cong; Col.
     assert (FSC B D P C D B x A).
       unfold FSC.
-      unfold Cong_3 in H5.
+      unfold Cong_3 in *.
       spliter.
-      repeat split; try assumption.
-        Col.
-      Cong.
-    assert (Cong P A x C).
-      eapply l4_16.
-        apply H7.
-      assumption.
-    assert (Cong P C x A).
-      eapply l4_16.
-        apply H8.
-      assumption.
-    assert (Cong_3 A P C C x A).
-      unfold Cong_3.
-      repeat split; try Cong.
-    assert (Col C x A).
-      eapply l4_13.
-        2:apply H11.
-      assumption.
+      repeat split; Col; Cong.
+    assert (Cong P A x C) by (eauto using l4_16).
+    assert (Cong P C x A) by (eauto using l4_16).
+    assert (Cong_3 A P C C x A) by (unfold Cong_3;repeat split; Cong).
+    assert (Col C x A) by (eauto using l4_13).
     assert (P=x).
       unfold FSC in *.
       spliter.
-      eapply (l6_21 A C B D); Col.
+      apply (l6_21 A C B D); Col.
     subst x.
-    assert (C = A \/ is_midpoint P C A).
-      eapply l7_20.
-        assumption.
-      assumption.
-    assert (B = D \/ is_midpoint P B D).
-      eapply l7_20.
-        assumption.
-      unfold FSC, Cong_3 in *.
-      spliter.
-      Cong.
-    unfold is_midpoint,FSC,Cong_3 in *.
-    spliter.
-    induction H14.
-      contradiction.
-    spliter.
-    induction H13.
-      subst C.
-      apply False_ind.
-      apply H.
-      apply col_trivial_3.
-    repeat split; try Cong.
-    apply between_symmetry.
-    spliter.
-    assumption.
+    unfold Cong_3 in *;spliter.
+    split;apply l7_20_bis;Col;Cong.
 Qed.
 
 Lemma l7_22_aux : forall A1 A2 B1 B2 C M1 M2,
@@ -705,7 +707,7 @@ Proof.
         assumption.
       apply cong_pseudo_reflexivity.
     assert (Cong P B Q A).
-      eapply five_segments_with_def.
+      eapply five_segment_with_def.
         eapply H9.
       unfold Col in H0.
       intuition.
@@ -1078,4 +1080,3 @@ Proof.
 Qed.
 
 End T7_2.
-
