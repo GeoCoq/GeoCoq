@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Tactics.Coinc.Permutations</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Tactics.Coinc.Permutations</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Utils.arity.html#"><span class="id" title="library">GeoCoq.Utils.arity</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#"><span class="id" title="library">GeoCoq.Tactics.Coinc.tactics_axioms</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a name="Permutations"><span class="id" title="section">Permutations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">COT</span> : <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#Coinc_theory"><span class="id" title="class">Coinc_theory</span></a>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="PermWdOK"><span class="id" title="lemma">PermWdOK</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">cp1</span> <span class="id" title="var">cp2</span> : <a class="idref" href="GeoCoq.Utils.arity.html#cartesianPower"><span class="id" title="definition">cartesianPower</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#COINCpoint"><span class="id" title="method">COINCpoint</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#n"><span class="id" title="method">n</span></a>))),<br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Utils.arity.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#wd"><span class="id" title="method">wd</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp1"><span class="id" title="variable">cp1</span></a> →<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Sorting.Permutation.html#Permutation"><span class="id" title="inductive">Permutation.Permutation</span></a> (<a class="idref" href="GeoCoq.Utils.arity.html#CPToList"><span class="id" title="definition">CPToList</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp1"><span class="id" title="variable">cp1</span></a>) (<a class="idref" href="GeoCoq.Utils.arity.html#CPToList"><span class="id" title="definition">CPToList</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp2"><span class="id" title="variable">cp2</span></a>) →<br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Utils.arity.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#wd"><span class="id" title="method">wd</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp2"><span class="id" title="variable">cp2</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">cp1</span> <span class="id" title="var">cp2</span> <span class="id" title="var">Happ</span> <span class="id" title="var">HPerm</span>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#PermOK"><span class="id" title="lemma">PermOK</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">cp1</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">HPerm</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">cp2</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">cp1</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_n_1_app"><span class="id" title="lemma">app_n_1_app</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#wd_perm_1"><span class="id" title="method">wd_perm_1</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_app_1_n"><span class="id" title="lemma">app_app_1_n</span></a> <span class="id" title="keyword">with</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">A</span> <span class="id" title="var">X</span>); <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPAbl"><span class="id" title="lemma">consTailCPAbl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPLast"><span class="id" title="lemma">consTailCPLast</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">X</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_2_n_app_default"><span class="id" title="lemma">app_2_n_app_default</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#wd_perm_2"><span class="id" title="method">wd_perm_2</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_app_2_n_default"><span class="id" title="lemma">app_app_2_n_default</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">X</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">A</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">B</span> <span class="id" title="var">X</span>)); <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>; <span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPHd"><span class="id" title="lemma">consHeadCPHd</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPTlD"><span class="id" title="lemma">consTailCPTlD</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>; <span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPHd"><span class="id" title="lemma">consHeadCPHd</span></a>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPTlD"><span class="id" title="lemma">consTailCPTlD</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="PermCoincOK"><span class="id" title="lemma">PermCoincOK</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">cp1</span> <span class="id" title="var">cp2</span> : <a class="idref" href="GeoCoq.Utils.arity.html#cartesianPower"><span class="id" title="definition">cartesianPower</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#COINCpoint"><span class="id" title="method">COINCpoint</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#n"><span class="id" title="method">n</span></a>)))),<br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Utils.arity.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#coinc"><span class="id" title="method">coinc</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp1"><span class="id" title="variable">cp1</span></a> →<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Sorting.Permutation.html#Permutation"><span class="id" title="inductive">Permutation.Permutation</span></a> (<a class="idref" href="GeoCoq.Utils.arity.html#CPToList"><span class="id" title="definition">CPToList</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp1"><span class="id" title="variable">cp1</span></a>) (<a class="idref" href="GeoCoq.Utils.arity.html#CPToList"><span class="id" title="definition">CPToList</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp2"><span class="id" title="variable">cp2</span></a>) →<br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Utils.arity.html#app"><span class="id" title="definition">app</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#coinc"><span class="id" title="method">coinc</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#cp2"><span class="id" title="variable">cp2</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span> <span class="id" title="var">cp1</span> <span class="id" title="var">cp2</span> <span class="id" title="var">Happ</span> <span class="id" title="var">HPerm</span>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#PermOK"><span class="id" title="lemma">PermOK</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">cp1</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">HPerm</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">cp2</span>; <span class="id" title="tactic">clear</span> <span class="id" title="var">cp1</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_n_1_app"><span class="id" title="lemma">app_n_1_app</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#coinc_perm_1"><span class="id" title="method">coinc_perm_1</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_app_1_n"><span class="id" title="lemma">app_app_1_n</span></a> <span class="id" title="keyword">with</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">A</span> <span class="id" title="var">X</span>); <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPAbl"><span class="id" title="lemma">consTailCPAbl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consTailCPLast"><span class="id" title="lemma">consTailCPLast</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">X</span> <span class="id" title="var">Happ</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_2_n_app"><span class="id" title="lemma">app_2_n_app</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">B</span> <span class="id" title="var">A</span> <span class="id" title="var">X</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.tactics_axioms.html#coinc_perm_2"><span class="id" title="method">coinc_perm_2</span></a>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#app_app_2_n"><span class="id" title="lemma">app_app_2_n</span></a> <span class="id" title="keyword">with</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">A</span> (<a class="idref" href="GeoCoq.Utils.arity.html#consHeadCP"><span class="id" title="definition">consHeadCP</span></a> <span class="id" title="var">B</span> <span class="id" title="var">X</span>)); <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">reflexivity</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Utils.arity.html#consHeadCPTl"><span class="id" title="lemma">consHeadCPTl</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="GeoCoq.Tactics.Coinc.Permutations.html#Permutations"><span class="id" title="section">Permutations</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
