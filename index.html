@@ -85,18 +85,22 @@
 	axioms (except continuity).
 	
 	<ul>
-	  <li><a href="html/GeoCoq.Axioms.tarski_axioms.html">Tarski axioms</a></li>
-	  <li><a href="html/GeoCoq.Axioms.hilbert_axioms.html">Hilbert axioms</a> </li>
+	  <li><a href="html/GeoCoq.Axioms.tarski_axioms.html">Tarski axioms in Coq</a></li>
+	  <li><a href="html/GeoCoq.Axioms.hilbert_axioms.html">Hilbert axioms in Coq</a> </li>
 	</ul>
 	
 	<h2>The formalization of the book</h2>
 
+    
       <div style="padding:10px; float:right;">
-	<a href="http://www.amazon.fr/Metamathematische-Methoden-Geometrie-Metamathematical-university/dp/4871877078"><img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="images/sst.png"alt="SST Book" /></a>
+	<a title="By George M. Bergman [GFDL (http://www.gnu.org/copyleft/fdl.html)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3AAlfredTarski1968.jpeg"><img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="https://upload.wikimedia.org/wikipedia/commons/7/71/AlfredTarski1968.jpeg" alt="Alfred Tarski 1968"/></a>
       </div>
-	
+      <div style="padding:10px; float:right;">
+	<a title="Wanda Szmielew" href="http://www-history.mcs.st-andrews.ac.uk/PictDisplay/Szmielew.html">
+	<img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" height="137" src="http://www-history.mcs.st-andrews.ac.uk/BigPictures/Szmielew.jpeg" alt="Tarski"/></a>
+      </div>
 
-	In the early 60s, Wanda Szmielew and <a
+	In the early 60s, <a href="https://pl.wikipedia.org/wiki/Wanda_Szmielew">Wanda Szmielew</a> and <a
 	href="http://en.wikipedia.org/wiki/Alfred_Tarski">Alfred
 	Tarski</a> started the project of a treaty about the
 	foundations of geometry. A systematic development of <a
@@ -109,9 +113,12 @@
 	project of Wanda Szmielew and Alfred Tarski. He published the
 	treaty in 1983 in German : <span style="font-style:
 	italic;">Metamathematische Methoden in der Geometrie</span>.<br>
+
 	The main part of this development consists in the
 	formalization of the first part of this book.
-	
+	  <div style="padding:10px; float:right;">
+	<a href="http://www.amazon.fr/Metamathematische-Methoden-Geometrie-Metamathematical-university/dp/4871877078"><img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="images/sst.png"alt="SST Book" /></a>
+      </div>
 	  
 	  <ul>
             <li><a href="html/GeoCoq.Tarski_dev.Ch02_cong.html">Ch. 02 congruence properties</a></li>
@@ -130,6 +137,9 @@
 	    <li><a href="html/GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.html">Ch. 12
 	    parallelism using intersection decidability</a> </li>
 	    <li> Ch. 13 Synthetic proofs of the theorems of Pappus and Desargues.
+<div style="padding:10px; float:right;">
+	<a href=""><img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="images/pappus.png"alt="Pappus" /></a>
+      </div>
 	    <ul>
 	      <li><a href="html/GeoCoq.Tarski_dev.Ch13_1.html">Ch. 13.1</a> </li>
 	      <li><a href="html/GeoCoq.Tarski_dev.Ch13_2_length.html">Ch. 13.2
@@ -139,11 +149,15 @@
             angles</a> Angle measure defined as an equivalence class
             using the angle congruence predicate.</li>
 	      <li><a href="html/GeoCoq.Tarski_dev.Ch13_4_cos.html">Ch. 13.4 cos</a> </li>
+ 
 	      <li><a href="html/GeoCoq.Tarski_dev.Ch13_5_Pappus_Pascal.html">Ch. 13.5 Pappus-Pascal</a> </li>
+    
+
 	      <li><a href="html/GeoCoq.Tarski_dev.Ch13_6_Desargues_Hessenberg.html">Ch. 13.6
 	      Desargues</a> Hessenberg's proof that Pappus implies
 	      Desargues. </li>
 	    </ul></li>
+
 	    <li>Ch. 14 Arithmetization of geometry<br>
 	    <div style="padding:10px; float:right;">
 	      <a href="https://www.bibnum.education.fr/mathematiques/geometrie/le-livre-premier-de-la-geometrie-de-descartes"><img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="images/descartes-geometrie.png"alt="Descartes Geometrie" /></a>
@@ -239,8 +253,8 @@
 	  
 	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.</br>
           Then download and unpack the files, it will create a GeoCoq
-          directory. In this directory, type <code>make</code> to compile the
-	  files, it will create some .vo files.
+          directory. In this directory, type <code>./configure</code> and <code>make</code> to compile the
+	  files, it will create some <code>.vo</code> files.
 
 	  <h2>Using opam pacakage manager</h2>
 
