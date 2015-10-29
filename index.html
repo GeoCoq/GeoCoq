@@ -9,6 +9,22 @@
   ga('create', 'UA-65265958-1', 'auto');
   ga('send', 'pageview');
 
+</script> 
+<script type="text/javascript" src="http://www.geogebratube.org/scripts/deployggb.js"></script>
+<script type="text/javascript">
+  
+    // The second parameter forces not to use webSimple (this is necessary when multiple applets are used on one page, if one cannot use webSimple).
+    var applet1 = new GGBApplet({material_id: "1930337", showResetIcon:false, width:300, height:300}, true);
+  
+    // The third parameter sets the bordercolor. Additional parameters can be defined as described here: http://wiki.geogebra.org/en/Reference:Applet_Parameters
+
+    var applet2 = new GGBApplet({material_id: "1930395", showResetIcon:false, width:300, height:300}, true);
+
+    window.onload = function() {
+        applet1.inject('applet_container1', 'preferHTML5');
+        applet2.inject('applet_container2', 'preferHTML5');
+        applet3.inject('applet_container3', 'preferHTML5');
+    }
 </script>
   <head>
     <meta charset='utf-8'>
@@ -223,17 +239,30 @@
 	  <ul>
             <li><a href="html/GeoCoq.Highschool.triangle_midpoints_theorems.html">Midpoints
 	    theorems</a> </li>
-	    <li><a href="html/GeoCoq.Highschool.midpoint_thales.html">Midpoint Thales theorem.</a> </li>
+	    <li><a href="html/GeoCoq.Highschool.midpoint_thales.html">Midpoint Thales theorem</a> </li>
+	 
+
+
 	    <li><a href="html/GeoCoq.Highschool.varignon.html">Varignon's theorem</a></li>
 	    <li><a href="html/GeoCoq.Tarski_dev.Annexes.quadrilaterals.html">Quadrilaterals</a>
             and <a href="html/GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html">Quadrilaterals with inter dec</a>
             Definition of some quadrilaterals and their
 	    properties.</li>
+	  
 	    <li><a href="html/GeoCoq.Highschool.orthocenter.html">Orthocenter theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.circumcenter.html">Circumcenter theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.gravityCenter.html">Gravity center theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.Euler_line.html">Euler line</a></li>
 	  </ul>
+	  <div>
+	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" id="applet_container1" >
+	       <a href="html/GeoCoq.Highschool.Euler_line.html">Euler line</a> 
+	    </div>
+	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" id="applet_container2" > 
+	      <a href="html/GeoCoq.Highschool.circumcenter.html">Circumcenter theorem</a>
+	    </div>
+	  </div>
+	  
 
 	  <h1>Contributors</h1>
 	  
@@ -272,7 +301,7 @@
 
 	  <h1>Related papers</h1>
 
-  <iframe src="https://haltools.archives-ouvertes.fr/Public/afficheRequetePubli.php?collection_exp=GeoCoq&CB_auteur=oui&CB_titre=oui&CB_identifiant=oui&CB_article=oui&langue=Anglais&tri_exp=annee_publi&ordre_aff=TA&Fen=Aff&css=../css/styles_publicationsHAL.css" width=700 height=1100 frameborder=0 scrolling=auto> </iframe> 
+	  <iframe src="https://haltools.archives-ouvertes.fr/Public/afficheRequetePubli.php?collection_exp=GeoCoq&CB_auteur=oui&CB_titre=oui&CB_identifiant=oui&CB_article=oui&langue=Anglais&tri_exp=annee_publi&ordre_aff=TA&Fen=Aff&css=../css/styles_publicationsHAL.css" width=700 height=1100 frameborder=0 scrolling=auto> </iframe> 
 
 
           <h1>Related work</h1>
