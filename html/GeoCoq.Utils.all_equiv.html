@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Utils.all_equiv</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Utils.all_equiv</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="all_equiv"><span class="id" title="definition">all_equiv</span></a> (<span class="id" title="var">l</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Prop</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l"><span class="id" title="variable">l</span></a> → <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l"><span class="id" title="variable">l</span></a> → (<a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#df1ced36fc33ce188051218bca314374"><span class="id" title="notation">↔</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="stronger"><span class="id" title="definition">stronger</span></a> (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Prop</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l1"><span class="id" title="variable">l1</span></a> → <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l2"><span class="id" title="variable">l2</span></a> → (<a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> → <a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a name="all_equiv_under"><span class="id" title="definition">all_equiv_under</span></a> (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <span class="id" title="keyword">Prop</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l1"><span class="id" title="variable">l1</span></a> → <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l2"><span class="id" title="variable">l2</span></a> → <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#z"><span class="id" title="variable">z</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#l2"><span class="id" title="variable">l2</span></a> → (<a class="idref" href="GeoCoq.Utils.all_equiv.html#x"><span class="id" title="variable">x</span></a> → (<a class="idref" href="GeoCoq.Utils.all_equiv.html#y"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#df1ced36fc33ce188051218bca314374"><span class="id" title="notation">↔</span></a> <a class="idref" href="GeoCoq.Utils.all_equiv.html#z"><span class="id" title="variable">z</span></a>)).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
