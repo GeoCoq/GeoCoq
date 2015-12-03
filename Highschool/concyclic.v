@@ -8,7 +8,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 Definition Concyclic A B C D := Coplanar A B C D /\ exists O, Cong O A O B /\ Cong O A O C /\ Cong O A O D.
 
 Lemma concyclic_trans : forall A B C D E,
- ~ Col A B C -> 
+ ~ Col A B C ->
  Concyclic A B C D  -> Concyclic A B C E -> Concyclic A B D E.
 Proof.
 intros.

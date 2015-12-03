@@ -517,11 +517,7 @@ Proof.
         subst L.
         assert(C' = M).
           induction (Col_dec O X C).
-            apply (inter_unicity O C Y X).
-              Col.
-              Col.
-              Col.
-              Col.
+            apply (l6_21 O C Y X).
               intro.
               assert(Col O X Y) by ColR.
               induction H26.
@@ -531,8 +527,12 @@ Proof.
               spliter.
               apply H12.
               apply(col3 X Y); Col.
-            auto.
-          apply (inter_unicity O C X Y); Col.
+              auto.
+              Col.
+              Col.
+              Col.
+              Col.
+          apply (l6_21 O C X Y); Col.
         subst M.
         right.
         repeat split; try auto.
@@ -551,7 +551,7 @@ Proof.
       induction (eq_dec_points L M).
         subst L.
         assert(C' = M).
-          apply (inter_unicity O C A' C'). Col. Col. Col. Col.
+          apply (l6_21 O C A' C'); Col.
             intro.
             apply H22.
             ColR.
@@ -617,7 +617,7 @@ Proof.
               intro.
               subst P.
               assert(N = B).
-                apply (inter_unicity A B O B'). Col. Col. Col. Col. Col. auto.
+                apply (l6_21 A B O B'); Col.
                   subst N.
                   induction H47.
                     apply H47.
@@ -625,7 +625,7 @@ Proof.
                     split; Col.
                   spliter.
                   assert(B = O).
-                    apply (inter_unicity O B' M C); Col.
+                    apply (l6_21 O B' M C); Col.
                   subst B.
                   induction H56.
                     apply H56.
@@ -818,7 +818,7 @@ Proof.
         Par.
       Par.
     assert(C' = C'').
-      apply (inter_unicity A' C' O C). Col. Col.
+      apply (l6_21 A' C' O C); Col.
         induction H34.
         apply False_ind.
         apply H34.
@@ -826,9 +826,6 @@ Proof.
         split; Col.
         spliter.
         Col.
-        Col.
-        Col.
-      auto.
     contradiction.
 Qed.
 
@@ -1158,7 +1155,7 @@ Proof.
       apply H.
       apply(col_par_par_col A' B' C' A B C H19); left; Par.
     assert( C' = C'').
-      apply(inter_unicity A' C' B' C'); Col.
+      apply(l6_21 A' C' B' C'); Col.
       intro.
       subst C'.
       apply H19.
@@ -1273,16 +1270,16 @@ Proof.
           Par.
         Par.
       assert(C' = C'').
-        apply (inter_unicity C' A' B' C'); Col.
+        apply (l6_21 C' A' B' C'); Col.
+          intro.
+          subst C'.
+          apply H14.
+          Col.
           eapply (col_par_par_col A C A); Col.
             apply par_right_comm.
             left.
             Par.
           Par.
-        intro.
-        subst C'.
-        apply H14.
-        Col.
       subst C''.
       apply (par_trans _ _ B B'); Par.
     split.
@@ -1342,7 +1339,7 @@ Proof.
       apply (col_transitivity_1 _ C); Col.
     induction(Col_dec A D E).
       assert(B = D).
-        apply(inter_unicity O B A E); Col.
+        apply(l6_21 O B A E); Col.
         intro.
         subst E.
         apply H.
@@ -1359,12 +1356,12 @@ Proof.
         split; Col.
       spliter.
       assert(B' = D').
-        eapply(inter_unicity A' B' O B'); Col.
-          apply (col_transitivity_1 _ B); Col.
+        eapply(l6_21 A' B' O B'); Col.
         intro.
         apply H.
         apply (col_transitivity_1 _ A'); Col.
         apply (col_transitivity_1 _ B'); Col.
+        apply (col_transitivity_1 _ B); Col.
       subst D'.
       Par.
     assert(B <> B').
@@ -1425,7 +1422,7 @@ Proof.
     apply par_comm.
     induction(Col_dec B C E).
       assert(B = D).
-        apply(inter_unicity O B C E); Col.
+        apply(l6_21 O B C E); Col.
         intro.
         apply H.
         apply (col_transitivity_1 _ C); Col.
@@ -1439,9 +1436,9 @@ Proof.
         split; Col.
       spliter.
       assert(B' = D').
-        eapply(inter_unicity A' B' O B'); Col.
-          ColR.
-        Col5.
+        eapply(l6_21 A' B' O B'); Col.
+          Col5.
+        ColR.
       subst D'.
       Par.
     assert(Par C E C' E').
@@ -1516,7 +1513,7 @@ Proof.
     induction (eq_dec_points A A').
       subst A'.
       assert(B = B').
-        apply(inter_unicity A B O B); Col.
+        apply(l6_21 A B O B); Col.
         induction H14.
           apply False_ind.
           apply H14.
@@ -1526,7 +1523,10 @@ Proof.
         Col.
       subst B'.
       assert(D = D').
-        apply(inter_unicity A D O B); Col.
+        apply(l6_21 A D O B); Col.
+          intro.
+          apply H.
+          apply (col_transitivity_1 _ D); Col.
           induction H15.
             apply False_ind.
             apply H15.
@@ -1534,12 +1534,12 @@ Proof.
             split; Col.
           spliter.
           Col.
-        intro.
-        apply H.
-        apply (col_transitivity_1 _ D); Col.
       subst D'.
       assert(C = C').
-        apply(inter_unicity B C O A); Col.
+        apply(l6_21 B C O A); Col.
+          intro.
+          apply H.
+          apply (col_transitivity_1 _ C); Col.
           induction H16.
             apply False_ind.
             apply H16.
@@ -1547,10 +1547,6 @@ Proof.
             split; Col.
           spliter.
           Col.
-        intro.
-        apply H.
-        clean_trivial_hyps.
-        apply (col_transitivity_1 _ C); Col.
       subst C'.
       apply par_reflexivity.
       intro.
@@ -1568,7 +1564,7 @@ Proof.
           exists B'.
           split; Col.
         spliter.
-        eapply (inter_unicity B' C' O A); Col.
+        eapply (l6_21 B' C' O A); Col.
         intro.
         apply H.
         apply (col_transitivity_1 _ B'); Col.
@@ -1586,11 +1582,11 @@ Proof.
           exists B.
           split; Col.
         spliter.
-        eapply (inter_unicity B C O A'); Col.
+        eapply (l6_21 B C O A'); Col.
+          intro.
+          apply H.
+          apply (col_transitivity_1 _ C); Col.
           apply (col_transitivity_1 _ A); Col.
-        intro.
-        apply H.
-        apply (col_transitivity_1 _ C); Col.
       contradiction.
     induction(Par_dec C D C' D').
       auto.
@@ -1673,7 +1669,7 @@ Proof.
       induction (eq_dec_points A E).
         subst E.
         apply H13.
-        apply (inter_unicity X A D A); Col.
+        apply (l6_21 X A D A); Col.
           intro.
           apply H16.
           exists D.
@@ -1694,7 +1690,10 @@ Proof.
       assert(Col E X A) by ColR.
       assert(Col A C E) by ColR.
       apply H13.
-      apply (inter_unicity A E D C); Col.
+      apply (l6_21 A E D C); Col.
+        intro.
+        subst D.
+        contradiction.
         apply col_permutation_2.
         apply (col_transitivity_1  _ E); Col.
         intro.
@@ -1705,9 +1704,6 @@ Proof.
         split; Col.
         apply col_permutation_1.
         apply (col_transitivity_1  _ C); Col.
-      intro.
-      subst D.
-      contradiction.
     assert(Par Y B E Z).
       apply (par_trans _ _ X A); Par.
       left.
@@ -1720,8 +1716,7 @@ Proof.
       assert(Col E Y B) by ColR.
       assert(Col B D E) by ColR.
       apply H14.
-      apply (inter_unicity B E C D);Col.
-        assert_diffs;ColR.
+      apply (l6_21 B E C D); Col.
         intro.
         apply H16.
         exists C.
@@ -1741,6 +1736,7 @@ Proof.
       apply H16.
       exists C.
       split; Col.
+      assert_diffs; ColR.
     assert(~Col A' D' E').
       intro.
       assert(Col A' B' D').
@@ -1787,7 +1783,11 @@ Proof.
       intro.
       subst B'.
       apply H15.
-      apply(inter_unicity X A B A); Col.
+      apply(l6_21 X A B A); Col.
+        intro.
+        subst B.
+        apply H33.
+        Col.
         induction H18.
           apply False_ind.
           apply H18.
@@ -1795,10 +1795,6 @@ Proof.
           split; Col.
         spliter.
         Col.
-      intro.
-      subst B.
-      apply H33.
-      Col.
     assert(C <> C').
       intro.
       subst C'.
@@ -1887,15 +1883,15 @@ Proof.
       spliter.
       apply False_ind.
       apply H45.
-      apply (inter_unicity X A' B' E'); Col.
+      apply (l6_21 X A' B' E'); Col.
+        intro.
+        apply H16.
+        exists B'.
+        split; Col.
         apply col_permutation_2.
-        apply (col_transitivity_1  _ A); Col.
-      intro.
-      apply H16.
-      exists B'.
-      split; Col.
+        apply (col_transitivity_1  _ A'); Col.
       apply col_permutation_2.
-      apply (col_transitivity_1  _ A'); Col.
+      apply (col_transitivity_1  _ A); Col.
     assert(Par D E D' E').
       apply(l13_15_par A D E A' D' E'); Par.
         induction H19.
@@ -2012,7 +2008,7 @@ Proof.
         split; Col.
       spliter.
       assert(A' = C').
-        apply (inter_unicity X A B' A'); Col.
+        apply (l6_21 X A B' A'); Col.
         intro.
         apply H13.
         exists B'.
@@ -2030,7 +2026,7 @@ Proof.
         split; Col.
       spliter.
       assert(B' = D').
-        apply (inter_unicity Y B A' B'); Col.
+        apply (l6_21 Y B A' B'); Col.
         intro.
         apply H13.
         exists A'.
@@ -2046,7 +2042,7 @@ Proof.
         split; Col.
       spliter.
       assert(B = B').
-        apply (inter_unicity Y B A B); Col.
+        apply (l6_21 Y B A B); Col.
         intro.
         apply H13.
         exists A.
@@ -2059,7 +2055,7 @@ Proof.
           exists B.
           split; Col.
         spliter.
-        apply (inter_unicity X A B C); Col.
+        apply (l6_21 X A B C); Col.
         intro.
         apply H13.
         exists B.
@@ -2072,7 +2068,7 @@ Proof.
           exists A.
           split; Col.
         spliter.
-        apply (inter_unicity Y B A D); Col.
+        apply (l6_21 Y B A D); Col.
         intro.
         apply H13.
         exists A.
@@ -2101,7 +2097,11 @@ Proof.
       intro.
       subst C'.
       apply H17.
-      apply (inter_unicity X A B A); finish.
+      apply (l6_21 X A B A); finish.
+        intro.
+        apply H13.
+        exists B.
+        split; Col.
         assert(Par B C B A).
           apply(par_trans _ _ A' B');finish.
         induction H24.
@@ -2112,15 +2112,15 @@ Proof.
         spliter.
         Col.
       intro.
-      apply H13.
-      exists B.
-      split; Col.
-      intro.
       apply H18.
       subst D'.
       assert(Par A D A B).
         apply(par_trans _ _ A' B'); Par.
-      apply (inter_unicity Y B A B);Col.
+      apply (l6_21 Y B A B); Col.
+        intro.
+        apply H13.
+        exists A.
+        split; Col.
         induction H24.
           apply False_ind.
           apply H24.
@@ -2128,10 +2128,6 @@ Proof.
           split; Col.
         spliter.
         Col.
-      intro.
-      apply H13.
-      exists A.
-      split; Col.
       unfold Par_strict in H13.
       spliter.
       unfold Par_strict.

@@ -108,7 +108,7 @@ assert_congs_perm;split;eCong.
 Qed.
 
 Lemma triangle_par_mid : forall A B C P Q,
- ~Col A B C ->
+ ~ Col A B C ->
  is_midpoint P B C ->
  Par A B Q P ->
  Col Q A C ->
@@ -148,7 +148,7 @@ spliter.
 split; assumption.
 Qed.
 
-Lemma triangle_mid_par_strict_cong_simp : 
+Lemma triangle_mid_par_strict_cong_simp :
  forall A B C P Q,
  ~ Col A B C ->
  is_midpoint P B C ->
@@ -211,7 +211,7 @@ elim (eq_dec_points A P); intro.
   assert_congs_perm.
   split; eCong.
 
-Name x the symmetric of P wrt Q. 
+Name x the symmetric of P wrt Q.
 
 elim (eq_dec_points P x); intro.
   treat_equalities; intuition.
@@ -259,7 +259,7 @@ Lemma triangle_mid_par_flat_cong_2 : forall A B C P Q R,
  is_midpoint P B C ->
  is_midpoint Q A C ->
  is_midpoint R A B ->
- Par A B Q P  /\ Cong B R P Q.
+ Par A B Q P /\ Cong B R P Q.
 Proof.
 intros.
 assert (Par A B Q P /\ Cong A R P Q /\ Cong B R P Q)

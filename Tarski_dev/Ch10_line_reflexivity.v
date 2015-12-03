@@ -719,18 +719,17 @@ Proof.
           apply perp_sym.
           assumption.
         assert (B = T).
-          eapply inter_unicity.
-            5: apply H8.
+          eapply l6_21.
+            apply H8.
+            apply H4.
             apply col_trivial_3.
             unfold Col.
-            right; left.
+            right; right.
             apply midpoint_bet.
             apply l7_2.
             apply H1.
-            apply col_permutation_4.
-            assumption.
             apply col_trivial_2.
-          assumption.
+            assumption.
         subst B.
         apply l7_2 in H1.
         apply is_midpoint_id in H1.
@@ -758,18 +757,17 @@ Proof.
           apply H9.
         assumption.
       assert (X = T).
-        eapply inter_unicity.
-          5: apply H10.
+        eapply l6_21.
+          apply H10.
+          apply H6.
           apply col_trivial_3.
           unfold Col.
-          right; left.
+          right; right.
           apply midpoint_bet.
           apply l7_2.
           apply H1.
-          apply col_permutation_4.
-          assumption.
           apply col_trivial_2.
-        assumption.
+          assumption.
       subst X.
       apply l7_2 in H1.
       apply is_midpoint_id in H1.
@@ -857,26 +855,8 @@ Proof.
         induction (eq_dec_points X Y).
           subst Y.
           assumption.
-        eapply (colx _ _ M0 X).
-          assumption.
-          intro.
-          subst X.
-          apply is_midpoint_id in H6.
-          subst Y.
-          absurde.
-          intro.
-          subst Y.
-          apply l7_2 in H6.
-          apply is_midpoint_id in H6.
-          subst X.
-          absurde.
-          assumption.
-          assumption.
-        unfold Col.
-        right; right.
-        apply midpoint_bet.
-        apply l7_2.
-        assumption.
+        assert_diffs.
+        ColR.
       left.
       assert(Per M0 Y Q).
         unfold Per.
@@ -1080,19 +1060,7 @@ Proof.
           assumption.
         subst Q.
         assumption.
-      eapply colx.
-        assumption.
-        apply H1.
-        intro.
-        subst Q.
-        apply l7_3 in H2.
-        contradiction.
-        assumption.
-        assumption.
-      unfold Col.
-      left.
-      apply midpoint_bet.
-      apply H3.
+      ColR.
     right.
     reflexivity.
 Qed.
@@ -1167,15 +1135,9 @@ Proof.
             apply midpoint_bet.
             assumption.
           assert (M'=M0).
-            eapply inter_unicity.
-              apply H4.
-              unfold Col.
-              right; left.
-              apply midpoint_bet.
-              apply H0.
-              assumption.
-              apply col_permutation_5.
-              assumption.
+            eapply l6_21.
+              2: apply H.
+              2: apply H4.
               induction (eq_dec_points A M').
                 subst M'.
                 assert (~ Col A B P /\ Per P A B).
@@ -1193,7 +1155,6 @@ Proof.
                 spliter.
                 intro.
                 apply H6.
-                apply col_permutation_5.
                 assumption.
               assert (~ Col A B P /\ Per P M' A).
                 eapply l8_16_1.
@@ -1208,6 +1169,12 @@ Proof.
               spliter.
               intro.
               apply H7.
+              assumption.
+              assumption.
+              unfold Col.
+              right; left.
+              apply midpoint_bet.
+              apply H0.
               apply col_permutation_5.
               assumption.
             apply perp_distinct in H3.

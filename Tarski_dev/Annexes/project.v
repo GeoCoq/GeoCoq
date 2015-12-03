@@ -102,14 +102,14 @@ clear H19.
 apply par_distincts in H6.
 spliter.
 
-eapply (inter_unicity A B P Q); Col.
+eapply (l6_21 A B P Q); Col.
 intro.
 apply H16.
 apply(project_id A B X Y P P'); Col.
 
 subst Q'.
 
-eapply (inter_unicity A B P Q); Col.
+eapply (l6_21 A B P Q); Col.
 intro.
 apply H16.
 apply(project_id A B X Y P P'); Col.
@@ -126,7 +126,7 @@ spliter.
 clear H17.
 
 subst P'.
-eapply (inter_unicity A B Q P); Col.
+eapply (l6_21 A B Q P); Col.
 intro.
 apply H14.
 apply(project_id A B X Y Q Q'); Col.
@@ -218,7 +218,7 @@ Par.
 spliter.
 clear H3.
 
-apply (inter_unicity A B P P'); Col.
+apply (l6_21 A B P P'); Col.
 intro.
 apply H10.
 eapply project_id.
@@ -238,7 +238,7 @@ subst Q'.
 auto.
 Qed.
 
-Lemma project_existence : forall P A B X Y, 
+Lemma project_existence : forall P A B X Y,
  X<>Y -> A<>B ->
  ~ Par X Y A B ->
  exists! P', project P P' A B X Y.
@@ -304,7 +304,7 @@ contradiction.
 Qed.
 
 
-Lemma par_col_project : 
+Lemma par_col_project :
  forall P P' A B X Y ,
   A <> B ->
   ~ Par A B X Y ->
@@ -321,7 +321,7 @@ Qed.
 
 
 Lemma project_preserves_bet :
- forall A B X Y P Q R P' Q' R', 
+ forall A B X Y P Q R P' Q' R',
   Bet P Q R ->
   project P P' A B X Y ->
   project Q Q' A B X Y ->
@@ -448,11 +448,11 @@ assert(QQ=Q').
 assert(Col P' QQ R').
 apply bet_col.
 assumption.
-eapply (inter_unicity Q Q' P' R'); Col.
+eapply (l6_21 Q Q' P' R'); Col.
 
 intro.
 subst R'.
-apply between_egality in H31.
+apply between_equality in H31.
 subst QQ.
 contradiction.
 Between.
@@ -494,11 +494,11 @@ assert(QQ=Q').
 assert(Col P' QQ R).
 apply bet_col.
 assumption.
-eapply (inter_unicity Q Q' P' R); Col.
+eapply (l6_21 Q Q' P' R); Col.
 
 intro.
 subst R.
-apply between_egality in H26.
+apply between_equality in H26.
 subst QQ.
 contradiction.
 Between.
@@ -602,11 +602,11 @@ assert(QQ=Q).
 assert(Col P' QQ R').
 apply bet_col.
 assumption.
-eapply (inter_unicity Qx Qy P' R'); Col.
+eapply (l6_21 Qx Qy P' R'); Col.
 
 intro.
 subst R'.
-apply between_egality in H32.
+apply between_equality in H32.
 subst QQ.
 contradiction.
 Between.
@@ -678,11 +678,11 @@ assert(QQ=Q').
 assert(Col P QQ R').
 apply bet_col.
 assumption.
-eapply (inter_unicity Q Q' P R'); Col.
+eapply (l6_21 Q Q' P R'); Col.
 
 intro.
 subst P.
-apply between_egality in H27.
+apply between_equality in H27.
 subst QQ.
 contradiction.
 Between.
@@ -694,7 +694,7 @@ apply par_distincts in H10.
 spliter.
 assert(Q' = Q).
 
-eapply (inter_unicity P R Q Q'); Col.
+eapply (l6_21 P R Q Q'); Col.
 assert_cols.
 intro.
 assert(~Col A B Q).
@@ -721,7 +721,7 @@ spliter.
 
 assert(R = R').
 
-eapply (inter_unicity P Q R R'); Col.
+eapply (l6_21 P Q R R'); Col.
 apply bet_col in H.
 Col.
 intro.
@@ -1994,7 +1994,6 @@ induction H3.
 spliter.
 left.
 eapply l12_9.
-apply all_coplanar.
 apply perp_sym.
 apply H4.
 Perp.
@@ -2041,7 +2040,6 @@ induction H3.
 spliter.
 left.
 eapply l12_9.
-apply all_coplanar.
 apply perp_sym.
 apply H4.
 Perp.
@@ -2080,7 +2078,6 @@ induction H1.
 spliter.
 left.
 eapply l12_9.
-apply all_coplanar.
 apply perp_sym.
 apply H2.
 Perp.
@@ -2117,7 +2114,7 @@ subst P'.
 split; auto.
 Qed.
 
-Lemma projp_project_to_perp : 
+Lemma projp_project_to_perp :
  forall P P' A B X Y,
  P <> P' ->
  projp P P' A B ->
@@ -2342,13 +2339,13 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
 
       {
       assert (HPar : Par A B A A')
-        by (apply l12_9 with C D; Perp; apply all_coplanar).
+        by (apply l12_9 with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
       }
 
       {
       assert (HPar : Par A B B B')
-        by (apply l12_9 with C D; Perp; apply all_coplanar).
+        by (apply l12_9 with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
       }
     }
@@ -2358,13 +2355,13 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
 
       {
       assert (HPar : Par A B A A')
-        by (apply l12_9 with C D; Perp; apply all_coplanar).
+        by (apply l12_9 with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
       }
 
       {
       assert (HPar : Par A B B B')
-        by (apply l12_9 with C D; Perp; apply all_coplanar).
+        by (apply l12_9 with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
       }
     }
@@ -2376,7 +2373,7 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
   intro HNC; [|intuition]; destruct HA' as [HColA' HA'].
   apply l6_21 with C D A B; Col; try (intro; assert_diffs; intuition).
   assert (HPar : Par A B A A')
-    by (apply l12_9 with C D; Perp; apply all_coplanar).
+    by (apply l12_9 with C D; Perp).
   elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
   }
 
@@ -2386,7 +2383,7 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
   intro HNC; [intuition|]; destruct HB' as [HColB' HB'].
   apply l6_21 with C D B A; Col; try (intro; assert_diffs; intuition).
   assert (HPar : Par A B B B')
-    by (apply l12_9 with C D; Perp; apply all_coplanar).
+    by (apply l12_9 with C D; Perp).
   elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
   }
 
@@ -2410,7 +2407,7 @@ elim HP'; clear HP'; intro HP'; elim HP''; clear HP''; intro HP''.
   destruct HP' as [HCol2 HPerp1]; destruct HP'' as [HCol3 HPerp2].
   assert (H : Par P P' P' P'').
     {
-    apply l12_9 with L11 L12; Perp; try apply all_coplanar.
+    apply l12_9 with L11 L12; Perp.
     apply perp_sym; apply par_perp_perp with L21 L22; Par.
     }
   elim H; clear H; intro H; [exfalso; apply H; exists P'; Col|].
@@ -2479,7 +2476,7 @@ elim HPar; clear HPar; intro HPar.
         destruct HProjpB as [H HElim]; clear H;
         elim HElim; clear HElim; intro H; destruct H as [HColB HPerp2];
         [|exfalso; apply HPar; exists B'; Col].
-        apply l12_9 with L21 L22; Perp; apply all_coplanar.
+        apply l12_9 with L21 L22; Perp.
         }
       }
     apply plg_to_parallelogram in HPara; apply plg_cong in HPara; spliter; Cong.

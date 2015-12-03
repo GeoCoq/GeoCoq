@@ -121,14 +121,14 @@ Lemma lea_cases :
   lea A B C D E F \/ lea D E F A B C.
 Proof.
     intros.
-    assert(HH:= or_bet_out A B C H H0).
+    assert(HH:= or_bet_out A B C).
     induction HH.
       right.
       apply l11_31_2; assumption.
     induction H3.
       left.
       apply l11_31_1; assumption.
-    assert(HH:= or_bet_out D E F H1 H2).
+    assert(HH:= or_bet_out D E F).
     induction HH.
       left.
       apply l11_31_2; assumption.
@@ -153,7 +153,7 @@ Proof.
           auto.
           intro.
           subst C'.
-          apply between_egality in H11.
+          apply between_equality in H11.
             subst X.
             absurde.
           apply between_trivial.
@@ -408,13 +408,13 @@ Proof.
     intros.
     assert(HH:=lea_cases A B C D E F H H0 H1 H2).
     induction HH.
-      induction(Conga_dec A B C D E F).
+      induction(conga_dec A B C D E F).
         right; right.
         assumption.
       left.
       unfold lta.
       split; assumption.
-    induction(Conga_dec A B C D E F).
+    induction(conga_dec A B C D E F).
       right; right.
       assumption.
     right; left.
@@ -678,11 +678,9 @@ Proof.
       spliter.
       Col.
     assert(D = D').
-      eapply inter_unicity.
-        3: apply H11.
-        apply col_trivial_2.
-        2: apply H8.
-        apply col_trivial_2.
+      eapply l6_21.
+        4: apply H11.
+        5: apply H8.
         intro.
         apply H.
         assert(Col P C D).
@@ -739,6 +737,8 @@ Proof.
       apply par_distincts in H0.
       spliter.
       assumption.
+      apply col_trivial_2.
+      apply col_trivial_2.
     subst D'.
     split.
       Cong.
@@ -889,7 +889,7 @@ Proof.
     assert(T = T').
       apply bet_col in H22.
       apply bet_col in H23.
-      eapply (inter_unicity A C B D); Col.
+      eapply (l6_21 A C B D); Col.
     subst T'.
     assert(~Col B C T).
       intro.
@@ -1908,18 +1908,18 @@ Proof.
       spliter.
       ex_and H17 T.
       assert(A = T).
-        eapply (inter_unicity A C B' C').
+        eapply (l6_21 A C B' C').
+          intro.
+          apply H15.
+          Col.
+          intro.
+          treat_equalities.
+          contradiction.
           Col.
           Col.
           Col.
           apply bet_col in H18.
           Col.
-          intro.
-          apply H15.
-          Col.
-        intro.
-        treat_equalities.
-        contradiction.
       subst T.
       assumption.
     split.

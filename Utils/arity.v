@@ -31,7 +31,7 @@ Proof.
 induction n1; induction n2; trivial.
 Defined.
 
-Fixpoint arity (T:Type) (n:nat) := 
+Fixpoint arity (T:Type) (n:nat) :=
  match n with
  | 0 => Prop
  | S p => T -> arity T p

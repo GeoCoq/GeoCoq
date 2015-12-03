@@ -33,12 +33,12 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 **)
 
 (*
-Definition is_orthocenter H A B C := 
- ~ Col A B C /\ 
+Definition is_orthocenter H A B C :=
+ ~ Col A B C /\
  exists A1, exists B1, Perp A A1 B C /\ Perp B B1 A C /\ Col H A A1 /\ Col H B B1.
 *)
 
-Definition is_orthocenter H A B C := 
+Definition is_orthocenter H A B C :=
  ~ Col A B C /\ Perp A H B C /\ Perp B H A C /\ Perp C H A B.
 
 
@@ -148,7 +148,7 @@ apply par_col_par with A...
 apply perp_col1 with A1...
 Qed.
 
-Lemma altitude_intersect: 
+Lemma altitude_intersect:
  forall A  A1 B B1 C C1 O: Tpoint,
  ~ Col A B C ->
  Perp A A1 B C  -> Perp B B1 A C -> Perp C C1 A B ->
@@ -203,7 +203,7 @@ Lemma is_orthocenter_cases :
   is_orthocenter G A C B \/
   is_orthocenter G B A C \/
   is_orthocenter G B C A \/
-  is_orthocenter G C A B \/ 
+  is_orthocenter G C A B \/
   is_orthocenter G C B A ->
   is_orthocenter G A B C.
 Proof.
@@ -216,7 +216,7 @@ Qed.
 Lemma is_orthocenter_perm : forall A B C G,
  is_orthocenter G A B C ->
  is_orthocenter G A B C /\ is_orthocenter G A C B /\
- is_orthocenter G B A C /\ is_orthocenter G B C A /\ 
+ is_orthocenter G B A C /\ is_orthocenter G B C A /\
  is_orthocenter G C A B /\ is_orthocenter G C B A.
 Proof.
 intros.
@@ -260,9 +260,9 @@ intros.
 apply is_orthocenter_perm in H;intuition.
 Qed.
 
-Hint Resolve 
-     is_orthocenter_perm_1 
-     is_orthocenter_perm_2 
+Hint Resolve
+     is_orthocenter_perm_1
+     is_orthocenter_perm_2
      is_orthocenter_perm_3
      is_orthocenter_perm_4
      is_orthocenter_perm_5 : Orthocenter.
@@ -278,15 +278,15 @@ unfold is_orthocenter in *;spliter.
 assert_diffs.
 assert (Perp A B B C) by (apply per_perp;finish).
 assert (Par A H A B)
- by (apply l12_9 with B C;try apply all_coplanar;auto).
+ by (apply l12_9 with B C;auto).
 assert (Col A B H)
  by (perm_apply (par_id A B H)).
 
 assert (Par C H B C)
- by (apply l12_9 with A B;try apply all_coplanar;finish).
+ by (apply l12_9 with A B;finish).
 assert (Col B C H)
  by (perm_apply (par_id C B H)).
-apply inter_unicity with A B C B;finish.
+apply l6_21 with A B C B;finish.
 Qed.
 
 Lemma orthocenter_col :
@@ -305,12 +305,12 @@ subst;auto.
 assert (Perp A H B H)
  by (apply (perp_col1 A H B C H);finish).
 assert (Par A H A C)
-  by (apply l12_9 with B H;try apply all_coplanar;finish).
+  by (apply l12_9 with B H;finish).
 assert (Col H A C)
   by (perm_apply (par_id A C H)).
 assert (H=C).
 assert_diffs.
-apply inter_unicity with B C A C;finish.
+apply l6_21 with B C A C;finish.
 subst.
 auto.
 Qed.

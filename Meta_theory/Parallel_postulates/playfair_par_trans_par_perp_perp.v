@@ -84,7 +84,7 @@ assert (HCol6 : Col A B W).
   }
 assert (HCol7 : Col R W Z).
   {
-  destruct (HP X Y W Z R Z Z) as [H1 H2]; Col; Par; apply l12_9 with C D; try apply all_coplanar; Perp.
+  destruct (HP X Y W Z R Z Z) as [H1 H2]; Col; Par; apply l12_9 with C D; Perp.
   }
 destruct (symmetric_point_construction W X) as [W' HMid3].
 destruct (symmetric_point_construction R X) as [R' HMid4].
@@ -107,8 +107,7 @@ destruct H as [HCong3 [HPar4 HPar5]].
 assert (HCol9 : Col R' W' Z').
   {
   destruct (HP R W R' W' W' Z' W') as [H1 H2]; Col; Par.
-  apply l12_9 with C D;
-  try apply all_coplanar; Perp.
+  apply l12_9 with C D; Perp.
  apply perp_col2 with R Z; Col; Perp; try intro;
   treat_equalities.
  apply par_distincts in HPar4; intuition.
@@ -138,7 +137,7 @@ assert (X = X'); treat_equalities.
   assert (Col X X' Y).
     {
     destruct (HP W' Z' Y X' X Y Y); Col; Par;
-    apply l12_9 with C D; try apply all_coplanar; Perp.
+    apply l12_9 with C D; Perp.
     }
   assert (X <> W') by (intro; treat_equalities; apply par_distincts in HPar2; intuition).
   assert (Col X X' W').
@@ -180,14 +179,14 @@ assert (I = I'); treat_equalities.
     assert (Col I I' R').
       {
       destruct (HP Y Z' R' I R' I' R'); Col.
-      apply l12_9 with X Y; try apply all_coplanar; assert_diffs; assert_cols;
+      apply l12_9 with X Y; assert_diffs; assert_cols;
       [apply perp_col2 with C D|apply perp_col2 with R' R'']; Col; Perp.
       }
     assert (HDiff : R' <> Z') by (intro; treat_equalities; apply HI'Y; Col).
     assert (Col I I' Y).
       {
       destruct (HP R' Z' Y I Y I' Y); Col; Par.
-      apply l12_9 with C D; try apply all_coplanar; assert_diffs; assert_cols;
+      apply l12_9 with C D; assert_diffs; assert_cols;
       [apply perp_col2 with W' Z'|apply perp_col2 with X Y]; Col; Perp.
       intro; treat_equalities; apply HDiff.
       assert_diffs; assert_cols; apply l6_21 with Y Z' W' Z'; Col;
@@ -235,7 +234,7 @@ assert (R'' = R'''); treat_equalities.
     assert (Col R'' R''' I).
       {
       destruct (HP Z Y R'' I R''' I I); Col; Par.
-      apply l12_9 with X Y; try apply all_coplanar; assert_diffs; assert_cols;
+      apply l12_9 with X Y; assert_diffs; assert_cols;
       [apply perp_col2 with C D|apply perp_col2 with R' R'']; Col; Perp.
       }
     elim (l7_20 I R'' R'''); try (intro; treat_equalities); Col.
@@ -433,7 +432,7 @@ assert (HFalse : Par_strict R W R X).
   {
   apply par_not_col_strict with X; Col; assert_diffs; assert_cols;
   try (intro; elim (perp_not_col2 R W W X); Col; Perp).
-  apply l12_9 with A B; try apply all_coplanar;
+  apply l12_9 with A B;
   [apply perp_sym; apply perp_col2 with W X|apply perp_col2 with P Q]; Perp; ColR.
   }
 exfalso; apply HFalse; exists R; Col.

@@ -25,7 +25,7 @@ split.
 assumption.
 left.
 repeat split;auto.
-Qed. 
+Qed.
 
 Lemma proj_per : forall A B T P, A <> B -> proj T A B P -> Per T P A /\ Per T P B /\ Col A B P.
 intros.
@@ -71,7 +71,7 @@ unfold proj in *.
 spliter.
 induction H1; induction H2; spliter; assert(Col A P P').
 ColR.
-eapply (l8_18_unicity A B T P P'); 
+eapply (l8_18_unicity A B T P P');
 auto.
 subst T.
 contradiction.
@@ -499,7 +499,6 @@ spliter.
 
 assert(Par A B X PX).
 apply l12_9 with T A.
-apply all_coplanar.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -520,7 +519,6 @@ spliter.
 
 assert(Par A B Y PY).
 apply l12_9 with T A.
-apply all_coplanar.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -567,7 +565,6 @@ spliter.
 
 assert(Par A B Y PY).
 apply l12_9 with T A.
-apply all_coplanar.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -751,7 +748,6 @@ unfold proj in *.
 spliter.
 induction H5; induction H4;spliter.
 eapply l12_9.
-apply all_coplanar.
 apply perp_sym.
 apply H8.
 Perp.
@@ -797,7 +793,6 @@ Qed.
 Lemma proj_par : forall A B A' B' P Q, A <> A' -> B <> B' -> proj A P Q A' -> proj B P Q B' -> Par A A' B B'.
 intros.
 eapply l12_9.
-apply all_coplanar.
 unfold proj in *.
 spliter.
 induction H4; induction H3; spliter.
@@ -949,16 +944,13 @@ eapply proj_col.
 apply H3.
 
 apply H1.
-eapply (inter_unicity P Q).
-Col.
-apply col_permutation_1.
-apply H7.
-Col.
-Col.
-intro.
+eapply (l6_21 P Q).
 apply H11.
+apply H0.
 Col.
-assumption.
+Col.
+Col.
+Col.
 Qed.
 
 Lemma col_proj_col : forall A B A' B' P Q, A <> A' -> Col A B A' -> proj A P Q A' -> proj B P Q B' -> Col A B B'.
@@ -1398,18 +1390,16 @@ spliter.
 ex_and H21 BB.
 
 assert(BB= B').
-eapply inter_unicity.
-apply col_permutation_1.
-apply H21.
-apply col_permutation_2.
-apply bet_col.
-apply H22.
-Col.
-Col.
-intro.
+eapply l6_21.
+apply not_col_permutation_1.
 apply H20.
-Col.
+4: apply col_permutation_2.
+4: apply bet_col.
+4: apply H22.
 auto.
+Col.
+Col.
+Col.
 subst BB.
 assumption.
 Qed.
@@ -1591,18 +1581,16 @@ spliter.
 ex_and H33 BB.
 
 assert(BB= B').
-eapply inter_unicity.
-apply col_permutation_1.
-apply H33.
-apply col_permutation_2.
-apply bet_col.
-apply H34.
+eapply l6_21.
+apply not_col_permutation_1.
+apply H32.
+4: apply col_permutation_2.
+4: apply bet_col.
+4: apply H34.
+assumption.
+Col.
 Col.
 eapply (proj3_col A C B A' C' B' P Q); auto.
-intro.
-apply H32.
-Col.
-auto.
 subst BB.
 Between.
 
@@ -1692,18 +1680,16 @@ spliter.
 ex_and H31 BB.
 
 assert(BB= B').
-eapply inter_unicity.
-apply col_permutation_1.
-apply H31.
-apply col_permutation_2.
-apply bet_col.
-apply H32.
+eapply l6_21.
+apply not_col_permutation_1.
+apply H30.
+4: apply col_permutation_2.
+4: apply bet_col.
+4: apply H32.
+auto.
+Col.
 Col.
 eapply (proj3_col A C B A' C' B' P Q); auto.
-intro.
-apply H30.
-Col.
-auto.
 subst BB.
 Between.
 Qed.
@@ -2133,196 +2119,6 @@ Col.
 Col.
 Qed.
 
-(*
-Lemma midpoint_par : forall A B A' B' M, A <> B -> is_midpoint M A A' -> is_midpoint M B B' -> Par A B A' B'.
-intros.
-assert(A' <> B').
-intro.
-apply H.
-assert(Cong A' B' A B).
-eapply l7_13.
-apply H0.
-assumption.
-apply cong_symmetry in H3.
-subst B'.
-apply cong_identity in H3.
-assumption.
-assert(HH0:= H0).
-assert(HH1:= H1).
-unfold is_midpoint in HH0.
-unfold is_midpoint in HH1.
-spliter.
-
-assert(Col M A A').
-apply bet_col in H5.
-Col.
-assert(Col M B B').
-apply bet_col in H3.
-Col.
-
-induction(Col_dec A B B').
-unfold Par.
-right.
-
-
-induction(eq_dec_points B B').
-subst B'.
-apply l7_3 in H1.
-subst M.
-Col.
-
-assert(Col A A' B').
-
-assert(Col B M A).
-eapply col_transitivity_1.
-apply H10.
-Col.
-Col.
-
-assert(Col A M B').
-
-eapply col_transitivity_1.
-apply H.
-Col.
-Col.
-
-induction(eq_dec_points A M).
-subst M.
-apply cong_symmetry in H6.
-apply cong_identity in H6.
-subst A'.
-Col.
-
-eapply col_transitivity_1.
-apply H13.
-Col.
-Col.
-repeat split;
-Col.
-
-induction(eq_dec_points A B').
-subst B'.
-assert(A'=B).
-eapply l7_9.
-2: apply H1.
-apply l7_2.
-assumption.
-subst A'.
-Col.
-ColR.
-
-unfold Par.
-left.
-unfold Par_strict.
-repeat split; auto.
-intro.
-ex_and H10 X.
-
-
-prolong X M X' M X.
-assert(Col A' B' X').
-eapply mid_preserves_col.
-2: apply H0.
-2: apply H1.
-apply col_permutation_1.
-apply H10.
-unfold is_midpoint.
-split.
-assumption.
-apply cong_left_commutativity.
-Cong.
-
-assert(Col B' X X').
-eapply (col_transitivity_1 _ A').
-auto.
-Col.
-Col.
-induction(eq_dec_points X X').
-subst X'.
-apply between_identity in H12.
-subst X.
-apply H9.
-induction(eq_dec_points B M).
-subst M.
-apply cong_symmetry in H4.
-apply cong_identity in H4.
-subst B'.
-Col.
-apply col_permutation_2.
-apply (col_transitivity_1 _ M); Col.
-
-assert(Col X M B').
-apply bet_col in H12.
-apply (col_transitivity_1 _ X'); Col.
-
-assert(Col X' M B').
-apply bet_col in H12.
-apply (col_transitivity_1 _ X); Col.
-
-assert(Col M B X).
-eapply (col_transitivity_1 ).
-2: apply col_permutation_5.
-2: apply H8.
-intro.
-subst B'.
-apply cong_identity in H4.
-subst B.
-apply H9.
-Col.
-Col.
-
-assert(Col X M A).
-eapply (col_transitivity_1 ).
-2: apply col_permutation_3.
-2:apply H19.
-intro.
-subst X.
-
-assert(Cong M X' M B').
-eapply cong_transitivity.
-apply H13.
-Cong.
-assert (HH:=l7_20 M X' B' H18 H20).
-induction HH.
-subst X'.
-apply H9.
-apply col_permutation_2.
-apply (col_transitivity_1 _ M).
-intro.
-subst M.
-apply cong_symmetry in H4.
-apply cong_identity in H4.
-contradiction.
-Col.
-
-assert(Col M B A').
-ColR.
-induction(eq_dec_points M A').
-subst A'.
-apply cong_identity in H6.
-subst A.
-Col.
-ColR.
-assert(X'= B).
-eapply l7_9.
-apply H21.
-assumption.
-subst X'.
-tauto.
-Col.
-apply H9.
-eapply col3.
-2: apply H20.
-intro.
-subst X.
-apply cong_identity in H13.
-subst X'.
-tauto.
-Col.
-Col.
-Qed.
-*)
-
 Lemma midpoint_par_strict : forall A B A' B' M, A <> B -> ~Col A B B' -> is_midpoint M A A' -> is_midpoint M B B' -> Par_strict A B A' B'.
 intros.
 assert(Par A B A' B').
@@ -2514,9 +2310,9 @@ assumption.
 apply cong_reflexivity.
 assert (le B' B C' C).
 eapply l5_6.
-split.
 apply H4.
-split; auto.
+assumption.
+assumption.
 assert(le A B A C).
 eapply bet_le_le.
 apply H.
@@ -2638,7 +2434,7 @@ apply HH0.
 assumption.
 
 assert(B = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H9.
 Between.
@@ -2711,94 +2507,9 @@ split.
 apply symmetry_preseves_bet2;
 assumption.
 intro.
-eapply (symmetry_preseves_bet1 A B); 
+eapply (symmetry_preseves_bet1 A B);
 assumption.
 Qed.
-
-(*
-
-Lemma bet_cong_bet : forall A B C D, A <> B -> Bet A B C -> Bet A B D -> Cong A D B C -> Bet B D C.
-intros.
-
-assert(Bet B C D \/ Bet B D C).
-eapply (l5_2 A); assumption.
-induction H3.
-
-assert(le B C B D).
-eapply l5_5_2.
-exists D.
-split.
-assumption.
-Cong.
-
-assert(le D B D A).
-eapply l5_5_2.
-
-exists A.
-split.
-Between.
-Cong.
-
-assert(Cong B C B D).
-eapply le_anti_symmetry.
-assumption.
-eapply l5_6.
-split.
-apply H5.
-split; Cong.
-
-assert(C=D).
-eapply between_cong.
-apply H3.
-assumption.
-subst D.
-assert(B = A).
-eapply (between_cong C).
-Between.
-Cong.
-subst A.
-tauto.
-assumption.
-Qed.
-
-
-Lemma bet_cong_eq : forall A B C D, Bet A B C -> Bet A C D -> Cong B C A D -> C = D /\ A = B.
-intros.
-
-assert(C = D).
-
-assert(le A C A D).
-eapply l5_5_2.
-exists D.
-split.
-assumption.
-Cong.
-assert(le C B C A).
-eapply l5_5_2.
-exists A.
-split.
-Between.
-Cong.
-assert(Cong A C A D).
-eapply le_anti_symmetry.
-assumption.
-eapply l5_6.
-repeat split.
-apply H3.
-Cong.
-Cong.
-eapply between_cong.
-apply H0.
-assumption.
-split.
-assumption.
-subst D.
-apply sym_equal.
-eapply (between_cong C).
-Between.
-Cong.
-Qed.
-*)
 
 Lemma par_cong_mid : forall A B A' B', Par A B A' B' -> Cong A B A' B' -> exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ is_midpoint M A B' /\ is_midpoint M B A'.
 intros.
@@ -2950,27 +2661,14 @@ induction H26.
 subst B''.
 
 assert(X = M).
-eapply (inter_unicity A A' B B').
-unfold is_midpoint in H17.
-spliter.
-apply bet_col in H17.
-Col.
-apply bet_col in H18.
-Col.
-Col.
-apply bet_col in H10.
-Col.
-intro.
-apply H7.
-Col.
-assumption.
+eapply (l6_21 A A' B B'); Col.
 subst X.
 split; auto.
 
 assert(two_sides A A' B B'').
 unfold two_sides.
 repeat split; auto.
-intro. 
+intro.
 apply H8.
 apply col_permutation_1.
 eapply (col_transitivity_1 _ B'').
@@ -3026,7 +2724,7 @@ assumption.
 apply l9_9 in H29.
 contradiction.
 
-clear HH H3. 
+clear HH H3.
 
 
 (****************)
@@ -3207,7 +2905,7 @@ apply H17.
 apply one_side_symmetry.
 assumption.
 
-assert(one_side A A' X B). 
+assert(one_side A A' X B).
 
 eapply (out_one_side_1).
 intro.
@@ -3824,1128 +3522,10 @@ Between.
 Cong.
 Qed.
 
-(*
-Lemma par_cong_mid : forall A B A' B', Par A B A' B' -> Cong A B A' B' -> exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ is_midpoint M A B' /\ is_midpoint M B A'.
-intros.
-induction H.
-
-focus 2 with a capital f.
-spliter.
-
-assert(Col A B A').
-ColR.
-assert(Col A B B').
-ColR.
-
-induction H5.
-induction H3.
-
-assert( HH:= midpoint_existence A' B).
-ex_and HH M.
-exists M.
-right.
-split.
-
-assert(Bet B M B').
-
-eapply between_exchange4.
-2: apply H3.
-unfold is_midpoint in H6.
-spliter.
-Between.
-
-assert(Bet A M B').
-eapply between_exchange2.
-apply H5.
-assumption.
-
-assert(Cong A M B' M).
-eapply (l2_11 A  B _  _ A').
-eapply between_inner_transitivity.
-apply H5.
-assumption.
-eapply between_inner_transitivity.
-apply between_symmetry.
-apply H3.
-unfold is_midpoint in H6.
-spliter.
-assumption.
-Cong.
-unfold is_midpoint in H6.
-spliter.
-apply cong_left_commutativity.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-apply l7_2.
-assumption.
-induction H3.
-
-induction (eq_dec_points B B').
-
-subst B'.
-assert(A = A' \/ is_midpoint B A A').
-apply l7_20.
-assumption.
-Cong.
-induction H6.
-subst A'.
-
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-right.
-split.
-assumption.
-apply l7_2.
-assumption.
-exists B.
-left.
-split.
-assumption.
-apply l7_3_2.
-
-assert(A <> A').
-intro.
-subst A'.
-apply H6.
-eapply between_egality.
-apply between_symmetry.
-apply H3.
-Between.
-
-assert( HH:= midpoint_existence B B').
-ex_and HH M.
-exists M.
-left.
-split.
-
-assert(Bet A' M B).
-eapply between_exchange2.
-apply H3.
-unfold is_midpoint in H8.
-spliter.
-Between.
-assert(Bet M B A).
-eapply between_exchange3.
-unfold is_midpoint in H6.
-spliter.
-apply between_symmetry.
-apply H8.
-Between.
-assert(Bet A' M A).
-eapply outer_transitivity_between.
-apply H9.
-assumption.
-intro.
-subst M.
-apply is_midpoint_id in H8.
-contradiction.
-assert(Cong A M A' M).
-eapply l2_11.
-apply between_symmetry.
-apply H10.
-eapply between_inner_transitivity.
-apply H3.<
-
-ex_and HH M.
-unfold is_midpoint in H8.
-spliter.
-Between.
-assumption.
-unfold is_midpoint in H8.
-spliter.
-Cong.
-unfold is_midpoint.
-split.
-Between.
-Cong.
-assumption.
-
-induction(eq_dec_points B B').
-subst B'.
-assert(A = A' \/ is_midpoint B A A').
-eapply l7_20.
-assumption.
-Cong.
-induction H6.
-subst A'.
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-right.
-split.
-assumption.
-apply l7_2.
-assumption.
-exists B.
-left.
-split.
-assumption.
-apply l7_3_2.
-
-induction H4.
-assert(Bet B A A' \/ Bet B A' A).
-eapply (l5_2 B').
-auto.
-Between.
-assumption.
-induction H7.
-assert(A = B).
-eapply between_egality.
-apply H4.
-assumption.
-contradiction.
-
-assert(A' = B).
-eapply between_egality.
-apply between_symmetry.
-apply H4.
-assumption.
-subst A'.
-assert(A = B' \/ is_midpoint B A B').
-eapply l7_20.
-assumption.
-Cong.
-induction H8.
-subst B'.
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-left.
-split.
-assumption.
-apply l7_2.
-assumption.
-exists B.
-right.
-split.
-assumption.
-apply l7_3_2.
-
-induction (eq_dec_points B A').
-subst A'.
-assert(A = B' \/ is_midpoint B A B').
-eapply l7_20.
-assumption.
-Cong.
-induction H7.
-subst B'.
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-left.
-split.
-assumption.
-apply l7_2.
-assumption.
-exists B.
-right.
-split.
-assumption.
-apply l7_3_2.
-
-induction H4.
-
-assert( HH:= midpoint_existence A' B).
-ex_and HH M.
-exists M.
-right.
-split.
-assert(Bet B M A).
-eapply between_exchange4.
-unfold is_midpoint in H8.
-spliter.
-apply between_symmetry.
-apply H8.
-assumption.
-
-assert(Bet B' B M).
-eapply between_inner_transitivity.
-apply between_symmetry.
-apply H5.
-apply H9.
-
-assert(Bet M A' A).
-eapply between_exchange3.
-unfold is_midpoint in H8.
-spliter.
-apply between_symmetry.
-apply H8.
-assumption.
-assert(Bet B' M A').
-eapply outer_transitivity_between2.
-apply H10.
-unfold is_midpoint in H8.
-spliter.
-Between.
-intro.
-subst M.
-apply l7_2 in H8.
-apply is_midpoint_id in H8.
-contradiction.
-assert(Bet B' M A).
-eapply outer_transitivity_between.
-apply H12.
-assumption.
-intro.
-subst A'.
-apply is_midpoint_id in H8.
-subst M.
-tauto.
-
-assert(Cong A M B' M).
-eapply l4_3.
-apply between_symmetry.
-apply H9.
-apply H12.
-Cong.
-unfold is_midpoint in H8.
-spliter.
-apply cong_symmetry.
-Cong.
-unfold is_midpoint.
-split.
-Between.
-Cong.
-apply l7_2.
-assumption.
-
-assert(le B' A B' A').
-eapply l5_5_2.
-exists A'.
-split.
-
-eapply outer_transitivity_between2.
-
-apply between_symmetry.
-apply H5.
-Between.
-auto.
-apply cong_reflexivity.
-
-assert(le A B A B').
-eapply l5_5_2.
-exists B'.
-split.
-assumption.
-apply cong_reflexivity.
-
-assert(le A B' A B).
-eapply l5_6.
-split.
-apply le_comm in H8.
-apply H8.
-split.
-apply cong_reflexivity.
-Cong.
-
-assert(Cong A B' A B).
-eapply le_anti_symmetry.
-assumption.
-assumption.
-
-assert(B = B').
-eapply between_cong.
-apply H5.
-Cong.
-contradiction.
-induction H2.
-induction H5.
-
-assert(le B' A B' A').
-eapply l5_5_2.
-exists A'.
-split.
-
-eapply outer_transitivity_between2.
-
-apply between_symmetry.
-apply H5.
-Between.
-auto.
-apply cong_reflexivity.
-
-assert(le A B A B').
-eapply l5_5_2.
-exists B'.
-split.
-assumption.
-apply cong_reflexivity.
-
-assert(le A B' A B).
-eapply l5_6.
-split.
-apply le_comm in H8.
-apply H8.
-split.
-apply cong_reflexivity.
-Cong.
-
-assert(Cong A B' A B).
-eapply le_anti_symmetry.
-assumption.
-assumption.
-
-assert(B = B').
-eapply between_cong.
-apply H5.
-Cong.
-contradiction.
-
-
-
-eapply (construction_unicity A' A).
-apply H.
-
-apply (l5_6) in H8.
-
-unfold le.
-exists B.
-split.
-Between.
-unfold le.
-
-
-
-assert(le B' A' B A).
-unfold le.
-exists A.
-split.
-apply between_trivial.
-apply cong_symmetry.
-Cong.
-
-assert
-
-
-
-(************************************************************************************)
-
-Lemma par_cong_mid : forall A B A' B', Par A B A' B' -> Cong A B A' B' -> exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ is_midpoint M A B' /\ is_midpoint M B A'.
-intros.
-induction H.
-
-focus 2 with a capital f.
-spliter.
-
-assert(Col A B A').
-ColR.
-assert(Col A B B').
-ColR.
-
-assert( HH:= midpoint_existence A A').
-ex_and HH M.
-induction (is_midpoint_dec M B B').
-exists M.
-left.
-split; assumption.
-
-induction(eq_dec_points A A').
-subst A'.
-apply l7_3 in H6.
-subst M.
-assert(B = B' \/ is_midpoint A B B').
-eapply l7_20.
-Col.
-assumption.
-induction H6.
-subst B'.
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-right.
-split.
-assumption.
-apply l7_2.
-assumption.
-contradiction.
-
-induction(eq_dec_points B B').
-subst B'.
-
-assert(A = A' \/ is_midpoint B A A').
-eapply l7_20.
-Col.
-Cong.
-induction H9.
-subst A'.
-apply l7_3 in H6.
-subst M.
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-right.
-split.
-assumption.
-apply l7_2.
-assumption.
-assert(B = M).
-eapply l7_17.
-apply H9.
-assumption.
-subst M.
-apply False_ind.
-apply H7.
-apply l7_3_2.
-
-assert(Col M A B).
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-assert(Col M A' B').
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-assert(Col M A A').
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-assert(Col M B B').
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-induction(eq_dec_points M A).
-subst M.
-eapply (midpoint_id _ _ A) in H6 .
-contradiction.
-apply l7_3_2.
-
-assert(M <> A').
-intro.
-subst M.
-
-apply l7_2 in H6.
-apply is_midpoint_id in H6.
-contradiction.
-
-induction H10; induction H11.
-
-
-assert(Bet B M A').
-eapply outer_transitivity_between2.
-apply between_symmetry.
-apply H10.
-unfold is_midpoint in H6.
-spliter.
-assumption.
-auto.
-
-assert(Bet B M B').
-eapply outer_transitivity_between.
-apply H16.
-assumption.
-assumption.
-
-assert(Cong B M B' M).
-
-eapply l2_11.
-apply between_symmetry.
-apply H10.
-apply between_symmetry.
-apply H11.
-Cong.
-unfold is_midpoint in H6.
-spliter.
-Cong.
-assert(is_midpoint M B B').
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-contradiction.
-induction H11.
-
-assert( HH:= midpoint_existence A B').
-ex_and HH N.
-exists N.
-right.
-split.
-assumption.
-
-
-
-
-
-
-induction(eq_dec_points M B).
-subst M.
-unfold is_midpoint in H6.
-spliter.
-
-assert(A = A' \/ is_midpoint B A A').
-eapply l7_20.
-Col.
-Cong.
-induction H16.
-contradiction.
-
-assert(Cong A' B' B A').
-eapply cong_transitivity.
-apply cong_symmetry.
-apply H0.
-assumption.
-
-assert(B = B' \/ is_midpoint A' B B').
-eapply l7_20.
-Col.
-apply cong_left_commutativity.
-Cong.
-induction H18.
-contradiction.
-
-exists B.
-left
-
-
-
-subst A'.
-subst A'.
-
-induction H10; induction H11.
-
-
-
-
-subst B'.
-
-assert( HH:= midpoint_existence A B).
-ex_and HH M.
-exists M.
-right.
-split.
-assumption.
-apply l7_2.
-assumption.
-contradiction.
-
-right.
-
-
-Lemma par_cong_mid : forall A B A' B', Par A B A' B' -> Cong A B A' B' -> exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ is_midpoint M A B' /\ is_midpoint M B A'.
-intros.
-induction H.
-
-focus 2 with a capital f.
-spliter.
-assert( HH:= midpoint_existence A A').
-ex_and HH M.
-induction (is_midpoint_dec M B B').
-exists M.
-left.
-split; assumption.
-
-assert(HH:= midpoint_existence A B').
-ex_and HH N.
-
-exists N.
-right.
-split.
-assumption.
-
-assert(A' <> B').
-intro.
-subst B'.
-apply cong_identity in H0.
-subst B.
-contradiction.
-
-assert(A <> B).
-intro.
-subst B.
-tauto. 
-
-assert(Col A B A').).
-ColR.
-assert(Col A B B').
-ColR.
-
-induction (eq_dec_points A B').
-subst B'.
-assert(HH:=l7_20 A B A').
-
-assert(B = A' \/ is_midpoint A B A').
-apply HH.
-Col.
-Cong.
-induction H11.
-subst A'.
-apply l7_2 in H4.
-contradiction.
-apply l7_3 in H6.
-subst N.
-assumption.
-
-induction (eq_dec_points A' B).
-subst A'.
-assert(HH:=l7_20 B A B').
-
-assert(A = B' \/ is_midpoint B A B').
-apply HH.
-Col.
-Cong.
-induction H12.
-subst B'.
-apply l7_2 in H4.
-contradiction.
-assert(N= B).
-eapply l7_17.
-apply H6.
-assumption.
-subst N.
-apply l7_3_2.
-
-assert(HH:= H4).
-unfold is_midpoint in HH.
-spliter.
-
-induction (eq_dec_points A A').
-subst A'.
-apply between_identity in H13.
-subst M.
-apply False_ind.
-apply H5.
-assert(B = B' \/ is_midpoint A B B').
-apply (l7_20 A B B'); assumption.
-induction H13.
-subst B'.
-split; auto.
-apply bet_col.
-
-assert(Col M A B).
-apply bet_col in H13.
-
-ColR.
-
-assert(Col N A B).
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-assert(Col N A' B').
-unfold is_midpoint in H6.
-spliter.
-apply bet_col in H6.
-ColR.
-
-induction H13; induction H14.
-
-
-induction H13.
-
-
-
-
-Lemma par_cong_mid : forall A B A' B', Par A B A' B' -> Cong A B A' B' -> exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ is_midpoint M A B' /\ is_midpoint M B A'.
-intros.
-induction H.
-
-focus 2 with a capital f.
-spliter.
-assert( HH:= midpoint_existence A A').
-ex_and HH M.
-induction (is_midpoint_dec M B B').
-exists M.
-left.
-split; assumption.
-
-induction (eq_dec_points A B').
-subst B'.
-exists A.
-right.
-split.
-apply l7_3_2.
-assert(HH:=l7_20 A B A').
-
-assert(B = A' \/ is_midpoint A B A').
-apply HH.
-Col.
-Cong.
-induction H6.
-subst A'.
-apply l7_2 in H4.
-contradiction.
-assumption.
-
-assert(HH:= midpoint_existence A B').
-ex_and HH N.
-exists N.
-right.
-split.
-assumption.
-
-assert(HH:=H7).
-unfold is_midpoint in HH.
-spliter.
-assert(Col A N B').
-apply bet_col.
-assumption.
-
-assert(HH:= H4).
-unfold is_midpoint in HH.
-spliter.
-assert(Col A M A').
-apply bet_col.
-assumption.
-
-assert(Col A B N).
-assert(Col A B B').
-ColR.
-ColR.
-
-assert(Col A' B' N).
-ColR.
-
-assert(Col A B A').
-ColR.
-
-assert(Col A B B').
-ColR.
-
-induction (eq_dec_points A A').
-subst A'.
-apply between_identity in H11.
-subst M.
-
-assert(HH:= l7_20 A B B' H3 H0).
-induction HH.
-subst B'.
-apply l7_2.
-assumption.
-contradiction.
-
-assert(Col M A' B).
-ColR.
-
-induction (eq_dec_points A' B).
-subst A'.
-
-apply cong_left_commutativity in H0.
-
-
-assert(HH:= l7_20 B A B' H2 H0).
-induction HH.
-subst B'.
-apply l7_2 in H4.
-contradiction.
-assert(B= N).
-eapply l7_17.
-apply H20.
-assumption.
-subst N.
-apply l7_3_2.
-
-assert(Col B M B').
-ColR.
-
-assert(Col A B M).
-ColR.
-assert(Col A' B' M).
-ColR.
-
-assert(A <> M).
-intro.
-subst M.
-apply cong_symmetry in H12.
-apply cong_identity in H12.
-contradiction.
-
-induction (eq_dec_points B M).
-subst M.
-assert(HH:=l7_20 A' B B').
-assert(B = B' \/ is_midpoint A' B B').
-apply HH.
-Col.
-eapply cong_transitivity.
-apply cong_commutativity.
-apply cong_symmetry.
-apply H12.
-Cong.
-clear HH.
-induction H25.
-subst B'.
-apply False_ind.
-apply H5.
-apply l7_3_2.
-
-assert(Bet A A' B').
-eapply outer_transitivity_between2.
-apply H11.
-apply midpoint_bet.
-assumption.
-auto.
-
-
-(****************)
-
-induction H14; induction H15.
-
-assert(Bet A B N).
-
-assert(HH:= midpoint_existence A' B).
-ex_and HH N'.
-assert(N = N').
-
-assert(HH:= l7_21).
-
-unfold is_midpoint.
-split.
-
-eapply l7_15.
-3: apply H4.
-
-
-
-eapply l7_22.
-5:apply H4.
-apply H8.
-apply between_symmetry.
-5: apply H25.
-
-eapply symmetry_preserves_midpoint.
-3: apply H4.
-
-assert(A' = B' \/ is_midpoint A' B B').
-eapply l7_20.
-
-induction H22; induction H23.
-
-apply False_ind.
-apply H5.
-
-unfold is_midpoint.
-split.
-assert(Bet B M A').
-eapply between_exchange3.
-apply H22.
-assumption.
-apply between_symmetry.
-eapply between_exchange3.
-apply H23.
-Between.
-
-assert(HH:= l4_3 M B A M B' A').
-apply cong_left_commutativity.
-apply HH.
-Between.
-Between.
-Cong.
-Cong.
-induction H23.
-
-assert(HH:= l5_5_2 A B A M).
-assert(le A B A M).
-apply HH.
-exists M.
-split; auto.
-apply cong_reflexivity.
-clear HH.
-assert(HH:= l5_5_2 A' M A' B').
-assert(le A' M A' B').
-apply HH.
-exists B'.
-split.
-Between.
-apply cong_reflexivity.
-clear HH.
-
-assert(lt A B A M).
-unfold lt.
-split; auto.
-intro.
-
-
-assumption.
-
-(**************)
-
-assert(Bet A' B'M).
-
-assert(HH:= l7_22 A A' B B' M).
-
-assert(Bet A' B' M).
-
-assert(HH:=l4_3 A B M M A' B' ).
-
-apply False_ind.
-apply H5.
-unfold is_midpoint.
-split.
-
-
-
-unfold is_midpoint in H7.
-spliter.
-
-assert(HH:= l4_14 A B N
-
-induction H8.
-
-assert(Bet B' A' N).
-
-assert(HH0:= H7).
-unfold is_midpoint in HH0.
-spliter.
-apply bet_col in H9.
-apply cong_left_commutativity in H10. 
-
-
-assert(B = A' \/ is_midpoint N B A').
-eapply l7_20.
-ColR.
-
-induction H11.
-contradiction.
-apply (l7_20 N).
-apply HH.
-unfold is_midpoint in H7.
-spliter.
-apply bet_col.
-assumption.
-
-
-assert(HH:= l4_14 A B N B' A' H8).
-assert(exists C' : Tpoint, Cong_3 A B N B' A' C').
-apply HH.
-Cong.
-clear HH.
-ex_and H9 N'.
-unfold Cong_3 in H10.
-spliter.
-unfold is_midpoint in H7.
-spliter.
-
-assert(N = N').
-eapply l4_19.
-apply H7.
-eapply l4_18.
-apply H6.
-apply bet_col in H7.
-Col.
-apply H1.
-
-
-
-Lemma par_cong_case : forall A B A' B' M, is_midpoint M A A' -> Par A B A' B' -> Cong A B A' B' -> is_midpoint M B B' \/ Par A A' B B' /\ Cong A A' B B'.
-intros.
-induction H0.
-focus 2 with a capital f.
-spliter.
-induction is_midpoint
-
-induction H3; induction H4.
-
-*)
-
-(*
-Lemma eq_o_symmetry : forall A B P A' B' P' M , ~Col A B P -> is_midpoint M A A' -> is_midpoint M B B' -> is_midpoint M P P' ->
-                                                  eq_o A B P A' B' P'.
-intros.
-unfold eq_o.
-repeat split.
-assumption.
-intro.
-apply H.
-eapply mid_preserves_col.
-apply H3.
-apply l7_2.
-apply H0.
-apply l7_2.
-assumption.
-apply l7_2.
-assumption.
-intros C C' BB' M0 BB CC K.
-intros.
-
-assert(M0=M).
-eapply l7_17.
-apply H9.
-assumption.
-subst M0.
-
-assert(Cong A B A' B').
-eapply l7_13.
-apply l7_2.
-apply H0.
-apply l7_2.
-assumption.
-assert(Cong A' B' A' BB').
-eapply cong_transitivity.
-apply cong_symmetry.
-apply H13.
-assumption.
-
-assert(B' = BB').
-eapply l6_11_unicity.
-4:apply H14.
-3:apply H7.
-unfold out in H7.
-spliter.
-auto.
-unfold out in H7.
-spliter.
-auto.
-apply out_trivial.
-unfold out in H7.
-spliter.
-auto.
-apply cong_reflexivity.
-subst BB'.
-unfold out in H7.
-spliter.
-clear H14 H16 H15.
-
-assert(BB=B).
-eapply l7_9.
-apply l7_2.
-apply H10.
-assumption.
-subst BB.
-apply l7_3 in H12.
-subst K.
-
-clear H13 H10 H9.
-
-*)
-
-(*
-
-Lemma eq_o_sym : forall A B P A' B' P', eq_o A B P A' B' P' -> eq_o A' B' P' A B P.
-intros.
-assert(HH:= H).
-unfold eq_o in HH.
-spliter.
-unfold eq_o.
-repeat split; auto.
-intros C' C BB M B1 C1 K.
-intros.
-
-assert(HH:= (H2 C2 C0 B1 M B C)). 
-
-apply H1.
-
-*)
-
 Lemma per_preserves_bet_aux1 : forall P Q A B C B' C', P <> Q -> Bet A B C ->
                                       Col P Q A ->
                                       Per B B' P -> Col P Q B' ->
-                                      Per C C' P -> Col P Q C' -> 
+                                      Per C C' P -> Col P Q C' ->
                                       P <> A -> P <> B' -> P <> C' ->
                                       Bet A B' C'.
 intros.
@@ -5059,24 +3639,22 @@ auto.
 induction(Col_dec C B B').
 assert(C=B).
 
-eapply (inter_unicity B B').
-Col.
-apply bet_col.
-apply H0.
-Col.
-Col.
+eapply (l6_21 B B').
 assert(Per B B' A).
 eapply (per_col _ _ P).
 auto.
 assumption.
 ColR.
 apply per_not_col in H15.
-intro.
 apply H15.
+auto.
+auto.
+apply H13.
 Col.
-auto.
-auto.
-assumption.
+Col.
+apply bet_col.
+apply H0.
+Col.
 subst C.
 
 assert(B'=C').
@@ -5115,7 +3693,6 @@ tauto.
 
 assert(Par B B' C C').
 eapply l12_9.
-apply all_coplanar.
 apply H15.
 apply perp_sym.
 apply perp_left_comm.
@@ -5195,18 +3772,16 @@ ex_and H25 T.
 
 
 assert(T = B').
-eapply inter_unicity.
-apply col_permutation_1.
-apply H25.
-apply bet_col in H26.
-apply col_permutation_2.
-apply H26.
+eapply l6_21.
+apply not_col_permutation_1.
+apply H24.
+4: apply bet_col in H26.
+4: apply col_permutation_2.
+4: apply H26.
+auto.
+Col.
 Col.
 ColR.
-intro.
-apply H24.
-Col.
-auto.
 subst T.
 Between.
 Qed.
@@ -5230,7 +3805,7 @@ Qed.
 Lemma per_preserves_bet_aux2 : forall P Q A B C A' C', P <> Q -> Bet A B C ->
                                       Per A A' P -> Col P Q A' ->
                                       Col P Q B ->
-                                      Per C C' P -> Col P Q C' -> 
+                                      Per C C' P -> Col P Q C' ->
                                       P <> A'-> P <> B -> P <> C' ->
                                       Bet A' B C'.
 intros.
@@ -5317,18 +3892,13 @@ assert(Col C A' P).
 ColR.
 
 assert(B=C).
-eapply (inter_unicity).
-apply H3.
-apply col_trivial_2;
-Col.
-assumption.
-apply bet_col.
-
-apply H0.
-intro.
+eapply l6_21.
 apply H11.
+apply H12.
 Col.
-assumption.
+Col.
+Col.
+Col.
 subst C.
 apply between_trivial.
 
@@ -5386,7 +3956,6 @@ tauto.
 
 assert(Par T B C C').
 eapply l12_9.
-apply all_coplanar.
 apply H18.
 apply perp_sym.
 apply perp_left_comm.
@@ -5411,7 +3980,6 @@ tauto.
 
 assert(Par T B A A').
 eapply l12_9.
-apply all_coplanar.
 apply H18.
 apply perp_sym.
 apply perp_left_comm.
@@ -5540,27 +4108,8 @@ spliter.
 ex_and H32 BB.
 
 assert(B=BB).
-eapply (inter_unicity T B A' C').
-Col.
+eapply (l6_21 T B A' C'); Col.
 ColR.
-Col.
-apply bet_col in H33.
-Col.
-intro.
-assert(Per T B A').
-eapply per_col.
-2:apply H15.
-auto.
-ColR.
-apply per_not_col in H35.
-apply H35.
-Col.
-assumption.
-intro.
-subst A'.
-apply H30.
-Col.
-assumption.
 subst BB.
 assumption.
 Qed.
@@ -5579,7 +4128,7 @@ spliter.
 Col.
 Qed.
 
-Lemma per_diff : forall A B A' B' P, A <> B -> ~ Col A B A' -> 
+Lemma per_diff : forall A B A' B' P, A <> B -> ~ Col A B A' ->
                              Per A A' P -> Per B B' P ->
                              A' <> P -> B' <> P -> A' <> B'.
 intros.
@@ -5597,7 +4146,7 @@ Qed.
 Lemma per_preserves_bet : forall P Q A B C A' B' C', P <> Q -> Bet A B C ->
                                       Per A A' P -> Col P Q A' ->
                                       Per B B' P -> Col P Q B' ->
-                                      Per C C' P -> Col P Q C' -> 
+                                      Per C C' P -> Col P Q C' ->
                                       P <> A'-> P <> B' -> P <> C' ->
                                       Bet A' B' C'.
 intros.
@@ -5671,7 +4220,6 @@ tauto.
 
 assert(Par B B' C C').
 eapply l12_9.
-apply all_coplanar.
 apply H16.
 apply perp_sym.
 apply perp_left_comm.
@@ -5685,7 +4233,6 @@ auto.
 
 assert(Par B B' A A').
 eapply l12_9.
-apply all_coplanar.
 apply H16.
 apply perp_sym.
 apply perp_left_comm.
@@ -5939,18 +4486,16 @@ spliter.
 ex_and H35 BB.
 
 assert(BB = B').
-eapply inter_unicity.
-apply col_permutation_1.
-apply H35.
-apply col_permutation_2.
-apply bet_col.
-apply H36.
+eapply l6_21.
+apply not_col_permutation_1.
+apply H34.
+4:apply col_permutation_2.
+4:apply bet_col.
+4:apply H36.
+auto.
+Col.
 Col.
 ColR.
-intro.
-apply H34.
-Col.
-auto.
 subst BB.
 assumption.
 Qed.
@@ -5974,7 +4519,7 @@ contradiction.
 intro.
 subst D.
 assert(B = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H3.
 Between.
@@ -6005,7 +4550,7 @@ tauto.
 intro.
 subst D.
 assert(A = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H0.
 Between.
@@ -6021,7 +4566,7 @@ assumption.
 intro.
 subst D.
 assert(A = B).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H3.
 Between.
@@ -6279,17 +4824,15 @@ assumption.
 
 apply H2.
 
-eapply inter_unicity.
-3: apply out_col.
-3: apply H1.
-Col.
-2:apply col_permutation_2.
-2:apply H18.
-Col.
-intro.
+eapply l6_21.
+apply not_col_permutation_2.
 apply H17.
-Col.
+5:apply col_permutation_2.
+5:apply H18.
 auto.
+Col.
+Col.
+Col.
 
 assert(HH:=ex_col A C C1).
 assert(Distincts A C C1).
@@ -6383,7 +4926,6 @@ apply H9.
 Col.
 assert(Par C C' A B).
 eapply l12_9.
-apply all_coplanar.
 apply H10.
 assumption.
 
@@ -6523,17 +5065,15 @@ unfold is_midpoint in H8.
 spliter.
 
 assert(C'=A).
-eapply inter_unicity.
-apply col_permutation_1.
-apply H26.
-apply bet_col.
-apply H8.
-Col.
-Col.
-intro.
+eapply l6_21.
+apply not_col_permutation_1.
 apply H25.
-Col.
+4: apply bet_col.
+4: apply H8.
 auto.
+Col.
+Col.
+Col.
 subst C'.
 apply cong_identity in H27.
 subst C1.
@@ -6563,66 +5103,26 @@ unfold two_sides in H27.
 spliter.
 ex_and H31 AA.
 assert(AA=A).
-eapply inter_unicity.
-apply col_permutation_1.
-apply H31.
-apply col_permutation_2.
-apply bet_col.
-apply H32.
-Col.
-Col.
-intro.
+eapply l6_21.
+apply not_col_permutation_1.
 apply H30.
-Col.
+4: apply col_permutation_2.
+4: apply bet_col.
+4: apply H32.
 intro.
 subst C'.
 apply between_identity in H32.
 subst AA.
 apply H30.
 assumption.
+Col.
+Col.
+Col.
+
 subst AA.
 left.
 assumption.
 Qed.
-
-(*Lemma out_preserves_eqo1' : forall A B B' P, ~Col A B P -> out A B B' -> eqo A B P A B' P.
-intros.
-assert(HH0:=H0).
-apply out_col in H0.
-unfold out in HH0.
-spliter.
-unfold eqo.
-repeat split.
-assumption.
-ColR.
-intros.
-left.
-
-apply out_col in H0.
-intro.
-apply H.
-eapply col_transitivity_1.
-
-Lemma out_preserves_eqo' : forall A B P B' P', ~Col A B P -> out A B B' -> out A P P' -> eqo A B P A B' P'.
-intros.
-assert(HH0:= H0).
-apply out_col in H0.
-unfold out in HH0.
-spliter.
-assert(one_side A B' P P').
-eapply out_one_side.
-auto.
-intro.
-apply H.
-ColR.
-2:apply H1.
-Col.
-eapply one_side_preserves_eqo1.
-assert(o
-unfold out in H0.
-spliter.
-intros.
-*)
 
 Lemma ex_col1 : forall A B C, A <> B -> Col A B C -> exists D, Col A B D /\ A <> D /\ B <> D /\ C <> D.
 intros.
@@ -6643,7 +5143,7 @@ contradiction.
 intro.
 subst D.
 assert(B = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H1.
 Between.
@@ -6679,7 +5179,7 @@ tauto.
 intro.
 subst D.
 assert(A = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H0.
 Between.
@@ -6699,7 +5199,7 @@ assumption.
 intro.
 subst D.
 assert(A = B).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H1.
 Between.
@@ -6720,828 +5220,5 @@ apply between_identity in H0.
 subst B.
 tauto.
 Qed.
-
-(*
-
-Lemma eqo_one_side : forall A B X Y, eqo A B X A B Y -> one_side A B X Y.
-intros.
-unfold eqo in H.
-spliter.
-
-assert(A <> B).
-intro.
-apply H.
-subst B.
-Col.
-assert(A <> X).
-intro.
-apply H.
-subst X.
-Col.
-assert(A <> Y).
-intro.
-apply H0.
-subst Y.
-Col.
-
-assert(exists T : Tpoint, Per T A B /\ Cong T A A B /\ one_side B A T X).
-eapply ex_per_cong.
-auto.
-auto.
-Col.
-intro.
-apply H.
-Col.
-ex_and H5 T.
-
-assert(T <> A).
-intro.
-subst T.
-apply cong_symmetry in H6.
-apply cong_identity in H6.
-contradiction.
-
-assert(~Col T A B).
-unfold one_side in H7.
-ex_and H7 U.
-unfold two_sides in *.
-spliter.
-intro.
-apply H13.
-Col.
-
-assert(Perp T A A B).
-apply per_perp_in in H5; auto.
-apply perp_in_perp in H5.
-induction H5.
-apply perp_not_eq_1 in H5.
-tauto.
-assumption.
-
-induction (Col_dec T A X);
-induction (Col_dec T A Y).
-
-(*cas X Y sur AT*)
-
-prolong B A B' B A.
-prolong Y A C' Y A.
-
-assert(Per B A X).
-eapply per_col.
-2:apply l8_2.
-2:apply H5.
-auto.
-Col.
-apply per_perp_in in H17; auto.
-apply perp_in_perp in H17.
-induction H17.
-apply perp_not_eq_1 in H17.
-tauto.
-apply perp_comm in H17.
-
-assert(Per B A Y).
-eapply per_col.
-2:apply l8_2.
-2:apply H5.
-auto.
-Col.
-apply per_perp_in in H18; auto.
-apply perp_in_perp in H18.
-induction H18.
-apply perp_not_eq_1 in H18.
-tauto.
-apply perp_comm in H18.
-
-assert(HH:=(H1 X Y B A B' C' A)).
-assert(Bet X A C' \/ one_side A A X C').
-apply HH; auto.
-apply l8_2.
-apply l8_5.
-apply l8_2.
-apply l8_5.
-apply out_trivial.
-auto.
-apply cong_reflexivity.
-apply l7_3_2.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-
-induction H19.
-unfold one_side.
-exists C'.
-split.
-unfold two_sides.
-repeat split; try Col.
-intro.
-
-apply bet_col in H15.
-assert(C' = A).
-eapply (inter_unicity A B Y A); Col.
-subst C'.
-apply cong_symmetry in H16.
-apply cong_identity in H16.
-subst Y.
-apply H0.
-Col.
-exists A.
-split; Col.
-unfold two_sides.
-repeat split.
-assumption.
-intro.
-apply H0.
-Col.
-intro.
-apply bet_col in H19.
-assert(C' = A).
-eapply (inter_unicity A B X A); Col.
-subst C'.
-apply cong_symmetry in H16.
-apply cong_identity in H16.
-subst Y.
-apply H0.
-Col.
-exists A.
-split; Col.
-unfold one_side in H19.
-ex_and H19 U.
-unfold two_sides in H19.
-spliter.
-tauto.
-
-(* cas 2 Y pas sur AT *)
-
-assert(HH:= l8_18_existence T A Y H12).
-ex_and HH Y1.
-
-assert(A <> Y1).
-intro.
-subst Y1.
-apply H0.
-eapply perp_perp_col.
-apply perp_sym.
-apply H10.
-apply perp_left_comm.
-Perp.
-
-assert(HH:=ex_col1 A Y1 T).
-assert(exists D : Tpoint, Col A Y1 D /\ A <> D /\ Y1 <> D /\ T <> D).
-apply HH; Col.
-clear HH.
-ex_and H16 D.
-
-assert(one_side A B Y Y1).
-assert(HH:= per_one_side  A B D A Y Y1).
-apply HH.
-assumption.
-assumption.
-assumption.
-Col.
-Col.
-apply perp_sym.
-apply perp_comm.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H10.
-ColR.
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-auto.
-apply perp_comm.
-eapply perp_col.
-2:apply H14.
-assumption.
-ColR.
-ColR.
-
-prolong B A B' B A.
-prolong Y1 A C' Y1 A.
-
-assert(HH1:= H1 X Y1 B A B' C' A).
-
-assert(Perp A B X A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Perp A B Y1 A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Bet X A C' \/ one_side A A X C').
-apply HH1; auto.
-apply l8_2.
-apply l8_5.
-
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H14.
-Col.
-apply out_trivial.
-auto.
-apply cong_reflexivity.
-apply l7_3_2.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-induction H27.
-
-assert(two_sides A B Y1 C').
-unfold two_sides.
-repeat split.
-assumption.
-intro.
-apply H15.
-eapply (inter_unicity X A B A).
-Col.
-Col.
-ColR.
-Col.
-intro.
-apply H.
-Col.
-auto.
-
-intro.
-assert(C' = A).
-eapply (inter_unicity X A B A).
-apply bet_col.
-apply H27.
-apply col_permutation_3.
-apply H28.
-Col.
-Col.
-intro.
-apply H.
-Col.
-auto.
-subst C'.
-apply cong_symmetry in H24.
-apply cong_identity in H24.
-subst Y1.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(two_sides A B X C').
-unfold two_sides.
-repeat split.
-assumption.
-intro.
-apply H.
-Col.
-intro.
-assert(C' = A).
-eapply (inter_unicity X A B A).
-apply bet_col.
-apply H27.
-apply col_permutation_3.
-apply H29.
-Col.
-Col.
-intro.
-apply H.
-Col.
-auto.
-subst C'.
-apply cong_symmetry in H24.
-apply cong_identity in H24.
-subst Y1.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(one_side A B X Y1).
-eapply l9_8_1.
-apply H29.
-assumption.
-eapply one_side_transitivity.
-apply H30.
-apply one_side_symmetry.
-assumption.
-unfold one_side in H27.
-ex_and H27 U.
-unfold two_sides in H28.
-spliter.
-tauto.
-
-(* cas 3 X pas sur AT *)
-
-assert(HH:= l8_18_existence T A X H11).
-ex_and HH X1.
-
-assert(A <> X1).
-intro.
-subst X1.
-apply H.
-eapply perp_perp_col.
-apply perp_sym.
-apply H10.
-apply perp_left_comm.
-Perp.
-
-assert(HH:=ex_col1 A X1 T).
-assert(exists D : Tpoint, Col A X1 D /\ A <> D /\ X1 <> D /\ T <> D).
-apply HH; Col.
-clear HH.
-ex_and H16 D.
-
-assert(one_side A B X X1).
-assert(HH:= per_one_side  A B D A X X1).
-apply HH.
-assumption.
-assumption.
-assumption.
-Col.
-Col.
-apply perp_sym.
-apply perp_comm.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H10.
-ColR.
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-auto.
-apply perp_comm.
-eapply perp_col.
-2:apply H14.
-assumption.
-ColR.
-ColR.
-
-prolong B A B' B A.
-prolong Y A C' Y A.
-
-assert(HH1:= H1 X1 Y B A B' C' A).
-
-assert(Perp A B X1 A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Perp A B Y A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Bet X1 A C' \/ one_side A A X1 C').
-apply HH1; auto.
-
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H14.
-Col.
-apply l8_2.
-apply l8_5.
-apply out_trivial.
-auto.
-apply cong_reflexivity.
-apply l7_3_2.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-induction H27.
-
-assert(~Col X1 B A).
-apply perp_not_col in H25.
-intro.
-apply H25.
-Col.
-
-assert(two_sides A B Y C').
-unfold two_sides.
-repeat split.
-assumption.
-
-intro.
-apply H4.
-eapply (inter_unicity X1 A B A).
-Col.
-Col.
-ColR.
-Col.
-assumption.
-auto.
-
-intro.
-assert(C' = A).
-eapply (inter_unicity X1 A B A).
-apply bet_col.
-apply H27.
-Col.
-Col.
-Col.
-assumption.
-auto.
-subst C'.
-apply cong_symmetry in H24.
-apply cong_identity in H24.
-subst Y.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(two_sides A B X1 C').
-unfold two_sides.
-repeat split.
-assumption.
-intro.
-apply H28.
-Col.
-intro.
-assert(C' = A).
-eapply (inter_unicity X1 A B A).
-apply bet_col.
-apply H27.
-apply col_permutation_3.
-apply H30.
-Col.
-Col.
-assumption.
-auto.
-subst C'.
-apply cong_symmetry in H24.
-apply cong_identity in H24.
-subst Y.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(one_side A B X1 Y).
-eapply l9_8_1.
-apply H30.
-assumption.
-eapply one_side_transitivity.
-apply H20.
-assumption.
-unfold one_side in H27.
-ex_and H27 U.
-unfold two_sides in H28.
-spliter.
-tauto.
-
-(* cas 4 X Y pas sur AT *)
-
-assert(HH:= l8_18_existence T A X H11).
-ex_and HH X1.
-
-
-assert(HH:= l8_18_existence T A Y H12).
-ex_and HH Y1.
-
-assert(A <> X1).
-intro.
-subst X1.
-apply H.
-eapply perp_perp_col.
-apply perp_sym.
-apply H10.
-apply perp_left_comm.
-Perp.
-
-assert(A <> Y1).
-intro.
-subst Y1.
-apply H0.
-eapply perp_perp_col.
-apply perp_sym.
-apply H10.
-apply perp_left_comm.
-Perp.
-
-(***********************************)
-
-assert(HH:=ex_col1 A X1 T).
-assert(exists D : Tpoint, Col A X1 D /\ A <> D /\ X1 <> D /\ T <> D).
-apply HH; Col.
-clear HH.
-ex_and H19 D.
-
-assert(one_side A B X X1).
-assert(HH:= per_one_side  A B D A X X1).
-apply HH.
-assumption.
-assumption.
-assumption.
-Col.
-Col.
-apply perp_sym.
-apply perp_comm.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H10.
-ColR.
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-auto.
-apply perp_comm.
-eapply perp_col.
-2:apply H14.
-assumption.
-ColR.
-ColR.
-
-assert(HH:=ex_col1 A Y1 T).
-assert(exists D : Tpoint, Col A Y1 D /\ A <> D /\ Y1 <> D /\ T <> D).
-apply HH; Col.
-clear HH.
-ex_and H24 E.
-
-assert(one_side A B Y Y1).
-assert(HH:= per_one_side  A B E A Y Y1).
-apply HH.
-assumption.
-assumption.
-assumption.
-Col.
-Col.
-apply perp_sym.
-apply perp_comm.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H10.
-ColR.
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-auto.
-apply perp_comm.
-eapply perp_col.
-2:apply H16.
-assumption.
-ColR.
-ColR.
-
-prolong B A B' B A.
-prolong Y1 A C' Y1 A.
-
-assert(HH1:= H1 X1 Y1 B A B' C' A).
-
-assert(Perp A B X1 A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Perp A B Y1 A).
-apply perp_sym.
-apply perp_left_comm.
-eapply perp_col.
-assumption.
-apply perp_left_comm.
-apply H10.
-Col.
-
-assert(Bet X1 A C' \/ one_side A A X1 C').
-apply HH1; auto.
-
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H14.
-Col.
-
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-apply perp_sym.
-eapply perp_col.
-assumption.
-apply perp_comm.
-apply H16.
-Col.
-
-apply out_trivial.
-auto.
-apply cong_reflexivity.
-apply l7_3_2.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-unfold is_midpoint.
-split.
-assumption.
-Cong.
-induction H35.
-
-assert(~Col X1 B A).
-apply perp_not_col in H33.
-intro.
-apply H33.
-Col.
-
-assert(two_sides A B Y1 C').
-unfold two_sides.
-repeat split.
-assumption.
-
-intro.
-apply H18.
-eapply (inter_unicity X1 A B A).
-Col.
-Col.
-ColR.
-Col.
-assumption.
-auto.
-
-intro.
-assert(C' = A).
-eapply (inter_unicity X1 A B A).
-apply bet_col.
-assumption.
-Col.
-Col.
-Col.
-assumption.
-auto.
-subst C'.
-apply cong_symmetry in H32.
-apply cong_identity in H32.
-subst Y1.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(two_sides A B X1 C').
-unfold two_sides.
-repeat split.
-assumption.
-intro.
-apply H36.
-Col.
-intro.
-assert(C' = A).
-eapply (inter_unicity X1 A B A).
-apply bet_col.
-assumption.
-Col.
-Col.
-Col.
-assumption.
-auto.
-subst C'.
-apply cong_symmetry in H32.
-apply cong_identity in H32.
-subst Y1.
-tauto.
-exists A.
-split.
-Col.
-assumption.
-
-assert(one_side A B X1 Y1).
-eapply l9_8_1.
-apply H38.
-assumption.
-eapply one_side_transitivity.
-apply H23.
-eapply one_side_transitivity.
-apply H39.
-apply one_side_symmetry.
-assumption.
-unfold one_side in H35.
-ex_and H35 U.
-unfold two_sides in H35.
-spliter.
-tauto.
-Qed.
-*)
-
-
-
-(* Definition proj := fun  T A B P => A <> B /\ (~Col A B T /\ Perp A B T P /\ Col A B P \/ Col A B T /\ P = T).
-
-Lemma proj_exists : forall A B T, A <> B -> exists P, proj T A B P.
-intros.
-induction(Col_dec A B T).
-exists T.
-unfold proj.
-split.
-assumption.
-right.
-split;
-auto.
-assert(HH:=l8_18_existence A B T H0).
-ex_and HH P.
-exists P.
-unfold proj.
-split.
-assumption.
-left.
-repeat split;auto.
-Qed. 
-
-Lemma not_eqo : forall A B C, ~eqo A B C B A C.
-intros.
-intro.
-unfold eqo in H.
-spliter.
-assert(A <> B).
-intro.
-subst B.
-apply H.
-Col.
-assert(HH:=ex_per_cong B A A C A B).
-assert(exists P : Tpoint, Per P A B /\ Cong P A A B /\ one_side B A P C).
-apply HH; Col.
-clear HH.
-ex_and H3 T.
-
-assert(HH:=l8_18_existence C T A).
-*)
 
 End Ch12.

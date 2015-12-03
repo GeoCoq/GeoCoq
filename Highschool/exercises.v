@@ -1,4 +1,4 @@
-Require Import GeoCoq.Highschool.triangle_midpoints_theorems.
+Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Require Import GeoCoq.Highschool.varignon.
 
 Section Exercises.
@@ -34,7 +34,7 @@ elim (eq_dec_points A C); intro; apply plg_per_rect.
 
     apply parallelogram_to_plg; unfold Parallelogram; right; unfold Parallelogram_flat; repeat split.
     ColR.
-    ColR.  
+    ColR.
     assumption.
 
     assumption.

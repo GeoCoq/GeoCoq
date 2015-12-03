@@ -337,15 +337,15 @@ intros HYM2Z2 HCong5 HCong6 HCong7 HPerp1 HPerp2 HPerp3.
 elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
 
   exfalso; apply HABC; apply par_id.
-  apply l12_9 with Y Z1; try apply all_coplanar; Perp.
+  apply l12_9 with Y Z1; Perp.
   apply perp_col1 with Z2; assert_diffs; Perp; ColR.
 
   exfalso; apply HABC; apply par_id_1.
-  apply l12_9 with Y Z1; try apply all_coplanar; Perp.
+  apply l12_9 with Y Z1; Perp.
   apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 
   exfalso; apply HABC; apply par_id_2.
-  apply l12_9 with Y Z2; try apply all_coplanar; Perp.
+  apply l12_9 with Y Z2; Perp.
   apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 
   assert (H := HXYZ1); apply HTC in H; destruct H as [x [HCong1 HCong2]]; exists x;
@@ -399,7 +399,7 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
     assert (A = x) by (apply l6_21 with A B C A; Col); treat_equalities.
     assert (H : Par B C A T).
     {
-      apply l12_9 with X Y; try apply all_coplanar.
+      apply l12_9 with X Y.
 
         apply perp_sym; apply perp_col2 with Z T; Perp; assert_cols; ColR.
 
@@ -413,7 +413,7 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
   }
   assert (HPar : Par B C x y).
   {
-    apply l12_9 with X Y; try apply all_coplanar.
+    apply l12_9 with X Y.
 
       apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 

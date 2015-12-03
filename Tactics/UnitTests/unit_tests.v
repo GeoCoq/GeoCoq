@@ -63,9 +63,9 @@ not_exist_hyp_comm A B.
 auto.
 Qed.
 
-Goal forall A B C Q, 
- B <> A -> Col A B C -> is_midpoint Q A C -> 
- A <> C -> B <> C -> is_midpoint A B C -> 
+Goal forall A B C Q,
+ B <> A -> Col A B C -> is_midpoint Q A C ->
+ A <> C -> B <> C -> is_midpoint A B C ->
  Q <> C.
 Proof.
 intros.
@@ -158,7 +158,7 @@ assert_diffs.
 intuition.
 Qed.
 
-Goal forall A B C D I, 
+Goal forall A B C D I,
   is_midpoint I A B -> Par A B C D -> I<>A.
 Proof.
 intros.
@@ -166,7 +166,7 @@ assert_diffs.
 assumption.
 Qed.
 
-Goal forall A B C D I, 
+Goal forall A B C D I,
   is_midpoint I A B -> Par A I C D -> B<>A.
 Proof.
 intros.

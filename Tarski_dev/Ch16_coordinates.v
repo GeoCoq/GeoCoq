@@ -20,8 +20,7 @@ Qed.
 
 (** Lemma 16.2 in dimension 2. *)
 
-Lemma Cs_not_Col :
-  forall O E S U1 U2, Cs O E S U1 U2 -> ~ Col U1 S U2.
+Lemma Cs_not_Col : forall O E S U1 U2, Cs O E S U1 U2 -> ~ Col U1 S U2.
 Proof.
 unfold Cs; intros O E S U1 U2 HCs.
 spliter; assert_diffs; apply per_not_col; Perp.
@@ -30,18 +29,16 @@ Qed.
 (** As we are in dimension 2, we skip 16.3 which is only needed to prove 16.4 in dimension n. *)
 
 (** Lemma 16.4 in dimension 2. *)
-
-Lemma exists_grid : exists O E S U1 U2, Cs O E S U1 U2.
+Lemma exists_grid : exists O E E' S U1 U2, ~ Col O E E' /\ Cs O E S U1 U2.
 Proof.
 destruct lower_dim as [O [I [X HNC]]].
 assert (H : ~ Col O I X) by auto; clear HNC; rename H into HNC.
 assert_diffs; destruct (ex_per_cong I O O X O I) as [J HJ]; Col; spliter.
-exists O; exists I; exists O; exists I; exists J.
-repeat (split; Cong; Perp).
+exists O; exists I; exists X; exists O; exists I; exists J.
+repeat (split; finish).
 Qed.
 
 (** P is of coordinates (X,Y) in the grip SU1U2 using unit length OE. *)
-
 Definition Cd O E S U1 U2 P X Y :=
   Cs O E S U1 U2 /\ Coplanar P S U1 U2 /\
   (exists PX, projp P PX S U1 /\ Cong_3 O E X S U1 PX) /\
@@ -58,8 +55,7 @@ split; auto.
 Qed.
 
 (** Lemma 16.6 in dimension 2. *)
-
-Lemma Cd_Col : forall  O E S U1 U2 P X Y,
+Lemma Cd_Col : forall O E S U1 U2 P X Y,
   Cd O E S U1 U2 P X Y -> Col O E X /\ Col O E Y.
 Proof.
 unfold Cd; unfold projp; intros O E S U1 U2 P X Y HCd.
@@ -90,7 +86,6 @@ exists PX; exists X; Cong.
 Qed.
 
 (** Lemma 16.7 in dimension 2. *)
-
 Lemma coordinates_of_point : forall O E S U1 U2 P,
   Cs O E S U1 U2 -> exists X, exists Y, Cd O E S U1 U2 P X Y.
 Proof.
@@ -106,8 +101,7 @@ split; [exists PX|exists PY]; auto.
 Qed.
 
 Lemma point_of_coordinates_origin : forall O E S U1 U2,
-  Cs O E S U1 U2 ->
-  Cd O E S U1 U2 S O O.
+  Cs O E S U1 U2 -> Cd O E S U1 U2 S O O.
 Proof.
 intros O E S U1 U2 HCs.
 split; auto.
@@ -117,10 +111,7 @@ assert_diffs; split; exists S; repeat (split; Col; Cong).
 Qed.
 
 Lemma point_of_coordinates_on_an_axis : forall O E S U1 U2 X,
-  Cs O E S U1 U2 ->
-  Col O E X ->
-  O <> X ->
-  exists P, Cd O E S U1 U2 P X O.
+  Cs O E S U1 U2 -> Col O E X -> O <> X -> exists P, Cd O E S U1 U2 P X O.
 Proof.
 intros O E S U1 U2 X HCs HCol HOX.
 assert (H := HCs); destruct H as [HDiff [HCong1 [HCong2 H]]]; clear H.
@@ -137,9 +128,7 @@ apply perp_col0 with S U1; Col; Perp;
 Qed.
 
 Lemma point_of_coordinates : forall O E S U1 U2 X Y,
-  Cs O E S U1 U2 ->
-  Col O E X -> Col O E Y ->
-  exists P, Cd O E S U1 U2 P X Y.
+  Cs O E S U1 U2 -> Col O E X -> Col O E Y -> exists P, Cd O E S U1 U2 P X Y.
 Proof.
 intros O E S U1 U2 X Y HCs HCol1 HCol2.
 elim (eq_dec_points O X); intro HOX; elim (eq_dec_points O Y); intro HOY;
@@ -156,7 +145,7 @@ destruct (perp_exists PY S U2) as [PY' HPerp2]; [assert_diffs; auto|].
 assert (HPerp3 : Perp PX PX' PY PY').
   {
   apply par_perp_perp with S U2; Perp.
-  apply l12_9 with S U1; Perp; try apply all_coplanar.
+  apply l12_9 with S U1; Perp.
   destruct HCs as [H [H' [H'' HPer]]]; clear H; clear H'; clear H''.
   assert_diffs; apply per_perp in HPer; Perp.
   }
@@ -175,7 +164,7 @@ split; [exists PX|exists PY]; split; Cong.
    assert_diffs; apply per_perp in HPer; Perp|
   |apply l4_13 with E O Y; try apply cong_3_swap; Col].
   assert (HPar : Par S U1 PY PY')
-    by (apply l12_9 with P PX'; Perp; apply all_coplanar).
+    by (apply l12_9 with P PX'; Perp).
   elim HPar; clear HPar; intro HParS; [|spliter; ColR].
   exfalso; apply HParS; exists P; split; Col.
   apply l4_13 with X O E; try (apply cong_3_swap; apply cong_3_swap_2); Col.
@@ -192,7 +181,7 @@ split; [exists PX|exists PY]; split; Cong.
    assert_diffs; apply per_perp in HPer; Perp|
   |apply l4_13 with E O X; try apply cong_3_swap; Col].
   assert (HPar : Par S U2 PX PX')
-    by (apply l12_9 with P PY'; Perp; apply all_coplanar).
+    by (apply l12_9 with P PY'; Perp).
   elim HPar; clear HPar; intro HParS; [|spliter; ColR].
   exfalso; apply HParS; exists P; split; Col.
   apply l4_13 with Y O E; try (apply cong_3_swap; apply cong_3_swap_2); Col.
@@ -200,8 +189,7 @@ split; [exists PX|exists PY]; split; Cong.
 Qed.
 
 Lemma eq_points_coordinates : forall O E S U1 U2 P1 X1 Y1 P2 X2 Y2,
-  Cd O E S U1 U2 P1 X1 Y1 ->
-  Cd O E S U1 U2 P2 X2 Y2 ->
+  Cd O E S U1 U2 P1 X1 Y1 -> Cd O E S U1 U2 P2 X2 Y2 ->
   (P1 = P2 <-> (X1 = X2 /\ Y1 = Y2)).
 Proof.
 intros O E S U1 U2 P1 X1 Y1 P2 X2 Y2 HCd1 HCd2.
@@ -255,7 +243,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp; apply all_coplanar.
+      apply l12_9 with P2 P1; Perp.
       }
 
       {
@@ -263,7 +251,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp3 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp; try apply all_coplanar.
+      apply l12_9 with P2 P1; Perp.
       apply perp_col0 with P1 PY; Perp; Col.
       }
 
@@ -272,7 +260,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp; try apply all_coplanar.
+      apply l12_9 with P2 P1; Perp.
       apply perp_col0 with P1 PX; Perp; Col.
       }
 
@@ -281,7 +269,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp3 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; try apply all_coplanar;
+      apply l12_9 with P2 P1;
       [apply perp_col0 with P1 PX|apply perp_col0 with P1 PY];Perp; Col.
       }
     }
@@ -296,12 +284,9 @@ split; intro; spliter; treat_equalities.
 Qed.
 
 (** As we are in dimension 2, we skip 16.8 which is only needed to prove 16.11 in dimension n. *)
-
 Lemma l16_9_1 : forall O E E' X Y XY XMY,
-  Col O E X -> Col O E Y ->
-  is_length O E E' X Y XY ->
-  leP O E E' Y X ->
-  diff O E E' X Y XMY ->
+  Col O E X -> Col O E Y -> is_length O E E' X Y XY ->
+  leP O E E' Y X -> diff O E E' X Y XMY ->
   XY = XMY.
 Proof.
 intros O E E' X Y XY XMY HCol1 HCol2 HXY HLe1 HXMY.
@@ -342,14 +327,10 @@ assert (L1 = D)
 treat_equalities; auto.
 Qed.
 
-Lemma l16_9_2 :
- forall O E E' X Y XY XMY XY2 XMY2, 
-   Col O E X -> Col O E Y -> 
-   is_length O E E' X Y XY ->
-   diff O E E' X Y XMY ->
-   prod O E E' XY XY XY2 -> 
-   prod O E E' XMY XMY XMY2 ->
-   XY2 = XMY2.
+Lemma l16_9_2 : forall O E E' X Y XY XMY XY2 XMY2,
+  Col O E X -> Col O E Y -> is_length O E E' X Y XY ->
+  diff O E E' X Y XMY -> prod O E E' XY XY XY2 -> prod O E E' XMY XMY XMY2 ->
+  XY2 = XMY2.
 Proof.
 intros O E E' X Y XY XMY XY2 XMY2 HCol1 HCol2 HXY HXMY HXY2 HXMY2.
 assert (HNC : ~ Col O E E')
@@ -367,11 +348,9 @@ Definition Cong_4 P1 P2 P3 P4 Q1 Q2 Q3 Q4 :=
   Cong P2 P3 Q2 Q3 /\ Cong P2 P4 Q2 Q4 /\ Cong P3 P4 Q3 Q4.
 
 (** Lemma 16.10 for k  = 2. *)
-
 Lemma cong_3_2_cong_4 : forall O E I J S U X Y,
   O <> E -> Col O E I -> Col O E J ->
-  Cong_3 O E I S U X ->
-  Cong_3 O E J S U Y ->
+  Cong_3 O E I S U X -> Cong_3 O E J S U Y ->
   Cong_4 O E I J S U X Y.
 Proof.
 intros O E I J S U X Y HOE HCol1 HCol2 HCong1 HCong4.
@@ -383,17 +362,15 @@ repeat (split; Cong).
 Qed.
 
 Definition Cong_5 P1 P2 P3 P4 P5 Q1 Q2 Q3 Q4 Q5 :=
-  Cong P1 P2 Q1 Q2 /\ Cong P1 P3 Q1 Q3 /\ Cong P1 P4 Q1 Q4 /\ Cong P1 P5 Q1 Q5 /\
+  Cong P1 P2 Q1 Q2 /\ Cong P1 P3 Q1 Q3 /\
+  Cong P1 P4 Q1 Q4 /\ Cong P1 P5 Q1 Q5 /\
   Cong P2 P3 Q2 Q3 /\ Cong P2 P4 Q2 Q4 /\ Cong P2 P5 Q2 Q5 /\
   Cong P3 P4 Q3 Q4 /\ Cong P3 P5 Q3 Q5 /\ Cong P4 P5 Q4 Q5.
 
 (** Lemma 16.10 for k  = 3. *)
-
 Lemma cong_3_3_cong_5: forall O E I J K S U X Y Z,
   O <> E -> Col O E I -> Col O E J -> Col O E K ->
-  Cong_3 O E I S U X ->
-  Cong_3 O E J S U Y ->
-  Cong_3 O E K S U Z ->
+  Cong_3 O E I S U X -> Cong_3 O E J S U Y -> Cong_3 O E K S U Z ->
   Cong_5 O E I J K S U X Y Z.
 Proof.
 intros O E I J K S U X Y Z HOE HCol1 HCol2 HCol3 HCong1 HCong4 HCong7.
@@ -407,13 +384,12 @@ Qed.
 Lemma square_distance_formula_aux : forall O E E' S U1 U2 P PX PY Q QX PXQX,
   Cd O E S U1 U2 P PX PY -> Cd O E S U1 U2 Q QX PY ->
   P <> Q -> ~ Col O E E' -> Col O E PX -> Col O E QX -> Col O E PY ->
-  Col O E PXQX -> Cs O E S U1 U2 ->
-  length O E E' PX QX PXQX ->
+  Cs O E S U1 U2 -> length O E E' PX QX PXQX ->
   length O E E' Q P PXQX.
 Proof.
 intros O E E' S U1 U2 P PX PY Q QX PXQX.
-intros HCd1 HCd2 HDiff  HNC HCol1 HCol2 HCol3 HCol5 HCs HPXQX.
-apply length_eq_cong_2 with PX QX; auto; clear HPXQX; clear HCol5.
+intros HCd1 HCd2 HDiff  HNC HCol1 HCol2 HCol3 HCs HPXQX.
+apply length_eq_cong_2 with PX QX; auto; clear HPXQX.
 destruct HCd1 as [H [H' [HPX' HPY']]]; clear H; clear H'.
 destruct HPX' as [PX' [HProjp1 HCong1]]; destruct HPY' as [PY' [HProjp2 HCong2]].
 destruct HCd2 as [H [H' [HQX' HQY']]]; clear H; clear H'.
@@ -435,9 +411,9 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     {
     exfalso; unfold Cong_3 in *; spliter; treat_equalities.
     assert (HPar1 : Par P Q S U1)
-      by (apply l12_9 with S U2; Perp; apply all_coplanar).
+      by (apply l12_9 with S U2; Perp).
     assert (HPar2 : Par P S Q S)
-      by (apply l12_9 with S U1; Perp; apply all_coplanar).
+      by (apply l12_9 with S U1; Perp).
     elim HPar2; clear HPar2; intro HCol1; [apply HCol1; exists S; Col|].
     elim HPar1; clear HPar1; intro HCol2; [apply HCol2; exists S; spliter; Col|].
     spliter; apply perp_not_col2 in HPerp3;
@@ -449,7 +425,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     treat_equalities; assert (HCol7 : Col S U2 P).
       {
       assert (H : Par P S S U2)
-        by (apply l12_9 with S U1; Perp; apply all_coplanar).
+        by (apply l12_9 with S U1; Perp).
       elim H; clear H; intro H; [exfalso; apply H; exists S|spliter]; Col.
       }
     assert (HNC' : ~ Col S U1 U2) by (apply perp_not_col; Perp).
@@ -459,7 +435,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       [apply perp_col0 with S U1|apply perp_sym; apply perp_col0 with S U1|];
       Col; Perp.
       apply perp_sym; apply par_perp_perp with S U1; Perp.
-      apply l12_9 with S U2; Perp; apply all_coplanar.
+      apply l12_9 with S U2; Perp.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
@@ -471,7 +447,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     treat_equalities; assert (HCol7 : Col S U2 Q).
       {
       assert (H : Par Q S S U2)
-        by (apply l12_9 with S U1; Perp; apply all_coplanar).
+        by (apply l12_9 with S U1; Perp).
       elim H; clear H; intro H; [exfalso; apply H; exists S|spliter]; Col.
       }
     assert (HNC' : ~ Col S U1 U2) by (apply perp_not_col; Perp).
@@ -481,7 +457,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       [apply perp_col0 with S U1|apply perp_sym; apply perp_col0 with S U1|];
       Col; Perp.
       apply perp_sym; apply par_perp_perp with S U1; Perp.
-      apply l12_9 with S U2; Perp; apply all_coplanar.
+      apply l12_9 with S U2; Perp.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
@@ -498,7 +474,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       elim H; clear H; intro H; [|spliter; subst; Col].
       destruct H as [H HPerp5]; clear H.
       assert (HPar : Par P S S U1)
-        by (apply l12_9 with S U2; Perp; apply all_coplanar).
+        by (apply l12_9 with S U2; Perp).
       elim HPar; clear HPar; intro HPar;
       [exfalso; apply HPar; exists S|spliter]; Col.
       }
@@ -513,7 +489,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
         intro; treat_equalities; apply HDiff1.
         assert_diffs; apply l6_21 with S U1 U2 S; Col.
         assert (HPar : Par P PX' S U2)
-          by (apply l12_9 with S U1; Perp; apply all_coplanar).
+          by (apply l12_9 with S U1; Perp).
         elim HPar; clear HPar; intro HPar;
         [exfalso; apply HPar; exists P|]; spliter; Col.
         }
@@ -522,7 +498,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
         intro; treat_equalities; apply HDiff2.
         assert_diffs; apply l6_21 with S U1 U2 S; Col.
         assert (HPar : Par Q QX' S U2)
-          by (apply l12_9 with S U1; Perp; apply all_coplanar).
+          by (apply l12_9 with S U1; Perp).
         elim HPar; clear HPar; intro HPar;
         [exfalso; apply HPar; exists Q|]; spliter; Col.
         }
@@ -542,7 +518,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
 
           {
           apply par_perp_perp with S U1; Perp.
-          apply l12_9 with S U2; Perp; try (apply all_coplanar).
+          apply l12_9 with S U2; Perp.
           apply perp_sym; apply perp_col0 with P Q; Col.
           apply col_permutation_1; apply projp2_col with S U2; auto.
           }
@@ -563,7 +539,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
 
           {
           apply par_perp_perp with S U1; Perp.
-          apply l12_9 with S U2; Perp; try (apply all_coplanar).
+          apply l12_9 with S U2; Perp.
           apply perp_sym; apply perp_col0 with P Q; Col.
           apply col_permutation_1; apply projp2_col with S U2; auto.
           }
@@ -580,14 +556,14 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
 
   {
   exfalso; elim (perp_not_col2 S U1 P PX'); Perp; intro H; apply H; Col; clear H.
-  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp; apply all_coplanar).
+  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp).
   elim HPar; clear HPar; intro HPar; spliter; Col.
   exfalso; apply HPar; exists Q; Col.
   }
 
   {
   exfalso; elim (perp_not_col2 S U1 Q QX'); Perp; intro H; apply H; Col; clear H.
-  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp; apply all_coplanar).
+  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp).
   elim HPar; clear HPar; intro HPar; spliter; Col.
   exfalso; apply HPar; exists P; Col.
   }
@@ -599,16 +575,11 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
 Qed.
 
 Lemma square_distance_formula :
-  forall O E E' S U1 U2 P Q PX PY QX QY PQ PQ2 PXMQX PYMQY PXMQX2 PYMQY2 F, 
-  Cd O E S U1 U2 P PX PY ->
-  Cd O E S U1 U2 Q QX QY ->
-  is_length O E E' P Q PQ ->
-  prod O E E' PQ PQ PQ2 ->
-  diff O E E' PX QX PXMQX ->
-  prod O E E' PXMQX PXMQX PXMQX2 ->
-  diff O E E' PY QY PYMQY ->
-  prod O E E' PYMQY PYMQY PYMQY2 ->
-  sum O E E' PXMQX2 PYMQY2 F ->
+  forall O E E' S U1 U2 P Q PX PY QX QY PQ PQ2 PXMQX PYMQY PXMQX2 PYMQY2 F,
+  Cd O E S U1 U2 P PX PY -> Cd O E S U1 U2 Q QX QY -> is_length O E E' P Q PQ ->
+  prod O E E' PQ PQ PQ2 -> diff O E E' PX QX PXMQX ->
+  prod O E E' PXMQX PXMQX PXMQX2 -> diff O E E' PY QY PYMQY ->
+  prod O E E' PYMQY PYMQY PYMQY2 -> sum O E E' PXMQX2 PYMQY2 F ->
   PQ2 = F.
 Proof.
 intros O E E' S U1 U2 P Q PX PY QX QY PQ PQ2 PXMQX PYMQY PXMQX2 PYMQY2 F.
@@ -708,7 +679,7 @@ try clear HPX; try clear HPY; try clear HQX; try clear HQY.
   assert (HPerp3 : Perp U1 S S U2)
     by (unfold Cs in HCs; spliter; assert_diffs; apply per_perp; Perp).
   apply perp_per_2; auto; apply perp_sym; apply par_perp_perp with S U1; Perp.
-  apply l12_9 with S U2; Perp; apply all_coplanar.
+  apply l12_9 with S U2; Perp.
   }
 
   {
@@ -725,25 +696,18 @@ try clear HPX; try clear HPY; try clear HQX; try clear HQY.
 Qed.
 
 (** Lemma 16.12 in dimension 2. *)
-
 Lemma characterization_of_congruence :
   forall O E E' S U1 U2
          A AX AY B BX BY C CX CY D DX DY
          AXMBX AXMBX2 AYMBY AYMBY2 AB2
          CXMDX CXMDX2 CYMDY CYMDY2 CD2,
-  Cd O E S U1 U2 A AX AY ->
-  Cd O E S U1 U2 B BX BY ->
-  Cd O E S U1 U2 C CX CY ->
-  Cd O E S U1 U2 D DX DY ->
-  diff O E E' AX BX AXMBX ->
-  prod O E E' AXMBX AXMBX AXMBX2 ->
-  diff O E E' AY BY AYMBY ->
-  prod O E E' AYMBY AYMBY AYMBY2 ->
+  Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY ->
+  Cd O E S U1 U2 C CX CY -> Cd O E S U1 U2 D DX DY ->
+  diff O E E' AX BX AXMBX -> prod O E E' AXMBX AXMBX AXMBX2 ->
+  diff O E E' AY BY AYMBY -> prod O E E' AYMBY AYMBY AYMBY2 ->
   sum O E E' AXMBX2 AYMBY2 AB2 ->
-  diff O E E' CX DX CXMDX ->
-  prod O E E' CXMDX CXMDX CXMDX2 ->
-  diff O E E' CY DY CYMDY ->
-  prod O E E' CYMDY CYMDY CYMDY2 ->
+  diff O E E' CX DX CXMDX -> prod O E E' CXMDX CXMDX CXMDX2 ->
+  diff O E E' CY DY CYMDY -> prod O E E' CYMDY CYMDY CYMDY2 ->
   sum O E E' CXMDX2 CYMDY2 CD2 ->
   (Cong A B C D <-> AB2 = CD2).
 Proof.
@@ -830,7 +794,8 @@ Qed.
 
 Lemma bet_betCood_aux : forall O E S U1 U2 A AX AY B BX BY C CX CY,
   Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
-  Bet A B C -> Bet AX BX CX.
+  Bet A B C ->
+  Bet AX BX CX.
 Proof.
 intros O E S U1 U2 A AX AY B BX BY C CX CY HCdA HCdB HCdC HBet.
 destruct (parallel_existence S U1 A) as [A1 [A2 [HDiff4 [HPar HCol]]]];
@@ -885,7 +850,8 @@ Qed.
 
 Lemma bet_betCood : forall O E S U1 U2 A AX AY B BX BY C CX CY,
   Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
-  Bet A B C -> Bet AX BX CX /\ Bet AY BY CY.
+  Bet A B C ->
+  Bet AX BX CX /\ Bet AY BY CY.
 Proof.
 intros O E S U1 U2 A AX AY B BX BY C CX CY HCdA HCdB HCdC HBet.
 split; [apply bet_betCood_aux with O E S U1 U2 A AY B BY C CY|]; auto.
@@ -979,7 +945,7 @@ elim (Col_dec A B BX''); intro HABBX''.
       assert_diffs; apply col_cong_3_cong_3_eq with S U1 AX' O E; Cong.
       apply l4_13 with O E AX; auto.
       }
-    treat_equalities; 
+    treat_equalities;
     assert (O = BXMAX)
       by (apply diff_unicity with O E E' AX AX; auto; apply diff_null; Col);
     assert (O = CXMAX)
@@ -1175,7 +1141,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           by (apply par_perp_2_par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2; try apply all_coplanar.
+        left; apply l12_9 with A1 A2.
 
           {
           apply perp_sym; apply perp_col0 with BX' BX''; Perp;
@@ -1194,7 +1160,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           by (apply par_perp_2_par with S U1 A1 A2; Perp).
         elim HCol1; clear HCol1; intro HCol1;
         [exfalso; apply HCol1; exists BX'; Col|].
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with BX' BX''; Perp;
         assert_diffs; spliter; Col.
         }
@@ -1204,7 +1170,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           by (apply par_perp_2_par with S U1 A1 A2; Perp).
         elim HCol1; clear HCol1; intro HCol1;
         [exfalso; apply HCol1; exists BX'; Col|].
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with BX' BX''; Perp;
         assert_diffs; spliter; Col.
         apply perp_sym; apply par_perp_perp with S U1; Perp.
@@ -1219,18 +1185,18 @@ elim (Col_dec A B BX''); intro HABBX''.
           by (apply par_perp_2_par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2; try apply all_coplanar; Perp.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with CX' CX''; Perp;
         assert_diffs; spliter; Col.
         intro; treat_equalities; assert_cols; apply HABBX''; ColR.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar; Perp.
+        left; apply l12_9 with A1 A2; Perp; Perp.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply par_perp_perp with S U1; Perp.
         }
 
@@ -1243,7 +1209,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           by (apply par_perp_2_par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2; try apply all_coplanar; Perp.
+        left; apply l12_9 with A1 A2; Perp.
 
           {
           apply perp_sym; apply par_perp_perp with S U1; Perp.
@@ -1257,12 +1223,12 @@ elim (Col_dec A B BX''); intro HABBX''.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply par_perp_perp with S U1; Perp.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp; try apply all_coplanar.
+        left; apply l12_9 with A1 A2; Perp.
         apply perp_sym; apply par_perp_perp with S U1; Perp.
         apply perp_sym; apply par_perp_perp with S U1; Perp.
         }
@@ -1420,13 +1386,9 @@ Lemma characterization_of_betweenness :
   forall O E E' S U1 U2
          A AX AY B BX BY C CX CY
          BXMAX BYMAY CXMAX CYMAY,
-  Cd O E S U1 U2 A AX AY ->
-  Cd O E S U1 U2 B BX BY ->
-  Cd O E S U1 U2 C CX CY ->
-  diff O E E' BX AX BXMAX ->
-  diff O E E' BY AY BYMAY ->
-  diff O E E' CX AX CXMAX ->
-  diff O E E' CY AY CYMAY ->
+  Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
+  diff O E E' BX AX BXMAX -> diff O E E' BY AY BYMAY ->
+  diff O E E' CX AX CXMAX -> diff O E E' CY AY CYMAY ->
   (Bet A B C <-> exists T, O <> E /\ Col O E T /\
                            leP O E E' O T /\ leP O E E' T E /\
                            prod O E E' T CXMAX BXMAX /\
@@ -1650,7 +1612,7 @@ split; [intro HBet|intro HT].
         by (apply diff_ar2 in HBXMAX; unfold Ar2 in *; spliter; Col).
       assert (HX' : prod O E E' T CXMAX BXMAX).
         {
-        apply characterization_of_betweenness_aux 
+        apply characterization_of_betweenness_aux
         with S U1 U2 A AX AY B BX BY C CX CY AB AC IAC; auto.
         }
       assert (BXMAX = B'XMAX) by (apply prod_unicity with O E E' T CXMAX; auto).
@@ -1701,15 +1663,10 @@ Lemma characterization_of_collinearity :
   forall O E E' S U1 U2
          A AX AY B BX BY C CX CY
          AXMBX AYMBY BXMCX BYMCY XProd YProd,
-  Cd O E S U1 U2 A AX AY ->
-  Cd O E S U1 U2 B BX BY ->
-  Cd O E S U1 U2 C CX CY ->
-  diff O E E' AX BX AXMBX ->
-  diff O E E' AY BY AYMBY ->
-  diff O E E' BX CX BXMCX ->
-  diff O E E' BY CY BYMCY ->
-  prod O E E' AXMBX BYMCY XProd->
-  prod O E E' AYMBY BXMCX YProd->
+  Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
+  diff O E E' AX BX AXMBX -> diff O E E' AY BY AYMBY ->
+  diff O E E' BX CX BXMCX -> diff O E E' BY CY BYMCY ->
+  prod O E E' AXMBX BYMCY XProd -> prod O E E' AYMBY BXMCX YProd ->
   (Col A B C <-> XProd = YProd).
 Proof.
 intros O E E' S U1 U2 A AX AY B BX BY C CX CY AXMBX AYMBY BXMCX BYMCY XProd YProd.
@@ -2011,7 +1968,7 @@ split; intro HCol; treat_equalities.
   }
 
   {
-  elim (eq_dec_points O AXMBX); intro HDiff1; 
+  elim (eq_dec_points O AXMBX); intro HDiff1;
   treat_equalities; try apply diff_null_eq in HAXMBX;
   elim (eq_dec_points O AYMBY); intro HDiff2;
   treat_equalities; try apply diff_null_eq in HAYMBY;
@@ -2135,8 +2092,8 @@ split; intro HCol; treat_equalities.
       {
       assert (HBetX : Bet CX AX BX).
         {
-        apply l5_12_b; [assert_diffs; ColR|].
-        split; [apply length_leP_le_1 with O E E' L2 L3|
+        apply l5_12_b; [assert_diffs; ColR|
+                apply length_leP_le_1 with O E E' L2 L3|
                 apply length_leP_le_1 with O E E' L1 L3];
         auto; apply length_sym; auto.
         }
@@ -2243,7 +2200,7 @@ split; intro HCol; treat_equalities.
             assert (H : leP O E E' AX CX).
               {
               apply compatibility_of_sum_with_order with O L2 AX; auto;
-              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.      
+              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
             elim H; clear H; intro H; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' AX AX; auto.
@@ -2291,8 +2248,8 @@ split; intro HCol; treat_equalities.
       {
       assert (HBetX : Bet AX BX CX).
         {
-        apply l5_12_b; [assert_diffs; ColR|].
-        split; [apply length_leP_le_1 with O E E' L1 L2|
+        apply l5_12_b; [assert_diffs; ColR|
+                apply length_leP_le_1 with O E E' L1 L2|
                 apply length_leP_le_1 with O E E' L3 L2];
         auto; apply length_sym; auto.
         }
@@ -2394,7 +2351,7 @@ split; intro HCol; treat_equalities.
             assert (H : leP O E E' AX BX).
               {
               apply compatibility_of_sum_with_order with O L1 AX; auto;
-              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.      
+              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
             elim H; clear H; intro H; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' AX AX; auto.
@@ -2422,8 +2379,8 @@ split; intro HCol; treat_equalities.
       {
       assert (HBetX : Bet BX CX AX).
         {
-        apply l5_12_b; [assert_diffs; ColR|].
-        split; [apply length_leP_le_1 with O E E' L3 L1|
+        apply l5_12_b; [assert_diffs; ColR|
+                apply length_leP_le_1 with O E E' L3 L1|
                 apply length_leP_le_1 with O E E' L2 L1];
         auto; apply length_sym; auto.
         }
@@ -2508,7 +2465,7 @@ split; intro HCol; treat_equalities.
             assert (H : leP O E E' BX CX).
               {
               apply compatibility_of_sum_with_order with O L3 BX; auto;
-              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.      
+              try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
             elim H; clear H; intro H; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' BX BX; auto.

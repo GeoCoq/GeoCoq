@@ -287,7 +287,7 @@ elim H1; clear H1; intro H1; try (elim H1; clear H1; intro H1).
             apply l12_6; apply par_strict_right_comm;
             apply par_strict_col_par_strict with R; assert_cols; Col.
             apply par_not_col_strict with P; try (intro; apply HQSU; assert_cols; ColR); Col.
-            apply l12_17 with T; try split; 
+            apply l12_17 with T; try split;
             spliter; assert_diffs; Cong; Between.
             }
           }

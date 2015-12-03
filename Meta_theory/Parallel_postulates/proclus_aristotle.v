@@ -22,7 +22,7 @@ Proof.
   assert(HY0 := l10_15 D B D A).
   destruct HY0 as [Y0 [HPerp _]]; Col.
   assert(Perp B A B D) by (apply (perp_col1 _ _ _ D0); Perp; Col).
-  assert(HPar : Par B A Y0 D) by (apply (l12_9 _ _ _ _ D B); Perp; apply all_coplanar).
+  assert(HPar : Par B A Y0 D) by (apply (l12_9 _ _ _ _ D B); Perp).
   assert(HY := proclus B A Y0 D B C).
   destruct HY as [Y []]; Col.
   apply (par_not_col_strict _ _ _ _ D) in HPar; Col.
@@ -64,19 +64,13 @@ Proof.
   assert_diffs.
   assert(Y<>D) by (intro; subst Y; Col).
   assert(one_side B A C D).
-    apply (one_side_transitivity _ _ _ D0); auto. apply out_one_side; Col; apply bet_out; auto.
+    apply (one_side_transitivity _ _ _ D0); auto; apply out_one_side; Col; apply bet_out; auto.
   assert(Par_strict B D X Y).
   { apply (par_not_col_strict _ _ _ _ Y); Col.
-    apply (l12_9 _ _ _ _ B A); Perp; apply all_coplanar.
+    apply (l12_9 _ _ _ _ B A); Perp.
     intro; assert(Col B C D); Col; ColR.
   }
-  assert(two_sides B C A D).
-  { apply invert_two_sides.
-    apply in_angle_two_sides; Col.
-    apply (lea_in_angle _ _ _ A B C); Lea; Conga.
-    apply invert_one_side; apply one_side_symmetry; auto.
-  }
-  
+  assert(InAngle C A B D) by (apply lea_in_angle; Lea; Conga; Side).
   assert(out B C Y).
   { apply (col_one_side_out _ A); Col.
     apply (one_side_transitivity _ _ _ D); auto.
@@ -91,8 +85,8 @@ Proof.
     apply l12_6; auto.
     apply (one_side_transitivity _ _ _ C).
     apply out_one_side; try (apply l6_6); Col.
-    apply one_side_symmetry.
-    apply os_ts1324__os; auto.
+    apply invert_one_side.
+    apply in_angle_one_side; try (apply l11_24); Col.
   }
 
   assert(Per B X Y).
@@ -116,13 +110,13 @@ apply proclus_s_postulate_implies_strong_parallel_postulate in proclus.
 apply strong_parallel_postulate_implies_tarski_s_euclid in proclus.
 apply tarski_s_euclid_implies_playfair in proclus.
 apply playfair__alternate_interior in proclus.
+rename proclus into aia.
 
-
-    apply proclus.
-    - apply (col_preserves_two_sides B C); Col.
-      apply l9_2.
-      apply (l9_8_2 _ _ A); auto.
-      apply out_one_side; Col.
+    apply aia.
+    - apply l9_2.
+      apply (l9_8_2 _ _ A).
+      apply (col_preserves_two_sides C B); Col; apply in_angle_two_sides; Col.
+      apply invert_one_side; apply out_one_side; Col.
 
     - apply par_left_comm.
       apply (par_col_par _ _ _ A); Col.
@@ -131,9 +125,7 @@ apply playfair__alternate_interior in proclus.
    }
 
   repeat (split; auto).
-  - apply (cong_preserves_le P Q B D).
-    split.
-    2: split; Cong.
+  - apply (cong_preserves_le P Q B D); Cong.
     apply le_right_comm.
     exists D0.
     split; Between; Cong.

@@ -57,7 +57,7 @@ assert (T:=cong_transitivity A B B C C A H0 H1).
 Cong.
 Qed.
 
-Lemma equilateral_rot : 
+Lemma equilateral_rot :
  equilateral A B C ->
  equilateral B C A.
 Proof.
@@ -67,7 +67,7 @@ unfold equilateral.
 intuition Cong.
 Qed.
 
-Lemma equilateral_swap : 
+Lemma equilateral_swap :
  equilateral A B C ->
  equilateral B A C.
 Proof.
@@ -77,7 +77,7 @@ unfold equilateral.
 intuition Cong.
 Qed.
 
-Lemma equilateral_rot_2 : 
+Lemma equilateral_rot_2 :
  equilateral A B C ->
  equilateral C B A.
 Proof.
@@ -87,7 +87,7 @@ unfold equilateral.
 intuition Cong.
 Qed.
 
-Lemma equilateral_swap_2 : 
+Lemma equilateral_swap_2 :
  equilateral A B C ->
  equilateral A C B.
 Proof.
@@ -97,7 +97,7 @@ unfold equilateral.
 intuition Cong.
 Qed.
 
-Lemma equilateral_swap_rot : 
+Lemma equilateral_swap_rot :
  equilateral A B C ->
  equilateral C A B.
 Proof.

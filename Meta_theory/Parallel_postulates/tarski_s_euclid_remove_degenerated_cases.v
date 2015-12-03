@@ -9,7 +9,7 @@ Lemma tarski_s_euclid_remove_degenerated_cases :
   (forall A B C D T,
    A <> B ->
    A <> C ->
-   A <> D -> 
+   A <> D ->
    A <> T ->
    B <> C ->
    B <> D ->

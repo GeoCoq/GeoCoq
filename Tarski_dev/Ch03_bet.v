@@ -54,7 +54,7 @@ Proof.
     apply between_trivial.
 Qed.
 
-Lemma between_egality : forall A B C : Tpoint, Bet A B C -> Bet B A C -> A = B.
+Lemma between_equality : forall A B C : Tpoint, Bet A B C -> Bet B A C -> A = B.
 Proof.
     intros.
     assert (exists x, Bet B x B /\ Bet A x A) by (apply (inner_pasch A B C);assumption).

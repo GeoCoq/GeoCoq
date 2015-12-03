@@ -99,7 +99,7 @@ assert (H : BetS Q S Q').
   }
 clear HQSQ'; rename H into HQSQ'.
 assert (HCop : Coplanar P S R R') by apply all_coplanar.
-(*
+(* DO NOT REMOVE!!!
   {
   assert (HTS : two_sides P S R R').
     {

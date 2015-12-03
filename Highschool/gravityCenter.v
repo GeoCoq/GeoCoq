@@ -1,4 +1,4 @@
-Require Export GeoCoq.Highschool.triangle_midpoints_theorems.
+Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Require Import GeoCoq.Highschool.varignon.
 
 Section GravityCenter.
@@ -36,8 +36,8 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 Lemma intersection_two_medians_exist :
 forall A B C I J,
  ~Col A B C ->
- is_midpoint I B C -> is_midpoint J A C -> 
- exists G, Col G A I /\ Col G B J. 
+ is_midpoint I B C -> is_midpoint J A C ->
+ exists G, Col G A I /\ Col G B J.
 Proof with finish.
 intros.
 assert_bet.
@@ -50,7 +50,7 @@ Qed.
 Lemma intersection_two_medians_exist_unique :
 forall A B C I J,
  ~Col A B C ->
- is_midpoint I B C -> is_midpoint J A C -> 
+ is_midpoint I B C -> is_midpoint J A C ->
  exists! G, Col G A I /\ Col G B J.
 Proof with finish.
 intros.
@@ -60,16 +60,16 @@ unfold unique.
 assert_all.
 repeat split...
 intros G' HG'; spliter.
-apply inter_unicity with A I B J...
+apply l6_21 with A I B J...
 intro; search_contradiction.
 show_distinct' B J...
 Qed.
 
-Definition is_gravity_center G A B C := 
+Definition is_gravity_center G A B C :=
  ~ Col A B C /\
  exists I, exists J, is_midpoint I B C /\ is_midpoint J A C /\ Col G A I /\ Col G B J.
 
-Lemma is_gravity_center_exist_unique : forall A B C, 
+Lemma is_gravity_center_exist_unique : forall A B C,
   ~ Col A B C ->
   exists! G, is_gravity_center G A B C.
 Proof with finish.
@@ -82,7 +82,7 @@ exists G; unfold unique; unfold is_gravity_center; repeat split...
 exists I;  exists J; do 3 (split; finish).
 intros G' HG'; spliter; decompose [ex and] H8;clear H8.
 assert_all.
-apply inter_unicity with A x B x0...
+apply l6_21 with A x B x0...
 intro;search_contradiction.
 show_distinct' B x0...
 Qed.
@@ -94,13 +94,13 @@ Ltac intersection_medians G A B C I J H1 H2 H3 :=
 Tactic Notation "Name" ident(G) "the" "intersection" "of" "the" "medians" "(" ident(A) ident(I) ")" "which" "is" "a" "median" "since" ident(H2) "and" "(" ident(B) ident(J) ")" "which" "is" "a" "median" "since" ident(H3) "of" "the" "non-flat" "triangle" ident(A) ident(B) ident(C) ident(H1) :=
  intersection_medians G A B C I J H1 H2 H3.
 
-Lemma three_medians_intersect: 
+Lemma three_medians_intersect:
  forall A B C I J K,
  ~Col A B C ->
  is_midpoint I B C ->
  is_midpoint J A C ->
  is_midpoint K A B ->
- exists G, Col G A I /\ Col G B J /\Col G C K. 
+ exists G, Col G A I /\ Col G B J /\Col G C K.
 Proof with assert_all.
 intros.
 assert_diffs.
@@ -140,8 +140,8 @@ Lemma is_gravity_center_col :
 Proof.
 intros.
 unfold is_gravity_center in *.
-spliter. 
-destruct H1 as [J [K [Ha [Hb [Hc Hd]]]]]. 
+spliter.
+destruct H1 as [J [K [Ha [Hb [Hc Hd]]]]].
 elim (three_medians_intersect A B C J K I H);try assumption.
 intro G';intros.
 spliter.
@@ -219,7 +219,7 @@ ColR.
 Qed.
 (* TODO put in assert_diffs ? *)
 
-(** We don't have ratio so we express that AG=2/3 AA' using midpoints. *) 
+(** We don't have ratio so we express that AG=2/3 AA' using midpoints. *)
 
 Lemma is_gravity_center_third :
  forall A B C G G' A',
@@ -442,7 +442,7 @@ Qed.
 Lemma is_gravity_center_perm : forall A B C G,
  is_gravity_center G A B C ->
  is_gravity_center G A B C /\ is_gravity_center G A C B /\
- is_gravity_center G B A C /\ is_gravity_center G B C A /\ 
+ is_gravity_center G B A C /\ is_gravity_center G B C A /\
  is_gravity_center G C A B /\ is_gravity_center G C B A.
 Proof.
 intros.
@@ -496,9 +496,9 @@ intros.
 apply is_gravity_center_perm in H;intuition.
 Qed.
 
-Hint Resolve 
-     is_gravity_center_perm_1 
-     is_gravity_center_perm_2 
+Hint Resolve
+     is_gravity_center_perm_1
+     is_gravity_center_perm_2
      is_gravity_center_perm_3
      is_gravity_center_perm_4
      is_gravity_center_perm_5 : gravityCenter.
@@ -508,7 +508,7 @@ Lemma is_gravity_center_cases : forall A B C G,
   is_gravity_center G A C B \/
   is_gravity_center G B A C \/
   is_gravity_center G B C A \/
-  is_gravity_center G C A B \/ 
+  is_gravity_center G C A B \/
   is_gravity_center G C B A ->
   is_gravity_center G A B C.
 Proof.

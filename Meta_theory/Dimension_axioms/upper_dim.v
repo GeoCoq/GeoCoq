@@ -12,18 +12,19 @@ Definition upper_dim_axiom := forall A B C P Q : Tpoint,
 Definition all_coplanar_axiom := forall A B C D, Coplanar A B C D.
 
 Lemma not_bet_out : forall A B C,
- A <> B -> C <> B -> Col A B C -> ~Bet A B C ->
- out B A C.
+ Col A B C -> ~Bet A B C -> out B A C.
 Proof.
     intros.
+    assert(A <> B) by (intro; subst; Between).
+    assert(C <> B) by (intro; subst; Between).
     unfold out.
     repeat split.
       assumption.
       assumption.
-    unfold Col in H1.
-    induction H1.
+    unfold Col in H.
+    induction H.
       contradiction.
-    induction H1.
+    induction H.
       right.
       assumption.
     left.
@@ -31,9 +32,15 @@ Proof.
     assumption.
 Qed.
 
-Lemma or_bet_out : forall A B C, A <> B -> C <> B -> (Bet A B C \/ out B A C \/ ~Col A B C).
+Lemma or_bet_out : forall A B C, Bet A B C \/ out B A C \/ ~Col A B C.
 Proof.
     intros.
+    elim(eq_dec_points A B).
+      intro; left; Between.
+    intro.
+    elim(eq_dec_points C B).
+      intro; left; Between.
+    intro.
     induction(Col_dec A B C).
       unfold Col in *.
       decompose [or] H1.
@@ -41,27 +48,23 @@ Proof.
         assumption.
         right;left.
         apply not_bet_out.
-          assumption.
-          assumption.
           unfold Col.
           assumption.
         intro.
         assert (Bet C B A) by Between.
         apply H0.
         symmetry.
-        apply (between_egality B C A).
+        apply (between_equality B C A).
           assumption.
         assumption.
       right;left.
       apply not_bet_out.
-        assumption.
-        assumption.
         unfold Col.
         assumption.
       intro.
       assert (Bet B A C) by Between.
       apply H.
-      apply (between_egality A B C).
+      apply (between_equality A B C).
         assumption.
       assumption.
     right;right.
@@ -180,7 +183,7 @@ assumption.
 assert(P <> PX).
 apply perp_not_eq_2 in H6.
 assumption.
-assert(HA:= (or_bet_out X PX P H11 H12)).
+assert(HA:= (or_bet_out X PX P)).
 induction HA.
 assert(two_sides PX A P X).
 repeat split; try assumption.
@@ -332,7 +335,7 @@ Qed.
 
 (* TODO cleanup the proof *)
 
-Lemma upper_dim_implies_two_sides_dec : 
+Lemma upper_dim_implies_two_sides_dec :
   upper_dim_axiom ->
   (forall A B C D, two_sides A B C D \/ ~two_sides A B C D).
 Proof.
@@ -408,7 +411,7 @@ assumption.
 right.
 intro.
 assert(one_side A B D P).
-apply (l9_8_1 _ _ _ _ C); 
+apply (l9_8_1 _ _ _ _ C);
 apply l9_2;
 assumption.
 
@@ -581,7 +584,7 @@ elim (upper_dim_implies_one_or_two_sides HUD A C B D); Col.
   }
 Qed.
 
-Lemma cop_per_per_col : forall A X Y Z, 
+Lemma cop_per_per_col : forall A X Y Z,
   Coplanar A X Y Z ->  A <> Z -> Per X Z A -> Per Y Z A -> Col X Y Z.
 Proof.
 intros A X Y Z HC HAZ HPer1 HPer2.
@@ -601,7 +604,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
     {
     assert (HLe : le A X B I).
       {
-      apply l5_6 with A X A I; split; Cong.
+      apply l5_6 with A X A I; Cong.
       apply l6_13_2; Col.
       split; try (intro; treat_equalities; Col).
       split; try (intro; treat_equalities; Col); Col.
@@ -659,7 +662,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
     {
     assert (HLe : le A Y B I).
       {
-      apply l5_6 with A Y A I; split; Cong.
+      apply l5_6 with A Y A I; Cong.
       apply l6_13_2; Col.
       split; try (intro; treat_equalities; Col).
       split; try (intro; treat_equalities; Col); Col.

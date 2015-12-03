@@ -18,54 +18,54 @@ Proof.
     apply (par_not_col_strict _ _ _ _ P); auto.
     apply par_symmetry; auto.
   }
-  assert (HP1 := l8_18_existence C D P).
-  destruct HP1 as [P1 []]; auto.
-  elim(Col_dec P Q P1).
-    intro; exists P1; split; auto.
+  assert (HC0 := l8_18_existence C D P).
+  destruct HC0 as [C0 []]; auto.
+  elim(Col_dec P Q C0).
+    intro; exists C0; split; auto.
   intro HNCol1.
   assert_diffs.
-  assert(HQ1 : exists Q1, Col Q P Q1 /\ one_side A B P1 Q1).
+  assert(HQ1 : exists Q1, Col Q P Q1 /\ one_side A B C0 Q1).
   { apply (not_par_same_side _ _ _ _ P); Col.
     apply not_col_permutation_1.
     apply (par_not_col C D); Col; Par.
   }
   destruct HQ1 as [Q1 []].
-  assert(~Col A B Q1) by (apply (one_side_not_col _ _ _ P1); Side).
+  assert(~Col A B Q1) by (apply (one_side_not_col _ _ _ C0); Side).
   assert(P<>Q1) by (intro; subst Q1; auto).
-  assert(~ Col P P1 Q1) by (intro; apply HNCol1; ColR).
+  assert(~ Col P C0 Q1) by (intro; apply HNCol1; ColR).
 
-  assert(HNCol2 : ~Col P1 A B) by (apply (par_not_col C D); Par; Col).
-  assert(HA1 : exists A1, Col A B A1 /\ one_side P P1 Q1 A1).
-  { elim(Col_dec P P1 A).
+  assert(HNCol2 : ~Col C0 A B) by (apply (par_not_col C D); Par; Col).
+  assert(HA1 : exists A1, Col A B A1 /\ one_side P C0 Q1 A1).
+  { elim(Col_dec P C0 A).
     2: intro; apply (not_par_same_side _ _ _ _ P); Col.
     intro.
-    assert(HA1 := not_par_same_side P P1 B A P Q1).
+    assert(HA1 := not_par_same_side P C0 B A P Q1).
     destruct HA1 as [A1 []]; Col.
     intro; apply HNCol2; ColR.
     exists A1; split; Col.
   }
   destruct HA1 as [A1 []].
-  assert(~Col P P1 A1) by (apply (one_side_not_col _ _ _ Q1); Side).
+  assert(~Col P C0 A1) by (apply (one_side_not_col _ _ _ Q1); Side).
   assert(HNCol3 : ~Col P C D) by (apply (par_not_col A B); Col).
-  assert(HC1 : exists C1, Col C D C1 /\ one_side P P1 Q1 C1).
-  { elim(Col_dec P P1 C).
-    2: intro; apply (not_par_same_side _ _ _ _ P1); Col.
+  assert(HC1 : exists C1, Col C D C1 /\ one_side P C0 Q1 C1).
+  { elim(Col_dec P C0 C).
+    2: intro; apply (not_par_same_side _ _ _ _ C0); Col.
     intro.
-    assert(HC1 := not_par_same_side P P1 D C P1 Q1).
+    assert(HC1 := not_par_same_side P C0 D C C0 Q1).
     destruct HC1 as [C1 []]; Col.
     intro; apply HNCol3; ColR.
     exists C1; split; Col.
   }
   destruct HC1 as [C1 []].
-  assert(HNCol4 : ~Col P P1 C1) by (apply (one_side_not_col _ _ _ Q1); Side).
-  assert(HC2 := symmetric_point_construction C1 P1).
+  assert(HNCol4 : ~Col P C0 C1) by (apply (one_side_not_col _ _ _ Q1); Side).
+  assert(HC2 := symmetric_point_construction C1 C0).
   destruct HC2 as [C2].
   assert_cols.
   assert_diffs.
-  assert(~ Col C2 P P1) by (intro; apply HNCol4; ColR).
+  assert(~ Col C2 P C0) by (intro; apply HNCol4; ColR).
   assert(Col C D C2) by ColR.
-  assert(InAngle Q1 P1 P A1) by (apply os2__inangle; Side; apply (col2_os__os A B); Col).
-  assert(lta A1 P Q1 A1 P P1).
+  assert(InAngle Q1 C0 P A1) by (apply os2__inangle; Side; apply (col2_os__os A B); Col).
+  assert(lta A1 P Q1 A1 P C0).
   { split.
     exists Q1; split; Conga; apply l11_24; auto.
     intro HConga.
@@ -80,9 +80,9 @@ Proof.
   assert(acute A1 P Q1).
   { exists A1.
     exists P.
-    exists P1.
+    exists C0.
     split; auto.
-    apply (l11_17 P P1 C2).
+    apply (l11_17 P C0 C2).
     - apply perp_per_1; auto.
       apply perp_sym.
       apply (perp_col2 C D); Perp.
@@ -92,44 +92,40 @@ Proof.
       apply aia.
       2: apply (par_col4__par A B C D); Col.
       apply (l9_8_2 _ _ C1).
-      repeat split; Col; exists P1; split; Col; Between.
+      repeat split; Col; exists C0; split; Col; Between.
       apply (one_side_transitivity _ _ _ Q1); Side.
    }
-   assert (HS := greenberg P P1 C1 A1 P Q1).
+   assert (HS := greenberg P C0 C1 A1 P Q1).
    destruct HS as [S []]; auto.
      intro; apply HQ; ColR.
      apply perp_per_1; auto; apply perp_sym; apply (perp_col2 C D); Perp.
    assert(Col C D S) by ColR.
    assert_diffs.
-   assert(one_side P P1 S C1) by (apply invert_one_side; apply out_one_side; Col).
-   assert(HY : InAngle Q1 P1 P S).
-   { assert(one_side P P1 S C1) by (apply invert_one_side; apply out_one_side; Col).
-     assert(~ Col P P1 S) by (apply (one_side_not_col _ _ _ C1); auto).
+   assert(one_side P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
+   assert(HY : InAngle Q1 C0 P S).
+   { assert(one_side P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
+     assert(~ Col P C0 S) by (apply (one_side_not_col _ _ _ C1); auto).
      apply os2__inangle.
      apply (one_side_transitivity _ _ _ C1); Side.
      exists A1.
-     assert(one_side P P1 S A1).
+     assert(one_side P C0 S A1).
      { apply (one_side_transitivity _ _ _ C1); auto.
        apply (one_side_transitivity _ _ _ Q1); Side.
      }
-     assert(two_sides P S P1 A1) by (apply l9_31; auto; apply l12_6; apply (par_strict_col4__par_strict A B C D); auto).
+     assert(two_sides P S C0 A1) by (apply l9_31; auto; apply l12_6; apply (par_strict_col4__par_strict A B C D); auto).
      split; auto.
-     assert(Hlta : lta A1 P S A1 P Q1).
-     { apply (conga_preserves_lta P S P1 A1 P Q1); try (apply conga_refl); auto.
-       apply conga_sym.
-       apply conga_right_comm.
-       apply aia; Side.
-       apply (par_col4__par A B C D); auto.
-     }
+     assert(Conga A1 P S C0 S P) by (apply aia; Side; apply (par_col4__par A B C D); auto).
+     assert(Hlta : lta A1 P S A1 P Q1) by (apply (conga_preserves_lta P S C0 A1 P Q1); Conga).
      destruct Hlta as [Hlea HNConga].
+     assert_diffs.
      apply invert_two_sides.
      apply in_angle_two_sides; auto.
      2: apply not_col_permutation_1; apply (par_not_col C D); Col; apply (par_strict_col2_par_strict _ _ A B); Par.
      - intro.
        elim (out_dec P S Q1); intro Habs.
-       assert_diffs; apply HNConga; apply (out_conga A1 P S A1 P S); try (apply out_trivial); Conga.
+       apply HNConga; apply (out_conga A1 P S A1 P S); try (apply out_trivial); Conga.
        apply not_out_bet in Habs; Col.
-       assert(~ one_side P P1 S A1); auto.
+       assert(~ one_side P C0 S A1); auto.
        apply l9_9.
        apply l9_2.
        apply (l9_8_2 _ _ Q1); auto.
@@ -138,9 +134,8 @@ Proof.
        split; Col; Between.
 
      - apply l11_24.
-       apply (lea_in_angle _ _ _ P1 S P); Lea.
-       apply aia; Side; apply (par_col4__par A B C D); auto.
-       apply (one_side_transitivity _ _ _ P1).
+       apply lea_in_angle; Lea; Conga.
+       apply (one_side_transitivity _ _ _ C0).
        apply one_side_symmetry; apply (col2_os__os A B); auto.
        apply l12_6; apply (par_strict_col4__par_strict A B C D); auto.
    }
