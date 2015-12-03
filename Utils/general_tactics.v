@@ -30,8 +30,8 @@ Ltac not_exist_hyp t := match goal with
   | H1:t |- _ => fail 2
  end || idtac.
 
-Ltac DecompAndAll := 
- repeat  
+Ltac DecompAndAll :=
+ repeat
  match goal with
    | H:(?X1 /\ ?X2) |- _ => decompose [and] H;clear H
 end.
@@ -39,7 +39,7 @@ end.
 Ltac assert_if_not_exist H :=
   not_exist_hyp H;assert H.
 
-Ltac absurde := 
+Ltac absurde :=
 match goal with
    |H : (?X <> ?X) |- _ => apply False_ind; apply H; reflexivity
 end.
@@ -77,12 +77,12 @@ Tactic Notation "sort" :=
 
 Definition ltac_something (P:Type) (e:P) := e.
 
-Notation "'Something'" := 
+Notation "'Something'" :=
   (@ltac_something _ _).
 
 Lemma ltac_something_eq : forall (e:Type),
   e = (@ltac_something _ e).
-Proof. 
+Proof.
 auto.
 Qed.
 
@@ -99,12 +99,12 @@ Qed.
 (* hide_def x and show_def x can be used to hide/show the body of the definition x. *)
 
 Tactic Notation "hide_def" hyp(x) :=
-  let x' := constr:(x) in 
+  let x' := constr:(x) in
   let T := eval unfold x in x' in
   change T with (@ltac_something _ T) in x.
 
 Tactic Notation "show_def" hyp(x) :=
-  let x' := constr:(x) in 
+  let x' := constr:(x) in
   let U := eval unfold x in x' in
   match U with @ltac_something _ ?T =>
     change U with T in x end.
@@ -122,7 +122,7 @@ Tactic Notation "hide_defs" :=
   repeat match goal with H := ?T |- _ =>
     match T with
     | @ltac_something _ _ => fail 1
-    | _ => change T with (@ltac_something _ T) in H 
+    | _ => change T with (@ltac_something _ T) in H
     end
   end.
 
@@ -146,9 +146,9 @@ Tactic Notation "show_hyps" :=
 
 Tactic Notation "hide_hyps" :=
   repeat match goal with H: ?T |- _ =>
-    match type of T with 
-    | Prop => 
-      match T with 
+    match type of T with
+    | Prop =>
+      match T with
       | @ltac_something _ _ => fail 2
       | _ => hide_hyp H
       end

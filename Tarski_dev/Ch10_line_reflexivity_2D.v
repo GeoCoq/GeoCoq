@@ -150,7 +150,7 @@ Proof.
             apply cong_commutativity.
             eapply is_image_spec_col_cong with A B;Col.
           apply col_permutation_2.
-           
+
           eapply per_per_col.
             apply l8_2.
             apply H7.
@@ -354,38 +354,11 @@ Proof.
                   apply HH0.
                 unfold is_midpoint in H7.
                 spliter.
-                eapply colx.
-                  assumption.
-                  3:apply H4.
-                  3:apply H5.
-                  auto.
-                  intro.
-                  subst X.
-                  apply cong_symmetry in H18.
-                  apply cong_identity in H18.
-                  subst Y.
-                  absurde.
-                unfold Col.
-                right; left.
-                apply between_symmetry.
-                assumption.
+                ColR.
               apply cong_commutativity.
               eapply is_image_spec_col_cong.
                 apply H10.
-              eapply colx.
-                4:apply H4.
-                4:apply H5.
-                assumption.
-                auto.
-                intro.
-                subst X.
-                apply is_midpoint_id in H7.
-                contradiction.
-              unfold Col.
-              right; left.
-              apply midpoint_bet.
-              apply l7_2.
-              assumption.
+              ColR.
             apply cong_commutativity.
             assumption.
           apply cong_commutativity.
@@ -597,7 +570,7 @@ Proof.
     spliter.
     assert(Cong A B A1 B) by eCong.
     assert(Cong B C B C1) by eCong.
-     
+
     assert(exists Y, is_midpoint Y C C1)
       by (apply midpoint_existence).
     ex_and H14 Y.
@@ -606,7 +579,7 @@ Proof.
       apply H10.
 
     induction (eq_dec_points B Y).
-    { 
+    {
       subst Y.
       induction (eq_dec_points A A1).
         subst A1.

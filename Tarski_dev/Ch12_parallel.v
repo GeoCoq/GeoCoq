@@ -363,6 +363,18 @@ repeat
       let h := fresh in
       not_exist_hyp4 A B B C D E E F;
       assert (h := lea_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      | H:lta ?A ?B ?C ?D ?E ?F |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B B C D E E F;
+      assert (h := lta_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      | H:(acute ?A ?B ?C) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 A B A C B C;
+      assert (h := acute_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
+      | H:(obtuse ?A ?B ?C) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 A B A C B C;
+      assert (h := obtuse_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
 
       | H:Par ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp_comm A B);
@@ -558,9 +570,11 @@ Proof.
 Qed.
 
 Lemma l12_9 : forall A1 A2 B1 B2 C1 C2,
- Coplanar A1 A2 B1 B2 -> Perp A1 A2 C1 C2 -> Perp B1 B2 C1 C2 ->
+ Perp A1 A2 C1 C2 -> Perp B1 B2 C1 C2 ->
  Par A1 A2 B1 B2.
 Proof.
+    intros A1 A2 B1 B2 C1 C2.
+    assert(H := all_coplanar A1 A2 B1 B2).
     intros.
     unfold Par.
     unfold Par_strict.
@@ -629,7 +643,6 @@ Proof.
       repeat split.
         assumption.
         apply l12_9 with P A.
-          apply all_coplanar.
           apply H2.
         apply per_perp_in in H4.
           apply perp_in_perp in H4.
@@ -663,7 +676,6 @@ Proof.
     repeat split.
       assumption.
       apply l12_9 with P P'.
-        apply all_coplanar.
         apply H2.
       apply per_perp_in in H5.
         apply perp_in_perp in H5.
@@ -814,73 +826,28 @@ Proof.
       induction (eq_dec_points C X).
         subst X.
         reflexivity.
-      eapply inter_unicity.
-        apply H2.
-        apply H3.
-        assumption.
-        assumption.
+      eapply l6_21.
+        2: apply H.
+        2: apply H3.
         intro.
         apply H1.
-        apply par_symmetry.
         unfold Par.
         right.
         repeat split; assumption || ColR.
-(*          assumption.
-          assumption.
-          Col.
-        assert(Col A C X) by ColR.
-        assert(Col A C D) by ColR.
-        apply col_permutation_2.
-        ColR. 
-        eapply (col_transitivity_1 _ C).
-          intro.
-          subst C.
-          apply not_par_not_col in H1.
-            apply H1.
-            eapply (col_transitivity_1 _ _).
-              apply H6.
-              Col.
-            Col.
-            assumption.
-          assumption.
-          Col.
-*)
         assumption.
-  
-    eapply inter_unicity.
-      apply H2.
-      apply H3.
-      assumption.
-      assumption.
+        assumption.
+        assumption.
+    eapply l6_21.
+      2: apply H0.
+      2: apply H2.
       intro.
       apply H1.
       unfold Par.
       right.
       repeat split; ColR || assumption.
       assumption.
-(*
-     
-        assert(Col A C Y).
-          eapply (col_transitivity_1 _ B).
-            assumption.
-            Col.
-          assumption.
-        apply col_permutation_2.
-        eapply (col_transitivity_1 _ Y).
-          assumption.
-          Col.
-        Col.
-      assert(Col B C Y).
-        eapply (col_transitivity_1 _ A).
-          auto.
-          Col.
-        Col.
-      apply col_permutation_2.
-      eapply (col_transitivity_1 _ Y).
-        assumption.
-        Col.
-      Col.
-    assumption. *)
+      assumption.
+      assumption.
 Qed.
 
 Lemma inter_unicity_not_par : forall A B C D P,
@@ -1416,7 +1383,6 @@ Proof.
           apply perp_distinct in H14.
           intuition.
         eapply l12_9 with P A.
-          apply all_coplanar.
           apply H4.
         apply perp_sym.
         eapply perp_col.
@@ -1505,7 +1471,6 @@ Proof.
       apply perp_in_perp in H17.
       induction H17.
         apply l12_9 with P E.
-          apply all_coplanar.
           apply H4.
         eapply perp_col.
           intro.
@@ -1848,23 +1813,19 @@ Proof.
         Col.
         intro.
         assert(C'=X).
-          eapply (inter_unicity A B C D).
+          eapply (l6_21 A B C D).
+            assumption.
+            assumption.
             Col.
+            assumption.
             apply out_col in H2.
             eapply (col_transitivity_1 _ X).
               intro.
               treat_equalities.
               Col5.
               Col.
-            apply bet_col in H4.
             Col.
-            assumption.
-            apply out_col in H2.
             Col.
-            intro.
-            apply H0.
-            Col.
-          assumption.
         treat_equalities.
         unfold out in H2.
         tauto.
@@ -1919,7 +1880,7 @@ Qed.
 
 Lemma l12_21_b : forall A B C D,
  two_sides A C B D ->
- (Conga B A C D C A -> Par A B C D).
+ Conga B A C D C A -> Par A B C D.
 Proof.
     intros.
     apply conga_distinct in H0.
@@ -2185,6 +2146,8 @@ Qed.
 End T12_2'.
 
 Hint Resolve col_par : par.
+
+Hint Resolve l12_6 : side.
 
 Ltac finish := repeat match goal with
  | |- Bet ?A ?B ?C => Between

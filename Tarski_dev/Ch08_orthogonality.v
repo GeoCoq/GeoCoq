@@ -155,7 +155,7 @@ repeat
       apply  between_identity in H;smart_subst X2;clean_reap_hyps
    | H:(is_midpoint ?X ?Y ?Y) |- _ => apply l7_3 in H; smart_subst Y;clean_reap_hyps
    | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
-     let T := fresh in not_exist_hyp (A=B); assert (T := between_egality A B C H H2);
+     let T := fresh in not_exist_hyp (A=B); assert (T := between_equality A B C H H2);
                        smart_subst A;clean_reap_hyps
    | H : is_midpoint ?P ?A ?P1, H2 : is_midpoint ?P ?A ?P2 |- _ =>
      let T := fresh in not_exist_hyp (P1=P2);
@@ -254,7 +254,7 @@ repeat
       apply  between_identity in H; smart_subst'
    | H:(is_midpoint ?X ?Y ?Y) |- _ => apply l7_3 in H; smart_subst'
    | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
-     let T := fresh in not_exist_hyp (A=B); assert (T : between_egality A B C H H2); smart_subst'
+     let T := fresh in not_exist_hyp (A=B); assert (T : between_equality A B C H H2); smart_subst'
    | H : is_midpoint ?P ?A ?P1, H2 : is_midpoint ?P ?A ?P2 |- _ =>
      let T := fresh in not_exist_hyp (P1=P2); assert (T : symmetric_point_unicity A P P1 P2 H H2); smart_subst'
    | H : is_midpoint ?A ?P ?X, H2 : is_midpoint ?A ?Q ?X |- _ =>
@@ -1012,7 +1012,7 @@ Qed.
 
 End T8_3.
 
-Hint Resolve perp_sym perp_left_comm perp_right_comm perp_comm per_perp_in
+Hint Resolve perp_sym perp_left_comm perp_right_comm perp_comm per_perp_in per_perp
              perp_in_per perp_in_left_comm perp_in_right_comm perp_in_comm perp_in_sym : perp.
 
 Ltac double A B A' :=
@@ -1371,7 +1371,7 @@ Proof.
       assert (Bet B Y Z) by (apply outer_transitivity_between2 with A;auto).
       apply between_symmetry in H3.
       assert (Y = P).
-        eapply between_egality.
+        eapply between_equality.
           apply H3.
         assumption.
       treat_equalities.
@@ -2142,7 +2142,7 @@ Proof.
           apply perp_sym.
           apply H0.
         assert_cols;Col.
-      Col. 
+      Col.
     apply between_symmetry in H7.
     assert (Cong A R P B).
       apply (perp_cong A B P R X); assumption.
@@ -2153,7 +2153,7 @@ Proof.
 Qed.
 
 (** This following result is very important, it shows the existence of a midpoint.
- The proof is involved because we are not using continuity axioms. 
+ The proof is involved because we are not using continuity axioms.
 *)
 
 (** This corresponds to l8_22 in Tarski's book. *)
@@ -2262,7 +2262,7 @@ Qed.
 
 End T8_4.
 
-Hint Resolve  perp_col perp_perp_in perp_in_perp : perp.
+Hint Resolve perp_per_1 perp_per_2 perp_col perp_perp_in perp_in_perp : perp.
 
 Section T8_5.
 
@@ -2547,6 +2547,80 @@ intros A B C D P Q HPerp HCol1 HCol2 HCD.
 apply perp_sym.
 apply perp_col2 with P Q; Perp; ColR.
 Qed.
+
+
+Lemma per_cong_mid : forall A B C H,
+ B <> C -> Bet A B C -> Cong A H C H -> Per H B C ->
+ is_midpoint B A C.
+Proof.
+    intros.
+    induction (eq_dec_points H B).
+      subst H.
+      unfold is_midpoint.
+      split.
+        assumption.
+      apply cong_right_commutativity.
+      assumption.
+    assert(Per C B H).
+      apply l8_2.
+      assumption.
+    assert (Per H B A).
+      eapply per_col.
+        apply H0.
+        assumption.
+      unfold Col.
+      right; right.
+      assumption.
+    assert (Per A B H).
+      apply l8_2.
+      assumption.
+    unfold Per in *.
+    ex_and H3 C'.
+    ex_and H5 H'.
+    ex_and H6 A'.
+    ex_and H7 H''.
+    assert (H' = H'').
+      eapply construction_unicity.
+        2: apply  midpoint_bet.
+        2:apply H5.
+        assumption.
+        apply cong_commutativity.
+        apply midpoint_cong.
+        apply l7_2.
+        apply H5.
+        apply midpoint_bet.
+        assumption.
+      apply cong_commutativity.
+      apply midpoint_cong.
+      apply l7_2.
+      assumption.
+    subst H''.
+    assert(IFSC H B H' A H B H' C).
+      repeat split.
+        apply midpoint_bet.
+        assumption.
+        apply midpoint_bet.
+        assumption.
+        apply cong_reflexivity.
+        apply cong_reflexivity.
+        apply cong_commutativity.
+        assumption.
+      apply cong_commutativity.
+      eapply cong_transitivity.
+        apply cong_symmetry.
+        apply H11.
+      eapply cong_transitivity.
+        apply H2.
+      assumption.
+    eapply l4_2 in H12.
+    unfold is_midpoint.
+    split.
+      assumption.
+    apply cong_left_commutativity.
+    assumption.
+Qed.
+
+
 
 End T8_5.
 

@@ -1,14 +1,14 @@
 (* Exercise done by David Braun under the supervision of Nicolas Magaud, cleaned up by Julien Narboux. *)
 
-Require Export GeoCoq.Highschool.triangle_midpoints_theorems.
+Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Section T_42.
 
 Context `{MT:Tarski_2D_euclidean}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma midpoint_thales : forall o a b c : Tpoint, 
+Lemma midpoint_thales : forall o a b c : Tpoint,
    ~ Col a b c ->
-   is_midpoint o a b -> 
+   is_midpoint o a b ->
    Cong o a o c ->
    Per a c b.
 Proof.

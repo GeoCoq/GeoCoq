@@ -74,7 +74,7 @@ Qed.
 
 Lemma perp_in_per_1 :
  forall A B C D X,
-  Perp_in X A B C D -> 
+  Perp_in X A B C D ->
   Per A X C.
 Proof.
 intros.
@@ -86,7 +86,7 @@ Qed.
 
 Lemma perp_in_per_2 :
  forall A B C D X,
-  Perp_in X A B C D -> 
+  Perp_in X A B C D ->
   Per A X D.
 Proof.
 intros.
@@ -98,7 +98,7 @@ Qed.
 
 Lemma perp_in_per_3 :
  forall A B C D X,
-  Perp_in X A B C D -> 
+  Perp_in X A B C D ->
   Per B X C.
 Proof.
 intros.
@@ -110,7 +110,7 @@ Qed.
 
 Lemma perp_in_per_4 :
  forall A B C D X,
-  Perp_in X A B C D -> 
+  Perp_in X A B C D ->
   Per B X D.
 Proof.
 intros.
@@ -146,7 +146,7 @@ Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma perp_bisect_cong_1 :
- forall P Q A B, 
+ forall P Q A B,
  perp_bisect P Q A B ->
  Cong A P B P.
 Proof.
@@ -162,7 +162,7 @@ Cong.
 Qed.
 
 Lemma perp_bisect_cong_2 :
- forall P Q A B, 
+ forall P Q A B,
  perp_bisect P Q A B ->
  Cong A Q B Q.
 Proof.
@@ -187,7 +187,7 @@ Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma perp_bisect_cong :
- forall P Q A B, 
+ forall P Q A B,
  perp_bisect P Q A B ->
  Cong A P B P /\ Cong A Q B Q.
 Proof.
@@ -265,7 +265,7 @@ Qed.
 Definition is_on_perp_bisect P A B := Cong A P P B.
 
 Lemma perp_bisect_is_on_perp_bisect :
- forall A B C P, 
+ forall A B C P,
   is_on_perp_bisect P A B ->
   is_on_perp_bisect P B C ->
   is_on_perp_bisect P A C.

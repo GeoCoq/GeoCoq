@@ -660,7 +660,7 @@ induction m; intros cp interp.
 Qed.
 
 Definition ss_ok (ss : SS.t) (interp: positive -> COINCpoint) :=
-  forall s, SS.mem s ss = true -> 
+  forall s, SS.mem s ss = true ->
   forall cp, memCP cp s = true ->
     app coinc (interp_CP cp interp).
 

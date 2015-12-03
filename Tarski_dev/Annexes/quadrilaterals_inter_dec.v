@@ -1,43 +1,43 @@
 Require Export GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 Require Export GeoCoq.Tarski_dev.Annexes.Tagged_predicates.
 
-Ltac image_6 A B P' H P:= 
+Ltac image_6 A B P' H P:=
  let T:= fresh in assert (T:= l10_6_existence A B P' H);
  ex_and T P.
 
-Ltac image A B P P':= 
+Ltac image A B P P':=
  let T:= fresh in assert (T:= l10_2_existence A B P);
  ex_and T P'.
 
 Ltac perp A B C X :=
  match goal with
-   | H:(~Col A B C) |- _ => 
+   | H:(~Col A B C) |- _ =>
     let T:= fresh in assert (T:= l8_18_existence A B C H);
     ex_and T X
  end.
 
 Ltac parallel A B C D P :=
  match goal with
-   | H:(A <> B) |- _ => 
-    let T := fresh in assert(T:= parallel_existence A B P H); 
-    ex_and T C  
+   | H:(A <> B) |- _ =>
+    let T := fresh in assert(T:= parallel_existence A B P H);
+    ex_and T C
  end.
 
 Ltac par_strict :=
-repeat 
+repeat
  match goal with
-      | H: Par_strict ?A ?B ?C ?D |- _ => 
+      | H: Par_strict ?A ?B ?C ?D |- _ =>
        let T := fresh in not_exist_hyp (Par_strict B A D C); assert (T := par_strict_comm A B C D H)  
-      | H: Par_strict ?A ?B ?C ?D |- _ => 
+      | H: Par_strict ?A ?B ?C ?D |- _ =>
        let T := fresh in not_exist_hyp (Par_strict C D A B); assert (T := par_strict_symmetry A B C D H)  
-      | H: Par_strict ?A ?B ?C ?D |- _ => 
+      | H: Par_strict ?A ?B ?C ?D |- _ =>
        let T := fresh in not_exist_hyp (Par_strict B A C D); assert (T := par_strict_left_comm A B C D H)   
-      | H: Par_strict ?A ?B ?C ?D |- _ => 
+      | H: Par_strict ?A ?B ?C ?D |- _ =>
        let T := fresh in not_exist_hyp (Par_strict A B D C); assert (T := par_strict_right_comm A B C D H) 
  end.
 
 Ltac clean_trivial_hyps :=
-  repeat 
+  repeat
   match goal with
    | H:(Cong ?X1 ?X1 ?X2 ?X2) |- _ => clear H
    | H:(Cong ?X1 ?X2 ?X2 ?X1) |- _ => clear H
@@ -48,7 +48,7 @@ Ltac clean_trivial_hyps :=
    | H:(Col ?X2 ?X1 ?X1) |- _ => clear H
    | H:(Col ?X1 ?X2 ?X1) |- _ => clear H
    | H:(Par ?X1 ?X2 ?X1 ?X2) |- _ => clear H
-   | H:(Par ?X1 ?X2 ?X2 ?X1) |- _ => clear H 
+   | H:(Par ?X1 ?X2 ?X2 ?X1) |- _ => clear H
    | H:(Per ?X1 ?X2 ?X2)     |- _ => clear H
    | H:(Per ?X1 ?X1 ?X2)     |- _ => clear H
    | H:(is_midpoint ?X1 ?X1 ?X1) |- _ => clear H
@@ -82,7 +82,7 @@ Ltac sfinish := repeat match goal with
 end.
 
 Ltac clean_reap_hyps :=
-  repeat 
+  repeat
   match goal with
    | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?A ?B ?D ?C |- _ => clear H2
    | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?A ?B ?C ?D |- _ => clear H2
@@ -199,10 +199,10 @@ Context `{MT:Tarski_2D_euclidean}.
 Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma par_cong_mid_ts :
- forall A B A' B', 
+ forall A B A' B',
   Par_strict A B A' B' ->
   Cong A B A' B' ->
-  two_sides A A' B B' -> 
+  two_sides A A' B B' ->
   exists M,  is_midpoint M A A' /\ is_midpoint M B B'.
 Proof.
 intros.
@@ -264,19 +264,7 @@ induction H20.
 subst B''.
 
 assert(X = M).
-eapply (inter_unicity A A' B B').
-unfold is_midpoint in H11.
-spliter.
-apply bet_col in H11.
-Col.
-apply bet_col in H12.
-Col.
-Col.
-apply bet_col in H6.
-Col.
-intro.
-apply H3.
-Col.
+eapply (l6_21 A A' B B'); Col.
 
 intro.
 subst B'.
@@ -289,7 +277,7 @@ split; auto.
 assert(two_sides A A' B B'').
 unfold two_sides.
 repeat split; auto.
-intro. 
+intro.
 apply H4.
 apply col_permutation_1.
 eapply (col_transitivity_1 _ B'').
@@ -347,10 +335,10 @@ contradiction.
 Qed.
 
 Lemma par_cong_mid_os :
-  forall A B A' B', 
+  forall A B A' B',
    Par_strict A B A' B' ->
    Cong A B A' B' ->
-   one_side A A' B B' -> 
+   one_side A A' B B' ->
    exists M, is_midpoint M A B' /\ is_midpoint M B A'.
 Proof.
 intros.
@@ -498,7 +486,7 @@ apply H18.
 apply one_side_symmetry.
 assumption.
 
-assert(one_side A A' X B). 
+assert(one_side A A' X B).
 
 eapply (out_one_side_1).
 intro.
@@ -553,7 +541,7 @@ Qed.
 Lemma par_strict_cong_mid :
  forall A B A' B',
   Par_strict A B A' B' ->
-  Cong A B A' B' -> 
+  Cong A B A' B' ->
   exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/
              is_midpoint M A B' /\ is_midpoint M B A'.
 Proof.
@@ -711,7 +699,7 @@ Qed.
 Lemma par_strict_cong_mid1 :
  forall A B A' B',
   Par_strict A B A' B' ->
-  Cong A B A' B' -> 
+  Cong A B A' B' ->
   (two_sides A A' B B'  /\ exists M,  is_midpoint M A A' /\ is_midpoint M B B') \/ 
   (one_side A A' B B' /\ exists M, is_midpoint M A B' /\ is_midpoint M B A').
 Proof.
@@ -749,8 +737,8 @@ Qed.
 Lemma par_cong_mid :
  forall A B A' B',
   Par A B A' B' ->
-  Cong A B A' B' -> 
-  exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/ 
+  Cong A B A' B' ->
+  exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/
              is_midpoint M A B' /\ is_midpoint M B A'.
 Proof.
 intros.
@@ -1132,7 +1120,7 @@ Qed.
 
 Lemma plgs_not_comm :
   forall A B C D,
-   Parallelogram_strict A B C D -> 
+   Parallelogram_strict A B C D ->
  ~ Parallelogram_strict A B D C /\ ~ Parallelogram_strict B A C D.
 Proof.
 intros.
@@ -1187,7 +1175,7 @@ Qed.
 Lemma plg_not_comm :
  forall A B C D,
  A <> B ->
- Parallelogram A B C D -> 
+ Parallelogram A B C D ->
  ~ Parallelogram A B D C /\ ~ Parallelogram B A C D.
 Proof.
 intros.
@@ -1955,7 +1943,7 @@ apply plg_comm2.
 assumption.
 Qed.
 
-Lemma par_preserves_conga_os : 
+Lemma par_preserves_conga_os :
  forall A B C D P , Par A B C D -> Bet A D P -> D <> P -> one_side A D B C -> Conga B A P C D P.
 Proof.
 intros.
@@ -2199,7 +2187,7 @@ spliter.
 apply bet_col in  H13.
 Col.
 assert(Par A' C' A'' C'').
- 
+
 eapply midpoint_par.
 intro.
 subst C'.
@@ -2261,10 +2249,10 @@ Lemma parallel_2_plg :
   Parallelogram_strict A B C D.
 Proof.
 intros.
-assert (Cong A B C D /\ Cong B C D A /\ 
+assert (Cong A B C D /\ Cong B C D A /\
         two_sides B D A C /\ two_sides A C B D)
   by (apply l12_19;Par).
-unfold Parallelogram_strict; intuition. 
+unfold Parallelogram_strict; intuition.
 Qed.
 
 Lemma par_2_plg :
@@ -2398,10 +2386,10 @@ Ltac permutation_intro_in_hyps_aux :=
 
 Ltac permutation_intro_in_hyps := clean_reap_hyps; clean_trivial_hyps; tag_hyps; permutation_intro_in_hyps_aux.
 
-Ltac assert_cols_aux := 
+Ltac assert_cols_aux :=
 repeat
  match goal with
-      | H:Bet ?X1 ?X2 ?X3 |- _ => 
+      | H:Bet ?X1 ?X2 ?X3 |- _ =>
      not_exist_hyp (Col X1 X2 X3);assert (Col X1 X2 X3) by (apply bet_col;apply H) 
 
       | H:is_midpoint ?X1 ?X2 ?X3 |- _ =>
@@ -2434,10 +2422,10 @@ Ltac not_exist_hyp_perm_cong A B C D := not_exist_hyp (Cong A B C D); not_exist_
                                         not_exist_hyp (Cong C D A B); not_exist_hyp (Cong C D B A);
                                         not_exist_hyp (Cong D C A B); not_exist_hyp (Cong D C B A).
 
-Ltac assert_congs_1 := 
+Ltac assert_congs_1 :=
 repeat
  match goal with
-      | H:is_midpoint ?X1 ?X2 ?X3 |- _ => 
+      | H:is_midpoint ?X1 ?X2 ?X3 |- _ =>
       let h := fresh in
       not_exist_hyp_perm_cong X1 X2 X1 X3;
       assert (h := midpoint_cong X2 X1 X3 H)
@@ -2458,7 +2446,7 @@ repeat
       assert (h := plgs_cong_1 X1 X2 X3 X4 H)
   end.
 
-Ltac assert_congs_2 := 
+Ltac assert_congs_2 :=
 repeat
  match goal with
       | H1:is_midpoint ?M1 ?A1 ?B1, H2:is_midpoint ?M2 ?A2 ?B2, H3:Cong ?A1 ?B1 ?A2 ?B2 |- _ => 
@@ -2469,12 +2457,12 @@ repeat
       | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
       let h := fresh in
       not_exist_hyp_perm_cong X1 X4 X2 X3;
-      assert (h := plg_cong_2 X1 X2 X3 X4 H);clean_reap_hyps 
+      assert (h := plg_cong_2 X1 X2 X3 X4 H);clean_reap_hyps
 
       | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
       let h := fresh in
       not_exist_hyp_perm_cong X1 X4 X2 X3;
-      assert (h := plgs_cong_2 X1 X2 X3 X4 H);clean_reap_hyps 
+      assert (h := plgs_cong_2 X1 X2 X3 X4 H);clean_reap_hyps
   end.
 
 Ltac assert_congs_perm := permutation_intro_in_hyps; assert_congs_1; assert_congs_2; clean_reap_hyps.
@@ -2493,7 +2481,7 @@ Ltac not_exist_hyp_perm_para_s A B C D := not_exist_hyp (Parallelogram_strict A 
                                           not_exist_hyp (Parallelogram_strict C B A D);
                                           not_exist_hyp (Parallelogram_strict B A D C).
 
-Ltac assert_paras_aux := 
+Ltac assert_paras_aux :=
 repeat
  match goal with
       | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
@@ -2504,12 +2492,12 @@ repeat
       | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
       let h := fresh in
       not_exist_hyp_perm_para X1 X2 X3 X4;
-      assert (h := plg_to_parallelogram X1 X2 X3 X4 H) 
+      assert (h := plg_to_parallelogram X1 X2 X3 X4 H)
 
       | H:(~ Col ?X1 ?X2 ?X3), H2:Par ?X1 ?X2 ?X3 ?X4, H3:Par ?X1 ?X4 ?X2 ?X3 |- _ =>
       let h := fresh in
       not_exist_hyp_perm_para_s X1 X2 X3 X4;
-      assert (h := parallel_2_plg X1 X2 X3 X4 H H2 H3) 
+      assert (h := parallel_2_plg X1 X2 X3 X4 H H2 H3)
   end.
 
 Ltac assert_paras_perm := permutation_intro_in_hyps; assert_paras_aux; clean_reap_hyps.
@@ -2519,7 +2507,7 @@ Ltac not_exist_hyp_perm_npara A B C D := not_exist_hyp (~Parallelogram A B C D);
                                          not_exist_hyp (~Parallelogram A D C B); not_exist_hyp (~Parallelogram D C B A);
                                          not_exist_hyp (~Parallelogram C B A D); not_exist_hyp (~Parallelogram B A D C).
 
-Ltac assert_nparas_1 := 
+Ltac assert_nparas_1 :=
  repeat
  match goal with
       | H:(?X1<>?X2), H2:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
@@ -2528,7 +2516,7 @@ Ltac assert_nparas_1 :=
       assert (h := plg_not_comm_1 X1 X2 X3 X4 H H2)
   end.
 
-Ltac assert_nparas_2 := 
+Ltac assert_nparas_2 :=
  repeat
  match goal with
       | H:(?X1<>?X2), H2:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
@@ -2546,10 +2534,10 @@ Ltac diag_plg_intersection M A B C D H :=
 Tactic Notation "Name" ident(M) "the" "intersection" "of" "the" "diagonals" "(" ident(A) ident(C) ")" "and" "(" ident(B) ident(D) ")" "of" "the" "parallelogram" ident(H) :=
  diag_plg_intersection M A B C D H.
 
-Ltac assert_diffs := 
+Ltac assert_diffs :=
 repeat
  match goal with
-      | H:(~Col ?X1 ?X2 ?X3) |- _ => 
+      | H:(~Col ?X1 ?X2 ?X3) |- _ =>
       let h := fresh in
       not_exist_hyp3 X1 X2 X1 X3 X2 X3;
       assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps 
@@ -2641,6 +2629,18 @@ repeat
       let h := fresh in
       not_exist_hyp4 A B B C D E E F;
       assert (h := lea_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      | H:lta ?A ?B ?C ?D ?E ?F |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B B C D E E F;
+      assert (h := lta_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      | H:(acute ?A ?B ?C) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 A B A C B C;
+      assert (h := acute_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
+      | H:(obtuse ?A ?B ?C) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 A B A C B C;
+      assert (h := obtuse_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
 
       | H:(Par_strict ?X1 ?X2 ?X3 ?X4) |- _ =>
       let HN := fresh in
@@ -2660,18 +2660,18 @@ repeat
       assert (HN := par_strict_not_col_4 X1 X2 X3 X4 H)
 
 
-   | H:Par_strict ?A ?B ?C ?D |- _ => 
+   | H:Par_strict ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp2 A B C D);
        assert (T:= par_strict_distinct A B C D H);
        decompose [and] T;clear T;clean_reap_hyps
-      | H:Par ?A ?B ?C ?D |- _ => 
+      | H:Par ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp2 A B C D);
        assert (T:= par_distincts A B C D H);decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp ?A ?B ?C ?D |- _ => 
+      | H:Perp ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp2 A B C D);
        assert (T:= perp_distinct A B C D H);
        decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp_in ?X ?A ?B ?C ?D |- _ => 
+      | H:Perp_in ?X ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp2 A B C D);
        assert (T:= perp_in_distinct X A B C D H);
        decompose [and] T;clear T;clean_reap_hyps
@@ -2682,7 +2682,7 @@ repeat
  end.
 
 
-Hint Resolve parallelogram_strict_not_col 
+Hint Resolve parallelogram_strict_not_col
              parallelogram_strict_not_col_2
              parallelogram_strict_not_col_3
              parallelogram_strict_not_col_4 : Col.
@@ -2694,7 +2694,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma parallelogram_strict_midpoint : forall A B C D I,
   Parallelogram_strict A B C D ->
-  Col I A C -> 
+  Col I A C ->
   Col I B D ->
   is_midpoint I A C /\ is_midpoint I B D.
 Proof.
@@ -2706,9 +2706,9 @@ assert (H01 : Col A C I).
  Col.
 assert (H02 : Col D B I).
  Col.
-assert (H03 : ~Col A D C). 
+assert (H03 : ~Col A D C).
  apply parallelogram_strict_not_col_3 in H.
- Col. 
+ Col.
 unfold Parallelogram_strict in H.
 decompose [and] H.
 (* trouver unicité intersection *)
@@ -2724,15 +2724,16 @@ assert (MDB:D<>B).
  assert (H13 : Col A C I').
   Col.
  apply (Ch08_orthogonality.distinct A C I' D B H11 H13 H12).
-assert (H11 : Col D B I'). 
+assert (H11 : Col D B I').
  assert (H14 := midpoint_bet B I' D H3).
  assert (H15 := bet_col B I' D H14).
  Col.
-assert (H12 : Col A C I'). 
+assert (H12 : Col A C I').
  assert (H14 := midpoint_bet A I' C H2).
  assert (H15 := bet_col A I' C H14).
  Col.
-assert (H13 := inter_unicity A C D B I I' H01 H02 H12 H11 H03 MDB).
+apply not_col_permutation_5 in H03.
+assert (H13 := l6_21 A C D B I I' H03 MDB H01 H12 H02 H11).
 split.
  rewrite H13;assumption.
  subst;assumption.
@@ -2833,7 +2834,7 @@ assumption.
 Cong.
 Qed.
 
-Lemma rect_per1 : forall A B C D, Rectangle A B C D -> Per B A D.  
+Lemma rect_per1 : forall A B C D, Rectangle A B C D -> Per B A D.
 intros.
 unfold Rectangle in H.
 spliter.
@@ -3198,7 +3199,7 @@ Lemma perp_3_perp :
 Proof.
 intros.
 assert (Par A B C D).
-  (apply (l12_9  A B C D B C);try apply all_coplanar; auto using perp_sym).
+  (apply (l12_9  A B C D B C); auto using perp_sym).
 assert (Perp A B D A)
  by (apply (par_perp_perp C D A B  D A);Perp;apply par_symmetry;auto).
 auto using perp_sym, perp_left_comm.
@@ -3214,11 +3215,11 @@ Lemma perp_3_rect :
 Proof.
 intros.
 assert (Par A B C D)
- by (apply (l12_9  A B C D B C);try apply all_coplanar;Perp).
+ by (apply (l12_9  A B C D B C);Perp).
 assert (Perp D A A B)
  by (eapply perp_3_perp;eauto).
 assert (Par A D B C)
- by (apply (l12_9  A D B C A B);try apply all_coplanar;Perp).
+ by (apply (l12_9  A D B C A B);Perp).
 assert (Parallelogram_strict A B C D)
  by (apply (parallel_2_plg); auto).
 apply plg_per_rect1.
@@ -3482,7 +3483,7 @@ Ltac not_exist_hyp_perm_pars A B C D := not_exist_hyp (Par_strict A B C D); not_
                                         not_exist_hyp (Par_strict C D A B); not_exist_hyp (Par_strict C D B A);
                                         not_exist_hyp (Par_strict D C A B); not_exist_hyp (Par_strict D C B A).
 
-Ltac assert_pars_1 := 
+Ltac assert_pars_1 :=
  repeat
  match goal with
       | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
@@ -3506,7 +3507,7 @@ Ltac assert_pars_1 :=
       assert (h := plgs_pars_1 X1 X2 X3 X4 H)
   end.
 
-Ltac assert_pars_2 := 
+Ltac assert_pars_2 :=
  repeat
  match goal with
       | H: ?X1 <> ?X2, H2:?X2 <> ?X3, H3:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
@@ -3838,7 +3839,7 @@ spliter.
 
 assert(D = D').
 
-eapply (inter_unicity A D C D D D'); Col.
+eapply (l6_21 A D C D D D'); Col.
 intro.
 unfold Par_strict in H.
 spliter.
@@ -3980,9 +3981,7 @@ intros.
 
 induction(eq_dec_points A E).
 subst E.
-eapply plgs_trans_trivial.
-apply H.
-assumption.
+eapply (plgs_trans_trivial A B C D); assumption.
 
 apply plgs_diff in H.
 apply plgs_diff in H0.
@@ -4006,15 +4005,13 @@ spliter.
 
 apply par_strict_symmetry in H18.
 
-
 assert(HH1:= l12_6 C D A B H18).
 assert(HH2:= l12_6 C D E F H16).
 
 assert(Conga A D D' B C D').
 apply par_preserves_conga_os.
 left.
-apply par_strict_left_comm.
-assumption.
+Par.
 assumption.
 assumption.
 apply invert_one_side.
@@ -4023,34 +4020,19 @@ assumption.
 assert(Conga E D D' F C D').
 apply par_preserves_conga_os.
 left.
-apply par_strict_right_comm.
-apply par_strict_symmetry.
-assumption.
+Par.
 assumption.
 assumption.
 apply invert_one_side.
 assumption.
 
 assert(~ Col A C D).
-intro.
-unfold Parallelogram_strict in H.
-spliter.
-unfold Par_strict in H18.
-spliter.
-apply H27.
-exists A.
-split; Col.
+apply (par_strict_not_col_2 B).
+Par.
 
 assert(~ Col E C D).
-intro.
-unfold Parallelogram_strict in H0.
-spliter.
-unfold Par_strict in H16.
-spliter.
-apply H28.
-exists E.
-split; Col.
-
+apply (par_strict_not_col_2 F).
+Par.
 
 assert(HH:=one_or_two_sides C D A E H22 H23).
 
@@ -4143,6 +4125,57 @@ left.
 assumption.
 
 induction(Col_dec A E F).
+induction H30.
+apply False_ind.
+apply H30.
+exists A.
+split; Col.
+spliter.
+(*
+induction HH.
+apply False_ind.
+apply H18.
+unfold two_sides in H37.
+spliter.
+ex_and H40 T.
+exists T.
+apply bet_col in H41.
+split; ColR.
+*)
+right.
+unfold Parallelogram_flat.
+repeat split; eCong.
+ColR.
+ColR.
+
+induction(eq_dec_points A F).
+right.
+subst F.
+intro.
+subst E.
+
+apply cong_symmetry in H26.
+
+assert(HQ:=par_strict_cong_mid C A D B H17 H26).
+ex_and HQ M.
+induction H37.
+unfold is_midpoint in *.
+spliter.
+
+apply H16.
+exists M.
+split; Col.
+unfold is_midpoint in *.
+spliter.
+apply H19.
+exists M.
+split.
+ColR.
+ColR.
+left.
+assumption.
+(*
+induction(Col_dec A E F).
 apply plg_permut.
 apply plg_permut.
 right.
@@ -4191,6 +4224,7 @@ left.
 assumption.
 left.
 auto.
+*)
 
 assert(Par A E B F \/ ~ Par_strict D C A B \/ ~ Par_strict D C E F).
 
@@ -4475,7 +4509,7 @@ Col.
 repeat split; auto.
 right.
 
-eapply (bet3_cong3_bet A B C D D'); 
+eapply (bet3_cong3_bet A B C D D');
 auto;
 Cong.
 apply out_trivial.
@@ -4551,7 +4585,7 @@ induction HH.
 
 prolong A B A' A B.
 
-eapply (conga_to_par_os _ _ _ _ A'); 
+eapply (conga_to_par_os _ _ _ _ A');
 auto.
 intro.
 subst A'.
@@ -4607,7 +4641,7 @@ induction H35.
 spliter.
 prolong A B A' A B.
 
-eapply (conga_to_par_os _ _ _ _ A'); 
+eapply (conga_to_par_os _ _ _ _ A');
 auto.
 intro.
 subst A'.
@@ -4638,8 +4672,8 @@ apply cong_symmetry in H38.
 apply cong_identity in H38.
 contradiction.
 left.
-eapply (bet3_cong3_bet D _ _ A); 
-auto; 
+eapply (bet3_cong3_bet D _ _ A);
+auto;
 Cong.
 apply out_trivial.
 intro.
@@ -4650,7 +4684,7 @@ ColR.
 spliter.
 prolong A B A' A C.
 
-eapply (conga_to_par_os _ _ _ _ A'); 
+eapply (conga_to_par_os _ _ _ _ A');
 auto.
 intro.
 subst A'.
@@ -4680,7 +4714,7 @@ intro.
 subst E.
 apply H13.
 ColR.
-repeat split. 
+repeat split.
 auto.
 intro.
 subst A'.

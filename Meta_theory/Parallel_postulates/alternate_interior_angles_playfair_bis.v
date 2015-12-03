@@ -25,7 +25,7 @@ Proof.
     ColR.
   }
   intro HStrict.
-  apply (par_not_col_strict _ _ _ _ P) in HParAB; Col. 
+  apply (par_not_col_strict _ _ _ _ P) in HParAB; Col.
   apply (par_not_col_strict _ _ _ _ P) in HParAC; Col.
   destruct HPerp2 as [P1 [P2 [HP [HPerpAP HPerpBP]]]].
   assert(HQ := HPerpAP); auto.

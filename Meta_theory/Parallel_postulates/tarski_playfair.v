@@ -56,16 +56,16 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
     intro.
     treat_equalities.
     absurde.
-  assert(Col B P B1) by ColR. 
-  assert(Col B P B2) by ColR. 
+  assert(Col B P B1) by ColR.
+  assert(Col B P B2) by ColR.
   assert(Col C' P C1) by ColR.
   assert(Col C P C1) by (assert_cols;ColR).
-  assert(Col C' P C2) by ColR. 
+  assert(Col C' P C2) by ColR.
   assert(Col C P C2) by (assert_cols;ColR).
 
   assert(~Col B P C)
     by (intro;apply H11;assert_cols;ColR).
- 
+
   assert(P <> D) by (intro; subst D; apply bet_col in H16; contradiction).
   assert(HE := HTE P B C D A1 H17 H16 H29).
   ex_and HE X; ex_and H30 Y.
@@ -83,9 +83,9 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
 
   assert(HPar4 : Par_strict A1 A2 P Y) by (apply (par_strict_col2_par_strict _ _ C1 C2); Col; apply (col3 C P); Col).
   apply Hy in HPar4.
-  assert(HOS : one_side A1 A2 X Y) 
+  assert(HOS : one_side A1 A2 X Y)
      by (apply one_side_transitivity with P; try assumption; unfold one_side in *; ex_and H34 Z; exists Z; split; assumption).
-  assert(Ho := HOS). 
+  assert(Ho := HOS).
   unfold one_side in HOS.
   ex_and HOS Z.
   unfold two_sides in H36.
@@ -100,9 +100,9 @@ assert( A1 <> A2 /\ B1 <> B2) by (apply par_distinct;auto).
 assert( A1 <> A2 /\ C1 <> C2) by (apply par_distinct;auto).
 spliter.
 clear H4.
-induction(Col_dec P A1 A2). 
+induction(Col_dec P A1 A2).
   (** If P is one line A1A2 then line A1A2=B1B2=C1C2 and we can conclude. *)
-  induction H. 
+  induction H.
 
     exfalso.
     apply H.

@@ -11,7 +11,7 @@ Lemma legendre_aux1 : greenberg_s_postulate -> triangle_postulate ->
    Col C1 B1 B2.
 Proof.
   intros greenberg triangle.
-  intros A1 A2 B1 B2 C1 C2 P HPerp2 HPB HParAC HPC HCts.
+  intros A1 A2 B1 B2 C1 C2 P HPerp2 HPB HParAC HPC HNts.
   assert (HParAB : Par A1 A2 B1 B2) by (apply (perp2_par _ _ _ _ P); auto).
   elim(Col_dec P A1 A2).
   { intro HConf.
@@ -83,13 +83,8 @@ Proof.
   destruct HA3 as [A3 []].
   assert(~ Col P Q A3) by (apply (one_side_not_col _ _ _ C1); Side).
   assert_diffs.
-
-  assert(two_sides P C1 Q B3).
-  { apply l9_31; auto.
-    apply one_side_symmetry.
-    apply (col2_os__os B1 B2); Col.
-  }
-  assert(HInAngle : InAngle C1 Q P B3) by (apply os_ts__inangle; Side).
+  assert(HInAngle : InAngle C1 Q P B3).
+    apply os2__inangle; Side; apply (col2_os__os B1 B2); Col.
   assert(lta B3 P C1 B3 P Q).
   { split.
     exists C1; split; try (apply l11_24); Conga.
@@ -174,6 +169,8 @@ Proof.
     apply os_ts__inangle.
     - apply l9_2.
       apply (l9_8_2 _ _ Q); Side.
+      apply invert_two_sides; apply in_angle_two_sides; Col.
+      intro; apply HC1NotB; ColR.
     - apply (one_side_transitivity _ _ _ Q); apply (col2_os__os B1 B2); Col.
       apply l12_6.
       apply (par_strict_col2_par_strict _ _ A1 A2); Col; Par.
@@ -189,7 +186,7 @@ Proof.
   }
   destruct Habs as [_ Habs].
   apply Habs.
-  suma.assert_diffs.
+  apply suma_distincts in Hsuma1.
   spliter.
   apply conga_line; Between.
   apply (triangle R Q P); auto.

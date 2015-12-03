@@ -321,7 +321,7 @@ Proof.
    intros.
    induction (l7_20 M A B H0 H1);intuition.
 Qed.
- 
+
 Lemma cong_col_mid : forall A B C,
  A <> C -> Col A B C -> Cong A B B C ->
  is_midpoint B A C.
@@ -452,9 +452,7 @@ Proof.
     *)
     assert (le C B1 C x0).
       eapply l5_6.
-      split.
         apply H11.
-      split.
         assumption.
       unfold is_midpoint in *.
       spliter.
@@ -1019,7 +1017,7 @@ Proof.
     assert (I=B).
       apply between_symmetry in H0.
       apply between_symmetry in H2.
-      eapply between_egality.
+      eapply between_equality.
         apply H2.
       apply H0.
     intuition.
@@ -1077,6 +1075,42 @@ Proof.
       Midpoint.
       Midpoint.
     Cong.
+Qed.
+
+Lemma cong_mid2__cong13 : forall A M B A' M' B',
+ is_midpoint M A B -> is_midpoint M' A' B' ->
+ Cong A M A' M' -> Cong A B A' B'.
+Proof.
+    intros A M B A' M' B' HM HM' HCong.
+    destruct HM.
+    destruct HM'.
+    apply (l2_11 _ M _ _ M'); auto.
+    apply (cong_transitivity _ _ A' M'); auto.
+    apply (cong_transitivity _ _ A M); Cong.
+Qed.
+
+Lemma le_mid2__le13 : forall A M B A' M' B',
+ is_midpoint M A B -> is_midpoint M' A' B' ->
+ le A M A' M' -> le A B A' B'.
+Proof.
+    intros A M B A' M' B' HM HM' Hle.
+    destruct HM.
+    destruct HM'.
+    apply (bet2_le2__le _ M _ _ M'); auto.
+    apply (l5_6 A M A' M'); auto.
+Qed.
+
+Lemma le_mid2__le12 : forall A M B A' M' B',
+ is_midpoint M A B -> is_midpoint M' A' B' ->
+ le A B A' B' -> le A M A' M'.
+Proof.
+    intros A M B A' M' B' HM HM' Hle.
+    elim(le_cases A M A' M'); auto.
+    intro.
+    assert(le A' B' A B) by (apply (le_mid2__le13 _ M' _ _ M); auto).
+    apply cong__le.
+    apply (cong_cong_half_1 _ _ B _ _ B'); auto.
+    apply le_anti_symmetry; auto.
 Qed.
 
 End T7_2.

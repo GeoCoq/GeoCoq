@@ -1,6 +1,6 @@
 Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 Require Import Morphisms.
-Require Import GeoCoq.Axioms.hilbert_axioms. 
+Require Import GeoCoq.Axioms.hilbert_axioms.
 
 Section T.
 
@@ -32,9 +32,9 @@ Definition Eq : relation Line := fun l m => forall X, Incident X l <-> Incident 
 
 Infix "=l=" := Eq (at level 70):type_scope.
 
-Lemma incident_eq : forall A B l, forall H : A<>B, 
+Lemma incident_eq : forall A B l, forall H : A<>B,
  Incident A l -> Incident B l ->
- (Lin A B H) =l= l. 
+ (Lin A B H) =l= l.
 Proof.
 intros.
 unfold Eq.
@@ -79,7 +79,7 @@ Col.
 Qed.
 
 (** Our equality is an equivalence relation. *)
-  
+
 Lemma eq_transitivity : forall l m n, l =l= m -> m =l= n -> l =l= n.
 Proof.
 unfold Eq,Incident.
@@ -116,8 +116,8 @@ Qed.
 
 
 (** The equality is compatible with Incident *)
-	   
-Lemma eq_incident : forall A l m, l =l= m -> 
+
+Lemma eq_incident : forall A l m, l =l= m ->
  (Incident A l <-> Incident A m).
 Proof.
 intros.
@@ -136,9 +136,8 @@ Qed.
 
 
 (** There is only one line going through two points. *)
-	   
 Lemma axiom_line_unicity : forall A B l m, A <> B ->
- (Incident A l) -> (Incident B l) -> (Incident A m) -> (Incident B m) -> 
+ (Incident A l) -> (Incident B l) -> (Incident A m) -> (Incident B m) ->
  l =l= m.
 Proof.
 intros.
@@ -152,7 +151,7 @@ Qed.
 
 (** Every line contains at least two points. *)
 
-Lemma axiom_two_points_on_line : forall l, 
+Lemma axiom_two_points_on_line : forall l,
   exists A, exists B, Incident B l /\ Incident A l /\ A <> B.
 Proof.
 intros.
@@ -284,11 +283,11 @@ split;
 intro;
 spliter.
 assert (B=C) by
- (apply (between_egality B C A);Between).
+ (apply (between_equality B C A);Between).
 solve [intuition].
 
 assert (A = B) by
- (apply (between_egality A B C);Between).
+ (apply (between_equality A B C);Between).
 intuition.
 Qed.
 
@@ -693,10 +692,10 @@ decompose [and] H1;clear H1.
 clear H8.
 destruct H7.
 assert (A = x).
-eapply between_egality;eauto.
+eapply between_equality;eauto.
 intuition.
 assert (A = C).
-eapply between_egality;eauto.
+eapply between_equality;eauto.
 apply between_symmetry.
 auto.
 intuition.
@@ -766,7 +765,7 @@ intro.
 treat_equalities.
 
 apply between_symmetry in H.
-apply between_egality in H.
+apply between_equality in H.
 treat_equalities.
 tauto.
 apply between_symmetry.
@@ -935,7 +934,7 @@ spliter.
 apply between_symmetry in H2.
 apply between_symmetry in H1.
 assert(P2 h2 = P2 h1).
-eapply between_egality.
+eapply between_equality.
 apply H1.
 assumption.
 auto.
@@ -1021,7 +1020,7 @@ rewrite <-H9 in H1.
 apply between_symmetry in H2.
 apply between_symmetry in H1.
 assert(P2 h2 = P2 h1).
-eapply between_egality.
+eapply between_equality.
 apply H2.
 assumption.
 auto.

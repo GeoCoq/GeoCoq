@@ -10,7 +10,7 @@ Lemma par_perp_perp_implies_par_perp_2_par :
   postulate_of_parallelism_of_perpendicular_tranversals.
 Proof.
 intros HPPP A1; intros.
-apply l12_9 with A1 A2; try apply all_coplanar; Perp.
+apply l12_9 with A1 A2; Perp.
 apply perp_sym.
 apply HPPP with B1 B2; Par; Perp.
 Qed.

@@ -7,11 +7,8 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Definition Ps O E A := out O A E.
 
-Lemma l14_36_a :
- forall O E E' A B C,
- sum O E E' A B C ->
- out O A B ->
- Bet O A C.
+Lemma l14_36_a : forall O E E' A B C,
+ sum O E E' A B C -> out O A B -> Bet O A C.
 Proof.
     intros.
     assert(HS:=H).
@@ -63,10 +60,8 @@ Proof.
     apply (outer_transitivity_between2 O B A C); auto.
 Qed.
 
-Lemma l14_36_b :
- forall O E E' A B C,
- sum O E E' A B C ->
- out O A B -> O <> A /\ O <> C /\ A <> C.
+Lemma l14_36_b : forall O E E' A B C,
+ sum O E E' A B C -> out O A B -> O <> A /\ O <> C /\ A <> C.
 Proof.
     intros.
     assert(HH:= l14_36_a O E E' A B C H H0).
@@ -86,23 +81,16 @@ Proof.
     spliter.
     unfold Ar2 in H.
     spliter.
-    assert(is_sum O E E' A O A).
-      apply (sum_0_r); Col.
-    unfold is_sum in H7.
-    spliter.
-    induction H7.
-      assert(B = O).
+    assert(sum O E E' A O A).
+      apply (sum_A_O). assumption.
+    assumption.
+    assert(B = O).
         apply (sum_unicityB O E E' H A B O A); auto.
       contradiction.
-    spliter.
-    contradiction.
 Qed.
 
 (** Lemma 14.37 *)
-
-Lemma O_not_positive :
- forall O E,
- ~ Ps O E O.
+Lemma O_not_positive : forall O E, ~ Ps O E O.
 Proof.
     intros.
     unfold Ps.
@@ -110,10 +98,8 @@ Proof.
     intuition.
 Qed.
 
-Lemma pos_null_neg :
- forall O E E' A MA,
- opp O E E' A MA ->
- Ps O E A \/ O = A \/ Ps O E MA.
+Lemma pos_null_neg : forall O E E' A MA,
+ opp O E E' A MA -> Ps O E A \/ O = A \/ Ps O E MA.
 Proof.
     intros.
     unfold opp in H.
@@ -170,13 +156,8 @@ Proof.
     tauto.
 Qed.
 
-
-Lemma sum_pos_pos :
- forall O E E' A B AB,
- Ps O E A ->
- Ps O E B ->
- sum O E E' A B AB ->
- Ps O E AB.
+Lemma sum_pos_pos : forall O E E' A B AB,
+  Ps O E A -> Ps O E B -> sum O E E' A B AB -> Ps O E AB.
 Proof.
     intros.
     unfold Ps in *.
@@ -194,12 +175,8 @@ Proof.
     assumption.
 Qed.
 
-Lemma prod_pos_pos :
- forall O E E' A B AB,
- Ps O E A ->
- Ps O E B ->
- prod O E E' A B AB ->
- Ps O E AB.
+Lemma prod_pos_pos : forall O E E' A B AB,
+ Ps O E A -> Ps O E B -> prod O E E' A B AB -> Ps O E AB.
 Proof.
     intros.
     assert(HP:= H1).
@@ -290,9 +267,9 @@ Proof.
     spliter.
     induction H4.
       apply H.
-      apply (between_egality _ _ E); Between.
+      apply (between_equality _ _ E); Between.
     apply H1.
-    apply (between_egality _ _ A); Between.
+    apply (between_equality _ _ A); Between.
 Qed.
 
 Lemma neg_not_pos : forall O E A, Ng O E A -> ~Ps O E A.
@@ -305,9 +282,9 @@ Proof.
     spliter.
     induction H2.
       apply H0.
-      apply (between_egality _ _ E); Between.
+      apply (between_equality _ _ E); Between.
     apply H1.
-    apply (between_egality _ _ A); Between.
+    apply (between_equality _ _ A); Between.
 Qed.
 
 Lemma opp_pos_neg : forall O E E' A MA, Ps O E A ->  opp O E E' A MA -> Ng O E MA.
@@ -352,8 +329,7 @@ Definition ltP O E E' A B :=
  forall D, diff O E E' B A D -> Ps O E D.
 *)
 
-Definition ltP O E E' A B :=
- exists D, diff O E E' B A D /\ Ps O E D.
+Definition ltP O E E' A B := exists D, diff O E E' B A D /\ Ps O E D.
 
 Lemma ltP_ar2 : forall O E E' A B, ltP O E E' A B -> Ar2 O E E' A B A.
 Proof.
@@ -386,8 +362,7 @@ Proof.
     tauto.
 Qed.
 
-Definition leP O E E' A B :=
- ltP O E E' A B \/ A=B.
+Definition leP O E E' A B := ltP O E E' A B \/ A=B.
 
 Lemma leP_refl : forall O E E' A, leP O E E' A A.
 Proof.
@@ -433,10 +408,7 @@ Proof.
 Qed.
 
 Lemma diff_pos_diff_neg : forall O E E' A B AmB BmA,
-                                     diff O E E' A B AmB
-                                  -> diff O E E' B A BmA
-                                  -> Ps O E AmB
-                                  -> Ng O E BmA.
+  diff O E E' A B AmB -> diff O E E' B A BmA -> Ps O E AmB -> Ng O E BmA.
 Proof.
     intros.
     assert(opp O E E' AmB BmA).
@@ -457,9 +429,9 @@ Proof.
     clean_duplicated_hyps.
     induction H4.
       apply H.
-      apply (between_egality _  _ E); Between.
+      apply (between_equality _  _ E); Between.
     apply H3.
-    apply (between_egality _  _ A); Between.
+    apply (between_equality _  _ A); Between.
 Qed.
 
 Lemma leP_asym : forall O E E' A B, leP O E E' A B -> leP O E E' B A -> A = B.
@@ -516,7 +488,9 @@ Qed.
 
 (* sum_preserves leP : a <= x /\ b <= y => a + b <= x + y *)
 
-Lemma leP_sum_leP : forall O E E' A B C X Y Z, leP O E E' A X -> leP O E E' B Y -> sum O E E' A B C -> sum O E E' X Y Z -> leP O E E' C Z.
+Lemma leP_sum_leP : forall O E E' A B C X Y Z,
+  leP O E E' A X -> leP O E E' B Y -> sum O E E' A B C -> sum O E E' X Y Z ->
+  leP O E E' C Z.
 Proof.
     intros.
     unfold leP in *.
@@ -575,7 +549,8 @@ Proof.
     apply(sum_unicity O E E' A B); auto.
 Qed.
 
-Lemma square_pos : forall O E E' A A2, O <> A -> prod O E E' A A A2 -> Ps O E A2.
+Lemma square_pos : forall O E E' A A2,
+  O <> A -> prod O E E' A A A2 -> Ps O E A2.
 Proof.
 intros O E E' A A2 HDiff HA2.
 assert (HNC : ~ Col O E E') by (unfold prod, Ar2 in *; spliter; Col).
@@ -610,9 +585,7 @@ unfold diff, opp, sum, Ar2 in HDiff; destruct HDiff as [MB HXMY]; spliter; Col.
 Qed.
 
 Lemma ps_le : forall O E E' X,
-  ~ Col O E E' ->
-  Bet O X E \/ Bet O E X ->
-  leP O E E' O X.
+  ~ Col O E E' -> Bet O X E \/ Bet O E X -> leP O E E' O X.
 Proof.
 intros O E E' X HNC HBet.
 elim (eq_dec_points O X); intro HOX; [right; auto|left].
@@ -621,10 +594,7 @@ assert_diffs; repeat (split; Col).
 Qed.
 
 Lemma lt_diff_ps : forall O E E' X Y XMY,
-  Col O E X -> Col O E Y ->
-  ltP O E E' Y X ->
-  diff O E E' X Y XMY ->
-  Ps O E XMY.
+  Col O E X -> Col O E Y -> ltP O E E' Y X -> diff O E E' X Y XMY -> Ps O E XMY.
 Proof.
 intros O E E' X Y XMY HCol1 HCol2 HLt HXMY.
 destruct HLt as [XMY' [HDiff HPs]].
@@ -649,9 +619,7 @@ apply diff_opp with B A; auto.
 Qed.
 
 Lemma compatibility_of_sum_with_order : forall O E E' A B C APC BPC,
-  leP O E E' A B ->
-  sum O E E' A C APC ->
-  sum O E E' B C BPC ->
+  leP O E E' A B -> sum O E E' A C APC -> sum O E E' B C BPC ->
   leP O E E' APC BPC.
 Proof.
 intros O E E' A B C APC BPC HLe HAPC HBPC.
@@ -674,9 +642,7 @@ elim HLe; clear HLe; intro HLe.
 Qed.
 
 Lemma compatibility_of_prod_with_order : forall O E E' A B AB,
-  leP O E E' O A ->
-  leP O E E' O B ->
-  prod O E E' A B AB ->
+  leP O E E' O A -> leP O E E' O B -> prod O E E' A B AB ->
   leP O E E' O AB.
 Proof.
 intros O E E' A B AB HLeA HLeB HAB.
@@ -698,10 +664,7 @@ treat_equalities; apply prod_pos_pos with E' A B; auto.
 Qed.
 
 Lemma pos_inv_pos : forall O E E' A IA,
-  O <> A ->
-  leP O E E' O A ->
-  prod O E E' IA A E ->
-  leP O E E' O IA.
+  O <> A -> leP O E E' O A -> prod O E E' IA A E -> leP O E E' O IA.
 Proof.
 intros O E E' A IA HOA HLe HIA.
 elim HLe; clear HLe; intro HLe; treat_equalities; [|intuition].
@@ -741,10 +704,8 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
 Qed.
 
 Lemma le_pos_prod_le : forall O E E' A B C AC BC,
-  leP O E E' A B ->
-  leP O E E' O C ->
-  prod O E E' A C AC ->
-  prod O E E' B C BC ->
+  leP O E E' A B -> leP O E E' O C ->
+  prod O E E' A C AC -> prod O E E' B C BC ->
   leP O E E' AC BC.
 Proof.
 intros O E E' A B C AC BC HALeB HPsC HAC HBC.
@@ -809,11 +770,11 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
              try destruct HCMB as [HBet1 HBet2])).
 
     {
-    exfalso; apply HDiff5; apply between_egality with C; Between.
+    exfalso; apply HDiff5; apply between_equality with C; Between.
     }
 
     {
-    exfalso; apply HDiff2; apply between_egality with O; Between.
+    exfalso; apply HDiff2; apply between_equality with O; Between.
     }
 
     {
@@ -848,13 +809,13 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
     destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
     elim (eq_dec_points A BMA); intro HDiff6; treat_equalities;
     [apply l14_36_a in HBMA; try apply out_trivial; auto;
-     apply HDiff3; apply between_egality with O; Between|].
+     apply HDiff3; apply between_equality with O; Between|].
     apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
     do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                try destruct HBMA as [HBet1 HBet2])).
 
       {
-      apply HDiff5; apply between_egality with A; Between.
+      apply HDiff5; apply between_equality with A; Between.
       }
 
       {
@@ -865,12 +826,12 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
       }
 
       {
-      apply HDiff3; apply between_egality with O; Between.
+      apply HDiff3; apply between_equality with O; Between.
       apply between_symmetry; apply outer_transitivity_between2 with BMA; auto.
       }
 
       {
-      apply HDiff3; apply between_egality with O; Between.
+      apply HDiff3; apply between_equality with O; Between.
       apply outer_transitivity_between2 with BMA; Between.
       }
     }
@@ -910,20 +871,20 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet6 : Bet O B C) by eBetween.
-            exfalso; apply HDiff5; apply between_egality with C; Between.
+            exfalso; apply HDiff5; apply between_equality with C; Between.
             }
 
             {
             destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
             elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
             [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-             apply HDiff3; apply between_egality with O; Between|].
+             apply HDiff3; apply between_equality with O; Between|].
             apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
             do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                        try destruct HBMA as [HBet6 HBet7])).
 
               {
-              exfalso; apply HDiff5; apply between_egality with A; Between.
+              exfalso; apply HDiff5; apply between_equality with A; Between.
               }
 
               {
@@ -933,45 +894,45 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
                 {
                 assert (HBet9 : Bet E O B)
                   by (apply outer_transitivity_between2 with BMA; Between).
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
 
                 {
                 assert (HBet9 : Bet E O B) by eBetween.
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
               }
 
               {
               assert (HBet8 : Bet O A B)
                 by (apply outer_transitivity_between2 with BMA; Between).
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
 
               {
               assert (HBet8 : Bet O A B) by eBetween.
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
             }
           }
 
           {
           assert (HBet5 : Bet O B C) by eBetween.
-          exfalso; apply HDiff5; apply between_egality with C; Between.
+          exfalso; apply HDiff5; apply between_equality with C; Between.
           }
 
           {
           destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-           apply HDiff3; apply between_egality with O; eBetween|].
+           apply HDiff3; apply between_equality with O; eBetween|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet5 HBet6])).
 
             {
             assert (HBet7 : Bet O B A) by eBetween.
-            exfalso; apply HDiff5; apply between_egality with A; Between.
+            exfalso; apply HDiff5; apply between_equality with A; Between.
             }
 
             {
@@ -980,26 +941,26 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
               {
               elim (l5_3 O B BMA E); Between; intro HBet8; exfalso;
-              [apply HDiff5; apply between_egality with BMA|
-               apply HDiff8; apply between_egality with B]; Between.
+              [apply HDiff5; apply between_equality with BMA|
+               apply HDiff8; apply between_equality with B]; Between.
               }
 
               {
               assert (HBet8 : Bet O B BMA) by eBetween.
-              exfalso; apply HDiff5; apply between_egality with BMA; Between.
+              exfalso; apply HDiff5; apply between_equality with BMA; Between.
               }
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
           }
 
@@ -1007,14 +968,14 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-           apply HDiff3; apply between_egality with O; eBetween|].
+           apply HDiff3; apply between_equality with O; eBetween|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet5 HBet6])).
 
             {
             assert (HBet7 : Bet A O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with A; Between.
+            exfalso; apply HDiff1; apply between_equality with A; Between.
             }
 
             {
@@ -1023,25 +984,25 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
               {
               assert (HBet8 : Bet BMA O E) by eBetween.
-              exfalso; apply HDiff8; apply between_egality with E; Between.
+              exfalso; apply HDiff8; apply between_equality with E; Between.
               }
 
               {
               assert (HBet8 : Bet BMA O E) by eBetween.
-              exfalso; apply HDiff1; apply between_egality with BMA; Between.
+              exfalso; apply HDiff1; apply between_equality with BMA; Between.
               }
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet B A C) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet B A C) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
           }
         }
@@ -1052,7 +1013,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
         elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
         [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-         apply HDiff3; apply between_egality with O; eBetween|].
+         apply HDiff3; apply between_equality with O; eBetween|].
         apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
         do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                    try destruct HBMA as [HBet3 HBet4])).
@@ -1066,22 +1027,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1094,22 +1055,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1141,20 +1102,20 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet6 : Bet O B C) by eBetween.
-            exfalso; apply HDiff2; apply between_egality with O; Between.
+            exfalso; apply HDiff2; apply between_equality with O; Between.
             }
 
             {
             destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
             elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
             [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-             apply HDiff3; apply between_egality with O; Between|].
+             apply HDiff3; apply between_equality with O; Between|].
             apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
             do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                        try destruct HBMA as [HBet6 HBet7])).
 
               {
-              exfalso; apply HDiff5; apply between_egality with A; Between.
+              exfalso; apply HDiff5; apply between_equality with A; Between.
               }
 
               {
@@ -1164,45 +1125,45 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
                 {
                 assert (HBet9 : Bet E O B)
                   by (apply outer_transitivity_between2 with BMA; Between).
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
 
                 {
                 assert (HBet9 : Bet E O B) by eBetween.
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
               }
 
               {
               assert (HBet8 : Bet O A B)
                 by (apply outer_transitivity_between2 with BMA; Between).
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
 
               {
               assert (HBet8 : Bet O A B) by eBetween.
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
             }
           }
 
           {
           assert (HBet5 : Bet O B C) by eBetween.
-          exfalso; apply HDiff2; apply between_egality with O; Between.
+          exfalso; apply HDiff2; apply between_equality with O; Between.
           }
 
           {
           destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-           apply HDiff3; apply between_egality with O; eBetween|].
+           apply HDiff3; apply between_equality with O; eBetween|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet5 HBet6])).
 
             {
             assert (HBet7 : Bet O B A) by eBetween.
-            exfalso; apply HDiff5; apply between_egality with A; Between.
+            exfalso; apply HDiff5; apply between_equality with A; Between.
             }
 
             {
@@ -1211,26 +1172,26 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
               {
               elim (l5_3 O B BMA E); Between; intro HBet8; exfalso;
-              [apply HDiff5; apply between_egality with BMA|
-               apply HDiff8; apply between_egality with B]; Between.
+              [apply HDiff5; apply between_equality with BMA|
+               apply HDiff8; apply between_equality with B]; Between.
               }
 
               {
               assert (HBet8 : Bet O B BMA) by eBetween.
-              exfalso; apply HDiff5; apply between_egality with BMA; Between.
+              exfalso; apply HDiff5; apply between_equality with BMA; Between.
               }
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
           }
 
@@ -1238,14 +1199,14 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-           apply HDiff3; apply between_egality with O; eBetween|].
+           apply HDiff3; apply between_equality with O; eBetween|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet5 HBet6])).
 
             {
             assert (HBet7 : Bet A O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with A; Between.
+            exfalso; apply HDiff1; apply between_equality with A; Between.
             }
 
             {
@@ -1254,25 +1215,25 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
               {
               assert (HBet8 : Bet BMA O E) by eBetween.
-              exfalso; apply HDiff8; apply between_egality with E; Between.
+              exfalso; apply HDiff8; apply between_equality with E; Between.
               }
 
               {
               assert (HBet8 : Bet BMA O E) by eBetween.
-              exfalso; apply HDiff1; apply between_egality with BMA; Between.
+              exfalso; apply HDiff1; apply between_equality with BMA; Between.
               }
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet B A C) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet B A C) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
           }
         }
@@ -1283,7 +1244,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
         elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
         [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-         apply HDiff3; apply between_egality with O; eBetween|].
+         apply HDiff3; apply between_equality with O; eBetween|].
         apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
         do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                    try destruct HBMA as [HBet3 HBet4])).
@@ -1297,22 +1258,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1325,22 +1286,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet8 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1378,13 +1339,13 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
             destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
             elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
             [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-             apply HDiff3; apply between_egality with O; Between|].
+             apply HDiff3; apply between_equality with O; Between|].
             apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
             do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                        try destruct HBMA as [HBet6 HBet7])).
 
               {
-              exfalso; apply HDiff5; apply between_egality with A; Between.
+              exfalso; apply HDiff5; apply between_equality with A; Between.
               }
 
               {
@@ -1394,24 +1355,24 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
                 {
                 assert (HBet9 : Bet E O B)
                   by (apply outer_transitivity_between2 with BMA; Between).
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
 
                 {
                 assert (HBet9 : Bet E O B) by eBetween.
-                exfalso; apply HDiff5; apply between_egality with E; Between.
+                exfalso; apply HDiff5; apply between_equality with E; Between.
                 }
               }
 
               {
               assert (HBet8 : Bet O A B)
                 by (apply outer_transitivity_between2 with BMA; Between).
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
 
               {
               assert (HBet8 : Bet O A B) by eBetween.
-              exfalso; apply HDiff3; apply between_egality with O; Between.
+              exfalso; apply HDiff3; apply between_equality with O; Between.
               }
             }
           }
@@ -1424,14 +1385,14 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-           apply HDiff3; apply between_egality with O; eBetween|].
+           apply HDiff3; apply between_equality with O; eBetween|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet5 HBet6])).
 
             {
             assert (HBet7 : Bet O B A) by eBetween.
-            exfalso; apply HDiff5; apply between_egality with A; Between.
+            exfalso; apply HDiff5; apply between_equality with A; Between.
             }
 
             {
@@ -1440,26 +1401,26 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
               {
               elim (l5_3 O B BMA E); Between; intro HBet8; exfalso;
-              [apply HDiff5; apply between_egality with BMA|
-               apply HDiff8; apply between_egality with B]; Between.
+              [apply HDiff5; apply between_equality with BMA|
+               apply HDiff8; apply between_equality with B]; Between.
               }
 
               {
               assert (HBet8 : Bet O B BMA) by eBetween.
-              exfalso; apply HDiff5; apply between_egality with BMA; Between.
+              exfalso; apply HDiff5; apply between_equality with BMA; Between.
               }
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
 
             {
             assert (HBet7 : Bet O A B) by eBetween.
             assert (HBet8 : Bet O B A) by eBetween.
-            exfalso; apply HDiff3; apply between_egality with O; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
           }
 
@@ -1479,7 +1440,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
         elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
         [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-         apply HDiff4; apply between_egality with B; eBetween|].
+         apply HDiff4; apply between_equality with B; eBetween|].
         apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
         do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                    try destruct HBMA as [HBet4 HBet5])).
@@ -1493,22 +1454,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1521,22 +1482,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1581,7 +1542,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HLt as [BMA [HBMA HPsBMA]]; apply diff_sum in HBMA.
         elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
         [apply l14_36_a in HBMA; try apply out_trivial; auto; exfalso;
-         apply HDiff4; apply between_egality with B; eBetween|].
+         apply HDiff4; apply between_equality with B; eBetween|].
         apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
         do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                    try destruct HBMA as [HBet4 HBet5])).
@@ -1595,22 +1556,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1623,22 +1584,22 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff8; apply between_egality with E; Between.
+            exfalso; apply HDiff8; apply between_equality with E; Between.
             }
 
             {
             assert (HBet9 : Bet BMA O E) by eBetween.
-            exfalso; apply HDiff1; apply between_egality with BMA; Between.
+            exfalso; apply HDiff1; apply between_equality with BMA; Between.
             }
           }
 
@@ -1669,7 +1630,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HPsB as [H [H' HElim]]; clear H; clear H'.
         elim HElim; clear HElim; intro HBet4;
         assert (HBet5 : Bet O B C) by eBetween;
-        exfalso; apply HDiff5; apply between_egality with C; Between.
+        exfalso; apply HDiff5; apply between_equality with C; Between.
         }
 
         {
@@ -1677,7 +1638,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
         destruct HPsB as [H [H' HElim]]; clear H; clear H'.
         elim HElim; clear HElim; intro HBet4;
         assert (HBet5 : Bet O B C) by eBetween;
-        exfalso; apply HDiff2; apply between_egality with O; Between.
+        exfalso; apply HDiff2; apply between_equality with O; Between.
         }
 
         {
@@ -1719,34 +1680,34 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [destruct HPsBMA as [H [H' HElim]]; clear H; clear H';
            elim HElim; clear HElim; intro HBet6; exfalso;
-           [apply HDiff4; apply between_egality with E|
-            apply HDiff1; apply between_egality with A]; Between|].
+           [apply HDiff4; apply between_equality with E|
+            apply HDiff1; apply between_equality with A]; Between|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet6 HBet7])).
 
             {
-            exfalso; apply HDiff4; apply between_egality with B; Between.
+            exfalso; apply HDiff4; apply between_equality with B; Between.
             }
 
             {
-            exfalso; apply HDiff3; apply between_egality with O; Between.
-            }
-
-            {
-            assert (HBet8 : Bet E O BMA) by eBetween.
-            destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
-            exfalso; elim HElim; clear HElim; intro HBet9;
-            [apply HDiff8; apply between_egality with E|
-             apply HDiff1; apply between_egality with BMA]; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
 
             {
             assert (HBet8 : Bet E O BMA) by eBetween.
             destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
             exfalso; elim HElim; clear HElim; intro HBet9;
-            [apply HDiff8; apply between_egality with E|
-             apply HDiff1; apply between_egality with BMA]; Between.
+            [apply HDiff8; apply between_equality with E|
+             apply HDiff1; apply between_equality with BMA]; Between.
+            }
+
+            {
+            assert (HBet8 : Bet E O BMA) by eBetween.
+            destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
+            exfalso; elim HElim; clear HElim; intro HBet9;
+            [apply HDiff8; apply between_equality with E|
+             apply HDiff1; apply between_equality with BMA]; Between.
             }
           }
 
@@ -1759,11 +1720,11 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           elim (l5_2 O B A C); Between; intro HBet7.
 
             {
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
 
             {
-            exfalso; apply HDiff2; apply between_egality with A; Between.
+            exfalso; apply HDiff2; apply between_equality with A; Between.
             }
           }
         }
@@ -1778,34 +1739,34 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           elim (eq_dec_points A BMA); intro HDiff7; treat_equalities;
           [destruct HPsBMA as [H [H' HElim]]; clear H; clear H';
            elim HElim; clear HElim; intro HBet6; exfalso;
-           [apply HDiff4; apply between_egality with E|
-            apply HDiff1; apply between_egality with A]; Between|].
+           [apply HDiff4; apply between_equality with E|
+            apply HDiff1; apply between_equality with A]; Between|].
           apply sum_cong in HBMA; Col; apply plgf_bet in HBMA.
           do 3 (try (elim HBMA; clear HBMA; intro HBMA;
                      try destruct HBMA as [HBet6 HBet7])).
 
             {
-            exfalso; apply HDiff4; apply between_egality with B; Between.
+            exfalso; apply HDiff4; apply between_equality with B; Between.
             }
 
             {
-            exfalso; apply HDiff3; apply between_egality with O; Between.
-            }
-
-            {
-            assert (HBet8 : Bet E O BMA) by eBetween.
-            destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
-            exfalso; elim HElim; clear HElim; intro HBet9;
-            [apply HDiff8; apply between_egality with E|
-             apply HDiff1; apply between_egality with BMA]; Between.
+            exfalso; apply HDiff3; apply between_equality with O; Between.
             }
 
             {
             assert (HBet8 : Bet E O BMA) by eBetween.
             destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
             exfalso; elim HElim; clear HElim; intro HBet9;
-            [apply HDiff8; apply between_egality with E|
-             apply HDiff1; apply between_egality with BMA]; Between.
+            [apply HDiff8; apply between_equality with E|
+             apply HDiff1; apply between_equality with BMA]; Between.
+            }
+
+            {
+            assert (HBet8 : Bet E O BMA) by eBetween.
+            destruct HPsBMA as [HDiff8 [H' HElim]]; clear H'.
+            exfalso; elim HElim; clear HElim; intro HBet9;
+            [apply HDiff8; apply between_equality with E|
+             apply HDiff1; apply between_equality with BMA]; Between.
             }
           }
 
@@ -1819,11 +1780,11 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
           elim (l5_2 O B A C); Between; intro HBet7.
 
             {
-            exfalso; apply HDiff3; apply between_egality with C; Between.
+            exfalso; apply HDiff3; apply between_equality with C; Between.
             }
 
             {
-            exfalso; apply HDiff2; apply between_egality with A; Between.
+            exfalso; apply HDiff2; apply between_equality with A; Between.
             }
           }
         }
@@ -1942,9 +1903,7 @@ apply bet_lt21_le32 with A; auto.
 Qed.
 
 Lemma opp_2_le_le : forall O E E' A MA B MB,
-  opp O E E' A MA -> opp O E E' B MB ->
-  leP O E E' A B ->
-  leP O E E' MB MA.
+  opp O E E' A MA -> opp O E E' B MB -> leP O E E' A B -> leP O E E' MB MA.
 Proof.
 intros O E E' A MA B MB HOppA HOppB HLe.
 assert (HNC : ~ Col O E E') by (unfold opp, sum, Ar2 in *; spliter; Col).
@@ -1961,8 +1920,7 @@ eapply compatibility_of_sum_with_order in HLe; [|apply HMB|apply HMA]; auto.
 Qed.
 
 Lemma diff_2_le_le : forall O E E' A B C AMC BMC,
-  diff O E E' A C AMC -> diff O E E' B C BMC ->
-  leP O E E' A B ->
+  diff O E E' A C AMC -> diff O E E' B C BMC -> leP O E E' A B ->
   leP O E E' AMC BMC.
 intros O E E' A B C AMC BMC HAMC HBMC HLe.
 assert (HNC : ~ Col O E E')

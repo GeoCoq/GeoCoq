@@ -1,12 +1,18 @@
 Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_ID.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_tarski.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.TCP_tarski.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_consecutive_interior_angles.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_playfair_bis.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_postulate_triangle.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_triangle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_proclus.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.aristotle_greenberg.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.consecutive_interior_angles_alternate_interior_angles.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.euclid_SPP.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.euclid_5_original_euclid.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.inverse_projection_proclus_bis.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.midpoints_playfair.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.original_euclid_original_spp.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.original_spp_inverse_projection.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_2_par_par_perp_perp.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_TCP.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_par_perp_2_par.
@@ -16,9 +22,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.par_trans_proclus.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_alternate_interior_angles.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_bis_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_par_trans_par_perp_perp.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_playfair_bis.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_aristotle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_SPP.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_aristotle.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_bis_proclus.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_midpoints.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_euclid.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_playfair.
@@ -46,7 +52,9 @@ Theorem parallel_postulates_without_decidability_of_intersection_of_lines :
              postulate_of_transitivity_of_parallelism::
              midpoints_converse_postulate::
              alternate_interior_angles_postulate::
-             playfair_bis::nil).
+             playfair_bis::
+             consecutive_interior_angles_postulate::
+             nil).
 Proof.
 intros.
 unfold all_equiv; simpl; intros x y Hx Hy.
@@ -59,9 +67,10 @@ assert (R:=par_perp_2_par_implies_par_perp_perp).
 assert (S:=playfair_implies_par_perp_perp).
 assert (T:=par_perp_perp_implies_playfair).
 assert (U:=playfair_bis__playfair).
-assert (V:=playfair__playfair_bis).
-assert (W:=alternate_interior__playfair_bis).
-assert (X:=playfair__alternate_interior).
+assert (V:=alternate_interior__playfair_bis).
+assert (W:=playfair__alternate_interior).
+assert (X:=consecutive_interior__alternate_interior).
+assert (Y:=alternate_interior__consecutive_interior).
 decompose [or] Hx; clear Hx; decompose [or] Hy; clear Hy; subst;
 tauto. (* We could create a lemma to make this line quicker... *)
 Qed.
@@ -79,11 +88,23 @@ Theorem parallel_postulates :
              euclid_5::
              midpoints_converse_postulate::
              alternate_interior_angles_postulate::
-             playfair_bis::nil).
+             playfair_bis::
+             consecutive_interior_angles_postulate::
+             original_euclid::
+             original_spp::
+             inverse_projection_postulate::
+             proclus_bis::
+             nil).
 Proof.
 intro HID; unfold all_equiv; simpl; intros x y Hx Hy.
-assert (F:=playfair_bis__playfair).
-assert (G:=playfair__playfair_bis).
+assert (AA:=euclid_5__original_euclid).
+assert (A:=inverse_projection__proclus_bis).
+assert (B:=original_euclid__original_spp).
+assert (C:=original_spp__inverse_projection).
+assert (D:=proclus_bis__proclus).
+assert (E:=consecutive_interior__alternate_interior).
+assert (F:=alternate_interior__consecutive_interior).
+assert (G:=playfair_bis__playfair).
 assert (H:=alternate_interior__playfair_bis).
 assert (I:=playfair__alternate_interior).
 assert (J:=strong_parallel_postulate_SPP).
@@ -115,8 +136,18 @@ Theorem result_similar_to_beeson_s_one :
              strong_parallel_postulate::
              triangle_circumscription_principle::
              proclus_postulate::
-             tarski_s_parallel_postulate::nil).
+             tarski_s_parallel_postulate::
+             original_euclid::
+             original_spp::
+             inverse_projection_postulate::
+             proclus_bis::
+             nil).
 Proof.
+assert (J:=euclid_5__original_euclid).
+assert (K:=inverse_projection__proclus_bis).
+assert (L:=original_euclid__original_spp).
+assert (M:=original_spp__inverse_projection).
+assert (N:=proclus_bis__proclus).
 assert (O:=strong_parallel_postulate_SPP).
 assert (P:=strong_parallel_postulate_implies_tarski_s_euclid).
 assert (Q:=tarski_s_euclid_implies_euclid_5).
@@ -138,14 +169,21 @@ Theorem stronger_parallel_postulates :
             strong_parallel_postulate::
             triangle_circumscription_principle::
             proclus_postulate::
-            tarski_s_parallel_postulate::nil)
+            tarski_s_parallel_postulate::
+            original_euclid::
+            original_spp::
+            inverse_projection_postulate::
+            proclus_bis::
+            nil)
            (playfair_s_postulate::
             perpendicular_transversal_postulate::
             postulate_of_parallelism_of_perpendicular_tranversals::
             postulate_of_transitivity_of_parallelism::
             midpoints_converse_postulate::
             alternate_interior_angles_postulate::
-            playfair_bis::nil).
+            playfair_bis::
+            consecutive_interior_angles_postulate::
+            nil).
 Proof.
 assert(H:=result_similar_to_beeson_s_one).
 assert(I:=strong_parallel_postulate_SPP).
@@ -171,10 +209,17 @@ Theorem equivalence_of_aristotle_greenberg_and_decidability_of_intersection :
                    euclid_5::
                    midpoints_converse_postulate::
                    alternate_interior_angles_postulate::
-                   playfair_bis::nil)
+                   playfair_bis::
+                   consecutive_interior_angles_postulate::
+                   original_euclid::
+                   original_spp::
+                   inverse_projection_postulate::
+                   proclus_bis::
+                   nil)
                   (aristotle_s_postulate::
                    decidability_of_intersection::
-                   greenberg_s_postulate::nil).
+                   greenberg_s_postulate::
+                   nil).
 Proof.
 intros x y z HInx HIny HInz Hx.
 cut playfair_s_postulate;
@@ -233,10 +278,16 @@ Theorem parallel_postulates_assuming_greenberg_s_postulate :
              midpoints_converse_postulate::
              alternate_interior_angles_postulate::
              playfair_bis::
-             triangle_postulate::nil).
+             triangle_postulate::
+             consecutive_interior_angles_postulate::
+             original_euclid::
+             original_spp::
+             inverse_projection_postulate::
+             proclus_bis::
+             nil).
 Proof.
 intros HG; assert(H:=parallel_postulates).
-assert(I:=playfair__triangle).
+assert(I:=alternate_interior__triangle).
 assert(J:=triangle_playfair_bis).
 assert(K:=equivalence_of_aristotle_greenberg_and_decidability_of_intersection).
 unfold all_equiv, all_equiv_under in *; simpl in *; intros x y Hx Hy.

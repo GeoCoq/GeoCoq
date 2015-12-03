@@ -334,7 +334,7 @@ Qed.
 
 Instance Beeson_follows_from_Tarski : intuitionistic_Tarski_neutral_dimensionless.
 Proof.
-exact (Build_intuitionistic_Tarski_neutral_dimensionless 
+exact (Build_intuitionistic_Tarski_neutral_dimensionless
  Tpoint BetH Cong
  cong_stability
  bet_stability

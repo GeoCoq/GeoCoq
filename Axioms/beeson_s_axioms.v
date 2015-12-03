@@ -15,7 +15,7 @@ Class intuitionistic_Tarski_neutral_dimensionless := {
  Icong_inner_transitivity : forall A B C D E F,
    ICong A B C D -> ICong A B E F -> ICong C D E F;
  Iinner_pasch : forall A B C P Q,
-   IBet A P C -> IBet B Q C -> ~ ICol A B C -> 
+   IBet A P C -> IBet B Q C -> ~ ICol A B C ->
    exists x, IBet P x B /\ IBet Q x A;
  Ibetween_symmetry : forall A B C, IBet A B C -> IBet C B A;
  Ibetween_inner_transitivity : forall A B C D, IBet A B D -> IBet B C D -> IBet A B C;

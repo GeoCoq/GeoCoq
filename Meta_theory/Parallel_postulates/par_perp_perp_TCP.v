@@ -96,7 +96,6 @@ elim HInter; clear HInter; intro HInter.
   assert (HPerp := HPTP B1 B2 C1 C2 A C HPar HAC).
   apply par_id.
   apply l12_9 with C1 C2; finish.
-  apply all_coplanar.
 Qed.
 
 End par_perp_perp_TCP.

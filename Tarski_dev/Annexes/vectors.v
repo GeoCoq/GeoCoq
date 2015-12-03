@@ -132,10 +132,10 @@ split; Cong.
 assumption.
 Qed.
 
-Lemma vector_construction_unicity : 
- forall A B C D D', 
- eqV A B C D -> 
- eqV A B C D' -> 
+Lemma vector_construction_unicity :
+ forall A B C D D',
+ eqV A B C D ->
+ eqV A B C D' ->
  D = D'.
 Proof.
 intros.
@@ -297,7 +297,7 @@ Qed.
 Lemma eqv_sum :
   forall A B C A' B' C',
   eqV A B A' B' ->
-  eqV B C B' C' -> 
+  eqV B C B' C' ->
   eqV A C A' C'.
 Proof.
 intros.
@@ -348,7 +348,7 @@ subst D.
 apply eqv_trivial.
 Qed.
 
-Lemma chasles : 
+Lemma chasles :
  forall A B C,
   is_sum A B B C A C.
 Proof.
@@ -600,7 +600,7 @@ subst D'0.
 assumption.
 Qed.
 
-Lemma sum_exists : 
+Lemma sum_exists :
  forall A B C D, exists E, exists F, is_sum A B C D E F.
 intros.
 assert(HH:= vector_construction C D B).
@@ -755,7 +755,7 @@ Col.
 induction(Col_dec A B T).
 apply False_ind.
 assert(B = T).
-apply (inter_unicity A B C B); Col.
+apply (l6_21 A B C B); Col.
 subst T.
 apply H22.
 exists D.
@@ -765,7 +765,7 @@ split; Col.
 induction(Col_dec C D T).
 apply False_ind.
 assert(C = T).
-apply (inter_unicity C D B C); Col.
+apply (l6_21 C D B C); Col.
 subst T.
 apply H22.
 exists A.
@@ -1195,10 +1195,10 @@ unfold out in H.
 spliter.
 induction H8.
 apply H.
-apply (between_egality _ _ D');
+apply (between_equality _ _ D');
 Between.
 apply H7.
-apply (between_egality _ _ A);
+apply (between_equality _ _ A);
 Between.
 induction H.
 spliter.
@@ -1324,7 +1324,7 @@ apply H11.
 apply (one_side_transitivity _ _ _ C).
 apply one_side_symmetry.
 apply H3.
-assumption. 
+assumption.
 
 
 assert(HH:=par_cong_mid_os  A B' D C' H10 H2 H13).
@@ -2388,7 +2388,7 @@ spliter.
 apply False_ind.
 
 apply H3.
-apply (between_egality _ _ D).
+apply (between_equality _ _ D).
 apply between_symmetry.
 apply H13.
 assumption.
@@ -2396,7 +2396,7 @@ induction H12.
 spliter.
 
 assert(D = D').
-apply (between_egality _ _ C).
+apply (between_equality _ _ C).
 Between.
 Between.
 subst D'.
@@ -2763,12 +2763,12 @@ unfold is_midpoint in H0.
 unfold out in H.
 spliter.
 induction H3.
-apply (between_egality _ _ C).
+apply (between_equality _ _ C).
 apply H0.
 assumption.
 apply False_ind.
 apply H2.
-apply (between_egality _ _ A).
+apply (between_equality _ _ A).
 Between.
 assumption.
 Qed.

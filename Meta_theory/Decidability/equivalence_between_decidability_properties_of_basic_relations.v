@@ -110,8 +110,8 @@ prolong A' C' E' C E.
 
 assert  (Cong E D E' D')
  by (
-  apply (five_segment_with_def A C E D A' C' E' D');[ 
-  unfold OFSC;  repeat split;Cong| 
+  apply (five_segment_with_def A C E D A' C' E' D');[
+  unfold OFSC;  repeat split;Cong|
   assumption]).
 
 apply (five_segment_with_def E C B D E' C' B' D').
@@ -158,9 +158,9 @@ Lemma eq_dec_implies_l4_6 :
   (forall A B:Tpoint, A=B \/ A<>B) ->
   forall A B C A' B' C', Bet A B C -> Cong_3 A B C A' B' C' -> Bet A' B' C'.
 Proof.
-unfold Cong_3. 
+unfold Cong_3.
 intro eq_dec; intros.
-assert (exists B'', Bet A' B'' C' /\ Cong_3 A B C A' B'' C') 
+assert (exists B'', Bet A' B'' C' /\ Cong_3 A B C A' B'' C')
   by (eapply eq_dec_implies_l4_5;intuition).
 ex_and H1 x.
 unfold Cong_3 in *;spliter.
@@ -367,7 +367,7 @@ Proof.
 intros.
 assert (Bet A B C).
 eapply eq_dec_implies_l4_6 with A C B; unfold Cong_3; repeat split; Cong.
-eapply between_egality; eBetween.
+eapply between_equality; eBetween.
 Qed.
 
 Lemma eq_dec_cong_dec :

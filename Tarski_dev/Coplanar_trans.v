@@ -1426,7 +1426,7 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
   assert (H : Bet X1 R Q) by eBetween.
   apply between_symmetry in HQRX1.
   apply between_symmetry in H.
-  assert (H' := between_egality R Q X1 HQRX1 H); treat_equalities; exfalso; apply HNC; Col.
+  assert (H' := between_equality R Q X1 HQRX1 H); treat_equalities; exfalso; apply HNC; Col.
   }
 
   {
@@ -1639,7 +1639,7 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
   assert (H : Bet X1 Q R) by eBetween.
   apply between_symmetry in HQRX1.
   apply between_symmetry in H.
-  assert (H' := between_egality R Q X1 H HQRX1); treat_equalities; exfalso; apply HNC; Col.
+  assert (H' := between_equality R Q X1 H HQRX1); treat_equalities; exfalso; apply HNC; Col.
   }
 Qed.
 
@@ -2258,7 +2258,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
   assert (H : Bet X1 R Q) by eBetween.
   apply between_symmetry in HQRX1.
   apply between_symmetry in H.
-  assert (H' := between_egality R Q X1 HQRX1 H); treat_equalities; exfalso; apply HNC; Col.
+  assert (H' := between_equality R Q X1 HQRX1 H); treat_equalities; exfalso; apply HNC; Col.
   }
 
   {
@@ -2461,7 +2461,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
   assert (H : Bet X1 Q R) by eBetween.
   apply between_symmetry in HQRX1.
   apply between_symmetry in H.
-  assert (H' := between_egality R Q X1 H HQRX1); treat_equalities; exfalso; apply HNC; Col.
+  assert (H' := between_equality R Q X1 H HQRX1); treat_equalities; exfalso; apply HNC; Col.
   }
 Qed.
 

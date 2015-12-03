@@ -1,4 +1,4 @@
-Require Import GeoCoq.Highschool.triangle_midpoints_theorems.
+Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 
 Section Varignon.
 
@@ -39,7 +39,7 @@ Qed.
 Lemma varignon_aux :
  forall A B C D I J K L,
   (A<>C \/ B<>D) ->
-  J<>L -> 
+  J<>L ->
   is_midpoint I A B ->
   is_midpoint J B C ->
   is_midpoint K C D ->
@@ -135,7 +135,7 @@ induction (eq_dec_points A D).
   treat_equalities.
   intuition.
  assert_cols.
- assert (Cong X L K L). 
+ assert (Cong X L K L).
  assert (Par B L L K /\
        Par B C K X /\
        Par L C L X /\
@@ -149,7 +149,7 @@ induction (eq_dec_points A D).
    Cong.
  repeat split.
  show_distinct L X . intuition.
- assert_diffs.  
+ assert_diffs.
  ColR.
  Col.
  auto.
@@ -157,7 +157,7 @@ induction (eq_dec_points A D).
  left;auto.
 induction (eq_dec_points B D).
  treat_equalities. intuition.
-assert (is_midpoint L I K). 
+assert (is_midpoint L I K).
 assert (Par A B L X /\
        Par A D X I /\
        Par B D L I /\
@@ -196,7 +196,7 @@ induction (eq_dec_points I K).
   apply (plg_not_comm_1 B D A C);auto.
 
 apply cong_col_mid.
- auto. 
+ auto.
  assert (Par I L K L).
   apply par_trans with B D;Par.
  apply par_id_5;Par.

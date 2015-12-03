@@ -8,7 +8,7 @@ Section Quadrilateral.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma cong_identity_inv : 
+Lemma cong_identity_inv :
  forall A B C, A <> B -> ~ Cong A B C C.
 Proof.
 intros.
@@ -18,9 +18,9 @@ eapply cong_identity.
 apply H0.
 Qed.
 
-Lemma midpoint_midpoint_col : forall A B A' B' M, 
- A <> B -> 
- is_midpoint M A A' -> is_midpoint M B B' -> 
+Lemma midpoint_midpoint_col : forall A B A' B' M,
+ A <> B ->
+ is_midpoint M A A' -> is_midpoint M B B' ->
  Col A B B' ->
  A' <> B' /\ Col A A' B' /\ Col B A' B'.
 Proof.
@@ -97,9 +97,9 @@ Col.
 ColR.
 Qed.
 
-Lemma midpoint_par : 
+Lemma midpoint_par :
  forall A B A' B' M,
- A <> B -> 
+ A <> B ->
  is_midpoint M A A' ->
  is_midpoint M B B' ->
  Par A B A' B'.
@@ -534,9 +534,9 @@ assumption.
 apply cong_reflexivity.
 assert (le B' B C' C).
 eapply l5_6.
-split.
 apply H4.
-split; auto.
+auto.
+auto.
 assert(le A B A C).
 eapply bet_le_le.
 apply H.
@@ -664,7 +664,7 @@ apply HH0.
 assumption.
 
 assert(B = C).
-eapply between_egality.
+eapply between_equality.
 apply between_symmetry.
 apply H9.
 Between.
@@ -758,7 +758,7 @@ split.
 apply symmetry_preseves_bet2;
 assumption.
 intro.
-eapply (symmetry_preseves_bet1 A B); 
+eapply (symmetry_preseves_bet1 A B);
 assumption.
 Qed.
 
@@ -795,9 +795,9 @@ assert(Cong B C B D).
 eapply le_anti_symmetry.
 assumption.
 eapply l5_6.
-split.
 apply H5.
-split; Cong.
+Cong.
+Cong.
 
 assert(C=D).
 eapply between_cong.
@@ -2104,13 +2104,13 @@ apply l7_2.
 apply H0.
 assumption.
 assumption.
-Qed. 
+Qed.
 
-                                                
+
 
 Lemma plgf_not_comm :
  forall A B C D, A <> B ->
-  Parallelogram_flat A B C D -> 
+  Parallelogram_flat A B C D ->
   ~ Parallelogram_flat A B D C /\ ~ Parallelogram_flat B A C D.
 Proof.
 intros.
@@ -2252,7 +2252,7 @@ repeat split; try (intro; subst X).
 apply bet_col.
 eBetween.
 apply H1.
-eapply between_egality.
+eapply between_equality.
 apply H3.
 Between.
 apply between_identity in H3.
@@ -2275,7 +2275,7 @@ apply cong_identity in H4.
 subst C.
 tauto.
 apply H2.
-eapply between_egality.
+eapply between_equality.
 2: apply H3.
 Between.
 apply between_identity in H3.
@@ -2293,7 +2293,7 @@ apply cong_symmetry in H4.
 apply cong_identity in H4.
 contradiction.
 apply H0.
-eapply between_egality.
+eapply between_equality.
 apply H3.
 Between.
 Qed.
@@ -2320,7 +2320,7 @@ apply plg_to_parallelogram in H0.
 auto.
 Qed.
 
-Lemma plg_cong_rectangle : 
+Lemma plg_cong_rectangle :
  forall A B C D,
   Plg A B C D ->
   Cong A C B D ->
@@ -3159,7 +3159,7 @@ induction H0.
 right; right; right.
 split.
 assumption.
-apply (col_cong2_bet1 A); 
+apply (col_cong2_bet1 A);
 Col;
 Cong.
 
@@ -3304,7 +3304,7 @@ exists x.
 tauto.
 Qed.
 
-Lemma Rectangle_not_triv_2 : forall A B, 
+Lemma Rectangle_not_triv_2 : forall A B,
  ~ Rectangle A B A B.
 Proof.
 intros.
@@ -3368,7 +3368,7 @@ assumption.
 Qed.
 
 Lemma Rhombus_Rectangle_Square : forall A B C D,
- Rhombus A B C D -> 
+ Rhombus A B C D ->
  Rectangle A B C D ->
  Square A B C D.
 Proof.

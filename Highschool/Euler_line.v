@@ -1,5 +1,5 @@
-Require Import GeoCoq.Highschool.triangle_midpoints_theorems.
-Require Import GeoCoq.Highschool.circumcenter. 
+Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
+Require Import GeoCoq.Highschool.circumcenter.
 Require Import GeoCoq.Highschool.orthocenter.
 Require Import GeoCoq.Highschool.midpoint_thales.
 Require Import GeoCoq.Highschool.gravityCenter.
@@ -76,14 +76,14 @@ assert (HOM1M2 : ~ Col O M1 M2).
 assert (HPar_strict : Par_strict O M1 O M2).
   {
   apply par_not_col_strict with M2; Col.
-  apply l12_9 with A B; try apply all_coplanar; Col;
+  apply l12_9 with A B; Col;
   try (apply perp_col0 with A C; Col; perm_apply perp_bisect_perp);
   apply perp_bisect_perp; Col.
   }
 assert (H := not_par_strict_id O M1 M2); Col.
 Qed.
 
-Lemma concyclic_not_col_or_eq : 
+Lemma concyclic_not_col_or_eq :
   forall A B C A', Concyclic A B C A' ->
   A'=C \/ A'=B \/ A=B \/ A=C \/ A=A' \/ (~ Col A B A' /\ ~ Col A C A').
 Proof.
@@ -138,23 +138,23 @@ Qed.
 
 (* TODO bug le hint resolve de gravityCenter.v n'est pas visible... *)
 
-Hint Resolve 
-     is_gravity_center_perm_1 
-     is_gravity_center_perm_2 
+Hint Resolve
+     is_gravity_center_perm_1
+     is_gravity_center_perm_2
      is_gravity_center_perm_3
      is_gravity_center_perm_4
      is_gravity_center_perm_5 : gravityCenter.
 
-Hint Resolve 
-     is_orthocenter_perm_1 
-     is_orthocenter_perm_2 
+Hint Resolve
+     is_orthocenter_perm_1
+     is_orthocenter_perm_2
      is_orthocenter_perm_3
      is_orthocenter_perm_4
      is_orthocenter_perm_5 : Orthocenter.
 
-Hint Resolve 
-     is_circumcenter_perm_1 
-     is_circumcenter_perm_2 
+Hint Resolve
+     is_circumcenter_perm_1
+     is_circumcenter_perm_2
      is_circumcenter_perm_3
      is_circumcenter_perm_4
      is_circumcenter_perm_5 : Circumcenter.
@@ -226,11 +226,11 @@ decompose [or] T;clear T;try contradiction.
     apply midpoint_thales with O;finish.
     unfold is_circumcenter in *;spliter.
     apply cong_transitivity with O B;finish.
-   
+
    apply (Euler_line_special_case A C B G H O);finish.
    auto with Orthocenter.
    auto with Circumcenter.
- 
+
  - unfold is_circumcenter in *;spliter.
    treat_equalities.
    intuition.
@@ -249,7 +249,7 @@ assert (Perp A' B B A)
  by (apply per_perp;finish).
 
 assert (Par C H A' B)
- by (apply l12_9 with A B;try apply all_coplanar;finish).
+ by (apply l12_9 with A B;finish).
 
 assert (Perp B H A C)
  by (unfold is_orthocenter in *;spliter;finish).
@@ -264,7 +264,7 @@ assert (Per A C A').
 assert (Perp A' C C A) by (apply per_perp;finish).
 
 assert (Par B H C A')
- by (apply l12_9 with A C;try apply all_coplanar;finish).
+ by (apply l12_9 with A C;finish).
 
 induction (Col_dec B H C).
  * assert (H=B \/ H=C) by (apply (orthocenter_col A B C H);finish).

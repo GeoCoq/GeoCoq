@@ -219,13 +219,13 @@ Lemma inner_paschT : forall A B C P Q,
 Proof.
 intros A B C P Q HBet1 HBet2.
 elim (eq_dec_points A P); intro HDiff1;
-[rewrite HDiff1 in *; exists P; split; 
+[rewrite HDiff1 in *; exists P; split;
  [apply bet_symmetryG|]; apply between_trivialT|].
 elim (eq_dec_points P C); intro HDiff2;
 [rewrite HDiff2 in *; exists Q; split; apply bet_symmetryG;
  try apply between_trivialT; auto|].
 elim (eq_dec_points B Q); intro HDiff3;
-[rewrite HDiff3 in *; exists Q; split; 
+[rewrite HDiff3 in *; exists Q; split;
  [|apply bet_symmetryG]; apply between_trivialT|].
 elim (eq_dec_points Q C); intro HDiff4;
 [rewrite HDiff4 in *; exists P; split; apply bet_symmetryG;
@@ -261,7 +261,7 @@ Qed.
 
 Global Instance TG_to_T : Tarski_neutral_dimensionless.
 Proof.
-exact 
+exact
 (Build_Tarski_neutral_dimensionless TpointG BetG CongG
   between_identityT cong_pseudo_reflexivityG cong_identityG
   cong_inner_transitivityT inner_paschT five_segmentG

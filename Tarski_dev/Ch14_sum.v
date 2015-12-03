@@ -39,21 +39,19 @@ Qed.
 
 Definition sum O E E' A B C :=
  Ar2 O E E' A B C /\
- exists A', (exists C',
+ exists A', exists C',
  Pj E E' A  A' /\ Col O E' A' /\
  Pj O E  A' C' /\
  Pj O E' B  C' /\
- Pj E' E C' C).
+ Pj E' E C' C.
 
 Definition sump O E E' A B C :=
  Col O E A /\ Col O E B /\
  exists A', exists C', exists P',
-       project A A' O E' E E' /\
-       Par O E A' P' /\
-       project B C' A' P' O E' /\
-       project C' C O E E E'.
-
-
+   project A A' O E' E E' /\
+   Par O E A' P' /\
+   project B C' A' P' O E' /\
+   project C' C O E E E'.
 
 Lemma sum_to_sump : forall O E E' A B C, sum O E E' A B C -> sump O E E' A B C.
 Proof.
@@ -200,9 +198,10 @@ Qed.
 
 (* a inclure dans project.v *)
 
-Lemma project_col_project : forall A B C P P' X Y, A <> C -> Col A B C
-                                                -> project P P' A B X Y
-                                                -> project P P' A C X Y.
+Lemma project_col_project : forall A B C P P' X Y,
+  A <> C -> Col A B C ->
+  project P P' A B X Y ->
+  project P P' A C X Y.
 Proof with finish.
     intros.
     unfold project in *.
@@ -215,14 +214,22 @@ Proof with finish.
     ColR.
 Qed.
 
-Lemma project_trivial : forall P A B X Y, A <> B -> X <> Y -> Col A B P -> ~Par A B X Y -> project P P A B X Y.
+Lemma project_trivial : forall P A B X Y,
+  A <> B -> X <> Y ->
+  Col A B P -> ~ Par A B X Y ->
+  project P P A B X Y.
 Proof.
     intros.
     unfold project.
     repeat split; Col.
 Qed.
 
-Lemma pj_col_project : forall P P' A B X Y, A <> B -> X <> Y -> Col P' A B -> ~Par A B X Y -> Pj X Y P P' -> project P P' A B X Y.
+Lemma pj_col_project : forall P P' A B X Y,
+ A <> B -> X <> Y ->
+ Col P' A B ->
+ ~ Par A B X Y ->
+ Pj X Y P P' ->
+ project P P' A B X Y.
 Proof.
     intros.
     unfold Pj in H3.
@@ -862,8 +869,6 @@ Proof.
     auto.
 Qed.
 
-
-
 Lemma sum_O_B : forall B, Col O E B -> sum O E E' O B B.
 Proof.
     intros.
@@ -898,7 +903,6 @@ Proof.
     Col.
 Qed.
 
-
 Lemma opp0_unicity : forall M, opp O E E' O M -> M = O.
 Proof.
     intros.
@@ -931,7 +935,7 @@ Proof.
       tauto.
     subst C'.
     assert( A' = O).
-      apply (inter_unicity O E E' O); Col.
+      apply (l6_21 O E E' O); Col.
       induction H2.
         apply False_ind.
         apply H2.
@@ -990,7 +994,6 @@ Proof.
     apply(col_transitivity_1 _ A'); Col.
 Qed.
 
-
 Lemma proj_col : forall A A' C' , A = O -> Col O E A -> Par O E A' C' -> project A A' O E' E E' -> A' = O.
 Proof.
     intros.
@@ -1007,7 +1010,6 @@ Proof.
       Par.
     auto.
 Qed.
-
 
 Lemma grid_not_par : ~Par O E E E' /\ ~Par O E O E' /\ ~Par O E' E E' /\ O <> E /\ O <> E' /\ E <> E'.
 Proof.
@@ -1057,8 +1059,7 @@ Proof.
     unfold project in H.
     spliter.
     induction H11.
-      apply(inter_unicity O E E' O).
-        Col.
+      apply(l6_21 O E E' O); Col.
         assert(Col O A' A).
           apply(col_transitivity_1 _ E); Col.
         apply col_permutation_2.
@@ -1071,16 +1072,9 @@ Proof.
           split; Col.
         spliter.
         contradiction.
-        Col.
-        Col.
-        intro.
-        apply grid_ok.
-        Col.
-      auto.
-    subst A'.
-    apply(inter_unicity O E E' O); Col.
+    subst.
+    apply(l6_21 O E E' O); Col.
 Qed.
-
 
 Lemma sum_O_B_eq : forall B C, sum O E E' O B C -> B = C.
 Proof.
@@ -1094,7 +1088,6 @@ Proof.
     apply (sum_unicity O B); auto.
 Qed.
 
-
 Lemma sum_A_O_eq : forall A C, sum O E E' A O C -> A = C.
 Proof.
     intros.
@@ -1106,7 +1099,6 @@ Proof.
     assert(HH:=sum_A_O A H1).
     apply (sum_unicity A O); auto.
 Qed.
-
 
 Lemma sum_par_strict : forall A B C A' C', Ar2 O E E' A B C -> A <> O -> Pj E E' A A' -> Col O E' A' -> Pj O E A' C' -> Pj O E' B C' -> Pj E' E C' C
                                            -> A' <> O /\ (Par_strict O E A' C' \/ B = O).
@@ -1273,7 +1265,6 @@ Proof.
     contradiction.
 Qed.
 
-
 Lemma sum_A_B_B : forall A B, sum O E E' A B B -> A = O.
 Proof.
     intros.
@@ -1323,9 +1314,7 @@ Proof.
     tauto.
 Qed.
 
-
-
-Lemma sum_unicityB : forall A X Y C, sum  O E E' A X C -> sum O E E' A Y C -> X = Y.
+Lemma sum_unicityB : forall A X Y C, sum O E E' A X C -> sum O E E' A Y C -> X = Y.
 Proof.
     intros.
     induction (eq_dec_points A O).
@@ -1379,7 +1368,7 @@ Proof.
           split; Col.
         spliter.
         assert(A' = A'').
-          apply (inter_unicity O E' A A'); Col.
+          apply (l6_21 O E' A A'); Col.
           intro.
           apply grid_ok.
           apply(col_transitivity_1 _ A); Col.
@@ -1405,7 +1394,7 @@ Proof.
                   split; Col.
                 spliter.
                 assert(C' = C'').
-                  apply (inter_unicity A' C' C C');Col.
+                  apply (l6_21 A' C' C C'); Col.
                   intro.
                   apply H6.
                   exists C.
@@ -1422,7 +1411,7 @@ Proof.
                       exists C'.
                       split; Col.
                     spliter.
-                    apply(inter_unicity O E C' X); Col.
+                    apply(l6_21 O E C' X); Col.
                     intro.
                     apply H4.
                     exists C'.
@@ -1559,7 +1548,7 @@ Proof.
               split; Col.
             spliter.
             assert(C' = C'').
-              apply(inter_unicity C C' B C'); Col.
+              apply(l6_21 C C' B C'); Col.
               intro.
               induction H19.
                 apply H19.
@@ -1598,7 +1587,7 @@ Proof.
                   split; Col.
                 spliter.
                 assert(A'= A'').
-                  apply (inter_unicity O E' C' A'); Col.
+                  apply (l6_21 O E' C' A'); Col.
                   intro.
                   induction H16.
                     apply H16.
@@ -1606,7 +1595,7 @@ Proof.
                     split; Col.
                   spliter.
                   apply H1.
-                  apply (inter_unicity O E C' O); Col.
+                  apply (l6_21 O E C' O); Col.
                     intro.
                     apply grid_ok.
                     ColR.
@@ -1629,7 +1618,7 @@ Proof.
                       exists A'.
                       split; Col.
                     spliter.
-                    apply (inter_unicity O E A' X); Col.
+                    apply (l6_21 O E A' X); Col.
                     intro.
                     apply H19.
                     exists A'.
@@ -1700,7 +1689,6 @@ Proof.
     contradiction.
 Qed.
 
-
 Lemma sum_B_null : forall A B, sum O E E' A B A -> B = O.
 Proof.
     intros.
@@ -1724,7 +1712,6 @@ Proof.
     assert(HP:= sum_O_B B H2).
     apply(sum_unicityA B A O B); auto.
 Qed.
-
 
 Lemma sum_plg : forall A B C, sum O E E' A B C -> (A <> O ) \/ ( B <> O) -> exists A', exists C', Plg O B C' A' /\ Plg C' A' A C.
 Proof.
@@ -1889,8 +1876,6 @@ Proof.
     tauto.
 Qed.
 
-
-
 Lemma sum_cong : forall A B C, sum O E E' A B C -> (A <> O \/ B <> O) -> Parallelogram_flat O A C B.
 Proof.
     intros.
@@ -1936,7 +1921,17 @@ Proof.
     tauto.
 Qed.
 
-
+Lemma sum_cong2 : forall A B C,
+  sum O E E' A B C ->
+  (A <> O \/ B <> O) ->
+  (Cong O A B C /\ Cong O B A C).
+Proof.
+intros.
+apply sum_cong in H.
+unfold Parallelogram_flat in *.
+spliter;Cong.
+assumption.
+Qed.
 
 Lemma sum_comm : forall A B C, sum O E E' A B C -> sum O E E' B A C.
 Proof.
@@ -2133,10 +2128,10 @@ Proof.
     tauto.
 Qed.
 
-Lemma cong_sum : forall A B C, O <> C \/ B <> A
-                               -> Ar2 O E E' A B C
-                               -> Cong O A B C -> Cong O B A C
-                               -> sum O E E' A B C.
+Lemma cong_sum : forall A B C,
+  O <> C \/ B <> A -> Ar2 O E E' A B C ->
+  Cong O A B C -> Cong O B A C ->
+  sum O E E' A B C.
 Proof.
     intros A B C.
     intro Hor.
@@ -2335,7 +2330,30 @@ Proof.
     split; Col.
 Qed.
 
-
+Lemma sum_iff_cong : forall A B C,
+  Ar2 O E E' A B C -> (O <> C \/ B <> A) ->
+ ((Cong O A B C /\ Cong O B A C) <-> sum O E E' A B C).
+Proof.
+intros.
+split.
+intros.
+apply cong_sum;intuition idtac.
+intros.
+apply sum_cong2.
+assumption.
+destruct H.
+cases_equality A O.
+subst.
+right.
+intro.
+subst.
+assert (T:= sum_O_O).
+destruct H0.
+apply H0.
+eauto using sum_unicity.
+intuition.
+intuition.
+Qed.
 
 Lemma opp_comm : forall X Y, opp O E E' X Y -> opp O E E' Y X.
 Proof.
@@ -2344,7 +2362,6 @@ Proof.
     apply sum_comm.
     auto.
 Qed.
-
 
 Lemma opp_unicity :
  forall A MA1 MA2,
@@ -2424,93 +2441,7 @@ Proof.
     left; auto.
 Qed.
 
-
 End Grid.
-
-
-Definition is_sum O E E' A B C :=
- sum O E E' A B C \/ ((Col O E E' \/ ~ Col O E A \/ ~ Col O E B) /\ C=O).
-
-Definition is_opp O E E' A C :=
- sum O E E' C A O \/ ((Col O E E' \/ ~ Col O E A) /\ C=O).
-
-(** Defintion 14.8 is skipped because we do not have a function symbol *)
-
-(** Lemma 14.10 *)
-
-
-
-Lemma sum_0_l :
- forall O E E' A, ~Col O E E' /\ Col O E A -> is_sum O E E' O A A.
-Proof.
-    intros.
-    spliter.
-    left.
-    apply(sum_O_B O E E' H A H0).
-Qed.
-
-
-Lemma sum_0_r :
- forall O E E' A, ~Col O E E' /\ Col O E A -> is_sum O E E' A O A.
-Proof.
-    intros.
-    spliter.
-    left.
-    apply(sum_A_O O E E' H A H0).
-Qed.
-
-
-(** Lemma 14.11 *)
-
-Lemma is_opp_opp_left :
- forall O E E' A MA,
-  ~Col O E E' /\ Col O E A -> is_opp O E E' A MA -> is_sum O E E' MA A O.
-Proof.
-    intros.
-    spliter.
-    unfold is_opp in H0.
-    unfold is_sum.
-    induction H0.
-      left.
-      assumption.
-    spliter.
-    induction H0; contradiction.
-Qed.
-
-Lemma is_opp_opp_right :
- forall O E E' A MA, ~Col O E E' /\ Col O E A -> is_opp O E E' A MA -> is_sum O E E' A MA O.
-Proof.
-    intros.
-    unfold is_opp in H0.
-    unfold is_sum.
-    induction H0.
-      left.
-      apply sum_comm.
-        tauto.
-      assumption.
-    spliter.
-    induction H0; contradiction.
-Qed.
-
-
-(** Lemma 14.12 *)
-(** The sum is commutative *)
-
-Lemma sum_sym :
- forall O E E' A B C,
- ~Col O E E' /\ Col O E A /\ Col O E B -> is_sum O E E' A B C -> is_sum O E E' B A C.
-Proof.
-    intros.
-    spliter.
-    unfold is_sum in *.
-    induction H0.
-      left.
-      apply sum_comm.
-        assumption.
-      assumption.
-    spliter.
-    induction H0; [contradiction|induction H0; contradiction].
-Qed.
 
 Lemma pj_unicity : forall O E E' A A' A'', ~Col O E E' -> Col O E A -> Col O E' A' -> Col O E' A'' -> Pj E E' A A' -> Pj E E' A A'' -> A' = A''.
 Proof.
@@ -2541,7 +2472,7 @@ Proof.
         exists A.
         split; Col.
       spliter.
-      apply(inter_unicity  O E' A A'); Col.
+      apply(l6_21 O E' A A'); Col.
       intro.
       apply H.
       ColR.
@@ -2718,7 +2649,7 @@ Proof.
                 split; ColR.
               spliter.
               apply H25.
-              apply(inter_unicity O E E' O);sfinish.
+              apply(l6_21 O E E' O);sfinish.
             subst C'.
             left.
             apply (par_trans _ _ B B'); Par.
@@ -2749,14 +2680,10 @@ Proof.
     intuition.
 Qed.
 
-
 (** Lemma 14.14 *)
-
 Lemma sum_assoc_1 : forall O E E' A B C AB BC ABC,
- sum O E E' A B AB ->
- sum O E E' B C BC ->
- sum O E E' A BC ABC ->
-        sum O E E' AB C ABC.
+  sum O E E' A B AB -> sum O E E' B C BC -> sum O E E' A BC ABC ->
+  sum O E E' AB C ABC.
 Proof.
     intros.
     assert(HS1:=H).
@@ -2949,7 +2876,7 @@ Proof.
       apply(par_trans _ _ AB AB2'); Par.
     subst AB2'.
     assert(AB = O).
-      apply(inter_unicity O E E' O); Col.
+      apply(l6_21 O E E' O); Col.
     subst AB.
     assert(HH:= plg_trivial C O H2).
     assert(Hp:= plg_unicity C O O C C2 HH H34).
@@ -3022,7 +2949,6 @@ Qed.
 
 (** Lemma 14.15 *)
 (** The choice of E' does not affect sum. *)
-
 Lemma sum_y_axis_change :
  forall O E E' E'' A B C,
   sum O E E' A B C ->
@@ -3155,7 +3081,6 @@ Qed.
 
 (** Lemma 14.16 *)
 (** The choice of E does not affect sum. *)
-
 Lemma sum_x_axis_unit_change :
  forall O E E' U A B C,
  sum O E E' A B C ->
@@ -3322,90 +3247,63 @@ Proof.
     subst A.
     clean_duplicated_hyps.
     assert(A' = O').
-      apply(inter_unicity O' E' O O');Col.
-        unfold Pj in H3.
-        induction H3.
-          induction H3.
-            apply False_ind.
-            apply H3.
-            exists O.
-            split; Col.
-          spliter.
-          Col.
-        subst A'.
-        Col.
+      apply(l6_21 O' E' O O');Col.
         intro.
         apply H.
         exists O.
         split; Col.
-      intro.
-      apply H.
-      subst O'.
-      exists O.
-      split; Col.
+        intro.
+        apply H.
+        subst O'.
+        exists O.
+        split; Col.
+      unfold Pj in H3.
+      induction H3.
+        induction H3.
+          apply False_ind.
+          apply H3.
+          exists O.
+          split; Col.
+        spliter.
+        Col.
+      subst A'.
+      Col.
     subst A'.
-    assert(is_sum O E E' O B B).
-      apply(sum_0_l O E E' B ).
-      split; Col.
-    unfold is_sum in H7.
-    induction H7.
+    assert(sum O E E' O B B).
+      apply sum_O_B. assumption. Col.
+    unfold sum in H7.
       assert(B = C).
         apply(sum_unicity O E E' O B); auto.
       subst C.
       assert(B' = C').
-        apply(inter_unicity O' E' B B'); Col.
-          induction H5.
-            induction H4.
-              assert(Par B C' B B').
-                apply(par_trans _ _ O O'); Par.
-              induction H13.
-                apply False_ind.
-                apply H13.
-                exists B.
-                split; Col.
-              spliter.
-              Col.
-            subst B'.
-            Col.
-          subst C'.
-          Col.
+        apply(l6_21 O' E' B B'); Col.
           intro.
           apply H.
           exists B.
           split; Col.
-        intro.
-        subst B'.
-        apply H.
-        exists B.
-        split; Col.
+          intro.
+          subst B'.
+          apply H.
+          exists B.
+          split; Col.
+        induction H5.
+          induction H4.
+            assert(Par B C' B B').
+              apply(par_trans _ _ O O'); Par.
+            induction H13.
+              apply False_ind.
+              apply H13.
+              exists B.
+              split; Col.
+            spliter.
+            Col.
+          subst B'.
+          Col.
+        subst C'.
+        Col.
       subst C'.
-      assert(is_sum O' E' E O' B' B').
-        apply sum_0_l.
-        split; Col.
-        intro.
-        apply H.
-        exists E.
-        split; Col.
-      unfold is_sum in H13.
-      induction H13.
-        auto.
-      spliter.
-      subst B'.
-      apply sum_O_O.
-      intro.
-      apply H.
-      exists E.
-      split; Col.
-    spliter.
-    subst B.
-    apply False_ind.
-    induction H7.
-      contradiction.
-    induction H7.
-      apply H7.
-      Col.
-    apply H7.
-    Col.
+      apply sum_O_B;Col.
+      assert_diffs. Col.
 Qed.
 
 Lemma change_grid_sum :
@@ -3622,7 +3520,6 @@ Qed.
 
 (** Definition 14.38. *)
 (** Definition of the substraction. *)
-
 Definition diff O E E' A B AMB :=
   exists MB, opp O E E' B MB /\ sum O E E' A MB AMB.
 
@@ -3705,9 +3602,12 @@ Proof.
 Qed.
 
 Lemma diff_O_A : forall O E E' A mA,
-  ~ Col O E E' -> Col O E A -> Col O E mA -> opp O E E' A mA -> diff O E E' O A mA.
+  ~ Col O E E' -> opp O E E' A mA -> diff O E E' O A mA.
 Proof.
     intros.
+    assert (Col O E A) by (unfold opp, sum, Ar2 in *; spliter; auto).
+    assert (Col O E mA) by (unfold opp, sum, Ar2 in *; spliter; auto).
+    revert H0; revert H1; revert H2; intros.
     unfold diff.
     exists mA.
     split.
@@ -3774,7 +3674,6 @@ Proof.
     subst mB'.
     apply (opp_unicity O E E' H1 mB); apply opp_comm; auto.
 Qed.
-
 
 Lemma diff_null_eq : forall O E E' A B, diff O E E' A B O -> A = B.
 Proof.
@@ -4270,7 +4169,6 @@ Proof.
     repeat split; auto.
 Qed.
 
-
 Lemma sum_to_sum3 : forall O E E' A B AB X S, sum O E E' A B AB -> sum O E E' AB X S -> sum3 O E E' A B X S.
 Proof.
     intros.
@@ -4439,7 +4337,6 @@ Proof.
 Qed.
 
 (* a + b + c + d = d + a + b + c *)
-
 Lemma sum22_permut : forall O E E' A B C D S, sum22 O E E' A B C D S -> sum22 O E E' D A B C S.
 Proof.
     intros.
@@ -4479,7 +4376,6 @@ Proof.
 Qed.
 
 (* a + b + c + d = b + a + c + d *)
-
 Lemma sum22_comm : forall O E E' A B C D S, sum22 O E E' A B C D S -> sum22 O E E' B A C D S.
 Proof.
     intros.
@@ -4497,7 +4393,6 @@ Proof.
 Qed.
 
 (* a + b + c + d = b  c + a + d *)
-
 Lemma sum_abcd : forall O E E' A B C D AB CD BC AD S, sum O E E' A B AB -> sum O E E' C D CD
                                                    -> sum O E E' B C BC -> sum O E E' A D AD
                                                    -> sum O E E' AB CD S -> sum O E E' BC AD S.
@@ -4536,7 +4431,6 @@ Proof.
 Qed.
 
 (* (b - a) + (c - b) = (c - a) *)
-
 Lemma sum_diff_diff_a : forall O E E' A B C dBA dCB dCA,
                          diff O E E' B A dBA
                       -> diff O E E' C B dCB
@@ -4587,10 +4481,8 @@ Proof.
 Qed.
 
 Lemma sum_diff_diff_b : forall O E E' A B C dBA dCB dCA,
-                         diff O E E' B A dBA
-                      -> diff O E E' C B dCB
-                      -> sum O E E' dCB dBA dCA
-                      -> diff O E E' C A dCA.
+  diff O E E' B A dBA -> diff O E E' C B dCB -> sum O E E' dCB dBA dCA ->
+  diff O E E' C A dCA.
 Proof.
     intros.
     assert(Ar2 O E E' B A dBA).
@@ -4630,10 +4522,10 @@ Proof.
 Qed.
 
 (* (x + y) - (a + b) = (x - a) + (y - b) *)
-
-Lemma sum_diff2_diff_sum2_a : forall O E E' A B C X Y Z dXA dYB dZC, sum O E E' A B C -> sum O E E' X Y Z
-                                                            -> diff O E E' X A dXA -> diff O E E' Y B dYB
-                                                            -> sum O E E' dXA dYB dZC -> diff O E E' Z C dZC.
+Lemma sum_diff2_diff_sum2_a : forall O E E' A B C X Y Z dXA dYB dZC,
+  sum O E E' A B C -> sum O E E' X Y Z -> diff O E E' X A dXA ->
+  diff O E E' Y B dYB -> sum O E E' dXA dYB dZC ->
+  diff O E E' Z C dZC.
 Proof.
     intros.
     assert(Ar2 O E E' A B C).
@@ -4674,9 +4566,10 @@ Proof.
     assumption.
 Qed.
 
-Lemma sum_diff2_diff_sum2_b : forall O E E' A B C X Y Z dXA dYB dZC, sum O E E' A B C -> sum O E E' X Y Z
-                                                            -> diff O E E' X A dXA -> diff O E E' Y B dYB
-                                                            -> diff O E E' Z C dZC -> sum O E E' dXA dYB dZC .
+Lemma sum_diff2_diff_sum2_b : forall O E E' A B C X Y Z dXA dYB dZC,
+  sum O E E' A B C -> sum O E E' X Y Z -> diff O E E' X A dXA ->
+  diff O E E' Y B dYB -> diff O E E' Z C dZC ->
+  sum O E E' dXA dYB dZC .
 Proof.
     intros.
     assert(Ar2 O E E' A B C).
@@ -4708,13 +4601,25 @@ apply diff_O_A_opp; apply sum_diff; auto.
 Qed.
 
 Lemma sum_diff_diff : forall O E E' AX BX CX AXMBX AXMCX BXMCX,
-  ~ Col O E E' -> Col O E AX -> Col O E BX -> Col O E CX ->
-  Col O E AXMBX -> Col O E AXMCX -> Col O E BXMCX ->
-  diff O E E' AX BX AXMBX -> diff O E E' AX CX AXMCX -> diff O E E' BX CX BXMCX ->
+  diff O E E' AX BX AXMBX -> diff O E E' AX CX AXMCX ->
+  diff O E E' BX CX BXMCX ->
   sum O E E' AXMBX BXMCX AXMCX.
 Proof.
-intros O E E' AX BX CX AXMBX AXMCX BXMCX HNC HColAX HColBX HColCX.
-intros HColAXMBX HColAXMCX HColBXMCX HAXMBX HAXMCX HBXMCX.
+intros O E E' AX BX CX AXMBX AXMCX BXMCX HAXMBX HAXMCX HBXMCX.
+assert (HNC : ~ Col O E E')
+  by (unfold diff, sum, Ar2 in *; destruct HAXMBX; spliter; auto).
+assert (HColAX : Col O E AX)
+  by (unfold diff, sum, Ar2 in *; destruct HAXMBX; spliter; auto).
+assert (HColBX : Col O E BX)
+  by (unfold diff, sum, Ar2 in *; destruct HBXMCX; spliter; auto).
+assert (HColCX : Col O E CX)
+  by (unfold diff, opp, sum, Ar2 in *; destruct HBXMCX; spliter; auto).
+assert (HColAXMBX : Col O E AXMBX)
+  by (unfold diff, sum, Ar2 in *; destruct HAXMBX; spliter; auto).
+assert (HColAXMCX : Col O E AXMCX)
+  by (unfold diff, sum, Ar2 in *; destruct HAXMCX; spliter; auto).
+assert (HColBXMCX : Col O E BXMCX)
+  by (unfold diff, sum, Ar2 in *; destruct HBXMCX; spliter; auto).
 destruct (opp_exists O E E' HNC BX) as [MBX HMBX]; Col.
 assert (HSum1 : sum O E E' AX MBX AXMBX).
   {

@@ -9,7 +9,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 Definition is_circumcenter G A B C := Cong A G B G /\ Cong B G C G.
 
 Lemma circumcenter_cong : forall G A B C,
- is_circumcenter G A B C -> 
+ is_circumcenter G A B C ->
  Cong A G B G /\ Cong B G C G /\ Cong C G A G.
 Proof.
 intros.
@@ -23,7 +23,7 @@ Lemma is_circumcenter_cases :
   is_circumcenter G A C B \/
   is_circumcenter G B A C \/
   is_circumcenter G B C A \/
-  is_circumcenter G C A B \/ 
+  is_circumcenter G C A B \/
   is_circumcenter G C B A ->
   is_circumcenter G A B C.
 Proof.
@@ -36,7 +36,7 @@ Qed.
 Lemma is_circumcenter_perm : forall A B C G,
  is_circumcenter G A B C ->
  is_circumcenter G A B C /\ is_circumcenter G A C B /\
- is_circumcenter G B A C /\ is_circumcenter G B C A /\ 
+ is_circumcenter G B A C /\ is_circumcenter G B C A /\
  is_circumcenter G C A B /\ is_circumcenter G C B A.
 Proof.
 intros.
@@ -84,9 +84,9 @@ End Circumcenter.
 
 
 (* TODO investigate bug Hint Resolve/Section *)
-Hint Resolve 
-     is_circumcenter_perm_1 
-     is_circumcenter_perm_2 
+Hint Resolve
+     is_circumcenter_perm_1
+     is_circumcenter_perm_2
      is_circumcenter_perm_3
      is_circumcenter_perm_4
      is_circumcenter_perm_5 : Circumcenter.
@@ -154,7 +154,7 @@ Lemma circumcenter_intersect : forall A B C A' B' C' G,
   is_midpoint A' B C ->
   is_midpoint B' A C ->
   is_midpoint C' A B ->
-  perp_bisect G A' B C -> 
+  perp_bisect G A' B C ->
   perp_bisect G B' A C ->
   Perp G C' A B.
 Proof.
@@ -177,7 +177,7 @@ intuition.
 auto with perp_bisect.
 Qed.
 
-Lemma is_circumcenter_unicity : 
+Lemma is_circumcenter_unicity :
    forall A B C O O',
   A<>B -> B<>C -> A<>C ->
   is_circumcenter O A B C ->
@@ -212,7 +212,7 @@ elim (Col_dec A B C); intro HABC.
     apply par_not_col_strict with C'; Col.
 
       {
-      apply l12_9 with A B; try apply all_coplanar; try (apply perp_bisect_perp; assumption); Col.
+      apply l12_9 with A B; try (apply perp_bisect_perp; assumption); Col.
       apply perp_col0 with B C; Col; apply perp_sym; apply perp_bisect_perp; Col.
       }
 
@@ -257,7 +257,7 @@ elim (Col_dec A B C); intro HABC.
       assert (HPar : Par_strict A B A C).
         {
         apply par_not_col_strict with C; Col.
-        apply l12_9 with B C; try apply all_coplanar; Col;
+        apply l12_9 with B C; Col;
         try apply per_perp; Col; apply perp_right_comm; apply per_perp; Col.
         }
       assert (HFalse := not_par_strict_id A B C); exfalso; apply HFalse; Col.
@@ -274,7 +274,7 @@ elim (Col_dec A B C); intro HABC.
       assert (HPar : Par_strict B A B C).
         {
         apply par_not_col_strict with C; Col.
-        apply l12_9 with A C; try apply all_coplanar; Col;
+        apply l12_9 with A C; Col;
         try apply per_perp; Col; apply perp_right_comm; apply per_perp; Perp.
         }
       assert (HFalse := not_par_strict_id B A C); exfalso; apply HFalse; Col.
@@ -343,7 +343,7 @@ elim (Col_dec A B C); intro HABC.
       assert (HPar : Par_strict A B A C).
         {
         apply par_not_col_strict with C; Col.
-        apply l12_9 with B C; try apply all_coplanar; Col;
+        apply l12_9 with B C; Col;
         try apply per_perp; Col; apply perp_right_comm; apply per_perp; Col.
         }
       assert (HFalse := not_par_strict_id A B C); exfalso; apply HFalse; Col.
@@ -360,7 +360,7 @@ elim (Col_dec A B C); intro HABC.
       assert (HPar : Par_strict B A B C).
         {
         apply par_not_col_strict with C; Col.
-        apply l12_9 with A C; try apply all_coplanar; Col;
+        apply l12_9 with A C; Col;
         try apply per_perp; Col; apply perp_right_comm; apply per_perp; Perp.
         }
       assert (HFalse := not_par_strict_id B A C); exfalso; apply HFalse; Col.
@@ -434,7 +434,7 @@ elim (Col_dec A B C); intro HABC.
         assert (HPar : Par_strict A C B C).
           {
           apply par_not_col_strict with B; Col.
-          apply l12_9 with A B; try apply all_coplanar; Col;
+          apply l12_9 with A B; Col;
           try (apply perp_left_comm; apply per_perp; Perp);
           try (apply perp_comm; apply per_perp; Perp).
           }
@@ -502,7 +502,7 @@ elim (Col_dec A B C); intro HABC.
         assert (HPar : Par_strict A C B C).
           {
           apply par_not_col_strict with B; Col.
-          apply l12_9 with A B; try apply all_coplanar; Col;
+          apply l12_9 with A B; Col;
           try (apply perp_left_comm; apply per_perp; Perp);
           try (apply perp_comm; apply per_perp; Perp).
           }
@@ -670,7 +670,7 @@ elim (Col_dec A B C); intro HABC.
           intro HOA'B'; assert (HPar : Par_strict A C C B).
             {
             apply par_not_col_strict with B; Col.
-            apply l12_9 with O A'; try apply all_coplanar; Col;
+            apply l12_9 with O A'; Col;
             try (apply perp_col0 with O B'; Col; apply perp_bisect_perp; assumption);
             apply perp_sym; apply perp_right_comm; apply perp_bisect_perp; Col.
             }

@@ -326,7 +326,7 @@ Proof.
         tauto.
       assert(HH:= l12_9 Q B  C C' A B).
       assert(Par Q B C C').
-        apply HH; try apply all_coplanar; Perp.
+        apply HH; Perp.
       assert(one_side B Q C C').
         apply l12_6.
         induction H23.
@@ -654,256 +654,7 @@ Proof.
       contradiction.
       auto.
 Qed.
-(*
-Lemma perp_bet_obtuse : forall A B C C', B <> C' -> Perp A B C C' -> Col A B C' -> Bet A B C' -> obtuse A B C.
-Proof.
-    intros.
-    assert(exists M, is_midpoint M B C).
-      apply midpoint_existence.
-    ex_and H3 M.
-    prolong C' M P C' M.
-    assert(is_midpoint M C' P).
-      unfold is_midpoint.
-      split; auto.
-      Cong.
-    assert(Plg B C' C P).
-      unfold Plg.
-      split.
-        left.
-        intro.
-        subst C.
-        apply perp_comm in H0.
-        apply perp_not_col in H0.
-        apply H0.
-        Col.
-      exists M.
-      split; auto.
-    assert(Parallelogram B C' C P).
-      apply plg_to_parallelogram.
-      auto.
-    induction H8.
-      assert(Par_strict B C' C P /\ Par_strict B P C' C).
-        apply plgs_par_strict.
-        auto.
-      spliter.
-      apply plgs_comm2 in H8.
-      assert(Rectangle C' B P C).
-        apply plg_per_rect.
-          apply parallelogram_to_plg.
-          left.
-          auto.
-        left.
-        apply perp_in_per.
-        apply perp_in_comm.
-        apply perp_perp_in.
-        apply perp_sym.
-        apply (perp_col _ A).
-          intro.
-          subst C'.
-          unfold Par_strict in H9.
-          tauto.
-          Perp.
-        Col.
-      assert(Per C' B P).
-        eapply rect_per1.
-        apply plg_per_rect.
-          apply H7.
-        right; left.
-        apply perp_in_per.
-        apply perp_in_sym.
-        apply perp_perp_in.
-        apply perp_comm.
-        apply (perp_col _ A).
-          auto.
-          Perp.
-        Col.
-      assert(A <> B /\ C <> B /\ P <> B).
-        apply perp_distinct in H0.
-        spliter.
-        repeat split.
-          auto.
-          intro.
-          subst C.
-          apply H10.
-          exists B.
-          split; Col.
-        intro.
-        subst P.
-        apply H10.
-        exists C.
-        split; Col.
-      spliter.
-      unfold obtuse.
-      exists A.
-      exists B.
-      exists P.
-      split.
-        apply l8_2.
-        eapply (per_col _ _ C').
-          auto.
-          Perp.
-        Col.
-      unfold gta.
-      unfold lta.
-      split.
-        unfold lea.
-        exists P.
-        split.
-          unfold InAngle.
-          repeat split; auto.
-          assert(one_side B P C C').
-            apply l12_6.
-            apply par_strict_right_comm.
-            auto.
-          assert(two_sides B P A C').
-            unfold two_sides.
-            repeat split.
-              auto.
-              intro.
-              apply H9.
-              exists P.
-              split.
-                ColR.
-              Col.
-              intro.
-              apply H10.
-              exists C'.
-              split; Col.
-            exists B.
-            split; Col.
-          assert(two_sides B P C A).
-            eapply l9_8_2.
-              apply l9_2.
-              apply H17.
-            apply one_side_symmetry.
-            auto.
-          unfold two_sides in H18.
-          spliter.
-          ex_and H21 T.
-          exists T.
-          split.
-            repeat split.
-            Between.
-          right.
-          assert(~ Col T A B).
-            intro.
-            assert(T = B).
-              apply bet_col in H22.
-              apply (inter_unicity B A P B); Col.
-            subst T.
-            apply bet_col in H22.
-            assert(Col B C C').
-              ColR.
-            apply H9.
-            exists C.
-            split; Col.
-          induction H21.
-            assert(one_side A B T C).
-              eapply out_one_side_1.
-                auto.
-                intro.
-                apply H23.
-                Col.
-                apply col_trivial_3.
-              unfold out.
-              repeat split.
-                intro.
-                subst T.
-                apply bet_col in H21.
-                contradiction.
-                intro.
-                unfold one_side in H16.
-                subst C.
-                apply between_identity in H22.
-                subst T.
-                apply bet_col in H21.
-                contradiction.
-              left.
-              Between.
-            assert(one_side A B C P).
-              apply l12_6.
-              unfold Par_strict.
-              repeat split; auto; try apply all_coplanar.
-                intro.
-                subst P.
-                apply H10.
-                exists C.
-                split; Col.
-              intro.
-              ex_and H25 K.
-              apply H9.
-              exists K.
-              split.
-                ColR.
-              auto.
-            assert(one_side A B T P).
-              eapply one_side_transitivity.
-                apply H24.
-              auto.
-            assert(two_sides A B T P).
-              unfold two_sides.
-              repeat split.
-                auto.
-                auto.
-                intro.
-                unfold two_sides in H17.
-                spliter.
-                apply H28.
-                Col.
-              exists B.
-              split.
-                Col.
-              Between.
-            apply l9_9 in H27.
-            contradiction.
-          unfold out.
-          repeat split.
-            intro.
-            subst T.
-            apply H23.
-            Col.
-            intro.
-            subst P.
-            apply H10.
-            exists C.
-            split; Col.
-          induction H21.
-            right.
-            auto.
-          left.
-          Between.
-        apply conga_refl.
-          auto.
-        auto.
-      assert(Per P B A).
-        apply (per_col _ _ C').
-          auto.
-          Perp.
-        Col.
-      intro.
-      assert(Per A B C).
-        apply (l11_17 A B P).
-          Perp.
-        auto.
-      assert(Col C P B).
-        eapply (per_per_col _ _ A); Perp.
-      apply H10.
-      exists C.
-      split; Col.
-    unfold Parallelogram_flat in H8.
-    spliter.
-    apply False_ind.
-    assert(Perp B C' C C').
-      apply (perp_col _ A).
-        auto.
-        Perp.
-      Col.
-    apply perp_left_comm in H13.
-    apply perp_not_col in H13.
-    apply H13.
-    Col.
-Qed.
-*)
+
 Lemma anga_conga_anga : forall a A B C A' B' C' , anga a -> a A B C -> Conga A B C A' B' C' -> a A' B' C'.
 Proof.
     intros.
@@ -1673,7 +1424,7 @@ Proof.
       assert(HP:=null_lcos_eql la l  a H H3).
       assert(lcos lab l b) by (rewrite HP;assumption).
       assert(HQ:= l13_6 b lb lab l H0 H5).
-      rewrite <- HQ;assumption. 
+      rewrite <- HQ;assumption.
       induction (is_null_anga_dec b).
         assert(HH:=null_lcos_eql lab la  b H1 H5).
         assert(HP:=null_lcos_eql lb l  b H0 H5).
@@ -2008,7 +1759,7 @@ Proof.
     intros.
     assert (ang a).
         apply eqA_preserves_ang with b;auto.
-        symmetry;auto.         
+        symmetry;auto.
     unfold eqA in H1.
     anga_instance a A B C.
 

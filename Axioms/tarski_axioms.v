@@ -1,6 +1,6 @@
 Require Export GeoCoq.Utils.general_tactics.
 
-(** This version of the axioms of Tarski is the one given in 
+(** This version of the axioms of Tarski is the one given in
  Wolfram Schwabhäuser, Wanda Szmielew and Alfred Tarski,
  Metamathematische Methoden in der Geometrie, Springer-Verlag, Berlin, 1983.
 

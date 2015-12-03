@@ -510,7 +510,7 @@ assert (HmemEq : forall p, S.mem p x = S.mem p y)
 do 3 (rewrite HmemEq); reflexivity.
 Qed.
 
-Lemma ss_ok_empty : forall interp, 
+Lemma ss_ok_empty : forall interp,
   ss_ok SS.empty interp.
 Proof.
 intros interp ss Hmem1 p1 p2 p3 Hmem2.
@@ -518,7 +518,7 @@ rewrite SSWEqP.MP.Dec.F.empty_b in Hmem1.
 discriminate.
 Qed.
 
-Lemma sp_ok_empty : forall interp, 
+Lemma sp_ok_empty : forall interp,
   sp_ok SP.empty interp.
 Proof.
 intros.
@@ -528,7 +528,7 @@ rewrite SPWEqP.MP.Dec.F.empty_b in Hp.
 discriminate.
 Qed.
 
-Lemma collect_cols : 
+Lemma collect_cols :
   forall (A B C : COLTpoint) (HCol : CTCol A B C) pa pb pc ss (interp :  positive -> COLTpoint),
   interp pa = A ->
   interp pb = B ->

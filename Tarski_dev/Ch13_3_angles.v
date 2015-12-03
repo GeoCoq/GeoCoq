@@ -922,7 +922,7 @@ Proof.
     apply False_ind.
     assert(HH0:=ang_distincts a A B C H0 H15).
     spliter.
-    assert(HP:=or_bet_out A B C H18 H19).
+    assert(HP:=or_bet_out A B C).
     induction HP.
       contradiction.
     induction H20.

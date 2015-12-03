@@ -35,12 +35,12 @@ Definition greenberg_s_postulate :=
   exists S, lta P S Q A B C /\ out Q S R.
 
 Definition tarski_s_parallel_postulate :=
- forall A B C D T : Tpoint,
+ forall A B C D T,
  Bet A D T -> Bet B D C -> A<>D ->
  exists x, exists y,
  Bet A B x /\ Bet A C y /\ Bet x T y.
 
-(** This unicity of parallel postulate. *)
+(** This is unicity of parallel postulate. *)
 
 Definition playfair_s_postulate :=
  forall A1 A2 B1 B2 C1 C2 P,
@@ -102,6 +102,8 @@ Definition euclid_5 :=
   Cong P T Q T -> Cong R T S T ->
   exists I, BetS S Q I /\ BetS P U I.
 
+(** This is the converse of triangle_mid_par. *)
+
 Definition midpoints_converse_postulate :=
   forall A B C P Q,
  ~Col A B C ->
@@ -111,6 +113,7 @@ Definition midpoints_converse_postulate :=
  is_midpoint Q A C.
 
 (** This is the converse of l12_21_b. *)
+
 Definition alternate_interior_angles_postulate :=
   forall A B C D, two_sides A C B D -> Par A B C D -> Conga B A C D C A.
 
@@ -120,5 +123,41 @@ Definition playfair_bis := forall A1 A2 B1 B2 C1 C2 P,
   Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
   Par A1 A2 C1 C2 -> Col P C1 C2 ->
   Col C1 B1 B2 /\ Col C2 B1 B2.
+
+Definition original_euclid :=
+  forall A B C D P Q R,
+  one_side B C A D ->
+  Isi A B C B C D ->
+  Suma A B C B C D P Q R ->
+  ~ Bet P Q R ->
+  exists Y, out B A Y /\ out C D Y.
+
+Definition original_spp :=
+  forall A B C D P Q R,
+  one_side B C A D ->
+  Suma A B C B C D P Q R ->
+  ~ Bet P Q R ->
+  exists Y, Col B A Y /\ Col C D Y.
+
+Definition inverse_projection_postulate :=
+  forall A B C P Q,
+  acute A B C ->
+  out B A P ->
+  P <> Q -> Per B P Q ->
+  exists Y, out B C Y /\ Col P Q Y.
+
+Definition proclus_bis :=
+  forall A B C D P Q,
+  Perp2 A B C D P ->
+  Col A B P ->
+  ~ Col A B Q ->
+  exists Y, Col P Q Y /\ Col C D Y.
+
+Definition consecutive_interior_angles_postulate :=
+  forall A B C D P Q R,
+  one_side B C A D ->
+  Par A B C D ->
+  Suma A B C B C D P Q R ->
+  Bet P Q R.
 
 End Euclid_def.

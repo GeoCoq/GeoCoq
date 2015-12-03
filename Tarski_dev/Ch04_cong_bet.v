@@ -27,8 +27,8 @@ prolong A' C' E' C E.
 
 assert  (Cong E D E' D')
  by (
-  apply (five_segment_with_def A C E D A' C' E' D');[ 
-  unfold OFSC;  repeat split;Cong| 
+  apply (five_segment_with_def A C E D A' C' E' D');[
+  unfold OFSC;  repeat split;Cong|
   assumption]).
 
 apply (five_segment_with_def E C B D E' C' B' D').
@@ -80,9 +80,9 @@ Qed.
 
 Lemma l4_6 : forall A B C A' B' C', Bet A B C -> Cong_3 A B C A' B' C' -> Bet A' B' C'.
 Proof.
-unfold Cong_3. 
+unfold Cong_3.
 intros.
-assert (exists B'', Bet A' B'' C' /\ Cong_3 A B C A' B'' C') 
+assert (exists B'', Bet A' B'' C' /\ Cong_3 A B C A' B'' C')
   by (eapply l4_5;intuition).
 ex_and H1 x.
 unfold Cong_3 in *;spliter.

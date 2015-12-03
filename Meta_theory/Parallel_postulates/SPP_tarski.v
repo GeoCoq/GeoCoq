@@ -177,7 +177,7 @@ Lemma strong_parallel_postulate_implies_tarski_s_euclid_aux :
   (forall A B C D T,
    A <> B ->
    A <> C ->
-   A <> D -> 
+   A <> D ->
    A <> T ->
    B <> C ->
    B <> D ->
@@ -343,7 +343,7 @@ elim (Col_dec X T Y); intro HXTY.
   assert (HNC : ~ Col T B'' Y) by (intro; apply HXTY; unfold BetS in *; spliter; assert_cols; ColR).
   assert (HCop : Coplanar T B B'' Y).
     {
-    (*
+    (* DO NOT REMOVE THIS!!!
     apply coplanar_pseudo_trans with A B C; assert_cols; Cop.
 
       {

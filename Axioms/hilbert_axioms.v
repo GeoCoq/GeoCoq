@@ -38,20 +38,20 @@ Class Hilbert := {
  CongH : Point -> Point -> Point -> Point -> Prop;
  cong_pseudo_transitivity : forall A B C D E F, CongH A B C D -> CongH A B E F -> CongH C D E F;
  cong_refl : forall A B, CongH A B A B;
- cong_existence : forall A B l M, A <> B -> Incid M l -> exists A', exists B', 
+ cong_existence : forall A B l M, A <> B -> Incid M l -> exists A', exists B',
     Incid A' l /\ Incid B' l /\ BetH A' M B' /\ CongH M A' A B /\ CongH M B' A B;
  cong_unicity : forall A B l M A' B' A'' B'', A <> B -> Incid M l ->
   Incid A'  l -> Incid B'  l ->
   Incid A'' l -> Incid B'' l ->
   BetH A' M B' -> CongH M A' A B ->
   CongH M B'  A B -> BetH  A'' M B'' ->
-  CongH M A'' A B -> 
+  CongH M A'' A B ->
   CongH M B'' A B ->
   (A' = A'' /\ B' = B'') \/ (A' = B'' /\ B' = A'');
 
  disjoint := fun A B C D => ~ exists P, BetH A P B /\ BetH C P D;
  addition: forall A B C A' B' C', ColH A B C -> ColH A' B' C' ->
-                                  disjoint A B B C -> disjoint A' B' B' C' -> 
+                                  disjoint A B B C -> disjoint A' B' B' C' ->
                                   CongH A B A' B' -> CongH B C B' C' -> CongH A C A' C';
  Angle := @Triple Point;
  angle := build_triple Point;
@@ -65,13 +65,13 @@ Class Hilbert := {
 
  outH := fun P A B => BetH P A B \/ BetH P B A \/ (P <> A /\ A = B);
 
- InAngleH := fun a P => 
- (exists M, BetH (V1 a) M (V2 a) /\ ((outH (V a) M P) \/ M = (V a))) \/ 
+ InAngleH := fun a P =>
+ (exists M, BetH (V1 a) M (V2 a) /\ ((outH (V a) M P) \/ M = (V a))) \/
                                    outH (V a) (V1 a) P \/ outH (V a) (V2 a) P;
 
  Hline := @Couple Point;
  line_of_hline : Hline -> Line;
- hline_construction := fun a (h: Hline)  P (hc:Hline) H => 
+ hline_construction := fun a (h: Hline)  P (hc:Hline) H =>
  (P1 h) = (P1 hc) /\
  CongaH a (angle (P2 h) (P1 h) (P2 hc) (conj (sym_not_equal (Cond h)) H)) /\
   (forall M, InAngleH (angle (P2 h) (P1 h) (P2 hc) (conj (sym_not_equal (Cond h)) H)) M ->
@@ -80,16 +80,16 @@ Class Hilbert := {
 
   aux : forall (h h1 : Hline), P1 h = P1 h1 -> P2 h1 <> P1 h;
 
-  hcong_4_existence: forall a h P, 
+  hcong_4_existence: forall a h P,
   ~Incid P (line_of_hline h) -> ~ BetH (V1 a)(V a)(V2 a) ->
-  exists h1, (P1 h) = (P1 h1) /\ (forall CondAux : P1 h = P1 h1,  
+  exists h1, (P1 h) = (P1 h1) /\ (forall CondAux : P1 h = P1 h1,
                                     CongaH a (angle (P2 h) (P1 h) (P2 h1) (conj (sym_not_equal (Cond h)) (aux h h1 CondAux)))
                                     /\ (forall M, ~ Incid M (line_of_hline h) /\ InAngleH (angle (P2 h) (P1 h) (P2 h1) (conj (sym_not_equal (Cond h)) (aux h h1 CondAux))) M
                                                     -> same_side P M  (line_of_hline h)));
 
 
- hEq : relation Hline := fun h1 h2 => (P1 h1) = (P1 h2) /\ 
-                          ((P2 h1) = (P2 h2) \/ BetH (P1 h1) (P2 h2) (P2 h1) \/ 
+ hEq : relation Hline := fun h1 h2 => (P1 h1) = (P1 h2) /\
+                          ((P2 h1) = (P2 h2) \/ BetH (P1 h1) (P2 h2) (P2 h1) \/
                                                   BetH (P1 h1) (P2 h1) (P2 h2));
 
  hcong_4_unicity :
