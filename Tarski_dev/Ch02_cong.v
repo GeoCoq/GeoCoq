@@ -98,7 +98,7 @@ Section T1_2.
 
 Context `{M:Tarski_neutral_dimensionless}.
 
-Definition OFSC := fun A B C D A' B' C' D' =>
+Definition OFSC A B C D A' B' C' D' :=
   Bet A B C /\ Bet A' B' C' /\
   Cong A B A' B' /\ Cong B C B' C' /\
   Cong A D A' D' /\ Cong B D B' D'.
@@ -150,7 +150,7 @@ Proof.
     eauto using cong_identity, cong_symmetry.
 Qed.
 
-Definition Cong_3 := fun A1 A2 A3 B1 B2 B3 => Cong A1 A2 B1 B2 /\ Cong A1 A3 B1 B3 /\ Cong A2 A3 B2 B3.
+Definition Cong_3 A B C A' B' C' := Cong A B A' B' /\ Cong A C A' C' /\ Cong B C B' C'.
 
 Lemma cong_3_sym : forall A B C A' B' C',
  Cong_3 A B C A' B' C' -> Cong_3 A' B' C' A B C.

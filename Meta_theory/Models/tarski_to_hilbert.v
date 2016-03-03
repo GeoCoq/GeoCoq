@@ -317,13 +317,13 @@ Qed.
 
 Definition cut := fun l A B => ~Incident A l /\ ~Incident B l /\ exists I, Incident I l /\ Between_H A I B.
 
-(** We show that this definition is equivalent to the predicate two_sides of Tarski. *)
+(** We show that this definition is equivalent to the predicate TS of Tarski. *)
 
-Lemma cut_two_sides : forall l A B, cut l A B <-> two_sides (P1 l) (P2 l) A B.
+Lemma cut_two_sides : forall l A B, cut l A B <-> TS (P1 l) (P2 l) A B.
 Proof.
 intros.
 unfold cut.
-unfold two_sides.
+unfold TS.
 split.
 intros.
 spliter.
@@ -371,7 +371,7 @@ apply cols_coincide_2.
 assumption.
 
 assert(HH:=H1).
-unfold two_sides in HH.
+unfold TS in HH.
 spliter.
 
 unfold Incident in H0.
@@ -613,7 +613,7 @@ subst A''.
 
 eapply (l6_11_unicity M A B B''); try assumption.
 
-unfold out.
+unfold Out.
 repeat split; try assumption.
 eapply l5_2.
 apply H18.
@@ -630,7 +630,7 @@ eapply (l6_11_unicity M A B A'); try assumption.
 apply out_trivial.
 assumption.
 
-unfold out.
+unfold Out.
 repeat split; try assumption.
 
 eapply l5_2.
@@ -646,7 +646,7 @@ subst B''.
 eapply (l6_11_unicity M A B B'); try assumption.
 apply out_trivial.
 assumption.
-unfold out.
+unfold Out.
 repeat split; try assumption.
 eapply l5_2.
 apply H20.
@@ -671,20 +671,20 @@ Remark axiom_hcong_scott:
 Proof.
 intros.
 unfold same_side_scott.
-assert (exists X : Tpoint, out A X C /\ Cong A X P Q).
+assert (exists X : Tpoint, Out A X C /\ Cong A X P Q).
 apply l6_11_existence;auto.
 decompose [ex and] H1;clear H1.
 exists x.
 repeat split.
-unfold out in H3.
+unfold Out in H3.
 intuition.
-unfold out in H3.
+unfold Out in H3.
 intuition.
 apply cols_coincide_2.
 apply out_col;assumption.
 
 
-unfold out in H3.
+unfold Out in H3.
 unfold Between_H.
 intro.
 decompose [and] H3;clear H3.
@@ -749,10 +749,10 @@ assumption.
 induction H.
 apply False_ind.
 apply H0.
-assert(exists M, is_midpoint M B C) by(apply midpoint_existence).
+assert(exists M, Midpoint M B C) by(apply midpoint_existence).
 ex_and H3 M.
 exists M.
-unfold is_midpoint in H4.
+unfold Midpoint in H4.
 spliter.
 split.
 unfold Between_H.
@@ -787,10 +787,10 @@ assumption.
 
 apply False_ind.
 apply H0.
-assert(exists M, is_midpoint M A B) by(apply midpoint_existence).
+assert(exists M, Midpoint M A B) by(apply midpoint_existence).
 ex_and H3 M.
 exists M.
-unfold is_midpoint in H4.
+unfold Midpoint in H4.
 spliter.
 split.
 unfold Between_H.
@@ -1045,7 +1045,7 @@ Definition angle := build_triple Tpoint.
 
 (**  The congruence of angles of Hilbert is the same as the congruence of angles of Tarski. *)
 
-Definition Hconga : relation Angle := fun A1 A2 => Conga  (V1 A1) (V A1) (V2 A1)  (V1 A2) (V A2) (V2 A2).
+Definition Hconga : relation Angle := fun A1 A2 => CongA  (V1 A1) (V A1) (V2 A1)  (V1 A2) (V A2) (V2 A2).
 
 (** This is an equivalence relation. *)
 
@@ -1108,9 +1108,9 @@ Definition line_of_hline := fun hl => Lin (P1 hl) (P2 hl) (Cond hl).
 
 Definition same_side := fun A B l => exists P, cut l A P /\ cut l B P.
 
-(** Same side predicate corresponds to one_side of Tarski. *)
+(** Same side predicate corresponds to OS of Tarski. *)
 
-Lemma same_side_one_side : forall A B l, same_side A B l -> one_side (P1 l) (P2 l) A B.
+Lemma same_side_one_side : forall A B l, same_side A B l -> OS (P1 l) (P2 l) A B.
 Proof.
 unfold same_side.
 intros.
@@ -1122,17 +1122,17 @@ apply H.
 apply H0.
 Qed.
 
-Lemma one_side_same_side : forall A B l, one_side (P1 l) (P2 l) A B -> same_side A B l.
+Lemma one_side_same_side : forall A B l, OS (P1 l) (P2 l) A B -> same_side A B l.
 Proof.
 intros.
 unfold same_side.
-unfold one_side in H.
+unfold OS in H.
 ex_and H P.
 exists P.
 unfold cut.
 unfold Incident.
-unfold two_sides in H.
-unfold two_sides in H0.
+unfold TS in H.
+unfold TS in H0.
 spliter.
 repeat split; auto.
 ex_and H6 T.
@@ -1172,10 +1172,10 @@ Definition outH := fun P A B => Between_H P A B \/ Between_H P B A \/ (P <> A /\
 
 (** This is equivalent to the out predicate of Tarski. *)
 
-Lemma outH_out : forall P A B, outH P A B -> out P A B.
+Lemma outH_out : forall P A B, outH P A B -> Out P A B.
 Proof.
 unfold outH.
-unfold out.
+unfold Out.
 intros.
 induction H.
 unfold Between_H in H.
@@ -1195,8 +1195,8 @@ left.
 apply between_trivial.
 Qed.
 
-Lemma out_outH : forall P A B, out P A B -> outH P A B.
-unfold out.
+Lemma out_outH : forall P A B, Out P A B -> outH P A B.
+unfold Out.
 unfold outH.
 intros.
 spliter.
@@ -1329,7 +1329,7 @@ induction(eq_dec_points P (V a)).
 subst P.
 Col.
 assert(HH:=in_angleH_in_angle a P (conj H1 H0)).
-assert(out (V a) (V1 a) P).
+assert(Out (V a) (V1 a) P).
 apply (in_angle_out _ _ (V2 a)).
 assumption.
 assumption.
@@ -1413,9 +1413,9 @@ unfold Hconga.
 simpl.
 split.
 eapply l11_21_b.
-unfold out.
+unfold Out.
 repeat split; auto.
-unfold out.
+unfold Out.
 repeat split; auto.
 left.
 apply between_trivial.
@@ -1467,7 +1467,7 @@ unfold Hconga.
 simpl.
 split.
 eapply l11_21_b.
-unfold out.
+unfold Out.
 repeat split; auto.
 left.
 apply between_symmetry.
@@ -1524,9 +1524,9 @@ ex_and HH C.
 assert((P1 h) <> C).
 intro.
 subst C.
-unfold one_side in H6.
+unfold OS in H6.
 ex_and H6 X.
-unfold two_sides in *.
+unfold TS in *.
 spliter.
 apply H11.
 Col.
@@ -1572,9 +1572,9 @@ apply H6.
 apply one_side_symmetry.
 apply invert_one_side.
 assumption.
-unfold one_side in H6.
+unfold OS in H6.
 ex_and H6 T.
-unfold two_sides in *.
+unfold TS in *.
 spliter.
 Col.
 unfold Incident in H8.
@@ -1661,7 +1661,7 @@ assumption.
 unfold Hconga in *.
 simpl in *.
 
-assert(Conga (P2 h)(P1 h)(P2 h1) (P2 h)(P1 h)(P2 h2)).
+assert(CongA (P2 h)(P1 h)(P2 h1) (P2 h)(P1 h)(P2 h2)).
 eapply conga_trans.
 apply conga_sym.
 apply H5.
@@ -1673,7 +1673,7 @@ left.
 assumption.
 
 induction H7.
-unfold out in H7.
+unfold Out in H7.
 spliter.
 induction H10.
 rewrite <-H1.
@@ -1687,7 +1687,7 @@ right; left.
 unfold Between_H.
 repeat split; auto.
 
-assert(Conga (P2 h)(P1 h)(P2 h2) (P2 h) (P1 h)(P2 h1)).
+assert(CongA (P2 h)(P1 h)(P2 h2) (P2 h) (P1 h)(P2 h1)).
 eapply conga_trans.
 apply conga_sym.
 apply H3.
@@ -1697,7 +1697,7 @@ assumption.
 induction(Col_dec (V1 a) (V a) (V2 a)).
 assert(HC0:=col_conga_col (V1 a)(V a)(V2 a)(P2 h)(P1 h)(P2 h1) H10 H5).
 assert(HC1:=col_conga_col (V1 a)(V a)(V2 a)(P2 h)(P1 h)(P2 h2) H10 H3).
-unfold two_sides in H7.
+unfold TS in H7.
 spliter.
 apply False_ind.
 apply H11.

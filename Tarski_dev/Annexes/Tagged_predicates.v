@@ -74,14 +74,14 @@ Proof.
 trivial.
 Qed.
 
-Definition Mid_tagged A B C := is_midpoint A B C.
+Definition Mid_tagged A B C := Midpoint A B C.
 
-Lemma Mid_Mid_tagged : forall A B C, is_midpoint A B C -> Mid_tagged A B C.
+Lemma Mid_Mid_tagged : forall A B C, Midpoint A B C -> Mid_tagged A B C.
 Proof.
 trivial.
 Qed.
 
-Lemma Mid_tagged_Mid : forall A B C, Mid_tagged A B C -> is_midpoint A B C.
+Lemma Mid_tagged_Mid : forall A B C, Mid_tagged A B C -> Midpoint A B C.
 Proof.
 trivial.
 Qed.
@@ -98,14 +98,14 @@ Proof.
 trivial.
 Qed.
 
-Definition Perp_in_tagged X A B C D := Perp_in X A B C D.
+Definition Perp_in_tagged X A B C D := Perp_at X A B C D.
 
-Lemma Perp_in_Perp_in_tagged : forall X A B C D, Perp_in X A B C D -> Perp_in_tagged X A B C D.
+Lemma Perp_in_Perp_in_tagged : forall X A B C D, Perp_at X A B C D -> Perp_in_tagged X A B C D.
 Proof.
 trivial.
 Qed.
 
-Lemma Perp_in_tagged_Perp_in : forall X A B C D, Perp_in_tagged X A B C D -> Perp_in X A B C D.
+Lemma Perp_in_tagged_Perp_in : forall X A B C D, Perp_in_tagged X A B C D -> Perp_at X A B C D.
 Proof.
 trivial.
 Qed.

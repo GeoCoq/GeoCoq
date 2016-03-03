@@ -1,11 +1,11 @@
 Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
-Section original_spp_inverse_projection.
+Section original_spp_inverse_projection_postulate.
 
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma original_spp__inverse_projection : original_spp -> inverse_projection_postulate.
+Lemma original_spp__inverse_projection_postulate : original_spp -> inverse_projection_postulate.
 Proof.
   intros ospp A B C P Q Hacute Hout HPQ HPer.
   assert_diffs.
@@ -24,7 +24,7 @@ Proof.
     split; auto.
     split.
     apply l11_31_2; Between.
-    intro; destruct Hlta; Conga.
+    intro; destruct Hlta; CongA.
   }
   intro HNCol1.
   assert(HNCol2 : ~ Col B P Q) by (apply per_not_col; auto).
@@ -40,7 +40,7 @@ Proof.
   destruct HY as [Y []]; auto.
     apply (col_one_side _ A); Side.
   { intro.
-    assert(Hlta : lta A B C C B P).
+    assert(Hlta : LtA A B C C B P).
     { apply acute_per__lta; auto.
       apply (bet_per_suma__per123 _ _ _ B P Q0 D E F); auto.
       apply l8_2.
@@ -49,7 +49,7 @@ Proof.
     destruct Hlta as [Hlea HNConga].
     apply HNConga.
     apply conga_right_comm.
-    apply (out_conga A B C A B C); try (apply out_trivial); Conga.
+    apply (out_conga A B C A B C); try (apply out_trivial); CongA.
   }
 
   exists Y.
@@ -69,11 +69,11 @@ Proof.
     { intro.
       assert(HInter := l8_16_1 B0 B A C B).
       destruct HInter; Col; Perp.
-      assert(Habs : lta A B C A B C) by (apply acute_per__lta; auto).
-      destruct Habs; Conga.
+      assert(Habs : LtA A B C A B C) by (apply acute_per__lta; auto).
+      destruct Habs; CongA.
     }
     apply l11_24.
-    apply lea_in_angle; Conga; Side.
+    apply lea_in_angle; CongA; Side.
     apply lta__lea.
     apply acute_per__lta; auto.
     apply perp_per_1; Perp.
@@ -94,4 +94,4 @@ Proof.
     apply HNCol2; ColR.
 Qed.
 
-End original_spp_inverse_projection.
+End original_spp_inverse_projection_postulate.

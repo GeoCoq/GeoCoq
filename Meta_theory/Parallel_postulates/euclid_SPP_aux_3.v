@@ -13,8 +13,8 @@ Lemma euclid_5_implies_strong_parallel_postulate_aux_2 :
    ~ Col P R U ->
    Cong P T Q T ->
    Cong R T S T ->
-   one_side P R S U ->
-   one_side P S R U ->
+   OS P R S U ->
+   OS P S R U ->
    ~ Col P Q S ->
    Col P R X ->
    Col Q U X ->
@@ -95,7 +95,7 @@ elim H1; clear H1; intro H1; try (elim H1; clear H1; intro H1).
         {
         assert (HQS : Q <> S) by (assert_diffs; Col).
         assert (HQU : Q <> U) by (assert_diffs; Col).
-        assert (HTS : two_sides Q S P U).
+        assert (HTS : TS Q S P U).
           {
           apply l9_8_2 with X.
 
@@ -200,7 +200,7 @@ elim H1; clear H1; intro H1; try (elim H1; clear H1; intro H1).
           {
           assert (HQS : Q <> S) by (assert_diffs; Col).
           assert (HQU : Q <> U) by (assert_diffs; Col).
-          assert (HTS : two_sides Q S P U).
+          assert (HTS : TS Q S P U).
             {
             apply l9_8_2 with X.
 
@@ -238,7 +238,7 @@ elim H1; clear H1; intro H1; try (elim H1; clear H1; intro H1).
       }
 
       {
-      assert (HTS : two_sides P S Q X).
+      assert (HTS : TS P S Q X).
         {
         apply l9_8_2 with R.
 
@@ -260,7 +260,7 @@ elim H1; clear H1; intro H1; try (elim H1; clear H1; intro H1).
       assert (H := l5_3 Q U I' X); elim H; clear H; Col; intro HQUI'.
 
         {
-        assert (HTS : two_sides Q X P S).
+        assert (HTS : TS Q X P S).
           {
           apply l9_31.
 
@@ -401,8 +401,8 @@ Lemma euclid_5_implies_strong_parallel_postulate_aux_3 :
    ~ Col P R U ->
    Cong P T Q T ->
    Cong R T S T ->
-   one_side P R S U ->
-   one_side P S R U ->
+   OS P R S U ->
+   OS P S R U ->
    ~ Col P Q S ->
    Col P U X ->
    Col Q R X ->
@@ -568,7 +568,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
         assert (HQR : Q <> R) by (assert_diffs; Col).
         assert (HQS : Q <> S) by (assert_diffs; Col).
         assert (HRS : R <> S) by (assert_diffs; Col).
-        assert (HTS : two_sides Q S P X).
+        assert (HTS : TS Q S P X).
           {
           apply l9_8_2 with R.
 
@@ -618,7 +618,7 @@ intros HE5 P Q Q' R R' S T T' X Hcong1 HCong2 HCong3 HCong4 HCong5;
 intros HPTQ HPT'Q' HRTS HR'T'S HQSQ' HPQS HPQ'S HPRR' H1 H2.
 apply BetSEq in HPTQ; apply BetSEq in HPT'Q'; apply BetSEq in HRTS;
 apply BetSEq in HR'T'S; apply BetSEq in HQSQ'.
-assert (HTS : two_sides P S R R').
+assert (HTS : TS P S R R').
   {
   apply l9_8_2 with T.
 
@@ -751,7 +751,7 @@ elim (eq_dec_points R' X); intro HRX; treat_equalities.
     }
 
     {
-    assert (H : two_sides R R' P S).
+    assert (H : TS R R' P S).
       {
       apply l9_8_2 with X.
 
@@ -811,7 +811,7 @@ elim (eq_dec_points R' X); intro HRX; treat_equalities.
           }
 
           {
-          assert (HTS : two_sides R R' Q Q').
+          assert (HTS : TS R R' Q Q').
             {
             assert_diffs; split; Col.
             split; Col.
@@ -991,7 +991,7 @@ elim (eq_dec_points S X); intro HSX; treat_equalities.
     }
 
     {
-    assert (HTS : two_sides Q' S P X).
+    assert (HTS : TS Q' S P X).
       {
       apply l9_8_2 with R.
 

@@ -8,15 +8,13 @@ Section Pappus_Pascal.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-
-
 Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
  Col O A B -> Col O P Q -> Perp O P P A -> Perp O Q Q B ->
- lg la -> lg lb -> lg lp -> lg lq -> la O A -> lb O B -> lp O P -> lq O Q ->
- exists a, anga a /\ lcos lp la a /\ lcos lq lb a.
+ Q_Cong la -> Q_Cong lb -> Q_Cong lp -> Q_Cong lq -> la O A -> lb O B -> lp O P -> lq O Q ->
+ exists a, Q_CongA_Acute a /\ Lcos lp la a /\ Lcos lq lb a.
 Proof.
     intros.
-    assert(acute A O P).
+    assert(Acute A O P).
       eapply (perp_acute _ _ P);finish.
     assert(P <> O).
       intro.
@@ -60,17 +58,17 @@ Proof.
       assert(A <> P).
         apply perp_not_eq_2 in H1.
         auto.
-      assert(project O O O P A P).
-        unfold project.
+      assert(Proj O O O P A P).
+        unfold Proj.
         repeat split; Col.
-      assert(project A P O P A P).
-        unfold project.
+      assert(Proj A P O P A P).
+        unfold Proj.
         repeat split; Col.
         left.
         apply par_reflexivity.
         auto.
-      assert(project B Q O P A P).
-        unfold project.
+      assert(Proj B Q O P A P).
+        unfold Proj.
         repeat split; Col.
         left.
         eapply (l12_9 _ _ _ _ O P).
@@ -92,12 +90,12 @@ apply perp_perp_in in H2.
 Perp.
 
    (*       apply(project_preserves_bet O P A P O A B O P Q); auto. *)
-        assert(Conga A O P B O Q).
+        assert(CongA A O P B O Q).
           eapply (out_conga B _ Q B _ Q).
             apply conga_refl; auto.
-            unfold out.
+            unfold Out.
             repeat split; auto.
-            unfold out.
+            unfold Out.
             repeat split; auto.
             apply out_trivial; auto.
           apply out_trivial; auto.
@@ -118,14 +116,14 @@ apply perp_perp_in in H1.
 Perp.
 
  (*         apply(project_preserves_bet O P A P A B O P Q O); auto.*)
-        assert(Conga A O P B O Q).
+        assert(CongA A O P B O Q).
           eapply (out_conga B _ Q B _ Q).
             apply conga_refl; auto.
-            unfold out.
+            unfold Out.
             repeat split; auto.
             left.
             Between.
-            unfold out.
+            unfold Out.
             repeat split; auto.
             left.
             Between.
@@ -145,7 +143,7 @@ apply perp_perp_in in H1.
 Perp.
 
  (*       apply(project_preserves_bet O P A P B O A Q O P); auto. *)
-      assert(Conga A O P B O Q).
+      assert(CongA A O P B O Q).
         eapply (l11_14 ); Between.
       apply (anga_conga_anga _ A O P); auto.
     exists a.
@@ -166,89 +164,22 @@ Perp.
     apply anga_sym; auto.
 Qed.
 
-Lemma acute_trivial : forall A B, A <> B -> acute A B A.
-Proof.
-    intros.
-    assert(HH:= not_col_exists A B H).
-    ex_and HH P.
-    assert(exists C : Tpoint, Per C B A /\ Cong C B A B /\ one_side A B C P).
-      apply(ex_per_cong A B B P A B H H); Col; exists A.
-    ex_and H1 C.
-    assert_diffs.
-    unfold acute.
-    exists A.
-    exists B.
-    exists C.
-    split.
-      apply l8_2.
-      auto.
-    unfold lta.
-    split.
-      unfold lea.
-      exists A.
-      split.
-        apply in_angle_trivial_1; auto.
-      apply conga_refl; auto.
-    intro.
-    assert(out B A C).
-      apply(out_conga_out A B A A B C).
-        apply out_trivial; auto.
-      auto.
-    assert(Perp C B B A).
-      apply per_perp_in in H1; auto.
-      apply perp_in_perp in H1.
-      induction H1.
-        apply perp_not_eq_1 in H1.
-        tauto.
-      auto.
-    apply perp_comm in H8.
-    apply perp_not_col in H8.
-    apply out_col in H7.
-    Col.
-Qed.
-
-
-Lemma lcos_eqa_lcos : forall lp l a b, lcos lp l a -> eqA a b -> lcos lp l b.
-Proof.
-    intros.
-    assert(HH:=lcos_lg_anga l lp a H).
-    spliter.
-    clear H1.
-    assert(HH:= H0).
-    unfold eqA in HH.
-    assert (ang a) by (apply anga_is_ang;auto).
-    assert (ang b) by (apply eqA_preserves_ang with a;auto).
-    assert (anga b).
-      apply (eqA_preserves_anga a b); auto.
-    unfold lcos in *.
-    spliter.
-    repeat split; auto.
-    ex_and H9 A.
-    ex_and H10 B.
-    ex_and H9 C.
-    exists A.
-    exists B.
-    exists C.
-    repeat split; auto.
-    apply HH;auto.
-Qed.
-
 Lemma l13_10_aux2 : forall O A B la lla lb llb,
- Col O A B  -> lg la -> lg lla -> lg lb -> lg llb -> la O A -> lla O A -> lb O B -> llb O B ->
- A <> O -> B <> O -> exists a, anga a /\ lcos lla la a /\ lcos llb lb a.
+ Col O A B  -> Q_Cong la -> Q_Cong lla -> Q_Cong lb -> Q_Cong llb -> la O A -> lla O A -> lb O B -> llb O B ->
+ A <> O -> B <> O -> exists a, Q_CongA_Acute a /\ Lcos lla la a /\ Lcos llb lb a.
 Proof.
     intros.
     assert(HH:=anga_exists A O A H8 H8 (acute_trivial A O H8)).
     ex_and HH a.
     exists a.
     split; auto.
-    assert(is_null_anga a).
-      assert(out O A A /\ is_null_anga a).
+    assert(Q_CongA_Null_Acute a).
+      assert(Out O A A /\ Q_CongA_Null_Acute a).
         apply(anga_col_null a A O A); auto.
         Col.
       tauto.
     split.
-      assert(eqL la lla).
+      assert(EqL la lla).
         apply ex_eql.
         exists O.
         exists A.
@@ -256,7 +187,7 @@ Proof.
       rewrite <- H13.
       apply null_lcos; auto.
       intro.
-      unfold lg_null in H14.
+      unfold Q_Cong_Null in H14.
       spliter.
       ex_and H15 X.
       assert(HH:= lg_cong la O A X X H0 H4 H16).
@@ -264,10 +195,10 @@ Proof.
       tauto.
     assert(HH:=anga_exists B O B H9 H9 (acute_trivial B O H9)).
     ex_and HH b.
-    assert(eqA a b).
+    assert(EqA a b).
       assert(HH:=null_anga A O B O a b).
       apply HH; split; auto.
-    assert(eqL lb llb).
+    assert(EqL lb llb).
       apply ex_eql.
       exists O.
       exists B.
@@ -275,7 +206,7 @@ Proof.
     rewrite <- H16.
     apply null_lcos; auto.
     intro.
-    unfold lg_null in H17.
+    unfold Q_Cong_Null in H17.
     spliter.
     ex_and H18 X.
     assert(HH:= lg_cong lb O B X X H2 H6 H19).
@@ -284,636 +215,7 @@ Proof.
 Qed.
 
 
-Lemma acute_not_per : forall A B C, acute A B C -> ~ Per A B C.
-Proof.
-    intros.
-    unfold acute in H.
-    ex_and H A'.
-    ex_and H0 B'.
-    ex_and H C'.
-    unfold lta in H0.
-    spliter.
-    intro.
-    apply H1.
-    assert(A <> B /\ C <> B /\ A' <> B' /\ C' <> B').
-      unfold lea in H0.
-      ex_and H0 X.
-      apply conga_distinct in H3.
-      spliter.
-      repeat split; auto.
-      unfold InAngle in H0.
-      spliter; auto.
-    spliter.
-    apply(l11_16 A B C A' B' C'); auto.
-Qed.
-
-
-
-Lemma lcos_exists : forall l a, anga a -> lg l -> ~lg_null l -> exists lp, lcos lp l a.
-Proof.
-    intros.
-    lg_instance l A B.
-    induction(is_null_anga_dec a).
-      exists l.
-      apply null_lcos; auto.
-      anga_instance1 a A B C.
-        assert(~ Col B C A).
-          intro.
-          assert(out B A C /\ is_null_anga a).
-            apply(anga_col_null a A B C H H4).
-            Col.
-          apply H3.
-          tauto.
-        assert(HH:= l8_18_existence B C A H5).
-        ex_and HH P.
-        assert(HH:=lg_exists B P).
-        ex_and HH lp.
-        exists lp.
-        assert(acute A B C).
-          unfold anga in H.
-          ex_and H A'.
-          ex_and H10 B'.
-          ex_and H C'.
-          assert(HH:=H10 A B C).
-          destruct HH.
-          assert(HP:= H12 H4).
-          apply (acute_lea_acute _ _ _ A' B' C'); auto.
-          unfold lea.
-          exists C'.
-          split.
-            apply in_angle_trivial_2.
-              apply conga_distinct in HP.
-              tauto.
-            apply conga_distinct in HP.
-            tauto.
-          apply conga_sym.
-          auto.
-        unfold lcos.
-        repeat split; auto.
-        exists B.
-        exists P.
-        exists A.
-        repeat split; auto.
-          apply perp_in_per.
-          apply perp_in_comm.
-          apply perp_perp_in.
-          apply perp_sym.
-          apply (perp_col _ C).
-            intro.
-            subst P.
-            assert(Per A B C).
-              apply perp_in_per.
-              apply perp_in_comm.
-              apply perp_perp_in.
-              Perp.
-            apply acute_not_per in H10.
-            contradiction.
-            Perp.
-          Col.
-          apply (lg_sym l); auto.
-        assert(HH:=H10).
-        unfold acute in HH.
-        apply(anga_sym a); auto.
-        apply(anga_out_anga a A B C A P); auto.
-          apply out_trivial.
-          intro.
-          subst B.
-          apply H5.
-          Col.
-        eapply (perp_acute_out _ _ A).
-          apply acute_sym.
-          auto.
-          Perp.
-        Col.
-      intro.
-      apply H1.
-      unfold lg_null.
-      split; auto.
-      subst B.
-      exists A.
-      auto.
-    assumption.
-Qed.
-
-Definition lcos_eq := fun la a lb b => exists lp, lcos lp la a /\ lcos lp lb b.
-
-Lemma lcos_eq_refl : forall la a, lg la -> ~lg_null la -> anga a -> lcos_eq la a la a.
-Proof.
-    intros.
-    unfold lcos_eq.
-    assert(HH:=lcos_exists la a H1 H H0).
-    ex_and HH lp.
-    exists lp.
-    split; auto.
-Qed.
-
-Lemma lcos_eq_sym : forall la a lb b, lcos_eq la a lb b -> lcos_eq lb b la a.
-Proof.
-    intros.
-    unfold lcos_eq in *.
-    ex_and H lp.
-    exists lp.
-    split; auto.
-Qed.
-
-Lemma lcos_eq_trans : forall la a lb b lc c, lcos_eq la a lb b -> lcos_eq lb b lc c -> lcos_eq la a lc c.
-Proof.
-    intros.
-    unfold lcos_eq in *.
-    ex_and H lab.
-    ex_and H0 lbc.
-    assert(HH:= l13_6 b lab lbc lb H1 H0).
-    assert(lcos lbc la a).
-      rewrite <- HH.
-      apply lcos_lg_anga in H.
-      tauto.
-    exists lbc.
-    split; auto.
-Qed.
-
-
-Definition lcos2 := fun lp l a b => exists la, lcos la l a /\ lcos lp la b.
-
-Lemma lcos2_comm : forall lp l a b, lcos2 lp l a b -> lcos2 lp l b a.
-Proof.
-    intros.
-    unfold lcos2 in *.
-    ex_and H la.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H0.
-    spliter.
-    assert(exists lb, lcos lb l b).
-      apply(lcos_exists l b); auto.
-      assert(HH:= lcos_lg_not_null la l a H).
-      tauto.
-    ex_and H7 lb.
-    apply lcos_lg_anga in H8.
-    spliter.
-    exists lb.
-    split.
-      auto.
-    assert(exists lp', lcos lp' lb a).
-      apply(lcos_exists lb a); auto.
-      assert(HH:= lcos_lg_not_null lb l b H7).
-      tauto.
-    ex_and H11 lp'.
-    assert(eqL lp lp').
-      apply(l13_7 a b l la lb lp lp'); auto.
-    apply lcos_lg_anga in H12.
-    rewrite H11. tauto.
-Qed.
-
-Lemma lcos2_exists : forall l a b, lg l -> ~lg_null l -> anga a -> anga b -> 
- exists lp, lcos2 lp l a b.
-Proof.
-    intros.
-    assert(HH:= lcos_exists l a H1 H H0).
-    ex_and HH la.
-    apply lcos_lg_anga in H3.
-    spliter.
-    assert(~ lg_null la /\ ~ lg_null l).
-      apply (lcos_lg_not_null _ _ a).
-      auto.
-    spliter.
-    clear H8.
-    assert(HH:= lcos_exists la b H2 H5 H7).
-    ex_and HH lab.
-    exists lab.
-    unfold lcos2.
-    exists la.
-    split; auto.
-Qed.
-
-Lemma lcos2_exists' : forall l a b, lg l -> ~lg_null l -> anga a -> anga b ->
- exists la, exists lab, lcos la l a /\ lcos lab la b.
-Proof.
-    intros.
-    assert(HH:=lcos_exists l a H1 H H0).
-    ex_and HH la.
-    exists la.
-    apply lcos_lg_anga in H3.
-    spliter.
-    assert(HP:=lcos_not_lg_null la l a H3).
-    assert(HH:=lcos_exists la b H2 H5 HP).
-    ex_and HH lab.
-    exists lab.
-    split; auto.
-Qed.
-
-Definition lcos2_eq := fun l1 a b l2 c d => exists lp, lcos2 lp l1 a b /\ lcos2 lp l2 c d.
-
-Lemma lcos2_eq_refl : forall l a b, lg l -> ~lg_null l -> anga a -> anga b -> lcos2_eq l a b l a b.
-Proof.
-    intros.
-    assert(HH:= lcos2_exists l a b H H0 H1 H2).
-    ex_and HH lab.
-    unfold lcos2_eq.
-    exists lab.
-    split; auto.
-Qed.
-
-Lemma lcos2_eq_sym : forall l1 a b l2 c d, lcos2_eq l1 a b l2 c d -> lcos2_eq l2 c d l1 a b.
-Proof.
-    intros.
-    unfold lcos2_eq in *.
-    ex_and H lp.
-    exists lp.
-    auto.
-Qed.
-
-Lemma lcos2_unicity: forall l l1 l2 a b, lcos2 l1 l a b -> lcos2 l2 l a b -> eqL l1 l2.
-Proof.
-    intros.
-    unfold lcos2 in *.
-    ex_and H la.
-    ex_and H0 lb.
-    assert(eqL la lb).
-      apply (l13_6 a _ _ l); auto.
-    apply lcos_lg_anga in H2.
-    apply lcos_lg_anga in H1.
-    spliter.
-    assert(lcos l2 la b).
-      rewrite H3;auto.
-    apply (l13_6 b _ _ la); auto.
-Qed.
-
-Lemma lcos2_eql_lcos2 : forall lla llb la lb a b, lcos2 la lla a b -> eqL lla llb -> eqL la lb -> lcos2 lb llb a b.
-Proof.
-    intros.
-    unfold lcos2 in *.
-    ex_and H l.
-    exists l.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H2.
-    spliter.
-    split.
-    rewrite <- H0;auto.
-    rewrite <- H1;auto.
-Qed.
-
-Lemma lcos2_lg_anga : forall lp l a b, lcos2 lp l a b -> lcos2 lp l a b /\ lg lp /\ lg l /\ anga a /\ anga b.
-Proof.
-    intros.
-    split; auto.
-    unfold lcos2 in H.
-    ex_and H ll.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H0.
-    spliter.
-    split; auto.
-Qed.
-
-Lemma lcos2_eq_trans : forall l1 a b l2 c d l3 e f, lcos2_eq l1 a b l2 c d -> lcos2_eq l2 c d l3 e f
-                                   -> lcos2_eq l1 a b l3 e f.
-Proof.
-    intros.
-    unfold lcos2_eq in *.
-    ex_and H lp.
-    ex_and H0 lq.
-    exists lp.
-    split; auto.
-    assert(eqL lp lq).
-      eapply (lcos2_unicity l2 _ _ c d); auto.
-    apply lcos2_lg_anga in H2.
-    apply lcos2_lg_anga in H1.
-    spliter.
-    eapply (lcos2_eql_lcos2 l3 _ lq); auto.
-      reflexivity.
-    symmetry; auto.
-Qed.
-
-Lemma lcos_eq_lcos2_eq : forall la lb a b c, anga c -> lcos_eq la a lb b -> lcos2_eq la a c lb b c.
-Proof.
-    intros.
-    assert(HH0:=H0).
-    unfold lcos_eq in HH0.
-    ex_and HH0 lp.
-    apply lcos_lg_anga in H1.
-    apply lcos_lg_anga in H2.
-    spliter.
-    clear H7.
-    assert(~ lg_null lp /\ ~ lg_null la).
-      apply (lcos_lg_not_null _ _ a).
-      auto.
-    spliter.
-    unfold lcos2_eq.
-    assert(HH:= lcos_exists lp c H H4 H7).
-    ex_and HH lq.
-    exists lq.
-    split.
-      unfold lcos2.
-      exists lp.
-      split; auto.
-    unfold lcos2.
-    exists lp.
-    split; auto.
-Qed.
-
-Lemma lcos2_lg_not_null: forall lp l a b, lcos2 lp l a b -> ~lg_null l /\ ~lg_null lp.
-Proof.
-    intros.
-    unfold lcos2 in H.
-    ex_and H la.
-    apply lcos_lg_not_null in H.
-    apply lcos_lg_not_null in H0.
-    spliter.
-    split; auto.
-Qed.
-
-Definition lcos3 := fun lp l a b c => exists la, exists lab, lcos la l a /\ lcos lab la b /\ lcos lp lab c.
-
-Lemma lcos3_lcos_1_2 : forall lp l a b c, lcos3 lp l a b c <-> exists la, lcos la l a /\ lcos2 lp la b c.
-Proof.
-    intros.
-    split.
-      intro.
-      unfold lcos3 in H.
-      ex_and H la.
-      ex_and H0 lab.
-      exists la.
-      split; auto.
-      unfold lcos2.
-      exists lab.
-      split; auto.
-    intro.
-    ex_and H la.
-    unfold lcos2 in H0.
-    ex_and H0 lab.
-    unfold lcos3.
-    exists la.
-    exists lab.
-    apply lcos_lg_anga in H0.
-    apply lcos_lg_anga in H1.
-    spliter.
-    split; auto.
-Qed.
-
-Lemma lcos3_lcos_2_1 : forall lp l a b c, lcos3 lp l a b c <-> exists lab, lcos2 lab l a b /\ lcos lp lab c.
-Proof.
-    intros.
-    split.
-      intro.
-      unfold lcos3 in H.
-      ex_and H la.
-      ex_and H0 lab.
-      exists lab.
-      split.
-        unfold lcos2.
-        exists la.
-        split; assumption.
-      assumption.
-    intro.
-    ex_and H lab.
-    unfold lcos3.
-    unfold lcos2 in H.
-    ex_and H la.
-    exists la.
-    exists lab.
-    split; auto.
-Qed.
-
-
-Lemma lcos3_permut3 : forall lp l a b c, lcos3 lp l a b c -> lcos3 lp l b a c.
-Proof.
-    intros.
-    assert(HH:= lcos3_lcos_2_1 lp l a b c).
-    destruct HH.
-    assert(exists lab : Tpoint -> Tpoint -> Prop, lcos2 lab l a b /\ lcos lp lab c).
-      apply lcos3_lcos_2_1; auto.
-    ex_and H2 lab.
-    apply lcos2_comm in H2.
-    apply lcos3_lcos_2_1.
-    exists lab.
-    split; auto.
-Qed.
-
-
-Lemma lcos3_permut1 : forall lp l a b c, lcos3 lp l a b c -> lcos3 lp l a c b.
-Proof.
-    intros.
-    assert(HH:= lcos3_lcos_1_2 lp l a b c).
-    destruct HH.
-    assert(exists la : Tpoint -> Tpoint -> Prop, lcos la l a /\ lcos2 lp la b c).
-      apply lcos3_lcos_1_2; auto.
-    ex_and H2 la.
-    apply lcos2_comm in H3.
-    apply lcos3_lcos_1_2.
-    exists la.
-    split; auto.
-Qed.
-
-Lemma lcos3_permut2 : forall lp l a b c, lcos3 lp l a b c -> lcos3 lp l c b a.
-Proof.
-    intros.
-    apply lcos3_permut3.
-    apply lcos3_permut1.
-    apply lcos3_permut3.
-    auto.
-Qed.
-
-Lemma lcos3_exists : forall l a b c, lg l -> ~lg_null l -> anga a -> anga b -> anga c ->
- exists lp, lcos3 lp l a b c.
-Proof.
-    intros.
-    assert(HH:= lcos_exists l a H1 H H0).
-    ex_and HH la.
-    apply lcos_lg_anga in H4.
-    spliter.
-    assert(~ lg_null la /\ ~ lg_null l).
-      apply (lcos_lg_not_null _ _ a).
-      auto.
-    spliter.
-    clear H9.
-    clear H7.
-    assert(HH:= lcos_exists la b H2 H6 H8).
-    ex_and HH lab.
-    apply lcos_lg_anga in H7.
-    spliter.
-    assert(~ lg_null lab /\ ~ lg_null la).
-      apply (lcos_lg_not_null _ _ b).
-      auto.
-    spliter.
-    assert(HH:= lcos_exists lab c H3 H10 H12).
-    ex_and HH lp.
-    exists lp.
-    unfold lcos3.
-    exists la.
-    exists lab.
-    split;auto.
-Qed.
-
-(*----------------------------------------*)
-
-
-Definition lcos3_eq := fun l1 a b c l2 d e f => exists lp, lcos3 lp l1 a b c /\ lcos3 lp l2 d e f.
-
-Lemma lcos3_eq_refl : forall l a b c, lg l -> ~lg_null l -> anga a -> anga b -> anga c -> lcos3_eq l a b c l a b c.
-Proof.
-    intros.
-    assert(HH:= lcos3_exists l a b c H H0 H1 H2 H3).
-    ex_and HH lp.
-    unfold lcos3_eq.
-    exists lp.
-    split; auto.
-Qed.
-
-Lemma lcos3_eq_sym : forall l1 a b c l2 d e f, lcos3_eq l1 a b c l2 d e f -> lcos3_eq l2 d e f l1 a b c.
-Proof.
-    intros.
-    unfold lcos3_eq in *.
-    ex_and H lp.
-    exists lp.
-    auto.
-Qed.
-
-Lemma lcos3_unicity: forall l l1 l2 a b c, lcos3 l1 l a b c -> lcos3 l2 l a b c -> eqL l1 l2.
-Proof.
-    intros.
-    unfold lcos3 in *.
-    ex_and H la.
-    ex_and H1 lab.
-    ex_and H0 la'.
-    ex_and H3 lab'.
-    assert(eqL la la').
-      apply (l13_6 a _ _ l); auto.
-    apply lcos_lg_anga in H2.
-    apply lcos_lg_anga in H3.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H4.
-    spliter.
-    assert(lcos lab' la b).
-      rewrite H5;auto.
-    assert(eqL lab lab') by
-      (apply (l13_6 b _ _ la); auto).
-    assert(lcos l2 lab c).
-      rewrite H19. auto.
-    apply (l13_6 c _ _ lab); auto.
-Qed.
-
-
-Lemma lcos3_eql_lcos3 : forall lla llb la lb a b c, lcos3 la lla a b c -> eqL lla llb -> eqL la lb -> lcos3 lb llb a b c.
-Proof.
-    intros.
-    unfold lcos3 in *.
-    ex_and H lpa.
-    exists lpa.
-    ex_and H2 lpab.
-    exists lpab.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H2.
-    apply lcos_lg_anga in H3.
-    spliter.
-    split.
-    rewrite <- H0;auto.
-    split.
-      auto.
-    rewrite <- H1;auto.
-Qed.
-
-Lemma lcos3_lg_anga : forall lp l a b c, lcos3 lp l a b c -> lcos3 lp l a b c /\ lg lp /\ lg l /\ anga a /\ anga b /\ anga c.
-Proof.
-    intros.
-    split; auto.
-    unfold lcos3 in H.
-    ex_and H la.
-    ex_and H0 lab.
-    apply lcos_lg_anga in H.
-    apply lcos_lg_anga in H0.
-    apply lcos_lg_anga in H1.
-    spliter.
-    split; auto.
-Qed.
-
-Lemma lcos3_lg_not_null: forall lp l a b c, lcos3 lp l a b c -> ~lg_null l /\ ~lg_null lp.
-Proof.
-    intros.
-    unfold lcos3 in H.
-    ex_and H la.
-    ex_and H0 lab.
-    apply lcos_lg_not_null in H.
-    apply lcos_lg_not_null in H1.
-    spliter.
-    split; auto.
-Qed.
-
-Lemma lcos3_eq_trans : forall l1 a b c l2 d e f l3 g h i,
- lcos3_eq l1 a b c l2 d e f -> lcos3_eq l2 d e f l3 g h i -> lcos3_eq l1 a b c l3 g h i.
-Proof.
-    intros.
-    unfold lcos3_eq in *.
-    ex_and H lp.
-    ex_and H0 lq.
-    exists lp.
-    split; auto.
-    assert(eqL lp lq).
-      eapply (lcos3_unicity l2 _ _ d e f); auto.
-    apply lcos3_lg_anga in H2.
-    apply lcos3_lg_anga in H1.
-    spliter.
-    eapply (lcos3_eql_lcos3 l3 _ lq); auto.
-      reflexivity.
-    symmetry; auto.
-Qed.
-
-Lemma lcos_eq_lcos3_eq : forall la lb a b c d, anga c -> anga d -> lcos_eq la a lb b -> lcos3_eq la a c d lb b c d.
-Proof.
-    intros.
-    assert(HH1:=H1).
-    unfold lcos_eq in HH1.
-    ex_and HH1 lp.
-    apply lcos_lg_anga in H2.
-    apply lcos_lg_anga in H3.
-    spliter.
-    assert(~ lg_null lp /\ ~ lg_null la).
-      apply (lcos_lg_not_null _ _ a).
-      auto.
-    spliter.
-    assert(HH:= lcos_exists lp c H H5 H10).
-    ex_and HH lq.
-    apply lcos_lg_anga in H12.
-    spliter.
-    assert(~ lg_null lq /\ ~ lg_null lp).
-      apply (lcos_lg_not_null _ _ c); auto.
-    spliter.
-    assert(HH:= lcos_exists lq d H0 H14 H16).
-    ex_and HH lm.
-    unfold lcos3_eq.
-    exists lm.
-    split; unfold lcos3.
-      exists lp.
-      exists lq.
-      split; auto.
-    exists lp.
-    exists lq.
-    split; auto.
-Qed.
-
-Lemma lcos2_eq_lcos3_eq : forall la lb a b c d e, anga e -> lcos2_eq la a b lb c d -> lcos3_eq la a b e lb c d e.
-Proof.
-    intros.
-    assert(HH0:=H0).
-    unfold lcos2_eq in HH0.
-    ex_and HH0 lp.
-    apply lcos2_lg_anga in H1.
-    apply lcos2_lg_anga in H2.
-    spliter.
-    assert(~ lg_null la /\ ~ lg_null lp).
-      eapply (lcos2_lg_not_null _ _ a b).
-      auto.
-    spliter.
-    assert(HH:= lcos_exists lp e H H3 H12).
-    ex_and HH lq.
-    apply lcos_lg_anga in H13.
-    spliter.
-    assert(~ lg_null lq /\ ~ lg_null lp).
-      apply (lcos_lg_not_null _ _ e); auto.
-    spliter.
-    unfold lcos3_eq.
-    exists lq.
-    split; apply lcos3_lcos_2_1; exists lp; split; auto.
-Qed.
-
-Lemma l13_6_bis : forall lp l1 l2 a, lcos lp l1 a -> lcos lp l2 a -> eqL l1 l2.
+Lemma l13_6_bis : forall lp l1 l2 a, Lcos lp l1 a -> Lcos lp l2 a -> EqL l1 l2.
 Proof.
     intros.
     induction(is_null_anga_dec a).
@@ -929,8 +231,8 @@ Proof.
       spliter.
       assert (HH:= H).
       assert(HH0:= H0).
-      unfold lcos in HH.
-      unfold lcos in HH0.
+      unfold Lcos in HH.
+      unfold Lcos in HH0.
       spliter.
       ex_and H11 A.
       ex_and H16 B.
@@ -955,11 +257,11 @@ Proof.
       spliter.
       assert(Cong A B A' B').
         apply (lg_cong lp); auto.
-      assert(Conga B A C B' A' C').
+      assert(CongA B A C B' A' C').
         apply (anga_conga a); auto.
-      assert(Conga C B A C' B' A').
+      assert(CongA C B A C' B' A').
         apply l11_16; auto.
-      assert(Cong A C A' C' /\ Cong B C B' C' /\ Conga A C B A' C' B').
+      assert(Cong A C A' C' /\ Cong B C B' C' /\ CongA A C B A' C' B').
         apply(l11_50_1 A B C A' B' C'); auto.
           intro.
           apply HH.
@@ -971,21 +273,21 @@ Proof.
         split; auto.
       split; auto.
       eapply (lg_cong_lg _ A C); auto.
-    unfold lcos in *;intuition.
+    unfold Lcos in *;intuition.
 Qed.
 
 
-Lemma lcos3_lcos2 : forall l1 l2 a b c d n, lcos3_eq l1 a b n l2 c d n -> lcos2_eq l1 a b l2 c d.
+Lemma lcos3_lcos2 : forall l1 l2 a b c d n, Eq_Lcos3 l1 a b n l2 c d n -> Eq_Lcos2 l1 a b l2 c d.
 Proof.
     intros.
-    unfold lcos3_eq in H.
+    unfold Eq_Lcos3 in H.
     ex_and H lp.
-    unfold lcos2_eq.
+    unfold Eq_Lcos2.
     apply lcos3_lcos_2_1 in H.
     apply lcos3_lcos_2_1 in H0.
     ex_and H ll1.
     ex_and H0 ll2.
-    assert (eqL ll1 ll2).
+    assert (EqL ll1 ll2).
       eapply(l13_6_bis lp _ _ n); auto.
     exists ll1.
     split; auto.
@@ -997,17 +299,17 @@ Proof.
     symmetry; auto.
 Qed.
 
-Lemma lcos2_lcos : forall l1 l2 a b c, lcos2_eq l1 a c l2 b c -> lcos_eq l1 a l2 b.
+Lemma lcos2_lcos : forall l1 l2 a b c, Eq_Lcos2 l1 a c l2 b c -> Eq_Lcos l1 a l2 b.
 Proof.
     intros.
-    unfold lcos2_eq in H.
+    unfold Eq_Lcos2 in H.
     ex_and H lp.
     unfold lcos2 in H.
     unfold lcos2 in H0.
     ex_and H lx.
     ex_and H0 ly.
-    unfold lcos_eq.
-    assert(eqL lx ly).
+    unfold Eq_Lcos.
+    assert(EqL lx ly).
       eapply(l13_6_bis lp _ _ c); auto.
     exists lx.
     split; auto.
@@ -1017,11 +319,11 @@ Proof.
     rewrite H3;auto.
 Qed.
 
-Lemma lcos_per_anga : forall O A P la lp a, lcos lp la a -> la O A -> lp O P -> Per A P O -> a A O P.
+Lemma lcos_per_anga : forall O A P la lp a, Lcos lp la a -> la O A -> lp O P -> Per A P O -> a A O P.
 Proof.
     intros.
     assert(HH:= H).
-    unfold lcos in HH.
+    unfold Lcos in HH.
     spliter.
     ex_and H6 O'.
     ex_and H7 P'.
@@ -1044,24 +346,24 @@ Proof.
             auto.
           subst P'.
           eapply (cong_identity _  O' O'); Cong.
-        assert(lt P' A' A' O' /\ lt P' O' A' O').
+        assert(Lt P' A' A' O' /\ Lt P' O' A' O').
           apply(l11_46 A' P' O' H15).
           left.
           auto.
         spliter.
-        unfold lt in H17.
+        unfold Lt in H17.
         spliter.
         apply False_ind.
         apply H18.
         Cong.
       subst A'.
-      assert(is_null_anga a).
+      assert(Q_CongA_Null_Acute a).
         apply(out_null_anga a P' O' P'); auto.
         apply out_trivial.
         intro.
         subst P'.
         apply H12.
-        unfold lg_null.
+        unfold Q_Cong_Null.
         split.
           auto.
         exists O'.
@@ -1070,7 +372,7 @@ Proof.
         intro.
         subst P.
         apply H12.
-        unfold lg_null.
+        unfold Q_Cong_Null.
         split.
           auto.
         exists O.
@@ -1105,24 +407,24 @@ Proof.
       subst A'.
       assert(Cong O P O A).
         apply (cong_transitivity _ _ O' P'); Cong.
-      assert(lt P A A O /\ lt P O A O).
+      assert(Lt P A A O /\ Lt P O A O).
         apply(l11_46 A P O H16).
         left.
         auto.
       spliter.
-      unfold lt in H21.
+      unfold Lt in H21.
       spliter.
       apply H22.
       Cong.
-    assert(Conga A P O A' P' O').
+    assert(CongA A P O A' P' O').
       apply l11_16; auto.
-    assert(Cong P A P' A' /\ Conga P A O P' A' O' /\ Conga P O A P' O' A').
-      assert(lt P A A O /\ lt P O A O).
+    assert(Cong P A P' A' /\ CongA P A O P' A' O' /\ CongA P O A P' O' A').
+      assert(Lt P A A O /\ Lt P O A O).
         apply(l11_46 A P O H16).
         left.
         auto.
       spliter.
-      unfold lt in H22.
+      unfold Lt in H22.
       spliter.
       apply(l11_52 A P O A' P' O' ); Cong.
     spliter.
@@ -1134,7 +436,7 @@ Proof.
 Qed.
 
 Lemma lcos_lcos_col : forall la lb lp a b O A B P,
- lcos lp la a -> lcos lp lb b -> la O A -> lb O B -> lp O P -> a A O P -> b B O P -> Col A B P.
+ Lcos lp la a -> Lcos lp lb b -> la O A -> lb O B -> lp O P -> a A O P -> b B O P -> Col A B P.
 Proof.
     intros.
     apply lcos_lg_anga in H.
@@ -1152,7 +454,7 @@ Proof.
     assert(HH:=lcos_lg_not_null lp la a H).
     spliter.
     apply H14.
-    unfold lg_null.
+    unfold Q_Cong_Null.
     split; auto.
     exists O.
     auto.
@@ -1227,7 +529,7 @@ intro.
 apply H4.
 Col.
 
-assert(one_side A' A B C').
+assert(OS A' A B C').
 apply out_one_side.
 left; auto.
 repeat split.
@@ -1238,16 +540,16 @@ Col.
 intro.
 subst C'.
 apply one_side_symmetry in H10.
-unfold one_side in H10.
+unfold OS in H10.
 ex_and H10 X.
-unfold two_sides in H10.
+unfold TS in H10.
 spliter.
 apply H14.
 Col.
 left.
 assumption.
 
-assert(one_side C' C B A').
+assert(OS C' C B A').
 apply out_one_side.
 left; auto.
 repeat split.
@@ -1258,22 +560,22 @@ Col.
 intro.
 subst C'.
 apply one_side_symmetry in H10.
-unfold one_side in H10.
+unfold OS in H10.
 ex_and H10 X.
-unfold two_sides in H10.
+unfold TS in H10.
 spliter.
 apply H15.
 Col.
 left.
 Between.
 
-assert(one_side A' A B C).
+assert(OS A' A B C).
 apply(one_side_transitivity _ _ _ C'); auto.
 apply invert_one_side.
 apply one_side_symmetry.
 assumption.
 
-assert(one_side C C' B A).
+assert(OS C C' B A).
 apply(one_side_transitivity _ _ _ A'); auto.
 apply invert_one_side.
 assumption.
@@ -1284,10 +586,10 @@ apply invert_one_side in H15.
 
 assert(HP:= col_one_side_out A A' B C H2 H15).
 
-assert(out C B A).
+assert(Out C B A).
 apply(col_one_side_out C C' B A); Col.
 
-unfold out in *.
+unfold Out in *.
 spliter.
 
 induction H19.
@@ -1410,7 +712,7 @@ Qed.
 Lemma l13_10_aux4 : forall A B C A' B' C' O,
   ~ Col O A A' -> B <> O -> C <> O -> Col O A B -> Col O B C -> B' <> O -> C' <> O ->
   Col O A' B' -> Col O B' C' -> Perp2 B C' C B' O -> Perp2 C A' A C' O -> Bet O A B ->
-  out O A' B'.
+  Out O A' B'.
 Proof.
     intros.
     assert(A <> O).
@@ -1549,8 +851,8 @@ Qed.
 Lemma l13_10_aux5 : forall A B C A' B' C' O,
  ~ Col O A A' -> B <> O -> C <> O -> Col O A B -> Col O B C ->
  B' <> O -> C' <> O -> Col O A' B' -> Col O B' C'->
- Perp2 B C' C B' O -> Perp2 C A' A C' O -> out O A B ->
- out O A' B'.
+ Perp2 B C' C B' O -> Perp2 C A' A C' O -> Out O A B ->
+ Out O A' B'.
 Proof.
     intros.
     assert(A' <> O).
@@ -1695,7 +997,7 @@ Proof.
           assert(Col O A C').
             eapply (col_transitivity_1 _ C); Col.
           eapply (col_transitivity_1 _ C'); Col.
-        assert(exists a, anga a /\ lcos ll lb a /\ lcos ll' lc a).
+        assert(exists a, Q_CongA_Acute a /\ Lcos ll lb a /\ Lcos ll' lc a).
           induction(eq_dec_points B L).
             subst L.
             assert(C = L').
@@ -1729,11 +1031,11 @@ Proof.
             apply(l6_21 O C C' B B L); Col.
             intro.
             subst C'.
-            unfold Perp_in in H17.
+            unfold Perp_at in H17.
             tauto.
           Perp.
         ex_and H52 l'.
-        assert(exists a, anga a /\ lcos ll lc' a /\ lcos ll' lb' a).
+        assert(exists a, Q_CongA_Acute a /\ Lcos ll lc' a /\ Lcos ll' lb' a).
           induction(eq_dec_points C' L).
             subst L.
             assert(B' = L').
@@ -1768,11 +1070,11 @@ Proof.
             apply(l6_21 O B' B C' C' L); Col.
             intro.
             subst C'.
-            unfold Perp_in in H17.
+            unfold Perp_at in H17.
             tauto.
           Perp.
         ex_and H55 l.
-        assert(exists a, anga a /\ lcos lm lc a /\ lcos lm' la a).
+        assert(exists a, Q_CongA_Acute a /\ Lcos lm lc a /\ Lcos lm' la a).
           induction (eq_dec_points C M).
             subst M.
             assert(A = M').
@@ -1806,11 +1108,11 @@ Proof.
             apply(l6_21 O A A' C C M); Col.
             intro.
             subst A'.
-            unfold Perp_in in H22.
+            unfold Perp_at in H22.
             tauto.
           Perp.
         ex_and H58 m'.
-        assert(exists a, anga a /\ lcos lm la' a /\ lcos lm' lc' a).
+        assert(exists a, Q_CongA_Acute a /\ Lcos lm la' a /\ Lcos lm' lc' a).
           induction(eq_dec_points A' M).
             subst M.
             assert(C' = M').
@@ -1849,12 +1151,12 @@ Proof.
             apply(l6_21 O C' C A' A' M); Col.
             intro.
             subst A'.
-            unfold Perp_in in H22.
+            unfold Perp_at in H22.
             tauto.
           Perp.
         ex_and H61 m.
-        assert(exists a, anga a /\ lcos ln la a).
-          assert(exists a, anga a /\ a A O N).
+        assert(exists a, Q_CongA_Acute a /\ Lcos ln la a).
+          assert(exists a, Q_CongA_Acute a /\ a A O N).
             apply(anga_exists A O N).
               intro.
               subst A.
@@ -1882,7 +1184,7 @@ Proof.
           exists n'.
           split.
             auto.
-          unfold lcos.
+          unfold Lcos.
           repeat split; auto.
           exists O.
           exists N.
@@ -1902,8 +1204,8 @@ Proof.
             Col.
           apply anga_sym; auto.
         ex_and H64 n'.
-        assert(exists a, anga a /\ lcos ln lb' a).
-          assert(exists a, anga a /\ a B' O N).
+        assert(exists a, Q_CongA_Acute a /\ Lcos ln lb' a).
+          assert(exists a, Q_CongA_Acute a /\ a B' O N).
             apply(anga_exists B' O N).
               intro.
               subst B'.
@@ -1928,7 +1230,7 @@ Proof.
           exists n.
           split.
             auto.
-          unfold lcos.
+          unfold Lcos.
           repeat split; auto.
           exists O.
           exists N.
@@ -1948,30 +1250,30 @@ Proof.
             Col.
           apply anga_sym; auto.
         ex_and H66 n.
-        assert(lcos_eq lc l' lb' l).
-          unfold lcos_eq.
+        assert(Eq_Lcos lc l' lb' l).
+          unfold Eq_Lcos.
           exists ll'.
           split; auto.
-        assert(lcos_eq lb l' lc' l).
-          unfold lcos_eq.
+        assert(Eq_Lcos lb l' lc' l).
+          unfold Eq_Lcos.
           exists ll.
           split; auto.
-        assert(lcos_eq lc m' la' m).
-          unfold lcos_eq.
+        assert(Eq_Lcos lc m' la' m).
+          unfold Eq_Lcos.
           exists lm.
           split; auto.
-        assert(lcos_eq la m' lc' m).
-          unfold lcos_eq.
+        assert(Eq_Lcos la m' lc' m).
+          unfold Eq_Lcos.
           exists lm'.
           split; auto.
-        assert(lcos_eq la n' lb' n).
-          unfold lcos_eq.
+        assert(Eq_Lcos la n' lb' n).
+          unfold Eq_Lcos.
           exists ln.
           split; auto.
-        assert(exists lp, lcos lp lb n').
+        assert(exists lp, Lcos lp lb n').
           apply(lcos_exists lb n'); auto.
           intro.
-          unfold lg_null in H73.
+          unfold Q_Cong_Null in H73.
           spliter.
           ex_and H74 X.
           apply H0.
@@ -1979,17 +1281,17 @@ Proof.
           apply (lg_cong lb); auto.
           apply (lg_sym lb); auto.
         ex_and H73 bn'.
-        assert(exists lp, lcos lp ll n').
+        assert(exists lp, Lcos lp ll n').
           apply(lcos_exists ll n'); auto.
           intro.
-          unfold lg_null in H73.
+          unfold Q_Cong_Null in H73.
           spliter.
           ex_and H75 X.
           apply H48.
           apply (cong_identity _ _ X).
           apply (lg_cong ll); auto.
         ex_and H73 bl'n'.
-        assert(exists lp, lcos lp bn' l').
+        assert(exists lp, Lcos lp bn' l').
           apply(lcos_exists bn' l'); auto.
             apply lcos_lg_anga in H74.
             spliter.
@@ -2005,104 +1307,104 @@ Proof.
           unfold lcos2.
           exists bn'.
           split; auto.
-        assert(eqL bl'n' bn'l').
+        assert(EqL bl'n' bn'l').
           apply lcos2_comm in H77.
           apply (lcos2_unicity lb _ _ l' n'); auto.
         apply lcos_lg_anga in H75.
         apply lcos_lg_anga in H76.
         spliter.
-        assert(lcos2_eq lb l' n' lb n' l').
-          unfold lcos2_eq.
+        assert(Eq_Lcos2 lb l' n' lb n' l').
+          unfold Eq_Lcos2.
           exists bl'n'.
           split; auto.
           eapply (lcos2_eql_lcos2 lb _ bn'l').
             auto.
             reflexivity.
           symmetry; auto.
-        assert(lcos2_eq lb l' n' lc' l n').
+        assert(Eq_Lcos2 lb l' n' lc' l n').
           apply lcos_eq_lcos2_eq; auto.
-        assert(lcos3_eq lb l' n' m lc' l n' m).
+        assert(Eq_Lcos3 lb l' n' m lc' l n' m).
           apply lcos2_eq_lcos3_eq; auto.
-        assert(lcos3_eq lb l' n' m lc' m l n').
-          unfold lcos3_eq in H87.
+        assert(Eq_Lcos3 lb l' n' m lc' m l n').
+          unfold Eq_Lcos3 in H87.
           ex_and H87 lp.
-          unfold lcos3_eq.
+          unfold Eq_Lcos3.
           exists lp.
           split; auto.
           apply lcos3_permut1.
           apply lcos3_permut2.
           auto.
-        assert(lcos3_eq la m' l n' lc' m l n').
+        assert(Eq_Lcos3 la m' l n' lc' m l n').
           apply lcos_eq_lcos3_eq; auto.
-        assert(lcos3_eq lb l' n' m la m' l n').
+        assert(Eq_Lcos3 lb l' n' m la m' l n').
           apply (lcos3_eq_trans _ _ _ _ lc' m l n'); auto.
           apply lcos3_eq_sym; auto.
-        assert(lcos3_eq lb l' n' m la n' m' l).
-          unfold lcos3_eq in H90.
+        assert(Eq_Lcos3 lb l' n' m la n' m' l).
+          unfold Eq_Lcos3 in H90.
           ex_and H90 lp.
-          unfold lcos3_eq.
+          unfold Eq_Lcos3.
           exists lp.
           split; auto.
           apply lcos3_permut1.
           apply lcos3_permut2.
           auto.
-        assert(lcos3_eq la n' m' l lb' n m' l).
+        assert(Eq_Lcos3 la n' m' l lb' n m' l).
           apply lcos_eq_lcos3_eq; auto.
-        assert(lcos3_eq lb l' n' m lb' n m' l).
+        assert(Eq_Lcos3 lb l' n' m lb' n m' l).
           apply (lcos3_eq_trans _ _ _ _ la n' m' l); auto.
-        assert(lcos3_eq lb l' n' m lb' l n m').
-          unfold lcos3_eq in H93.
+        assert(Eq_Lcos3 lb l' n' m lb' l n m').
+          unfold Eq_Lcos3 in H93.
           ex_and H93 lp.
-          unfold lcos3_eq.
+          unfold Eq_Lcos3.
           exists lp.
           split; auto.
           apply lcos3_permut1.
           apply lcos3_permut2.
           auto.
-        assert(lcos3_eq lb' l n m' lc l' n m').
+        assert(Eq_Lcos3 lb' l n m' lc l' n m').
           apply lcos_eq_lcos3_eq; auto.
           apply lcos_eq_sym; auto.
-        assert(lcos3_eq lb l' n' m lc l' n m').
+        assert(Eq_Lcos3 lb l' n' m lc l' n m').
           apply (lcos3_eq_trans _ _ _ _ lb' l n m'); auto.
-        assert(lcos3_eq lb l' n' m lc m' l' n).
-          unfold lcos3_eq in H96.
+        assert(Eq_Lcos3 lb l' n' m lc m' l' n).
+          unfold Eq_Lcos3 in H96.
           ex_and H96 lp.
-          unfold lcos3_eq.
+          unfold Eq_Lcos3.
           exists lp.
           split; auto.
           apply lcos3_permut1.
           apply lcos3_permut2.
           auto.
-        assert(lcos3_eq la' m l' n lc m' l' n).
+        assert(Eq_Lcos3 la' m l' n lc m' l' n).
           apply lcos_eq_lcos3_eq; auto.
           apply lcos_eq_sym; auto.
-        assert(lcos3_eq lb l' n' m la' m l' n).
+        assert(Eq_Lcos3 lb l' n' m la' m l' n).
           apply (lcos3_eq_trans _ _ _ _ lc m' l' n); auto.
           apply lcos3_eq_sym; auto.
-        assert(lcos3_eq lb l' n' m la' n l' m).
-          unfold lcos3_eq in H99.
+        assert(Eq_Lcos3 lb l' n' m la' n l' m).
+          unfold Eq_Lcos3 in H99.
           ex_and H99 lp.
-          unfold lcos3_eq.
+          unfold Eq_Lcos3.
           exists lp.
           split; auto.
           apply lcos3_permut2.
           auto.
-        assert(lcos2_eq lb l' n' la' n l').
+        assert(Eq_Lcos2 lb l' n' la' n l').
           apply (lcos3_lcos2 _ _ _ _ _ _ m); auto.
-        assert(lcos2_eq lb n' l' la' n l').
-          unfold lcos2_eq in H101.
+        assert(Eq_Lcos2 lb n' l' la' n l').
+          unfold Eq_Lcos2 in H101.
           ex_and H101 lp.
-          unfold lcos2_eq.
+          unfold Eq_Lcos2.
           exists lp.
           split; auto.
           apply lcos2_comm.
           auto.
-        assert(lcos_eq lb n' la' n).
+        assert(Eq_Lcos lb n' la' n).
           apply (lcos2_lcos) in H102.
           auto.
         clear H85 H86 H87 H88 H89 H90 H91 H92 H93 H94 H95 H96 H97 H98 H99 H100 H101 H102.
 (*************** we construct the length ln'  ********************)
-        unfold lcos_eq in H103.
+        unfold Eq_Lcos in H103.
         ex_and H103 ln'.
         assert(O <> N).
           apply perp_not_eq_2 in H25; auto.
@@ -2134,7 +1436,7 @@ Proof.
           apply (perp_col _ A); Col.
           Perp.
 (*************** two cases  ********************)
-        assert(Bet A O B \/ out O A B \/ ~ Col A O B).
+        assert(Bet A O B \/ Out O A B \/ ~ Col A O B).
           apply(or_bet_out A O B); auto.
 (*************** case : Bet A O B  ********************)
         induction H93.
@@ -2147,7 +1449,7 @@ Proof.
             assert(HH:=lcos_lg_not_null ln' lb n' H85).
             spliter.
             apply H96.
-            unfold lg_null.
+            unfold Q_Cong_Null.
             split; auto.
             exists O.
             auto.
@@ -2155,11 +1457,11 @@ Proof.
             intro.
             subst A'.
             contradiction.
-(*************** we prove (Per O N' B) using lcos ln' lb n'  ********************)        
+(*************** we prove (Per O N' B) using Lcos ln' lb n'  ********************)        
             assert(Per O N' B).
             apply(lcos_per O N' B ln' lb n'); auto.
-            assert(Conga N O A B O N').
-(*************** pair of vertical angles (angles opposés par le sommet) ********************)  
+            assert(CongA N O A B O N').
+(*************** pair of vertical angles (angles opposés par Le sommet) ********************)  
               apply(l11_13 N' O A A O N' N B ); Between.
               apply conga_left_comm.
               apply conga_refl; auto.
@@ -2169,7 +1471,7 @@ Proof.
 (*************** we prove (Per O N' A') usinglcos ln' la' n  ********************) 
           assert(Per O N' A').
             apply(lcos_per O N' A' ln' la' n); auto.
-            assert(Conga N O B' A' O N').
+            assert(CongA N O B' A' O N').
               apply(l11_13 N' O B' B' O N' N A' ); Between.
                 apply conga_left_comm.
                 apply conga_refl; auto.
@@ -2194,16 +1496,16 @@ Proof.
         induction H93.
 (*************** case : out O A B  ********************)
 (*************** we construct N' on the half-line ON such as ln' O N' /\ out O N' N  ********************)        
-          assert(exists N' : Tpoint, ln' O N' /\ out O N' N).
+          assert(exists N' : Tpoint, ln' O N' /\ Out O N' N).
             apply(ex_point_lg_out ln' O N H87 H89).
             assert(HH:=lcos_lg_not_null ln' la' n H86).
             spliter.
             auto.
           ex_and H94 N'.
-(*************** we prove (Per O N' B) using lcos ln' lb n'  ********************)
+(*************** we prove (Per O N' B) using Lcos ln' lb n'  ********************)
           assert(Per O N' B).
             apply(lcos_per O N' B ln' lb n'); auto.
-            assert(Conga A O N B O N').
+            assert(CongA A O N B O N').
               apply(out_conga A O N A O N A N B N').
                 apply conga_refl ; auto.
                 apply out_trivial; auto.
@@ -2214,10 +1516,10 @@ Proof.
             apply (anga_conga_anga n' A O N); auto.
             apply conga_right_comm.
             auto.
-(*************** we prove (Per O N' A) using lcos ln' la' n  ********************)
+(*************** we prove (Per O N' A) using Lcos ln' la' n  ********************)
           assert(Per O N' A').
             apply(lcos_per O N' A' ln' la' n); auto.
-            assert(Conga B' O N A' O N').
+            assert(CongA B' O N A' O N').
               apply(out_conga B' O N B' O N B' N A' N').
                 apply conga_refl; auto.
                 apply out_trivial; auto.
@@ -2243,7 +1545,7 @@ Proof.
             eapply (per_per_perp); auto.
               intro.
               subst N'.
-              unfold out in H95.
+              unfold Out in H95.
               tauto.
               intro.
               subst A'.

@@ -5,49 +5,49 @@ Section UnitTests.
 Context `{MT:Tarski_2D_euclidean}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Goal forall A B I, A <> B -> is_midpoint I A B -> I <> A /\ I <> B.
+Goal forall A B I, A <> B -> Midpoint I A B -> I <> A /\ I <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, B <> A -> is_midpoint I A B -> I <> A /\ I <> B.
+Goal forall A B I, B <> A -> Midpoint I A B -> I <> A /\ I <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, I<>A -> is_midpoint I A B -> I <> B /\ A <> B.
+Goal forall A B I, I<>A -> Midpoint I A B -> I <> B /\ A <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, I<>B -> is_midpoint I A B -> I <> A /\ A <> B.
+Goal forall A B I, I<>B -> Midpoint I A B -> I <> A /\ A <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, A<>I -> is_midpoint I A B -> I <> B /\ A <> B.
+Goal forall A B I, A<>I -> Midpoint I A B -> I <> B /\ A <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, B<>I -> is_midpoint I A B -> I <> A /\ A <> B.
+Goal forall A B I, B<>I -> Midpoint I A B -> I <> A /\ A <> B.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B I, A<>B -> is_midpoint I A B -> A <> I /\ I <> B.
+Goal forall A B I, A<>B -> Midpoint I A B -> A <> I /\ I <> B.
 Proof.
 intros.
 assert_diffs.
@@ -64,8 +64,8 @@ auto.
 Qed.
 
 Goal forall A B C Q,
- B <> A -> Col A B C -> is_midpoint Q A C ->
- A <> C -> B <> C -> is_midpoint A B C ->
+ B <> A -> Col A B C -> Midpoint Q A C ->
+ A <> C -> B <> C -> Midpoint A B C ->
  Q <> C.
 Proof.
 intros.
@@ -115,7 +115,7 @@ assert_diffs.
 split;intuition.
 Qed.
 
-Goal forall X A B C D, Perp_in X A B C D -> A<>B /\ C<>D.
+Goal forall X A B C D, Perp_at X A B C D -> A<>B /\ C<>D.
 Proof.
 intros.
 assert_diffs.
@@ -136,14 +136,14 @@ assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B C, out A B C -> B<>A /\ C<>A.
+Goal forall A B C, Out A B C -> B<>A /\ C<>A.
 Proof.
 intros.
 assert_diffs.
 split;assumption.
 Qed.
 
-Goal forall A B C, out A B C -> Col B A C.
+Goal forall A B C, Out A B C -> Col B A C.
 Proof.
 intros.
 assert_cols.
@@ -159,7 +159,7 @@ intuition.
 Qed.
 
 Goal forall A B C D I,
-  is_midpoint I A B -> Par A B C D -> I<>A.
+  Midpoint I A B -> Par A B C D -> I<>A.
 Proof.
 intros.
 assert_diffs.
@@ -167,7 +167,7 @@ assumption.
 Qed.
 
 Goal forall A B C D I,
-  is_midpoint I A B -> Par A I C D -> B<>A.
+  Midpoint I A B -> Par A I C D -> B<>A.
 Proof.
 intros.
 assert_diffs.
@@ -265,7 +265,7 @@ assert_congs_perm.
 finish.
 Qed.
 
-Goal forall A B C, is_midpoint A B C -> Cong A B C A.
+Goal forall A B C, Midpoint A B C -> Cong A B C A.
 Proof.
 intros.
 assert_congs_perm.

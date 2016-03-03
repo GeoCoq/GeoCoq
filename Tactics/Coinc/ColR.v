@@ -302,13 +302,13 @@ elim (SSWP.In_dec (S.union s1 s2) (SS.remove s2 (SS.remove s1 ss))); intro HDec.
   apply SSWP.add_cardinal_1; assumption.
   rewrite HR2.
   rewrite <- HR1.
-  omega.
+  apply le_S;apply le_n.
 
   assert (HR2 : SS.cardinal (SS.add (S.union s1 s2) (SS.remove s2 (SS.remove s1 ss))) = S( SS.cardinal (SS.remove s2 (SS.remove s1 ss)))).
   apply SSWP.add_cardinal_2; assumption.
   rewrite HR2.
   rewrite <- HR1.
-  omega.
+  apply le_n.
 Defined.
 
 Definition test_col (ss : SS.t) (sp : SP.t) p1 p2 p3 : bool :=

@@ -5,17 +5,17 @@ Section Order.
 Context `{MT:Tarski_2D_euclidean}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition Ps O E A := out O A E.
+Definition Ps O E A := Out O A E.
 
 Lemma l14_36_a : forall O E E' A B C,
- sum O E E' A B C -> out O A B -> Bet O A C.
+ Sum O E E' A B C -> Out O A B -> Bet O A C.
 Proof.
     intros.
     assert(HS:=H).
-    unfold sum in H.
+    unfold Sum in H.
     spliter.
     unfold Ar2 in H.
-    unfold out in H0.
+    unfold Out in H0.
     spliter.
     assert(Parallelogram_flat O A C B).
       apply(sum_cong O E E' H A B C HS).
@@ -27,7 +27,7 @@ Proof.
       subst B.
       unfold Parallelogram_flat in H7.
       spliter.
-      assert(O = C \/ is_midpoint A O C).
+      assert(O = C \/ Midpoint A O C).
         apply(l7_20 A O C).
           ColR.
         Cong.
@@ -37,7 +37,7 @@ Proof.
         apply HS.
         apply (double_null_null O E E') in HS; auto.
         tauto.
-      unfold is_midpoint in H13.
+      unfold Midpoint in H13.
       tauto.
     induction H3.
       apply plg_permut in H8.
@@ -61,11 +61,11 @@ Proof.
 Qed.
 
 Lemma l14_36_b : forall O E E' A B C,
- sum O E E' A B C -> out O A B -> O <> A /\ O <> C /\ A <> C.
+ Sum O E E' A B C -> Out O A B -> O <> A /\ O <> C /\ A <> C.
 Proof.
     intros.
     assert(HH:= l14_36_a O E E' A B C H H0).
-    unfold out in H0.
+    unfold Out in H0.
     spliter.
     split; auto.
     split.
@@ -77,11 +77,11 @@ Proof.
     intro.
     subst C.
     assert(HS:= H).
-    unfold sum in H.
+    unfold Sum in H.
     spliter.
     unfold Ar2 in H.
     spliter.
-    assert(sum O E E' A O A).
+    assert(Sum O E E' A O A).
       apply (sum_A_O). assumption.
     assumption.
     assert(B = O).
@@ -94,19 +94,19 @@ Lemma O_not_positive : forall O E, ~ Ps O E O.
 Proof.
     intros.
     unfold Ps.
-    unfold out.
+    unfold Out.
     intuition.
 Qed.
 
 Lemma pos_null_neg : forall O E E' A MA,
- opp O E E' A MA -> Ps O E A \/ O = A \/ Ps O E MA.
+ Opp O E E' A MA -> Ps O E A \/ O = A \/ Ps O E MA.
 Proof.
     intros.
-    unfold opp in H.
+    unfold Opp in H.
     induction (eq_dec_points A O).
       right; left; auto.
     assert(HS:= H).
-    unfold sum in H.
+    unfold Sum in H.
     spliter.
     unfold Ar2 in H.
     spliter.
@@ -116,7 +116,7 @@ Proof.
     spliter.
     assert(HG:=grid_not_par O E E' H).
     spliter.
-    assert(A = MA \/ is_midpoint O A MA).
+    assert(A = MA \/ Midpoint O A MA).
       apply(l7_20 O A MA); try ColR.
       Cong.
     induction H16.
@@ -134,22 +134,22 @@ Proof.
       apply is_midpoint_id_2 in H16.
       subst A.
       tauto.
-    unfold is_midpoint in H16.
+    unfold Midpoint in H16.
     spliter.
     unfold Ps.
     unfold Col in H2.
     induction H2.
-      unfold out.
+      unfold Out.
       repeat split; auto.
     induction H2.
-      unfold out.
+      unfold Out.
       repeat split; Col.
       left.
       apply between_symmetry.
       auto.
     apply False_ind.
     apply H17.
-    unfold out.
+    unfold Out.
     repeat split; auto.
     apply between_symmetry in H16.
     assert(HH:= l5_2 MA O A E H18 H16 H2).
@@ -157,18 +157,18 @@ Proof.
 Qed.
 
 Lemma sum_pos_pos : forall O E E' A B AB,
-  Ps O E A -> Ps O E B -> sum O E E' A B AB -> Ps O E AB.
+  Ps O E A -> Ps O E B -> Sum O E E' A B AB -> Ps O E AB.
 Proof.
     intros.
     unfold Ps in *.
-    assert(out O A B).
+    assert(Out O A B).
       apply l6_6 in H0.
       apply(l6_7 O A E B); auto.
     assert(HH:=l14_36_b O E E' A B AB H1 H2).
     spliter.
     assert(HH:=l14_36_a O E E' A B AB H1 H2).
     apply l6_6 in H.
-    assert(out O A AB).
+    assert(Out O A AB).
       apply bet_out; auto.
     assert(HP:=l6_7 O E A AB H H6).
     apply l6_6.
@@ -176,11 +176,11 @@ Proof.
 Qed.
 
 Lemma prod_pos_pos : forall O E E' A B AB,
- Ps O E A -> Ps O E B -> prod O E E' A B AB -> Ps O E AB.
+ Ps O E A -> Ps O E B -> Prod O E E' A B AB -> Ps O E AB.
 Proof.
     intros.
     assert(HP:= H1).
-    unfold prod in H1.
+    unfold Prod in H1.
     spliter.
     unfold Ar2 in H1.
     spliter.
@@ -189,7 +189,7 @@ Proof.
     spliter.
     unfold Ps in H.
     unfold Ps in H0.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     assert(E' <> A).
       intro.
@@ -207,23 +207,23 @@ Proof.
         split; Col.
       spliter.
       contradiction.
-    assert(project E E' O E' E E').
+    assert(Proj E E' O E' E E').
       apply(pj_col_project); Col.
       left; right.
       repeat split; Col.
-    assert(project B B' O E' E E').
+    assert(Proj B B' O E' E E').
       apply(pj_col_project); Col.
-    assert(project O O O E' E E').
+    assert(Proj O O O E' E E').
       apply(pj_col_project); Col.
       right.
       auto.
-    assert(project E' A O E E' A).
+    assert(Proj E' A O E E' A).
       apply(pj_col_project); Col.
       left; right.
       repeat split; Col.
-    assert(project B' AB O E E' A).
+    assert(Proj B' AB O E E' A).
       apply(pj_col_project); Col.
-    assert(project O O O E E' A).
+    assert(Proj O O O E E' A).
       apply(pj_col_project); Col.
       right.
       auto.
@@ -263,7 +263,7 @@ Proof.
     intro.
     unfold Ps in H.
     unfold Ng in H0.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     induction H4.
       apply H.
@@ -278,7 +278,7 @@ Proof.
     intro.
     unfold Ps in H0.
     unfold Ng in H.
-    unfold out in H0.
+    unfold Out in H0.
     spliter.
     induction H2.
       apply H0.
@@ -287,14 +287,14 @@ Proof.
     apply (between_equality _ _ A); Between.
 Qed.
 
-Lemma opp_pos_neg : forall O E E' A MA, Ps O E A ->  opp O E E' A MA -> Ng O E MA.
+Lemma opp_pos_neg : forall O E E' A MA, Ps O E A ->  Opp O E E' A MA -> Ng O E MA.
 Proof.
     intros.
     assert(HH:=opp_midpoint O E E' A MA H0).
     unfold Ng.
     unfold Ps in H.
-    unfold out in H.
-    unfold is_midpoint in HH.
+    unfold Out in H.
+    unfold Midpoint in HH.
     spliter.
     repeat split; auto.
       intro.
@@ -306,16 +306,16 @@ Proof.
     apply(between_inner_transitivity MA O E A); Between.
 Qed.
 
-Lemma opp_neg_pos : forall O E E' A MA, Ng O E A ->  opp O E E' A MA -> Ps O E MA.
+Lemma opp_neg_pos : forall O E E' A MA, Ng O E A ->  Opp O E E' A MA -> Ps O E MA.
 Proof.
     intros.
     assert(HH:=opp_midpoint O E E' A MA H0).
     unfold Ng in H.
     unfold Ps.
-    unfold is_midpoint in HH.
+    unfold Midpoint in HH.
     spliter.
     apply l6_6.
-    unfold out.
+    unfold Out.
     repeat split; auto.
       intro.
       subst MA.
@@ -324,17 +324,13 @@ Proof.
     apply (l5_2 A O E MA); auto.
 Qed.
 
-(*
-Definition ltP O E E' A B :=
- forall D, diff O E E' B A D -> Ps O E D.
-*)
 
-Definition ltP O E E' A B := exists D, diff O E E' B A D /\ Ps O E D.
+Definition LtP O E E' A B := exists D, Diff O E E' B A D /\ Ps O E D.
 
-Lemma ltP_ar2 : forall O E E' A B, ltP O E E' A B -> Ar2 O E E' A B A.
+Lemma ltP_ar2 : forall O E E' A B, LtP O E E' A B -> Ar2 O E E' A B A.
 Proof.
     intros.
-    unfold ltP in H.
+    unfold LtP in H.
     ex_and H D.
     apply diff_ar2 in H.
     unfold Ar2 in H.
@@ -342,13 +338,13 @@ Proof.
     repeat split; auto.
 Qed.
 
-Lemma ltP_neq : forall O E E' A B, ltP O E E' A B -> A <> B.
+Lemma ltP_neq : forall O E E' A B, LtP O E E' A B -> A <> B.
 Proof.
     intros.
     assert(HH:=ltP_ar2 O E E' A B H).
     unfold Ar2 in HH.
     spliter.
-    unfold ltP in H.
+    unfold LtP in H.
     intro.
     subst B.
     ex_and H OO.
@@ -358,40 +354,40 @@ Proof.
       apply diff_null; Col.
     subst OO.
     unfold Ps in H4.
-    unfold out in H4.
+    unfold Out in H4.
     tauto.
 Qed.
 
-Definition leP O E E' A B := ltP O E E' A B \/ A=B.
+Definition LeP O E E' A B := LtP O E E' A B \/ A=B.
 
-Lemma leP_refl : forall O E E' A, leP O E E' A A.
+Lemma leP_refl : forall O E E' A, LeP O E E' A A.
 Proof.
     intros.
     right.
     tauto.
 Qed.
 
-Lemma ltP_sum_pos : forall O E E' A B C , Ps O E B -> sum O E E' A B C -> ltP O E E' A C.
+Lemma ltP_sum_pos : forall O E E' A B C , Ps O E B -> Sum O E E' A B C -> LtP O E E' A C.
 Proof.
     intros.
-    unfold ltP.
+    unfold LtP.
     exists B.
     split; auto.
     apply sum_diff in H0.
     assumption.
 Qed.
 
-Lemma pos_opp_neg : forall O E E' A mA, Ps O E A -> opp O E E' A mA -> Ng O E mA.
+Lemma pos_opp_neg : forall O E E' A mA, Ps O E A -> Opp O E E' A mA -> Ng O E mA.
 Proof.
     intros.
     assert(Ar2 O E E' mA A O).
-      unfold opp in H0.
+      unfold Opp in H0.
       apply sum_ar2; auto.
     unfold Ar2 in H1.
     apply opp_midpoint in H0.
-    unfold is_midpoint in H0.
+    unfold Midpoint in H0.
     unfold Ps in H.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     unfold Ng.
     repeat split.
@@ -408,10 +404,10 @@ Proof.
 Qed.
 
 Lemma diff_pos_diff_neg : forall O E E' A B AmB BmA,
-  diff O E E' A B AmB -> diff O E E' B A BmA -> Ps O E AmB -> Ng O E BmA.
+  Diff O E E' A B AmB -> Diff O E E' B A BmA -> Ps O E AmB -> Ng O E BmA.
 Proof.
     intros.
-    assert(opp O E E' AmB BmA).
+    assert(Opp O E E' AmB BmA).
       apply (diff_opp O E E' A B); auto.
     eapply (pos_opp_neg O E E' AmB); auto.
 Qed.
@@ -424,7 +420,7 @@ Proof.
     spliter.
     unfold Ps in H.
     unfold Ng in H0.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     clean_duplicated_hyps.
     induction H4.
@@ -434,12 +430,12 @@ Proof.
     apply (between_equality _  _ A); Between.
 Qed.
 
-Lemma leP_asym : forall O E E' A B, leP O E E' A B -> leP O E E' B A -> A = B.
+Lemma leP_asym : forall O E E' A B, LeP O E E' A B -> LeP O E E' B A -> A = B.
 Proof.
     intros.
-    unfold leP in *.
+    unfold LeP in *.
     induction H; induction H0.
-      unfold ltP in *.
+      unfold LtP in *.
       ex_and H BmA.
       ex_and H0 AmB.
       assert(HH:=diff_pos_diff_neg O E E' A B AmB BmA H0 H H2).
@@ -453,13 +449,13 @@ Proof.
     auto.
 Qed.
 
-Lemma leP_trans : forall O E E' A B C, leP O E E' A B -> leP O E E' B C -> leP O E E' A C.
+Lemma leP_trans : forall O E E' A B C, LeP O E E' A B -> LeP O E E' B C -> LeP O E E' A C.
 Proof.
     intros.
-    unfold leP in *.
+    unfold LeP in *.
     induction H; induction H0.
       left.
-      unfold ltP in *.
+      unfold LtP in *.
       ex_and H dBA.
       ex_and H0 dCB.
       assert(Ar2 O E E' B A dBA).
@@ -489,11 +485,11 @@ Qed.
 (* sum_preserves leP : a <= x /\ b <= y => a + b <= x + y *)
 
 Lemma leP_sum_leP : forall O E E' A B C X Y Z,
-  leP O E E' A X -> leP O E E' B Y -> sum O E E' A B C -> sum O E E' X Y Z ->
-  leP O E E' C Z.
+  LeP O E E' A X -> LeP O E E' B Y -> Sum O E E' A B C -> Sum O E E' X Y Z ->
+  LeP O E E' C Z.
 Proof.
     intros.
-    unfold leP in *.
+    unfold LeP in *.
     assert(Ar2 O E E' A B C).
       apply sum_ar2; auto.
     assert(Ar2 O E E' X Y Z).
@@ -502,7 +498,7 @@ Proof.
     spliter.
     clean_duplicated_hyps.
     induction H; induction H0.
-      unfold ltP in *.
+      unfold LtP in *.
       ex_and H dXA.
       ex_and H0 dYB.
       assert(HH:= diff_exists O E E' Z C  H3 H7 H10).
@@ -510,18 +506,18 @@ Proof.
       left.
       exists dZC.
       split; auto.
-      assert(sum O E E' dXA dYB dZC).
+      assert(Sum O E E' dXA dYB dZC).
         apply(sum_diff2_diff_sum2_b O E E' A B C X Y Z dXA dYB dZC H1 H2 H H0); auto.
       apply(sum_pos_pos O E E' dXA dYB); auto.
       subst Y.
       left.
-      unfold ltP in *.
+      unfold LtP in *.
       ex_and H dXA.
       assert(HH:=diff_exists O E E' Z C H3 H7 H10).
       ex_and HH dZC.
       exists dZC.
       split; auto.
-      assert( sum O E E' dXA O dZC).
+      assert(Sum O E E' dXA O dZC).
         apply(sum_diff2_diff_sum2_b O E E' A B C X B Z dXA O dZC); auto.
         apply diff_null; auto.
       assert(dXA = dZC).
@@ -530,13 +526,13 @@ Proof.
       assumption.
       subst X.
       left.
-      unfold ltP in *.
+      unfold LtP in *.
       ex_and H0 dYB.
       assert(HH:=diff_exists O E E' Z C H3 H7 H10).
       ex_and HH dZC.
       exists dZC.
       split; auto.
-      assert(sum O E E' O dYB dZC).
+      assert(Sum O E E' O dYB dZC).
         apply(sum_diff2_diff_sum2_b O E E' A B C A Y Z O dYB dZC); auto.
         apply diff_null; auto.
       assert(dYB = dZC).
@@ -550,11 +546,11 @@ Proof.
 Qed.
 
 Lemma square_pos : forall O E E' A A2,
-  O <> A -> prod O E E' A A A2 -> Ps O E A2.
+  O <> A -> Prod O E E' A A A2 -> Ps O E A2.
 Proof.
 intros O E E' A A2 HDiff HA2.
-assert (HNC : ~ Col O E E') by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HNC : ~ Col O E E') by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (opp_exists O E E' HNC A) as [MA HMA]; Col.
 assert (HElim := HMA); apply pos_null_neg in HElim.
 elim HElim; clear HElim; intro HElim; [apply prod_pos_pos with E' A A; auto|].
@@ -571,21 +567,21 @@ Lemma col_pos_or_neg : forall O E X,
   O <> E -> O <> X -> Col O E X -> Ps O E X \/ Ng O E X.
 Proof.
 intros O E X HOE HOX HCol.
-unfold Ps, Ng, out.
+unfold Ps, Ng, Out.
 unfold Col in HCol; intuition.
 Qed.
 
-Lemma ltP_neg : forall O E E' A, ltP O E E' A O -> Ng O E A.
+Lemma ltP_neg : forall O E E' A, LtP O E E' A O -> Ng O E A.
 Proof.
 intros O E E' A HLt.
 destruct HLt as [MA [HDiff HPs]].
 apply opp_pos_neg with E' MA; auto.
 apply diff_O_A_opp; apply sum_diff; apply sum_comm; try apply diff_sum; auto.
-unfold diff, opp, sum, Ar2 in HDiff; destruct HDiff as [MB HXMY]; spliter; Col.
+unfold Diff, Opp, Sum, Ar2 in HDiff; destruct HDiff as [MB HXMY]; spliter; Col.
 Qed.
 
 Lemma ps_le : forall O E E' X,
-  ~ Col O E E' -> Bet O X E \/ Bet O E X -> leP O E E' O X.
+  ~ Col O E E' -> Bet O X E \/ Bet O E X -> LeP O E E' O X.
 Proof.
 intros O E E' X HNC HBet.
 elim (eq_dec_points O X); intro HOX; [right; auto|left].
@@ -594,7 +590,7 @@ assert_diffs; repeat (split; Col).
 Qed.
 
 Lemma lt_diff_ps : forall O E E' X Y XMY,
-  Col O E X -> Col O E Y -> ltP O E E' Y X -> diff O E E' X Y XMY -> Ps O E XMY.
+  Col O E X -> Col O E Y -> LtP O E E' Y X -> Diff O E E' X Y XMY -> Ps O E XMY.
 Proof.
 intros O E E' X Y XMY HCol1 HCol2 HLt HXMY.
 destruct HLt as [XMY' [HDiff HPs]].
@@ -602,7 +598,7 @@ apply (diff_unicity _ _ _ _ _ XMY) in HDiff; treat_equalities; auto.
 Qed.
 
 Lemma col_2_le_or_ge : forall O E E' A B,
-  ~ Col O E E' -> Col O E A -> Col O E B -> leP O E E' A B \/ leP O E E' B A.
+  ~ Col O E E' -> Col O E A -> Col O E B -> LeP O E E' A B \/ LeP O E E' B A.
 Proof.
 intros O E E' A B HNC HColA HColB.
 assert (HDiff1 : O <> E) by (assert_diffs; auto).
@@ -619,8 +615,8 @@ apply diff_opp with B A; auto.
 Qed.
 
 Lemma compatibility_of_sum_with_order : forall O E E' A B C APC BPC,
-  leP O E E' A B -> sum O E E' A C APC -> sum O E E' B C BPC ->
-  leP O E E' APC BPC.
+  LeP O E E' A B -> Sum O E E' A C APC -> Sum O E E' B C BPC ->
+  LeP O E E' APC BPC.
 Proof.
 intros O E E' A B C APC BPC HLe HAPC HBPC.
 elim HLe; clear HLe; intro HLe.
@@ -642,18 +638,18 @@ elim HLe; clear HLe; intro HLe.
 Qed.
 
 Lemma compatibility_of_prod_with_order : forall O E E' A B AB,
-  leP O E E' O A -> leP O E E' O B -> prod O E E' A B AB ->
-  leP O E E' O AB.
+  LeP O E E' O A -> LeP O E E' O B -> Prod O E E' A B AB ->
+  LeP O E E' O AB.
 Proof.
 intros O E E' A B AB HLeA HLeB HAB.
 elim HLeA; clear HLeA; intro HLeA;
 elim HLeB; clear HLeB; intro HLeB; treat_equalities;
 try (apply prod_O_l_eq in HAB); try (apply prod_O_r_eq in HAB);
 treat_equalities; try (apply leP_refl).
-assert (HNC : ~ Col O E E') by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColB : Col O E B) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColAB : Col O E AB) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HNC : ~ Col O E E') by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColB : Col O E B) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColAB : Col O E AB) by (unfold Prod, Ar2 in *; spliter; Col).
 left; exists AB; split; try (apply diff_A_O); Col.
 destruct HLeA as [A' [HDiff1 HPsA]]; destruct HLeB as [B' [HDiff2 HPsB]].
 assert (A = A')
@@ -664,13 +660,13 @@ treat_equalities; apply prod_pos_pos with E' A B; auto.
 Qed.
 
 Lemma pos_inv_pos : forall O E E' A IA,
-  O <> A -> leP O E E' O A -> prod O E E' IA A E -> leP O E E' O IA.
+  O <> A -> LeP O E E' O A -> Prod O E E' IA A E -> LeP O E E' O IA.
 Proof.
 intros O E E' A IA HOA HLe HIA.
 elim HLe; clear HLe; intro HLe; treat_equalities; [|intuition].
-assert (HNC : ~ Col O E E') by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColIA : Col O E IA) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HNC : ~ Col O E E') by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColIA : Col O E IA) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' IA O) as [IA' HIA']; Col.
 assert (IA = IA') by (apply diff_unicity with O E E' IA O; auto; apply diff_A_O; Col).
 treat_equalities; left; exists IA; split; auto; clear HIA'.
@@ -689,9 +685,9 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
 
   {
   destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-  assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
-  assert (HProd1 : prod O E E' IA ME MIA) by (apply opp_prod; auto).
-  assert (HProd2 : prod O E E' MIA A ME).
+  assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+  assert (HProd1 : Prod O E E' IA ME MIA) by (apply opp_prod; auto).
+  assert (HProd2 : Prod O E E' MIA A ME).
     {
     apply prod_assoc1 with ME IA E; auto;
     apply prod_comm; auto; apply prod_1_l; Col.
@@ -704,17 +700,17 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
 Qed.
 
 Lemma le_pos_prod_le : forall O E E' A B C AC BC,
-  leP O E E' A B -> leP O E E' O C ->
-  prod O E E' A C AC -> prod O E E' B C BC ->
-  leP O E E' AC BC.
+  LeP O E E' A B -> LeP O E E' O C ->
+  Prod O E E' A C AC -> Prod O E E' B C BC ->
+  LeP O E E' AC BC.
 Proof.
 intros O E E' A B C AC BC HALeB HPsC HAC HBC.
-assert (HNC : ~ Col O E E') by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColB : Col O E B) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColC : Col O E C) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColAC : Col O E AC) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColBC : Col O E BC) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HNC : ~ Col O E E') by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColB : Col O E B) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColC : Col O E C) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColAC : Col O E AC) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColBC : Col O E BC) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' BC AC) as [BCMAC HBCMAC]; Col.
 apply compatibility_of_sum_with_order with O BCMAC AC;
 try apply sum_O_B; try (apply sum_comm; try apply diff_sum); Col.
@@ -722,7 +718,7 @@ destruct (diff_exists O E E' B A) as [BMA HBMA]; Col.
 assert (HColBMA : Col O E BMA)
   by (apply diff_ar2 in HBMA; unfold Ar2 in *; spliter; Col).
 destruct (prod_exists O E E' HNC BMA C) as [BCMAC' HBCMAC']; Col.
-assert (H : diff O E E' BC AC BCMAC').
+assert (H : Diff O E E' BC AC BCMAC').
   {
   apply sum_diff; apply diff_sum in HBMA;
   apply distr_r with A BMA C B; auto.
@@ -731,7 +727,7 @@ assert (BCMAC = BCMAC') by (apply diff_unicity with O E E' BC AC; auto).
 clear H; treat_equalities;
 apply compatibility_of_prod_with_order with BMA C; auto.
 destruct (opp_exists O E E' HNC A) as [MA HMA]; Col.
-assert (HColMA : Col O E MA) by (unfold opp, sum, Ar2 in *; spliter; Col).
+assert (HColMA : Col O E MA) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 apply compatibility_of_sum_with_order with A B MA; auto;
 try (apply diff_sum; apply diff_O_A; Col).
 apply diff_O_A in HMA; Col; apply diff_sum in HBMA; apply diff_sum in HMA.
@@ -740,7 +736,7 @@ apply sum_comm; auto.
 Qed.
 
 Lemma bet_lt12_le23 : forall O E E' A B C,
-  Bet A B C -> ltP O E E' A B -> leP O E E' B C.
+  Bet A B C -> LtP O E E' A B -> LeP O E E' B C.
 Proof.
 intros O E E' A B C HBet HLt.
 assert (HNC : ~ Col O E E')
@@ -1794,7 +1790,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 Qed.
 
 Lemma bet_lt12_le13 : forall O E E' A B C,
-  Bet A B C -> ltP O E E' A B -> leP O E E' A C.
+  Bet A B C -> LtP O E E' A B -> LeP O E E' A C.
 Proof.
 intros O E E' A B C HBet HLt.
 apply leP_trans with B; [left; auto|].
@@ -1802,7 +1798,7 @@ apply bet_lt12_le23 with A; auto.
 Qed.
 
 Lemma bet_lt21_le32 : forall O E E' A B C,
-  Bet A B C -> ltP O E E' B A -> leP O E E' C B.
+  Bet A B C -> LtP O E E' B A -> LeP O E E' C B.
 Proof.
 intros O E E' A B C HBet HLt.
 assert (HNC : ~ Col O E E')
@@ -1818,9 +1814,9 @@ destruct (diff_exists O E E' B C) as [BMC HBMC]; Col.
 destruct (opp_exists O E E' HNC A) as [MA HMA]; Col.
 destruct (opp_exists O E E' HNC B) as [MB HMB]; Col.
 destruct (opp_exists O E E' HNC C) as [MC HMC]; Col.
-assert (HColMA : Col O E MA) by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColMB : Col O E MB) by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColMC : Col O E MC) by (unfold opp, sum, Ar2 in *; spliter; Col).
+assert (HColMA : Col O E MA) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColMB : Col O E MB) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColMC : Col O E MC) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 assert (HColBMC : Col O E BMC)
   by (apply diff_ar2 in HBMC; unfold Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A B) as [AMB HAMB]; Col.
@@ -1829,7 +1825,7 @@ assert (HColAMB : Col O E AMB)
 destruct (diff_exists O E E' MA MB) as [MAMMB HMAMMB]; Col.
 assert (HColMAMMB : Col O E MAMMB)
   by (apply diff_ar2 in HMAMMB; unfold Ar2 in *; spliter; Col).
-assert (HOppAMB : opp O E E' AMB MAMMB).
+assert (HOppAMB : Opp O E E' AMB MAMMB).
   {
   apply sum_opp; apply sum_assoc_1 with MB A B;
   [| |apply sum_comm; Col; apply diff_sum; apply diff_O_A; Col].
@@ -1851,7 +1847,7 @@ assert (HOppAMB : opp O E E' AMB MAMMB).
 destruct (diff_exists O E E' MB MA) as [MBMMA HMBMMA]; Col.
 assert (HColMBMMA : Col O E MBMMA)
   by (apply diff_ar2 in HMBMMA; unfold Ar2 in *; spliter; Col).
-assert (HOppMAMMB : opp O E E' MAMMB MBMMA) by (apply diff_opp with MA MB; auto).
+assert (HOppMAMMB : Opp O E E' MAMMB MBMMA) by (apply diff_opp with MA MB; auto).
 assert (AMB = MBMMA)
   by (apply opp_unicity with O E E' MAMMB; auto; apply opp_comm; auto).
 treat_equalities.
@@ -1860,7 +1856,7 @@ assert (HBet' : Bet MA MB MC)
 destruct (diff_exists O E E' MB MC) as [MBMMC HMBMMC]; Col.
 assert (HColMAMMC : Col O E MBMMC)
   by (apply diff_ar2 in HMBMMC; unfold Ar2 in *; spliter; Col).
-assert (HOppAMC : opp O E E' BMC MBMMC).
+assert (HOppAMC : Opp O E E' BMC MBMMC).
   {
   apply sum_opp; apply sum_assoc_1 with MC B C;
   [| |apply sum_comm; Col; apply diff_sum; apply diff_O_A; Col].
@@ -1880,13 +1876,13 @@ assert (HOppAMC : opp O E E' BMC MBMMC).
     }
   }
 destruct (diff_exists O E E' MC MB) as [MCMMB HMCMMB]; Col.
-assert (HOppMBMMC : opp O E E' MBMMC MCMMB) by (apply diff_opp with MB MC; auto).
+assert (HOppMBMMC : Opp O E E' MBMMC MCMMB) by (apply diff_opp with MB MC; auto).
 assert (BMC = MCMMB)
   by (apply opp_unicity with O E E' MBMMC; auto; apply opp_comm; auto).
 treat_equalities.
-assert (HLt' : ltP O E E' MA MB)
+assert (HLt' : LtP O E E' MA MB)
   by (exists AMB; split; auto; apply lt_diff_ps with E' A B; auto).
-assert (HLe : leP O E E' MB MC) by (apply bet_lt12_le23 with MA; auto).
+assert (HLe : LeP O E E' MB MC) by (apply bet_lt12_le23 with MA; auto).
 left; exists BMC; split; auto; apply lt_diff_ps with E' MC MB; auto.
 elim HLe; clear HLe; intro HFalse; auto; treat_equalities.
 assert (O = BMC)
@@ -1895,7 +1891,7 @@ treat_equalities; apply diff_null_eq in HBMC; treat_equalities; intuition.
 Qed.
 
 Lemma bet_lt21_le31 : forall O E E' A B C,
-  Bet A B C -> ltP O E E' B A -> leP O E E' C A.
+  Bet A B C -> LtP O E E' B A -> LeP O E E' C A.
 Proof.
 intros O E E' A B C HBet HLt.
 apply leP_trans with B; [|left; auto].
@@ -1903,25 +1899,25 @@ apply bet_lt21_le32 with A; auto.
 Qed.
 
 Lemma opp_2_le_le : forall O E E' A MA B MB,
-  opp O E E' A MA -> opp O E E' B MB -> leP O E E' A B -> leP O E E' MB MA.
+  Opp O E E' A MA -> Opp O E E' B MB -> LeP O E E' A B -> LeP O E E' MB MA.
 Proof.
 intros O E E' A MA B MB HOppA HOppB HLe.
-assert (HNC : ~ Col O E E') by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColMA : Col O E MA) by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColB : Col O E B) by (unfold opp, sum, Ar2 in *; spliter; Col).
-assert (HColMB : Col O E MB) by (unfold opp, sum, Ar2 in *; spliter; Col).
+assert (HNC : ~ Col O E E') by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColMA : Col O E MA) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColB : Col O E B) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
+assert (HColMB : Col O E MB) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 destruct (sum_exists O E E' HNC MA MB) as [MAMB HMAMB]; Col.
-assert (HMA : sum O E E' B MAMB MA)
+assert (HMA : Sum O E E' B MAMB MA)
   by (apply sum_assoc_2 with MB MA O; apply sum_comm; Col; apply sum_A_O; auto).
-assert (HMB : sum O E E' A MAMB MB)
+assert (HMB : Sum O E E' A MAMB MB)
   by (apply sum_assoc_2 with MA MB O; try apply sum_O_B; auto; apply sum_comm; auto).
 eapply compatibility_of_sum_with_order in HLe; [|apply HMB|apply HMA]; auto.
 Qed.
 
 Lemma diff_2_le_le : forall O E E' A B C AMC BMC,
-  diff O E E' A C AMC -> diff O E E' B C BMC -> leP O E E' A B ->
-  leP O E E' AMC BMC.
+  Diff O E E' A C AMC -> Diff O E E' B C BMC -> LeP O E E' A B ->
+  LeP O E E' AMC BMC.
 intros O E E' A B C AMC BMC HAMC HBMC HLe.
 assert (HNC : ~ Col O E E')
   by (apply diff_ar2 in HAMC; unfold Ar2 in *; spliter; Col).
@@ -1932,12 +1928,12 @@ assert (HColAMC : Col O E AMC)
 assert (HColBMC : Col O E BMC)
   by (apply diff_ar2 in HBMC; unfold Ar2 in *; spliter; Col).
 destruct (opp_exists O E E' HNC C) as [MC HMC]; Col.
-assert (HAMC' : sum O E E' A MC AMC).
+assert (HAMC' : Sum O E E' A MC AMC).
   {
   apply diff_sum in HAMC; apply sum_assoc_1 with AMC C O;
   apply sum_comm; auto; apply sum_O_B; Col.
   }
-assert (HBMC' : sum O E E' B MC BMC).
+assert (HBMC' : Sum O E E' B MC BMC).
   {
   apply diff_sum in HBMC; apply sum_assoc_1 with BMC C O;
   apply sum_comm; auto; apply sum_O_B; Col.

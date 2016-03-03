@@ -18,12 +18,12 @@ Proof.
   assert (HB' := ex_conga_ts A C D' C A B).
   destruct HB' as [B' []]; Col.
   assert_diffs.
-  assert(HSuma : Suma B A C A C D' B A B').
-    exists B'; repeat (split; Conga). apply l9_9; Side.
-  assert(two_sides A C D' D).
+  assert(HSuma : SumA B A C A C D' B A B').
+    exists B'; repeat (split; CongA). apply l9_9; Side.
+  assert(TS A C D' D).
     repeat (split; Col); exists C; split; Col; Between.
   assert(Bet B A B').
-  { apply (cia B A C D'); Suma.
+  { apply (cia B A C D'); SumA.
     exists D; split; auto.
     apply (par_col_par B A C D); Par; Col.
   }
@@ -32,7 +32,7 @@ Proof.
     split.
     right; intro; apply HNCol1; Col.
     exists B'.
-    split; Conga.
+    split; CongA.
     split.
     apply l9_9; Side.
     intro HNts.
@@ -44,7 +44,7 @@ Proof.
     apply conga_line; Between.
 
   - exists D'.
-    repeat (split; Conga).
+    repeat (split; CongA).
     apply l9_9; Side.
 Qed.
 

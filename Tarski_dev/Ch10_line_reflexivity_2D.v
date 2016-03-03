@@ -117,17 +117,17 @@ Qed.
 
 (* TODO add coplanar assumption, this is false in 3D. *)
 Lemma image_in_col : forall A B P P' Q Q' M,
- is_image_spec_in M P P' A B -> is_image_spec_in M Q Q' A B ->
+ ReflectL_at M P P' A B -> ReflectL_at M Q Q' A B ->
  Col M P Q.
 Proof.
     intros.
-    assert(is_image_spec P P' A B).
+    assert(ReflectL P P' A B).
       eapply (image_in_is_image_spec M).
       assumption.
-    assert(is_image_spec Q Q' A B).
+    assert(ReflectL Q Q' A B).
       eapply (image_in_is_image_spec M).
       assumption.
-    unfold is_image_spec_in in *.
+    unfold ReflectL_at in *.
     spliter.
     induction H3.
       induction H5.
@@ -197,18 +197,18 @@ Proof.
 Qed.
 
 Lemma l10_10_spec : forall A B P Q P' Q',
- A<>B -> is_image_spec P' P A B -> is_image_spec Q' Q A B ->
+ A<>B -> ReflectL P' P A B -> ReflectL Q' Q A B ->
  Cong P Q P' Q'.
 Proof.
     intros.
     assert(HH0 := H0).
     assert(HH1 := H1 ).
-    unfold is_image_spec in H0.
-    unfold is_image_spec in H1.
+    unfold ReflectL in H0.
+    unfold ReflectL in H1.
     spliter.
     ex_and H0 X.
     ex_and H1 Y.
-    assert (exists M, is_midpoint M X Y).
+    assert (exists M, Midpoint M X Y).
       apply midpoint_existence.
     ex_elim H6 M0.
     double P M0 P''.
@@ -217,7 +217,7 @@ Proof.
     apply cong_commutativity.
     induction H3.
       induction H2.
-        assert (is_image_spec P'' P''' A B).
+        assert (ReflectL P'' P''' A B).
           apply is_image_is_image_spec .
             assumption.
           eapply (midpoint_preserves_image ) with P P' M0.
@@ -244,9 +244,9 @@ Proof.
           apply perp_distinct in H3.
           spliter.
           absurde.
-        assert (is_midpoint Y P'' P''') by (eauto using symmetry_preserves_midpoint).
-        assert (Cong P'' Y P''' Y) by (unfold is_midpoint in *; spliter; Cong).
-        assert (Cong Q Y Q' Y) by (unfold is_midpoint in *;spliter; Cong).
+        assert (Midpoint Y P'' P''') by (eauto using symmetry_preserves_midpoint).
+        assert (Cong P'' Y P''' Y) by (unfold Midpoint in *; spliter; Cong).
+        assert (Cong Q Y Q' Y) by (unfold Midpoint in *;spliter; Cong).
         assert (Col P'' Y Q).
           apply col_permutation_2.
           eapply image_in_col.
@@ -336,13 +336,13 @@ Proof.
                 apply l7_3 in H7.
                 subst X.
                 eapply cong_transitivity.
-                  unfold is_midpoint in H6.
+                  unfold Midpoint in H6.
                   spliter.
                   apply cong_symmetry.
                   apply H7.
                 eapply cong_transitivity.
                   apply H16.
-                unfold is_midpoint in H9.
+                unfold Midpoint in H9.
                 spliter.
                 assumption.
               eapply l2_11.
@@ -352,7 +352,7 @@ Proof.
                 eapply is_image_spec_col_cong.
                   apply l10_4_spec.
                   apply HH0.
-                unfold is_midpoint in H7.
+                unfold Midpoint in H7.
                 spliter.
                 ColR.
               apply cong_commutativity.
@@ -391,13 +391,13 @@ Proof.
 Qed.
 
 Lemma l10_10 : forall A B P Q P' Q',
-  is_image P' P A B -> is_image Q' Q A B ->
+  Reflect P' P A B -> Reflect Q' Q A B ->
  Cong P Q P' Q'.
 Proof.
     intros.
     induction (eq_dec_points A B).
       subst.
-      unfold is_image in *.
+      unfold Reflect in *.
       induction H.
         intuition.
       induction H0.
@@ -409,7 +409,7 @@ Qed.
 
 Lemma image_preserves_bet : forall A B C A' B' C' X Y,
    X <> Y ->
-  is_image_spec A A' X Y -> is_image_spec B B' X Y -> is_image_spec C C' X Y ->
+  ReflectL A A' X Y -> ReflectL B B' X Y -> ReflectL C C' X Y ->
   Bet A B C ->
   Bet A' B' C'.
 Proof.
@@ -436,9 +436,9 @@ Qed.
 
 Lemma image_gen_preserves_bet : forall A B C A' B' C' X Y,
    X <> Y ->
-  is_image A A' X Y ->
-  is_image B B' X Y ->
-  is_image C C' X Y ->
+  Reflect A A' X Y ->
+  Reflect B B' X Y ->
+  Reflect C C' X Y ->
   Bet A B C ->
   Bet A' B' C'.
 Proof.
@@ -448,12 +448,12 @@ Qed.
 
 Lemma image_preserves_midpoint :
  forall A B C A' B' C' X Y, X <> Y ->
- is_image_spec A A' X Y -> is_image_spec B B' X Y -> is_image_spec C C' X Y ->
- is_midpoint A B C ->
- is_midpoint A' B' C'.
+ ReflectL A A' X Y -> ReflectL B B' X Y -> ReflectL C C' X Y ->
+ Midpoint A B C ->
+ Midpoint A' B' C'.
 Proof.
     intros.
-    unfold is_midpoint in *.
+    unfold Midpoint in *.
     spliter.
     repeat split.
       eapply image_preserves_bet.
@@ -480,13 +480,13 @@ Qed.
 
 Lemma image_preserves_per : forall A B C A' B' C' X Y,
   X <> Y ->
- is_image_spec A A' X Y -> is_image_spec B B' X Y -> is_image_spec C C' X Y ->
+ ReflectL A A' X Y -> ReflectL B B' X Y -> ReflectL C C' X Y ->
  Per A B C ->
  Per A' B' C'.
 Proof.
     intros.
     double C B C1.
-    assert (exists C1', is_image_spec C1 C1' X Y).
+    assert (exists C1', ReflectL C1 C1' X Y).
       apply l10_6_existence_spec.
       assumption.
     ex_and H5 C1'.
@@ -539,7 +539,7 @@ Proof.
       apply cong_identity in H1.
       subst B'.
       assumption.
-    assert (exists X, is_midpoint X B B').
+    assert (exists X, Midpoint X B B').
       apply midpoint_existence.
     ex_and H5 X.
     double A' X A1.
@@ -571,7 +571,7 @@ Proof.
     assert(Cong A B A1 B) by eCong.
     assert(Cong B C B C1) by eCong.
 
-    assert(exists Y, is_midpoint Y C C1)
+    assert(exists Y, Midpoint Y C C1)
       by (apply midpoint_existence).
     ex_and H14 Y.
     apply cong_symmetry.
@@ -615,7 +615,7 @@ Proof.
           assumption.
         apply l8_2.
         assumption.
-      assert (A= A1 \/ is_midpoint B A A1).
+      assert (A= A1 \/ Midpoint B A A1).
         eapply l7_20.
           apply col_permutation_5.
           assumption.
@@ -627,8 +627,8 @@ Proof.
         apply H19.
       assumption.
     }
-    assert(is_image_spec C1 C B Y).
-      unfold is_image_spec.
+    assert(ReflectL C1 C B Y).
+      unfold ReflectL.
       split.
         exists Y.
         split.
@@ -663,7 +663,7 @@ Proof.
       apply l10_4_spec.
       assumption.
     (*************** cas 2 ***************)
-    assert(exists A2, is_image_spec A1 A2 B Y).
+    assert(exists A2, ReflectL A1 A2 B Y).
       apply l10_6_existence_spec.
       assumption.
     ex_elim H18 A2.
@@ -684,7 +684,7 @@ Proof.
       eapply is_image_spec_col_cong.
         apply H19.
       apply col_trivial_3.
-    assert (A = A2 \/ is_midpoint B A A2).
+    assert (A = A2 \/ Midpoint B A A2).
       eapply l7_20.
         apply col_permutation_1.
         eapply per_per_col.
@@ -722,7 +722,7 @@ Qed.
 
 Lemma l10_16 : forall A B C A' B' P,
  ~ Col A B C -> ~ Col A' B' P -> Cong A B A' B' ->
- exists C', Cong_3 A B C A' B' C' /\ one_side  A' B' P C' .
+ exists C', Cong_3 A B C A' B' C' /\ OS  A' B' P C' .
 Proof.
     intros.
     induction (eq_dec_points A B).
@@ -740,14 +740,14 @@ Proof.
         assumption.
       assumption.
     ex_elim H5 X'.
-    assert (exists Q, Perp A' B' Q X' /\ one_side A' B' P Q).
+    assert (exists Q, Perp A' B' Q X' /\ OS A' B' P Q).
       apply l10_15.
         eapply l4_13.
           apply H3.
         assumption.
       assumption.
     ex_and H5 Q.
-    assert (exists C', out X' C' Q /\ Cong  X' C' X C).
+    assert (exists C', Out X' C' Q /\ Cong  X' C' X C).
       eapply l6_11_existence.
         apply perp_distinct in H5.
         spliter.
@@ -868,7 +868,7 @@ Proof.
       assumption.
       assumption.
     assert (T19 := (l9_19 A' B' C' Q X')).
-    assert (one_side A' B' C' Q <-> out X' C' Q /\ ~ Col A' B' C').
+    assert (OS A' B' C' Q <-> Out X' C' Q /\ ~ Col A' B' C').
       apply T19.
         intro.
         subst B'.
@@ -884,7 +884,7 @@ Proof.
     apply cong_symmetry in H1.
     destruct H14.
     spliter.
-    assert (one_side A' B' C' Q).
+    assert (OS A' B' C' Q).
       apply H15.
       split.
         assumption.
@@ -906,14 +906,14 @@ Proof.
 Qed.
 
 Lemma image_cong_col : forall A B P P' X,
- P <> P' -> is_image P P' A B -> Cong P X P' X ->
+ P <> P' -> Reflect P P' A B -> Cong P X P' X ->
  Col A B X.
 Proof.
     intros.
-    unfold is_image in *.
+    unfold Reflect in *.
     induction H0.
       spliter.
-      unfold is_image_spec in H2.
+      unfold ReflectL in H2.
       spliter.
       ex_and H2 M.
       induction H3.
@@ -1012,7 +1012,7 @@ Qed.
 
 Lemma per_per_cong_1 :
  forall A B X Y, A <> B -> Per A B X -> Per A B Y ->
- Cong B X B Y -> X = Y \/ is_midpoint B X Y.
+ Cong B X B Y -> X = Y \/ Midpoint B X Y.
 Proof.
     intros.
     (* eauto 6 using l7_20, per_per_col, l8_2, col_permutation_5.
@@ -1031,7 +1031,7 @@ Qed.
 
 Lemma per_per_cong : forall A B X Y,
  A <> B -> Per A B X -> Per A B Y -> Cong B X B Y ->
- X = Y \/ is_image_spec X Y A B.
+ X = Y \/ ReflectL X Y A B.
 Proof.
     intros.
     assert (Col X Y B).
@@ -1045,11 +1045,11 @@ Proof.
       left.
       assumption.
     right.
-    unfold is_image_spec.
+    unfold ReflectL.
     split.
       exists B.
       split.
-        assert (X = Y \/ is_midpoint B X Y).
+        assert (X = Y \/ Midpoint B X Y).
           eapply l7_20.
             apply col_permutation_5.
             assumption.
@@ -1081,18 +1081,18 @@ Qed.
 
 Lemma per_per_cong_gen : forall A B X Y,
  A <> B -> Per A B X -> Per A B Y -> Cong B X B Y ->
- X = Y \/ is_image X Y A B.
+ X = Y \/ Reflect X Y A B.
 Proof.
     intros.
-    assert (X = Y \/ is_image_spec X Y A B) by (apply per_per_cong;auto).
+    assert (X = Y \/ ReflectL X Y A B) by (apply per_per_cong;auto).
     induction H3.
       tauto.
     right.
-    unfold is_image.
+    unfold Reflect.
     tauto.
 Qed.
 
-Lemma two_sides_dec : forall A B C D, two_sides A B C D \/ ~two_sides A B C D.
+Lemma two_sides_dec : forall A B C D, TS A B C D \/ ~ TS A B C D.
 Proof.
 apply upper_dim_implies_two_sides_dec.
 apply all_coplanar_implies_upper_dim; unfold all_coplanar_axiom;
@@ -1102,20 +1102,20 @@ Qed.
 (* Teanup the proof *)
 
 Lemma one_side_dec : forall A B C D,
- one_side A B C D \/ ~ one_side A B C D.
+ OS A B C D \/ ~ OS A B C D.
 Proof.
     intros.
     elim (Col_dec C A B); intro HCol1.
       right.
       intro H.
       destruct H as [C' [Hts1 Hts2]].
-      unfold two_sides in *.
+      unfold TS in *.
       intuition.
     elim (Col_dec D A B); intro HCol2.
       right.
       intro H.
       destruct H as [C' [Hts1 Hts2]].
-      unfold two_sides in *.
+      unfold TS in *.
       intuition.
 induction(eq_dec_points C D).
 subst D.
@@ -1136,7 +1136,7 @@ subst D'.
 
 
 assert(exists P T : Tpoint,
-       Cong B P B D /\ Perp B A P B /\ Col B A T /\ two_sides B A C P).
+       Cong B P B D /\ Perp B A P B /\ Col B A T /\ TS B A C P).
 apply(l8_21_bis B A C B D); auto.
 intro.
 subst D.
@@ -1159,7 +1159,7 @@ Perp.
 assert(Col D P B).
 apply (per_per_col _ _ A); Perp.
 
-assert(D = P \/ is_midpoint B D P).
+assert(D = P \/ Midpoint B D P).
 apply(l7_20 B D P); finish.
 apply invert_two_sides in H6.
 
@@ -1170,8 +1170,8 @@ apply l9_9 in H6.
 assumption.
 left.
 
-assert(two_sides A B D P).
-unfold is_midpoint in H10.
+assert(TS A B D P).
+unfold Midpoint in H10.
 spliter.
 repeat split; Col.
 apply per_not_col in H8.
@@ -1187,12 +1187,12 @@ apply HCol2.
 Col.
 exists B.
 split; Col.
-unfold one_side.
+unfold OS.
 exists P.
 split; auto.
 
 assert(exists P T : Tpoint,
-       Cong D' P D' D /\ Perp D' B P D' /\ Col D' B T /\ two_sides D' B C P).
+       Cong D' P D' D /\ Perp D' B P D' /\ Col D' B T /\ TS D' B C P).
 apply(l8_21_bis D' B C D' D); auto.
 intro.
 subst D.
@@ -1221,11 +1221,11 @@ apply perp_perp_in in H5.
 Perp.
 assert(Col D P D').
 apply (per_per_col _ _ B); Perp.
-assert(D = P \/ is_midpoint D' D P).
+assert(D = P \/ Midpoint D' D P).
 apply(l7_20 D' D P); finish.
 apply invert_two_sides in H7.
 
-assert(two_sides A B C P).
+assert(TS A B C P).
 apply(col_preserves_two_sides B D' A B C P); Col.
 
 induction H12.
@@ -1235,8 +1235,8 @@ apply l9_9 in H13.
 assumption.
 left.
 
-assert(two_sides A B D P).
-unfold is_midpoint in H12.
+assert(TS A B D P).
+unfold Midpoint in H12.
 spliter.
 repeat split; Col.
 apply per_not_col in H10; auto.

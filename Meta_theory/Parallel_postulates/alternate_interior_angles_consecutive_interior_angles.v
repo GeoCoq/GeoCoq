@@ -15,14 +15,14 @@ Proof.
   apply (suma2__conga A B C B C D); auto.
   assert(HNCol : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
   assert_diffs.
-  assert(two_sides B C A A').
+  assert(TS B C A A').
   { repeat split; Col.
     intro; apply HNCol; ColR.
     exists B.
     split; Col; Between.
   }
   apply (conga3_suma__suma A B C C B A' A B A'); try (apply conga_refl); auto.
-    exists A'; repeat (split; Conga); apply l9_9; auto.
+    exists A'; repeat (split; CongA); apply l9_9; auto.
   apply conga_comm.
   apply aia.
     apply l9_2; apply (l9_8_2 _ _ A); auto.

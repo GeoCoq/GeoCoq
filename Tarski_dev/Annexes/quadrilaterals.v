@@ -20,7 +20,7 @@ Qed.
 
 Lemma midpoint_midpoint_col : forall A B A' B' M,
  A <> B ->
- is_midpoint M A A' -> is_midpoint M B B' ->
+ Midpoint M A A' -> Midpoint M B B' ->
  Col A B B' ->
  A' <> B' /\ Col A A' B' /\ Col B A' B'.
 Proof.
@@ -39,8 +39,8 @@ assumption.
 
 assert(HH0:= H0).
 assert(HH1:= H1).
-unfold is_midpoint in HH0.
-unfold is_midpoint in HH1.
+unfold Midpoint in HH0.
+unfold Midpoint in HH1.
 spliter.
 
 assert(Col M A A').
@@ -100,8 +100,8 @@ Qed.
 Lemma midpoint_par :
  forall A B A' B' M,
  A <> B ->
- is_midpoint M A A' ->
- is_midpoint M B B' ->
+ Midpoint M A A' ->
+ Midpoint M B B' ->
  Par A B A' B'.
 Proof.
 intros.
@@ -128,8 +128,8 @@ split; auto.
 
 assert(HH0:= H0).
 assert(HH1:= H1).
-unfold is_midpoint in HH0.
-unfold is_midpoint in HH1.
+unfold Midpoint in HH0.
+unfold Midpoint in HH1.
 spliter.
 
 assert(Col M A A').
@@ -153,7 +153,7 @@ eapply mid_preserves_col.
 2: apply H1.
 apply col_permutation_1.
 apply H10.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 assumption.
 apply cong_left_commutativity.
@@ -255,8 +255,8 @@ Lemma midpoint_par_strict :
  forall A B A' B' M,
  A <> B ->
  ~ Col A B B' ->
- is_midpoint M A A' ->
- is_midpoint M B B' ->
+ Midpoint M A A' ->
+ Midpoint M B B' ->
  Par_strict A B A' B'.
 Proof.
 intros.
@@ -281,9 +281,9 @@ apply H0.
 Col.
 Qed.
 
-Lemma le_left_comm : forall A B C D, le A B C D -> le B A C D.
+Lemma le_left_comm : forall A B C D, Le A B C D -> Le B A C D.
 intros.
-unfold le in *.
+unfold Le in *.
 ex_and H P.
 exists P.
 split.
@@ -291,7 +291,7 @@ assumption.
 Cong.
 Qed.
 
-Lemma le_right_comm : forall A B C D, le A B C D -> le A B D C.
+Lemma le_right_comm : forall A B C D, Le A B C D -> Le A B D C.
 intros.
 induction(eq_dec_points D C).
 subst D.
@@ -305,11 +305,11 @@ apply le_trivial.
 
 assert(HH:=segment_construction_3 D C A B H0 H1).
 ex_and HH P'.
-unfold out in H2.
+unfold Out in H2.
 spliter.
 induction H5.
 
-assert(le D C A B).
+assert(Le D C A B).
 eapply l5_5_2.
 exists P'.
 split; auto.
@@ -318,12 +318,12 @@ assert(Cong A B C D).
 apply le_anti_symmetry.
 auto.
 auto.
-unfold le.
+unfold Le.
 exists C.
 split.
 apply between_trivial.
 Cong.
-unfold le.
+unfold Le.
 exists P'.
 split.
 assumption.
@@ -331,7 +331,7 @@ Cong.
 Qed.
 
 Lemma le_comm :
- forall A B C D, le A B C D -> le B A D C.
+ forall A B C D, Le A B C D -> Le B A D C.
 Proof.
 intros.
 apply le_left_comm.
@@ -343,13 +343,13 @@ Lemma le_cong_le :
  forall A B C A' B' C',
  Bet A B C ->
  Bet A' B' C' ->
- le A B A' B' ->
+ Le A B A' B' ->
  Cong B C B' C' ->
- le A C A' C'.
+ Le A C A' C'.
 Proof.
 intros.
 eapply l5_5_2.
-unfold le in H1.
+unfold Le in H1.
 ex_and H1 P.
 prolong A C T P B'.
 exists T.
@@ -385,9 +385,9 @@ Lemma cong_le_le :
  forall A B C A' B' C',
  Bet A  B  C ->
  Bet A' B' C' ->
- le B C B' C' ->
+ Le B C B' C' ->
  Cong A B A' B' ->
- le A C A' C'.
+ Le A C A' C'.
 Proof.
 intros.
 apply le_comm.
@@ -426,11 +426,11 @@ subst D.
 apply cong_identity in H5.
 contradiction.
 
-assert (out C B D').
+assert (Out C B D').
 repeat split; auto.
 eapply (l5_2 D); auto.
 
-assert(out D B D').
+assert(Out D B D').
 repeat split; auto.
 
 intro.
@@ -444,12 +444,12 @@ contradiction.
 
 eapply (l5_1 _ C); auto.
 
-assert(le D A D C).
-unfold le.
+assert(Le D A D C).
+unfold Le.
 exists A.
 split; Cong.
 
-assert(le D B D D').
+assert(Le D B D D').
 eapply (le_cong_le _ A _ _ C).
 eBetween.
 assumption.
@@ -466,18 +466,18 @@ Lemma bet_le_le :
  forall A B C A' B' C',
  Bet A  B  C ->
  Bet A' B' C' ->
- le A B A' B' ->
- le B C B' C' ->
- le A C A' C'.
+ Le A B A' B' ->
+ Le B C B' C' ->
+ Le A C A' C'.
 Proof.
 intros.
 assert(HH1:=H1).
 assert(HH2:=H2).
-unfold le in HH1.
-unfold le in HH2.
+unfold Le in HH1.
+unfold Le in HH2.
 ex_and HH1 X.
 ex_and HH2 Y.
-assert(le A C A' Y).
+assert(Le A C A' Y).
 eapply le_cong_le.
 3: apply H1.
 apply H.
@@ -488,8 +488,8 @@ assumption.
 induction (eq_dec_points B' Y).
 subst Y.
 
-assert(le A' B' A' C').
-unfold le.
+assert(Le A' B' A' C').
+unfold Le.
 exists B'.
 split.
 assumption.
@@ -508,7 +508,7 @@ assumption.
 assumption.
 eapply le_transitivity.
 apply H7.
-unfold le.
+unfold Le.
 exists Y.
 split.
 assumption.
@@ -518,26 +518,26 @@ Qed.
 
 Lemma bet_double_bet :
  forall A B C B' C',
- is_midpoint B' A B ->
- is_midpoint C' A C ->
+ Midpoint B' A B ->
+ Midpoint C' A C ->
  Bet A B' C' ->
  Bet A B C.
 Proof.
 intros.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
-assert(le A B' A C').
-unfold le.
+assert(Le A B' A C').
+unfold Le.
 exists B'.
 split.
 assumption.
 apply cong_reflexivity.
-assert (le B' B C' C).
+assert (Le B' B C' C).
 eapply l5_6.
 apply H4.
 auto.
 auto.
-assert(le A B A C).
+assert(Le A B A C).
 eapply bet_le_le.
 apply H.
 apply H0.
@@ -568,7 +568,7 @@ subst C.
 apply between_identity in H0.
 contradiction.
 
-assert(out A B C).
+assert(Out A B C).
 
 assert(Bet A B C' \/ Bet A C' B).
 eapply l5_1.
@@ -611,15 +611,15 @@ Qed.
 Lemma bet_half_bet :
  forall A B C B' C',
  Bet A B C  ->
- is_midpoint B' A B ->
- is_midpoint C' A C ->
+ Midpoint B' A B ->
+ Midpoint C' A C ->
  Bet A B' C'.
 Proof.
 intros.
 assert(HH0:= H0).
 assert(HH1:= H1).
-unfold is_midpoint in H0.
-unfold is_midpoint in H1.
+unfold Midpoint in H0.
+unfold Midpoint in H1.
 spliter.
 
 induction(eq_dec_points A B).
@@ -683,8 +683,8 @@ eapply between_exchange4.
 apply H0.
 assumption.
 
-assert(out A B' C').
-unfold out.
+assert(Out A B' C').
+unfold Out.
 repeat split; auto.
 eapply l5_3.
 apply H9.
@@ -697,8 +697,8 @@ Qed.
 
 Lemma midpoint_preserves_bet :
  forall A B C B' C',
-  is_midpoint B' A B ->
-  is_midpoint C' A C ->
+  Midpoint B' A B ->
+  Midpoint C' A C ->
  (Bet A B C <-> Bet A B' C').
 Proof.
 intros.
@@ -717,8 +717,8 @@ Qed.
 
 Lemma symmetry_preseves_bet1 :
  forall A B M A' B',
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
   Bet M A B ->
   Bet M A' B'.
 Proof.
@@ -732,8 +732,8 @@ Qed.
 
 Lemma symmetry_preseves_bet2 :
  forall A B M A' B',
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
   Bet M A' B' ->
   Bet M A B.
 Proof.
@@ -749,8 +749,8 @@ Qed.
 
 Lemma symmetry_preserves_bet :
  forall A B M A' B',
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
  (Bet M A' B' <-> Bet M A B).
 Proof.
 intros.
@@ -776,14 +776,14 @@ assert(Bet B C D \/ Bet B D C).
 eapply (l5_2 A); assumption.
 induction H3.
 
-assert(le B C B D).
+assert(Le B C B D).
 eapply l5_5_2.
 exists D.
 split.
 assumption.
 Cong.
 
-assert(le D B D A).
+assert(Le D B D A).
 eapply l5_5_2.
 
 exists A.
@@ -818,8 +818,8 @@ Lemma col_cong_mid :
   Par A B A' B' ->
   ~ Par_strict A B A' B' ->
   Cong A B A' B' ->
-  exists M,  is_midpoint M A A' /\ is_midpoint M B B' \/
-             is_midpoint M A B' /\ is_midpoint M B A'.
+  exists M,  Midpoint M A A' /\ Midpoint M B B' \/
+             Midpoint M A B' /\ Midpoint M B A'.
 Proof.
 intros.
 unfold Par in H.
@@ -829,7 +829,7 @@ spliter.
 
 induction (eq_dec_points A A').
 subst A'.
-assert(B = B' \/ is_midpoint A B B').
+assert(B = B' \/ Midpoint A B B').
 eapply l7_20; auto.
 induction H5.
 subst B'.
@@ -849,7 +849,7 @@ assumption.
 
 induction (eq_dec_points B B').
 subst B'.
-assert(A = A' \/ is_midpoint B A A').
+assert(A = A' \/ Midpoint B A A').
 eapply l7_20.
 Col.
 Cong.
@@ -871,7 +871,7 @@ apply l7_3_2.
 
 induction (eq_dec_points A B').
 subst B'.
-assert(B = A' \/ is_midpoint A B A').
+assert(B = A' \/ Midpoint A B A').
 eapply l7_20.
 Col.
 Cong.
@@ -893,7 +893,7 @@ assumption.
 
 induction (eq_dec_points A' B).
 subst A'.
-assert(A = B' \/ is_midpoint B A B').
+assert(A = B' \/ Midpoint B A B').
 eapply l7_20.
 Col.
 Cong.
@@ -926,7 +926,7 @@ ex_and HH M.
 exists M.
 right.
 assert(HH:= H11).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 split.
 
@@ -953,7 +953,7 @@ assumption.
 Cong.
 Cong.
 
-unfold is_midpoint.
+unfold Midpoint.
 split.
 assumption.
 Cong.
@@ -968,7 +968,7 @@ exists M.
 left.
 
 assert(HH:= H11).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 
 split.
@@ -1001,7 +1001,7 @@ apply H4.
 Between.
 assumption.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1019,7 +1019,7 @@ ex_and HH M.
 exists M.
 right.
 assert(HH:=H12).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 
 split.
@@ -1065,7 +1065,7 @@ apply H15.
 apply H18.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1096,7 +1096,7 @@ ex_and HH M.
 exists M.
 
 assert(HH:=H12).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 left.
 
@@ -1141,7 +1141,7 @@ apply H15.
 apply H18.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1151,7 +1151,7 @@ assert( HH:= midpoint_existence A B').
 ex_and HH M.
 exists M.
 assert(HH:=H11).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 right.
 split.
@@ -1187,7 +1187,7 @@ apply H3.
 assumption.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1215,7 +1215,7 @@ assert( HH:= midpoint_existence A A').
 ex_and HH M.
 exists M.
 assert(HH:=H11).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 left.
 split.
@@ -1255,7 +1255,7 @@ apply H17.
 assumption.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 assumption.
 Cong.
@@ -1271,7 +1271,7 @@ assert( HH:= midpoint_existence A B').
 ex_and HH M.
 exists M.
 assert(HH:=H12).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 right.
 split.
@@ -1309,7 +1309,7 @@ apply H13.
 assumption.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1318,7 +1318,7 @@ assert( HH:= midpoint_existence A A').
 ex_and HH M.
 exists M.
 assert(HH:=H12).
-unfold is_midpoint in HH.
+unfold Midpoint in HH.
 spliter.
 left.
 split.
@@ -1351,7 +1351,7 @@ Between.
 apply H15.
 Cong.
 Cong.
-unfold is_midpoint.
+unfold Midpoint.
 split.
 Between.
 Cong.
@@ -1360,8 +1360,8 @@ Qed.
 Lemma mid_par_cong1 :
  forall A B A' B' M,
   A <> B ->
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
   Cong A B A' B' /\ Par A B A' B'.
 Proof.
 intros.
@@ -1374,8 +1374,8 @@ Qed.
 Lemma mid_par_cong2 :
  forall A B A' B' M,
   A <> B' ->
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
   Cong A B' A' B /\ Par A B' A' B.
 Proof.
 intros.
@@ -1389,8 +1389,8 @@ Qed.
 Lemma mid_par_cong :
  forall A B A' B' M,
   A <> B -> A <> B' ->
-  is_midpoint M A A' ->
-  is_midpoint M B B' -> 
+  Midpoint M A A' ->
+  Midpoint M B B' -> 
   Cong A B A' B' /\ Cong A B' A' B /\ Par A B A' B' /\ Par A B' A' B.
 Proof.
 intros.
@@ -1408,19 +1408,14 @@ Qed.
 
 
 
-Definition Parallelogram_strict := fun A B A' B' => two_sides A A' B B' /\ Par A B A' B' /\ Cong A B A' B'.
+Definition Parallelogram_strict A B A' B' := TS A A' B B' /\ Par A B A' B' /\ Cong A B A' B'.
 
-(*
-Definition Parallelogram_flat' := fun A B A' B' => Col A B A' /\ Col A B B' /\ Cong A B A' B'.
+Definition Parallelogram_flat A B A' B' :=
+  Col A B A' /\ Col A B B' /\
+  Cong A B A' B' /\ Cong A B' A' B /\
+  (A <> A' \/ B <> B').
 
-Definition Parallelogram_flat'' := fun A B A' B' => Col A B A' /\ Col A B B' /\ Cong A B A' B' /\ Cong A B' A' B.
-*)
-
-Definition Parallelogram_flat := fun A B A' B' => Col A B A' /\ Col A B B' 
-                                                    /\ Cong A B A' B' /\ Cong A B' A' B
-                                                    /\ (A <> A' \/ B <> B').
-
-Definition Parallelogram := fun A B A' B' => Parallelogram_strict A B A' B' \/ Parallelogram_flat A B A' B'.
+Definition Parallelogram A B A' B' := Parallelogram_strict A B A' B' \/ Parallelogram_flat A B A' B'.
 
 Lemma Parallelogram_strict_Parallelogram :
  forall A B C D,
@@ -1494,7 +1489,7 @@ intros.
 intro.
 unfold Parallelogram_strict in H.
 spliter.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply H2.
 Col.
@@ -1516,7 +1511,7 @@ Qed.
 Lemma plgf_mid :
  forall A B C D,
   Parallelogram_flat A B C D ->
-  exists M, is_midpoint M A C /\ is_midpoint M B D.
+  exists M, Midpoint M A C /\ Midpoint M B D.
 Proof.
 intros.
 unfold Parallelogram_flat in H.
@@ -1575,7 +1570,7 @@ tauto.
 
 apply False_ind.
 assert(Col A B M).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 eapply (col_transitivity_1 _ D).
 assumption.
@@ -1605,7 +1600,7 @@ Between.
 clear H15 H16.
 
 assert(B = A /\ D = C).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_cong_eq.
 
@@ -1619,7 +1614,7 @@ tauto.
 induction H12.
 
 assert(Bet M A C \/ Bet M C A).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 eapply (l5_2 B); assumption.
 induction H15.
@@ -1635,7 +1630,7 @@ assumption.
 clear H17 H16.
 
 assert(A = C /\ B = D).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_cong_eq.
 eBetween.
@@ -1657,7 +1652,7 @@ assumption.
 clear H16 H17.
 
 assert(C = A /\ D = B).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_cong_eq.
 eBetween.
@@ -1678,7 +1673,7 @@ Between.
 clear H15 H16.
 
 assert(A = B /\ C = D).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_cong_eq.
 
@@ -1693,7 +1688,7 @@ Qed.
 Lemma mid_plgs :
  forall A B C D M,
   ~ Col A B C ->
-  is_midpoint M A C -> is_midpoint M B D ->
+  Midpoint M A C -> Midpoint M B D ->
   Parallelogram_strict A B C D.
 Proof.
 intros.
@@ -1709,7 +1704,7 @@ intro.
 subst D.
 apply l7_3 in H1.
 subst M.
-unfold is_midpoint in H0.
+unfold Midpoint in H0.
 spliter.
 apply bet_col in H0.
 contradiction.
@@ -1734,7 +1729,7 @@ intro.
 apply H.
 Col.
 intro.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H0.
 apply bet_col in H1.
@@ -1745,7 +1740,7 @@ assert(Col M A B).
 ColR.
 ColR.
 exists M.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 split.
 apply bet_col in H0.
@@ -1765,7 +1760,7 @@ Lemma mid_plgf_aux :
  forall A B C D M,
   A <> C ->
   Col A B C ->
-  is_midpoint M A C -> is_midpoint M B D ->
+  Midpoint M A C -> Midpoint M B D ->
   Parallelogram_flat A B C D.
 Proof.
 intros.
@@ -1774,14 +1769,14 @@ induction(eq_dec_points B D).
 subst D.
 apply l7_3 in H2.
 subst M.
-unfold is_midpoint in H1.
+unfold Midpoint in H1.
 spliter.
 repeat split; Col.
 Cong.
 Cong.
 
 assert(Col A B M).
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H1.
 apply bet_col in H2.
@@ -1809,7 +1804,7 @@ clear H8 H7.
 
 repeat split.
 Col.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H2.
 apply bet_col in H1.
@@ -1820,14 +1815,14 @@ eapply l4_3.
 apply H4.
 apply between_symmetry.
 apply H9.
-unfold is_midpoint in H1.
+unfold Midpoint in H1.
 spliter.
 Cong.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 Cong.
 
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 eapply (l2_11 _ M _ _ M _).
 eBetween.
@@ -1843,7 +1838,7 @@ assert(Bet M A D \/ Bet M D A).
 eapply (l5_2 B).
 auto.
 assumption.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 assumption.
 induction H7.
@@ -1859,7 +1854,7 @@ apply H9.
 assumption.
 clear H9 H8.
 
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 repeat split.
 assumption.
@@ -1893,7 +1888,7 @@ assert(Bet M B C).
 apply H9.
 assumption.
 clear H8 H9.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 repeat split.
 assumption.
@@ -1929,7 +1924,7 @@ clear H8 H7.
 
 repeat split.
 Col.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H2.
 apply bet_col in H1.
@@ -1941,14 +1936,14 @@ apply between_symmetry.
 apply H4.
 apply between_symmetry.
 apply H9.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 Cong.
-unfold is_midpoint in H1.
+unfold Midpoint in H1.
 spliter.
 Cong.
 
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 eapply (l2_11 _ M _ _ M _).
 eBetween.
@@ -1964,7 +1959,7 @@ Lemma mid_plgf :
  forall A B C D M,
   (A <> C \/ B <> D ) ->
   Col A B C ->
-  is_midpoint M A C -> is_midpoint M B D ->
+  Midpoint M A C -> Midpoint M B D ->
   Parallelogram_flat A B C D.
 Proof.
 intros.
@@ -1976,7 +1971,7 @@ subst C.
 spliter.
 apply l7_3 in H1.
 subst M.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 unfold Parallelogram_flat.
 repeat split.
@@ -1990,7 +1985,7 @@ auto.
 spliter.
 eapply (mid_plgf_aux C D A B M).
 auto.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H1.
 apply bet_col in H2.
@@ -2015,7 +2010,7 @@ Qed.
 Lemma mid_plg :
  forall A B C D M,
  (A <> C \/ B <> D ) ->
- is_midpoint M A C -> is_midpoint M B D ->
+ Midpoint M A C -> Midpoint M B D ->
  Parallelogram A B C D.
 Proof.
 intros.
@@ -2033,7 +2028,7 @@ Qed.
 Lemma mid_plg_1 :
  forall A B C D M,
  A <> C ->
- is_midpoint M A C -> is_midpoint M B D ->
+ Midpoint M A C -> Midpoint M B D ->
  Parallelogram A B C D.
 Proof.
 intros.
@@ -2043,7 +2038,7 @@ Qed.
 Lemma mid_plg_2 :
  forall A B C D M,
  B <> D ->
- is_midpoint M A C -> is_midpoint M B D ->
+ Midpoint M A C -> Midpoint M B D ->
  Parallelogram A B C D.
 Proof.
 intros.
@@ -2053,7 +2048,7 @@ Qed.
 Lemma midpoint_cong_unicity :
  forall A B C D M,
   Col A B C ->
-  is_midpoint M A B /\ is_midpoint M C D ->
+  Midpoint M A B /\ Midpoint M C D ->
   Cong A B C D ->
   A = C /\ B = D \/ A = D /\ B = C.
 Proof.
@@ -2083,9 +2078,9 @@ assumption.
 right.
 spliter.
 assert(HH:=cong_cong_half_1 A M B C M D H0 H4 H1).
-assert(A = C \/ is_midpoint M A C).
+assert(A = C \/ Midpoint M A C).
 apply l7_20.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 apply bet_col in H0.
 apply bet_col in H4.
@@ -2166,7 +2161,7 @@ spliter.
 split; Cong.
 Qed.
 
-Definition Plg A B C D := (A <> C \/ B <> D) /\ exists M, is_midpoint M A C /\ is_midpoint M B D.
+Definition Plg A B C D := (A <> C \/ B <> D) /\ exists M, Midpoint M A C /\ Midpoint M B D.
 
 Lemma plg_to_parallelogram : forall A B C D, Plg A B C D -> Parallelogram A B C D.
 intros.
@@ -2182,7 +2177,7 @@ Qed.
 Lemma plgs_one_side :
  forall A B C D,
  Parallelogram_strict A B C D ->
- one_side A B C D /\ one_side C D A B.
+ OS A B C D /\ OS C D A B.
 Proof.
 intros.
 unfold Parallelogram_strict in H.
@@ -2196,7 +2191,7 @@ apply l12_6.
 assumption.
 apply False_ind.
 spliter.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply H6.
 Col.
@@ -2215,7 +2210,7 @@ Qed.
 
 (** Rhombus *)
 
-Definition Rhombus := fun A B C D => Plg A B C D /\ Cong A B B C.
+Definition Rhombus A B C D := Plg A B C D /\ Cong A B B C.
 
 Lemma Rhombus_Plg : forall A B C D, Rhombus A B C D -> Plg A B C D.
 Proof.
@@ -2300,7 +2295,7 @@ Qed.
 
 (** Rectangle *)
 
-Definition Rectangle := fun A B C D => Plg A B C D /\ Cong A C B D.
+Definition Rectangle A B C D := Plg A B C D /\ Cong A C B D.
 
 Lemma Rectangle_Plg : forall A B C D,
   Rectangle A B C D ->
@@ -2352,7 +2347,7 @@ intros.
 intro.
 unfold Parallelogram_strict in H0.
 spliter.
-unfold two_sides in H0.
+unfold TS in H0.
 repeat split.
 spliter.
 apply H3.
@@ -2382,7 +2377,7 @@ apply H1.
 assumption.
 apply cong_pseudo_reflexivity.
 Cong.
-assert(D = D1 \/ is_midpoint C D D1).
+assert(D = D1 \/ Midpoint C D D1).
 eapply l7_20.
 apply bet_col in H1.
 apply bet_col in H2.
@@ -2414,8 +2409,8 @@ assumption.
 apply cong_pseudo_reflexivity.
 Cong.
 
-assert(is_midpoint C D2 D1).
-unfold is_midpoint.
+assert(Midpoint C D2 D1).
+unfold Midpoint.
 split.
 
 induction(eq_dec_points A B).
@@ -2443,7 +2438,7 @@ eapply (outer_transitivity_between).
 apply H11.
 assumption.
 auto.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 eapply cong_transitivity.
 apply cong_symmetry.
@@ -2626,12 +2621,12 @@ Qed.
 
 
 
-Lemma plgf3_mid : forall A B C, Parallelogram_flat A B A C -> is_midpoint A B C.
+Lemma plgf3_mid : forall A B C, Parallelogram_flat A B A C -> Midpoint A B C.
 intros.
 unfold Parallelogram_flat in H.
 spliter.
 
-assert(B=C \/ is_midpoint A B C).
+assert(B=C \/ Midpoint A B C).
 eapply l7_20.
 Col.
 Cong.
@@ -2654,7 +2649,7 @@ subst D.
 right.
 split; reflexivity.
 
-assert(exists M,  (is_midpoint M A B /\ is_midpoint M C D) \/ (is_midpoint M A D /\ is_midpoint M C B)).
+assert(exists M,  (Midpoint M A B /\ Midpoint M C D) \/ (Midpoint M A D /\ Midpoint M C B)).
 apply col_cong_mid.
 unfold Par.
 right.
@@ -2704,12 +2699,12 @@ Qed.
 
 
 Lemma col_cong_mid1 : forall A B C D, A <> D -> Col A B C -> Col A B D -> Cong A B C D -> Cong A C B D 
-                                 -> exists M, is_midpoint M A D /\ is_midpoint M B C.
+                                 -> exists M, Midpoint M A D /\ Midpoint M B C.
 intros.
 
 assert(exists M : Tpoint,
-       is_midpoint M A C /\ is_midpoint M B D \/
-       is_midpoint M A D /\ is_midpoint M B C).
+       Midpoint M A C /\ Midpoint M B D \/
+       Midpoint M A D /\ Midpoint M B C).
 
 induction(eq_dec_points A B).
 subst B.
@@ -2760,12 +2755,12 @@ assumption.
 Qed.
 
 Lemma col_cong_mid2 : forall A B C D, A <> C -> Col A B C -> Col A B D -> Cong A B C D -> Cong A D B C 
-                                 -> exists M, is_midpoint M A C /\ is_midpoint M B D.
+                                 -> exists M, Midpoint M A C /\ Midpoint M B D.
 intros.
 
 assert(exists M : Tpoint,
-       is_midpoint M A C /\ is_midpoint M B D \/
-       is_midpoint M A D /\ is_midpoint M B C).
+       Midpoint M A C /\ Midpoint M B D \/
+       Midpoint M A D /\ Midpoint M B C).
 
 induction(eq_dec_points A B).
 subst B.
@@ -2821,7 +2816,7 @@ Lemma plgs_not_col : forall A B C D, Parallelogram_strict A B C D -> ~Col A B C 
 intros.
 unfold Parallelogram_strict in H.
 spliter.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 
 assert(~Col A B C).
@@ -2843,11 +2838,11 @@ apply H5.
 ColR.
 Qed.
 
-Lemma not_col_sym_not_col : forall A B B' C , ~Col A B C -> is_midpoint A B B' -> ~Col A B' C.
+Lemma not_col_sym_not_col : forall A B B' C , ~Col A B C -> Midpoint A B B' -> ~Col A B' C.
 intros.
 intro.
 apply H.
-unfold is_midpoint in H0.
+unfold Midpoint in H0.
 spliter.
 assert(A <> B).
 intro.
@@ -2870,8 +2865,8 @@ assert(HH:=midpoint_existence A C).
 ex_and HH M.
 prolong B M D B M.
 
-assert(is_midpoint M B D).
-unfold is_midpoint.
+assert(Midpoint M B D).
+unfold Midpoint.
 split; Cong.
 exists D.
 
@@ -2901,7 +2896,7 @@ split.
 assumption.
 unfold Parallelogram_strict in H.
 spliter.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 repeat split; intro.
 subst B.
@@ -2926,18 +2921,18 @@ subst T.
 contradiction.
 Qed.
 
-Lemma sym_par : forall A B M, A <> B -> forall A' B', is_midpoint M A A' -> is_midpoint M B B' -> Par A B A' B'.
+Lemma sym_par : forall A B M, A <> B -> forall A' B', Midpoint M A A' -> Midpoint M B B' -> Par A B A' B'.
 
 intros.
 eapply (midpoint_par _ _ _ _ M); assumption.
 Qed.
 
-Lemma symmetry_preserves_two_sides : forall A B X Y M A' B', Col X Y M -> two_sides X Y A B -> is_midpoint M A A' -> is_midpoint M B B'
-                                               -> two_sides X Y A' B'.
+Lemma symmetry_preserves_two_sides : forall A B X Y M A' B', Col X Y M -> TS X Y A B -> Midpoint M A A' -> Midpoint M B B'
+                                               -> TS X Y A' B'.
 intros.
 
 assert(X <> Y /\ ~Col A X Y /\ ~Col B X Y).
-unfold two_sides in H0.
+unfold TS in H0.
 spliter.
 split; auto.
 spliter.
@@ -2972,12 +2967,12 @@ apply is_midpoint_id.
 apply l7_2.
 assumption.
 
-assert(two_sides X Y A A').
-unfold two_sides.
+assert(TS X Y A A').
+unfold TS.
 repeat split; auto.
 intro.
 apply H4.
-unfold is_midpoint in H1.
+unfold Midpoint in H1.
 spliter.
 apply bet_col in H1.
 
@@ -2994,12 +2989,12 @@ Col.
 apply midpoint_bet.
 assumption.
 
-assert(two_sides X Y B B').
-unfold two_sides.
+assert(TS X Y B B').
+unfold TS.
 repeat split; auto.
 intro.
 apply H5.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 apply bet_col in H2.
 
@@ -3016,7 +3011,7 @@ Col.
 apply midpoint_bet.
 assumption.
 
-assert(one_side X Y A' B).
+assert(OS X Y A' B).
 eapply l9_8_1.
 apply l9_2.
 apply H10.
@@ -3028,15 +3023,15 @@ apply one_side_symmetry.
 assumption.
 Qed.
 
-Lemma symmetry_preserves_one_side : forall A B X Y M A' B', Col X Y M -> one_side X Y A B -> is_midpoint M A A' -> is_midpoint M B B'
-                                               -> one_side X Y A' B'.
+Lemma symmetry_preserves_one_side : forall A B X Y M A' B', Col X Y M -> OS X Y A B -> Midpoint M A A' -> Midpoint M B B'
+                                               -> OS X Y A' B'.
 intros.
 
 assert(X <> Y /\ ~Col A X Y /\ ~Col B X Y).
-unfold one_side in H0.
+unfold OS in H0.
 ex_and H0 P.
-unfold two_sides in H0.
-unfold two_sides in H3.
+unfold TS in H0.
+unfold TS in H3.
 spliter.
 split; auto.
 spliter.
@@ -3071,12 +3066,12 @@ apply is_midpoint_id.
 apply l7_2.
 assumption.
 
-assert(two_sides X Y A A').
-unfold two_sides.
+assert(TS X Y A A').
+unfold TS.
 repeat split; auto.
 intro.
 apply H4.
-unfold is_midpoint in H1.
+unfold Midpoint in H1.
 spliter.
 apply bet_col in H1.
 
@@ -3093,12 +3088,12 @@ Col.
 apply midpoint_bet.
 assumption.
 
-assert(two_sides X Y B B').
-unfold two_sides.
+assert(TS X Y B B').
+unfold TS.
 repeat split; auto.
 intro.
 apply H5.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 apply bet_col in H2.
 

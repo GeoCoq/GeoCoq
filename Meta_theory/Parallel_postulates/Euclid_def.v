@@ -1,4 +1,4 @@
-Require Export GeoCoq.Tarski_dev.Annexes.suma.
+Require Export GeoCoq.Tarski_dev.Annexes.saccheri.
 Require Export GeoCoq.Tarski_dev.Annexes.perp_bisect.
 Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals.
 Require Export GeoCoq.Tarski_dev.Coplanar_perm.
@@ -26,13 +26,13 @@ Definition decidability_of_intersection_in_a_plane :=
 
 Definition aristotle_s_postulate :=
   forall P Q A B C,
-  ~ Col A B C -> acute A B C ->
-  exists X, exists Y, out B A X /\ out B C Y /\ Per B X Y /\ lt P Q X Y.
+  ~ Col A B C -> Acute A B C ->
+  exists X, exists Y, Out B A X /\ Out B C Y /\ Per B X Y /\ Lt P Q X Y.
 
 Definition greenberg_s_postulate :=
   forall P Q R A B C, ~ Col A B C ->
-  acute A B C -> Q <> R -> Per P Q R ->
-  exists S, lta P S Q A B C /\ out Q S R.
+  Acute A B C -> Q <> R -> Per P Q R ->
+  exists S, LtA P S Q A B C /\ Out Q S R.
 
 Definition tarski_s_parallel_postulate :=
  forall A B C D T,
@@ -67,7 +67,7 @@ Definition perpendicular_transversal_postulate :=
  forall A B C D P Q,
  Par A B C D -> Perp A B P Q -> Perp C D P Q.
 
-Definition postulate_of_parallelism_of_perpendicular_tranversals :=
+Definition postulate_of_parallelism_of_perpendicular_transversals :=
  forall A1 A2 B1 B2 C1 C2 D1 D2,
  Par A1 A2 B1 B2 -> Perp A1 A2 C1 C2 -> Perp B1 B2 D1 D2 -> Par C1 C2 D1 D2.
 
@@ -107,17 +107,17 @@ Definition euclid_5 :=
 Definition midpoints_converse_postulate :=
   forall A B C P Q,
  ~Col A B C ->
- is_midpoint P B C ->
+ Midpoint P B C ->
  Par A B Q P ->
  Col A C Q ->
- is_midpoint Q A C.
+ Midpoint Q A C.
 
 (** This is the converse of l12_21_b. *)
 
 Definition alternate_interior_angles_postulate :=
-  forall A B C D, two_sides A C B D -> Par A B C D -> Conga B A C D C A.
+  forall A B C D, TS A C B D -> Par A B C D -> CongA B A C D C A.
 
-Definition triangle_postulate := forall A B C D E F, Trisuma A B C D E F -> Bet D E F.
+Definition triangle_postulate := forall A B C D E F, TriSumA A B C D E F -> Bet D E F.
 
 Definition playfair_bis := forall A1 A2 B1 B2 C1 C2 P,
   Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
@@ -126,25 +126,25 @@ Definition playfair_bis := forall A1 A2 B1 B2 C1 C2 P,
 
 Definition original_euclid :=
   forall A B C D P Q R,
-  one_side B C A D ->
+  OS B C A D ->
   Isi A B C B C D ->
-  Suma A B C B C D P Q R ->
+  SumA A B C B C D P Q R ->
   ~ Bet P Q R ->
-  exists Y, out B A Y /\ out C D Y.
+  exists Y, Out B A Y /\ Out C D Y.
 
 Definition original_spp :=
   forall A B C D P Q R,
-  one_side B C A D ->
-  Suma A B C B C D P Q R ->
+  OS B C A D ->
+  SumA A B C B C D P Q R ->
   ~ Bet P Q R ->
   exists Y, Col B A Y /\ Col C D Y.
 
 Definition inverse_projection_postulate :=
   forall A B C P Q,
-  acute A B C ->
-  out B A P ->
+  Acute A B C ->
+  Out B A P ->
   P <> Q -> Per B P Q ->
-  exists Y, out B C Y /\ Col P Q Y.
+  exists Y, Out B C Y /\ Col P Q Y.
 
 Definition proclus_bis :=
   forall A B C D P Q,
@@ -155,9 +155,44 @@ Definition proclus_bis :=
 
 Definition consecutive_interior_angles_postulate :=
   forall A B C D P Q R,
-  one_side B C A D ->
+  OS B C A D ->
   Par A B C D ->
-  Suma A B C B C D P Q R ->
+  SumA A B C B C D P Q R ->
   Bet P Q R.
+
+Definition existential_triangle :=
+  exists A B C D E F, ~ Col A B C /\ TriSumA A B C D E F /\ Bet D E F.
+
+Definition saccheri_s_right_angle_hypothesis := right_angle_hypothesis.
+
+Definition existential_saccheri :=
+  exists A B C D, Saccheri A B C D /\ Per A B C.
+
+Definition rectangle_principle :=
+  forall A B C D, Lambert A B C D -> Per B C D.
+
+Definition rectangle_existence :=
+  exists A B C D, Lambert A B C D /\ Per B C D.
+
+Definition thales_postulate :=
+  forall A B C M, ~ Col A B C -> Midpoint M A B -> Cong M A M C -> Per A C B.
+
+Definition thales_converse_postulate :=
+  forall A B C M, ~ Col A B C -> Midpoint M A B -> Per A C B -> Cong M A M C.
+
+Definition thales_existence :=
+  exists A B C M, ~ Col A B C /\ Midpoint M A B /\ Cong M A M C /\ Per A C B.
+
+Definition universal_posidonius :=
+  forall A1 A2 A3 B1 B2 B3, Saccheri A1 B1 B2 A2 -> Col A1 A2 A3 -> Col B1 B2 B3 -> Perp A1 A2 A3 B3 ->
+  Cong A3 B3 A1 B1.
+
+Definition posidonius_postulate :=
+  exists A1 A2 B1 B2, Saccheri A1 B1 B2 A2 /\
+  forall A3 B3, Col A1 A2 A3 -> Col B1 B2 B3 -> Perp A1 A2 A3 B3 -> Cong A3 B3 A1 B1.
+
+Definition similar_triangles_existence :=
+  exists A B C D E F,
+  ~ Col A B C /\ CongA A B C D E F /\ CongA B C A E F D /\ CongA C A B F D E /\ ~ Cong A B D E.
 
 End Euclid_def.

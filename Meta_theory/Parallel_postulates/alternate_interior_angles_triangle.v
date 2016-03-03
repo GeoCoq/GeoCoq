@@ -24,20 +24,20 @@ Proof.
   assert(~ Col A B B0) by (apply (par_not_col A C); Col).
   assert_diffs.
 
-  assert(HB1 : exists B1, Col B0 B B1 /\ two_sides B C A B1) by (apply (not_par_other_side _ _ _ _ B); Col).
+  assert(HB1 : exists B1, Col B0 B B1 /\ TS B C A B1) by (apply (not_par_other_side _ _ _ _ B); Col).
   destruct HB1 as [B1 [HCol1 Hts1]].
   assert(~ Col B1 B C) by (destruct Hts1 as [_ [_ []]]; auto).
   assert(HB2 := symmetric_point_construction B1 B).
   destruct HB2 as [B2].
   assert_diffs.
-  assert(two_sides B A B1 B2).
+  assert(TS B A B1 B2).
   { repeat split; auto.
     intro; assert(Col A B B0); auto; ColR.
     intro; assert(Col A B B0); auto; ColR.
     exists B.
     split; Col; Between.
   }
-  assert(two_sides B A C B2).
+  assert(TS B A C B2).
   { apply (l9_8_2 _ _ B1); auto.
     apply os_ts1324__os; Side.
     apply l12_6.
@@ -46,15 +46,15 @@ Proof.
   }
   apply (bet_conga_bet B1 B B2); Between.
   apply (suma2__conga D1 E1 F1 C A B); auto.
-  assert(Conga A B B2 C A B).
+  assert(CongA A B B2 C A B).
   { apply conga_left_comm; apply aia; try (apply l9_2; auto).
     apply par_symmetry; apply (par_col_par _ _ _ B0); try (apply par_strict_par); auto; ColR.
   }
   apply (conga3_suma__suma B1 B A A B B2 B1 B B2); try (apply conga_refl); auto.
-    exists B2; repeat (split; Conga); apply l9_9; auto.
+    exists B2; repeat (split; CongA); apply l9_9; auto.
   apply (suma2__conga A B C B C A); auto.
-  apply (conga3_suma__suma A B C C B B1 A B B1); Conga.
-  exists B1; repeat (split; Conga); apply l9_9; auto.
+  apply (conga3_suma__suma A B C C B B1 A B B1); CongA.
+  exists B1; repeat (split; CongA); apply l9_9; auto.
   apply conga_comm.
   apply aia; Side.
   apply par_symmetry.

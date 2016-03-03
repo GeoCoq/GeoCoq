@@ -13,8 +13,8 @@ Lemma euclid_5_implies_strong_parallel_postulate_aux_1_1 :
    ~ Col P R U ->
    Cong P T Q T ->
    Cong R T S T ->
-   one_side P R S U ->
-   one_side P S R U ->
+   OS P R S U ->
+   OS P S R U ->
    ~ Col P Q S ->
    Bet P Q X ->
    Col R U X ->
@@ -73,9 +73,9 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
       }
 
       {
-      assert (HTS : two_sides Q S P U).
+      assert (HTS : TS Q S P U).
         {
-        assert (HOS : one_side Q S R P).
+        assert (HOS : OS Q S R P).
           {
           apply one_side_transitivity with T.
 
@@ -110,7 +110,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
           }
 
           {
-          assert (HTS : two_sides Q S R X).
+          assert (HTS : TS Q S R X).
             {
             apply l9_8_2 with P; try (apply one_side_symmetry); Col.
             spliter; assert_cols.
@@ -193,7 +193,7 @@ intros HE5 P Q Q' R R' S T T' X Hcong1 HCong2 HCong3 HCong4 HCong5;
 intros HPTQ HPT'Q' HRTS HR'T'S HQSQ' HPQS HPQ'S HPRR' H1 H2.
 apply BetSEq in HPTQ; apply BetSEq in HPT'Q'; apply BetSEq in HRTS;
 apply BetSEq in HR'T'S; apply BetSEq in HQSQ'.
-assert (HTS : two_sides P S R R').
+assert (HTS : TS P S R R').
   {
   apply l9_8_2 with T.
 
@@ -282,7 +282,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
         }
 
         {
-        assert (HTS : two_sides R R' Q Q').
+        assert (HTS : TS R R' Q Q').
           {
           assert_diffs; split; Col.
           split; Col.
@@ -308,7 +308,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
       }
 
       {
-      assert (HTS : two_sides R P R' S).
+      assert (HTS : TS R P R' S).
         {
         apply l9_31.
 
@@ -401,7 +401,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
         }
 
         {
-        assert (HTS : two_sides R R' Q Q').
+        assert (HTS : TS R R' Q Q').
           {
           assert_diffs; split; Col.
           split; Col.
@@ -472,7 +472,7 @@ elim H2; clear H2; intro H2; try (elim H2; clear H2; intro H2).
       assert (H := mid_plgs Q S P R T); destruct H as [Hc1 [Hc2 HCong6]];
       try (split); Cong; Col; try (spliter; Between).
       }
-    assert (HTS : two_sides R P R' S).
+    assert (HTS : TS R P R' S).
       {
       apply l9_31.
 

@@ -10,9 +10,9 @@ Lemma Per_mid_rectangle : forall A B C I J K,
   A <> B ->
   B <> C ->
   Per B A C ->
-  is_midpoint I B C ->
-  is_midpoint J A C ->
-  is_midpoint K A B ->
+  Midpoint I B C ->
+  Midpoint J A C ->
+  Midpoint K A B ->
   Rectangle A J I K.
 Proof.
 intros.
@@ -21,7 +21,7 @@ assert_cols.
 elim (eq_dec_points A C); intro; apply plg_per_rect.
 
   treat_equalities.
-  assert (HM : exists M : Tpoint, is_midpoint M J I) by (apply midpoint_existence); decompose [ex] HM; repeat split; intuition; exists x; intuition.
+  assert (HM : exists M : Tpoint, Midpoint M J I) by (apply midpoint_existence); decompose [ex] HM; repeat split; intuition; exists x; intuition.
 
   treat_equalities; intuition.
 
@@ -95,19 +95,19 @@ end.
 Lemma quadrileral_midpoints:
  forall A B C D I J K L X Y,
   ~ Col I J K ->
-  is_midpoint I A B ->
-  is_midpoint J B C ->
-  is_midpoint K C D ->
-  is_midpoint L A D ->
-  is_midpoint X I K ->
-  is_midpoint Y J L ->
+  Midpoint I A B ->
+  Midpoint J B C ->
+  Midpoint K C D ->
+  Midpoint L A D ->
+  Midpoint X I K ->
+  Midpoint Y J L ->
   X = Y.
 Proof.
 intros.
 assert_diffs_by_cases.
 assert (Parallelogram I J K L)
   by (apply (varignon A B C D I J K L);finish).
-assert (is_midpoint X J L)
+assert (Midpoint X J L)
   by (perm_apply (plg_mid_2 I J K L X)).
 treat_equalities;trivial.
 Qed.

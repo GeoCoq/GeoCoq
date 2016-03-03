@@ -7,7 +7,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma par_perp_perp_implies_perp_bisect_existence :
   perpendicular_transversal_postulate ->
-  forall A B, A <> B -> exists P, exists Q, perp_bisect P Q A B.
+  forall A B, A <> B -> exists P, exists Q, Perp_bisect P Q A B.
 Proof.
 intros HPTP A B HDiff.
 assert (HM := midpoint_existence A B); destruct HM as [M HM].
@@ -16,7 +16,7 @@ assert(HQ' := l8_18_existence A B P' HP'); clear HP'.
 destruct HQ' as [Q' [Hc HP'Q']]; clear Hc.
 assert (HPQ := parallel_existence P' Q' M).
 destruct HPQ as [P [Q [HDiff' [HPar HCol]]]]; try (assert_diffs; assumption).
-exists P; exists Q; unfold perp_bisect.
+exists P; exists Q; unfold Perp_bisect.
 split; assert_diffs; Col.
 split; try (exists M; split; Col; Midpoint); left.
 apply HPTP with P' Q'; finish.

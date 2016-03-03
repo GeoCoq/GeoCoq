@@ -32,12 +32,12 @@ Proof.
   exists X.
   exists Y.
 
-  assert(one_side B A C D).
+  assert(OS B A C D).
   { apply (one_side_transitivity _ _ _ D0); auto.
     apply out_one_side; Col.
     apply bet_out; Between.
   }
-  assert(Hlta : lta A B C A B D).
+  assert(Hlta : LtA A B C A B D).
   { destruct Hacute as [A' [B' [C' [HPer Hlta]]]].
     apply (conga_preserves_lta A B C A' B' C'); try (apply conga_refl); auto.
     destruct Hlta.
@@ -49,7 +49,7 @@ Proof.
   { intro.
     elim(Bet_dec C B D).
     { intro.
-      assert(~ one_side B A C D); auto.
+      assert(~ OS B A C D); auto.
       apply l9_9.
       repeat split; Col.
       exists B.
@@ -58,27 +58,27 @@ Proof.
     intro.
     destruct Hlta as [_ HNConga].
     apply HNConga.
-    apply (out_conga A B C A B C); try (apply out_trivial); Conga.
+    apply (out_conga A B C A B C); try (apply out_trivial); CongA.
     apply not_bet_out; Col.
   }
   assert_diffs.
   assert(Y<>D) by (intro; subst Y; Col).
-  assert(one_side B A C D).
+  assert(OS B A C D).
     apply (one_side_transitivity _ _ _ D0); auto; apply out_one_side; Col; apply bet_out; auto.
   assert(Par_strict B D X Y).
   { apply (par_not_col_strict _ _ _ _ Y); Col.
     apply (l12_9 _ _ _ _ B A); Perp.
     intro; assert(Col B C D); Col; ColR.
   }
-  assert(InAngle C A B D) by (apply lea_in_angle; Lea; Conga; Side).
-  assert(out B C Y).
+  assert(InAngle C A B D) by (apply lea_in_angle; Lea; CongA; Side).
+  assert(Out B C Y).
   { apply (col_one_side_out _ A); Col.
     apply (one_side_transitivity _ _ _ D); auto.
     apply l12_6.
     apply (par_strict_col_par_strict _ _ _ Y0); Par; Col.
   }
 
-  assert(out B A X).
+  assert(Out B A X).
   { apply (col_one_side_out _ D); Col.
     apply one_side_symmetry.
     apply (one_side_transitivity _ _ _ Y).

@@ -33,7 +33,7 @@ Proof.
   apply suma_distincts in Hdiff.
   spliter.
   assert(HY := oe A' B C D' P' Q' R').
-  destruct HY as [Y []]; Suma.
+  destruct HY as [Y []]; SumA.
   3: exists Y; split; ColR.
   { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
     assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
@@ -52,51 +52,51 @@ Proof.
   apply HNBet.
   apply (bet_conga_bet P' Q' R'); auto.
   apply (suma2__conga A B C B C D); auto.
-  apply suma__suma456123.
+  apply suma_sym.
   apply (conga3_suma__suma A' B C B C D' P' Q' R'); auto.
   3: apply conga_refl; auto.
   - assert(HNCol : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
-    assert(two_sides C B D D').
+    assert(TS C B D D').
     { repeat split; Col.
       intro; apply HNCol; ColR.
       exists C; Col; Between.
     }
     apply (isi2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
-      Suma.
-    { apply isi__isi321456.
+      SumA.
+    { apply isi_left_comm.
       repeat split; Col.
         right; intro; assert_cols; Col.
       exists D'.
-      split; Conga; split.
+      split; CongA; split.
       apply l9_9; auto.
       intro HNts; destruct HNts as [_ [_ []]]; assert_cols; Col.
     }
-    apply suma__suma321456789.
+    apply suma_left_comm.
     exists D'.
-    split; Conga; split.
+    split; CongA; split.
     apply l9_9; auto.
     apply conga_line; Between.
 
   - assert(HNCol : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
-    assert(two_sides B C A A').
+    assert(TS B C A A').
     { repeat split; Col.
       intro; apply HNCol; ColR.
       exists B; Col; Between.
     }
     apply (isi2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
-      Suma.
-    { apply isi__isi321456.
-      apply isi__isi456123.
+      SumA.
+    { apply isi_left_comm.
+      apply isi_sym.
       repeat split; Col.
         right; intro; assert_cols; Col.
       exists A'.
-      split; Conga; split.
+      split; CongA; split.
       apply l9_9; auto.
       intro HNts; destruct HNts as [_ [_ []]]; assert_cols; Col.
     }
-    apply suma__suma456123.
+    apply suma_sym.
     exists A'.
-    split; Conga; split.
+    split; CongA; split.
     apply l9_9; auto.
     apply conga_line; Between.
 Qed.

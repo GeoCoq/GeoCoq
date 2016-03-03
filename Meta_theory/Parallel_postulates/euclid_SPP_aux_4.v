@@ -13,8 +13,8 @@ Lemma euclid_5_implies_strong_parallel_postulate_aux_1_3 :
    ~ Col P R U ->
    Cong P T Q T ->
    Cong R T S T ->
-   one_side P R S U ->
-   one_side P S R U ->
+   OS P R S U ->
+   OS P S R U ->
    ~ Col P Q S ->
    Bet X P Q ->
    Col R U X ->
@@ -128,15 +128,15 @@ Qed.
 
 Lemma coplanar_side_dec : forall O Ip Im Jp P P',
   Coplanar O Ip Jp P ->
-  is_midpoint O Ip Im ->
-  is_midpoint O P P' ->
+  Midpoint O Ip Im ->
+  Midpoint O P P' ->
   ~ Col O Ip Jp ->
   ~ Col P Ip Im ->
   ~ Col P O Jp ->
-  (one_side O Ip Jp P /\ one_side O Jp Ip P) \/
-  (one_side O Im Jp P /\ one_side O Jp Im P) \/
-  (one_side O Ip Jp P' /\ one_side O Jp Ip P') \/
-  (one_side O Im Jp P' /\ one_side O Jp Im P').
+  (OS O Ip Jp P /\ OS O Jp Ip P) \/
+  (OS O Im Jp P /\ OS O Jp Im P) \/
+  (OS O Ip Jp P' /\ OS O Jp Ip P') \/
+  (OS O Im Jp P' /\ OS O Jp Im P').
 Proof.
 intros O Ip Im Jp P P' HCop HMid1 HMid2 HNC1 HNC2 HNC3.
 destruct HCop as [X H].
@@ -208,7 +208,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           split; try (intro; assert_cols; apply HNC2; ColR).
           split; try (intro; assert_cols; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -223,7 +223,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             show_distinct O X; Col.
             split; try (intro; assert_cols; apply HNC1; ColR).
             split; try (intro; assert_cols; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; eBetween.
+            exists O; unfold Midpoint in *; spliter; split; Col; eBetween.
             }
 
             {
@@ -243,7 +243,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           split; try (intro; assert_cols; apply HNC3; ColR).
           split; try (intro; assert_cols; apply HNC3; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -269,7 +269,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; eBetween.
+          exists O; unfold Midpoint in *; spliter; split; Col; eBetween.
           }
 
           {
@@ -361,7 +361,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           split; try (intro; assert_cols; apply HNC2; ColR).
           split; try (intro; assert_cols; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -376,7 +376,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             show_distinct O X; Col.
             split; try (intro; assert_cols; apply HNC1; ColR).
             split; try (intro; assert_cols; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; eBetween.
+            exists O; unfold Midpoint in *; spliter; split; Col; eBetween.
             }
 
             {
@@ -396,7 +396,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           split; try (intro; assert_cols; apply HNC3; ColR).
           split; try (intro; assert_cols; apply HNC3; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -422,7 +422,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; eBetween.
+          exists O; unfold Midpoint in *; spliter; split; Col; eBetween.
           }
 
           {
@@ -514,7 +514,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_diffs; assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -549,7 +549,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_diffs; assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -676,7 +676,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
@@ -722,7 +722,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -736,7 +736,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             assert_diffs; split; Col.
             split; Col.
             assert_cols; split; try (intro; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+            exists O; unfold Midpoint in *; spliter; split; Col; Between.
             }
 
             {
@@ -755,7 +755,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -843,7 +843,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
@@ -889,7 +889,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -903,7 +903,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             assert_diffs; split; Col.
             split; Col.
             assert_cols; split; try (intro; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+            exists O; unfold Midpoint in *; spliter; split; Col; Between.
             }
 
             {
@@ -922,7 +922,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -965,7 +965,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -979,7 +979,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             assert_diffs; split; Col.
             assert_cols; split; Col.
             split; try (intro; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+            exists O; unfold Midpoint in *; spliter; split; Col; Between.
             }
 
             {
@@ -998,7 +998,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1037,7 +1037,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -1048,14 +1048,14 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; Col.
           split; Col.
-          exists X; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists X; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1140,7 +1140,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
@@ -1262,7 +1262,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -1280,7 +1280,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
               show_distinct O X; Col.
               assert_cols; split; try (intro; apply HNC2; ColR).
               split; try (intro; apply HNC1; ColR).
-              exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+              exists O; unfold Midpoint in *; spliter; split; Col; Between.
               }
 
               {
@@ -1312,7 +1312,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; try (intro; apply HNC3; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1358,7 +1358,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC1; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
@@ -1480,7 +1480,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -1498,7 +1498,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
               show_distinct O X; Col.
               assert_cols; split; try (intro; apply HNC2; ColR).
               split; try (intro; apply HNC1; ColR).
-              exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+              exists O; unfold Midpoint in *; spliter; split; Col; Between.
               }
 
               {
@@ -1530,7 +1530,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; try (intro; apply HNC3; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1573,7 +1573,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -1587,7 +1587,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             assert_diffs; split; Col.
             assert_cols; split; try (intro; apply HNC1; ColR).
             split; try (intro; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+            exists O; unfold Midpoint in *; spliter; split; Col; Between.
             }
 
             {
@@ -1615,7 +1615,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; Col.
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1655,7 +1655,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC2; ColR).
           split; try (intro; apply HNC2; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
 
@@ -1690,7 +1690,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
           assert_diffs; split; Col.
           assert_cols; split; try (intro; apply HNC3; ColR).
           split; try (intro; apply HNC3; ColR).
-          exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists O; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -1728,7 +1728,7 @@ try intros H1 H2; try intro H; try destruct H as [H1 H2].
             assert_diffs; split; Col.
             split; Col.
             assert_cols; split; try (intro; apply HNC1; ColR).
-            exists O; unfold is_midpoint in *; spliter; split; Col; Between.
+            exists O; unfold Midpoint in *; spliter; split; Col; Between.
             }
 
             {

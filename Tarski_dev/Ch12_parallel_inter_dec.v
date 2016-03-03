@@ -61,13 +61,13 @@ Proof.
 Qed.
 
 Lemma l12_16 : forall A1 A2 B1 B2 C1 C2 X,
-  Par A1 A2 B1 B2 -> inter A1 A2 C1 C2 X -> exists Y, inter B1 B2 C1 C2 Y.
+  Par A1 A2 B1 B2 -> Inter A1 A2 C1 C2 X -> exists Y, Inter B1 B2 C1 C2 Y.
 Proof.
     intros.
     assert(HH:= H).
     unfold Par in H.
     induction H.
-      unfold inter in H0.
+      unfold Inter in H0.
       spliter.
       ex_and H0 P.
       assert(HNCol : ~Col B1 B2 X) by (intro; unfold Par_strict in H; spliter; apply H7; exists X; Col).
@@ -90,7 +90,7 @@ Proof.
         Col.
       intro.
       apply HNCol; Col.
-    unfold inter in H0.
+    unfold Inter in H0.
     spliter.
     ex_and H0 P.
     exists X.
@@ -118,7 +118,7 @@ Qed.
 Lemma lea_cases :
  forall A B C D E F,
   A <> B -> C <> B -> D <> E -> F <> E ->
-  lea A B C D E F \/ lea D E F A B C.
+  LeA A B C D E F \/ LeA D E F A B C.
 Proof.
     intros.
     assert(HH:= or_bet_out A B C).
@@ -135,20 +135,20 @@ Proof.
     induction H4.
       right.
       apply l11_31_1; assumption.
-    assert(exists C', Conga  D E F A B C' /\ one_side A B C' C).
+    assert(exists C', CongA  D E F A B C' /\ OS A B C' C).
       apply angle_construction_1.
         assumption.
       assumption.
     ex_and H5 C'.
     induction(two_sides_dec B C A C').
-      unfold two_sides in H7.
+      unfold TS in H7.
       spliter.
       ex_and H10 X.
       assert(A <> X).
         intro.
         subst X.
         contradiction.
-      assert(out A X C').
+      assert(Out A X C').
         apply bet_out.
           auto.
           intro.
@@ -165,9 +165,9 @@ Proof.
         eapply (col_transitivity_1 _ X).
           intro.
           subst X.
-          unfold one_side in H6.
+          unfold OS in H6.
           ex_and H6 C0.
-          unfold two_sides in *.
+          unfold TS in *.
           spliter.
           ex_and H21 T0.
           ex_and H18 T1.
@@ -179,18 +179,18 @@ Proof.
           assumption.
         apply col_permutation_1.
         assumption.
-      assert(one_side A B X C').
+      assert(OS A B X C').
         apply out_one_side.
           left.
           assumption.
         assumption.
-      assert(one_side A B C X).
+      assert(OS A B C X).
         eapply one_side_transitivity.
           apply one_side_symmetry.
           apply H6.
         apply one_side_symmetry.
         assumption.
-      assert(out B X C).
+      assert(Out B X C).
         eapply col_one_side_out.
           apply col_permutation_4.
           assumption.
@@ -205,9 +205,9 @@ Proof.
         repeat split; try assumption.
           intro.
           subst C'.
-          unfold one_side in H6.
+          unfold OS in H6.
           ex_and H6 C0.
-          unfold two_sides in *.
+          unfold TS in *.
           spliter.
           apply H22.
           apply col_trivial_3.
@@ -222,7 +222,7 @@ Proof.
       unfold Col in H8.
       induction H8.
         apply bet_out in H8.
-          assert(Conga D E F A B C).
+          assert(CongA D E F A B C).
             eapply out_conga.
               apply H5.
               apply out_trivial.
@@ -252,7 +252,7 @@ Proof.
       induction H8.
         apply between_symmetry in H8.
         apply bet_out in H8.
-          assert(Conga D E F A B C).
+          assert(CongA D E F A B C).
             eapply out_conga.
               apply H5.
               apply out_trivial.
@@ -272,16 +272,16 @@ Proof.
             assumption.
           apply conga_sym.
           assumption.
-          unfold one_side in H6.
+          unfold OS in H6.
           ex_and H6 C0.
-          unfold two_sides in H6.
+          unfold TS in H6.
           spliter.
           intro.
           subst C'.
           apply H10.
           apply col_trivial_3.
         assumption.
-      assert (two_sides A B C' C).
+      assert (TS A B C' C).
         repeat split.
           assumption.
           intro.
@@ -305,16 +305,16 @@ Proof.
     apply not_two_sides_one_side in H7.
       2:auto.
       2:assumption.
-      assert(two_sides B C' A C).
+      assert(TS B C' A C).
         eapply l9_31.
           apply invert_one_side.
           assumption.
         apply one_side_symmetry.
         assumption.
-      unfold two_sides in H9.
+      unfold TS in H9.
       spliter.
       ex_and H12 T.
-      unfold lea.
+      unfold LeA.
       exists C'.
       split.
         unfold InAngle.
@@ -326,7 +326,7 @@ Proof.
         right.
         unfold Col in H12.
         induction H12.
-          assert(one_side A B T C).
+          assert(OS A B T C).
             apply out_one_side.
               right.
               assumption.
@@ -344,7 +344,7 @@ Proof.
               apply bet_col.
               assumption.
             assumption.
-          assert(two_sides A B C' T).
+          assert(TS A B C' T).
             repeat split.
               assumption.
               intro.
@@ -357,9 +357,9 @@ Proof.
               eapply (col_transitivity_1 _ T).
                 intro.
                 subst T.
-                unfold one_side in H14.
+                unfold OS in H14.
                 ex_and H14 C0.
-                unfold two_sides in H14.
+                unfold TS in H14.
                 spliter.
                 apply H17.
                 apply col_trivial_3.
@@ -373,7 +373,7 @@ Proof.
               apply col_trivial_3.
             apply between_symmetry.
             assumption.
-          assert(two_sides A B C' C).
+          assert(TS A B C' C).
             apply l9_2.
             eapply l9_8_2.
               apply l9_2.
@@ -403,7 +403,7 @@ Qed.
 
 Lemma or_lta_conga_gta : forall A B C D E F,
  A <> B -> C <> B -> D <> E -> F <> E ->
- lta A B C D E F \/ gta  A B C D E F \/ Conga A B C D E F.
+ LtA A B C D E F \/ GtA  A B C D E F \/ CongA A B C D E F.
 Proof.
     intros.
     assert(HH:=lea_cases A B C D E F H H0 H1 H2).
@@ -412,14 +412,14 @@ Proof.
         right; right.
         assumption.
       left.
-      unfold lta.
+      unfold LtA.
       split; assumption.
     induction(conga_dec A B C D E F).
       right; right.
       assumption.
     right; left.
-    unfold gta.
-    unfold lta.
+    unfold GtA.
+    unfold LtA.
     split.
       assumption.
     intro.
@@ -430,20 +430,20 @@ Qed.
 
 Lemma not_lta_gea : forall  A B C D E F,
  A <> B -> C <> B -> D <> E -> F <> E ->
- ~ lta A B C D E F ->
- gea A B C D E F.
+ ~ LtA A B C D E F ->
+ GeA A B C D E F.
 Proof.
     intros.
     assert(HH:=or_lta_conga_gta A B C D E F H H0 H1 H2).
     induction HH.
       contradiction.
-    unfold gea.
+    unfold GeA.
     induction H4.
-      unfold gta in H4.
-      unfold lta in H4.
+      unfold GtA in H4.
+      unfold LtA in H4.
       spliter.
       assumption.
-    unfold lea.
+    unfold LeA.
     exists C.
     split.
       apply in_angle_trivial_2; assumption.
@@ -452,14 +452,14 @@ Proof.
 Qed.
 
 Lemma par_strict_one_side : forall A B C D P,
- Par_strict A B C D -> Col C D P -> one_side A B C P.
+ Par_strict A B C D -> Col C D P -> OS A B C P.
 Proof.
     intros.
     assert(HH:= H).
     unfold Par_strict in HH.
     spliter.
     apply l12_6 in H.
-    unfold one_side in *.
+    unfold OS in *.
     ex_and H C'.
     exists C'.
     split.
@@ -470,24 +470,24 @@ Proof.
       apply H4.
       exists P.
       split; Col.
-      unfold two_sides in H.
+      unfold TS in H.
       spliter.
       assumption.
     intro.
     apply H4.
-    unfold one_side in H6.
+    unfold OS in H6.
     ex_and H6 P'.
-    assert(one_side A B P C').
+    assert(OS A B P C').
       eapply l9_8_1.
         apply H6.
       assumption.
-    assert(two_sides A B P C).
+    assert(TS A B P C).
       eapply l9_8_2.
         apply l9_2.
         apply H.
       apply one_side_symmetry.
       assumption.
-    unfold two_sides in H9.
+    unfold TS in H9.
     spliter.
     ex_and H12 T.
     exists T.
@@ -507,7 +507,7 @@ Proof.
 Qed.
 
 Lemma par_strict_all_one_side : forall A B C D,
- Par_strict A B C D -> (forall P, Col C D P -> one_side A B C P).
+ Par_strict A B C D -> (forall P, Col C D P -> OS A B C P).
 Proof.
     intros.
     eapply par_strict_one_side.
@@ -615,10 +615,10 @@ Qed.
 Lemma l12_19 :
   forall A B C D ,
    ~Col A B C -> Par A B C D -> Par B C D A ->
-   Cong A B C D /\ Cong B C D A /\ two_sides B D A C /\ two_sides A C B D.
+   Cong A B C D /\ Cong B C D A /\ TS B D A C /\ TS A C B D.
 Proof.
     intros.
-    assert(exists P, is_midpoint P A C) by (eapply midpoint_existence).
+    assert(exists P, Midpoint P A C) by (eapply midpoint_existence).
     ex_and H2 P.
     double B P D'.
     assert(Cong C D' A B).
@@ -691,7 +691,7 @@ Proof.
             apply H.
             apply col_trivial_3.
             Col.
-          unfold is_midpoint in H3.
+          unfold Midpoint in H3.
           spliter.
           apply bet_col in H3.
           Col.
@@ -712,7 +712,7 @@ Proof.
             subst C.
             apply H.
             apply col_trivial_3.
-            unfold is_midpoint in H3.
+            unfold Midpoint in H3.
             spliter.
             apply bet_col in H3.
             Col.
@@ -724,12 +724,12 @@ Proof.
           apply is_midpoint_id in H2.
           subst P.
           apply H.
-          unfold is_midpoint in H3.
+          unfold Midpoint in H3.
           spliter.
           apply bet_col.
           assumption.
           Col.
-          unfold is_midpoint in H2.
+          unfold Midpoint in H2.
           spliter.
           apply bet_col in H2.
           Col.
@@ -760,7 +760,7 @@ Proof.
         split; apply col_trivial_3.
       spliter.
       Col.
-    unfold is_midpoint in *.
+    unfold Midpoint in *.
     spliter.
     split.
       eapply l12_18_c.
@@ -785,20 +785,20 @@ Qed.
 
 Lemma l12_20_bis :
   forall A B C D,
-   Par A B C D -> Cong A B C D -> two_sides B D A C ->
-   Par B C D A /\ Cong B C D A /\ two_sides A C B D.
+   Par A B C D -> Cong A B C D -> TS B D A C ->
+   Par B C D A /\ Cong B C D A /\ TS A C B D.
 Proof.
     intros.
     induction(eq_dec_points B C).
       subst C.
-      unfold two_sides in H1.
+      unfold TS in H1.
       spliter.
       apply False_ind.
       apply H3.
       apply col_trivial_1.
     induction(eq_dec_points A D).
       subst D.
-      unfold two_sides in H1.
+      unfold TS in H1.
       spliter.
       apply False_ind.
       apply H3.
@@ -811,10 +811,10 @@ Proof.
           2: apply col_trivial_2.
         apply par_right_comm.
         assumption.
-      unfold two_sides in H1.
+      unfold TS in H1.
       spliter.
       contradiction.
-    assert(exists P, is_midpoint P A C) by (apply midpoint_existence).
+    assert(exists P, Midpoint P A C) by (apply midpoint_existence).
     ex_and H5 P.
     double B P D'.
     assert(Par B C D' A).
@@ -858,7 +858,7 @@ Proof.
       eapply (cong_transitivity _ _ A B).
         Cong.
       Cong.
-    assert(D = D' \/ is_midpoint C D D').
+    assert(D = D' \/ Midpoint C D D').
       eapply l7_20.
         Col.
       assumption.
@@ -876,13 +876,13 @@ Proof.
       spliter.
       split; assumption.
     (************)
-    assert(two_sides A C B D).
+    assert(TS A C B D).
       apply par_two_sides_two_sides.
         assumption.
       assumption.
     assert(HH:= H15).
     assert(HH1:=H1).
-    unfold two_sides in H15, H1.
+    unfold TS in H15, H1.
     spliter.
     ex_and H21 T.
     ex_and H18 T'.
@@ -903,7 +903,7 @@ Proof.
         Col.
         Col.
       Col.
-    assert(one_side B C T D).
+    assert(OS B C T D).
       eapply out_one_side_1.
         assumption.
         assumption.
@@ -915,7 +915,7 @@ Proof.
         apply H24.
         apply col_trivial_3.
       auto.
-    assert(one_side B C T A).
+    assert(OS B C T A).
       eapply out_one_side_1.
         assumption.
         assumption.
@@ -928,13 +928,13 @@ Proof.
         apply H24.
         apply col_trivial_2.
       assumption.
-    assert(one_side B C A D).
+    assert(OS B C A D).
       apply (one_side_transitivity _ _ _ T).
         apply one_side_symmetry.
         assumption.
       assumption.
-    assert(two_sides B C D D').
-      unfold two_sides.
+    assert(TS B C D D').
+      unfold TS.
       repeat split.
         assumption.
         intro.
@@ -952,10 +952,10 @@ Proof.
       exists C.
       split.
         apply col_trivial_3.
-      unfold is_midpoint in H14.
+      unfold Midpoint in H14.
       spliter.
       assumption.
-    assert(two_sides B C A D').
+    assert(TS B C A D').
       eapply l9_8_2.
         apply H28.
       apply one_side_symmetry.
@@ -966,7 +966,7 @@ Proof.
       spliter.
       apply False_ind.
       apply H32.
-      unfold two_sides in H29.
+      unfold TS in H29.
       spliter.
       ex_and H35 X.
       exists X.
@@ -989,17 +989,17 @@ Proof.
         apply l7_3 in H5.
         subst P.
         apply H4.
-        unfold is_midpoint in H6.
+        unfold Midpoint in H6.
         spliter.
         auto.
         apply bet_col.
         assumption.
         Col.
-      unfold is_midpoint in H5.
+      unfold Midpoint in H5.
       spliter.
       apply bet_col in H5.
       Col.
-    unfold is_midpoint in H6.
+    unfold Midpoint in H6.
     spliter.
     apply bet_col in H6.
     Col.
@@ -1007,11 +1007,11 @@ Qed.
 
 Lemma l12_20 :
  forall A B C D,
-  Par A B C D -> Cong A B C D -> two_sides A C B D ->
-  Par B C D A /\ Cong B C D A /\ two_sides A C B D.
+  Par A B C D -> Cong A B C D -> TS A C B D ->
+  Par B C D A /\ Cong B C D A /\ TS A C B D.
 Proof.
     intros.
-    assert(two_sides B D A C).
+    assert(TS B D A C).
       apply par_two_sides_two_sides.
         apply par_comm.
         assumption.
@@ -1028,7 +1028,7 @@ Qed.
 Lemma par_one_or_two_sides :
  forall A B C D,
   Par_strict A B C D ->
- two_sides A C B D /\ two_sides B D A C \/ one_side A C B D /\ one_side B D A C.
+ TS A C B D /\ TS B D A C \/ OS A C B D /\ OS B D A C.
 Proof.
     intros.
     induction(two_sides_dec A C B D).
@@ -1089,11 +1089,11 @@ Qed.
 
 Lemma l12_21_a :
  forall A B C D,
-  two_sides A C B D ->
-  (Par A B C D -> Conga B A C D C A).
+  TS A C B D ->
+  (Par A B C D -> CongA B A C D C A).
 Proof.
     intros.
-    assert(two_sides B D A C).
+    assert(TS B D A C).
       apply par_two_sides_two_sides.
         apply par_comm.
         assumption.
@@ -1101,17 +1101,17 @@ Proof.
     assert(B <> C).
       intro.
       subst B.
-      unfold two_sides in H.
+      unfold TS in H.
       spliter.
       apply H2.
       apply col_trivial_3.
     assert(~Col B C D).
-      unfold two_sides in H1.
+      unfold TS in H1.
       spliter.
       intro.
       apply H4.
       Col.
-    assert(inter B C D C C).
+    assert(Inter B C D C C).
       repeat split.
         exists D.
         split.
@@ -1148,7 +1148,7 @@ Proof.
           unfold Par_strict in H0.
           spliter.
           apply H14.
-          unfold inter in H7.
+          unfold Inter in H7.
           ex_and H8 P.
           exists A.
           split; Col.
@@ -1156,7 +1156,7 @@ Proof.
         contradiction.
         apply H6.
         Col.
-      unfold inter in H8.
+      unfold Inter in H8.
       spliter.
       assumption.
     assert(Par_strict A B C D).
@@ -1195,17 +1195,17 @@ Proof.
         exists C.
         split; Col.
         apply H0.
-      unfold inter in H8.
+      unfold Inter in H8.
       spliter.
       Col.
     apply par_right_comm in H12.
     assert(HH:= l12_19 A B C D' H11 H15 H12).
     spliter.
     assert(A <> C).
-      unfold two_sides in H19.
+      unfold TS in H19.
       spliter.
       assumption.
-    assert(Conga B A C D' C A).
+    assert(CongA B A C D' C A).
       apply cong3_conga.
         auto.
         auto.
@@ -1216,23 +1216,23 @@ Proof.
       auto.
       apply out_trivial.
       auto.
-      unfold inter in H8.
+      unfold Inter in H8.
       spliter.
       induction H23.
-        assert(one_side A C D D').
+        assert(OS A C D D').
           eapply l9_8_1.
             apply l9_2.
             apply H.
           apply l9_2.
           assumption.
-        assert(two_sides A C D D').
-          unfold two_sides.
+        assert(TS A C D D').
+          unfold TS.
           repeat split.
             assumption.
-            unfold two_sides in H.
+            unfold TS in H.
             spliter.
             assumption.
-            unfold two_sides in H19.
+            unfold TS in H19.
             spliter.
             assumption.
           exists C.
@@ -1261,8 +1261,8 @@ Proof.
 Qed.
 
 Lemma l12_21 : forall A B C D,
- two_sides A C B D ->
- (Conga B A C D C A <-> Par A B C D).
+ TS A C B D ->
+ (CongA B A C D C A <-> Par A B C D).
 Proof.
     intros.
     split.
@@ -1273,8 +1273,8 @@ Proof.
 Qed.
 
 Lemma l12_22_a : forall A B C D P,
- out P A C -> one_side P A B D -> Par A B C D ->
- Conga B A P D C P.
+ Out P A C -> OS P A B D -> Par A B C D ->
+ CongA B A P D C P.
 Proof.
     intros.
     unfold Par in H1.
@@ -1294,7 +1294,7 @@ Proof.
       assert(HH:= parallel_existence A C B H3).
       ex_and HH X.
       ex_and H4 Y.
-      assert(inter A C C D C).
+      assert(Inter A C C D C).
         apply inter_right_comm.
         apply inter_trivial.
         intro.
@@ -1310,7 +1310,7 @@ Proof.
           intro.
           unfold Par_strict in H1.
           spliter.
-          unfold inter in H8.
+          unfold Inter in H8.
           spliter.
           treat_equalities.
           apply H12.
@@ -1318,7 +1318,7 @@ Proof.
           Col.
           apply H5.
           Col.
-        unfold inter in H8.
+        unfold Inter in H8.
         spliter; assumption.
       assert(Par A B C D').
         eapply par_col_par.
@@ -1331,7 +1331,7 @@ Proof.
           unfold Par.
           left.
           apply H1.
-        unfold inter in H8.
+        unfold Inter in H8.
         spliter.
         assumption.
       assert(Par_strict A C B D').
@@ -1346,7 +1346,7 @@ Proof.
           assumption.
           Col.
         Col.
-      assert(Cong A B D' C /\ Cong B D' C A /\ two_sides B C A D' /\ two_sides A D' B C).
+      assert(Cong A B D' C /\ Cong B D' C A /\ TS B C A D' /\ TS A D' B C).
         eapply l12_19.
           eapply par_not_col.
             apply H11.
@@ -1386,8 +1386,8 @@ Proof.
           Col.
         Col.
       assert(HH := l12_6 A B C D' H20).
-      assert(two_sides A B C C').
-        unfold two_sides.
+      assert(TS A B C C').
+        unfold TS.
         repeat split.
           intro.
           treat_equalities.
@@ -1409,11 +1409,11 @@ Proof.
         split.
           Col.
         assumption.
-      assert(two_sides A B D' C').
+      assert(TS A B D' C').
         eapply l9_8_2.
           apply H21.
         assumption.
-      assert(two_sides C' D' A B).
+      assert(TS C' D' A B).
         apply par_two_sides_two_sides.
           apply par_comm.
           apply par_symmetry.
@@ -1427,7 +1427,7 @@ Proof.
       assert(Cong_3 D' C A B A C').
         repeat split; Cong.
       apply cong3_conga in H27.
-        assert(one_side A C D D').
+        assert(OS A C D D').
           eapply one_side_transitivity with B.
             apply col_one_side with P.
               apply out_col in H.
@@ -1447,8 +1447,8 @@ Proof.
             assumption.
             Col.
           Col.
-        assert(out C D' D).
-          unfold inter in H8.
+        assert(Out C D' D).
+          unfold Inter in H8.
           spliter.
           induction H30.
             apply l6_6.
@@ -1459,7 +1459,7 @@ Proof.
               tauto.
               intro.
               treat_equalities.
-              unfold two_sides in H14.
+              unfold TS in H14.
               spliter.
               apply H12.
               Col.
@@ -1468,25 +1468,25 @@ Proof.
             apply bet_out.
               intro.
               treat_equalities.
-              unfold Conga in H27.
+              unfold CongA in H27.
               tauto.
               intro.
               treat_equalities.
-              unfold Conga in H27.
+              unfold CongA in H27.
               tauto.
             apply between_symmetry.
             assumption.
-          assert(two_sides A C D D').
-            unfold two_sides.
+          assert(TS A C D D').
+            unfold TS.
             repeat split.
               auto.
-              unfold one_side in H28.
+              unfold OS in H28.
               ex_and H28 K.
-              unfold two_sides in H28.
+              unfold TS in H28.
               tauto.
-              unfold one_side in H28.
+              unfold OS in H28.
               ex_and H28 K.
-              unfold two_sides in H31.
+              unfold TS in H31.
               tauto.
             exists C.
             split.
@@ -1495,11 +1495,11 @@ Proof.
             assumption.
           apply l9_9 in H31.
           contradiction.
-        unfold out in H.
+        unfold Out in H.
         spliter.
         induction H31.
-          assert(out C A C').
-            unfold out.
+          assert(Out C A C').
+            unfold Out.
             repeat split.
               assumption.
               intro.
@@ -1511,39 +1511,39 @@ Proof.
               contradiction.
             left.
             assumption.
-          assert(Conga D' C A D C P).
+          assert(CongA D' C A D C P).
             eapply l11_10.
               apply conga_refl.
                 3: apply H29.
               3:apply H32.
               intro.
               treat_equalities.
-              unfold out in H29.
+              unfold Out in H29.
               tauto.
               intro.
               treat_equalities.
-              unfold two_sides in H22.
+              unfold TS in H22.
               spliter.
               apply H12.
               Col.
               apply out_trivial.
               intro.
               treat_equalities.
-              unfold out in H29.
+              unfold Out in H29.
               tauto.
-            unfold out.
+            unfold Out.
             repeat split.
               intro.
               treat_equalities.
-              unfold Conga in H27.
+              unfold CongA in H27.
               tauto.
               intro.
               treat_equalities.
-              unfold two_sides in H14.
+              unfold TS in H14.
               spliter.
               apply H13.
               Col.
-            unfold out in H32.
+            unfold Out in H32.
             spliter.
             induction H34.
               eapply (l5_1 _ A).
@@ -1556,7 +1556,7 @@ Proof.
               apply H34.
             apply between_symmetry.
             assumption.
-          assert(Conga B A P B A C').
+          assert(CongA B A P B A C').
             eapply l11_10.
               apply (conga_refl B A P).
                 intro.
@@ -1569,7 +1569,7 @@ Proof.
               apply out_trivial.
               intro.
               treat_equalities.
-              unfold Conga in H33.
+              unfold CongA in H33.
               tauto.
               apply out_trivial.
               intro.
@@ -1578,13 +1578,13 @@ Proof.
               apply out_trivial.
               intro.
               treat_equalities.
-              unfold Conga in H33.
+              unfold CongA in H33.
               tauto.
-            unfold out.
+            unfold Out.
             repeat split.
               intro.
               treat_equalities.
-              unfold out in H32.
+              unfold Out in H32.
               tauto.
               auto.
             eapply (l5_2 C).
@@ -1599,7 +1599,7 @@ Proof.
             apply H27.
           assumption.
         apply conga_comm.
-        assert(Conga D C A B A C').
+        assert(CongA D C A B A C').
           eapply l11_10.
             apply H27.
             apply l6_6.
@@ -1632,7 +1632,7 @@ Proof.
         auto.
         intro.
         treat_equalities.
-        unfold two_sides in H14.
+        unfold TS in H14.
         spliter.
         apply H13.
         Col.
@@ -1640,16 +1640,16 @@ Proof.
     spliter.
     induction(eq_dec_points A C).
       treat_equalities.
-      unfold out in H.
+      unfold Out in H.
       spliter.
       assert(HH:= H0).
-      unfold one_side in HH.
+      unfold OS in HH.
       ex_and HH T.
-      unfold two_sides in *.
+      unfold TS in *.
       spliter.
       induction H4.
-        assert(two_sides P A B D).
-          unfold two_sides.
+        assert(TS P A B D).
+          unfold TS.
           repeat split.
             auto.
             assumption.
@@ -1669,7 +1669,7 @@ Proof.
           auto.
           apply out_trivial.
           auto.
-          unfold out.
+          unfold Out.
           repeat split.
             auto.
             auto.
@@ -1685,7 +1685,7 @@ Proof.
         auto.
         apply out_trivial.
         auto.
-        unfold out.
+        unfold Out.
         repeat split.
           auto.
           auto.
@@ -1694,9 +1694,9 @@ Proof.
         assumption.
       apply out_trivial.
       auto.
-    unfold one_side in H0.
+    unfold OS in H0.
     ex_and H0 T.
-    unfold two_sides in *.
+    unfold TS in *.
     spliter.
     apply False_ind.
     apply H7.
@@ -1704,15 +1704,15 @@ Proof.
     eapply (col_transitivity_1 _ C).
       assumption.
       Col.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     induction H14; apply bet_col in H14; Col.
 Qed.
 
 Lemma l12_22 :
   forall A B C D P,
-  out P A C -> one_side P A B D ->
-  (Conga B A P D C P <-> Par A B C D).
+  Out P A C -> OS P A B D ->
+  (CongA B A P D C P <-> Par A B C D).
 Proof.
     intros.
     split; intro.
@@ -1724,19 +1724,19 @@ Lemma l12_23 :
  forall A B C,
   ~Col A B C ->
   exists B', exists C',
-  two_sides A C B B' /\ two_sides A B C C' /\
-      Bet B' A C' /\ Conga A B C B A C' /\ Conga A C B C A B'.
+  TS A C B B' /\ TS A B C C' /\
+      Bet B' A C' /\ CongA A B C B A C' /\ CongA A C B C A B'.
 Proof.
     intros.
-    assert(exists B0, is_midpoint B0 A B) by (apply midpoint_existence).
-    assert(exists C0, is_midpoint C0 A C) by (apply midpoint_existence).
+    assert(exists B0, Midpoint B0 A B) by (apply midpoint_existence).
+    assert(exists C0, Midpoint C0 A C) by (apply midpoint_existence).
     ex_and H0 B0.
     ex_and H1 C0.
     prolong B C0 B' B C0.
     prolong C B0 C' C B0.
     exists B'.
     exists C'.
-    assert(two_sides A C B B').
+    assert(TS A C B B').
       eapply mid_two_sides.
         intro.
         treat_equalities.
@@ -1749,7 +1749,7 @@ Proof.
       split.
         assumption.
       Cong.
-    assert(two_sides A B C C').
+    assert(TS A B C C').
       eapply mid_two_sides.
         intro.
         treat_equalities.
@@ -1819,7 +1819,7 @@ Proof.
       apply par_right_comm.
       assumption.
     apply par_id in H10.
-    assert(one_side A C B0 C').
+    assert(OS A C B0 C').
       eapply out_one_side_1.
         intro.
         treat_equalities.
@@ -1829,20 +1829,20 @@ Proof.
         apply H.
         eapply (col_transitivity_1 _ B0).
           intro.
-          treat_equalities; unfold two_sides.
+          treat_equalities; unfold TS.
           apply H.
           apply is_midpoint_id in H2; subst; Col.
-          unfold is_midpoint in H2.
+          unfold Midpoint in H2.
           spliter.
           apply bet_col in H2.
           Col.
         Col.
         apply col_trivial_2.
-      unfold out.
+      unfold Out.
       repeat split.
         intro.
         treat_equalities.
-        unfold two_sides in H7.
+        unfold TS in H7.
         spliter.
         ex_and H11 T.
         apply between_identity in H12.
@@ -1850,16 +1850,16 @@ Proof.
         contradiction.
         intro.
         treat_equalities; repeat split.
-        unfold two_sides in H7.
+        unfold TS in H7.
         spliter.
-        unfold is_midpoint in H2.
+        unfold Midpoint in H2.
         spliter.
         apply bet_col in H2.
         apply H7.
         Col.
       left.
       assumption.
-    assert(one_side A C B0 B).
+    assert(OS A C B0 B).
       eapply out_one_side_1.
         intro.
         treat_equalities.
@@ -1869,42 +1869,42 @@ Proof.
         apply H.
         eapply (col_transitivity_1 _ B0).
           intro.
-          treat_equalities; unfold two_sides.
+          treat_equalities; unfold TS.
           apply H.
           apply is_midpoint_id in H2; subst; Col.
-          unfold is_midpoint in H2.
+          unfold Midpoint in H2.
           spliter.
           apply bet_col in H2.
           Col.
         Col.
         apply col_trivial_3.
-      unfold out.
+      unfold Out.
       repeat split.
         intro.
         treat_equalities.
-        unfold two_sides in H7.
+        unfold TS in H7.
         apply is_midpoint_id in H2; subst.
         tauto.
         intro.
         treat_equalities; repeat split.
-        unfold two_sides in H7.
+        unfold TS in H7.
         tauto.
-      unfold is_midpoint in H2.
+      unfold Midpoint in H2.
       spliter.
       left.
       assumption.
-    assert(one_side A C B C').
+    assert(OS A C B C').
       eapply one_side_transitivity.
         2:apply H11; intro.
       apply one_side_symmetry.
       assumption.
-    assert(two_sides A C B' C').
+    assert(TS A C B' C').
       apply l9_2.
       eapply l9_8_2.
         apply H6.
       assumption.
     split.
-      unfold two_sides in H14.
+      unfold TS in H14.
       spliter.
       ex_and H17 T.
       assert(A = T).
@@ -2161,7 +2161,7 @@ Proof.
 Qed.
 
 
-Lemma perp_inter_perp_in : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P /\ Perp_in P A B C D.
+Lemma perp_inter_perp_in : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P /\ Perp_at P A B C D.
 Proof.
     intros.
     assert(HH:=perp_inter_exists A B C D H).

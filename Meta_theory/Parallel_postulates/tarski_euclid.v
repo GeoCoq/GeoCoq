@@ -11,7 +11,7 @@ Lemma tarski_s_euclid_implies_euclid_5 :
 Proof.
 intros HT P Q R S T U HPTQ HRTS HQUR HNC HCong1 HCong2.
 destruct (symmetric_point_construction R P) as [V HMid].
-assert (Hc1 : Bet V P R) by (unfold is_midpoint in *; spliter; Between).
+assert (Hc1 : Bet V P R) by (unfold Midpoint in *; spliter; Between).
 assert (Hc2 : Bet Q U R) by (unfold BetS in *; spliter; Between).
 destruct (inner_pasch V Q R P U) as [W [HPWQ HUWV]]; Col; clear Hc1; clear Hc2.
 assert (HPW : P <> W).
@@ -31,7 +31,7 @@ assert (HPar : Par_strict Q S P R).
   assert_diffs; unfold BetS in *; spliter;
   apply l12_17 with T; try split; Cong; Between.
   }
-assert (HTS : two_sides Q S P Y).
+assert (HTS : TS Q S P Y).
   {
   apply l9_8_2 with X.
 
@@ -45,7 +45,7 @@ assert (HTS : two_sides Q S P Y).
       {
       apply par_strict_not_col_2 with P.
       apply par_strict_symmetry; apply par_strict_col_par_strict with R; Col.
-      unfold BetS in *; unfold is_midpoint in *; spliter;
+      unfold BetS in *; unfold Midpoint in *; spliter;
       assert_diffs; assert_cols; ColR.
       }
     repeat split; try (exists Q); Col.
@@ -87,7 +87,7 @@ assert (HPUI : BetS P U I).
     elim HPUI; clear HPUI; intro HPUI; exfalso.
 
       {
-      assert (HFalse : two_sides Q S P U).
+      assert (HFalse : TS Q S P U).
         {
         assert_diffs; split; Col.
         split; Col.
@@ -117,7 +117,7 @@ assert (HPUI : BetS P U I).
       }
 
       {
-      assert (HFalse : two_sides P R I U).
+      assert (HFalse : TS P R I U).
         {
         split; try (intro; treat_equalities; apply par_strict_distinct in HPar;
                     spliter; Col).
@@ -166,7 +166,7 @@ assert (HPUI : BetS P U I).
     }
  }
 split; Col.
-assert (HTS : two_sides Q R S I).
+assert (HTS : TS Q R S I).
   {
   apply l9_8_2 with P.
 
@@ -196,11 +196,11 @@ split.
   apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR;
   spliter; apply l9_19 with Q; Col.
   apply par_strict_not_col_4 in HPar; split; Col.
-  unfold two_sides in HTS; spliter; assert_diffs; repeat split; elim HSQI; Between.
+  unfold TS in HTS; spliter; assert_diffs; repeat split; elim HSQI; Between.
   }
 
   {
-  assert (HFalse := HTS); unfold two_sides in HTS; spliter;
+  assert (HFalse := HTS); unfold TS in HTS; spliter;
   assert_diffs; repeat split; Col; intro; treat_equalities;
   assert (HTS := not_two_sides_id S Q R); Col.
   }

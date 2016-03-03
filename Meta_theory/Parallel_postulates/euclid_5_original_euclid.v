@@ -33,7 +33,7 @@ Proof.
   assert(HA' : InAngle A C B E).
   { apply lea_in_angle; auto.
     - apply (l11_30 A B C B C D').
-        apply (isi_chara D); Between; Suma.
+        apply (isi_chara D); Between; SumA.
         apply conga_pseudo_refl; auto.
       apply (out_conga M C D' M B E); try (apply bet_out); Between.
 
@@ -63,9 +63,9 @@ Proof.
     apply (bet_conga_bet D' C D); Between.
     apply (suma2__conga A B C B C D); auto.
     apply (conga3_suma__suma D' C B B C D D' C D); try (apply conga_refl); auto.
-    2: apply (out_conga D' C M E B M); try (apply out_trivial); Conga; try (apply bet_out); Between.
+    2: apply (out_conga D' C M E B M); try (apply out_trivial); CongA; try (apply bet_out); Between.
     exists D.
-    repeat (split; Conga).
+    repeat (split; CongA).
     apply l9_9.
     repeat split; Col.
     exists C; Col; Between.

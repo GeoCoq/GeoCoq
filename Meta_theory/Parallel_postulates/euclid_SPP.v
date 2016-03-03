@@ -17,8 +17,8 @@ Lemma euclid_5_implies_strong_parallel_postulate_aux :
    Coplanar P Q R U ->
    Cong P T Q T ->
    Cong R T S T ->
-   one_side P R S U ->
-   one_side P S R U ->
+   OS P R S U ->
+   OS P S R U ->
    exists I : Tpoint, Col S Q I /\ Col P U I).
 Proof.
 intros HE5 P Q R S T U HPTQ HRTS HNC HCop HCong1 HCong2 HOS1 HOS2.
@@ -101,7 +101,7 @@ clear HQSQ'; rename H into HQSQ'.
 assert (HCop : Coplanar P S R R') by apply all_coplanar.
 (* DO NOT REMOVE!!!
   {
-  assert (HTS : two_sides P S R R').
+  assert (HTS : TS P S R R').
     {
     apply l9_8_2 with T.
 
@@ -248,12 +248,12 @@ elim (Col_dec P Q S); intro HPQS.
       split; Between.
       repeat split; intro; treat_equalities; unfold BetS in *; spliter; assert_cols; Col.
       }
-    assert (HCase1 : one_side P R S U -> one_side P S R U ->
+    assert (HCase1 : OS P R S U -> OS P S R U ->
                      exists I : Tpoint, Col S Q I /\ Col P U I).
       {
       apply euclid_5_implies_strong_parallel_postulate_aux with T; Col.
       }
-    assert (HCase2 : one_side P R' S U -> one_side P S R' U ->
+    assert (HCase2 : OS P R' S U -> OS P S R' U ->
                      exists I : Tpoint, Col S Q I /\ Col P U I).
       {
       assert (HCop' : Coplanar P Q' R' U).
@@ -262,7 +262,7 @@ elim (Col_dec P Q S); intro HPQS.
         apply coplanar_pseudo_trans with P Q R; Cop;
         try (intro; apply BetSEq in HPTQ; apply BetSEq in HRTS;
              spliter; assert_cols; apply HPQS; ColR).
-        assert (HTS : two_sides P Q R Q').
+        assert (HTS : TS P Q R Q').
           {
           apply l9_2; apply l9_8_2 with S.
 
@@ -299,7 +299,7 @@ elim (Col_dec P Q S); intro HPQS.
       *)
       apply all_coplanar.
       }
-    assert (HCase3 : one_side P R S U' -> one_side P S R U' ->
+    assert (HCase3 : OS P R S U' -> OS P S R U' ->
                      exists I : Tpoint, Col S Q I /\ Col P U I).
       {
       intros HOS1 HOS2; destruct (euclid_5_implies_strong_parallel_postulate_aux HE5 P Q R S T U')
@@ -314,7 +314,7 @@ elim (Col_dec P Q S); intro HPQS.
         exists I; assert_cols; split; ColR.
         }
       }
-    assert (HCase4 : one_side P R' S U' -> one_side P S R' U' ->
+    assert (HCase4 : OS P R' S U' -> OS P S R' U' ->
                     exists I : Tpoint, Col S Q I /\ Col P U I).
       {
       assert (HCop'' : Coplanar P Q' R' U').
@@ -323,7 +323,7 @@ elim (Col_dec P Q S); intro HPQS.
         apply coplanar_pseudo_trans with P Q R; Cop;
         try (intro; apply BetSEq in HPTQ; apply BetSEq in HRTS;
              spliter; assert_cols; apply HPQS; ColR).
-        assert (HTS : two_sides P Q R Q').
+        assert (HTS : TS P Q R Q').
           {
           apply l9_2; apply l9_8_2 with S.
 
@@ -361,7 +361,7 @@ elim (Col_dec P Q S); intro HPQS.
         exists I; assert_cols; split; ColR.
         }
       }
-    clear HCop'; assert (HTS : two_sides P S R R').
+    clear HCop'; assert (HTS : TS P S R R').
       {
       apply l9_8_2 with T.
 
@@ -422,7 +422,7 @@ elim (Col_dec P Q S); intro HPQS.
         split; try (intro; treat_equalities); Between.
         }
       }
-    assert (HMid : is_midpoint P R R').
+    assert (HMid : Midpoint P R R').
       {
       split.
 

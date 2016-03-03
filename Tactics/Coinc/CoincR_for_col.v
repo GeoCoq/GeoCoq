@@ -52,9 +52,7 @@ rewrite HA; rewrite HB; auto.
 Qed.
 
 Definition test_coinc_for_col ss st (pa pb pc : positive) :=
-  @test_coinc Tarski_is_a_Arity_for_col
-              Tarski_is_a_Coinc_predicates_for_col
-              Tarski_is_a_Coinc_theory_for_col ss st (pa, (pb, pc)).
+  @test_coinc Tarski_is_a_Arity_for_col ss st (pa, (pb, pc)).
 
 Definition interp_CP_for_col (pa pb pc : positive) interp :=
   @interp_CP Tarski_is_a_Arity_for_col 2 (pa, (pb, pc)) interp.

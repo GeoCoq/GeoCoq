@@ -13,36 +13,26 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 (******************** length *********************)
 
-Definition lg (A : Tpoint -> Tpoint -> Prop) := exists a, exists b, forall x y, Cong a b x y <-> A x y.
+Definition Q_Cong A := exists a, exists b, forall x y, Cong a b x y <-> A x y.
 
-Definition long  A B := fun x y => Cong A B x y.
-
-
-Lemma lg_exists : forall A B, exists l, lg l /\ l A B.
+Lemma lg_exists : forall A B, exists l, Q_Cong l /\ l A B.
 Proof.
     intros.
-    unfold lg.
+    unfold Q_Cong.
     exists (fun x y => Cong A B x y).
     split.
       exists A.
       exists B.
       intros.
-      split.
-        intro.
-        unfold long.
-        auto.
-      intro.
-      unfold long in H.
-      auto.
-    unfold long.
+      split; auto.
     Cong.
 Qed.
 
 
-Lemma lg_cong : forall l A B C D, lg l -> l A B -> l C D -> Cong A B C D.
+Lemma lg_cong : forall l A B C D, Q_Cong l -> l A B -> l C D -> Cong A B C D.
 Proof.
     intros.
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H X.
     ex_and H2 Y.
     assert(HH:= H A B).
@@ -54,10 +44,10 @@ Proof.
     eCong.
 Qed.
 
-Lemma lg_cong_lg : forall l A B C D, lg l -> l A B -> Cong A B C D -> l C D.
+Lemma lg_cong_lg : forall l A B C D, Q_Cong l -> l A B -> Cong A B C D -> l C D.
 Proof.
     intros.
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H A0.
     ex_and H2 B0.
     assert(HP:= H A B).
@@ -71,16 +61,16 @@ Proof.
     assumption.
 Qed.
 
-Lemma lg_sym : forall l A B, lg l -> l A B -> l B A.
+Lemma lg_sym : forall l A B, Q_Cong l -> l A B -> l B A.
 Proof.
     intros.
     apply (lg_cong_lg l A B); Cong.
 Qed.
 
-Lemma ex_points_lg : forall l, lg l -> exists A, exists B, l A B.
+Lemma ex_points_lg : forall l, Q_Cong l -> exists A, exists B, l A B.
 Proof.
     intros.
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H A.
     ex_and H0 B.
     assert(HH:= H A B).
@@ -96,7 +86,7 @@ End Length_1.
 Ltac lg_instance l A B :=
   assert(tempo_sg:= ex_points_lg l);
   match goal with
-    |H: lg l |-  _ => assert(tempo_H:=H); apply tempo_sg in tempo_H; elim tempo_H; intros A ; intro tempo_HP; clear tempo_H; elim tempo_HP; intro B; intro; clear tempo_HP
+    |H: Q_Cong l |-  _ => assert(tempo_H:=H); apply tempo_sg in tempo_H; elim tempo_H; intros A ; intro tempo_HP; clear tempo_H; elim tempo_HP; intro B; intro; clear tempo_HP
   end;
   clear tempo_sg.
 
@@ -105,25 +95,24 @@ Section Length_2.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition is_len := fun A B l => lg l /\ l A B.
+Definition Len A B l := Q_Cong l /\ l A B.
 
-
-Lemma is_len_cong : forall A B C D l, is_len A B l -> is_len C D l -> Cong A B C D.
+Lemma is_len_cong : forall A B C D l, Len A B l -> Len C D l -> Cong A B C D.
 Proof.
     intros.
-    unfold is_len in *.
+    unfold Len in *.
     spliter.
     eapply (lg_cong l); auto.
 Qed.
 
-Lemma is_len_cong_is_len : forall A B C D l, is_len A B l -> Cong A B C D -> is_len C D l.
+Lemma is_len_cong_is_len : forall A B C D l, Len A B l -> Cong A B C D -> Len C D l.
 Proof.
     intros.
-    unfold is_len in *.
+    unfold Len in *.
     spliter.
     split.
       auto.
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H a.
     ex_and H2 b.
     assert(HH:= H A B).
@@ -135,34 +124,34 @@ Proof.
     eCong.
 Qed.
 
-Lemma not_cong_is_len : forall A B C D l , ~(Cong A B C D) -> is_len A B l -> ~(l C D).
+Lemma not_cong_is_len : forall A B C D l , ~(Cong A B C D) -> Len A B l -> ~(l C D).
 Proof.
     intros.
-    unfold is_len in H0.
+    unfold Len in H0.
     spliter.
     intro.
     apply H.
     apply (lg_cong l); auto.
 Qed.
 
-Lemma not_cong_is_len1 : forall A B C D l , ~Cong A B C D -> is_len A B l -> ~is_len C D l.
+Lemma not_cong_is_len1 : forall A B C D l , ~Cong A B C D -> Len A B l -> ~ Len C D l.
 Proof.
     intros.
     intro.
-    unfold is_len in *.
+    unfold Len in *.
     spliter.
     apply H.
     apply (lg_cong l); auto.
 Qed.
 
-Definition lg_null := fun l => lg l /\ exists A, l A A.
+Definition Q_Cong_Null l := Q_Cong l /\ exists A, l A A.
 
-Lemma lg_null_instance : forall l A, lg_null l -> l A A.
+Lemma lg_null_instance : forall l A, Q_Cong_Null l -> l A A.
 Proof.
     intros.
-    unfold lg_null in H.
+    unfold Q_Cong_Null in H.
     spliter.
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H X.
     ex_and H1 Y.
     assert(HH:= H A A).
@@ -178,27 +167,27 @@ Proof.
     apply cong_trivial_identity.
 Qed.
 
-Lemma lg_null_trivial : forall l A, lg l -> l A A -> lg_null l.
+Lemma lg_null_trivial : forall l A, Q_Cong l -> l A A -> Q_Cong_Null l.
 Proof.
     intros.
-    unfold lg_null.
+    unfold Q_Cong_Null.
     split.
       auto.
     exists A.
     auto.
 Qed.
 
-Lemma lg_null_dec : forall l, lg l -> lg_null l \/ ~lg_null l.
+Lemma lg_null_dec : forall l, Q_Cong l -> Q_Cong_Null l \/ ~ Q_Cong_Null l.
 Proof.
     intros.
     assert(HH:=H).
-    unfold lg in H.
+    unfold Q_Cong in H.
     ex_and H A.
     ex_and H0 B.
     induction(eq_dec_points A B).
       subst B.
       left.
-      unfold lg_null.
+      unfold Q_Cong_Null.
       split.
         auto.
       exists A.
@@ -206,7 +195,7 @@ Proof.
       Cong.
     right.
     intro.
-    unfold lg_null in H1.
+    unfold Q_Cong_Null in H1.
     spliter.
     ex_and H2 P.
     apply H0.
@@ -216,7 +205,7 @@ Proof.
     auto.
 Qed.
 
-Lemma ex_point_lg : forall l A, lg l -> exists B, l A B.
+Lemma ex_point_lg : forall l A, Q_Cong l -> exists B, l A B.
 Proof.
     intros.
     induction(lg_null_dec l).
@@ -224,7 +213,7 @@ Proof.
       apply lg_null_instance.
       auto.
       assert(HH:= H).
-      unfold lg in HH.
+      unfold Q_Cong in HH.
       ex_and HH X.
       ex_and H1 Y.
       assert(HH:= other_point_exists A).
@@ -238,7 +227,7 @@ Proof.
         intro.
         subst Y.
         apply H0.
-        unfold lg_null.
+        unfold Q_Cong_Null.
         split.
           auto.
         exists X.
@@ -256,11 +245,11 @@ Qed.
 
 
 
-Lemma ex_point_lg_out : forall l A P, A <> P -> lg l -> ~lg_null l -> exists B, l A B /\ out A B P.
+Lemma ex_point_lg_out : forall l A P, A <> P -> Q_Cong l -> ~ Q_Cong_Null l -> exists B, l A B /\ Out A B P.
 Proof.
     intros.
     assert(HH:= H0).
-    unfold lg in HH.
+    unfold Q_Cong in HH.
     ex_and HH X.
     ex_and H2 Y.
     assert(HP:= H3 X Y).
@@ -272,7 +261,7 @@ Proof.
       intro.
       subst Y.
       apply H1.
-      unfold lg_null.
+      unfold Q_Cong_Null.
       split.
         auto.
       exists X.
@@ -289,11 +278,11 @@ Proof.
     auto.
 Qed.
 
-Lemma ex_point_lg_bet : forall l A M, lg l -> exists B : Tpoint, l M B /\ Bet A M B.
+Lemma ex_point_lg_bet : forall l A M, Q_Cong l -> exists B : Tpoint, l M B /\ Bet A M B.
 Proof.
     intros.
     assert(HH:= H).
-    unfold lg in HH.
+    unfold Q_Cong in HH.
     ex_and HH X.
     ex_and H0 Y.
     assert(HP:= H1 X Y).
@@ -312,7 +301,7 @@ End Length_2.
 Ltac lg_instance1 l A B :=
   assert(tempo_sg:= ex_point_lg l);
   match goal with
-    |H: lg l |-  _ => assert(tempo_H:=H); apply (tempo_sg A) in tempo_H; ex_elim tempo_H B; exists B
+    |H: Q_Cong l |-  _ => assert(tempo_H:=H); apply (tempo_sg A) in tempo_H; ex_elim tempo_H B; exists B
   end;
   clear tempo_sg.
 
@@ -324,9 +313,9 @@ Ltac lg_instance2 l A P B :=
   match goal with
     |H: A <> P |-  _ =>
                         match goal with
-                           |HP : lg l |-  _ =>
+                           |HP : Q_Cong l |-  _ =>
                                                match goal with
-                                                 |HQ : ~lg_null l |-  _ => assert(tempo_HQ:=HQ);
+                                                 |HQ : ~ Q_Cong_Null l |-  _ => assert(tempo_HQ:=HQ);
                                                                            apply (tempo_sg A P H HP) in tempo_HQ;
                                                                            ex_and tempo_HQ B
                                                end
@@ -342,7 +331,7 @@ Section Length_3.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma ex_points_lg_not_col : forall l P, lg l -> ~ lg_null l -> exists A, exists B, l A B /\ ~Col A B P.
+Lemma ex_points_lg_not_col : forall l P, Q_Cong l -> ~ Q_Cong_Null l -> exists A, exists B, l A B /\ ~Col A B P.
 Proof.
     intros.
     assert(HH:=other_point_exists P).
@@ -364,7 +353,7 @@ Proof.
     assert(A <> B).
       intro.
       subst B.
-      unfold out in H5.
+      unfold Out in H5.
       tauto; apply out_col in H5.
     apply out_col in H5.
     ColR.
@@ -375,8 +364,8 @@ End Length_3.
 Ltac lg_instance_not_col l P A B :=
   assert(tempo_sg:= ex_points_lg_not_col l P);
   match goal with
-        |HP : lg l |-  _ => match goal with
-                                  |HQ : ~lg_null l |-  _ => assert(tempo_HQ:=HQ);
+        |HP : Q_Cong l |-  _ => match goal with
+                                  |HQ : ~ Q_Cong_Null l |-  _ => assert(tempo_HQ:=HQ);
                                                             apply (tempo_sg HP) in tempo_HQ;
                                                             elim tempo_HQ;
                                                             intro A;
@@ -399,52 +388,52 @@ Section Length_4.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition eqL := fun (l1 l2 : Tpoint -> Tpoint -> Prop)=>  forall A B, l1 A B <-> l2 A B.
+Definition EqL (l1 l2 : Tpoint -> Tpoint -> Prop) := forall A B, l1 A B <-> l2 A B.
 
-Notation "l1 =l= l2" := (eqL l1 l2) (at level 80, right associativity).
+Notation "l1 =l= l2" := (EqL l1 l2) (at level 80, right associativity).
 
-Lemma ex_eql : forall l1 l2, (exists A , exists B, is_len A B l1 /\ is_len A B l2)  -> l1 =l= l2.
+Lemma ex_eql : forall l1 l2, (exists A , exists B, Len A B l1 /\ Len A B l2)  -> l1 =l= l2.
 Proof.
     intros.
     ex_and H A.
     ex_and H0 B.
     assert(HH:=H).
     assert(HH0:=H0).
-    unfold is_len in HH.
-    unfold is_len in HH0.
+    unfold Len in HH.
+    unfold Len in HH0.
     spliter.
-    unfold eqL.
+    unfold EqL.
     repeat split; auto.
       intro.
-      assert(is_len A0 B0 l1).
-        unfold is_len.
+      assert(Len A0 B0 l1).
+        unfold Len.
         split; auto.
       assert(Cong A B A0 B0).
         apply (is_len_cong _ _ _ _ l1); auto.
-      assert(is_len A0 B0 l2).
+      assert(Len A0 B0 l2).
         apply(is_len_cong_is_len A B).
           apply H0.
         auto.
-      unfold is_len in H8.
+      unfold Len in H8.
       spliter.
       auto.
     intro.
-    assert(is_len A0 B0 l2).
-      unfold is_len.
+    assert(Len A0 B0 l2).
+      unfold Len.
       split; auto.
     assert(Cong A B A0 B0).
       apply (is_len_cong _ _ _ _ l2); auto.
-    assert(is_len A0 B0 l1).
+    assert(Len A0 B0 l1).
       apply(is_len_cong_is_len A B).
         apply H.
       auto.
-    unfold is_len in H8.
+    unfold Len in H8.
     spliter.
     auto.
 Qed.
 
 
-Lemma all_eql : forall A B l1 l2, is_len A B l1 -> is_len A B l2 -> eqL l1 l2.
+Lemma all_eql : forall A B l1 l2, Len A B l1 -> Len A B l2 -> EqL l1 l2.
 Proof.
     intros.
     apply ex_eql.
@@ -455,7 +444,7 @@ Qed.
 
 
 
-Lemma null_len : forall A B la lb, is_len A A la -> is_len B B lb -> eqL la lb.
+Lemma null_len : forall A B la lb, Len A A la -> Len B B lb -> EqL la lb.
 Proof.
     intros.
     eapply (all_eql A A).
@@ -465,37 +454,96 @@ Qed.
 
 Require Export Setoid.
 
-Global Instance eqL_equivalence : Equivalence eqL.
+Global Instance eqL_equivalence : Equivalence EqL.
 Proof.
 split.
 - unfold Reflexive.
   intros.
-  unfold eqL.
+  unfold EqL.
   intros.
   tauto.
 - unfold Symmetric.
   intros.
-  unfold eqL in *.
+  unfold EqL in *.
   firstorder.
 - unfold Transitive.
-  unfold eqL.
+  unfold EqL.
   intros.
   rewrite H.
   apply H0.
 Qed.
 
 
-Lemma ex_lg : forall A B, exists l, lg l /\ l A B.
+Lemma ex_lg : forall A B, exists l, Q_Cong l /\ l A B.
 Proof.
     intros.
     exists (fun C D => Cong A B C D).
-    unfold lg.
+    unfold Q_Cong.
     split.
       exists A. exists B.
       tauto.
     Cong.
 Qed.
 
+Lemma lg_eql_lg : forall l1 l2, Q_Cong l1 -> EqL l1 l2 -> Q_Cong l2.
+Proof.
+    intros.
+    unfold EqL in *.
+    unfold Q_Cong in *.
+    decompose [ex] H.
+    exists x. exists x0.
+    intros.
+    rewrite H2.
+    apply H0.
+Qed.
+
+Lemma ex_eqL : forall l1 l2, Q_Cong l1 -> Q_Cong l2 -> (exists A, exists B, l1 A B /\ l2 A B) -> EqL l1 l2.
+Proof.
+intros.
+ex_and H1 A.
+ex_and H2 B.
+unfold EqL.
+assert(HH1:= H).
+assert(HH2:= H0).
+
+unfold Q_Cong in HH1.
+unfold Q_Cong in HH2.
+ex_and HH1 A1.
+ex_and H3 B1.
+ex_and HH2 A2.
+ex_and H3 B2.
+
+repeat split; auto.
+intro.
+assert(HH:= H4 A0 B0).
+assert(HP:= H5 A0 B0).
+destruct HP.
+apply H6.
+assert(HP:= H4 A B).
+assert(HQ:= H5 A B).
+destruct HP.
+destruct HQ.
+apply H9 in H1.
+apply H11 in H2.
+destruct HH.
+apply H13 in H3.
+eCong.
+
+intro.
+assert(HH:= H4 A0 B0).
+assert(HP:= H5 A0 B0).
+destruct HH.
+apply H6.
+assert(HH:= H4 A B).
+assert(HQ:= H5 A B).
+destruct HH.
+destruct HQ.
+apply H9 in H1.
+apply H11 in H2.
+destruct HP.
+apply H13 in H3.
+eCong.
+Qed.
 
 
 End Length_4.

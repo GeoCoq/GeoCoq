@@ -7,7 +7,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma legendre_aux1 : greenberg_s_postulate -> triangle_postulate ->
    forall A1 A2 B1 B2 C1 C2 P, Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
-   Par A1 A2 C1 C2 -> Col P C1 C2 -> ~ two_sides B1 B2 A1 C1 ->
+   Par A1 A2 C1 C2 -> Col P C1 C2 -> ~ TS B1 B2 A1 C1 ->
    Col C1 B1 B2.
 Proof.
   intros greenberg triangle.
@@ -43,7 +43,7 @@ Proof.
   clear dependent P2.
 
   assert_diffs.
-  assert(Hos : one_side B1 B2 Q C1).
+  assert(Hos : OS B1 B2 Q C1).
   { apply (one_side_transitivity _ _ _ A1).
     - elim(eq_dec_points A1 Q).
       intro; subst A1; apply one_side_reflexivity; auto; apply (par_strict_not_col_2 A2); Par.
@@ -58,7 +58,7 @@ Proof.
   assert(~ Col Q C1 P) by (apply (par_not_col A1 A2); auto; apply (par_strict_col_par_strict _ _ _ C2); Col).
   assert(~ Col B1 B2 Q) by (apply (one_side_not_col _ _ _ C1); auto).
 
-  assert(HB3 : exists B3, Col B1 B2 B3 /\ one_side P Q C1 B3).
+  assert(HB3 : exists B3, Col B1 B2 B3 /\ OS P Q C1 B3).
   { elim(Col_dec P Q B1).
     2: intro; apply (not_par_same_side _ _ _ _ P); Col.
     intro.
@@ -71,7 +71,7 @@ Proof.
   assert(HB4 := symmetric_point_construction B3 P).
   destruct HB4 as [B4].
   assert(~ Col P Q B3) by (apply (one_side_not_col _ _ _ C1); Side).
-  assert(HA3 : exists A3, Col A1 A2 A3 /\ one_side P Q C1 A3).
+  assert(HA3 : exists A3, Col A1 A2 A3 /\ OS P Q C1 A3).
   { elim(Col_dec P Q A1).
     2: intro; apply (not_par_same_side _ _ _ _ Q); Col.
     intro.
@@ -85,9 +85,9 @@ Proof.
   assert_diffs.
   assert(HInAngle : InAngle C1 Q P B3).
     apply os2__inangle; Side; apply (col2_os__os B1 B2); Col.
-  assert(lta B3 P C1 B3 P Q).
+  assert(LtA B3 P C1 B3 P Q).
   { split.
-    exists C1; split; try (apply l11_24); Conga.
+    exists C1; split; try (apply l11_24); CongA.
     intro HConga.
     apply l11_22_aux in HConga.
     destruct HConga as [Habs|Habs].
@@ -97,7 +97,7 @@ Proof.
     apply one_side_symmetry.
     apply (col2_os__os B1 B2); Col.
   }
-  assert(acute B3 P C1).
+  assert(Acute B3 P C1).
   { exists B3.
     exists P.
     exists Q.
@@ -110,20 +110,20 @@ Proof.
     intro; assert_cols; apply HC1NotB; ColR.
     apply perp_per_1; auto; apply (perp_col2_bis _ _ _ _ A1 A2); Perp; ColR.
   assert(P<>R) by (intro; subst R; assert_cols; Col).
-  assert(one_side P Q R A3) by (apply invert_one_side; apply out_one_side; Col).
+  assert(OS P Q R A3) by (apply invert_one_side; apply out_one_side; Col).
   assert_diffs.
-  assert(one_side P C1 R Q).
+  assert(OS P C1 R Q).
     apply l12_6; apply (par_strict_col4__par_strict C1 C2 A1 A2); Col; Par; ColR.
   assert(Hsuma1 := ex_suma B4 P R P R Q).
   destruct Hsuma1 as [A [B [C Hsuma1]]]; auto.
-  assert(Htri : Trisuma R Q P A B C).
+  assert(Htri : TriSumA R Q P A B C).
   { exists B4.
     exists P.
     exists R.
     split; auto.
     apply (conga3_suma__suma B4 P Q Q P R B4 P R); try (apply conga_refl; auto).
     - exists R.
-      repeat (split; Conga).
+      repeat (split; CongA).
       apply l9_9.
       apply l9_2.
       apply (l9_8_2 _ _ B3).
@@ -146,26 +146,26 @@ Proof.
     apply (par_strict_col2_par_strict _ _ B1 B2); auto; ColR.
     ColR.
   }
-  assert(~ one_side P R B4 B3).
+  assert(~ OS P R B4 B3).
   { apply l9_9.
     repeat split; Col.
     intro; assert(Col R P B4); Col; ColR.
     exists P.
     split; Col; Between.
   }
-  assert(Hsuma3 : Suma B4 P R R P B3 B4 P B3) by (exists B3; repeat (split; Conga)).
+  assert(Hsuma3 : SumA B4 P R R P B3 B4 P B3) by (exists B3; repeat (split; CongA)).
   assert(Hisi3 : Isi B4 P R R P B3).
   { repeat split; auto.
     right; intro; assert_cols; Col.
-    exists B3; repeat (split; Conga).
+    exists B3; repeat (split; CongA).
     intro Habs.
     destruct Habs as [_ [_ [Habs _]]].
     assert_cols; Col.
   }
-  assert(lea C1 P B3 R P B3).
+  assert(LeA C1 P B3 R P B3).
   { apply lea_comm.
     exists C1.
-    split; Conga.
+    split; CongA.
     apply os_ts__inangle.
     - apply l9_2.
       apply (l9_8_2 _ _ Q); Side.
@@ -177,7 +177,7 @@ Proof.
       ColR.
   }
 
-  assert(Habs : lta A B C B4 P B3).
+  assert(Habs : LtA A B C B4 P B3).
   { apply (lea456789_lta__lta _ _ _ D E F).
     2: apply (isi_lea2_suma2__lea B4 P R C1 P B3 _ _ _ B4 P R R P B3); Lea.
     apply (isi_lea_lta456_suma2__lta B4 P R P R Q _ _ _ B4 P R C1 P B3); Lea.

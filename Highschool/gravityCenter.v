@@ -36,7 +36,7 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 Lemma intersection_two_medians_exist :
 forall A B C I J,
  ~Col A B C ->
- is_midpoint I B C -> is_midpoint J A C ->
+ Midpoint I B C -> Midpoint J A C ->
  exists G, Col G A I /\ Col G B J.
 Proof with finish.
 intros.
@@ -50,7 +50,7 @@ Qed.
 Lemma intersection_two_medians_exist_unique :
 forall A B C I J,
  ~Col A B C ->
- is_midpoint I B C -> is_midpoint J A C ->
+ Midpoint I B C -> Midpoint J A C ->
  exists! G, Col G A I /\ Col G B J.
 Proof with finish.
 intros.
@@ -67,7 +67,7 @@ Qed.
 
 Definition is_gravity_center G A B C :=
  ~ Col A B C /\
- exists I, exists J, is_midpoint I B C /\ is_midpoint J A C /\ Col G A I /\ Col G B J.
+ exists I, exists J, Midpoint I B C /\ Midpoint J A C /\ Col G A I /\ Col G B J.
 
 Lemma is_gravity_center_exist_unique : forall A B C,
   ~ Col A B C ->
@@ -97,9 +97,9 @@ Tactic Notation "Name" ident(G) "the" "intersection" "of" "the" "medians" "(" id
 Lemma three_medians_intersect:
  forall A B C I J K,
  ~Col A B C ->
- is_midpoint I B C ->
- is_midpoint J A C ->
- is_midpoint K A B ->
+ Midpoint I B C ->
+ Midpoint J A C ->
+ Midpoint K A B ->
  exists G, Col G A I /\ Col G B J /\Col G C K.
 Proof with assert_all.
 intros.
@@ -132,11 +132,10 @@ Name Z the intersection of the diagonals (G D)
 ColR.
 Qed.
 
-Lemma is_gravity_center_col :
- forall A B C G I,
- is_gravity_center G A B C ->
- is_midpoint I A B ->
- Col G I C.
+Lemma is_gravity_center_col : forall A B C G I,
+  is_gravity_center G A B C ->
+  Midpoint I A B ->
+  Col G I C.
 Proof.
 intros.
 unfold is_gravity_center in *.
@@ -200,7 +199,6 @@ assert_diffs.
 ColR.
 Qed.
 
-
 Lemma is_gravity_center_diff_3 :
  forall A B C G,
  is_gravity_center G A B C ->
@@ -224,9 +222,9 @@ Qed.
 Lemma is_gravity_center_third :
  forall A B C G G' A',
  is_gravity_center G A B C ->
- is_midpoint G' A G ->
- is_midpoint A' B C ->
- is_midpoint G A' G'.
+ Midpoint G' A G ->
+ Midpoint A' B C ->
+ Midpoint G A' G'.
 Proof.
 intros.
 Name C' the midpoint of A and B.
@@ -243,7 +241,7 @@ apply (varignon' A B C G C' A' G'' G');finish.
 intuition.
 apply parallelogram_to_plg in HPar.
 destruct HPar as [HDiff [I [HCol1 HCol2]]].
-assert (G = I); try (treat_equalities; unfold is_midpoint in *; spliter; eCong).
+assert (G = I); try (treat_equalities; unfold Midpoint in *; spliter; eCong).
 show_distinct G A; assert_diffs; try (apply H; assert_cols; ColR).
 assert_diffs; assert_cols.
 assert (~ Col A C G) by (intro; apply H; ColR).
@@ -254,9 +252,9 @@ Qed.
 
 Lemma is_gravity_center_third_reci :
  forall A B C G A' A'',
- is_midpoint A' B C ->
- is_midpoint A'' A G ->
- is_midpoint G A' A'' ->
+ Midpoint A' B C ->
+ Midpoint A'' A G ->
+ Midpoint G A' A'' ->
  ~ Col A B C ->
  is_gravity_center G A B C.
 Proof.
@@ -273,7 +271,7 @@ destruct HB' as [B''' HB'].
 assert (HPar1 : Par B A A' B').
   {
   apply triangle_mid_par with C; assert_diffs; try split;
-  unfold is_midpoint in *; spliter; Between; Cong.
+  unfold Midpoint in *; spliter; Between; Cong.
   }
 assert (HCong1 : Cong A C' A' B').
   {
@@ -283,7 +281,7 @@ assert (HCong1 : Cong A C' A' B').
 assert (HPar2 : Par A B A'' B'').
   {
   apply triangle_mid_par with G; assert_diffs; try split;
-  unfold is_midpoint in *; spliter; Between; Cong.
+  unfold Midpoint in *; spliter; Between; Cong.
   }
 assert (HCong2 : Cong A C' A'' B'').
   {
@@ -296,13 +294,13 @@ assert (HPar3 : Par A'' B'' A' B''').
   {
   apply plg_par_1; try (intro; treat_equalities; Col; assert_diffs; assert_cols; apply HNC; ColR).
   apply mid_plg_1 with G; try (intro; treat_equalities; assert_cols; Col);
-  unfold is_midpoint in *; spliter; split; Between; Cong.
+  unfold Midpoint in *; spliter; split; Between; Cong.
   }
 assert (Cong3 : Cong A'' B'' A' B''').
   {
   apply plg_cong_1.
   apply mid_plg_1 with G; try (intro; treat_equalities; assert_cols; Col);
-  unfold is_midpoint in *; spliter; split; Between; Cong.
+  unfold Midpoint in *; spliter; split; Between; Cong.
   }
 assert (HCol : Col A' B' B''').
   {
@@ -317,7 +315,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
   }
 
   {
-  assert (HFalse : one_side A' B'' A'' B''').
+  assert (HFalse : OS A' B'' A'' B''').
     {
     apply one_side_transitivity with G.
 
@@ -334,7 +332,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       split; try (intro; apply HABG; ColR).
       split; Col.
       split; try (intro; treat_equalities; Col).
-      unfold is_midpoint in *; spliter; Between.
+      unfold Midpoint in *; spliter; Between.
       }
 
       {
@@ -349,7 +347,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       split; try (intro; apply HABG; ColR).
       split; Col.
       split; try (intro; treat_equalities; Col).
-      unfold is_midpoint in *; spliter; Between.
+      unfold Midpoint in *; spliter; Between.
       }
     }
   apply l9_9_bis in HFalse; exfalso; apply HFalse; clear HFalse.
@@ -364,7 +362,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
     assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
     split; try (intro; apply HABG; ColR).
     split; try (intro; apply HABG; ColR).
-    exists A'; unfold is_midpoint in *; spliter; split; Col; Between.
+    exists A'; unfold Midpoint in *; spliter; split; Col; Between.
     }
 
     {
@@ -372,7 +370,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
 
       {
       apply one_side_symmetry; apply l9_17 with C;
-      try (unfold is_midpoint in *; spliter; assumption).
+      try (unfold Midpoint in *; spliter; assumption).
       apply one_side_transitivity with G.
 
         {
@@ -388,7 +386,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
         split; try (intro; apply HABG; ColR).
         split; Col.
         split; try (intro; treat_equalities; Col).
-        unfold is_midpoint in *; spliter; eBetween.
+        unfold Midpoint in *; spliter; eBetween.
         }
 
         {
@@ -403,7 +401,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
           assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
           split; try (intro; apply HABG; ColR).
           split; try (intro; apply HABG; ColR).
-          exists B''; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists B''; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
           {
@@ -415,7 +413,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
           assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
           split; try (intro; apply HABG; ColR).
           split; try (intro; apply HABG; ColR).
-          exists A'; unfold is_midpoint in *; spliter; split; Col; Between.
+          exists A'; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
       }
@@ -433,7 +431,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       split; try (intro; apply HABG; ColR).
       split; Col.
       split; try (intro; treat_equalities; Col).
-      unfold is_midpoint in *; spliter; eBetween.
+      unfold Midpoint in *; spliter; eBetween.
       }
     }
   }
@@ -496,13 +494,6 @@ intros.
 apply is_gravity_center_perm in H;intuition.
 Qed.
 
-Hint Resolve
-     is_gravity_center_perm_1
-     is_gravity_center_perm_2
-     is_gravity_center_perm_3
-     is_gravity_center_perm_4
-     is_gravity_center_perm_5 : gravityCenter.
-
 Lemma is_gravity_center_cases : forall A B C G,
   is_gravity_center G A B C \/
   is_gravity_center G A C B \/
@@ -523,15 +514,24 @@ apply is_gravity_center_perm in H0;intuition.
 Qed.
 
 End GravityCenter.
+(* If we prove it with "Context `{M:Tarski_neutral_dimensionless}." we do not get the warning
+"the hint: eapply @is_gravity_center_perm_1 will only be used by eauto".
+There must be a bug with the handling of bases of hints. *)
+Hint Resolve
+     is_gravity_center_perm_1
+     is_gravity_center_perm_2
+     is_gravity_center_perm_3
+     is_gravity_center_perm_4
+     is_gravity_center_perm_5 : gravitycenter.
 
 Ltac permutation_intro_in_goal :=
  match goal with
  | |- Par ?A ?B ?C ?D => apply Par_cases
  | |- Par_strict ?A ?B ?C ?D => apply Par_strict_cases
  | |- Perp ?A ?B ?C ?D => apply Perp_cases
- | |- Perp_in ?X ?A ?B ?C ?D => apply Perp_in_cases
+ | |- Perp_at ?X ?A ?B ?C ?D => apply Perp_in_cases
  | |- Per ?A ?B ?C => apply Per_cases
- | |- is_midpoint ?A ?B ?C => apply Mid_cases
+ | |- Midpoint ?A ?B ?C => apply Mid_cases
  | |- ~ Col ?A ?B ?C => apply NCol_cases
  | |- Col ?A ?B ?C => apply Col_cases
  | |- Bet ?A ?B ?C => apply Bet_cases
@@ -539,7 +539,7 @@ Ltac permutation_intro_in_goal :=
  | |- is_gravity_center ?G ?A ?B ?C => apply is_gravity_center_cases
  end.
 
-Ltac gravityCenter := auto with gravityCenter.
+Ltac Gravitycenter := auto with gravitycenter.
 
 Ltac finish := repeat match goal with
  | |- Bet ?A ?B ?C => Between
@@ -548,11 +548,11 @@ Ltac finish := repeat match goal with
  | |- Par ?A ?B ?C ?D => Par
  | |- Par_strict ?A ?B ?C ?D => Par
  | |- Perp ?A ?B ?C ?D => Perp
- | |- Perp_in ?A ?B ?C ?D ?E => Perp
+ | |- Perp_at ?A ?B ?C ?D ?E => Perp
  | |- Per ?A ?B ?C => Perp
  | |- Cong ?A ?B ?C ?D => Cong
- | |- is_gravity_center ?G ?A ?B ?C => gravityCenter
- | |- is_midpoint ?A ?B ?C => Midpoint
+ | |- is_gravity_center ?G ?A ?B ?C => Gravitycenter
+ | |- Midpoint ?A ?B ?C => Midpoint
  | |- ?A<>?B => apply swap_diff;assumption
  | |- _ => try assumption
 end.
@@ -565,11 +565,11 @@ Ltac sfinish := repeat match goal with
  | |- Par ?A ?B ?C ?D => Par
  | |- Par_strict ?A ?B ?C ?D => Par
  | |- Perp ?A ?B ?C ?D => Perp
- | |- Perp_in ?A ?B ?C ?D ?E => Perp
+ | |- Perp_at ?A ?B ?C ?D ?E => Perp
  | |- Per ?A ?B ?C => Perp
  | |- Cong ?A ?B ?C ?D => Cong;eCong
- | |- is_gravity_center ?G ?A ?B ?C => gravityCenter
- | |- is_midpoint ?A ?B ?C => Midpoint
+ | |- is_gravity_center ?G ?A ?B ?C => Gravitycenter
+ | |- Midpoint ?A ?B ?C => Midpoint
  | |- ?A<>?B => apply swap_diff;assumption
  | |- ?A<>?B => intro;treat_equalities; solve [search_contradiction]
  | |- ?G1 /\ ?G2 => split

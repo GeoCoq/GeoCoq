@@ -32,8 +32,8 @@ Proof. exact col_transitivity_2. Qed.
 
 Lemma triangle_mid_par_strict : forall A B C P Q,
  ~Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
  Par_strict A B Q P.
 Proof.
 intros.
@@ -69,9 +69,9 @@ Qed.
 
 Lemma triangle_mid_par_strict_cong_aux : forall A B C P Q R,
  ~Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par_strict A B Q P  /\ Cong A R P Q /\ Cong B R P Q .
 Proof with finish.
 intros.
@@ -109,10 +109,10 @@ Qed.
 
 Lemma triangle_par_mid : forall A B C P Q,
  ~ Col A B C ->
- is_midpoint P B C ->
+ Midpoint P B C ->
  Par A B Q P ->
  Col Q A C ->
- is_midpoint Q A C.
+ Midpoint Q A C.
 Proof.
 assert (H:=playfair_s_postulate_implies_midpoints_converse_postulate);
 unfold midpoints_converse_postulate in H; intros; apply H with B P; Col.
@@ -122,9 +122,9 @@ Qed.
 
 Lemma triangle_mid_par_strict_cong_1 : forall A B C P Q R,
  ~Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par_strict A B Q P  /\ Cong A R P Q.
 Proof.
 intros.
@@ -136,9 +136,9 @@ Qed.
 
 Lemma triangle_mid_par_strict_cong_2 : forall A B C P Q R,
  ~Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par_strict A B Q P  /\ Cong B R P Q.
 Proof.
 intros.
@@ -151,8 +151,8 @@ Qed.
 Lemma triangle_mid_par_strict_cong_simp :
  forall A B C P Q,
  ~ Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
  Par_strict A B Q P.
 Proof.
 apply triangle_mid_par.
@@ -160,9 +160,9 @@ Qed.
 
 Lemma triangle_mid_par_strict_cong : forall A B C P Q R,
  ~Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par_strict A B Q P /\ Par_strict A C P R /\ Par_strict B C Q R /\
  Cong A R P Q /\ Cong B R P Q /\ Cong A Q P R /\ Cong C Q P R /\ Cong B P Q R /\ Cong C P Q R.
 Proof with finish.
@@ -185,9 +185,9 @@ Qed.
 Lemma triangle_mid_par_flat_cong_aux : forall A B C P Q R,
  B <> A ->
  Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par A B Q P /\ Cong A R P Q /\ Cong B R P Q.
 Proof with finish.
 intros.
@@ -241,9 +241,9 @@ Qed.
 Lemma triangle_mid_par_flat_cong_1 : forall A B C P Q R,
  B <> A ->
  Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par A B Q P  /\ Cong A R P Q.
 Proof.
 intros.
@@ -256,9 +256,9 @@ Qed.
 Lemma triangle_mid_par_flat_cong_2 : forall A B C P Q R,
  B <> A ->
  Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par A B Q P /\ Cong B R P Q.
 Proof.
 intros.
@@ -273,9 +273,9 @@ Lemma triangle_mid_par_flat_cong : forall A B C P Q R,
  C <> A ->
  C <> B ->
  Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par A B Q P /\ Par A C P R /\ Par B C Q R /\
  Cong A R P Q /\ Cong B R P Q /\ Cong A Q P R /\ Cong C Q P R /\ Cong B P Q R /\ Cong C P Q R.
 Proof with finish.
@@ -292,8 +292,8 @@ Qed.
 Lemma triangle_mid_par_flat : forall A B C P Q,
  B <> A ->
  Col A B C ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
  Par A B Q P.
 Proof.
 intros.
@@ -304,8 +304,8 @@ Qed.
 
 Lemma triangle_mid_par : forall A B C P Q,
  A <> B ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
  Par A B Q P.
 Proof.
 intros.
@@ -320,9 +320,9 @@ Lemma triangle_mid_par_cong : forall A B C P Q R,
  B <> A ->
  C <> A ->
  C <> B ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par A B Q P /\ Par A C P R /\ Par B C Q R /\
  Cong A R P Q /\ Cong B R P Q /\ Cong A Q P R /\ Cong C Q P R /\ Cong B P Q R /\ Cong C P Q R.
 Proof.
@@ -338,9 +338,9 @@ Qed.
 
 Lemma triangle_mid_par_cong_1 : forall A B C P Q R,
  C <> B ->
- is_midpoint P B C ->
- is_midpoint Q A C ->
- is_midpoint R A B ->
+ Midpoint P B C ->
+ Midpoint Q A C ->
+ Midpoint R A B ->
  Par B C Q R /\ Cong B P Q R .
 Proof.
 intros.

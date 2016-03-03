@@ -14,8 +14,6 @@ Module Import PosSort := Sort PosOrder.
 Section Coinc_refl.
 
 Context {AR : Arity}.
-Context {COP : Coinc_predicates AR}.
-Context {COT : Coinc_theory AR COP}.
 
 Definition pick_variety_auxCP {m : nat} (s : SS.elt) (cp : cartesianPower positive (S (S m))) : bool.
 Proof.
@@ -437,13 +435,13 @@ elim (SSWP.In_dec (S.union s1 s2) (SS.remove s2 (SS.remove s1 ss))); intro HDec.
   apply SSWP.add_cardinal_1; assumption.
   rewrite HR2.
   rewrite <- HR1.
-  omega.
+  apply le_S;apply le_n.
 
   assert (HR2 : SS.cardinal (SS.add (S.union s1 s2) (SS.remove s2 (SS.remove s1 ss))) = S( SS.cardinal (SS.remove s2 (SS.remove s1 ss)))).
   apply SSWP.add_cardinal_2; assumption.
   rewrite HR2.
   rewrite <- HR1.
-  omega.
+  apply le_n.
 Defined.
 
 Definition memCPAux m (cp : cartesianPower positive (S (S m))) (s : SS.elt) : bool.
@@ -659,6 +657,8 @@ induction m; intros cp interp.
     reflexivity.
 Qed.
 
+Context {COP : Coinc_predicates AR}.
+
 Definition ss_ok (ss : SS.t) (interp: positive -> COINCpoint) :=
   forall s, SS.mem s ss = true ->
   forall cp, memCP cp s = true ->
@@ -772,6 +772,8 @@ Qed.
 
 Definition st_ok (st : STt) (interp: positive -> COINCpoint) :=
   forall t, STmem t st = true -> app wd (interp_CP t interp).
+
+Context {COT : Coinc_theory AR COP}.
 
 Lemma identify_varieties_ok : forall ss st interp,
   ss_ok ss interp -> st_ok st interp ->
@@ -944,17 +946,17 @@ induction m'.
     apply andb_true_iff in Hmem.
     destruct Hmem as [Hmem1 Hmem2].
     assert (HmemEq : S.mem (fst cp') (S.add (fst cp) (S.add (snd cp) S.empty)) = S.mem (fst cp') s)
-      by (apply SWP.FM.mem_m; trivial); rewrite <- HmemEq in Hmem1; clear HmemEq.
+      by (apply SWP.FM.mem_m; trivial); simpl in *;rewrite <- HmemEq in Hmem1; clear HmemEq.
     assert (HmemEq : S.mem (snd cp') (S.add (fst cp) (S.add (snd cp) S.empty)) = S.mem (snd cp') s)
-      by (apply SWP.FM.mem_m; trivial); rewrite <- HmemEq in Hmem2; clear HmemEq; clear HEq.
+      by (apply SWP.FM.mem_m; trivial); simpl in *;rewrite <- HmemEq in Hmem2; clear HmemEq; clear HEq.
     rewrite SWP.Dec.F.add_b in Hmem1.
     rewrite <- SWP.Dec.F.singleton_b in Hmem1.
     assert (HmemEq : S.mem (fst cp') (S.add (snd cp) S.empty) = S.mem (fst cp') (S.singleton (snd cp)))
-      by (apply SWP.FM.mem_m; trivial; apply SWP.singleton_equal_add); rewrite HmemEq in Hmem1; clear HmemEq.
+      by (apply SWP.FM.mem_m; trivial; apply SWP.singleton_equal_add); simpl in *;rewrite HmemEq in Hmem1; clear HmemEq.
     rewrite SWP.Dec.F.add_b in Hmem2.
     rewrite <- SWP.Dec.F.singleton_b in Hmem2.
     assert (HmemEq : S.mem (snd cp') (S.add (snd cp) S.empty) = S.mem (snd cp') (S.singleton (snd cp)))
-      by (apply SWP.FM.mem_m; trivial; apply SWP.singleton_equal_add); rewrite HmemEq in Hmem2; clear HmemEq.
+      by (apply SWP.FM.mem_m; trivial; apply SWP.singleton_equal_add); simpl in *;rewrite HmemEq in Hmem2; clear HmemEq.
     apply orb_true_iff in Hmem1.
     apply orb_true_iff in Hmem2.
     elim HIn; clear HIn; intro HIn.
