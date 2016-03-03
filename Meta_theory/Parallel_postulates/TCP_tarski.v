@@ -64,7 +64,7 @@ intros HABC HABx HADT HBCT HBDC HACy HxTy.
 apply between_symmetry in HACy.
 assert (HI := inner_pasch C x y A T HACy HxTy); destruct HI as [I [HAIx HICT]].
 assert (HAx : A <> x) by (intro; treat_equalities; apply HABC; assert_cols; ColR).
-assert (HTS : two_sides A B C T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
+assert (HTS : TS A B C T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
 exists I; split; Between; assert_cols; ColR); apply l9_9 in HTS.
 apply HTS; apply one_side_transitivity with D.
 
@@ -139,10 +139,10 @@ Proof.
 intros A B C D T x y.
 intros HAB HAC HAD HAT HBC HBD HBT HCD HCT HDT Hxy.
 intros HABC HACy HADT HBCT HBDC HABx HTyx.
-assert (HTS : two_sides A C x T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
+assert (HTS : TS A C x T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
                                      exists y; split; assert_cols; Col; Between).
 assert (HAx : A <> x) by (intro; subst; apply HABC; assert_cols; ColR).
-assert (HOS : one_side A C x B).
+assert (HOS : OS A C x B).
 {
   assert (HACA : Col A C A) by Col.
   assert (HABx' : Col x B A) by (induction HABx; assert_cols; Col).
@@ -150,7 +150,7 @@ assert (HOS : one_side A C x B).
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; auto).
 }
-assert (HTS' : two_sides A C B T) by (apply l9_8_2 with x; assumption);
+assert (HTS' : TS A C B T) by (apply l9_8_2 with x; assumption);
 clear HTS; clear HOS; rename HTS' into HTS; apply l9_9 in HTS.
 apply HTS; apply one_side_transitivity with D.
 
@@ -193,9 +193,9 @@ Proof.
 intros A B C D T x y.
 intros HAB HAC HAD HAT HBC HBD HBT HCD HCT HDT Hxy.
 intros HABC HACy HADT HBCT HBDC HABx HTyx HPar.
-assert (HTS : two_sides B C A T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
+assert (HTS : TS B C A T) by (repeat (split; Col); try (intro; apply HBCT; assert_cols; ColR);
                                      exists D; split; assert_cols; Col; Between).
-assert (HOS : one_side B C A x).
+assert (HOS : OS B C A x).
 {
   assert (HBCB : Col B C B) by Col.
   assert (HABx' : Col A x B) by Col.
@@ -204,7 +204,7 @@ assert (HOS : one_side B C A x).
   repeat (split; Between).
   intro; treat_equalities; intuition.
 }
-assert (HTS' : two_sides B C x T) by (apply l9_8_2 with A; assumption);
+assert (HTS' : TS B C x T) by (apply l9_8_2 with A; assumption);
 clear HTS; clear HOS; destruct HTS' as [Hclear [Hclear' [Hclear'' [I [HBCI HITx]]]]];
 clear Hclear; clear Hclear'; clear Hclear''.
 assert (HTx : T <> x) by (intro; subst; apply HABC; assert_cols; ColR).
@@ -274,7 +274,7 @@ Proof.
 intros A B C D T Y HAB HAC HAD HAT HAY HBC HBD HBT HBY HCD HCT HCY HDT HTY.
 intros  HABC HADT HBCT HBDC HBYT.
 intro HACY.
-assert (HTS : two_sides A C B T)
+assert (HTS : TS A C B T)
   by (repeat (split; Col); try (intro; apply HABC; assert_cols; ColR); exists Y; split; Col; Between).
 apply l9_9 in HTS; apply HTS; apply one_side_transitivity with D.
 

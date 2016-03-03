@@ -22,7 +22,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides A R B Q).
+  assert (H : TS A R B Q).
     {
     apply l9_8_2 with X2.
 
@@ -54,7 +54,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides B R A Q).
+    assert (H : TS B R A Q).
       {
       apply l9_8_2 with X1.
 
@@ -83,7 +83,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (HTS1 : two_sides Q R X1 X2).
+    assert (HTS1 : TS Q R X1 X2).
       {
       split; try  (intro; subst; apply HNC; ColR).
       assert (R <> X1) by (intro; subst; apply HNC; ColR).
@@ -92,7 +92,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       split; try (intro; assert_cols; apply HBQR; ColR).
       exists Q; Col; Between.
       }
-    assert (HTS2 : two_sides Q R A X2).
+    assert (HTS2 : TS Q R A X2).
       {
       apply l9_8_2 with X1; try assumption.
       assert (H1 : Q <> R) by (assert_diffs; auto).
@@ -105,7 +105,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       split; try (intro; subst; apply HABR; Col).
       Between.
       }
-    assert (H : two_sides Q R A B).
+    assert (H : TS Q R A B).
       {
       apply l9_2.
       apply l9_8_2 with X2; try (apply l9_2; assumption).
@@ -142,7 +142,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides A R B Q).
+  assert (H : TS A R B Q).
     {
     apply l9_8_2 with X2.
 
@@ -174,7 +174,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides B R A Q).
+    assert (H : TS B R A Q).
       {
       apply l9_8_2 with X1.
 
@@ -203,7 +203,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (H : two_sides R Q A B).
+    assert (H : TS R Q A B).
       {
       apply l9_31.
 
@@ -285,7 +285,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides R Q A B).
+  assert (H : TS R Q A B).
     {
     apply l9_31.
 
@@ -347,7 +347,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -378,7 +378,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -427,7 +427,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides A R B Q).
+  assert (H : TS A R B Q).
     {
     apply l9_8_2 with X2.
 
@@ -461,7 +461,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides B R A Q).
+    assert (H : TS B R A Q).
       {
       apply l9_8_2 with X1.
 
@@ -492,7 +492,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (H : two_sides R Q A B).
+    assert (H : TS R Q A B).
       {
       apply l9_31.
 
@@ -575,7 +575,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides R Q A B).
+  assert (H : TS R Q A B).
     {
     apply l9_31.
 
@@ -637,7 +637,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -668,7 +668,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -717,7 +717,7 @@ assert (HQX1X2 : Col Q X1 X2) by (assert_diffs; ColR).
 elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
   {
-  assert (H : two_sides B R Q A).
+  assert (H : TS B R Q A).
     {
     apply l9_8_2 with X1.
 
@@ -749,7 +749,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
   elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -778,7 +778,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
     }
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -905,7 +905,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
   elim H; clear H; intro HAPU.
 
     {
-    assert (H : two_sides Q A R B).
+    assert (H : TS Q A R B).
       {
       apply l9_31.
 
@@ -982,7 +982,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
     }
 
     {
-    assert (H : two_sides B Q R A).
+    assert (H : TS B Q R A).
       {
       apply l9_8_2 with P.
 
@@ -1033,7 +1033,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
   elim H; clear H; intro HAPU.
 
     {
-    assert (H : two_sides R A Q B).
+    assert (H : TS R A Q B).
       {
       apply l9_31.
 
@@ -1110,7 +1110,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
     }
 
     {
-    assert (H : two_sides B R Q A).
+    assert (H : TS B R Q A).
       {
       apply l9_8_2 with P.
 
@@ -1180,7 +1180,7 @@ assert (H := l5_3 P A U X1 HCol1 HPUX1).
 elim H; clear H; intro HAPU.
 
   {
-  assert (H : two_sides B R Q A).
+  assert (H : TS B R Q A).
     {
     apply l9_8_2 with X1.
 
@@ -1209,7 +1209,7 @@ elim H; clear H; intro HAPU.
   }
 
   {
-  assert (H : two_sides R A Q B).
+  assert (H : TS R A Q B).
     {
     apply l9_31.
 
@@ -1314,7 +1314,7 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
   }
 
   {
-  assert (H : two_sides R A Q B).
+  assert (H : TS R A Q B).
 
     {
     apply l9_31.
@@ -1452,7 +1452,7 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
     }
 
     {
-    assert (H : two_sides R B Q A).
+    assert (H : TS R B Q A).
 
       {
       apply l9_31.
@@ -1555,7 +1555,7 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
     }
 
     {
-    assert (H : two_sides Q B R A).
+    assert (H : TS Q B R A).
 
       {
       apply l9_31.
@@ -1730,7 +1730,7 @@ Lemma coplanar_trans_1_aux_2_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2 HCol2 HCol4 HCol1 HCol3.
-assert (H : two_sides Q R A B).
+assert (H : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -1776,7 +1776,7 @@ Lemma coplanar_trans_1_aux_2_1_3_1_1 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
-assert (HOS : one_side Q R A B).
+assert (HOS : OS Q R A B).
   {
   apply one_side_transitivity with P.
 
@@ -1807,7 +1807,7 @@ assert (H : X2 <> X1) by auto; assert (HQRX1 := l5_2 X2 X1 Q R H HQX1X2 HRX1X2);
 elim HQRX1; clear HQRX1; intro HQRX1.
 
   {
-  assert (H : two_sides Q B R A).
+  assert (H : TS Q B R A).
     {
     apply l9_31; apply one_side_symmetry; try assumption.
     exists X2; split.
@@ -1836,7 +1836,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
   }
 
   {
-  assert (H : two_sides R B Q A).
+  assert (H : TS R B Q A).
     {
     apply l9_31; apply one_side_symmetry; apply invert_one_side; try assumption.
     exists X2; split.
@@ -1885,7 +1885,7 @@ Lemma coplanar_trans_1_aux_2_1_3_1_2 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
-assert (H : two_sides A Q R B).
+assert (H : TS A Q R B).
   {
   apply l9_8_2 with X2.
 
@@ -1936,7 +1936,7 @@ Lemma coplanar_trans_1_aux_2_1_3_1_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
-assert (H : two_sides A Q R B).
+assert (H : TS A Q R B).
   {
   apply l9_8_2 with X2.
 
@@ -1988,7 +1988,7 @@ Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
 assert (HQRX2 := l5_2 X1 X2 Q R HX1X2 HQX1X2 HRX1X2).
-assert (HOS : one_side Q R A B).
+assert (HOS : OS Q R A B).
   {
   apply one_side_transitivity with P.
 
@@ -2027,7 +2027,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
     }
 
     {
-    assert (H : two_sides Q B R A).
+    assert (H : TS Q B R A).
       {
       apply l9_31; apply one_side_symmetry; try assumption.
       exists X2; split.
@@ -2067,7 +2067,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
     }
 
     {
-    assert (H : two_sides R B Q A).
+    assert (H : TS R B Q A).
       {
       apply l9_31; apply one_side_symmetry; apply invert_one_side; try assumption.
       exists X2; split.
@@ -2116,7 +2116,7 @@ Lemma coplanar_trans_1_aux_2_1_3_2_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
-assert (HOS : one_side Q R A B).
+assert (HOS : OS Q R A B).
   {
   apply one_side_transitivity with P.
 
@@ -2153,7 +2153,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (H : two_sides Q A B R).
+  assert (H : TS Q A B R).
     {
     apply l9_31; try assumption.
     apply one_side_transitivity with P.
@@ -2223,7 +2223,7 @@ Lemma coplanar_trans_1_aux_2_1_3_3_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
-assert (HOS : one_side Q R A B).
+assert (HOS : OS Q R A B).
   {
   apply one_side_transitivity with P.
 
@@ -2275,7 +2275,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
       }
 
       {
-      assert (H : two_sides Q A B R).
+      assert (H : TS Q A B R).
         {
         apply l9_31; try assumption.
         apply one_side_transitivity with P.
@@ -2332,7 +2332,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
       }
 
       {
-      assert (H : two_sides Q B A R).
+      assert (H : TS Q B A R).
         {
         apply l9_8_2 with X1.
 
@@ -2370,7 +2370,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
 
     {
     elim (eq_dec_points R X2); intro HRX2; treat_equalities; Cop.
-    assert (H : two_sides R A B Q).
+    assert (H : TS R A B Q).
       {
       apply l9_31; apply invert_one_side; try assumption.
       apply one_side_transitivity with P.
@@ -2427,7 +2427,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
       }
 
       {
-      assert (H : two_sides R B A Q).
+      assert (H : TS R B A Q).
         {
         apply l9_8_2 with X1.
 
@@ -2579,7 +2579,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       }
 
       {
-      assert (H : two_sides Q B A R).
+      assert (H : TS Q B A R).
         {
         apply l9_8_2 with X1.
 
@@ -2618,7 +2618,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       }
 
       {
-      assert (H : two_sides Q A R B).
+      assert (H : TS Q A R B).
         {
         apply l9_31.
 
@@ -2687,7 +2687,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       }
 
       {
-      assert (H : two_sides R B A Q).
+      assert (H : TS R B A Q).
         {
         apply l9_8_2 with X1.
 
@@ -2726,7 +2726,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       }
 
       {
-      assert (H : two_sides R A Q B).
+      assert (H : TS R A Q B).
         {
         apply l9_31.
 
@@ -2800,7 +2800,7 @@ intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
 elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
   {
-  assert (H : two_sides B Q R A).
+  assert (H : TS B Q R A).
     {
     apply l9_8_2 with P.
 
@@ -2850,7 +2850,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   elim H; clear H; intro HAX1U.
 
     {
-    assert (H : two_sides Q A R B).
+    assert (H : TS Q A R B).
       {
       apply l9_31.
 
@@ -2905,7 +2905,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
     }
 
     {
-    assert (H : two_sides B Q R A).
+    assert (H : TS B Q R A).
       {
       apply l9_8_2 with X1.
 
@@ -2957,7 +2957,7 @@ intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
 elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
   {
-  assert (H : two_sides B Q R A).
+  assert (H : TS B Q R A).
     {
     apply l9_8_2 with P.
 
@@ -3007,7 +3007,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   elim H; clear H; intro HAX1U.
 
     {
-    assert (H : two_sides Q A R B).
+    assert (H : TS Q A R B).
       {
       apply l9_31.
 
@@ -3062,7 +3062,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
     }
 
     {
-    assert (H : two_sides B Q R A).
+    assert (H : TS B Q R A).
       {
       apply l9_8_2 with X1.
 
@@ -3125,7 +3125,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
     }
 
     {
-    assert (H : two_sides A Q B R).
+    assert (H : TS A Q B R).
       {
       apply l9_8_2 with X2.
 
@@ -3167,7 +3167,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
     }
 
     {
-    assert (H : two_sides A R B Q).
+    assert (H : TS A R B Q).
       {
       apply l9_8_2 with X2.
 
@@ -3286,7 +3286,7 @@ Lemma coplanar_trans_1_aux_2_2_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2 HCol2 HCol4 HCol1 HCol3.
-assert (H : two_sides Q R B A).
+assert (H : TS Q R B A).
   {
   apply l9_8_2 with P.
 
@@ -3346,7 +3346,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
   elim H; clear H; intro HBPU.
 
     {
-    assert (H : two_sides R B Q A).
+    assert (H : TS R B Q A).
       {
       apply l9_31.
 
@@ -3408,7 +3408,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
     }
 
     {
-    assert (H : two_sides A R Q B).
+    assert (H : TS A R Q B).
       {
       apply l9_8_2 with X2.
 
@@ -3447,7 +3447,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
   elim H; clear H; intro HBPU.
 
     {
-    assert (H : two_sides Q B R A).
+    assert (H : TS Q B R A).
       {
       apply l9_31.
 
@@ -3509,7 +3509,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
     }
 
     {
-    assert (H : two_sides A Q R B).
+    assert (H : TS A Q R B).
       {
       apply l9_8_2 with X2.
 
@@ -3567,7 +3567,7 @@ assert (H := l5_2 X2 P B U HPX2 HCol3 HX2PU).
 elim H; clear H; intro HBPU.
 
   {
-  assert (H : two_sides Q B R A).
+  assert (H : TS Q B R A).
     {
     apply l9_31.
 
@@ -3629,7 +3629,7 @@ elim H; clear H; intro HBPU.
   }
 
   {
-  assert (H : two_sides A Q R B).
+  assert (H : TS A Q R B).
     {
     apply l9_8_2 with X2.
 
@@ -3686,7 +3686,7 @@ assert (H := l5_2 X2 P B U HPX2 HCol3 HX2PU).
 elim H; clear H; intro HBPU.
 
   {
-  assert (H : two_sides Q B R A).
+  assert (H : TS Q B R A).
     {
     apply l9_31.
 
@@ -3748,7 +3748,7 @@ elim H; clear H; intro HBPU.
   }
 
   {
-  assert (H : two_sides A Q R B).
+  assert (H : TS A Q R B).
     {
     apply l9_8_2 with X2.
 
@@ -3800,7 +3800,7 @@ intros P Q R A B X1 X2 HNC HABP HABQ HABR HAQR HBQR HAX1 HAX2 HX1X2;
 intros HCol2 HCol4 HCol1 HCol3 HQX1X2 HRX1X2.
 apply between_symmetry in HQX1X2.
 apply between_symmetry in HRX1X2.
-assert (HOS : one_side Q R A B).
+assert (HOS : OS Q R A B).
   {
   apply one_side_transitivity with P.
 
@@ -3833,7 +3833,7 @@ elim H; clear H; intro HQRX1.
   elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
     {
-    assert (H : two_sides Q A R B).
+    assert (H : TS Q A R B).
       {
       apply l9_31; try assumption.
       apply one_side_transitivity with X2.
@@ -3881,7 +3881,7 @@ elim H; clear H; intro HQRX1.
     }
 
     {
-    assert (H : two_sides Q A R B).
+    assert (H : TS Q A R B).
       {
       apply l9_31; try assumption.
       exists X1; split.
@@ -3913,7 +3913,7 @@ elim H; clear H; intro HQRX1.
   elim (eq_dec_points R X1); intro HRX1; treat_equalities.
 
     {
-    assert (H : two_sides R A Q B).
+    assert (H : TS R A Q B).
       {
       apply l9_31; try (apply invert_one_side; assumption).
       apply one_side_transitivity with X2.
@@ -3961,7 +3961,7 @@ elim H; clear H; intro HQRX1.
     }
 
     {
-    assert (H : two_sides R A Q B).
+    assert (H : TS R A Q B).
       {
       apply l9_31; try (apply invert_one_side; assumption).
       exists X1; split.
@@ -4184,7 +4184,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides R A Q X2).
+  assert (HTS : TS R A Q X2).
     {
     apply l9_8_2 with P.
 
@@ -4231,7 +4231,7 @@ Lemma coplanar_trans_1_aux_3_1_2_1_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAPR HAQR HBPQ HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with X1.
 
@@ -4302,7 +4302,7 @@ Lemma coplanar_trans_1_aux_3_1_2_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAPR HAQR HBPQ HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with X1.
 
@@ -4380,7 +4380,7 @@ assert (HElim : Bet Q I X1 \/ Bet Q X1 I) by (apply l5_2 with P; assert_diffs; B
 elim HElim; clear HElim; intro HQX1I.
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     elim (eq_dec_points R X1); intro HRX1.
 
@@ -4474,7 +4474,7 @@ Lemma coplanar_trans_1_aux_3_1_2_2_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAPR HAQR HBPQ HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with X1.
 
@@ -4547,7 +4547,7 @@ Lemma coplanar_trans_1_aux_3_1_2_2_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAPR HAQR HBPQ HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with X1.
 
@@ -4626,7 +4626,7 @@ assert (HElim : Bet Q I X1 \/ Bet Q X1 I) by (apply l5_2 with P; assert_diffs; B
 elim HElim; clear HElim; intro HQX1I.
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     elim (eq_dec_points R X1); intro HRX1.
 
@@ -4728,7 +4728,7 @@ elim (eq_dec_points R X1); intro HRX1.
   }
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_8_2 with X1.
 
@@ -4784,7 +4784,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   elim HElim; clear HElim; intro HRX2I.
 
     {
-    assert (HTS : two_sides Q B R A).
+    assert (HTS : TS Q B R A).
       {
       apply l9_31.
 
@@ -4877,7 +4877,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     }
 
     {
-    assert (HTS : two_sides Q A B R).
+    assert (HTS : TS Q A B R).
       {
       apply l9_8_2 with X2.
 
@@ -4927,7 +4927,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R A B).
+  assert (HTS : TS Q R A B).
     {
     apply l9_8_2 with X2.
 
@@ -5189,7 +5189,7 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
   }
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     apply l9_8_2 with X1.
 
@@ -5269,7 +5269,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q A B R).
+  assert (HTS : TS Q A B R).
     {
     apply l9_8_2 with X2.
 
@@ -5321,7 +5321,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R A B).
+  assert (HTS : TS Q R A B).
     {
     apply l9_8_2 with X2.
 
@@ -5442,7 +5442,7 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
   }
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     apply l9_8_2 with X1.
 
@@ -5553,7 +5553,7 @@ elim (eq_dec_points P I); intro HPI; treat_equalities.
     elim H; clear H; intro HPX1I.
 
       {
-      assert (HTS : two_sides R A Q B).
+      assert (HTS : TS R A Q B).
         {
         apply l9_31.
 
@@ -5666,7 +5666,7 @@ elim (eq_dec_points P I); intro HPI; treat_equalities.
         }
 
         {
-        assert (HTS : two_sides R B A Q).
+        assert (HTS : TS R B A Q).
           {
           apply l9_8_2 with X1.
 
@@ -5718,7 +5718,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R A B).
+  assert (HTS : TS Q R A B).
     {
     apply l9_8_2 with X2.
 
@@ -5831,7 +5831,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with X1.
 
@@ -5910,7 +5910,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with X1.
 
@@ -6003,7 +6003,7 @@ elim H; clear H; intro HQI1I2.
     assert (H := l5_1 P I1 A I HPI1 HPAI1 HPI1I); elim H; clear H; intro HPAI.
 
       {
-      assert (HTS : two_sides Q A B R).
+      assert (HTS : TS Q A B R).
         {
         apply l9_31.
 
@@ -6054,7 +6054,7 @@ elim H; clear H; intro HQI1I2.
       }
 
       {
-      assert (HTS : two_sides Q B R A).
+      assert (HTS : TS Q B R A).
         {
         apply l9_8_2 with P.
 
@@ -6094,7 +6094,7 @@ elim H; clear H; intro HQI1I2.
     assert (H := l5_1 P I2 B I HPI2 HPBI2 HPI2I); elim H; clear H; intro HPBI.
 
       {
-      assert (HTS : two_sides Q B A R).
+      assert (HTS : TS Q B A R).
         {
         apply l9_31.
 
@@ -6170,7 +6170,7 @@ elim H; clear H; intro HQI1I2.
       }
 
       {
-      assert (HTS : two_sides Q A R B).
+      assert (HTS : TS Q A R B).
         {
         apply l9_8_2 with P.
 
@@ -6399,7 +6399,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with P.
 
@@ -6461,7 +6461,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_31.
 
@@ -6555,7 +6555,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
   elim H; clear H; intro HX2BI.
 
     {
-    assert (HTS : two_sides R B Q A).
+    assert (HTS : TS R B Q A).
       {
       apply l9_31.
 
@@ -6625,7 +6625,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
     }
 
     {
-    assert (HTS : two_sides R A Q B).
+    assert (HTS : TS R A Q B).
       {
       apply l9_8_2 with P.
 
@@ -6697,7 +6697,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q A R B).
+  assert (HTS : TS Q A R B).
     {
     apply l9_31.
 
@@ -6838,7 +6838,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with P.
 
@@ -6932,7 +6932,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with P.
 
@@ -6987,7 +6987,7 @@ Lemma coplanar_trans_1_aux_4_1_2_2_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
@@ -7108,7 +7108,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
       elim (l5_2 P X2 B I HPX2 (between_symmetry B X2 P HCol3) HPX2I); intro HX2BI.
 
         {
-        assert (HTS : two_sides R B Q A).
+        assert (HTS : TS R B Q A).
           {
           apply l9_31.
 
@@ -7178,7 +7178,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
         }
 
         {
-        assert (HTS : two_sides R A Q B).
+        assert (HTS : TS R A Q B).
           {
           apply l9_8_2 with P.
 
@@ -7228,7 +7228,7 @@ assert (HPQ : P <> Q) by (assert_diffs; Col).
 assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQX1I.
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_31.
 
@@ -7298,7 +7298,7 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
   }
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     apply l9_8_2 with X1.
 
@@ -7379,7 +7379,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q R B A).
+  assert (HTS : TS Q R B A).
     {
     apply l9_8_2 with P.
 
@@ -7473,7 +7473,7 @@ assert (HRAI : Col R A I) by (assert_cols; ColR).
 assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_31.
 
@@ -7542,7 +7542,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_8_2 with P.
 
@@ -7588,7 +7588,7 @@ assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
 elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_8_2 with X1.
 
@@ -7616,7 +7616,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_31.
 
@@ -7654,7 +7654,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       }
 
       {
-      assert (HOS : one_side R A X2 Q).
+      assert (HOS : OS R A X2 Q).
         {
         apply one_side_symmetry.
         assert (H1 : R <> A) by (assert_diffs; auto).
@@ -7699,7 +7699,7 @@ Lemma coplanar_trans_1_aux_4_1_3_1_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -7737,7 +7737,7 @@ assert (HTS : two_sides R B Q A).
     }
 
     {
-    assert (HOS : one_side R A X2 Q).
+    assert (HOS : OS R A X2 Q).
       {
       apply one_side_symmetry.
       assert (H1 : R <> A) by (assert_diffs; auto).
@@ -7812,7 +7812,7 @@ Lemma coplanar_trans_1_aux_4_1_3_2_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
@@ -7908,7 +7908,7 @@ Lemma coplanar_trans_1_aux_4_1_3_2_2 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -7955,7 +7955,7 @@ Lemma coplanar_trans_1_aux_4_1_3_2_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -8033,9 +8033,9 @@ Lemma coplanar_trans_1_aux_4_1_3_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q A R B).
+assert (HTS : TS Q A R B).
   {
-  assert (HOS : one_side Q A R X2).
+  assert (HOS : OS Q A R X2).
     {
     assert (H1 : Q <> A) by (assert_diffs; auto).
     assert (H2 : Col Q A Q) by Col.
@@ -8045,7 +8045,7 @@ assert (HTS : two_sides Q A R B).
     split; assert_diffs; Col.
     split; try (intro; treat_equalities); Between.
     }
-  assert (HTS1 : two_sides Q A P R).
+  assert (HTS1 : TS Q A P R).
     {
     apply l9_2.
     assert (H := inner_pasch P A X1 Q R HCol1 (between_symmetry X1 R A HCol2));
@@ -8056,7 +8056,7 @@ assert (HTS : two_sides Q A R B).
     split; try (intro; apply HNC; assert_cols; ColR).
     exists I; assert_cols; Col.
     }
-  assert (HTS2 : two_sides Q A P X2)
+  assert (HTS2 : TS Q A P X2)
     by (apply l9_2; apply l9_8_2 with R; try apply l9_2; Col).
   apply l9_2; apply l9_8_2 with P; Col.
   destruct HTS2 as [H1 [H2 [HQAX2 [I [HQAI HPX2I]]]]]; clear H1; clear H2.
@@ -8064,8 +8064,8 @@ assert (HTS : two_sides Q A R B).
   assert (H2 : Col Q A I) by (assert_cols; Col).
   assert (H3 : Col P B I) by (show_distinct P X2; Col; assert_cols; ColR).
   assert (H := l9_19 Q A P B I H1 H2 H3); rewrite H.
-  split; try (intro; unfold two_sides in HTS1; spliter; Col).
-  split; try (intro; treat_equalities; unfold two_sides in HTS1; spliter; Col).
+  split; try (intro; unfold TS in HTS1; spliter; Col).
+  split; try (intro; treat_equalities; unfold TS in HTS1; spliter; Col).
   split; try (intro; treat_equalities; Col).
   eBetween.
   }
@@ -8089,7 +8089,7 @@ intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
   {
-  assert (HTS : two_sides Q A B R).
+  assert (HTS : TS Q A B R).
     {
     apply l9_8_2 with P.
 
@@ -8119,9 +8119,9 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides Q A R B).
+  assert (HTS : TS Q A R B).
     {
-    assert (HOS : one_side Q A R X2).
+    assert (HOS : OS Q A R X2).
       {
       assert (H1 : Q <> A) by (assert_diffs; auto).
       assert (H2 : Col Q A Q) by Col.
@@ -8131,7 +8131,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       split; assert_diffs; Col.
       split; try (intro; treat_equalities); Between.
       }
-    assert (HTS1 : two_sides Q A P R).
+    assert (HTS1 : TS Q A P R).
       {
       apply l9_2.
       assert (H := inner_pasch P A X1 Q R HCol1 (between_symmetry X1 R A HCol2));
@@ -8142,7 +8142,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       split; try (intro; apply HNC; assert_cols; ColR).
       exists I; assert_cols; Col.
       }
-    assert (HTS2 : two_sides Q A P X2)
+    assert (HTS2 : TS Q A P X2)
       by (apply l9_2; apply l9_8_2 with R; try apply l9_2; Col).
     apply l9_2; apply l9_8_2 with P; Col.
     destruct HTS2 as [H1 [H2 [HQAX2 [I [HQAI HPX2I]]]]]; clear H1; clear H2.
@@ -8150,8 +8150,8 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     assert (H2 : Col Q A I) by (assert_cols; Col).
     assert (H3 : Col P B I) by (show_distinct P X2; Col; assert_cols; ColR).
     assert (H := l9_19 Q A P B I H1 H2 H3); rewrite H.
-    split; try (intro; unfold two_sides in HTS1; spliter; Col).
-    split; try (intro; treat_equalities; unfold two_sides in HTS1; spliter; Col).
+    split; try (intro; unfold TS in HTS1; spliter; Col).
+    split; try (intro; treat_equalities; unfold TS in HTS1; spliter; Col).
     split; try (intro; treat_equalities; Col).
     eBetween.
     }
@@ -8182,7 +8182,7 @@ assert (HQI2 : Q <> I2) by (intro; treat_equalities; assert_cols; Col).
 assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clear H; intro PI1I2.
 
   {
-  assert (HTS : two_sides Q B A R).
+  assert (HTS : TS Q B A R).
     {
     apply l9_8_2 with I1.
 
@@ -8209,7 +8209,7 @@ assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clea
   }
 
   {
-  assert (HTS : two_sides Q A B R).
+  assert (HTS : TS Q A B R).
     {
     apply l9_8_2 with I2.
 
@@ -8348,7 +8348,7 @@ intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
   {
-  assert (HTS : two_sides R A B Q).
+  assert (HTS : TS R A B Q).
     {
     apply l9_8_2 with P.
 
@@ -8375,9 +8375,9 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides R A B Q).
+  assert (HTS : TS R A B Q).
     {
-    assert (HTS : two_sides R A X2 Q).
+    assert (HTS : TS R A X2 Q).
       {
       split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
@@ -8429,7 +8429,7 @@ intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
   {
-  assert (HTS : two_sides R A B Q).
+  assert (HTS : TS R A B Q).
     {
     apply l9_8_2 with P.
 
@@ -8470,7 +8470,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       }
 
       {
-      assert (HTS : two_sides R B Q A).
+      assert (HTS : TS R B Q A).
         {
         apply l9_31.
 
@@ -8544,7 +8544,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     }
 
     {
-    assert (HTS : two_sides R A Q B).
+    assert (HTS : TS R A Q B).
       {
       apply l9_8_2 with X2.
 
@@ -8585,7 +8585,7 @@ Lemma coplanar_trans_1_aux_4_2_1_1_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q A B R).
+assert (HTS : TS Q A B R).
   {
   elim (eq_dec_points A X1); intro HAX1; treat_equalities.
 
@@ -8655,7 +8655,7 @@ assert (HTS : two_sides Q A B R).
       }
 
       {
-      assert (HOS : one_side Q A X1 P).
+      assert (HOS : OS Q A X1 P).
         {
         apply one_side_symmetry.
         assert (H1 : Q <> A) by (assert_diffs; auto).
@@ -8667,7 +8667,7 @@ assert (HTS : two_sides Q A B R).
         split; try (intro; treat_equalities; assert_cols; Col).
         Between.
         }
-      assert (HTS : two_sides Q A X1 R).
+      assert (HTS : TS Q A X1 R).
         {
         split; assert_diffs; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
@@ -8735,7 +8735,7 @@ Lemma coplanar_trans_1_aux_4_2_1_2_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -8789,7 +8789,7 @@ Lemma coplanar_trans_1_aux_4_2_1_2_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -8843,7 +8843,7 @@ Lemma coplanar_trans_1_aux_4_2_1_2_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -8929,7 +8929,7 @@ Lemma coplanar_trans_1_aux_4_2_1_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q A B R).
+assert (HTS : TS Q A B R).
   {
   elim (eq_dec_points A X1); intro HAX1; treat_equalities.
 
@@ -8956,7 +8956,7 @@ assert (HTS : two_sides Q A B R).
     }
 
     {
-    assert (HOS1 : one_side Q A P X1).
+    assert (HOS1 : OS Q A P X1).
       {
       assert (H1 : Q <> A) by (assert_diffs; auto).
       assert (H2 : Col Q A Q) by Col.
@@ -8967,7 +8967,7 @@ assert (HTS : two_sides Q A B R).
       split; try (intro; treat_equalities; assert_cols; Col).
       Between.
       }
-    assert (HOS2 : one_side Q A R X2).
+    assert (HOS2 : OS Q A R X2).
       {
       assert (H1 : Q <> A) by (assert_diffs; auto).
       assert (H2 : Col Q A Q) by Col.
@@ -8978,7 +8978,7 @@ assert (HTS : two_sides Q A B R).
       split; try (intro; treat_equalities; assert_cols; Col).
       Between.
       }
-    assert (HTS : two_sides Q A P X2).
+    assert (HTS : TS Q A P X2).
       {
       apply l9_2; apply l9_8_2 with R; Col.
       apply l9_2; apply l9_8_2 with X1; try apply one_side_symmetry; Col.
@@ -9013,7 +9013,7 @@ Lemma coplanar_trans_1_aux_4_2_1_3_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q A B R).
+assert (HTS : TS Q A B R).
   {
   elim (eq_dec_points A X1); intro HAX1; treat_equalities.
 
@@ -9083,7 +9083,7 @@ assert (HTS : two_sides Q A B R).
       }
 
       {
-      assert (HOS1 : one_side Q A P X1).
+      assert (HOS1 : OS Q A P X1).
         {
         assert (H1 : Q <> A) by (assert_diffs; auto).
         assert (H2 : Col Q A Q) by Col.
@@ -9094,7 +9094,7 @@ assert (HTS : two_sides Q A B R).
         split; try (intro; treat_equalities; assert_cols; Col).
         Between.
         }
-      assert (HOS2 : one_side Q A R X2).
+      assert (HOS2 : OS Q A R X2).
         {
         assert (H1 : Q <> A) by (assert_diffs; auto).
         assert (H2 : Col Q A Q) by Col.
@@ -9105,7 +9105,7 @@ assert (HTS : two_sides Q A B R).
         split; try (intro; treat_equalities; assert_cols; Col).
         Between.
         }
-      assert (HTS : two_sides Q A P X2).
+      assert (HTS : TS Q A P X2).
         {
         apply l9_2; apply l9_8_2 with R; Col.
         apply l9_2; apply l9_8_2 with X1; try apply one_side_symmetry; Col.
@@ -9141,7 +9141,7 @@ Lemma coplanar_trans_1_aux_4_2_1_3_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points P X1); intro HPX1; treat_equalities.
 
@@ -9169,7 +9169,7 @@ assert (HTS : two_sides R A Q B).
     }
 
     {
-    assert (HTS : two_sides R A P X2).
+    assert (HTS : TS R A P X2).
       {
       apply l9_2; apply l9_8_2 with Q.
 
@@ -9294,7 +9294,7 @@ Lemma coplanar_trans_1_aux_4_2_2_1_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A B Q).
+assert (HTS : TS R A B Q).
   {
   elim (eq_dec_points P X1); intro HPX1; treat_equalities.
 
@@ -9384,7 +9384,7 @@ Lemma coplanar_trans_1_aux_4_2_2_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q B A R).
+assert (HTS : TS Q B A R).
   {
   elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
@@ -9407,7 +9407,7 @@ assert (HTS : two_sides Q B A R).
       }
 
       {
-      assert (HTS : two_sides Q B X1 R).
+      assert (HTS : TS Q B X1 R).
         {
         apply l9_8_2 with P.
 
@@ -9484,7 +9484,7 @@ assert (H := l5_3 X2 B I P (between_symmetry P B X2 HCol3) HPX2I);
 elim H; clear H; intro HBX2I.
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_31.
 
@@ -9548,7 +9548,7 @@ elim H; clear H; intro HBX2I.
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_8_2 with X2.
 
@@ -9622,7 +9622,7 @@ Lemma coplanar_trans_1_aux_4_2_2_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol4 HCol1 HCol2 HCol3.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -9682,7 +9682,7 @@ destruct H as [I [HRBI HPQI]].
 assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear H; intro PX1I.
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     apply l9_8_2 with X1.
 
@@ -9711,7 +9711,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_31.
 
@@ -9808,7 +9808,7 @@ Lemma coplanar_trans_1_aux_4_2_2_3_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
@@ -9885,7 +9885,7 @@ Lemma coplanar_trans_1_aux_4_2_2_3_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points R X2); intro HRX2; treat_equalities.
 
@@ -10026,7 +10026,7 @@ Lemma coplanar_trans_1_aux_4_2_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol4 HCol1 HCol2 HCol3.
-assert (HTS : two_sides Q R B A).
+assert (HTS : TS Q R B A).
   {
   apply l9_8_2 with X1.
 
@@ -10088,7 +10088,7 @@ destruct H as [I [HPQI HRBI]].
 assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear H; intro PX1I.
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_31.
 
@@ -10151,7 +10151,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
   }
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_8_2 with X1.
 
@@ -10198,7 +10198,7 @@ Lemma coplanar_trans_1_aux_4_2_3_2_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
   apply l9_31.
@@ -10303,7 +10303,7 @@ Lemma coplanar_trans_1_aux_4_2_3_2_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
   apply l9_31.
@@ -10440,7 +10440,7 @@ Lemma coplanar_trans_1_aux_4_2_3_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol4 HCol1 HCol2 HCol3.
-assert (HTS : two_sides Q R B A).
+assert (HTS : TS Q R B A).
   {
   apply l9_8_2 with X1.
 
@@ -10566,7 +10566,7 @@ destruct H as [I [HPX2I HRX1I]].
 assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     apply l9_31.
 
@@ -10645,7 +10645,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     assert (HRX1 : R <> X1) by (intro; treat_equalities; Col).
     elim (eq_dec_points P I); intro HPI; treat_equalities.
@@ -10718,7 +10718,7 @@ Lemma coplanar_trans_1_aux_4_3_1_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -10791,7 +10791,7 @@ assert (HTS : two_sides R B Q A).
       }
 
       {
-      assert (HOS : one_side R A X2 Q).
+      assert (HOS : OS R A X2 Q).
         {
         apply one_side_symmetry.
         assert (H1 : R <> A) by (assert_diffs; auto).
@@ -10846,7 +10846,7 @@ Lemma coplanar_trans_1_aux_4_3_1_1_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -10891,7 +10891,7 @@ assert (HTS : two_sides R B Q A).
     }
 
     {
-    assert (HOS : one_side R A X2 Q).
+    assert (HOS : OS R A X2 Q).
       {
       apply one_side_symmetry.
       assert (H1 : R <> A) by (assert_diffs; auto).
@@ -10979,7 +10979,7 @@ Lemma coplanar_trans_1_aux_4_3_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -11034,7 +11034,7 @@ Lemma coplanar_trans_1_aux_4_3_1_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -11128,7 +11128,7 @@ assert (HTS : two_sides R B Q A).
         }
 
         {
-        assert (HTS : two_sides R A P X2).
+        assert (HTS : TS R A P X2).
           {
           apply l9_8_2 with Q.
 
@@ -11191,7 +11191,7 @@ Lemma coplanar_trans_1_aux_4_3_1_3_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q A B R).
+assert (HTS : TS Q A B R).
   {
   elim (eq_dec_points A X1); intro HAX1; treat_equalities.
 
@@ -11260,7 +11260,7 @@ assert (HTS : two_sides Q A B R).
       }          
 
       {
-      assert (HOS : one_side Q A R X2).
+      assert (HOS : OS Q A R X2).
         {
         assert (H1 : Q <> A) by (assert_diffs; auto).
         assert (H2 : Col Q A Q) by (assert_cols; Col).
@@ -11269,7 +11269,7 @@ assert (HTS : two_sides Q A B R).
         split; Col.
         assert_diffs; split; Between.
         }
-      assert (HTS : two_sides Q A P X2).
+      assert (HTS : TS Q A P X2).
         {
         apply l9_2; apply l9_8_2 with R; Col.
         assert_diffs; split; Col.
@@ -11312,7 +11312,7 @@ assert (H := inner_pasch R B X2 Q P HCol4 HCol3); destruct H as [I2 [HQBI2 HPRI2
 assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
 
   {
-  assert (HTS : two_sides Q B A R).
+  assert (HTS : TS Q B A R).
     {
     apply l9_8_2 with I1.
 
@@ -11341,7 +11341,7 @@ assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
   }
 
   {
-  assert (HTS : two_sides Q A B R).
+  assert (HTS : TS Q A B R).
     {
     apply l9_8_2 with I2.
 
@@ -11447,7 +11447,7 @@ Lemma coplanar_trans_1_aux_4_3_2_1_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HOS : one_side R Q A B).
+assert (HOS : OS R Q A B).
   {
   apply one_side_transitivity with X1.
 
@@ -11493,7 +11493,7 @@ destruct H as [I [HPX2I HRX1I]].
 assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
 
   {
-  assert (HTS : two_sides R B Q A).
+  assert (HTS : TS R B Q A).
     {
     assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
     apply l9_31; try (apply one_side_symmetry; Col).
@@ -11529,7 +11529,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
   }
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     assert (HRX1 : R <> X1) by (intro; treat_equalities; assert_cols; Col).
     elim (eq_dec_points P X1); intro HPX1; treat_equalities.
@@ -11598,7 +11598,7 @@ Lemma coplanar_trans_1_aux_4_3_2_1_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -11672,7 +11672,7 @@ assert (HTS : two_sides R B Q A).
       }
 
       {
-      assert (HOS : one_side R A X2 Q).
+      assert (HOS : OS R A X2 Q).
         {
         apply one_side_symmetry.
         assert (H1 : R <> A) by (assert_diffs; auto).
@@ -11727,7 +11727,7 @@ Lemma coplanar_trans_1_aux_4_3_2_1_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -11773,7 +11773,7 @@ assert (HTS : two_sides R B Q A).
     }
 
     {
-    assert (HOS : one_side R A X2 Q).
+    assert (HOS : OS R A X2 Q).
       {
       apply one_side_symmetry.
       assert (H1 : R <> A) by (assert_diffs; auto).
@@ -11860,7 +11860,7 @@ Lemma coplanar_trans_1_aux_4_3_2_2 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_8_2 with P.
 
@@ -11915,7 +11915,7 @@ Lemma coplanar_trans_1_aux_4_3_2_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_31.
 
@@ -12011,7 +12011,7 @@ assert (HTS : two_sides R B Q A).
         }
 
         {
-        assert (HTS : two_sides R A P X2).
+        assert (HTS : TS R A P X2).
           {
           apply l9_8_2 with Q.
 
@@ -12075,7 +12075,7 @@ assert (HQP : Q <> P) by (assert_diffs; Col).
 assert (H := l5_2 Q P X1 I HQP (between_symmetry X1 P Q HCol1) HPQI); elim H; clear H; intro HPX1I.
 
   {
-  assert (HTS : two_sides R A Q B).
+  assert (HTS : TS R A Q B).
     {
     apply l9_31.
 
@@ -12186,7 +12186,7 @@ assert (H := l5_2 Q P X1 I HQP (between_symmetry X1 P Q HCol1) HPQI); elim H; cl
   }
 
   {
-  assert (HTS : two_sides R B A Q).
+  assert (HTS : TS R B A Q).
     {
     apply l9_8_2 with X1.
 
@@ -12229,7 +12229,7 @@ Lemma coplanar_trans_1_aux_4_3_2_3_3 : forall P Q R A B X1 X2,
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
 assert (H := inner_pasch R B X2 Q P); destruct H as [I [HQBI HPRI]]; Between.
-assert (HTS : two_sides Q B R A).
+assert (HTS : TS Q B R A).
   {
   elim (eq_dec_points P B); intro HPB; treat_equalities.
 
@@ -12251,7 +12251,7 @@ assert (HTS : two_sides Q B R A).
       }
 
       {
-      assert (HTS : two_sides Q B R X1).
+      assert (HTS : TS Q B R X1).
         {
         assert (HQX2 : Q <> X2).
           {
@@ -12365,7 +12365,7 @@ Lemma coplanar_trans_1_aux_4_3_3_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol4 HCol1 HCol2 HCol3.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_2; apply l9_8_2 with P.
 
@@ -12420,7 +12420,7 @@ Lemma coplanar_trans_1_aux_4_3_3_2_1 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R A Q B).
+assert (HTS : TS R A Q B).
   {
   elim (eq_dec_points P X1); intro HPX2; treat_equalities.
 
@@ -12475,7 +12475,7 @@ assert (HTS : two_sides R A Q B).
       }
 
       {
-      assert (HTS1 : two_sides R A X2 Q).
+      assert (HTS1 : TS R A X2 Q).
         {
         assert_diffs; split; Col.
         split; try (intro; assert_cols; apply HAQR; ColR).
@@ -12483,7 +12483,7 @@ assert (HTS : two_sides R A Q B).
         exists R; split; Col; Between.
         }
       apply l9_2; apply l9_8_2 with X2; Col.
-      assert (HTS2 : two_sides R A P X2).
+      assert (HTS2 : TS R A P X2).
         {
         apply l9_8_2 with Q; try (apply l9_2; Col).
         assert (H1 : R <> A) by (assert_diffs; auto).
@@ -12533,7 +12533,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
     elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
       {
-      assert (HTS : two_sides Q A R B).
+      assert (HTS : TS Q A R B).
         {
         apply l9_31.
 
@@ -12591,7 +12591,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
     elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
       {
-      assert (HTS : two_sides Q A R B).
+      assert (HTS : TS Q A R B).
         {
         apply l9_31.
 
@@ -12637,7 +12637,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
     elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
       {
-      assert (HTS : two_sides Q A R B).
+      assert (HTS : TS Q A R B).
         {
         apply l9_31.
 
@@ -12683,7 +12683,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
     assert (H := l5_2 X1 X2 I1 I2 HX1X2 HX1X2I1 HX1X2I2); elim H; clear H; intro HX2I1I2.
 
       {
-      assert (HTS : two_sides Q A R B).
+      assert (HTS : TS Q A R B).
         {
         apply l9_2; apply l9_8_2 with I2.
 
@@ -12726,7 +12726,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
       }
 
       {
-      assert (HTS : two_sides Q B R A).
+      assert (HTS : TS Q B R A).
         {
         apply l9_2; apply l9_8_2 with I1.
 
@@ -12784,7 +12784,7 @@ Lemma coplanar_trans_1_aux_4_3_3_2_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol1 HCol2 HCol3 HCol4.
-assert (HTS : two_sides R B Q A).
+assert (HTS : TS R B Q A).
   {
   apply l9_8_2 with X1.
 
@@ -12859,7 +12859,7 @@ Lemma coplanar_trans_1_aux_4_3_3_3 : forall P Q R A B X1 X2,
   Coplanar Q R A B.
 Proof.
 intros P Q R A B X1 X2 HNC HABQ HABR HAQR HBQR HCol4 HCol1 HCol2 HCol3.
-assert (HTS : two_sides Q R A B).
+assert (HTS : TS Q R A B).
   {
   apply l9_2; apply l9_8_2 with P.
 

@@ -34,15 +34,15 @@ Proof.
     apply (l5_2 P);auto.
 Qed.
 
-Definition le := fun A B C D =>
-   exists y, Bet C y D /\ Cong A B C y.
+Definition Le A B C D :=
+   exists E, Bet C E D /\ Cong A B C E.
 
-Definition ge := fun A B C D => le C D A B.
+Definition Ge A B C D := Le C D A B.
 
 Lemma l5_5_1 : forall A B C D,
-  le A B C D -> exists x, Bet A B x /\ Cong A x C D.
+  Le A B C D -> exists x, Bet A B x /\ Cong A x C D.
 Proof.
-    unfold le.
+    unfold Le.
     intros.
     ex_and H P.
     prolong A B x P D.
@@ -53,11 +53,11 @@ Proof.
 Qed.
 
 Lemma l5_5_2 : forall A B C D,
- (exists x, Bet A B x /\ Cong A x C D) -> le A B C D.
+ (exists x, Bet A B x /\ Cong A x C D) -> Le A B C D.
 Proof.
     intros.
     ex_and H P.
-    unfold le.
+    unfold Le.
     assert (exists B' : Tpoint, Bet C B' D /\ Cong_3 A B P C B' D) by (eapply l4_5;auto).
     ex_and H1 y.
     exists y.
@@ -65,9 +65,9 @@ Proof.
 Qed.
 
 Lemma l5_6 : forall A B C D A' B' C' D',
- le A B C D -> Cong A B A' B' -> Cong C D C' D' -> le A' B' C' D'.
+ Le A B C D -> Cong A B A' B' -> Cong C D C' D' -> Le A' B' C' D'.
 Proof.
-    unfold le.
+    unfold Le.
     intros.
     spliter.
     ex_and H y.
@@ -83,17 +83,17 @@ Qed.
 
 Definition cong_preserves_le := l5_6.
 
-Lemma le_reflexivity : forall A B, le A B A B.
+Lemma le_reflexivity : forall A B, Le A B A B.
 Proof.
-    unfold le.
+    unfold Le.
     intros.
     exists B.
     split; Between; Cong.
 Qed.
 
-Lemma le_transitivity : forall A B C D E F, le A B C D -> le C D E F -> le A B E F .
+Lemma le_transitivity : forall A B C D E F, Le A B C D -> Le C D E F -> Le A B E F .
 Proof.
-    unfold le.
+    unfold Le.
     intros.
     ex_and H y.
     ex_and H0 z.
@@ -131,11 +131,11 @@ Proof.
 apply eq_dec_implies_between_cong_3; apply eq_dec_points.
 Qed.
 
-Lemma le_anti_symmetry : forall A B C D, le A B C D -> le C D A B -> Cong A B C D.
+Lemma le_anti_symmetry : forall A B C D, Le A B C D -> Le C D A B -> Cong A B C D.
 Proof.
     intros.
     assert (exists T, Bet C D T /\ Cong C T A B) by (apply l5_5_1;assumption).
-    unfold le in H.
+    unfold Le in H.
     ex_and H Y.
     ex_and H1 T.
     assert (Cong C Y C T) by eCong.
@@ -166,15 +166,15 @@ Proof.
 Qed.
 
 
-Lemma le_trivial : forall A C D, le A A C D .
+Lemma le_trivial : forall A C D, Le A A C D .
 Proof.
     intros.
-    unfold le.
+    unfold Le.
     exists C.
     split; Between; Cong.
 Qed.
 
-Lemma le_cases : forall A B C D, le A B C D \/ le C D A B.
+Lemma le_cases : forall A B C D, Le A B C D \/ Le C D A B.
 Proof.
     intros.
     induction(eq_dec_points A B).
@@ -183,13 +183,13 @@ Proof.
     ex_and H0 X.
     induction H0.
       left; apply l5_5_2; exists X; split; assumption.
-    right; unfold le; exists X; split; Cong.
+    right; unfold Le; exists X; split; Cong.
 Qed.
 
-Lemma le_zero : forall A B C, le A B C C -> A=B.
+Lemma le_zero : forall A B C, Le A B C C -> A=B.
 Proof.
     intros.
-    assert (le C C A B) by apply le_trivial.
+    assert (Le C C A B) by apply le_trivial.
     assert (Cong A B C C) by (apply le_anti_symmetry;assumption).
     treat_equalities;auto.
 Qed.
@@ -203,8 +203,8 @@ Lemma bet_cong_eq :
 Proof.
     intros.
     assert(C = D).
-      assert(le A C A D) by (eapply l5_5_2; exists D; split; Cong).
-      assert(le C B C A) by (eapply l5_5_2; exists A; split; Between; Cong).
+      assert(Le A C A D) by (eapply l5_5_2; exists D; split; Cong).
+      assert(Le C B C A) by (eapply l5_5_2; exists A; split; Between; Cong).
       assert(Cong A C A D) by (eapply le_anti_symmetry; try assumption; apply l5_6 with C B C A; Cong).
       apply between_cong with A; assumption.
     split; try assumption.
@@ -212,7 +212,7 @@ Proof.
     eapply (between_cong C); Between; Cong.
 Qed.
 
-Lemma cong__le : forall A B C D, Cong A B C D -> le A B C D.
+Lemma cong__le : forall A B C D, Cong A B C D -> Le A B C D.
 Proof.
   intros A B C D H.
   exists D.
@@ -221,27 +221,27 @@ Proof.
   Cong.
 Qed.
 
-Lemma le1221 : forall A B, le A B B A.
+Lemma le1221 : forall A B, Le A B B A.
 Proof.
   intros A B.
   apply cong__le; Cong.
 Qed.
 
-Lemma le_left_comm : forall A B C D, le A B C D -> le B A C D.
+Lemma le_left_comm : forall A B C D, Le A B C D -> Le B A C D.
 Proof.
   intros A B C D Hle.
   apply (le_transitivity _ _ A B); auto.
   apply le1221; auto.
 Qed.
 
-Lemma le_right_comm : forall A B C D, le A B C D -> le A B D C.
+Lemma le_right_comm : forall A B C D, Le A B C D -> Le A B D C.
 Proof.
   intros A B C D Hle.
   apply (le_transitivity _ _ C D); auto.
   apply le1221; auto.
 Qed.
 
-Lemma le_comm : forall A B C D, le A B C D -> le B A D C.
+Lemma le_comm : forall A B C D, Le A B C D -> Le B A D C.
 Proof.
   intros.
   apply le_left_comm.
@@ -249,23 +249,23 @@ Proof.
   assumption.
 Qed.
 
-Lemma ge_left_comm : forall A B C D, ge A B C D -> ge B A C D.
+Lemma ge_left_comm : forall A B C D, Ge A B C D -> Ge B A C D.
 Proof.
     intros.
-    unfold ge in *.
+    unfold Ge in *.
     apply le_right_comm.
     assumption.
 Qed.
 
-Lemma ge_right_comm : forall A B C D, ge A B C D -> ge A B D C.
+Lemma ge_right_comm : forall A B C D, Ge A B C D -> Ge A B D C.
 Proof.
     intros.
-    unfold ge in *.
+    unfold Ge in *.
     apply le_left_comm.
     assumption.
 Qed.
 
-Lemma ge_comm :  forall A B C D, ge A B C D -> ge B A D C.
+Lemma ge_comm :  forall A B C D, Ge A B C D -> Ge B A D C.
 Proof.
     intros.
     apply ge_left_comm.
@@ -274,13 +274,13 @@ Proof.
 Qed.
 
 
-Definition lt := fun A B C D => le A B C D /\ ~ Cong A B C D.
-Definition gt := fun A B C D => lt C D A B.
+Definition Lt A B C D := Le A B C D /\ ~ Cong A B C D.
+Definition Gt A B C D := Lt C D A B.
 
-Lemma lt_right_comm : forall A B C D, lt A B C D -> lt A B D C.
+Lemma lt_right_comm : forall A B C D, Lt A B C D -> Lt A B D C.
 Proof.
     intros.
-    unfold lt in *.
+    unfold Lt in *.
     spliter.
     split.
       apply le_right_comm.
@@ -291,13 +291,13 @@ Proof.
     assumption.
 Qed.
 
-Lemma lt_left_comm : forall A B  C D, lt A B C D -> lt B A C D.
+Lemma lt_left_comm : forall A B  C D, Lt A B C D -> Lt B A C D.
 Proof.
     intros.
-    unfold lt in *.
+    unfold Lt in *.
     spliter.
     split.
-      unfold le in *.
+      unfold Le in *.
       ex_and H P.
       exists P.
       apply cong_left_commutativity in H1.
@@ -308,7 +308,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma lt_comm : forall A B  C D, lt A B C D -> lt B A D C.
+Lemma lt_comm : forall A B  C D, Lt A B C D -> Lt B A D C.
 Proof.
     intros.
     apply lt_left_comm.
@@ -316,23 +316,23 @@ Proof.
     assumption.
 Qed.
 
-Lemma gt_left_comm : forall A B C D, gt A B C D -> gt B A C D.
+Lemma gt_left_comm : forall A B C D, Gt A B C D -> Gt B A C D.
 Proof.
     intros.
-    unfold gt in *.
+    unfold Gt in *.
     apply lt_right_comm.
     assumption.
 Qed.
 
-Lemma gt_right_comm : forall A B C D, gt A B C D -> gt A B D C.
+Lemma gt_right_comm : forall A B C D, Gt A B C D -> Gt A B D C.
 Proof.
     intros.
-    unfold gt in *.
+    unfold Gt in *.
     apply lt_left_comm.
     assumption.
 Qed.
 
-Lemma gt_comm : forall A B C D, gt A B C D -> gt B A D C.
+Lemma gt_comm : forall A B C D, Gt A B C D -> Gt B A D C.
 Proof.
     intros.
     apply gt_left_comm.
@@ -341,7 +341,7 @@ Proof.
 Qed.
 
 Lemma cong2_lt__lt : forall A B C D A' B' C' D',
- lt A B C D -> Cong A B A' B' -> Cong C D C' D' -> lt A' B' C' D'.
+ Lt A B C D -> Cong A B A' B' -> Cong C D C' D' -> Lt A' B' C' D'.
 Proof.
   intros A B C D A' B' C' D' Hlt HCong1 HCong2.
   destruct Hlt as [Hle HNCong].
@@ -382,16 +382,16 @@ Proof.
     auto.
 Qed.
 
-Lemma l5_12_a : forall A B C, Bet A B C -> le A B A C /\ le B C A C.
+Lemma l5_12_a : forall A B C, Bet A B C -> Le A B A C /\ Le B C A C.
 Proof.
     intros.
     split.
-      unfold le.
+      unfold Le.
       exists B; split.
         assumption.
       apply cong_reflexivity.
     apply le_comm.
-    unfold le.
+    unfold Le.
     exists B.
     split.
       apply between_symmetry.
@@ -399,14 +399,14 @@ Proof.
     apply cong_reflexivity.
 Qed.
 
-Lemma l5_12_b : forall A B C, Col A B C -> le A B A C -> le B C A C -> Bet A B C.
+Lemma l5_12_b : forall A B C, Col A B C -> Le A B A C -> Le B C A C -> Bet A B C.
 Proof.
     intros.
     unfold Col in H.
     induction H.
       assumption.
     induction H.
-      assert(le B C B A /\ le C A B A).
+      assert(Le B C B A /\ Le C A B A).
         apply l5_12_a.
           assumption.
       spliter.
@@ -423,7 +423,7 @@ Proof.
         assumption.
       subst B.
       apply between_trivial.
-    assert(le B A B C /\ le A C B C).
+    assert(Le B A B C /\ Le A C B C).
       apply l5_12_a.
         apply between_symmetry.
         assumption.
@@ -443,10 +443,10 @@ Proof.
     apply between_trivial.
 Qed.
 
-Lemma bet_le_eq : forall A B C, Bet A B C -> le A C B C -> A = B.
+Lemma bet_le_eq : forall A B C, Bet A B C -> Le A C B C -> A = B.
 Proof.
     intros.
-    assert(le C B C A).
+    assert(Le C B C A).
       eapply l5_5_2.
       exists A.
       split.
@@ -467,7 +467,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma or_lt_cong_gt : forall A B C D, lt A B C D \/ gt A B C D \/ Cong A B C D.
+Lemma or_lt_cong_gt : forall A B C D, Lt A B C D \/ Gt A B C D \/ Cong A B C D.
 Proof.
     intros.
     assert(HH:= le_cases A B C D).
@@ -476,14 +476,14 @@ Proof.
         right; right.
         assumption.
       left.
-      unfold lt.
+      unfold Lt.
       split; assumption.
     induction(Cong_dec A B C D).
       right; right.
       assumption.
     right; left.
-    unfold gt.
-    unfold lt.
+    unfold Gt.
+    unfold Lt.
     split.
       assumption.
     intro.
@@ -492,14 +492,14 @@ Proof.
     assumption.
 Qed.
 
-Lemma lt__le : forall A B C D, lt A B C D -> le A B C D.
+Lemma lt__le : forall A B C D, Lt A B C D -> Le A B C D.
 Proof.
     intros A B C D Hlt.
     destruct Hlt.
     assumption.
 Qed.
 
-Lemma le1234_lt__lt : forall A B C D E F, le A B C D -> lt C D E F -> lt A B E F.
+Lemma le1234_lt__lt : forall A B C D E F, Le A B C D -> Lt C D E F -> Lt A B E F.
 Proof.
     intros A B C D E F Hle Hlt.
     destruct Hlt as [Hle' HNCong].
@@ -511,7 +511,7 @@ Proof.
     apply (cong_preserves_le A B C D); Cong.
 Qed.
 
-Lemma le3456_lt__lt : forall A B C D E F, lt A B C D -> le C D E F -> lt A B E F.
+Lemma le3456_lt__lt : forall A B C D E F, Lt A B C D -> Le C D E F -> Lt A B E F.
 Proof.
     intros A B C D E F Hlt Hle.
     destruct Hlt as [Hle' HNCong].
@@ -523,7 +523,7 @@ Proof.
     apply (cong_preserves_le C D E F); Cong.
 Qed.
 
-Lemma not_and_lt : forall A B C D, ~ (lt A B C D /\ lt C D A B).
+Lemma not_and_lt : forall A B C D, ~ (Lt A B C D /\ Lt C D A B).
 Proof.
     intros A B C D.
     intro HInter.
@@ -532,7 +532,7 @@ Proof.
     apply le_anti_symmetry; assumption.
 Qed.
 
-Lemma nlt : forall A B, ~ lt A B A B.
+Lemma nlt : forall A B, ~ Lt A B A B.
 Proof.
     intros A B Hlt.
     apply (not_and_lt A B A B).
@@ -542,6 +542,6 @@ Qed.
 End T5.
 
 Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le le1221
-             le_left_comm le_right_comm le_comm lt__le : le.
+             le_left_comm le_right_comm le_comm lt__le : Le.
 
-Ltac Le := auto with le.
+Ltac Le := auto with Le.

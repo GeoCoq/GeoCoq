@@ -8,7 +8,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma midpoint_thales : forall o a b c : Tpoint,
    ~ Col a b c ->
-   is_midpoint o a b ->
+   Midpoint o a b ->
    Cong o a o c ->
    Per a c b.
 Proof.
@@ -33,7 +33,7 @@ Qed.
 Lemma midpoint_thales_reci :
   forall a b c o: Tpoint,
    Per a c b ->
-   is_midpoint o a b ->
+   Midpoint o a b ->
    Cong o a o b /\ Cong o b o c.
 Proof.
 intros.
@@ -49,12 +49,12 @@ split.
 Cong.
 (* Demonstration Cong o b o c *)
 assert(Hmid := midpoint_existence a c).
-(* Soit x le milieu de a c *)
+(* Soit x Le milieu de a c *)
 destruct Hmid.
 (* Demonstration o x parallele à b c *)
 assert(Hpar : Par c b x o).
 apply (triangle_mid_par c b a o x);finish.
-(* On doit effectuer le changement d'angle perpendiculaire en appliquant par_perp_perp*)
+(* On doit effectuer Le changement d'angle perpendiculaire en appliquant par_perp_perp*)
 (* Demonstration du sous but Perp pour appliquer par_perp_perp *)
 assert(Hper : Perp c b c a)
  by (apply perp_left_comm;apply per_perp;Perp).
@@ -78,7 +78,7 @@ spliter.
 apply l7_2 in H8.
 assert(HmidU := l7_9 a x0 x c H2 H8).
 subst.
-unfold is_midpoint in H2.
+unfold Midpoint in H2.
 spliter.
 eCong.
 Qed.

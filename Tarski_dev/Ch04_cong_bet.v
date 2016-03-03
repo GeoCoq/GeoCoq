@@ -5,7 +5,7 @@ Section T3.
 Context `{M:Tarski_neutral_dimensionless}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition IFSC := fun A B C D A' B' C' D' =>
+Definition IFSC A B C D A' B' C' D' :=
    Bet A B C /\ Bet A' B' C' /\
    Cong A C A' C' /\ Cong B C B' C' /\
    Cong A D A' D' /\ Cong C D C' D'.

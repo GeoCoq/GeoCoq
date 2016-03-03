@@ -19,7 +19,7 @@ Class Tarski_neutral_dimensionless := {
    Cong A B C D -> Cong A B E F -> Cong C D E F;
  inner_pasch : forall A B C P Q : Tpoint,
       Bet A P C -> Bet B Q C ->
-      exists x, Bet P x B /\ Bet Q x A;
+      exists X, Bet P X B /\ Bet Q X A;
  five_segment : forall A A' B B' C C' D D' : Tpoint,
     Cong A B A' B' ->
     Cong B C B' C' ->
@@ -40,8 +40,8 @@ Class Tarski_2D `(Tn : Tarski_neutral_dimensionless) := {
 Class Tarski_2D_euclidean `(T2D : Tarski_2D) := {
   euclid : forall A B C D T : Tpoint,
     Bet A D T -> Bet B D C -> A<>D ->
-    exists x, exists y,
-    Bet A B x /\ Bet A C y /\ Bet x T y
+    exists X, exists Y,
+    Bet A B X /\ Bet A C Y /\ Bet X T Y
 }.
 
 Class EqDecidability U := {

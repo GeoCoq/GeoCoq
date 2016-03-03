@@ -4,7 +4,7 @@ Section T2_1.
 
 Context `{M:Tarski_neutral_dimensionless}.
 
-Definition Col (A B C : Tpoint) : Prop := Bet A B C \/ Bet B C A \/ Bet C A B.
+Definition Col A B C := Bet A B C \/ Bet B C A \/ Bet C A B.
 
 Lemma bet_col : forall A B C, Bet A B C -> Col A B C.
 Proof.
@@ -217,7 +217,7 @@ Section T2_5.
 Context `{M:Tarski_neutral_dimensionless}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition Bet_4 := fun A1 A2 A3 A4 =>
+Definition Bet_4 A1 A2 A3 A4 :=
    Bet A1 A2 A3 /\ Bet A2 A3 A4 /\ Bet A1 A3 A4 /\ Bet A1 A2 A4.
 
 Lemma l_3_9_4 : forall A1 A2 A3 A4, Bet_4 A1 A2 A3 A4 -> Bet_4 A4 A3 A2 A1.

@@ -7,7 +7,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma par_perp_perp_implies_par_perp_2_par :
   perpendicular_transversal_postulate ->
-  postulate_of_parallelism_of_perpendicular_tranversals.
+  postulate_of_parallelism_of_perpendicular_transversals.
 Proof.
 intros HPPP A1; intros.
 apply l12_9 with A1 A2; Perp.

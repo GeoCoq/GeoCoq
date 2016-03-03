@@ -6,7 +6,7 @@ Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma par_perp_2_par_implies_par_perp_perp :
-  postulate_of_parallelism_of_perpendicular_tranversals ->
+  postulate_of_parallelism_of_perpendicular_transversals ->
   perpendicular_transversal_postulate.
 Proof.
 intros HPPP A B C D P Q HPar HPerp.
@@ -15,7 +15,7 @@ elim (Col_dec C D X); intro HCDX.
 
   elim HPar; clear HPar; intro HPar.
 
-    exfalso; apply HPar; exists X; unfold Perp_in in HX; spliter; Col.
+    exfalso; apply HPar; exists X; unfold Perp_at in HX; spliter; Col.
 
     apply perp_sym; apply perp_col2_bis with A B; spliter; Col; Perp.
 
@@ -23,7 +23,7 @@ elim (Col_dec C D X); intro HCDX.
   assert (HPar' : Par P Q X Y) by (apply HPPP with A B C D; assumption).
   elim HPar'; clear HPar'; intro HPar'.
 
-    exfalso; apply HPar'; exists X; unfold Perp_in in HX; spliter; Col.
+    exfalso; apply HPar'; exists X; unfold Perp_at in HX; spliter; Col.
 
     destruct HPar' as [HPQ [HXY [HCol1 HCol2]]].
     apply perp_sym; apply perp_col2 with X Y; Col; Perp.

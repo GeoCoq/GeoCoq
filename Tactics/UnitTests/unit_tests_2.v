@@ -47,35 +47,35 @@ auto.
 Qed.
 
 
-Goal forall A B C D E F, Conga A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
+Goal forall A B C D E F, CongA A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.
 intros.
 assert_diffs.
 repeat split; assumption.
 Qed.
 
-Goal forall A B C D E F, lea A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
+Goal forall A B C D E F, LeA A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.
 intros.
 assert_diffs.
 repeat split; assumption.
 Qed.
 
-Goal forall A B C D E F, lta A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
+Goal forall A B C D E F, LtA A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.
 intros.
 assert_diffs.
 repeat split; assumption.
 Qed.
 
-Goal forall A B C, acute A B C -> A <> B /\ C <> B.
+Goal forall A B C, Acute A B C -> A <> B /\ C <> B.
 Proof.
 intros.
 assert_diffs.
 repeat split; assumption.
 Qed.
 
-Goal forall A B C, obtuse A B C -> A <> B /\ C <> B.
+Goal forall A B C, Obtuse A B C -> A <> B /\ C <> B.
 Proof.
 intros.
 assert_diffs.
@@ -144,7 +144,7 @@ auto.
 Qed.
 
 
-Goal forall A B C D E F G H I, Suma A B C D E F G H I ->
+Goal forall A B C D E F G H I, SumA A B C D E F G H I ->
  A <> B /\ B <> C /\ D <> E /\ E <> F /\ G <> H /\ H <> I.
 Proof.
 intros.

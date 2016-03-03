@@ -107,12 +107,12 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 Lemma circumcenter_perp : forall A B C A' G,
   A<>B -> B<>C -> A<>C -> G <> A' ->
   is_circumcenter G A B C ->
-  is_midpoint A' B C ->
-  perp_bisect G A' B C.
+  Midpoint A' B C ->
+  Perp_bisect G A' B C.
 Proof.
 intros.
 apply cong_perp_bisect;try assumption;
-unfold is_midpoint, is_circumcenter in *;
+unfold Midpoint, is_circumcenter in *;
 intuition eCong.
 Qed.
 
@@ -137,25 +137,25 @@ Qed.
 Lemma circumcenter_perp_all : forall A B C A' B' C' G,
   A<>B -> B<>C -> A<>C -> G <> A' -> G <> B' -> G <> C' ->
   is_circumcenter G A B C ->
-  is_midpoint A' B C ->
-  is_midpoint B' A C ->
-  is_midpoint C' A B ->
-  perp_bisect G A' B C /\ perp_bisect G B' A C /\ perp_bisect G C' A B.
+  Midpoint A' B C ->
+  Midpoint B' A C ->
+  Midpoint C' A B ->
+  Perp_bisect G A' B C /\ Perp_bisect G B' A C /\ Perp_bisect G C' A B.
 Proof.
 intros.
 split; try apply cong_perp_bisect; try (split; try apply cong_perp_bisect);
 try assumption;
-unfold is_midpoint, is_circumcenter in *;
+unfold Midpoint, is_circumcenter in *;
 intuition eCong.
 Qed.
 
 Lemma circumcenter_intersect : forall A B C A' B' C' G,
   A<>B -> B<>C -> A<>C -> G <> A' -> G <> B' -> G <> C' ->
-  is_midpoint A' B C ->
-  is_midpoint B' A C ->
-  is_midpoint C' A B ->
-  perp_bisect G A' B C ->
-  perp_bisect G B' A C ->
+  Midpoint A' B C ->
+  Midpoint B' A C ->
+  Midpoint C' A B ->
+  Perp_bisect G A' B C ->
+  Perp_bisect G B' A C ->
   Perp G C' A B.
 Proof.
 intros.
@@ -171,10 +171,10 @@ assert (is_circumcenter G A B C).
  eCong.
  apply (perp_bisect_cong G A' B C).
  assumption.
-assert (perp_bisect G C' A B).
+assert (Perp_bisect G C' A B).
 assert (T:=circumcenter_perp_all A B C A' B' C' G ).
 intuition.
-auto with perp_bisect.
+auto with Perp_bisect.
 Qed.
 
 Lemma is_circumcenter_unicity :
@@ -189,23 +189,23 @@ elim (Col_dec A B C); intro HABC.
 
   {
   Name C' the midpoint of A and B.
-  assert (HPer1 : perp_bisect O C' A B).
+  assert (HPer1 : Perp_bisect O C' A B).
     {
     apply cong_perp_bisect; unfold is_circumcenter in *;
-    unfold is_midpoint in *; spliter; Cong.
+    unfold Midpoint in *; spliter; Cong.
     intro; treat_equalities; assert (HFalse := l7_20 O B C); elim HFalse; clear HFalse;
     try intro HFalse; Cong; assert_cols; try ColR.
     apply HAC; apply symmetric_point_unicity with B O; Col; split; Between; Cong.
     }
   Name A' the midpoint of B and C.
-  assert (HPer2 : perp_bisect O A' B C).
+  assert (HPer2 : Perp_bisect O A' B C).
     {
     apply cong_perp_bisect; unfold is_circumcenter in *;
-    unfold is_midpoint in *; spliter; Cong.
+    unfold Midpoint in *; spliter; Cong.
     intro; treat_equalities; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse;
     try intro HFalse; Cong; assert_cols; try ColR.
     apply HAC; apply symmetric_point_unicity with B O;
-    unfold is_midpoint in*; spliter; split; Between; Cong.
+    unfold Midpoint in*; spliter; split; Between; Cong.
     }
   assert (HPar : Par_strict O A' O C').
     {
@@ -218,14 +218,14 @@ elim (Col_dec A B C); intro HABC.
 
       {
       show_distinct A' C'; try (apply HAC; apply symmetric_point_unicity with B A';
-      unfold is_midpoint in *; spliter; split; Cong; Between).
+      unfold Midpoint in *; spliter; split; Cong; Between).
       intro; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse; try intro HFalse;
       unfold is_circumcenter in *; spliter; Cong; assert_diffs; assert_cols; try ColR.
       assert (HOC' : O <> C').
         {
         apply perp_bisect_equiv_def in HPer1.
         apply perp_bisect_equiv_def in HPer2.
-        unfold perp_bisect in *; unfold Perp_in in *;
+        unfold Perp_bisect in *; unfold Perp_at in *;
         destruct HPer1 as [I [HOC' Hc1]]; assert_diffs; Col.
         }
       apply HOC'; apply l7_17 with A B; Col.
@@ -279,22 +279,22 @@ elim (Col_dec A B C); intro HABC.
         }
       assert (HFalse := not_par_strict_id B A C); exfalso; apply HFalse; Col.
       }
-    assert (H : perp_bisect O' A' B C /\ perp_bisect O' B' A C /\ perp_bisect O' O A B).
+    assert (H : Perp_bisect O' A' B C /\ Perp_bisect O' B' A C /\ Perp_bisect O' O A B).
       {
       apply circumcenter_perp_all; Col.
       }
     destruct H as [HPer3 [HPer4 Hc]]; clear Hc.
-    assert (HPer1 : perp_bisect O A' B C).
+    assert (HPer1 : Perp_bisect O A' B C).
       {
       apply cong_perp_bisect; unfold is_circumcenter in *;
-      unfold is_midpoint in *; spliter; Cong.
+      unfold Midpoint in *; spliter; Cong.
       show_distinct O B; Col.
       intro; treat_equalities; apply HABC; assert_cols; ColR.
       }
-    assert (HPer2 : perp_bisect O B' A C).
+    assert (HPer2 : Perp_bisect O B' A C).
       {
       apply cong_perp_bisect; unfold is_circumcenter in *;
-      unfold is_midpoint in *; spliter; eCong.
+      unfold Midpoint in *; spliter; eCong.
       show_distinct O A; Col.
       intro; treat_equalities; apply HABC; assert_cols; ColR.
       }
@@ -303,7 +303,7 @@ elim (Col_dec A B C); intro HABC.
       {
       assert (HRect : Rectangle C B' O A').
         {
-        apply Per_mid_rectangle with B A; Perp; unfold is_midpoint in *; spliter;
+        apply Per_mid_rectangle with B A; Perp; unfold Midpoint in *; spliter;
         split; Between; Cong.
         }
       destruct HRect as [HPara Hc]; clear Hc.
@@ -365,22 +365,22 @@ elim (Col_dec A B C); intro HABC.
         }
       assert (HFalse := not_par_strict_id B A C); exfalso; apply HFalse; Col.
       }
-    assert (H : perp_bisect O A' B C /\ perp_bisect O B' A C /\ perp_bisect O O' A B).
+    assert (H : Perp_bisect O A' B C /\ Perp_bisect O B' A C /\ Perp_bisect O O' A B).
       {
       apply circumcenter_perp_all; Col.
       }
     destruct H as [HPer3 [HPer4 Hc]]; clear Hc.
-    assert (HPer1 : perp_bisect O' A' B C).
+    assert (HPer1 : Perp_bisect O' A' B C).
       {
       apply cong_perp_bisect; unfold is_circumcenter in *;
-      unfold is_midpoint in *; spliter; Cong.
+      unfold Midpoint in *; spliter; Cong.
       show_distinct O' B; Col.
       intro; treat_equalities; apply HABC; assert_cols; ColR.
       }
-    assert (HPer2 : perp_bisect O' B' A C).
+    assert (HPer2 : Perp_bisect O' B' A C).
       {
       apply cong_perp_bisect; unfold is_circumcenter in *;
-      unfold is_midpoint in *; spliter; eCong.
+      unfold Midpoint in *; spliter; eCong.
       show_distinct O' A; Col.
       intro; treat_equalities; apply HABC; assert_cols; ColR.
       }
@@ -389,7 +389,7 @@ elim (Col_dec A B C); intro HABC.
       {
       assert (HRect : Rectangle C B' O' A').
         {
-        apply Per_mid_rectangle with B A; Perp; unfold is_midpoint in *; spliter;
+        apply Per_mid_rectangle with B A; Perp; unfold Midpoint in *; spliter;
         split; Between; Cong.
         }
       destruct HRect as [HPara Hc]; clear Hc.
@@ -440,29 +440,29 @@ elim (Col_dec A B C); intro HABC.
           }
         assert (HFalse := not_par_strict_id C A B); exfalso; apply HFalse; Par.
         }
-      assert (H : perp_bisect O' A' B C /\ perp_bisect O' O A C /\ perp_bisect O' C' A B).
+      assert (H : Perp_bisect O' A' B C /\ Perp_bisect O' O A C /\ Perp_bisect O' C' A B).
         {
         apply circumcenter_perp_all; Col.
         }
       destruct H as [HPer3 [Hc HPer4]]; clear Hc.
-      assert (HPer1 : perp_bisect O A' B C).
+      assert (HPer1 : Perp_bisect O A' B C).
         {
         apply cong_perp_bisect; unfold is_circumcenter in *;
-        unfold is_midpoint in *; spliter; Cong.
+        unfold Midpoint in *; spliter; Cong.
         show_distinct O C; Col.
         intro; treat_equalities; apply HABC; assert_cols; ColR.
         }
-      assert (HPer2 : perp_bisect O C' A B).
+      assert (HPer2 : Perp_bisect O C' A B).
         {
         apply cong_perp_bisect; unfold is_circumcenter in *;
-        unfold is_midpoint in *; spliter; eCong.
+        unfold Midpoint in *; spliter; eCong.
         }
       apply l6_21 with O A' C' O'; Col.
 
         {
         assert (HRect : Rectangle B A' O C').
           {
-          apply Per_mid_rectangle with A C; Perp; unfold is_midpoint in *; spliter;
+          apply Per_mid_rectangle with A C; Perp; unfold Midpoint in *; spliter;
           split; Between; Cong.
           }
         destruct HRect as [HPara Hc]; clear Hc.
@@ -508,29 +508,29 @@ elim (Col_dec A B C); intro HABC.
           }
         assert (HFalse := not_par_strict_id C A B); exfalso; apply HFalse; Par.
         }
-      assert (H : perp_bisect O A' B C /\ perp_bisect O O' A C /\ perp_bisect O C' A B).
+      assert (H : Perp_bisect O A' B C /\ Perp_bisect O O' A C /\ Perp_bisect O C' A B).
         {
         apply circumcenter_perp_all; Col.
         }
       destruct H as [HPer3 [Hc HPer4]]; clear Hc.
-      assert (HPer1 : perp_bisect O' A' B C).
+      assert (HPer1 : Perp_bisect O' A' B C).
         {
         apply cong_perp_bisect; unfold is_circumcenter in *;
-        unfold is_midpoint in *; spliter; Cong.
+        unfold Midpoint in *; spliter; Cong.
         show_distinct O' C; Col.
         intro; treat_equalities; apply HABC; assert_cols; ColR.
         }
-      assert (HPer2 : perp_bisect O' C' A B).
+      assert (HPer2 : Perp_bisect O' C' A B).
         {
         apply cong_perp_bisect; unfold is_circumcenter in *;
-        unfold is_midpoint in *; spliter; eCong.
+        unfold Midpoint in *; spliter; eCong.
         }
       apply l6_21 with O' A' C' O; Col.
 
         {
         assert (HRect : Rectangle B A' O' C').
           {
-          apply Per_mid_rectangle with A C; Perp; unfold is_midpoint in *; spliter;
+          apply Per_mid_rectangle with A C; Perp; unfold Midpoint in *; spliter;
           split; Between; Cong.
           }
         destruct HRect as [HPara Hc]; clear Hc.
@@ -561,29 +561,29 @@ elim (Col_dec A B C); intro HABC.
         assert (HPer : Per C A B).
           {
           apply midpoint_thales with O; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; Col; try split; eCong; Between.
+          unfold Midpoint in *; spliter; Col; try split; eCong; Between.
           }
-        assert (H : perp_bisect O' O B C /\ perp_bisect O' B' A C /\ perp_bisect O' C' A B).
+        assert (H : Perp_bisect O' O B C /\ Perp_bisect O' B' A C /\ Perp_bisect O' C' A B).
           {
           apply circumcenter_perp_all; Col.
           }
         destruct H as [Hc [HPer3 HPer4]]; clear Hc.
-        assert (HPer1 : perp_bisect O B' A C).
+        assert (HPer1 : Perp_bisect O B' A C).
           {
           apply cong_perp_bisect; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; eCong.
+          unfold Midpoint in *; spliter; eCong.
           }
-        assert (HPer2 : perp_bisect O C' A B).
+        assert (HPer2 : Perp_bisect O C' A B).
           {
           apply cong_perp_bisect; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; eCong.
+          unfold Midpoint in *; spliter; eCong.
           }
         apply l6_21 with O B' C' O'; Col.
 
           {
           assert (HRect : Rectangle A B' O C').
             {
-            apply Per_mid_rectangle with B C; Perp; unfold is_midpoint in *; spliter;
+            apply Per_mid_rectangle with B C; Perp; unfold Midpoint in *; spliter;
             split; Between; Cong.
             }
           destruct HRect as [HPara Hc]; clear Hc.
@@ -609,29 +609,29 @@ elim (Col_dec A B C); intro HABC.
         assert (HPer : Per C A B).
           {
           apply midpoint_thales with O'; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; Col; try split; eCong; Between.
+          unfold Midpoint in *; spliter; Col; try split; eCong; Between.
           }
-        assert (H : perp_bisect O O' B C /\ perp_bisect O B' A C /\ perp_bisect O C' A B).
+        assert (H : Perp_bisect O O' B C /\ Perp_bisect O B' A C /\ Perp_bisect O C' A B).
           {
           apply circumcenter_perp_all; Col.
           }
         destruct H as [Hc [HPer3 HPer4]]; clear Hc.
-        assert (HPer1 : perp_bisect O' B' A C).
+        assert (HPer1 : Perp_bisect O' B' A C).
           {
           apply cong_perp_bisect; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; eCong.
+          unfold Midpoint in *; spliter; eCong.
           }
-        assert (HPer2 : perp_bisect O' C' A B).
+        assert (HPer2 : Perp_bisect O' C' A B).
           {
           apply cong_perp_bisect; unfold is_circumcenter in *;
-          unfold is_midpoint in *; spliter; eCong.
+          unfold Midpoint in *; spliter; eCong.
           }
         apply l6_21 with O' B' C' O; Col.
 
           {
           assert (HRect : Rectangle A B' O' C').
             {
-            apply Per_mid_rectangle with B C; Perp; unfold is_midpoint in *; spliter;
+            apply Per_mid_rectangle with B C; Perp; unfold Midpoint in *; spliter;
             split; Between; Cong.
             }
           destruct HRect as [HPara Hc]; clear Hc.
@@ -654,12 +654,12 @@ elim (Col_dec A B C); intro HABC.
         }
 
         {
-        assert (H : perp_bisect O A' B C /\ perp_bisect O B' A C /\ perp_bisect O C' A B).
+        assert (H : Perp_bisect O A' B C /\ Perp_bisect O B' A C /\ Perp_bisect O C' A B).
           {
           apply circumcenter_perp_all; Col.
           }
         destruct H as [HPer1 [HPer2 Hc]]; clear Hc.
-        assert (H : perp_bisect O' A' B C /\ perp_bisect O' B' A C /\ perp_bisect O' C' A B).
+        assert (H : Perp_bisect O' A' B C /\ Perp_bisect O' B' A C /\ Perp_bisect O' C' A B).
           {
           apply circumcenter_perp_all; Col.
           }
@@ -703,7 +703,7 @@ Context `{EqDec:EqDecidability Tpoint}.
 Lemma midpoint_thales_reci_circum :
   forall A B C O: Tpoint,
    Per A C B ->
-   is_midpoint O A B ->
+   Midpoint O A B ->
    is_circumcenter O A B C.
 Proof.
 intros.
@@ -717,7 +717,7 @@ Lemma circumcenter_per :
  A<>B -> B<>C ->
  Per A B C ->
  is_circumcenter O A B C ->
- is_midpoint O A C.
+ Midpoint O A C.
 Proof.
 intros.
 

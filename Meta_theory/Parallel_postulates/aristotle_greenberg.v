@@ -23,13 +23,13 @@ Proof.
     apply out_col.
     apply (eq_conga_out P R); auto.
   }
-  assert (HXY : (exists X Y, out B A X /\ out B C Y /\ Per B X Y /\ lt P Q X Y)) by (apply aristotle; assumption).
+  assert (HXY : (exists X Y, Out B A X /\ Out B C Y /\ Per B X Y /\ Lt P Q X Y)) by (apply aristotle; assumption).
   destruct HXY as [X [Y [PX [PY [HXright [Hle HNcong]]]]]].
   assert_diffs.
   assert (HXYdiff : X <> Y) by (intro; treat_equalities; apply HPQdiff; apply le_zero with X; auto).
-  assert (HT : (exists T, out Q T P /\ Cong Q T X Y)) by (apply l6_11_existence; auto).
+  assert (HT : (exists T, Out Q T P /\ Cong Q T X Y)) by (apply l6_11_existence; auto).
   destruct HT as [T []].
-  assert (HS : (exists S, out Q S R /\ Cong Q S X B)) by (apply l6_11_existence; auto).
+  assert (HS : (exists S, Out Q S R /\ Cong Q S X B)) by (apply l6_11_existence; auto).
   destruct HS as [S []].
   assert_diffs.
   exists S.
@@ -48,8 +48,8 @@ Proof.
   apply conga_preserves_lta with P S Q T S Q; try (apply conga_refl; auto).
   2: split.
   - apply conga_trans with X B Y.
-    2: apply (out_conga A B C A B C); Conga; apply out_trivial; auto.
-    assert (HInter : (Cong T S Y B /\ (T <> S -> Conga Q T S X Y B /\ Conga Q S T X B Y))).
+    2: apply (out_conga A B C A B C); CongA; apply out_trivial; auto.
+    assert (HInter : (Cong T S Y B /\ (T <> S -> CongA Q T S X Y B /\ CongA Q S T X B Y))).
     { apply (l11_49 T Q S Y X B); Cong.
       apply l11_16; Perp.
     }
@@ -59,7 +59,7 @@ Proof.
   - apply lea_comm.
     apply (l11_29_b Q S P Q S T).
     exists T.
-    split; Conga.
+    split; CongA.
     repeat split; auto.
     exists P.
     split.
@@ -71,14 +71,14 @@ Proof.
     apply (cong__le); Cong.
 
   - intro HConga.
-    assert (HInter : Cong Q P Q T /\ Cong S P S T /\ Conga Q P S Q T S).
+    assert (HInter : Cong Q P Q T /\ Cong S P S T /\ CongA Q P S Q T S).
     { apply l11_50_1; Cong.
       { intro.
         assert (HUn : S=Q\/P=Q) by (apply l8_9; Col).
         destruct HUn; treat_equalities; absurde.
       }
       apply l11_16; Perp.
-      Conga.
+      CongA.
     }
     destruct HInter as [HCong _].
     apply HNcong.

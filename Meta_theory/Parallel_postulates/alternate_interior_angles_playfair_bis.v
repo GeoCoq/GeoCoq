@@ -56,7 +56,7 @@ Proof.
   apply perp_left_comm.
   apply per_perp; auto.
 
-  assert(HA3 : exists A3, Col A1 A2 A3 /\ two_sides P Q C1 A3).
+  assert(HA3 : exists A3, Col A1 A2 A3 /\ TS P Q C1 A3).
   { elim(Col_dec P Q A1).
     2: intro; apply (not_par_other_side _ _ _ _ Q); Col.
     intro.

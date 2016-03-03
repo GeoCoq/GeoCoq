@@ -45,40 +45,40 @@ Context `{EqDec:EqDecidability Tpoint}.
 Variable O E E' : Tpoint.
 Variable ncolOEE' : ~ Col O E E'.
 
-Lemma sum_col: forall A B C, sum O E E' A B C -> Col O E C.
-Proof. intros; unfold sum, Ar2 in *; spliter; Col. Qed.
+Lemma sum_col: forall A B C, Sum O E E' A B C -> Col O E C.
+Proof. intros; unfold Sum, Ar2 in *; spliter; Col. Qed.
 
-Lemma sum_f : forall A B, Col O E A -> Col O E B -> {C | sum O E E' A B C}.
+Lemma sum_f : forall A B, Col O E A -> Col O E B -> {C | Sum O E E' A B C}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply sum_exists; auto|unfold uniqueness; apply sum_unicity].
 Qed.
 
-Lemma prod_col: forall A B C, prod O E E' A B C -> Col O E C.
-Proof. intros;  unfold prod, Ar2 in *; spliter; Col. Qed.
+Lemma prod_col: forall A B C, Prod O E E' A B C -> Col O E C.
+Proof. intros;  unfold Prod, Ar2 in *; spliter; Col. Qed.
 
-Lemma prod_f : forall A B, Col O E A -> Col O E B -> {C | prod O E E' A B C}.
+Lemma prod_f : forall A B, Col O E A -> Col O E B -> {C | Prod O E E' A B C}.
 Proof.
 intros.
 apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply prod_exists; auto|unfold uniqueness; apply prod_unicity].
 Qed.
 
-Lemma diff_col: forall A B C, diff O E E' A B C -> Col O E C.
+Lemma diff_col: forall A B C, Diff O E E' A B C -> Col O E C.
 Proof.
 intros A B C H; destruct H as [MB HMB]; spliter; apply sum_col with A MB; auto.
 Qed.
 
-Lemma diff_f : forall A B, Col O E A -> Col O E B -> {C | diff O E E' A B C}.
+Lemma diff_f : forall A B, Col O E A -> Col O E B -> {C | Diff O E E' A B C}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply diff_exists; auto|unfold uniqueness; apply diff_unicity].
 Qed.
 
-Lemma opp_col : forall A B, opp O E E' A B -> Col O E B.
-Proof. intros; unfold opp, sum, Ar2 in *; spliter; Col. Qed.
+Lemma opp_col : forall A B, Opp O E E' A B -> Col O E B.
+Proof. intros; unfold Opp, Sum, Ar2 in *; spliter; Col. Qed.
 
-Lemma opp_f : forall A, Col O E A -> {B | opp O E E' A B}.
+Lemma opp_f : forall A, Col O E A -> {B | Opp O E E' A B}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply opp_exists|unfold uniqueness; apply opp_unicity]; auto.
@@ -86,7 +86,7 @@ Qed.
 
 (** One needs to define a predicate for which MA is uniquely defined. *)
 Definition inv O E E' A MA :=
-  (A <> O /\ prod O E E' MA A E) \/ (A = O /\ MA = O).
+  (A <> O /\ Prod O E E' MA A E) \/ (A = O /\ MA = O).
 
 Lemma inv_exists_with_notation : forall A,
   Col O E A -> exists B, inv O E E' A B.
@@ -122,7 +122,7 @@ split; [apply inv_exists_with_notation|
 Qed.
 
 Definition div O E E' A B C :=
-  exists IB : Tpoint, inv O E E' B IB /\ prod O E E' A IB C.
+  exists IB : Tpoint, inv O E E' B IB /\ Prod O E E' A IB C.
 
 Lemma div_exists : forall A B,
   Col O E A -> Col O E B -> exists C, div O E E' A B C.
@@ -166,43 +166,47 @@ Variable orthonormal_grid : Cs O E SS U1 U2.
 
 Definition F : Type := {P : Tpoint | Col O E P}.
 
-Definition eqF (x y : F) := (proj1_sig x) = (proj1_sig y).
+Definition EqF (x y : F) := (proj1_sig x) = (proj1_sig y).
 
-Instance eqF_Reflexive : Reflexive eqF.
-Proof. unfold Reflexive, eqF; auto. Qed.
+Instance eqF_Reflexive : Reflexive EqF.
+Proof. unfold Reflexive, EqF; auto. Qed.
 
-Instance eqF_Symmetric : Symmetric eqF.
-Proof. unfold Symmetric, eqF; auto. Qed.
+Instance eqF_Symmetric : Symmetric EqF.
+Proof. unfold Symmetric, EqF; auto. Qed.
 
-Instance eqF_Transitive : Transitive eqF.
-Proof. unfold Transitive, eqF; intros x y z H; rewrite H; auto. Qed.
+Instance eqF_Transitive : Transitive EqF.
+Proof. unfold Transitive, EqF; intros x y z H; rewrite H; auto. Qed.
 
-Global Instance eqF_Equivalence : Equivalence eqF.
+Global Instance eqF_Equivalence : Equivalence EqF.
 Proof.
-exact (Build_Equivalence F eqF eqF_Reflexive eqF_Symmetric eqF_Transitive).
+exact (Build_Equivalence F EqF eqF_Reflexive eqF_Symmetric eqF_Transitive).
+(* For 8.5
+exact (Build_Equivalence eqF eqF_Reflexive eqF_Symmetric eqF_Transitive).
+*)
 Qed.
 
-Lemma eq_dec_F : forall A B, eqF A B \/ ~ eqF A B.
+Lemma eq_dec_F : forall A B, EqF A B \/ ~ EqF A B.
 Proof.
-intros; unfold eqF; simpl.
+intros; unfold EqF; simpl.
 destruct A as [A HA]; destruct B as [B HB]; simpl.
 exact (eq_dec_points A B).
 Qed.
 
 Lemma neg_and_eqF : forall A B C D,
-  ~ (eqF A B /\ eqF C D) <-> ~ eqF A B \/ ~ eqF C D.
+  ~ (EqF A B /\ EqF C D) <-> ~ EqF A B \/ ~ EqF C D.
 Proof.
 intros A B C D; split; intro H;
 induction (eq_dec_F A B); induction (eq_dec_F C D); intuition.
 Qed.
 
-Definition leF (x y : F) := leP O E E' (proj1_sig x) (proj1_sig y).
+Definition LeF (x y : F) := LeP O E E' (proj1_sig x) (proj1_sig y).
 
-Instance leF_Antisymmetric : Antisymmetric F eqF leF.
-Proof. unfold Antisymmetric, leF, eqF; intros x y; apply leP_asym. Qed.
+Instance leF_Antisymmetric : Antisymmetric F EqF LeF.
+(* For 8.5 Instance leF_Antisymmetric : Antisymmetric eqF leF. *)
+Proof. unfold Antisymmetric, LeF, EqF; intros x y; apply leP_asym. Qed.
 
-Instance leF_Transitive : Transitive leF.
-Proof. unfold Transitive, leF; intros x y z; apply leP_trans. Qed.
+Instance leF_Transitive : Transitive LeF.
+Proof. unfold Transitive, LeF; intros x y z; apply leP_trans. Qed.
 
 Lemma coordinates_of_point_f : forall P,
   {C | Cd O E SS U1 U2 P (fst C) (snd C)}.
@@ -238,7 +242,7 @@ Proof. exists O; Col. Defined.
 Definition OneF : F.
 Proof. exists E; Col. Defined.
 
-Definition addF (x y : F) : F.
+Definition AddF (x y : F) : F.
 Proof.
 destruct (sum_f O E E' ncolOEE'
                 (proj1_sig x) (proj1_sig y)
@@ -246,11 +250,11 @@ destruct (sum_f O E E' ncolOEE'
 apply (sum_col O E E' (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
-Definition TwoF := addF OneF OneF.
+Definition TwoF := AddF OneF OneF.
 
-Global Instance addF_morphism : Proper (eqF ==> eqF ==> eqF) addF.
+Global Instance addF_morphism : Proper (EqF ==> EqF ==> EqF) AddF.
 Proof.
-unfold Proper, respectful, eqF, addF; intros x y Hxy x' y' Hx'y'.
+unfold Proper, respectful, EqF, AddF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (sum_f O E E' ncolOEE' x x' Hx Hx').
@@ -258,16 +262,16 @@ destruct (sum_f O E E' ncolOEE' y y' Hy Hy'); simpl.
 treat_equalities; eauto using sum_unicity.
 Defined.
 
-Lemma neq20 : ~ eqF (addF OneF OneF) OF.
+Lemma neq20 : ~ EqF (AddF OneF OneF) OF.
 Proof.
-unfold addition, add_notation, addF, eqF; simpl.
+unfold addition, add_notation, AddF, EqF; simpl.
 destruct (sum_f O E E' ncolOEE' E E (col_trivial_2 O E)
                 (col_trivial_2 O E)) as [EPE HEPE]; simpl.
 intro; treat_equalities; apply double_null_null in HEPE.
 treat_equalities; Col.
 Qed.
 
-Definition mulF (x y : F) : F.
+Definition MulF (x y : F) : F.
 Proof.
 destruct (prod_f O E E' ncolOEE'
                  (proj1_sig x) (proj1_sig y)
@@ -275,9 +279,9 @@ destruct (prod_f O E E' ncolOEE'
 apply (prod_col O E E' (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
-Global Instance mulF_morphism : Proper (eqF ==> eqF ==> eqF) mulF.
+Global Instance mulF_morphism : Proper (EqF ==> EqF ==> EqF) MulF.
 Proof.
-unfold Proper, respectful, eqF, mulF; intros x y Hxy x' y' Hx'y'.
+unfold Proper, respectful, EqF, MulF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (prod_f O E E' ncolOEE' x x' Hx Hx').
@@ -285,7 +289,7 @@ destruct (prod_f O E E' ncolOEE' y y' Hy Hy'); simpl.
 treat_equalities; eauto using prod_unicity.
 Defined.
 
-Definition subF (x y : F) : F.
+Definition SubF (x y : F) : F.
 Proof.
 destruct (diff_f O E E' ncolOEE'
                  (proj1_sig x) (proj1_sig y)
@@ -293,9 +297,9 @@ destruct (diff_f O E E' ncolOEE'
 apply (diff_col O E E' (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
-Global Instance subF_morphism : Proper (eqF ==> eqF ==> eqF) subF.
+Global Instance subF_morphism : Proper (EqF ==> EqF ==> EqF) SubF.
 Proof.
-unfold Proper, respectful, eqF, subF; intros x y Hxy x' y' Hx'y'.
+unfold Proper, respectful, EqF, SubF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (diff_f O E E' ncolOEE' x x' Hx Hx').
@@ -303,37 +307,37 @@ destruct (diff_f O E E' ncolOEE' y y' Hy Hy'); simpl.
 treat_equalities; eauto using diff_unicity.
 Defined.
 
-Definition oppF (x : F) : F.
+Definition OppF (x : F) : F.
 Proof.
 destruct (opp_f O E E' ncolOEE' (proj1_sig x) (proj2_sig x)) as [P HP].
 exists P; apply (opp_col O E E' (proj1_sig x) P HP).
 Defined.
 
-Global Instance oppF_morphism : Proper (eqF ==> eqF ) oppF.
+Global Instance oppF_morphism : Proper (EqF ==> EqF) OppF.
 Proof.
-unfold Proper, respectful, eqF, oppF; intros x y Hxy.
+unfold Proper, respectful, EqF, OppF; intros x y Hxy.
 destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
 destruct (opp_f O E E' ncolOEE' x Hx).
 destruct (opp_f O E E' ncolOEE' y Hy); simpl.
 treat_equalities; eauto using opp_unicity.
 Defined.
 
-Definition invF (x : F) : F.
+Definition InvF (x : F) : F.
 Proof.
 destruct (inv_f O E E' ncolOEE' (proj1_sig x) (proj2_sig x)) as [P HP].
 exists P; apply (inv_col O E E' ncolOEE' (proj1_sig x) P HP).
 Defined.
 
-Global Instance invF_morphism : Proper (eqF ==> eqF ) invF.
+Global Instance invF_morphism : Proper (EqF ==> EqF) InvF.
 Proof.
-unfold Proper, respectful, eqF, invF; intros x y Hxy.
+unfold Proper, respectful, EqF, InvF; intros x y Hxy.
 destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
 destruct (inv_f O E E' ncolOEE' x Hx).
 destruct (inv_f O E E' ncolOEE' y Hy); simpl.
 treat_equalities; eauto using inv_unicity.
 Defined.
 
-Definition divF (x y : F) : F.
+Definition DivF (x y : F) : F.
 Proof.
 destruct (div_f O E E' ncolOEE'
                  (proj1_sig x) (proj1_sig y)
@@ -341,9 +345,9 @@ destruct (div_f O E E' ncolOEE'
 apply (div_col O E E' (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
-Global Instance divF_morphism : Proper (eqF ==> eqF ==> eqF) divF.
+Global Instance divF_morphism : Proper (EqF ==> EqF ==> EqF) DivF.
 Proof.
-unfold Proper, respectful, eqF, divF; intros x y Hxy x' y' Hx'y'.
+unfold Proper, respectful, EqF, DivF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (div_f O E E' ncolOEE' x x' Hx Hx').
@@ -351,9 +355,9 @@ destruct (div_f O E E' ncolOEE' y y' Hy Hy'); simpl.
 treat_equalities; eauto using div_unicity.
 Defined.
 
-Lemma ringF : (ring_theory OF OneF addF mulF subF oppF eqF).
+Lemma ringF : (ring_theory OF OneF AddF MulF SubF OppF EqF).
 Proof.
-split; unfold OF, OneF, addF, mulF, subF, oppF, eqF, sig_rect;
+split; unfold OF, OneF, AddF, MulF, SubF, OppF, EqF, sig_rect;
 intro x; try intro y; try intro z.
 
   {
@@ -439,14 +443,14 @@ intro x; try intro y; try intro z.
   destruct (opp_f O E E' ncolOEE' x Hx) as [Ox HOx]; simpl.
   destruct (sum_f O E E' ncolOEE' x Ox Hx
                   (opp_col O E E' x Ox HOx)) as [O' HO']; simpl.
-  unfold opp in HOx; apply sum_unicity with O E E' x Ox; try assumption.
+  unfold Opp in HOx; apply sum_unicity with O E E' x Ox; try assumption.
   apply sum_comm; assumption.
   }
 Qed.
 
-Lemma fieldF : (field_theory OF OneF addF mulF subF oppF divF invF eqF).
+Lemma fieldF : (field_theory OF OneF AddF MulF SubF OppF DivF InvF EqF).
 Proof.
-split; unfold OF, OneF, mulF, divF, invF, eqF, sig_rect; simpl;
+split; unfold OF, OneF, MulF, DivF, InvF, EqF, sig_rect; simpl;
 [apply ringF|assert_diffs; auto|intros p q|intros p Hp].
 
   {
@@ -479,7 +483,7 @@ Qed.
 Add Ring GeometricRing : ringF.
 Add Field GeometricField : fieldF.
 
-Global Instance Fops: (@Ring_ops F OF OneF addF mulF subF oppF eqF).
+Global Instance Fops: (@Ring_ops F OF OneF AddF MulF SubF OppF EqF).
 
 Global Instance FRing : (Ring (Ro:=Fops)).
 Proof.
@@ -505,14 +509,14 @@ Proof. exact (Rmul_comm ringF). Defined.
 Notation "0" := OF : FScope.
 Notation "1" := OneF : FScope.
 Notation "2" := TwoF : FScope.
-Infix "+" := addF : FScope.
-Infix "*" := mulF : FScope.
-Infix "-" := subF : FScope.
-Notation "- x" := (oppF x) : FScope.
-Infix "/" := divF : FScope.
-Infix "<=" := leF : FScope.
+Infix "+" := AddF : FScope.
+Infix "*" := MulF : FScope.
+Infix "-" := SubF : FScope.
+Notation "- x" := (OppF x) : FScope.
+Infix "/" := DivF : FScope.
+Infix "<=" := LeF : FScope.
 
-Infix "=F=" := eqF (at level 70) : FScope.
+Infix "=F=" := EqF (at level 70) : FScope.
 
 Open Scope FScope.
 
@@ -520,7 +524,7 @@ Lemma Fmult_integral : forall A B, A * B =F= 0 -> A =F= 0 \/ B =F= 0.
 Proof.
 intros A B HAB; apply prod_null with E E'.
 destruct A as [x Hx]; destruct B as [y Hy]; simpl.
-red in HAB; unfold eq_notation, eqF, multiplication, mul_notation, mulF in HAB.
+red in HAB; unfold eq_notation, EqF, multiplication, mul_notation, MulF in HAB.
 destruct (prod_f O E E' ncolOEE'
              (proj1_sig (exist (fun P : Tpoint => Col O E P) x Hx))
              (proj1_sig (exist (fun P : Tpoint => Col O E P) y Hy))
@@ -572,7 +576,7 @@ destruct Ac as [[Ax HAx] [Ay HAy]].
 destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
 destruct Dc as [[Dx HDx] [Dy HDy]].
-rewrite subF__eq0; unfold addF, mulF, subF, eqF; simpl.
+rewrite subF__eq0; unfold AddF, MulF, SubF, EqF; simpl.
 destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
 destruct (prod_f O E E' ncolOEE' AxMBx AxMBx
                  (diff_col O E E' Ax Bx AxMBx HAxMBx)
@@ -620,7 +624,7 @@ elim (coordinates_of_point_F C); intros Cc HCc.
 destruct Ac as [[Ax HAx] [Ay HAy]].
 destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
-unfold mulF, subF, eqF, leF; simpl.
+unfold MulF, SubF, EqF, LeF; simpl.
 destruct (diff_f O E E' ncolOEE' Bx Ax HBx HAx) as [BxMAx HBxMAx]; simpl.
 destruct (diff_f O E E' ncolOEE' By Ay HBy HAy) as [ByMAy HByMAy]; simpl.
 destruct (diff_f O E E' ncolOEE' Cx Ax HCx HAx) as [CxMAx HCxMAx]; simpl.
@@ -672,7 +676,7 @@ elim (coordinates_of_point_F C); intros Cc HCc.
 destruct Ac as [[Ax HAx] [Ay HAy]].
 destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
-rewrite subF__eq0; unfold addF, mulF, subF, eqF; simpl.
+rewrite subF__eq0; unfold AddF, MulF, SubF, EqF; simpl.
 destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
 destruct (diff_f O E E' ncolOEE' By Cy HBy HCy) as [ByMCy HByMCy]; simpl.
 destruct (prod_f O E E' ncolOEE' AxMBx ByMCy
@@ -688,63 +692,6 @@ apply (characterization_of_collinearity O E E' SS U1 U2
                                         AxMBx AyMBy BxMCx ByMCy P1 P2); auto.
 Qed.
 
-Lemma characterization_of_midpoint_F : forall A B I,
-  is_midpoint I A B <->
-  let (Ac, _) := coordinates_of_point_F A in
-  let (Ax, Ay) := Ac in
-  let (Bc, _) := coordinates_of_point_F B in
-  let (Bx, By) := Bc in
-  let (Ic, _) := coordinates_of_point_F I in
-  let (Ix, Iy) := Ic in
-  Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0.
-Proof.
-intros.
-elim (coordinates_of_point_F A); intros Ac HAc.
-elim (coordinates_of_point_F B); intros Bc HBc.
-elim (coordinates_of_point_F I); intros Ic HIc.
-destruct Ac as [[Ax HAx] [Ay HAy]].
-destruct Bc as [[Bx HBx] [By HBy]].
-destruct Ic as [[Ix HIx] [Iy HIy]].
-setoid_rewrite subF__eq0; unfold TwoF, OneF, addF, mulF, eqF; simpl.
-destruct (sum_f O E E' ncolOEE' E E (col_trivial_2 O E)
-                (col_trivial_2 O E)) as [ET2 HET2]; simpl.
-destruct (prod_f O E E' ncolOEE' Ix ET2 HIx
-                 (sum_col O E E' E E ET2 HET2)) as [IxT2 HIxT2].
-destruct (sum_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxPBx HAxPBx].
-destruct (prod_f O E E' ncolOEE' Iy ET2 HIy
-                 (sum_col O E E' E E ET2 HET2)) as [IyT2 HIyT2].
-destruct (sum_f O E E' ncolOEE' Ay By HAy HBy) as [AyPBy HAyPBy]; simpl.
-apply characterization_of_midpoint with O E E' SS U1 U2 Ax Ay
-                                          Bx By Ix Iy ET2; auto.
-Qed.
-
-Lemma characterization_of_right_triangle_F : forall A B C,
-  Per A B C <->
-  let (Ac, _) := coordinates_of_point_F A in
-  let (Ax, Ay) := Ac in
-  let (Bc, _) := coordinates_of_point_F B in
-  let (Bx, By) := Bc in
-  let (Cc, _) := coordinates_of_point_F C in
-  let (Cx, Cy) := Cc in
-  (Ax - Bx) * (Bx - Cx) + (Ay - By) * (By - Cy) =F= 0.
-Proof.
-intros; unfold Per.
-destruct (symmetric_point_construction C B) as [D HM]; revert HM.
-setoid_rewrite characterization_of_congruence_F.
-setoid_rewrite characterization_of_midpoint_F.
-elim (coordinates_of_point_F A); intros [Ax Ay] _.
-elim (coordinates_of_point_F B); intros [Bx By] _.
-elim (coordinates_of_point_F C); intros [Cx Cy] _; intro H.
-split; [clear H; clear D;
-        intro H; destruct H as [D [H1 H2]];
-        revert H2; revert H1|
-        intro H1; exists D; split;
-        [assumption|revert H1; revert H]];
-elim (coordinates_of_point_F D); intros Dc _;
-destruct Dc as [Dx Dy]; intros; spliter; nsatz.
-simpl; apply neqO_mul_neqO; apply neq20.
-Qed.
-
 Lemma characterization_of_equality_F : forall A B,
   A = B <->
   let (Ac, _) := coordinates_of_point_F A in
@@ -753,7 +700,7 @@ Lemma characterization_of_equality_F : forall A B,
   let (Bx, By) := Bc in
   Ax =F= Bx /\ Ay =F= By.
 Proof.
-intros A B; unfold eqF.
+intros A B; unfold EqF.
 elim (coordinates_of_point_F A); intros [[Ax HAx] [Ay HAy]] HAc.
 elim (coordinates_of_point_F B); intros [[Bx HBx] [By HBy]] HBc.
 rewrite (eq_points_coordinates O E SS U1 U2 A Ax Ay B Bx By HAc HBc).
@@ -768,7 +715,7 @@ Lemma characterization_of_neq_F_bis : forall A B,
   let (Bx, By) := Bc in
   ~ (Ax =F= Bx) \/ ~ (Ay =F= By).
 Proof.
-intros A B; rewrite characterization_of_equality_F; unfold eqF.
+intros A B; rewrite characterization_of_equality_F; unfold EqF.
 elim (coordinates_of_point_F A); intros [[Ax HAx] [Ay HAy]] _.
 elim (coordinates_of_point_F B); intros [[Bx HBx] [By HBy]] _.
 simpl; split; intro; spliter; [|intuition].
@@ -779,7 +726,7 @@ Lemma characterization_of_equality_F_aux : forall Ax Ay Bx By,
   Ax =F= Bx /\ Ay =F= By <->
   (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= OF.
 Proof.
-intros [Ax HAx] [Ay HAy] [Bx HBx] [By HBy]; unfold subF, mulF, addF, eqF; simpl.
+intros [Ax HAx] [Ay HAy] [Bx HBx] [By HBy]; unfold SubF, MulF, AddF, EqF; simpl.
 destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
 destruct (prod_f O E E' ncolOEE' AxMBx AxMBx
                  (diff_col O E E' Ax Bx AxMBx HAxMBx)
@@ -870,10 +817,100 @@ elim (coordinates_of_point_F A); intros [Ax Ay] _.
 elim (coordinates_of_point_F B); intros [Bx By] _; simpl; split; auto.
 Qed.
 
+Lemma characterization_of_midpoint_F : forall A B I,
+  Midpoint I A B <->
+  let (Ac, _) := coordinates_of_point_F A in
+  let (Ax, Ay) := Ac in
+  let (Bc, _) := coordinates_of_point_F B in
+  let (Bx, By) := Bc in
+  let (Ic, _) := coordinates_of_point_F I in
+  let (Ix, Iy) := Ic in
+  Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0.
+Proof.
+intros; elim (eq_dec_points A B); intro HAB.
+
+  {
+  split; intro HMid; treat_equalities.
+
+    {
+    elim (coordinates_of_point_F I); intros Ic HIc.
+    destruct Ic as [[Ix HIx] [Iy HIy]]; split; nsatz.
+    }
+
+    {
+    cut (A = I); [intro; treat_equalities; Midpoint|].
+    rewrite characterization_of_equality_F; revert HMid.
+    elim (coordinates_of_point_F A); intros Ac HAc.
+    elim (coordinates_of_point_F I); intros Ic HIc.
+    destruct Ac as [[Ax HAx] [Ay HAy]].
+    destruct Ic as [[Ix HIx] [Iy HIy]].
+    intro; spliter; split; nsatz; apply neq20.
+    }
+  }
+
+  {
+  split; intro HMid.
+
+    {
+    destruct HMid as [H HCong].
+    assert (HCol : Col A B I) by (assert_cols; Col); clear H.
+    revert HCol; revert HCong; revert HAB.
+    rewrite characterization_of_neq_F, characterization_of_congruence_F,
+            characterization_of_collinearity_F.
+    elim (coordinates_of_point_F A); intros [Ax Ay] _.
+    elim (coordinates_of_point_F B); intros [Bx By] _.
+    elim (coordinates_of_point_F I); intros [Ix Iy] _.
+    intros HAB HCong HCol.
+    cut ((Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0) \/
+         (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0); [intuition|].
+    clear HAB; scnf; repeat rewrite <- mulF__eq0; try nsatz; rtauto.
+    }
+
+    {
+    cut (Cong I A I B /\ Col A I B);
+    [intros [HCong HCol]; induction (l7_20 I A B HCol HCong); intuition|].
+    clear HAB; rewrite characterization_of_congruence_F,
+                       characterization_of_collinearity_F.
+    revert HMid.
+    elim (coordinates_of_point_F A); intros [Ax Ay] _.
+    elim (coordinates_of_point_F B); intros [Bx By] _.
+    elim (coordinates_of_point_F I); intros [Ix Iy] _.
+    intro; spliter; split; nsatz; apply neq20.
+    }
+  }
+Qed.
+
+Lemma characterization_of_right_triangle_F : forall A B C,
+  Per A B C <->
+  let (Ac, _) := coordinates_of_point_F A in
+  let (Ax, Ay) := Ac in
+  let (Bc, _) := coordinates_of_point_F B in
+  let (Bx, By) := Bc in
+  let (Cc, _) := coordinates_of_point_F C in
+  let (Cx, Cy) := Cc in
+  (Ax - Bx) * (Bx - Cx) + (Ay - By) * (By - Cy) =F= 0.
+Proof.
+intros; unfold Per.
+destruct (symmetric_point_construction C B) as [D HM]; revert HM.
+setoid_rewrite characterization_of_congruence_F.
+setoid_rewrite characterization_of_midpoint_F.
+elim (coordinates_of_point_F A); intros [Ax Ay] _.
+elim (coordinates_of_point_F B); intros [Bx By] _.
+elim (coordinates_of_point_F C); intros [Cx Cy] _; intro H.
+split; [clear H; clear D;
+        intro H; destruct H as [D [H1 H2]];
+        revert H2; revert H1|
+        intro H1; exists D; split;
+        [assumption|revert H1; revert H]];
+elim (coordinates_of_point_F D); intros Dc _;
+destruct Dc as [Dx Dy]; intros; spliter; nsatz.
+simpl; apply neqO_mul_neqO; apply neq20.
+Qed.
+
 Lemma characterization_of_parallelism_F_aux : forall A B C D,
   Par A B C D <->
   A <> B /\ C <> D /\
-  exists P, is_midpoint C A P /\ exists Q, is_midpoint Q B P /\ Col C D Q.
+  exists P, Midpoint C A P /\ exists Q, Midpoint Q B P /\ Col C D Q.
 Proof.
 intros; split; intro H; [do 2 (split; try solve [assert_diffs; auto])|
                          destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]].
@@ -1023,7 +1060,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
   }
 
   {
-  unfold Perp, Perp_in; intro HPerp.
+  unfold Perp, Perp_at; intro HPerp.
   assert (HX : ~ Par A B C D); revert HPerp.
     {
     intro H; assert (HAB : A <> B); revert H.
@@ -1121,9 +1158,9 @@ Ltac convert_to_algebra :=
 Ltac express_disj_as_a_single_poly := repeat rewrite <- mulF__eq0.
 
 Lemma centroid_theorem : forall A B C A1 B1 C1 G,
-  is_midpoint A1 B C ->
-  is_midpoint B1 A C ->
-  is_midpoint C1 A B ->
+  Midpoint A1 B C ->
+  Midpoint B1 A C ->
+  Midpoint C1 A B ->
   Col A A1 G ->
   Col B B1 G ->
   Col C C1 G \/ Col A B C.
@@ -1146,13 +1183,13 @@ as so far the only constant different from 0 or 1 which occurs is 2. *)
 Ltac prove_discr_for_powers_of_2 :=
   simpl; try rewrite <- oppF_neq0; repeat apply neqO_mul_neqO; apply neq20.
 
-Lemma Euler_circle: forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
+Lemma nine_point_circle: forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
   ~ Col A B C ->
   Col A B C2 -> Col B C A2 -> Col A C B2 ->
   Perp A B C C2 -> Perp B C A A2 -> Perp A C B B2 ->
   Perp A B C2 H -> Perp B C A2 H -> Perp A C B2 H ->
-  is_midpoint A3 A H -> is_midpoint B3 B H -> is_midpoint C3 C H ->
-  is_midpoint C1 A B -> is_midpoint A1 B C -> is_midpoint B1 C A ->
+  Midpoint A3 A H -> Midpoint B3 B H -> Midpoint C3 C H ->
+  Midpoint C1 A B -> Midpoint A1 B C -> Midpoint B1 C A ->
   Cong O A1 O B1 -> Cong O A1 O C1 ->
   Cong O A2 O A1 /\ Cong O B2 O A1 /\ Cong O C2 O A1 /\
   Cong O A3 O A1 /\ Cong O B3 O A1 /\ Cong O C3 O A1.

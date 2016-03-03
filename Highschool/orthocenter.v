@@ -41,8 +41,6 @@ Definition is_orthocenter H A B C :=
 Definition is_orthocenter H A B C :=
  ~ Col A B C /\ Perp A H B C /\ Perp B H A C /\ Perp C H A B.
 
-
-
 Lemma construct_intersection : forall A B C X1 X2 X3,
  ~ Col A B C ->
  Par A C B X1 -> Par A B C X2 ->  Par B C A X3 ->
@@ -127,7 +125,7 @@ Qed.
 
 Lemma diff_not_col_col_par4_mid: forall A B C D E,
   D <> E -> ~ Col A B C -> Col C D E -> Par A B C D ->
-  Par A B C E -> Par A E B C -> Par A C B D -> is_midpoint C D E.
+  Par A B C E -> Par A E B C -> Par A C B D -> Midpoint C D E.
 Proof.
 intros A B C D E HD HNC HC HPar1 HPar2 HPar3 HPar4.
 assert (HPara1 : Parallelogram_strict A B C E) by (apply parallel_2_plg; finish).
@@ -137,8 +135,8 @@ apply cong_col_mid; Col; eCong.
 Qed.
 
 Lemma altitude_is_perp_bisect : forall A B C O A1 E F,
-  A <> O -> E <> F -> Perp A A1 B C -> Col O A1 A -> Col A E F -> Par B C A E -> is_midpoint A E F ->
-  perp_bisect A O E F.
+  A <> O -> E <> F -> Perp A A1 B C -> Col O A1 A -> Col A E F -> Par B C A E -> Midpoint A E F ->
+  Perp_bisect A O E F.
 Proof with finish.
 intros.
 apply perp_mid_perp_bisect...
@@ -161,9 +159,9 @@ apply construct_triangle in HT.
 destruct HT as [D [E [F HT]]].
 spliter.
 
-assert (is_midpoint A E F) by (apply diff_not_col_col_par4_mid with B C; finish).
-assert (is_midpoint B D F) by (apply diff_not_col_col_par4_mid with A C; finish).
-assert (is_midpoint C D E) by (apply diff_not_col_col_par4_mid with A B; finish).
+assert (Midpoint A E F) by (apply diff_not_col_col_par4_mid with B C; finish).
+assert (Midpoint B D F) by (apply diff_not_col_col_par4_mid with A C; finish).
+assert (Midpoint C D E) by (apply diff_not_col_col_par4_mid with A B; finish).
 
 assert_diffs.
 cases_equality A O.
@@ -180,8 +178,8 @@ cases_equality C O.
 
   subst; Col.
 
-assert (perp_bisect A O E F) by (apply altitude_is_perp_bisect with B C A1; finish).
-assert (perp_bisect B O D F) by (apply altitude_is_perp_bisect with A C B1; finish).
+assert (Perp_bisect A O E F) by (apply altitude_is_perp_bisect with B C A1; finish).
+assert (Perp_bisect B O D F) by (apply altitude_is_perp_bisect with A C B1; finish).
 
 assert (Perp O C D E).
 
@@ -260,13 +258,6 @@ intros.
 apply is_orthocenter_perm in H;intuition.
 Qed.
 
-Hint Resolve
-     is_orthocenter_perm_1
-     is_orthocenter_perm_2
-     is_orthocenter_perm_3
-     is_orthocenter_perm_4
-     is_orthocenter_perm_5 : Orthocenter.
-
 Lemma orthocenter_per :
  forall A B C H,
  Per A B C ->
@@ -298,7 +289,7 @@ Proof.
 intros.
 unfold is_orthocenter in *.
 spliter.
-assert (Perp_in H B C A H).
+assert (Perp_at H B C A H).
 apply l8_14_2_1b_bis;finish.
 induction (eq_dec_points B H).
 subst;auto.

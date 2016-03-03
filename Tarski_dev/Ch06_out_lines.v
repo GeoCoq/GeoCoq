@@ -7,39 +7,39 @@ Section T6_1.
 Context `{M:Tarski_neutral_dimensionless}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition out P A B := A<>P /\ B<>P /\ (Bet P A B \/ Bet P B A).
+Definition Out P A B := A<>P /\ B<>P /\ (Bet P A B \/ Bet P B A).
 
-Lemma bet_out : forall A B C, B <> A -> C <> A -> Bet A B C -> out A B C.
+Lemma bet_out : forall A B C, B <> A -> C <> A -> Bet A B C -> Out A B C.
 Proof.
     intros.
-    unfold out.
+    unfold Out.
     tauto.
 Qed.
 
-Lemma out_dec : forall P A B, out P A B \/ ~ out P A B.
+Lemma out_dec : forall P A B, Out P A B \/ ~ Out P A B.
 Proof.
     intros.
-    unfold out.
+    unfold Out.
     elim (Bet_dec P A B);intro; elim (Bet_dec P B A);intro; elim (eq_dec_points A P);intro; elim (eq_dec_points B P);intro; tauto.
 Qed.
 
-Lemma out_diff1 : forall A B C, out A B C -> B <> A.
+Lemma out_diff1 : forall A B C, Out A B C -> B <> A.
 Proof.
     intros.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     assumption.
 Qed.
 
-Lemma out_diff2 : forall A B C, out A B C -> C <> A.
+Lemma out_diff2 : forall A B C, Out A B C -> C <> A.
 Proof.
     intros.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     assumption.
 Qed.
 
-Lemma out_distinct : forall A B C, out A B C -> B <> A /\ C <> A.
+Lemma out_distinct : forall A B C, Out A B C -> B <> A /\ C <> A.
 Proof.
     intros.
     split.
@@ -47,28 +47,28 @@ Proof.
     eapply out_diff2;eauto.
 Qed.
 
-Lemma out_col : forall A B C, out A B C -> Col A B C.
+Lemma out_col : forall A B C, Out A B C -> Col A B C.
 Proof.
     intros.
     unfold Col.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     induction H1;Between.
 Qed.
 
-Lemma l6_2 : forall A B C P,  A<>P -> B<>P -> C<>P -> Bet A P C -> (Bet B P C <-> out P A B).
+Lemma l6_2 : forall A B C P,  A<>P -> B<>P -> C<>P -> Bet A P C -> (Bet B P C <-> Out P A B).
 Proof.
     intros.
-    unfold out.
+    unfold Out.
     split.
       intros.
       repeat split; try assumption; eapply l5_2;eBetween.
     intro; spliter; induction H5; eBetween.
 Qed.
 
-Lemma l6_3_1 : forall A B P, out P A B -> (A<>P /\ B<>P /\ exists C, C<>P /\ Bet A P C /\ Bet B P C).
+Lemma l6_3_1 : forall A B P, Out P A B -> (A<>P /\ B<>P /\ exists C, C<>P /\ Bet A P C /\ Bet B P C).
 Proof.
-    unfold out.
+    unfold Out.
     intros.
     spliter.
     repeat split; try assumption.
@@ -84,18 +84,18 @@ Proof.
 Qed.
 
 Lemma l6_3_2 : forall A B P,
-  (A<>P /\ B<>P /\ exists C, C<>P /\ Bet A P C /\ Bet B P C) -> out P A B.
+  (A<>P /\ B<>P /\ exists C, C<>P /\ Bet A P C /\ Bet B P C) -> Out P A B.
 Proof.
     intros.
     spliter.
     ex_and H1 C.
-    unfold out.
+    unfold Out.
     repeat split; try assumption; eapply l5_2; eBetween.
 Qed.
 
-Lemma l6_4_1 : forall A B P, out P A B -> Col A P B /\ ~ Bet A P B.
+Lemma l6_4_1 : forall A B P, Out P A B -> Col A P B /\ ~ Bet A P B.
 Proof.
-    unfold out.
+    unfold Out.
     intros.
     spliter.
     unfold Col.
@@ -106,12 +106,12 @@ Proof.
     intro; apply H0; eapply between_equality; eBetween.
 Qed.
 
-Lemma l6_4_2 : forall A B P, Col A P B /\ ~ Bet A P B -> out P A B.
+Lemma l6_4_2 : forall A B P, Col A P B /\ ~ Bet A P B -> Out P A B.
 Proof.
     unfold Col.
     intros.
     spliter.
-    unfold out.
+    unfold Out.
     induction H.
       contradiction.
     induction (eq_dec_points A P).
@@ -123,26 +123,26 @@ Qed.
 
 (** out reflexivity. l6_5 *)
 
-Lemma out_trivial : forall P A, A<>P -> out P A A.
+Lemma out_trivial : forall P A, A<>P -> Out P A A.
 Proof.
     intros.
-    unfold out.
+    unfold Out.
     repeat split; Between.
 Qed.
 
 (** out symmetry. *)
 
-Lemma l6_6 : forall P A B, out P A B -> out P B A.
+Lemma l6_6 : forall P A B, Out P A B -> Out P B A.
 Proof.
-    unfold out.
+    unfold Out.
     intuition.
 Qed.
 
 (** out transitivity. *)
 
-Lemma l6_7 : forall P A B C, out P A B -> out P B C -> out P A C.
+Lemma l6_7 : forall P A B C, Out P A B -> Out P B C -> Out P A C.
 Proof.
-    unfold out.
+    unfold Out.
     intros.
     spliter.
     repeat split; try assumption.
@@ -154,10 +154,10 @@ Proof.
 Qed.
 
 Lemma bet_out_out_bet : forall A B C A' C',
- Bet A B C -> out B A A' -> out B C C' -> Bet A' B C'.
+ Bet A B C -> Out B A A' -> Out B C C' -> Bet A' B C'.
 Proof.
     intros.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     induction H5; induction H3.
       assert(Bet A' B C) by (apply outer_transitivity_between2 with A; Between).
@@ -171,10 +171,10 @@ Proof.
 Qed.
 
 Lemma out2_bet_out : forall A B C X P,
- out B A C -> out B X P -> Bet A X C -> out B A P /\ out B C P.
+ Out B A C -> Out B X P -> Bet A X C -> Out B A P /\ Out B C P.
 Proof.
     intros.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     induction H5; induction H3.
       repeat split; try assumption.
@@ -201,11 +201,11 @@ Qed.
 
 Lemma l6_11_unicity : forall A B C R X Y,
   R<>A -> B<>C ->
-  out A X R -> Cong A X B C ->
-  out A Y R -> Cong A Y B C ->
+  Out A X R -> Cong A X B C ->
+  Out A Y R -> Cong A Y B C ->
   X=Y.
 Proof.
-    unfold out.
+    unfold Out.
     intros.
     spliter.
     assert (Cong A X A Y) by eCong.
@@ -223,35 +223,39 @@ Proof.
 Qed.
 
 Lemma l6_11_existence : forall A B C R,
-  R<>A -> B<>C -> exists X, out A X R /\ Cong A X B C.
+  R<>A -> B<>C -> exists X, Out A X R /\ Cong A X B C.
 Proof.
     intros.
     assert (exists X : Tpoint, (Bet A R X \/ Bet A X R) /\ Cong A X B C) by (apply (segment_construction_2);assumption).
     ex_and H1 X.
     exists X.
-    unfold out;repeat split; try intro;treat_equalities;intuition.
+    unfold Out;repeat split; try intro;treat_equalities;intuition.
 Qed.
 
-Lemma l6_13_1 : forall P A B, out P A B -> le P A P B -> Bet P A B.
+Lemma l6_13_1 : forall P A B, Out P A B -> Le
+ P A P B -> Bet P A B.
 Proof.
-    unfold out.
+    unfold Out.
     intros.
     spliter.
     induction H2; try assumption.
-    unfold le in H0.
+    unfold Le
+ in H0.
     ex_and H0 Y.
     assert(Y = A).
       apply (l6_11_unicity P P A B); Between; Cong.
-        unfold out; repeat split; auto.
+        unfold Out; repeat split; auto.
         intro; treat_equalities; auto.
-      unfold out; repeat split; auto.
+      unfold Out; repeat split; auto.
     subst Y; assumption.
 Qed.
 
-Lemma l6_13_2 : forall P A B, out P A B -> Bet P A B -> le P A P B.
+Lemma l6_13_2 : forall P A B, Out P A B -> Bet P A B -> Le
+ P A P B.
 Proof.
     intros.
-    unfold le.
+    unfold Le
+.
     exists A.
     split; eCong.
 Qed.
@@ -376,7 +380,7 @@ Proof.
     apply col_transitivity_1 with Y; assumption.
 Qed.
 
-Lemma out2__bet : forall A B C, out A B C -> out C A B -> Bet A B C.
+Lemma out2__bet : forall A B C, Out A B C -> Out C A B -> Bet A B C.
 Proof.
     intros A B C Hout1 Hout2.
     apply l6_4_1 in Hout2.
@@ -388,8 +392,11 @@ Proof.
     assumption.
 Qed.
 
-Lemma bet2_le2__le : forall A B C A' B' C', Bet A B C -> Bet A' B' C' -> le A B A' B' -> le B C B' C' ->
-  le A C A' C'.
+Lemma bet2_le2__le : forall A B C A' B' C', Bet A B C -> Bet A' B' C' -> Le
+ A B A' B' -> Le
+ B C B' C' ->
+  Le
+ A C A' C'.
 Proof.
   intros A B C A' B' C' HBet HBet' HleAB HleBC.
 
@@ -441,21 +448,23 @@ Proof.
 Qed.
 
 Lemma cong_preserves_bet : forall B A' A0 E D' D0,
-  Bet B A' A0 -> Cong B A' E D' -> Cong B A0 E D0 -> out E D' D0 ->
+  Bet B A' A0 -> Cong B A' E D' -> Cong B A0 E D0 -> Out E D' D0 ->
   Bet E D' D0.
 Proof.
     intros.
-    unfold out in H2.
+    unfold Out in H2.
     spliter.
     induction H4.
       assumption.
-    assert (le E D0 E D').
+    assert (Le
+ E D0 E D').
       eapply l5_5_2.
       exists D'.
       split.
         assumption.
       Cong.
-    assert(le E D' E D0).
+    assert(Le
+ E D' E D0).
       eapply l5_6.
       repeat split.
         2:apply H0.
@@ -478,12 +487,12 @@ Proof.
 Qed.
 
 Lemma out_cong_cong : forall B A A0 E D D0,
- out B A A0 -> out E D D0 ->
+ Out B A A0 -> Out E D D0 ->
  Cong B A E D -> Cong B A0 E D0 ->
  Cong A A0 D D0.
 Proof.
     intros.
-    unfold out in H.
+    unfold Out in H.
     spliter.
     induction H4.
       assert (Bet E D D0).
@@ -510,10 +519,10 @@ Proof.
     eapply l4_3;eBetween;Cong.
 Qed.
 
-Lemma not_out_bet : forall A B C, Col A B C -> ~ out B A C -> Bet A B C.
+Lemma not_out_bet : forall A B C, Col A B C -> ~ Out B A C -> Bet A B C.
 Proof.
     intros.
-    unfold out in H0.
+    unfold Out in H0.
     induction (eq_dec_points A B).
       subst.
       Between.
@@ -533,12 +542,12 @@ Qed.
 
 Lemma not_bet_and_out :
  forall A B C,
- ~ (Bet A B C /\ out B A C).
+ ~ (Bet A B C /\ Out B A C).
 Proof.
     intros.
     intro.
     spliter.
-    unfold out in H0.
+    unfold Out in H0.
     spliter.
     induction H2.
       assert ( A = B).
@@ -557,13 +566,13 @@ Qed.
 Lemma out_to_bet :
  forall A B C A' B' C',
   Col A' B' C' ->
- (out B A C <-> out B' A' C') ->
+ (Out B A C <-> Out B' A' C') ->
   Bet A B C ->
   Bet A' B' C'.
 Proof.
     intros.
     induction(out_dec B A C).
-      unfold out in H2.
+      unfold Out in H2.
       spliter.
       induction H4.
         assert( A = B).
@@ -580,7 +589,7 @@ Proof.
         assumption.
       contradiction.
     destruct H0.
-    assert (~out B' A' C').
+    assert (~Out B' A' C').
       intro.
       apply H2.
       apply H3.
@@ -590,7 +599,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma col_out2_col  : forall A B C AA CC, Col A B C -> out B A AA -> out B C CC -> Col AA B CC.
+Lemma col_out2_col  : forall A B C AA CC, Col A B C -> Out B A AA -> Out B C CC -> Col AA B CC.
 Proof.
     intros.
     induction H.
@@ -603,7 +612,7 @@ Proof.
       left.
       assumption.
     induction H.
-      assert(out B AA CC).
+      assert(Out B AA CC).
         eapply l6_7.
           eapply l6_6.
           apply H0.
@@ -612,17 +621,17 @@ Proof.
           apply l6_6.
           apply H1.
         apply bet_out.
-          unfold out in *.
+          unfold Out in *.
           spliter.
           assumption.
-          unfold out in *.
+          unfold Out in *.
           spliter.
           assumption.
         assumption.
       apply col_permutation_4.
       apply out_col.
       assumption.
-    assert(out B AA CC).
+    assert(Out B AA CC).
       eapply l6_6.
       eapply l6_7.
         eapply l6_6.
@@ -632,10 +641,10 @@ Proof.
         eapply l6_6.
         apply H0.
       apply bet_out.
-        unfold out in *.
+        unfold Out in *.
         spliter.
         assumption.
-        unfold out in *.
+        unfold Out in *.
         spliter.
         assumption.
       apply between_symmetry.
@@ -645,12 +654,12 @@ Proof.
     assumption.
 Qed.
 
-Lemma bet2_out_out : forall A B C B' C', B <> A -> B' <> A -> out A C C' -> Bet A B C -> Bet A B' C' -> out A B B'.
+Lemma bet2_out_out : forall A B C B' C', B <> A -> B' <> A -> Out A C C' -> Bet A B C -> Bet A B' C' -> Out A B B'.
 Proof.
     intros.
     induction(eq_dec_points B' C').
       subst C'.
-      unfold out in *.
+      unfold Out in *.
       spliter.
       repeat split; try assumption.
       induction H5.
@@ -661,7 +670,7 @@ Proof.
       eapply l5_3.
         apply H2.
       assumption.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     repeat split.
       assumption.
@@ -690,10 +699,10 @@ Qed.
 
 
 Lemma out2_out_1 : forall B C D X,
- out B X C -> out B X D -> out B C D.
+ Out B X C -> Out B X D -> Out B C D.
 Proof.
     intros.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     repeat split.
       assumption.
@@ -717,7 +726,7 @@ Proof.
 Qed.
 
 Lemma out2_out_2 : forall B C D X,
- out B C X -> out B D X -> out B C D.
+ Out B C X -> Out B D X -> Out B C D.
 Proof.
     intros.
     eapply out2_out_1.
@@ -728,7 +737,7 @@ Proof.
 Qed.
 
 Lemma out_bet_out_1 : forall A B C P,
- out P A C -> Bet A B C -> out P A B.
+ Out P A C -> Bet A B C -> Out P A B.
 Proof.
     intros.
     induction (eq_dec_points B P).
@@ -736,7 +745,7 @@ Proof.
       apply False_ind.
       apply (not_bet_and_out A B C).
       split; assumption.
-    unfold out in *.
+    unfold Out in *.
     spliter.
     repeat split.
       assumption.
@@ -754,7 +763,7 @@ Proof.
 Qed.
 
 Lemma out_bet_out_2 : forall A B C P,
- out P A C -> Bet A B C -> out P B C.
+ Out P A C -> Bet A B C -> Out P B C.
 Proof.
     intros.
     apply l6_6.
@@ -766,7 +775,7 @@ Proof.
 Qed.
 
 Lemma out_bet__out : forall A B P Q,
- Bet P Q A -> out Q A B -> out P A B.
+ Bet P Q A -> Out Q A B -> Out P A B.
 Proof.
     intros A B P Q HBet Hout.
     destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6]; apply bet_out; eBetween; intro; treat_equalities; auto.

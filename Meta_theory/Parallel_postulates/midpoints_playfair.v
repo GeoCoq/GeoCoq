@@ -37,7 +37,7 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
 
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 B1 P) as [B3 [HCol HBet]];
-      assert_diffs; unfold is_midpoint in *; spliter;
+      assert_diffs; unfold Midpoint in *; spliter;
       try (exists B3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
 
         {
@@ -65,7 +65,7 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
 
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 B2 P) as [B3 [HCol HBet]];
-      assert_diffs; unfold is_midpoint in *; spliter;
+      assert_diffs; unfold Midpoint in *; spliter;
       try (exists B3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
 
         {
@@ -109,7 +109,7 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
 
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 C1 P) as [C3 [HCol HBet]];
-      assert_diffs; unfold is_midpoint in *; spliter;
+      assert_diffs; unfold Midpoint in *; spliter;
       try (exists C3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
 
         {
@@ -137,7 +137,7 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
 
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 C2 P) as [C3 [HCol HBet]];
-      assert_diffs; unfold is_midpoint in *; spliter;
+      assert_diffs; unfold Midpoint in *; spliter;
       try (exists C3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
 
         {

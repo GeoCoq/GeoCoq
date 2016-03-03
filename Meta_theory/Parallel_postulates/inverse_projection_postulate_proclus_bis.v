@@ -1,11 +1,11 @@
 Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
-Section inverse_projection_proclus_bis.
+Section inverse_projection_postulate_proclus_bis.
 
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma inverse_projection__proclus_bis : inverse_projection_postulate -> proclus_bis.
+Lemma inverse_projection_postulate__proclus_bis : inverse_projection_postulate -> proclus_bis.
 Proof.
   intros ip A B C D P Q HPerp2 HInter HNCol.
   elim(Col_dec C D P).
@@ -47,7 +47,7 @@ Proof.
       intro; exists C; split; Col.
   }
   destruct HC1 as [C1 []].
-  assert(HA0 : exists A0, Col A B A0 /\ one_side P C0 Q0 A0).
+  assert(HA0 : exists A0, Col A B A0 /\ OS P C0 Q0 A0).
   { elim(Col_dec P C0 A).
     - intro.
       assert(~ Col P C0 B) by (intro; apply HNCol3; ColR).
@@ -74,7 +74,7 @@ Proof.
     assert(HPer := l8_16_1 A B C0 A0 P); destruct HPer; Col; Perp.
   split.
   { exists Q0.
-    split; Conga.
+    split; CongA.
     apply os2__inangle; Side.
     apply (col2_os__os A B); auto.
   }
@@ -85,4 +85,4 @@ Proof.
     apply l9_9 in Habs; apply Habs; Side.
 Qed.
 
-End inverse_projection_proclus_bis.
+End inverse_projection_postulate_proclus_bis.

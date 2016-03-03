@@ -19,7 +19,7 @@ Lemma impossible_case_5 : forall P Q R S T U I,
 Proof.
 intros P Q R S T U I HPTQ HRTS HQUR HNC HNC' HPar1 HPar2 HSQI HPUI.
 apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR.
-assert (HTS : two_sides Q S P U) by (assert_diffs; spliter; assert_cols; repeat split;
+assert (HTS : TS Q S P U) by (assert_diffs; spliter; assert_cols; repeat split;
                                      Col; try (exists I; Col; Between); intro; apply HNC'; ColR).
 apply l9_9 in HTS; apply HTS.
 apply one_side_transitivity with R.
@@ -98,7 +98,7 @@ elim (eq_dec_points I S); intro HIS; treat_equalities.
   }
 
   {
-  assert (HTS : two_sides P U Q S) by (assert_diffs; spliter; assert_cols; repeat split;
+  assert (HTS : TS P U Q S) by (assert_diffs; spliter; assert_cols; repeat split;
                                        Col; try (exists I; Col; Between); intro; apply HNC; ColR).
   apply l9_9 in HTS; apply HTS.
   exists R; split.
@@ -353,7 +353,7 @@ elim (Col_dec X T Y); intro HXTY.
       {
       assert (HABD : ~ Col A B D) by (intro; assert_cols; apply HABC; ColR).
       apply coplanar_pseudo_trans with A B D; assert_cols; Cop.
-      assert (HTS : two_sides A D B B'').
+      assert (HTS : TS A D B B'').
         {
         apply l9_8_2 with X.
 

@@ -41,8 +41,8 @@ Qed.
 (** P is of coordinates (X,Y) in the grip SU1U2 using unit length OE. *)
 Definition Cd O E S U1 U2 P X Y :=
   Cs O E S U1 U2 /\ Coplanar P S U1 U2 /\
-  (exists PX, projp P PX S U1 /\ Cong_3 O E X S U1 PX) /\
-  (exists PY, projp P PY S U2 /\ Cong_3 O E Y S U2 PY).
+  (exists PX, Projp P PX S U1 /\ Cong_3 O E X S U1 PX) /\
+  (exists PY, Projp P PY S U2 /\ Cong_3 O E Y S U2 PY).
 
 Lemma coord_exchange_axes : forall O E S U1 U2 P X Y,
   Cd O E S U1 U2 P X Y -> Cd O E S U2 U1 P Y X.
@@ -58,14 +58,14 @@ Qed.
 Lemma Cd_Col : forall O E S U1 U2 P X Y,
   Cd O E S U1 U2 P X Y -> Col O E X /\ Col O E Y.
 Proof.
-unfold Cd; unfold projp; intros O E S U1 U2 P X Y HCd.
+unfold Cd; unfold Projp; intros O E S U1 U2 P X Y HCd.
 destruct HCd as [HCs [HC [[PX HPX] [PY HPY]]]]; clear HC.
 destruct HPX as [[HDiff1 HElim1] HCong1]; destruct HPY as [[HDiff2 HElim2] HCong2].
 split; [apply l4_13 with S U1 PX|apply l4_13 with S U2 PY]; Cong;
 [induction HElim1|induction HElim2]; spliter; treat_equalities; Col.
 Qed.
 
-Lemma exists_projp : forall A B P, A <> B -> exists P', projp P P' A B.
+Lemma exists_projp : forall A B P, A <> B -> exists P', Projp P P' A B.
 Proof.
 intros A B P HAB.
 elim (Col_dec A B P); intro HNC; [exists P; split; Col; right|].
@@ -75,7 +75,7 @@ Qed.
 
 Lemma exists_coord : forall O E S U P,
   S <> U -> Cong O E S U ->
-  exists PX, exists X, projp P PX S U /\ Cong_3 O E X S U PX.
+  exists PX, exists X, Projp P PX S U /\ Cong_3 O E X S U PX.
 Proof.
 intros O E S U P HSU HCong.
 destruct (exists_projp S U P HSU) as [PX Hprojp].
@@ -156,7 +156,7 @@ split; [exists PX|exists PY]; split; Cong.
   {
   assert_diffs; split; auto.
   left; split; [apply l4_13 with O E X; Col|].
-  unfold Perp_in in *; spliter; apply perp_col0 with PX PX'; Col.
+  unfold Perp_at in *; spliter; apply perp_col0 with PX PX'; Col.
   assert (HPYS : PY <> S) by (unfold Cong_3 in *; spliter; assert_diffs; auto).
   intro; treat_equalities; apply HPYS.
   apply l6_21 with S U1 U2 S; Col;
@@ -173,7 +173,7 @@ split; [exists PX|exists PY]; split; Cong.
   {
   assert_diffs; split; auto.
   left; split; [apply l4_13 with O E Y; Col|].
-  unfold Perp_in in *; spliter; apply perp_col0 with PY PY'; Col.
+  unfold Perp_at in *; spliter; apply perp_col0 with PY PY'; Col.
   assert (HPXS : PX <> S) by (unfold Cong_3 in *; spliter; assert_diffs; auto).
   intro; treat_equalities; apply HPXS.
   apply l6_21 with S U2 U1 S; Col;
@@ -285,8 +285,8 @@ Qed.
 
 (** As we are in dimension 2, we skip 16.8 which is only needed to prove 16.11 in dimension n. *)
 Lemma l16_9_1 : forall O E E' X Y XY XMY,
-  Col O E X -> Col O E Y -> is_length O E E' X Y XY ->
-  leP O E E' Y X -> diff O E E' X Y XMY ->
+  Col O E X -> Col O E Y -> Is_length O E E' X Y XY ->
+  LeP O E E' Y X -> Diff O E E' X Y XMY ->
   XY = XMY.
 Proof.
 intros O E E' X Y XY XMY HCol1 HCol2 HXY HLe1 HXMY.
@@ -295,7 +295,7 @@ assert (HNC : ~ Col O E E')
 assert (HOE : O <> E) by (assert_diffs; auto).
 assert (HCol3 : Col O E XMY).
   {
-  unfold diff, opp, sum, Ar2 in *;
+  unfold Diff, Opp, Sum, Ar2 in *;
   destruct HXMY as [MB [H1 [H2 [H3 H4]]]];
   spliter; Col.
   }
@@ -312,7 +312,7 @@ apply midpoint_opp; repeat (Col; split).
 Qed.
 
 Lemma length_eq_or_opp : forall O E E' A B L1 L2,
-  length O E E' A B L1 -> diff O E E' A B L2 -> L1 = L2 \/ opp O E E' L1 L2.
+  Length O E E' A B L1 -> Diff O E E' A B L2 -> L1 = L2 \/ Opp O E E' L1 L2.
 Proof.
 intros O E E' A B L1 L2 HL1 HL2.
 assert (HNC : ~ Col O E E') by (apply diff_ar2 in HL2; unfold Ar2 in *; spliter; Col).
@@ -328,8 +328,8 @@ treat_equalities; auto.
 Qed.
 
 Lemma l16_9_2 : forall O E E' X Y XY XMY XY2 XMY2,
-  Col O E X -> Col O E Y -> is_length O E E' X Y XY ->
-  diff O E E' X Y XMY -> prod O E E' XY XY XY2 -> prod O E E' XMY XMY XMY2 ->
+  Col O E X -> Col O E Y -> Is_length O E E' X Y XY ->
+  Diff O E E' X Y XMY -> Prod O E E' XY XY XY2 -> Prod O E E' XMY XMY XMY2 ->
   XY2 = XMY2.
 Proof.
 intros O E E' X Y XY XMY XY2 XMY2 HCol1 HCol2 HXY HXMY HXY2 HXMY2.
@@ -384,8 +384,8 @@ Qed.
 Lemma square_distance_formula_aux : forall O E E' S U1 U2 P PX PY Q QX PXQX,
   Cd O E S U1 U2 P PX PY -> Cd O E S U1 U2 Q QX PY ->
   P <> Q -> ~ Col O E E' -> Col O E PX -> Col O E QX -> Col O E PY ->
-  Cs O E S U1 U2 -> length O E E' PX QX PXQX ->
-  length O E E' Q P PXQX.
+  Cs O E S U1 U2 -> Length O E E' PX QX PXQX ->
+  Length O E E' Q P PXQX.
 Proof.
 intros O E E' S U1 U2 P PX PY Q QX PXQX.
 intros HCd1 HCd2 HDiff  HNC HCol1 HCol2 HCol3 HCs HPXQX.
@@ -576,10 +576,10 @@ Qed.
 
 Lemma square_distance_formula :
   forall O E E' S U1 U2 P Q PX PY QX QY PQ PQ2 PXMQX PYMQY PXMQX2 PYMQY2 F,
-  Cd O E S U1 U2 P PX PY -> Cd O E S U1 U2 Q QX QY -> is_length O E E' P Q PQ ->
-  prod O E E' PQ PQ PQ2 -> diff O E E' PX QX PXMQX ->
-  prod O E E' PXMQX PXMQX PXMQX2 -> diff O E E' PY QY PYMQY ->
-  prod O E E' PYMQY PYMQY PYMQY2 -> sum O E E' PXMQX2 PYMQY2 F ->
+  Cd O E S U1 U2 P PX PY -> Cd O E S U1 U2 Q QX QY -> Is_length O E E' P Q PQ ->
+  Prod O E E' PQ PQ PQ2 -> Diff O E E' PX QX PXMQX ->
+  Prod O E E' PXMQX PXMQX PXMQX2 -> Diff O E E' PY QY PYMQY ->
+  Prod O E E' PYMQY PYMQY PYMQY2 -> Sum O E E' PXMQX2 PYMQY2 F ->
   PQ2 = F.
 Proof.
 intros O E E' S U1 U2 P Q PX PY QX QY PQ PQ2 PXMQX PYMQY PXMQX2 PYMQY2 F.
@@ -593,14 +593,14 @@ assert (HCol4 : Col O E QY) by (apply Cd_Col in HCd2; spliter; Col).
 destruct (is_length_exists O E E' PX QX) as [PXQX HPXQX]; Col.
 assert (HCol5 : Col O E PXQX).
   {
-  unfold is_length, length in HPXQX; induction HPXQX; spliter; treat_equalities; Col.
+  unfold Is_length, Length in HPXQX; induction HPXQX; spliter; treat_equalities; Col.
   }
 destruct (prod_exists O E E' HNC PXQX PXQX) as [PXQX2 HPXQX2]; Col.
 assert (PXQX2 = PXMQX2) by (apply l16_9_2 with O E E' PX QX PXQX PXMQX; Col).
 destruct (is_length_exists O E E' PY QY) as [PYQY HPYQY]; Col.
 assert (HCol6 : Col O E PYQY).
   {
-  unfold is_length, length in HPYQY; induction HPYQY; spliter; treat_equalities; Col.
+  unfold Is_length, Length in HPYQY; induction HPYQY; spliter; treat_equalities; Col.
   }
 destruct (prod_exists O E E' HNC PYQY PYQY) as [PYQY2 HPYQY2]; Col.
 assert (PYQY2 = PYMQY2) by (apply l16_9_2 with O E E' PY QY PYQY PYMQY; Col).
@@ -703,12 +703,12 @@ Lemma characterization_of_congruence :
          CXMDX CXMDX2 CYMDY CYMDY2 CD2,
   Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY ->
   Cd O E S U1 U2 C CX CY -> Cd O E S U1 U2 D DX DY ->
-  diff O E E' AX BX AXMBX -> prod O E E' AXMBX AXMBX AXMBX2 ->
-  diff O E E' AY BY AYMBY -> prod O E E' AYMBY AYMBY AYMBY2 ->
-  sum O E E' AXMBX2 AYMBY2 AB2 ->
-  diff O E E' CX DX CXMDX -> prod O E E' CXMDX CXMDX CXMDX2 ->
-  diff O E E' CY DY CYMDY -> prod O E E' CYMDY CYMDY CYMDY2 ->
-  sum O E E' CXMDX2 CYMDY2 CD2 ->
+  Diff O E E' AX BX AXMBX -> Prod O E E' AXMBX AXMBX AXMBX2 ->
+  Diff O E E' AY BY AYMBY -> Prod O E E' AYMBY AYMBY AYMBY2 ->
+  Sum O E E' AXMBX2 AYMBY2 AB2 ->
+  Diff O E E' CX DX CXMDX -> Prod O E E' CXMDX CXMDX CXMDX2 ->
+  Diff O E E' CY DY CYMDY -> Prod O E E' CYMDY CYMDY CYMDY2 ->
+  Sum O E E' CXMDX2 CYMDY2 CD2 ->
   (Cong A B C D <-> AB2 = CD2).
 Proof.
 intros O E E' S U1 U2 A AX AY B BX BY C CX CY D DX DY.
@@ -720,7 +720,7 @@ assert (HNC : ~ Col O E E')
 destruct (is_length_exists O E E' A B) as [AB HLengthAB]; Col.
 assert (HColAB : Col O E AB).
   {
-  unfold is_length, length in *; induction HLengthAB;
+  unfold Is_length, Length in *; induction HLengthAB;
   spliter; treat_equalities; Col.
   }
 destruct (prod_exists O E E' HNC AB AB) as [AB2 HLengthAB2]; Col.
@@ -735,7 +735,7 @@ clear HAXMBX2; clear HAXMBX; clear HCdA; clear HCdB.
 destruct (is_length_exists O E E' C D) as [CD HLengthCD]; Col.
 assert (HColCD : Col O E CD).
   {
-  unfold is_length, length in *; induction HLengthCD;
+  unfold Is_length, Length in *; induction HLengthCD;
   spliter; treat_equalities; Col.
   }
 destruct (prod_exists O E E' HNC CD CD) as [CD2 HLengthCD2]; Col.
@@ -752,7 +752,7 @@ split; [intro HCong|intro; treat_equalities].
   {
   assert (H : Cong O AB O CD).
     {
-    unfold is_length, length in *;
+    unfold Is_length, Length in *;
     induction HLengthAB; [|spliter; treat_equalities; exfalso; apply HNC; Col];
     induction HLengthCD; [|spliter; treat_equalities; exfalso; apply HNC; Col].
     spliter; eCong.
@@ -766,11 +766,11 @@ split; [intro HCong|intro; treat_equalities].
     }
 
     {
-    assert (HOpp1 : opp O E E' AB CD)
+    assert (HOpp1 : Opp O E E' AB CD)
       by (apply midpoint_opp; unfold Ar2; auto; repeat (split; Col)).
     clear HMid; destruct (opp_exists O E E' HNC E) as [ME HOpp2]; Col.
-    assert (prod O E E' AB ME CD) by (apply opp_prod; auto).
-    assert (HXMY2' : prod O E E' CD CD AB2).
+    assert (Prod O E E' AB ME CD) by (apply opp_prod; auto).
+    assert (HXMY2' : Prod O E E' CD CD AB2).
       {
       apply prod_assoc1 with AB ME AB; auto.
       apply prod_assoc2 with ME AB E; try apply prod_1_l; Col; apply prod_comm; auto.
@@ -787,8 +787,8 @@ split; [intro HCong|intro; treat_equalities].
   [|spliter; treat_equalities; exfalso; apply HNC; Col].
   elim (eq_squares_eq_or_opp O E E' AB CD AB2); auto; intro HOpp; treat_equalities;
   [apply length_eq_cong_1 with O E E' AB; auto|].
-  unfold length, leP, ltP in *; spliter; apply opp_midpoint in HOpp.
-  unfold is_midpoint in *; spliter; eCong.
+  unfold Length, LeP, LtP in *; spliter; apply opp_midpoint in HOpp.
+  unfold Midpoint in *; spliter; eCong.
   }
 Qed.
 
@@ -803,7 +803,7 @@ try (intro; unfold Cd, Cs in *; spliter; treat_equalities; intuition).
 assert (HAX' := HCdA).
 destruct HAX' as [H [H' [HAX' H'']]]; clear H; clear H'; clear H''.
 destruct HAX' as [AX' [HProjpAX' HCongAX']].
-assert (HA : projp AX' A A1 A2).
+assert (HA : Projp AX' A A1 A2).
   {
   split; auto; induction (eq_dec_points A AX');
   [treat_equalities; right|left; split]; Col.
@@ -866,11 +866,11 @@ Lemma characterization_of_betweenness_aux : forall O E E' S U1 U2
   ~ Col O E E' -> Col O E AX -> Col O E BX -> Col O E CX ->
   Col O E BXMAX -> Col O E CXMAX -> Col O E T ->
   Col O E AB -> Col O E AC -> Col O E IAC ->
-  diff O E E' BX AX BXMAX -> diff O E E' CX AX CXMAX ->
-  length O E E' A B AB -> length O E E' A C AC ->
-  prod O E E' T AC AB -> prod O E E' IAC AC E ->
+  Diff O E E' BX AX BXMAX -> Diff O E E' CX AX CXMAX ->
+  Length O E E' A B AB -> Length O E E' A C AC ->
+  Prod O E E' T AC AB -> Prod O E E' IAC AC E ->
   Bet A B C -> A <> B -> A <> C -> B <> C ->
-  prod O E E' T CXMAX BXMAX.
+  Prod O E E' T CXMAX BXMAX.
 Proof.
 intros O E E' S U1 U2 A AX AY B BX BY C CX CY BXMAX CXMAX AB AC IAC T.
 intros HCdA HCdB HCdC HNC HColAX HColBX HColCX HColBXMAX HColCXMAX HColT.
@@ -880,7 +880,7 @@ try (intro; unfold Cd, Cs in *; spliter; treat_equalities; intuition).
 assert (HAX' := HCdA).
 destruct HAX' as [H [H' [HAX' H'']]]; clear H; clear H'; clear H''.
 destruct HAX' as [AX' [HProjpAX' HCongAX']].
-assert (HA : projp AX' A A1 A2).
+assert (HA : Projp AX' A A1 A2).
   {
   split; auto; induction (eq_dec_points A AX');
   [treat_equalities; right|left; split]; Col.
@@ -950,7 +950,7 @@ elim (Col_dec A B BX''); intro HABBX''.
       by (apply diff_unicity with O E E' AX AX; auto; apply diff_null; Col);
     assert (O = CXMAX)
       by (apply diff_unicity with O E E' AX AX; auto; apply diff_null; Col);
-    treat_equalities; apply prod_0_r; unfold prod, Ar2 in *; spliter; Col.
+    treat_equalities; apply prod_0_r; unfold Prod, Ar2 in *; spliter; Col.
     }
 
     {
@@ -965,13 +965,13 @@ elim (Col_dec A B BX''); intro HABBX''.
       assert (Col A1 A2 BX'') by (apply projp_col with BX'; auto); ColR.
       }
     treat_equalities.
-    assert (HElim : leP O E E' AX BX \/ leP O E E' BX AX)
+    assert (HElim : LeP O E E' AX BX \/ LeP O E E' BX AX)
       by (apply col_2_le_or_ge; Col).
     elim HElim; clear HElim; intro HLe4.
 
       {
       destruct (length_existence O E E' B A) as [LAB HLAB]; Col.
-      assert (LAXBX : length O E E' BX AX LAB).
+      assert (LAXBX : Length O E E' BX AX LAB).
         {
         apply length_eq_cong_2 with B A; auto.
         assert (Cong AX BX AX' BX').
@@ -996,7 +996,7 @@ elim (Col_dec A B BX''); intro HABBX''.
       apply bet_lt12_le13 with O E E' AX BX CX in HLt;
       [|apply bet_betCood_aux with O E S U1 U2 A AY B BY C CY; auto].
       destruct (length_existence O E E' C A) as [LAC HLAC]; Col.
-      assert (LAXCX : length O E E' CX AX LAC).
+      assert (LAXCX : Length O E E' CX AX LAC).
         {
         apply length_eq_cong_2 with C A; auto.
         assert (Cong AX CX AX' CX').
@@ -1029,7 +1029,7 @@ elim (Col_dec A B BX''); intro HABBX''.
 
       {
       destruct (length_existence O E E' A B) as [LAB HLAB]; Col.
-      assert (LAXBX : length O E E' AX BX LAB).
+      assert (LAXBX : Length O E E' AX BX LAB).
         {
         apply length_eq_cong_2 with A B; auto.
         assert (Cong AX BX AX' BX').
@@ -1055,7 +1055,7 @@ elim (Col_dec A B BX''); intro HABBX''.
       apply bet_lt21_le31 with O E E' AX BX CX in HLt;
       [|apply bet_betCood_aux with O E S U1 U2 A AY B BY C CY; auto].
       destruct (length_existence O E E' A C) as [LAC HLAC]; Col.
-      assert (LAXCX : length O E E' AX CX LAC).
+      assert (LAXCX : Length O E E' AX CX LAC).
         {
         apply length_eq_cong_2 with A C; auto.
         assert (Cong AX CX AX' CX').
@@ -1075,8 +1075,8 @@ elim (Col_dec A B BX''); intro HABBX''.
       assert (LAC = AXMCX)
         by (apply l16_9_1 with O E E' AX CX; Col; left; auto).
       treat_equalities.
-      assert (opp O E E' BXMAX LAB) by (apply diff_opp with BX AX; auto).
-      assert (opp O E E' CXMAX LAC) by (apply diff_opp with CX AX; auto).
+      assert (Opp O E E' BXMAX LAB) by (apply diff_opp with BX AX; auto).
+      assert (Opp O E E' CXMAX LAC) by (apply diff_opp with CX AX; auto).
       destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
       assert (AB = LAB) by (apply length_unicity with O E E' A B; auto).
       assert (AC = LAC) by (apply length_unicity with O E E' A C; auto).
@@ -1105,7 +1105,7 @@ elim (Col_dec A B BX''); intro HABBX''.
     apply diff_ar2 in HDiff; unfold Ar2 in *; spliter; Col.
     }
   destruct (prod_exists O E E' HNC AB ACX'') as [F HF]; Col.
-  assert (HF' : prodg O E E' ABX'' AC F).
+  assert (HF' : Prodg O E E' ABX'' AC F).
     {
     apply thales with A B C BX'' CX'' AB ACX''; auto.
 
@@ -1260,13 +1260,13 @@ elim (Col_dec A B BX''); intro HABBX''.
     }
   elim HF'; clear HF'; intro HF'; [|destruct HF' as [HFalse H]; clear H;
                                     exfalso; apply HFalse; do 3 (split; Col)].
-  assert (HProd : prod O E E' T ACX'' ABX'').
+  assert (HProd : Prod O E E' T ACX'' ABX'').
     {
-    assert (HColF : Col O E F) by (unfold prod, Ar2 in *; spliter; Col).
+    assert (HColF : Col O E F) by (unfold Prod, Ar2 in *; spliter; Col).
     destruct (prod_exists O E E' HNC F IAC) as [G HG]; Col.
-    assert (prod O E E' ABX'' E G)
+    assert (Prod O E E' ABX'' E G)
       by (apply prod_assoc2 with AC IAC F; auto; apply prod_comm; auto).
-    assert (prod O E E' ACX'' T G).
+    assert (Prod O E E' ACX'' T G).
       {
       apply prod_assoc2 with AB IAC F; auto; apply prod_comm; auto.
       apply prod_assoc2 with AC T E; auto; apply prod_comm; auto.
@@ -1276,12 +1276,12 @@ elim (Col_dec A B BX''); intro HABBX''.
       by (apply prod_unicity with O E E' ABX'' E; auto; apply prod_1_r; Col).
     treat_equalities; apply prod_comm; auto.
     }
-  assert (HElim : leP O E E' AX BX \/ leP O E E' BX AX)
+  assert (HElim : LeP O E E' AX BX \/ LeP O E E' BX AX)
     by (apply col_2_le_or_ge; Col).
   elim HElim; clear HElim; intro HLe4.
 
     {
-    assert (LAXBX : length O E E' BX AX ABX'').
+    assert (LAXBX : Length O E E' BX AX ABX'').
       {
       apply length_eq_cong_2 with A BX''; auto.
       assert (Cong AX BX AX' BX').
@@ -1306,7 +1306,7 @@ elim (Col_dec A B BX''); intro HABBX''.
     treat_equalities; exfalso; Col].
     apply bet_lt12_le13 with O E E' AX BX CX in HLt;
     [|apply bet_betCood_aux with O E S U1 U2 A AY B BY C CY; auto].
-    assert (LAXCX : length O E E' CX AX ACX'').
+    assert (LAXCX : Length O E E' CX AX ACX'').
       {
       apply length_eq_cong_2 with A CX''; auto.
       assert (Cong AX CX AX' CX').
@@ -1327,7 +1327,7 @@ elim (Col_dec A B BX''); intro HABBX''.
     }
 
     {
-    assert (LAXBX : length O E E' AX BX ABX'').
+    assert (LAXBX : Length O E E' AX BX ABX'').
       {
       apply length_eq_cong_2 with A BX''; auto.
       assert (Cong AX BX AX' BX').
@@ -1353,7 +1353,7 @@ elim (Col_dec A B BX''); intro HABBX''.
     treat_equalities; exfalso; Col].
     apply bet_lt21_le31 with O E E' AX BX CX in HLt;
     [|apply bet_betCood_aux with O E S U1 U2 A AY B BY C CY; auto].
-    assert (LAXCX : length O E E' AX CX ACX'').
+    assert (LAXCX : Length O E E' AX CX ACX'').
       {
       apply length_eq_cong_2 with A CX''; auto.
       assert (Cong AX CX AX' CX').
@@ -1372,8 +1372,8 @@ elim (Col_dec A B BX''); intro HABBX''.
     assert (ACX'' = AXMCX)
       by (apply l16_9_1 with O E E' AX CX; Col; left; auto).
     treat_equalities.
-    assert (opp O E E' BXMAX ABX'') by (apply diff_opp with BX AX; auto).
-    assert (opp O E E' CXMAX ACX'') by (apply diff_opp with CX AX; auto).
+    assert (Opp O E E' BXMAX ABX'') by (apply diff_opp with BX AX; auto).
+    assert (Opp O E E' CXMAX ACX'') by (apply diff_opp with CX AX; auto).
     destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
     apply prod_assoc2 with ACX'' ME ABX'';
     [auto|apply opp_prod; auto; apply opp_comm; auto|
@@ -1387,12 +1387,12 @@ Lemma characterization_of_betweenness :
          A AX AY B BX BY C CX CY
          BXMAX BYMAY CXMAX CYMAY,
   Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
-  diff O E E' BX AX BXMAX -> diff O E E' BY AY BYMAY ->
-  diff O E E' CX AX CXMAX -> diff O E E' CY AY CYMAY ->
+  Diff O E E' BX AX BXMAX -> Diff O E E' BY AY BYMAY ->
+  Diff O E E' CX AX CXMAX -> Diff O E E' CY AY CYMAY ->
   (Bet A B C <-> exists T, O <> E /\ Col O E T /\
-                           leP O E E' O T /\ leP O E E' T E /\
-                           prod O E E' T CXMAX BXMAX /\
-                           prod O E E' T CYMAY BYMAY).
+                           LeP O E E' O T /\ LeP O E E' T E /\
+                           Prod O E E' T CXMAX BXMAX /\
+                           Prod O E E' T CYMAY BYMAY).
 Proof.
 intros O E E' S U1 U2 A AX AY B BX BY C CX CY BXMAX BYMAY CXMAX CYMAY.
 intros HCdA HCdB HCdC HBXMAX HBYMAY HCXMAX HCYMAY.
@@ -1457,29 +1457,29 @@ split; [intro HBet|intro HT].
       destruct (length_existence O E E' A B) as [AB HAB]; Col.
       destruct (length_existence O E E' A C) as [AC HAC]; Col.
       destruct (length_existence O E E' B C) as [BC HBC]; Col.
-      assert (HSum : sum O E E' AB BC AC)
+      assert (HSum : Sum O E E' AB BC AC)
         by (assert_diffs; apply triangular_equality_bis with A B C; auto).
-      assert (HLe1 : leP O E E' O AB) by (apply length_pos with A B; auto).
-      assert (HLe2 : leP O E E' AB AC)
+      assert (HLe1 : LeP O E E' O AB) by (apply length_pos with A B; auto).
+      assert (HLe2 : LeP O E E' AB AC)
         by (apply length_leP_le_2 with A B A C; try (apply l5_5_2; exists C); Cong).
-      assert (HColAB : Col O E AB) by (unfold length in *; spliter; Col).
-      assert (HColAC : Col O E AC) by (unfold length in *; spliter; Col).
+      assert (HColAB : Col O E AB) by (unfold Length in *; spliter; Col).
+      assert (HColAC : Col O E AC) by (unfold Length in *; spliter; Col).
       destruct (inv_exists O E E' AC) as [IAC HIAC]; Col;
-      try (intro; unfold length in *; spliter; treat_equalities; auto).
-      assert (HColIAC : Col O E IAC) by (unfold prod, Ar2 in *; spliter; Col).
-      assert (HLe3 : leP O E E' O IAC).
+      try (intro; unfold Length in *; spliter; treat_equalities; auto).
+      assert (HColIAC : Col O E IAC) by (unfold Prod, Ar2 in *; spliter; Col).
+      assert (HLe3 : LeP O E E' O IAC).
         {
         apply pos_inv_pos with AC; auto;
-        try (intro; unfold length in *; spliter; treat_equalities; auto).
+        try (intro; unfold Length in *; spliter; treat_equalities; auto).
         apply length_pos with A C; auto.
         }
       destruct (prod_exists O E E' HNC AB IAC) as [T HT]; Col.
       exists T; split; try (intro; treat_equalities; Col).
-      split; [unfold prod, Ar2 in *; spliter; Col|].
+      split; [unfold Prod, Ar2 in *; spliter; Col|].
       split; [apply compatibility_of_prod_with_order with AB IAC; auto|].
       split; [apply le_pos_prod_le with AB AC IAC; auto; apply prod_comm; auto|].
-      assert (HColT : Col O E T) by (unfold prod, Ar2 in *; spliter; Col).
-      assert (HT' : prod O E E' T AC AB)
+      assert (HColT : Col O E T) by (unfold Prod, Ar2 in *; spliter; Col).
+      assert (HT' : Prod O E E' T AC AB)
         by (apply prod_assoc1 with AB IAC E; auto; apply prod_1_r; Col).
       split;
       [apply characterization_of_betweenness_aux
@@ -1499,15 +1499,15 @@ split; [intro HBet|intro HT].
   rename HColBX into HColB'X; rename HColBY into HColB'Y.
   rename HColBXMAX into HColB'XMAX; rename HColBYMAY into HColB'YMAY.
   destruct (length_existence O E E' A C) as [AC HAC]; Col.
-  assert (HColAC : Col O E AC) by (unfold length in *; spliter; Col).
-  assert (HLe1 : leP O E E' O AC) by (apply length_pos with A C; auto).
+  assert (HColAC : Col O E AC) by (unfold Length in *; spliter; Col).
+  assert (HLe1 : LeP O E E' O AC) by (apply length_pos with A C; auto).
   destruct (prod_exists O E E' HNC T AC) as [AB HT]; Col.
-  assert (HColAB : Col O E AB) by (unfold prod, Ar2 in *; spliter; Col).
-  assert (HLe2 : leP O E E' O AB)
+  assert (HColAB : Col O E AB) by (unfold Prod, Ar2 in *; spliter; Col).
+  assert (HLe2 : LeP O E E' O AB)
     by (apply compatibility_of_prod_with_order with T AC; auto).
-  assert (HB : exists B, Bet A B C /\ length O E E' A B AB).
+  assert (HB : exists B, Bet A B C /\ Length O E E' A B AB).
     {
-    assert (le O AB A C).
+    assert (Le O AB A C).
       {
       apply length_leP_le_1 with O E E' AB AC; auto.
       assert_diffs; do 2 (split; Cong).
@@ -1604,13 +1604,13 @@ split; [intro HBet|intro HT].
 
       {
       destruct (inv_exists O E E' AC) as [IAC HIAC]; Col;
-      try (intro; unfold length in *; spliter; treat_equalities; auto).
-      assert (HColIAC : Col O E IAC) by (unfold prod, Ar2 in *; spliter; Col).
+      try (intro; unfold Length in *; spliter; treat_equalities; auto).
+      assert (HColIAC : Col O E IAC) by (unfold Prod, Ar2 in *; spliter; Col).
       assert (HColBX : Col O E BX) by (apply Cd_Col in HCdB; spliter; Col).
       destruct (diff_exists O E E' BX AX) as [BXMAX HBXMAX]; Col.
       assert (HColBXMAX : Col O E BXMAX)
         by (apply diff_ar2 in HBXMAX; unfold Ar2 in *; spliter; Col).
-      assert (HX' : prod O E E' T CXMAX BXMAX).
+      assert (HX' : Prod O E E' T CXMAX BXMAX).
         {
         apply characterization_of_betweenness_aux
         with S U1 U2 A AX AY B BX BY C CX CY AB AC IAC; auto.
@@ -1620,7 +1620,7 @@ split; [intro HBet|intro HT].
       destruct (diff_exists O E E' BY AY) as [BYMAY HBYMAY]; Col.
       assert (HColBYMAY : Col O E BYMAY)
         by (apply diff_ar2 in HBYMAY; unfold Ar2 in *; spliter; Col).
-      assert (HY' : prod O E E' T CYMAY BYMAY).
+      assert (HY' : Prod O E E' T CYMAY BYMAY).
         {
         apply characterization_of_betweenness_aux
         with S U2 U1 A AY AX B BY BX C CY CX AB AC IAC; auto;
@@ -1664,9 +1664,9 @@ Lemma characterization_of_collinearity :
          A AX AY B BX BY C CX CY
          AXMBX AYMBY BXMCX BYMCY XProd YProd,
   Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 C CX CY ->
-  diff O E E' AX BX AXMBX -> diff O E E' AY BY AYMBY ->
-  diff O E E' BX CX BXMCX -> diff O E E' BY CY BYMCY ->
-  prod O E E' AXMBX BYMCY XProd -> prod O E E' AYMBY BXMCX YProd ->
+  Diff O E E' AX BX AXMBX -> Diff O E E' AY BY AYMBY ->
+  Diff O E E' BX CX BXMCX -> Diff O E E' BY CY BYMCY ->
+  Prod O E E' AXMBX BYMCY XProd -> Prod O E E' AYMBY BXMCX YProd ->
   (Col A B C <-> XProd = YProd).
 Proof.
 intros O E E' S U1 U2 A AX AY B BX BY C CX CY AXMBX AYMBY BXMCX BYMCY XProd YProd.
@@ -1717,8 +1717,8 @@ assert (HColAXMCX : Col O E AXMCX)
 destruct (diff_exists O E E' AY CY) as [AYMCY HAYMCY]; Col.
 assert (HColAYMCY : Col O E AYMCY)
   by (apply diff_ar2 in HAYMCY; unfold Ar2 in *; spliter; Col).
-assert (HColXProd : Col O E XProd) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColYProd : Col O E YProd) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColXProd : Col O E XProd) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColYProd : Col O E YProd) by (unfold Prod, Ar2 in *; spliter; Col).
 split; intro HCol; treat_equalities.
 
   {
@@ -1797,18 +1797,18 @@ split; intro HCol; treat_equalities.
       [|apply HCdA|apply HCdB|apply HCdC|
        apply HBXMAX|apply HBYMAY|apply HCXMAX| apply HCYMAY].
       destruct HBet' as [T [HDiff4 [HColT [HLe1 [HLe2 [HProd1 HProd2]]]]]].
-      assert (HSumX : sum O E E' AXMBX BXMCX AXMCX)
+      assert (HSumX : Sum O E E' AXMBX BXMCX AXMCX)
         by (apply sum_diff_diff with AX BX CX; auto).
-      assert (HSumY : sum O E E' AYMBY BYMCY AYMCY)
+      assert (HSumY : Sum O E E' AYMBY BYMCY AYMCY)
         by (apply sum_diff_diff with AY BY CY; auto).
       destruct (prod_exists O E E' HNC AXMBX AYMBY) as [P1 HP1]; Col.
-      assert (HColP1 : Col O E P1) by (unfold prod, Ar2 in *; spliter; Col).
+      assert (HColP1 : Col O E P1) by (unfold Prod, Ar2 in *; spliter; Col).
       destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-      assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+      assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
       destruct (prod_exists O E E' HNC ME T) as [P2 HP2]; Col.
-      assert (HColP2 : Col O E P2) by (unfold prod, Ar2 in *; spliter; Col).
+      assert (HColP2 : Col O E P2) by (unfold Prod, Ar2 in *; spliter; Col).
       destruct (sum_exists O E E' HNC XProd P1) as [XProd' HXProd']; Col.
-      assert (HColXProd' : Col O E XProd') by (unfold sum, Ar2 in *; spliter; Col).
+      assert (HColXProd' : Col O E XProd') by (unfold Sum, Ar2 in *; spliter; Col).
       destruct (prod_exists O E E' HNC AXMBX AYMCY) as [D HProdX']; Col.
       assert (XProd' = D); treat_equalities.
         {
@@ -1817,7 +1817,7 @@ split; intro HCol; treat_equalities.
         apply sum_comm; auto.
         }
       destruct (sum_exists O E E' HNC YProd P1) as [YProd' HYProd']; Col.
-      assert (HColYProd' : Col O E YProd') by (unfold sum, Ar2 in *; spliter; Col).
+      assert (HColYProd' : Col O E YProd') by (unfold Sum, Ar2 in *; spliter; Col).
       destruct (prod_exists O E E' HNC AYMBY AXMCX) as [D HProdY']; Col.
       assert (YProd' = D); treat_equalities.
         {
@@ -1879,7 +1879,7 @@ split; intro HCol; treat_equalities.
       destruct HBet' as [T [HDiff4 [HColT [HLe1 [HLe2 [HProd1 HProd2]]]]]].
       apply prod_unicity with O E E' AXMBX BYMCY; auto.
       destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-      assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+      assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
       destruct (prod_exists O E E' HNC ME T) as [P HP]; Col.
       apply prod_assoc2 with P AYMBY BXMCX; apply prod_comm; auto.
 
@@ -1906,9 +1906,9 @@ split; intro HCol; treat_equalities.
       [|apply HCdC|apply HCdA|apply HCdB|
        apply HAXMCX|apply HAYMCY|apply HBXMCX| apply HBYMCY].
       destruct HBet' as [T [HDiff4 [HColT [HLe1 [HLe2 [HProd1 HProd2]]]]]].
-      assert (HSumX : sum O E E' CXMAX AXMBX CXMBX)
+      assert (HSumX : Sum O E E' CXMAX AXMBX CXMBX)
         by (apply sum_diff_diff with CX AX BX; auto).
-      assert (HSumY : sum O E E' CYMAY AYMBY CYMBY)
+      assert (HSumY : Sum O E E' CYMAY AYMBY CYMBY)
         by (apply sum_diff_diff with CY AY BY; auto).
       destruct (prod_exists O E E' HNC CXMAX BYMCY) as [P1 HP1]; Col.
       destruct (prod_exists O E E' HNC CYMAY BXMCX) as [P2 HP1']; Col.
@@ -1916,7 +1916,7 @@ split; intro HCol; treat_equalities.
         {
         apply prod_unicity with O E E' CXMAX BYMCY; auto.
         destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-        assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+        assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
         destruct (prod_exists O E E' HNC ME T) as [P HP]; Col.
         apply prod_assoc1 with BXMCX P CYMAY; apply prod_comm; auto.
 
@@ -1932,7 +1932,7 @@ split; intro HCol; treat_equalities.
           apply diff_opp with AY CY; auto.
           }
         }
-      assert (HColP1 : Col O E P1) by (unfold prod, Ar2 in *; spliter; Col).
+      assert (HColP1 : Col O E P1) by (unfold Prod, Ar2 in *; spliter; Col).
       destruct (sum_exists O E E' HNC XProd P1) as [XProd' HXProd']; Col.
       destruct (prod_exists O E E' HNC CXMBX BYMCY) as [P2 HP2]; Col.
       assert (P2 = XProd'); treat_equalities.
@@ -1949,7 +1949,7 @@ split; intro HCol; treat_equalities.
         apply distr_r with CYMAY AYMBY BXMCX CYMBY; auto.
         apply prod_comm; auto.
         destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-        assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+        assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
         apply prod_assoc1 with CXMBX ME BYMCY; auto.
 
           {
@@ -2059,20 +2059,20 @@ split; intro HCol; treat_equalities.
 
     {
     destruct (length_existence O E E' AX BX) as [L1 HL1]; Col.
-    assert (HColL1 : Col O E L1) by (unfold length in *; spliter; Col).
+    assert (HColL1 : Col O E L1) by (unfold Length in *; spliter; Col).
     destruct (length_existence O E E' AX CX) as [L2 HL2]; Col.
-    assert (HColL2 : Col O E L2) by (unfold length in *; spliter; Col).
+    assert (HColL2 : Col O E L2) by (unfold Length in *; spliter; Col).
     destruct (length_existence O E E' BX CX) as [L3 HL3]; Col.
-    assert (HColL3 : Col O E L3) by (unfold length in *; spliter; Col).
-    assert (HElim : leP O E E' L1 L3 /\ leP O E E' L2 L3 \/
-                    leP O E E' L1 L2 /\ leP O E E' L3 L2 \/
-                    leP O E E' L2 L1 /\ leP O E E' L3 L1).
+    assert (HColL3 : Col O E L3) by (unfold Length in *; spliter; Col).
+    assert (HElim : LeP O E E' L1 L3 /\ LeP O E E' L2 L3 \/
+                    LeP O E E' L1 L2 /\ LeP O E E' L3 L2 \/
+                    LeP O E E' L2 L1 /\ LeP O E E' L3 L1).
       {
-      assert (H1 : leP O E E' L1 L2 \/ leP O E E' L2 L1)
+      assert (H1 : LeP O E E' L1 L2 \/ LeP O E E' L2 L1)
           by (apply col_2_le_or_ge; Col).
-      assert (H2 : leP O E E' L1 L3 \/ leP O E E' L3 L1)
+      assert (H2 : LeP O E E' L1 L3 \/ LeP O E E' L3 L1)
         by (apply col_2_le_or_ge; Col).
-      assert (H3 : leP O E E' L2 L3 \/ leP O E E' L3 L2)
+      assert (H3 : LeP O E E' L2 L3 \/ LeP O E E' L3 L2)
         by (apply col_2_le_or_ge; Col).
       elim H1; clear H1; intro HLe1; elim H2; clear H2; intro HLe2;
       elim H3; clear H3; intro HLe3; auto.
@@ -2106,33 +2106,33 @@ split; intro HCol; treat_equalities.
         apply HDiff1; apply diff_unicity with O E E' BX BX; auto;
         apply diff_null; Col.
         }
-      assert (HLe3 : leP O E E' O L3) by (apply length_pos with BX CX; auto).
+      assert (HLe3 : LeP O E E' O L3) by (apply length_pos with BX CX; auto).
       destruct (inv_exists O E E' L3) as [IBC HIBC]; Col.
-      assert (HColIBC : Col O E IBC) by (unfold prod, Ar2 in *; spliter; Col).
-      assert (HLe4 : leP O E E' O IBC) by (apply pos_inv_pos with L3; auto).
+      assert (HColIBC : Col O E IBC) by (unfold Prod, Ar2 in *; spliter; Col).
+      assert (HLe4 : LeP O E E' O IBC) by (apply pos_inv_pos with L3; auto).
       destruct (prod_exists O E E' HNC L2 IBC) as [T HT]; Col; exists T.
       split; try (intro; treat_equalities; Col).
-      split; [unfold prod, Ar2 in *; spliter; Col|].
-      assert (HLe5 : leP O E E' O L2) by (apply length_pos with AX CX; auto).
+      split; [unfold Prod, Ar2 in *; spliter; Col|].
+      assert (HLe5 : LeP O E E' O L2) by (apply length_pos with AX CX; auto).
       split; [apply compatibility_of_prod_with_order with L2 IBC; auto|].
       split; [apply le_pos_prod_le with L2 L3 IBC; auto; apply prod_comm; auto|].
       assert (HDiff6 : O <> E) by (assert_diffs; auto).
       destruct (prod_exists O E E' HNC BXMCX BYMCY) as [P HP]; Col.
-      destruct (prod_exists O E E' HNC AXMCX BYMCY) as [Prod HProd1]; Col.
-      assert (HSum : sum O E E' XProd P Prod).
+      destruct (prod_exists O E E' HNC AXMCX BYMCY) as [Pr HProd1]; Col.
+      assert (HSum : Sum O E E' XProd P Pr).
         {
         apply distr_l with BYMCY AXMBX BXMCX AXMCX; auto; try apply prod_comm; auto.
         apply sum_diff_diff with AX BX CX; auto.
         }
-      assert (HProd2 : prod O E E' AYMCY BXMCX Prod).
+      assert (HProd2 : Prod O E E' AYMCY BXMCX Pr).
         {
         destruct (prod_exists O E E' HNC AYMCY BXMCX) as [P' HP']; Col.
-        assert (Prod = P'); treat_equalities; auto.
+        assert (Pr = P'); treat_equalities; auto.
         apply sum_unicity with O E E' XProd P; auto.
         apply distr_l with BXMCX AYMBY BYMCY AYMCY; auto; try apply prod_comm; auto.
         apply sum_diff_diff with AY BY CY; auto.
         }
-      assert (HProd3 : prod O E E' T L3 L2).
+      assert (HProd3 : Prod O E E' T L3 L2).
         {
         apply prod_assoc1 with L2 IBC E; auto; try apply prod_1_r; Col.
         }
@@ -2170,9 +2170,9 @@ split; intro HCol; treat_equalities.
         try apply length_sym; auto; intro HOpp; treat_equalities.
 
           {
-          assert (HLe6 : ltP O E E' CX AX).
+          assert (HLe6 : LtP O E E' CX AX).
             {
-            assert (H : leP O E E' CX AX).
+            assert (H : LeP O E E' CX AX).
               {
               apply compatibility_of_sum_with_order with O L2 CX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2181,10 +2181,10 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' CX CX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' CX BX) by (apply bet_lt12_le13 with AX; auto).
+          assert (HLe7 : LeP O E E' CX BX) by (apply bet_lt12_le13 with AX; auto).
           assert (L3 = BXMCX) by (apply l16_9_1 with O E E' BX CX; auto; left; auto).
           treat_equalities; split; auto.
-          apply prod_assoc1 with IBC L2 Prod; auto; apply prod_comm; auto.
+          apply prod_assoc1 with IBC L2 Pr; auto; apply prod_comm; auto.
           apply prod_assoc1 with AYMCY L3 E; auto; apply prod_comm; auto.
           apply prod_1_l; Col.
           }
@@ -2195,9 +2195,9 @@ split; intro HCol; treat_equalities.
             apply opp_unicity with O E E' AXMCX; Col; apply opp_comm; auto.
             apply diff_opp with CX AX; auto.
             }
-          assert (HLe6 : ltP O E E' AX CX).
+          assert (HLe6 : LtP O E E' AX CX).
             {
-            assert (H : leP O E E' AX CX).
+            assert (H : LeP O E E' AX CX).
               {
               apply compatibility_of_sum_with_order with O L2 AX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2206,17 +2206,17 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' AX AX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' BX CX) by (apply bet_lt21_le31 with AX; auto).
+          assert (HLe7 : LeP O E E' BX CX) by (apply bet_lt21_le31 with AX; auto).
           assert (L3 = CXMBX); treat_equalities.
             {
             apply l16_9_1 with O E E' CX BX; auto;
             left; auto; apply length_sym; auto.
             }
           destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-          assert (HColT : Col O E T) by (unfold prod, Ar2 in *; spliter; Col).
-          assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+          assert (HColT : Col O E T) by (unfold Prod, Ar2 in *; spliter; Col).
+          assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
           destruct (prod_exists O E E' HNC ME T) as [OppT HMT]; Col.
-          assert (prod O E E' T BXMCX AXMCX); [|split; auto].
+          assert (Prod O E E' T BXMCX AXMCX); [|split; auto].
             {
             apply prod_assoc2 with ME L3 OppT; apply prod_comm; auto;
             [apply opp_prod; auto; apply diff_opp with CX BX; auto|
@@ -2224,7 +2224,7 @@ split; intro HCol; treat_equalities.
              apply prod_comm; apply opp_prod; auto].
             }
           destruct (opp_exists O E E' HNC IBC) as [MIBC HMIBC]; Col.
-          apply prod_assoc1 with MIBC AXMCX Prod; auto; apply prod_comm; auto.
+          apply prod_assoc1 with MIBC AXMCX Pr; auto; apply prod_comm; auto.
 
             {
             apply prod_assoc2 with ME IBC L2; auto; [|apply prod_comm];
@@ -2232,13 +2232,13 @@ split; intro HCol; treat_equalities.
             }
 
             {
-            destruct (opp_exists O E E' HNC Prod) as [MProd HMProd]; Col;
-            [unfold prod, Ar2 in *; spliter; Col|].
+            destruct (opp_exists O E E' HNC Pr) as [MProd HMProd]; Col;
+            [unfold Prod, Ar2 in *; spliter; Col|].
             apply prod_assoc2 with ME IBC MProd; auto;
             [apply opp_prod|apply prod_comm; apply opp_prod|]; auto.
             apply prod_assoc1 with AYMCY L3 E; auto; apply prod_comm; auto;
             try apply prod_1_l; Col.
-            apply prod_assoc1 with ME BXMCX Prod; apply prod_comm; auto;
+            apply prod_assoc1 with ME BXMCX Pr; apply prod_comm; auto;
             apply opp_prod; auto; apply diff_opp with BX CX; auto.
             }
           }
@@ -2262,33 +2262,33 @@ split; intro HCol; treat_equalities.
         apply HDiff1; apply diff_unicity with O E E' AX AX; auto;
         apply diff_null; Col.
         }
-      assert (HLe3 : leP O E E' O L2) by (apply length_pos with AX CX; auto).
+      assert (HLe3 : LeP O E E' O L2) by (apply length_pos with AX CX; auto).
       destruct (inv_exists O E E' L2) as [IAC HIAC]; Col.
-      assert (HColIAC : Col O E IAC) by (unfold prod, Ar2 in *; spliter; Col).
-      assert (HLe4 : leP O E E' O IAC) by (apply pos_inv_pos with L2; auto).
+      assert (HColIAC : Col O E IAC) by (unfold Prod, Ar2 in *; spliter; Col).
+      assert (HLe4 : LeP O E E' O IAC) by (apply pos_inv_pos with L2; auto).
       destruct (prod_exists O E E' HNC L1 IAC) as [T HT]; Col; exists T.
       split; try (intro; treat_equalities; Col).
-      split; [unfold prod, Ar2 in *; spliter; Col|].
-      assert (HLe5 : leP O E E' O L1) by (apply length_pos with AX BX; auto).
+      split; [unfold Prod, Ar2 in *; spliter; Col|].
+      assert (HLe5 : LeP O E E' O L1) by (apply length_pos with AX BX; auto).
       split; [apply compatibility_of_prod_with_order with L1 IAC; auto|].
       split; [apply le_pos_prod_le with L1 L2 IAC; auto; apply prod_comm; auto|].
       assert (HDiff6 : O <> E) by (assert_diffs; auto).
       destruct (prod_exists O E E' HNC AXMBX AYMBY) as [P HP]; Col.
-      destruct (prod_exists O E E' HNC AXMCX AYMBY) as [Prod HProd1]; Col.
-      assert (HSum : sum O E E' XProd P Prod).
+      destruct (prod_exists O E E' HNC AXMCX AYMBY) as [Pr HProd1]; Col.
+      assert (HSum : Sum O E E' XProd P Pr).
         {
         apply distr_l with AYMBY BXMCX AXMBX AXMCX; auto; try apply prod_comm; auto.
         apply sum_comm; Col; apply sum_diff_diff with AX BX CX; auto.
         }
-      assert (HProd2 : prod O E E' AYMCY AXMBX Prod).
+      assert (HProd2 : Prod O E E' AYMCY AXMBX Pr).
         {
         destruct (prod_exists O E E' HNC AYMCY AXMBX) as [P' HP']; Col.
-        assert (Prod = P'); treat_equalities; auto.
+        assert (Pr = P'); treat_equalities; auto.
         apply sum_unicity with O E E' XProd P; auto.
         apply distr_l with AXMBX BYMCY AYMBY AYMCY; auto; try apply prod_comm; auto.
         apply sum_comm; Col; apply sum_diff_diff with AY BY CY; auto.
         }
-      assert (HProd3 : prod O E E' T L2 L1).
+      assert (HProd3 : Prod O E E' T L2 L1).
         {
         apply prod_assoc1 with L1 IAC E; auto; try apply prod_1_r; Col.
         }
@@ -2306,9 +2306,9 @@ split; intro HCol; treat_equalities.
         try apply length_sym; auto; intro HOpp; treat_equalities.
 
           {
-          assert (HLe6 : ltP O E E' BX AX).
+          assert (HLe6 : LtP O E E' BX AX).
             {
-            assert (H : leP O E E' BX AX).
+            assert (H : LeP O E E' BX AX).
               {
               apply compatibility_of_sum_with_order with O L1 BX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2317,26 +2317,26 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' BX BX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' CX AX) by (apply bet_lt21_le31 with BX; auto).
+          assert (HLe7 : LeP O E E' CX AX) by (apply bet_lt21_le31 with BX; auto).
           assert (L2 = AXMCX) by (apply l16_9_1 with O E E' AX CX; auto; left; auto).
           treat_equalities.
-          assert (HProd4 : prod O E E' T CXMAX BXMAX); [|split; auto].
+          assert (HProd4 : Prod O E E' T CXMAX BXMAX); [|split; auto].
             {
             destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-            assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+            assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
             apply prod_assoc1 with L1 IAC ME; auto;
             [|apply opp_prod; auto; apply diff_opp with AX BX; auto].
             apply prod_assoc2 with L2 ME E; auto; apply opp_prod; auto.
             apply diff_opp with AX CX; auto.
             }
           destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-          assert (HColProd : Col O E Prod) by (unfold prod, Ar2 in *; spliter; Col).
-          destruct (opp_exists O E E' HNC Prod) as [MProd HMProd]; Col.
+          assert (HColProd : Col O E Pr) by (unfold Prod, Ar2 in *; spliter; Col).
+          destruct (opp_exists O E E' HNC Pr) as [MProd HMProd]; Col.
           apply prod_assoc1 with IAC L1 MProd; auto; apply prod_comm; auto;
-          [apply prod_assoc1 with ME AYMCY Prod; auto; apply prod_comm;
+          [apply prod_assoc1 with ME AYMCY Pr; auto; apply prod_comm;
            apply opp_prod; auto; apply diff_opp with AY CY; auto|].
           apply prod_assoc1 with BYMAY L2 E; apply prod_comm; auto;
-          try apply prod_1_l; Col; apply prod_assoc2 with AYMBY ME Prod; auto;
+          try apply prod_1_l; Col; apply prod_assoc2 with AYMBY ME Pr; auto;
           apply opp_prod; auto; apply diff_opp with AY BY; auto.
           }
 
@@ -2346,9 +2346,9 @@ split; intro HCol; treat_equalities.
             apply opp_unicity with O E E' AXMBX; Col; apply opp_comm; auto.
             apply diff_opp with BX AX; auto.
             }
-          assert (HLe6 : ltP O E E' AX BX).
+          assert (HLe6 : LtP O E E' AX BX).
             {
-            assert (H : leP O E E' AX BX).
+            assert (H : LeP O E E' AX BX).
               {
               apply compatibility_of_sum_with_order with O L1 AX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2357,14 +2357,14 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' AX AX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' AX CX) by (apply bet_lt12_le13 with BX; auto).
+          assert (HLe7 : LeP O E E' AX CX) by (apply bet_lt12_le13 with BX; auto).
           assert (L2 = CXMAX); treat_equalities.
             {
             apply l16_9_1 with O E E' CX AX; auto; left; apply length_sym; auto.
             }
           split; auto.
           destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-          apply prod_assoc1 with IAC L1 Prod; apply prod_comm; auto;
+          apply prod_assoc1 with IAC L1 Pr; apply prod_comm; auto;
           [apply prod_assoc1 with AYMCY ME AXMBX; auto; [|apply prod_comm];
            apply opp_prod; auto; apply diff_opp with AY CY; auto|].
           apply prod_assoc1 with BYMAY L2 E; apply prod_comm; auto;
@@ -2393,18 +2393,18 @@ split; intro HCol; treat_equalities.
         apply HDiff1; apply diff_unicity with O E E' AX AX; auto;
         apply diff_null; Col.
         }
-      assert (HLe3 : leP O E E' O L1) by (apply length_pos with AX BX; auto).
+      assert (HLe3 : LeP O E E' O L1) by (apply length_pos with AX BX; auto).
       destruct (inv_exists O E E' L1) as [IAB HIAB]; Col.
-      assert (HColIAB : Col O E IAB) by (unfold prod, Ar2 in *; spliter; Col).
-      assert (HLe4 : leP O E E' O IAB) by (apply pos_inv_pos with L1; auto).
+      assert (HColIAB : Col O E IAB) by (unfold Prod, Ar2 in *; spliter; Col).
+      assert (HLe4 : LeP O E E' O IAB) by (apply pos_inv_pos with L1; auto).
       destruct (prod_exists O E E' HNC L3 IAB) as [T HT]; Col; exists T.
       split; try (intro; treat_equalities; Col).
-      split; [unfold prod, Ar2 in *; spliter; Col|].
-      assert (HLe5 : leP O E E' O L3) by (apply length_pos with BX CX; auto).
+      split; [unfold Prod, Ar2 in *; spliter; Col|].
+      assert (HLe5 : LeP O E E' O L3) by (apply length_pos with BX CX; auto).
       split; [apply compatibility_of_prod_with_order with L3 IAB; auto|].
       split; [apply le_pos_prod_le with L3 L1 IAB; auto; apply prod_comm; auto|].
       assert (HDiff6 : O <> E) by (assert_diffs; auto).
-      assert (HProd1 : prod O E E' T L1 L3).
+      assert (HProd1 : Prod O E E' T L1 L3).
         {
         apply prod_assoc1 with L3 IAB E; auto; try apply prod_1_r; Col.
         }
@@ -2422,9 +2422,9 @@ split; intro HCol; treat_equalities.
         try apply length_sym; auto; intro HOpp; treat_equalities.
 
           {
-          assert (HLe6 : ltP O E E' CX BX).
+          assert (HLe6 : LtP O E E' CX BX).
             {
-            assert (H : leP O E E' CX BX).
+            assert (H : LeP O E E' CX BX).
               {
               apply compatibility_of_sum_with_order with O L3 CX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2433,14 +2433,14 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' CX CX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' AX BX) by (apply bet_lt21_le31 with CX; auto).
+          assert (HLe7 : LeP O E E' AX BX) by (apply bet_lt21_le31 with CX; auto).
           assert (L1 = BXMAX)
             by (apply l16_9_1 with O E E' BX AX; auto; left; apply length_sym; auto).
           treat_equalities.
-          assert (HProd2 : prod O E E' T AXMBX CXMBX); [|split; auto].
+          assert (HProd2 : Prod O E E' T AXMBX CXMBX); [|split; auto].
             {
             destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-            assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
+            assert (HColME : Col O E ME) by (unfold Opp, Sum, Ar2 in *; spliter; Col).
             apply prod_assoc1 with L3 IAB ME; auto;
             [|apply opp_prod; auto; apply diff_opp with BX CX; auto].
             apply prod_assoc2 with L1 ME E; auto; apply opp_prod; auto.
@@ -2460,9 +2460,9 @@ split; intro HCol; treat_equalities.
             apply opp_unicity with O E E' BXMCX; Col; apply opp_comm; auto.
             apply diff_opp with CX BX; auto.
             }
-          assert (HLe6 : ltP O E E' BX CX).
+          assert (HLe6 : LtP O E E' BX CX).
             {
-            assert (H : leP O E E' BX CX).
+            assert (H : LeP O E E' BX CX).
               {
               apply compatibility_of_sum_with_order with O L3 BX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
@@ -2471,7 +2471,7 @@ split; intro HCol; treat_equalities.
             exfalso; apply HDiff7; apply diff_unicity with O E E' BX BX; auto.
             apply diff_null; Col.
             }
-          assert (HLe7 : leP O E E' BX AX) by(apply bet_lt12_le13 with CX; auto).
+          assert (HLe7 : LeP O E E' BX AX) by(apply bet_lt12_le13 with CX; auto).
           assert (L1 = AXMBX) by (apply l16_9_1 with O E E' AX BX; auto; left; auto).
           treat_equalities.
           split; auto.
@@ -2486,418 +2486,6 @@ split; intro HCol; treat_equalities.
           apply diff_opp with BY CY; auto.
           }
         }
-      }
-    }
-  }
-Qed.
-
-Lemma characterization_of_midpoint : forall O E E' S U1 U2 A AX AY B BX BY M MX MY
-                                           AXPBX AYPBY ET2 MXT2 MYT2,
-  Cd O E S U1 U2 A AX AY -> Cd O E S U1 U2 B BX BY -> Cd O E S U1 U2 M MX MY ->
-  sum O E E' AX BX AXPBX -> sum O E E' AY BY AYPBY -> sum O E E' E E ET2 ->
-  prod O E E' MX ET2 MXT2 -> prod O E E' MY ET2 MYT2 ->
-  (is_midpoint M A B <-> MXT2 = AXPBX /\ MYT2 = AYPBY).
-Proof.
-intros O E E' S U1 U2 A AX AY B BX BY M MX MY AXPBX AYPBY ET2 MXT2 MYT2.
-intros HCdA HCdB HCdM HAXPBX HAYPBY HET2 HMXT2 HMYT2.
-assert (HNC : ~ Col O E E') by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColAX : Col O E AX) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColAY : Col O E AY) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColBX : Col O E BX) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColBY : Col O E BY) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColMX : Col O E MX) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColMXT2 : Col O E MXT2) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColMY : Col O E MY) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColMYT2 : Col O E MYT2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' AX MX) as [AXMMX HAXMMX]; Col.
-assert (HColAXMMX : Col O E AXMMX)
-  by (apply diff_ar2 in HAXMMX; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC AXMMX AXMMX) as [AXMMX2 HAXMMX2]; Col.
-assert (HColAXMMX2 : Col O E AXMMX2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' MX AX) as [MXMAX HMXMAX]; Col.
-assert (HColMXMAX : Col O E MXMAX)
-  by (apply diff_ar2 in HMXMAX; unfold Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' MX BX) as [MXMBX HMXMBX]; Col.
-assert (HColMXMBX : Col O E MXMBX)
-  by (apply diff_ar2 in HMXMBX; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC MXMBX MXMBX) as [MXMBX2 HMXMBX2]; Col.
-assert (HColMXMBX2 : Col O E MXMBX2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' BX MX) as [BXMMX HBXMMX]; Col.
-assert (HColBXMMX : Col O E BXMMX)
-  by (apply diff_ar2 in HBXMMX; unfold Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' AY MY) as [AYMMY HAYMMY]; Col.
-assert (HColAYMMY : Col O E AYMMY)
-  by (apply diff_ar2 in HAYMMY; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC AYMMY AYMMY) as [AYMMY2 HAYMMY2]; Col.
-assert (HColAYMMY2 : Col O E AYMMY2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' MY AY) as [MYMAY HMYMAY]; Col.
-assert (HColMYMAY : Col O E MYMAY)
-  by (apply diff_ar2 in HMYMAY; unfold Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' MY BY) as [MYMBY HMYMBY]; Col.
-assert (HColMYMBY : Col O E MYMBY)
-  by (apply diff_ar2 in HMYMBY; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC MYMBY MYMBY) as [MYMBY2 HMYMBY2]; Col.
-assert (HColMYMBY2 : Col O E MYMBY2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' BY MY) as [BYMMY HBYMMY]; Col.
-assert (HColBYMMY : Col O E BYMMY)
-  by (apply diff_ar2 in HBYMMY; unfold Ar2 in *; spliter; Col).
-destruct (sum_exists O E E' HNC AXMMX2 AYMMY2) as [AM2 HAM2]; Col.
-destruct (sum_exists O E E' HNC MXMBX2 MYMBY2) as [MB2 HMB2]; Col.
-destruct (diff_exists O E E' BX AX) as [BXMAX HBXMAX]; Col.
-assert (HColBXMAX : Col O E BXMAX)
-  by (apply diff_ar2 in HBXMAX; unfold Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' AX BX) as [AXMBX HAXMBX]; Col.
-assert (HColAXMBX : Col O E AXMBX)
-  by (apply diff_ar2 in HAXMBX; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC AXMBX AXMBX) as [AXMBX2 HAXMBX2]; Col.
-assert (HColAXMBX2 : Col O E AXMBX2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' BY AY) as [BYMAY HBYMAY]; Col.
-assert (HColBYMAY : Col O E BYMAY)
-  by (apply diff_ar2 in HBYMAY; unfold Ar2 in *; spliter; Col).
-destruct (diff_exists O E E' AY BY) as [AYMBY HAYMBY]; Col.
-assert (HColAYMBY : Col O E AYMBY)
-  by (apply diff_ar2 in HAYMBY; unfold Ar2 in *; spliter; Col).
-destruct (prod_exists O E E' HNC AYMBY AYMBY) as [AYMBY2 HAYMBY2]; Col.
-assert (HColAYMBY2 : Col O E AYMBY2) by (unfold prod, Ar2 in *; spliter; Col).
-destruct (sum_exists O E E' HNC AXMBX2 AYMBY2) as [AB2 HAB2]; Col.
-assert (HColAB2 : Col O E AB2) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HColET2 : Col O E ET2) by (unfold sum, Ar2 in *; spliter; Col).
-assert (HDiff1 : O <> ET2)
-  by (intro; treat_equalities; apply double_null_null in HET2; treat_equalities; Col).
-destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
-assert (HColME : Col O E ME) by (unfold opp, sum, Ar2 in *; spliter; Col).
-elim (eq_dec_points A B); intro HDiff2; treat_equalities.
-
-  {
-  eapply eq_points_coordinates in HCdB; [|apply HCdA].
-  destruct HCdB as [H H']; clear H'; destruct H as [H H']; auto; treat_equalities.
-  split; intro; spliter; treat_equalities.
-
-    {
-    eapply eq_points_coordinates in HCdM; [|apply HCdA].
-    destruct HCdM as [H H']; clear H'; destruct H as [H H']; auto; treat_equalities.
-    split; [apply sum_unicity with O E E' AX AX|apply sum_unicity with O E E' AY AY];
-    auto; [apply distr_l with AX E E ET2|apply distr_l with AY E E ET2];
-    try apply prod_1_r; Col.
-    }
-
-    {
-    assert (AX = MX); treat_equalities.
-      {
-      destruct (prod_exists O E E' HNC AX ET2) as [AXT2 HAXT2]; Col.
-      assert (AXT2 = MXT2); treat_equalities.
-        {
-        apply sum_unicity with O E E' AX AX; auto.
-        apply distr_l with AX E E ET2; auto; apply prod_1_r; Col.
-        }
-      apply prod_unicityA with O E E' ET2 AXT2; auto.
-      }
-    assert (AY = MY); treat_equalities.
-      {
-      destruct (prod_exists O E E' HNC AY ET2) as [AYT2 HAYT2]; Col.
-      assert (AYT2 = MYT2); treat_equalities.
-        {
-        apply sum_unicity with O E E' AY AY; auto.
-        apply distr_l with AY E E ET2; auto; apply prod_1_r; Col.
-        }
-      apply prod_unicityA with O E E' ET2 AYT2; auto.
-      }
-    eapply eq_points_coordinates in HCdM; [|apply HCdA].
-    destruct HCdM as [H' H]; clear H'; elim H; Midpoint.
-    }
-  }
-
-  {
-  split; intro HMid; spliter; treat_equalities.
-
-    {
-    destruct HMid as [HBet HCong].
-    rewrite characterization_of_congruence in HCong;
-    [|apply HCdA|apply HCdM|apply HCdM|apply HCdB|
-     apply HAXMMX|apply HAXMMX2|apply HAYMMY|apply HAYMMY2|apply HAM2|
-     apply HMXMBX|apply HMXMBX2|apply HMYMBY|apply HMYMBY2|apply HMB2].
-    treat_equalities; assert (HBet':= HBet); apply between_symmetry in HBet.
-    rewrite characterization_of_betweenness in HBet';
-    [|apply HCdA|apply HCdM|apply HCdB|
-     apply HMXMAX|apply HMYMAY|apply HBXMAX|apply HBYMAY].
-    destruct HBet' as [T [H [HColT [HOLeT [HTLeE [HProdX HProdY]]]]]]; clear H.
-    rewrite characterization_of_betweenness in HBet;
-    [|apply HCdB|apply HCdM|apply HCdA|
-     apply HMXMBX|apply HMYMBY|apply HAXMBX|apply HAYMBY].
-    destruct HBet as [T' [H [HColT' [HOLeT' [HT'LeE [HProdX' HProdY']]]]]]; clear H.
-    destruct (sum_exists O E E' HNC T T') as [TPT' HTPT']; Col.
-    assert (E = TPT'); treat_equalities.
-      {
-      assert (HElim : O <> BXMAX \/ O <> BYMAY).
-        {
-        elim (eq_dec_points O BXMAX); intro HDiff3;
-        elim (eq_dec_points O BYMAY); intro HDiff4; treat_equalities; auto; exfalso.
-        apply HDiff2; apply diff_null_eq in HBXMAX; apply diff_null_eq in HBYMAY.
-        treat_equalities; rewrite eq_points_coordinates;
-        [|apply HCdA|apply HCdB]; auto.
-        }
-      elim HElim; clear HElim ; intro HDiff3.
-
-        {
-        assert (HProdX'' : prod O E E' T' BXMAX BXMMX).
-          {
-          apply prod_assoc2 with AXMBX ME MXMBX; auto; apply opp_prod; auto;
-          [apply diff_opp with AX BX|apply diff_opp with MX BX]; auto.
-          }
-        apply prod_unicityA with O E E' BXMAX BXMAX; auto; try apply prod_1_l; Col.
-        destruct (prod_exists O E E' HNC TPT' BXMAX) as [BXMAX' HBXMAX'];
-        [unfold sum, Ar2 in *; spliter| |]; Col.
-        assert (BXMAX = BXMAX'); treat_equalities; auto.
-        apply sum_unicity with O E E' BXMMX MXMAX;
-        [apply sum_diff_diff with BX MX AX; auto|].
-        apply distr_l with BXMAX T' T TPT'; try apply sum_comm; auto;
-        apply prod_comm; auto.
-        }
-
-        {
-        assert (HProdY'' : prod O E E' T' BYMAY BYMMY).
-          {
-          apply prod_assoc2 with AYMBY ME MYMBY; auto; apply opp_prod; auto;
-          [apply diff_opp with AY BY|apply diff_opp with MY BY]; auto.
-          }
-        apply prod_unicityA with O E E' BYMAY BYMAY; auto; try apply prod_1_l; Col.
-        destruct (prod_exists O E E' HNC TPT' BYMAY) as [BYMAY' HBYMAY'];
-        [unfold sum, Ar2 in *; spliter| |]; Col.
-        assert (BYMAY = BYMAY'); treat_equalities; auto.
-        apply sum_unicity with O E E' BYMMY MYMAY;
-        [apply sum_diff_diff with BY MY AY; auto|].
-        apply distr_l with BYMAY T' T TPT'; try apply sum_comm; auto;
-        apply prod_comm; auto.
-        }
-      }
-    destruct (prod_exists O E E' HNC T T) as [T2 HT2]; Col.
-    assert (HColT2 : Col O E T2) by (unfold prod, Ar2 in *; spliter; Col).
-    assert (HT : prod O E E' T2 AB2 AM2).
-      {
-      assert (prod O E E' T2 AXMBX2 AXMMX2).
-        {
-        destruct (prod_exists O E E' HNC AXMMX AXMBX) as [P' HP']; Col.
-        apply prod_assoc1 with T T P'; auto.
-
-          {
-          apply prod_assoc2 with AXMBX AXMBX AXMMX; auto.
-          destruct (prod_exists O E E' HNC T ME) as [OppT HOppT]; Col.
-          apply prod_assoc2 with ME BXMAX OppT; auto;
-          [apply prod_comm; apply opp_prod; auto; apply diff_opp with BX AX; auto|].
-          apply prod_assoc1 with ME T MXMAX; auto; apply prod_comm; auto.
-          apply opp_prod; auto; apply diff_opp with MX AX; auto.
-          }
-
-          {
-          apply prod_assoc2 with AXMBX AXMMX AXMMX; auto; [|apply prod_comm; auto].
-          destruct (prod_exists O E E' HNC T ME) as [OppT HOppT]; Col.
-          apply prod_assoc2 with ME BXMAX OppT; auto;
-          [apply prod_comm; apply opp_prod; auto; apply diff_opp with BX AX; auto|].
-          apply prod_assoc1 with ME T MXMAX; auto; apply prod_comm; auto.
-          apply opp_prod; auto; apply diff_opp with MX AX; auto.
-          }
-        }
-      assert (prod O E E' T2 AYMBY2 AYMMY2).
-        {
-        destruct (prod_exists O E E' HNC AYMMY AYMBY) as [P' HP']; Col.
-        apply prod_assoc1 with T T P'; auto.
-
-          {
-          apply prod_assoc2 with AYMBY AYMBY AYMMY; auto.
-          destruct (prod_exists O E E' HNC T ME) as [OppT HOppT]; Col.
-          apply prod_assoc2 with ME BYMAY OppT; auto;
-          [apply prod_comm; apply opp_prod; auto; apply diff_opp with BY AY; auto|].
-          apply prod_assoc1 with ME T MYMAY; auto; apply prod_comm; auto.
-          apply opp_prod; auto; apply diff_opp with MY AY; auto.
-          }
-
-          {
-          apply prod_assoc2 with AYMBY AYMMY AYMMY; auto; [|apply prod_comm; auto].
-          destruct (prod_exists O E E' HNC T ME) as [OppT HOppT]; Col.
-          apply prod_assoc2 with ME BYMAY OppT; auto;
-          [apply prod_comm; apply opp_prod; auto; apply diff_opp with BY AY; auto|].
-          apply prod_assoc1 with ME T MYMAY; auto; apply prod_comm; auto.
-          apply opp_prod; auto; apply diff_opp with MY AY; auto.
-          }
-        }
-      destruct (prod_exists O E E' HNC T2 AB2) as [P HP]; Col.
-      assert (AM2 = P); treat_equalities; auto.
-      apply sum_unicity with O E E' AXMMX2 AYMMY2; auto.
-      apply distr_l with T2 AXMBX2 AYMBY2 AB2; auto.
-      }
-    destruct (prod_exists O E E' HNC T' T') as [T'2 HT'2]; Col.
-    assert (HColT'2 : Col O E T'2) by (unfold prod, Ar2 in *; spliter; Col).
-    assert (HT' : prod O E E' T'2 AB2 AM2).
-      {
-      assert (prod O E E' T'2 AXMBX2 MXMBX2).
-        {
-        destruct (prod_exists O E E' HNC MXMBX AXMBX) as [P' HP']; Col.
-        apply prod_assoc1 with T' T' P'; auto;
-        [apply prod_assoc2 with AXMBX AXMBX MXMBX|
-         apply prod_assoc2 with AXMBX MXMBX MXMBX]; auto; apply prod_comm; auto.
-        }
-      assert (prod O E E' T'2 AYMBY2 MYMBY2).
-        {
-        destruct (prod_exists O E E' HNC MYMBY AYMBY) as [P' HP']; Col.
-        apply prod_assoc1 with T' T' P'; auto;
-        [apply prod_assoc2 with AYMBY AYMBY MYMBY|
-         apply prod_assoc2 with AYMBY MYMBY MYMBY]; auto; apply prod_comm; auto.
-        }
-      destruct (prod_exists O E E' HNC T'2 AB2) as [P HP]; Col.
-      assert (AM2 = P); treat_equalities; auto.
-      apply sum_unicity with O E E' MXMBX2 MYMBY2; auto.
-      apply distr_l with T'2 AXMBX2 AYMBY2 AB2; auto.
-      }
-    assert (HDiff3 : O <> AM2).
-      {
-      intro; treat_equalities.
-      destruct (is_length_exists O E E' A M) as [LAM HLAM]; Col.
-      assert (HColLAM : Col O E LAM).
-        {
-        induction HLAM; try unfold length in *; spliter; treat_equalities; Col.
-        }
-      destruct (prod_exists O E E' HNC LAM LAM) as [LAM2 HLAM2]; Col.
-      assert (H := HLAM); eapply square_distance_formula in H;
-      [|apply HCdA|apply HCdM|apply HLAM2|
-       apply HAXMMX|apply HAXMMX2|apply HAYMMY|apply HAYMMY2|apply HAM2].
-      destruct (is_length_exists O E E' M B) as [LMB HLMB]; Col.
-      assert (HColLMB : Col O E LMB); treat_equalities; rename LAM2 into O.
-        {
-        induction HLMB; try unfold length in *; spliter; treat_equalities; Col.
-        }
-      destruct (prod_exists O E E' HNC LMB LMB) as [LMB2 HLMB2]; Col.
-      assert (H := HLMB); eapply square_distance_formula in H;
-      [|apply HCdM|apply HCdB|apply HLMB2|
-       apply HMXMBX|apply HMXMBX2|apply HMYMBY|apply HMYMBY2|apply HMB2].
-      treat_equalities; rename LMB2 into O;
-      apply prod_null in HLAM2; apply prod_null in HLMB2.
-      induction HLAM2; induction HLMB2; treat_equalities;
-      induction HLAM; induction HLMB; treat_equalities;
-      try apply length_id in H; try apply length_id in H0;
-      spliter; treat_equalities; intuition.
-      }
-    assert (T = T'); treat_equalities.
-      {
-      assert (T2 = T'2); treat_equalities.
-        {
-        apply prod_unicityA with O E E' AB2 AM2; auto;
-        intro H; apply eq_sym in H; treat_equalities.
-        apply sum_opp in HAB2; assert (HOpp := HAB2); apply pos_null_neg in HAB2.
-        elim HAB2; clear HAB2; intro HSign.
-
-          {
-          assert (H := HOpp).
-          apply opp_pos_neg in H; auto; apply neg_not_pos in H; apply H; clear H.
-          destruct (prod_exists O E E' HNC AYMBY ME) as [MAYPBY HMAYPBY]; Col.
-          apply square_pos with E' AYMBY; auto; intro; treat_equalities.
-          apply pos_opp_neg in HOpp; auto; destruct HOpp as [H H']; clear H'.
-          apply H; clear H; apply prod_unicity with O E E' O O;
-          try apply prod_0_l; Col.
-          }
-
-          {
-          elim HSign; clear HSign; intro HSign; treat_equalities;
-          [apply HDiff3; apply prod_unicity with O E E' T2 O;
-           try apply prod_0_r; Col|].
-          apply opp_comm in HOpp; Col; assert (H := HOpp);
-          apply opp_pos_neg in H; auto; apply neg_not_pos in H; apply H; clear H.
-          destruct (prod_exists O E E' HNC AXMBX ME) as [MAXPBX HMAXPBX]; Col.
-          apply square_pos with E' AXMBX; auto; intro; treat_equalities.
-          apply pos_opp_neg in HOpp; auto; destruct HOpp as [H H']; clear H'.
-          apply H; clear H; apply prod_unicity with O E E' O O;
-          try apply prod_0_l; Col.
-          }
-        }
-      assert (H := HT'2); eapply eq_squares_eq_or_opp in H; [|apply HT2];
-      elim H; clear H; intro HOpp; auto; exfalso.
-      elim HOLeT; clear HOLeT; intro HPs1; treat_equalities;
-      [apply ltP_pos in HPs1|assert (O = T2)
-         by (apply prod_unicity with O E E' O O; try apply prod_0_l; Col);
-         treat_equalities; apply HDiff3; apply prod_unicity with O E E' O AB2;
-         try apply prod_0_l; Col].
-      elim HOLeT'; clear HOLeT'; intro HPs2; treat_equalities;
-      [apply ltP_pos in HPs2|assert (O = T2)
-         by (apply prod_unicity with O E E' O O; try apply prod_0_l; Col);
-         treat_equalities; apply HDiff3; apply prod_unicity with O E E' O AB2;
-         try apply prod_0_l; Col].
-      apply opp_pos_neg in HOpp; auto; apply neg_not_pos in HOpp; auto.
-      }
-    split.
-
-      {
-      assert (AXMMX = MXMBX); treat_equalities.
-        {
-        apply prod_unicity with O E E' T AXMBX; auto.
-        apply prod_assoc2 with BXMAX ME MXMAX; auto; apply opp_prod; auto;
-        [apply diff_opp with BX AX|apply diff_opp with MX AX]; auto.
-        }
-      apply diff_sum in HAXMMX; apply diff_sum in HMXMBX.
-      apply sum_unicity with O E E' AX BX; auto.
-      apply sum_assoc_1 with MX AXMMX MX; auto; apply sum_comm; auto.
-      apply distr_l with MX E E ET2; auto; apply prod_1_r; Col.
-      }
-
-      {
-      assert (AYMMY = MYMBY); treat_equalities.
-        {
-        apply prod_unicity with O E E' T AYMBY; auto.
-        apply prod_assoc2 with BYMAY ME MYMAY; auto; apply opp_prod; auto;
-        [apply diff_opp with BY AY|apply diff_opp with MY AY]; auto.
-        }
-      apply diff_sum in HAYMMY; apply diff_sum in HMYMBY.
-      apply sum_unicity with O E E' AY BY; auto.
-      apply sum_assoc_1 with MY AYMMY MY; auto; apply sum_comm; auto.
-      apply distr_l with MY E E ET2; auto; apply prod_1_r; Col.
-      }
-    }
-
-    {
-    assert (AXMMX = MXMBX).
-      {
-      destruct (sum_exists O E E' HNC MX BX) as [MXPBX HMXPBX]; Col.
-      assert (MXT2' : sum O E E' AXMMX MXPBX MXT2).
-        {
-        apply sum_assoc_2 with MX BX AX; auto.
-        apply diff_sum in HAXMMX; apply sum_comm; auto.
-        }
-      apply sum_unicityA with O E E' MXPBX MXT2; auto.
-      apply diff_sum in HAXMMX; apply diff_sum in HMXMBX.
-      apply sum_assoc_2 with BX MX MX; apply sum_comm; auto.
-      apply distr_l with MX E E ET2; auto; apply prod_1_r; Col.
-      }
-    assert (AYMMY = MYMBY).
-      {
-      destruct (sum_exists O E E' HNC MY BY) as [MYPBY HMYPBY]; Col.
-      assert (MYT2' : sum O E E' AYMMY MYPBY MYT2).
-        {
-        apply sum_assoc_2 with MY BY AY; auto.
-        apply diff_sum in HAYMMY; apply sum_comm; auto.
-        }
-      apply sum_unicityA with O E E' MYPBY MYT2; auto.
-      apply diff_sum in HAYMMY; apply diff_sum in HMYMBY.
-      apply sum_assoc_2 with BY MY MY; apply sum_comm; auto.
-      apply distr_l with MY E E ET2; auto; apply prod_1_r; Col.
-      }
-    elim (l7_20 M A B); [intuition|auto| |]; treat_equalities.
-
-      {
-      destruct (prod_exists O E E' HNC AXMMX AYMMY) as [Prod1 HProd1]; Col.
-      destruct (prod_exists O E E' HNC AYMMY AXMMX) as [Prod2 HProd2]; Col.
-      rewrite characterization_of_collinearity;
-        [|apply HCdA|apply HCdM|apply HCdB|
-         apply HAXMMX|apply HAYMMY|apply HMXMBX|apply HMYMBY|
-         apply HProd1|apply HProd2].
-      apply prod_unicity with O E E' AXMMX AYMMY; auto; apply prod_comm; auto.
-      }
-
-      {
-      assert (AXMMX2 = MXMBX2) by (apply prod_unicity with O E E' AXMMX AXMMX; auto).
-      assert (AYMMY2 = MYMBY2) by (apply prod_unicity with O E E' AYMMY AYMMY; auto).
-      apply cong_left_commutativity; rewrite characterization_of_congruence;
-      [|apply HCdA|apply HCdM|apply HCdM|apply HCdB|
-       apply HAXMMX|apply HAXMMX2|apply HAYMMY|apply HAYMMY2|apply HAM2|
-       apply HMXMBX|apply HMXMBX2|apply HMYMBY|apply HMYMBY2|apply HMB2].
-      treat_equalities; apply sum_unicity with O E E' AXMMX2 AYMMY2; auto.
       }
     }
   }

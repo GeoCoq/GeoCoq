@@ -153,7 +153,7 @@ assert (X = X'); treat_equalities.
 destruct (l10_2_existence X Y R') as [R'' HR''].
 elim HR''; clear HR''; intro HR''; destruct HR'' as [H HR''];
 [clear H|treat_equalities; apply par_distincts in HPar3; intuition].
-unfold is_image_spec in HR''.
+unfold ReflectL in HR''.
 destruct HR'' as [[I [HMid5 HCol10]] H]; elim H; clear H; intro HPerp5;
 [|treat_equalities; exfalso; apply HNC1; assert_diffs; assert_cols; ColR].
 destruct (midpoint_existence R' Y) as [T'' HMid8].
@@ -219,9 +219,9 @@ assert (R'' = R'''); treat_equalities.
       }
     elim (l7_20 I R'' R'''); try (assert_diffs; ColR);
     try intro; treat_equalities; Col;
-    assert (Cong I R'' I R') by (unfold is_midpoint in *; spliter; eCong);
-    assert (Cong I R'' X W') by (unfold is_midpoint in *; spliter; eCong);
-    assert (Cong I R'' X W) by (unfold is_midpoint in *; spliter; eCong); eCong.
+    assert (Cong I R'' I R') by (unfold Midpoint in *; spliter; eCong);
+    assert (Cong I R'' X W') by (unfold Midpoint in *; spliter; eCong);
+    assert (Cong I R'' X W) by (unfold Midpoint in *; spliter; eCong); eCong.
     }
 
     {
@@ -238,11 +238,11 @@ assert (R'' = R'''); treat_equalities.
       [apply perp_col2 with C D|apply perp_col2 with R' R'']; Col; Perp.
       }
     elim (l7_20 I R'' R'''); try (intro; treat_equalities); Col.
-    assert (Cong I R'' I R') by (unfold is_midpoint in *; spliter; eCong).
-    assert (Cong I R'' Y Z') by (unfold is_midpoint in *; spliter; eCong).
-    assert (Cong I R'' X W') by (unfold is_midpoint in *; spliter; eCong).
-    assert (Cong I R'' X W) by (unfold is_midpoint in *; spliter; eCong).
-    assert (Cong I R'' Y Z) by (unfold is_midpoint in *; spliter; eCong); eCong.
+    assert (Cong I R'' I R') by (unfold Midpoint in *; spliter; eCong).
+    assert (Cong I R'' Y Z') by (unfold Midpoint in *; spliter; eCong).
+    assert (Cong I R'' X W') by (unfold Midpoint in *; spliter; eCong).
+    assert (Cong I R'' X W) by (unfold Midpoint in *; spliter; eCong).
+    assert (Cong I R'' Y Z) by (unfold Midpoint in *; spliter; eCong); eCong.
     }
   }
 assert (HCong8 : Cong I Y R'' Z).
@@ -283,7 +283,7 @@ assert (HRWR'' : Bet R W R'').
     elim (perp_not_col2 A B P Q); Col; intro; assert_diffs; assert_cols;
     [apply l6_21 with A B P Q|apply l6_21 with A B Q P]; Col; ColR.
     }
-  assert (HTS : two_sides W X R R'').
+  assert (HTS : TS W X R R'').
     {
     assert (HWX : W <> X)
       by (intro; treat_equalities; apply par_distinct in HPar6; intuition).
@@ -293,7 +293,7 @@ assert (HRWR'' : Bet R W R'').
     try (apply par_symmetry; apply par_col2_par with W W'; Col; Par).
     split; Col.
     assert_diffs; assert_cols; split; try (intro; apply HNC; ColR).
-    split; Col; exists X; unfold is_midpoint in *; spliter; split; Col; Between.
+    split; Col; exists X; unfold Midpoint in *; spliter; split; Col; Between.
     }
   destruct HTS as [Hc1 [Hc2 [Hc3 [W'' [HCol' HBet]]]]];
   clear Hc1; clear Hc2; clear Hc3.
@@ -349,7 +349,7 @@ assert (HCong9 : Cong R W R'' W).
 
     {
     apply l4_3 with Z Z'; eCong.
-    assert (HTS : two_sides R' R'' W' Z').
+    assert (HTS : TS R' R'' W' Z').
       {
       assert (HR'R' : R' <> R'') by (intro; assert_diffs; Col).
       apply l9_2; apply l9_8_2 with Z; try apply l12_6; Par.
@@ -370,7 +370,7 @@ assert (HCong9 : Cong R W R'' W).
     {
     apply l2_11 with Z Z'; Between; eCong.
 
-    assert (HTS : two_sides Z Z' W' R').
+    assert (HTS : TS Z Z' W' R').
       {
       assert (HR'R' : Z <> Z') by (intro; treat_equalities; assert_diffs; Col).
       apply l9_8_2 with W; try apply l12_6; Par.
@@ -392,7 +392,7 @@ assert (HCong9 : Cong R W R'' W).
     assert (HCong: Cong Z R'' Z' R')
       by (assert (Cong Y I R'' Z) by (apply l7_13 with T'''; Midpoint); eCong).
     assert (Cong R'' W R' W'); Cong; apply l4_3 with Z Z'; Between; eCong.
-    assert (HTS : two_sides W W' R' Z').
+    assert (HTS : TS W W' R' Z').
       {
       assert (HR'R' : W <> W') by (intro; treat_equalities; assert_diffs; Col).
       apply l9_8_2 with R''; try apply l12_6; Par.
@@ -415,13 +415,13 @@ assert (HCong10 : Cong R X R'' X).
   assert (Cong R' X R'' X).
     {
     apply perp_bisect_cong_2 with I; apply perp_mid_perp_bisect;
-    unfold is_midpoint in *; spliter; Between; Cong.
+    unfold Midpoint in *; spliter; Between; Cong.
     apply perp_col2 with X Y; Col; intro; treat_equalities.
     destruct (not_strict_par W W' R' R'' I); Col.
     show_distinct W W'; Col; assert_diffs; assert_cols.
     apply perp_not_col2 in HPerp1; elim HPerp1; intro HF; apply HF; ColR.
     }
-  unfold is_midpoint in *; spliter; eCong.
+  unfold Midpoint in *; spliter; eCong.
   }
 assert (HPerp6 : Perp X W W R).
   {

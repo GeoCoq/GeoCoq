@@ -9,56 +9,56 @@ Context `{EqDec:EqDecidability Tpoint}.
 (** Definition 15.1. *)
 (** Length of a segment.*)
 
-Definition length O E E' A B L :=
- O<>E /\ Col O E L /\ leP O E E' O L /\ Cong O L A B.
+Definition Length O E E' A B L :=
+ O<>E /\ Col O E L /\ LeP O E E' O L /\ Cong O L A B.
 
-Definition is_length O E E' A B L :=
- length O E E' A B L \/ (O=E /\ O=L).
+Definition Is_length O E E' A B L :=
+ Length O E E' A B L \/ (O=E /\ O=L).
 
 (** Lemma 15.2 *)
 (** Cong corresponds to length equality.*)
 (** Le corresponds to length inequality.*)
 
 Lemma length_pos : forall O E E' A B L,
-  length O E E' A B L -> leP O E E' O L.
+  Length O E E' A B L -> LeP O E E' O L.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 tauto.
 Qed.
 
 Lemma length_id_1 : forall O E E' A B,
-  length O E E' A B O -> A=B.
+  Length O E E' A B O -> A=B.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
 treat_equalities.
 reflexivity.
 Qed.
 
 Lemma length_id_2 : forall O E E' A,
-  O<>E -> length O E E' A A O.
+  O<>E -> Length O E E' A A O.
 Proof.
 intros.
-unfold length.
+unfold Length.
 repeat split.
 assumption.
 Col.
-unfold leP.
+unfold LeP.
 tauto.
 Cong.
 Qed.
 
 Lemma length_id : forall O E E' A B,
- length O E E' A B O <-> (A=B /\ O<>E).
+ Length O E E' A B O <-> (A=B /\ O<>E).
 Proof.
 intros.
 split.
 intros.
 split.
 eauto using length_id_1.
-unfold length in *.
+unfold Length in *.
 tauto.
 intros.
 spliter. subst.
@@ -67,34 +67,34 @@ assumption.
 Qed.
 
 Lemma length_eq_cong_1 : forall O E E' A B C D AB,
- length O E E' A B AB -> length O E E' C D AB -> Cong A B C D.
+ Length O E E' A B AB -> Length O E E' C D AB -> Cong A B C D.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
 apply cong_transitivity with O AB;Cong.
 Qed.
 
 Lemma length_eq_cong_2 : forall O E E' A B C D AB,
- length O E E' A B AB -> Cong A B C D -> length O E E' C D AB.
+ Length O E E' A B AB -> Cong A B C D -> Length O E E' C D AB.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
 repeat split;try assumption.
 apply cong_transitivity with A B;Cong.
 Qed.
 
-Lemma ltP_pos : forall O E E' A, ltP O E E' O A  -> Ps O E A.
+Lemma ltP_pos : forall O E E' A, LtP O E E' O A  -> Ps O E A.
 Proof.
 intros.
-unfold ltP in H.
+unfold LtP in H.
 ex_and H A'.
 
 assert(~Col O E E' /\ Col O E A).
-unfold diff in H.
+unfold Diff in H.
 ex_and H X.
-unfold sum in H1.
+unfold Sum in H1.
 spliter.
 unfold Ar2 in H1.
 tauto.
@@ -108,24 +108,24 @@ assumption.
 Qed.
 
 Lemma bet_leP : forall O E E' AB CD,
-  Bet O AB CD -> leP O E E' O AB -> leP O E E' O CD -> leP O E E' AB CD.
+  Bet O AB CD -> LeP O E E' O AB -> LeP O E E' O CD -> LeP O E E' AB CD.
 Proof.
 intros.
-unfold leP in *.
+unfold LeP in *.
 induction H0; induction H1.
 
-unfold ltP in H0.
-unfold ltP in H1.
+unfold LtP in H0.
+unfold LtP in H1.
 ex_and H0 P.
 ex_and H1 Q.
 
 assert(Ar2 O E E' AB CD P /\ Col O E Q).
-unfold diff in H0.
+unfold Diff in H0.
 ex_and H0 X.
-unfold diff in H1.
+unfold Diff in H1.
 ex_and H1 Y.
-unfold sum in H4.
-unfold sum in H5.
+unfold Sum in H4.
+unfold Sum in H5.
 spliter.
 unfold Ar2 in *.
 spliter.
@@ -154,26 +154,26 @@ clear H0 H1.
 assert(HH:=opp_exists O E E' H4 AB H6).
 ex_and HH AB'.
 
-assert(exists P, sum O E E' CD AB' P).
+assert(exists P, Sum O E E' CD AB' P).
 apply(sum_exists O E E' H4 CD AB'); Col.
-unfold opp in H0.
-unfold sum in H0.
+unfold Opp in H0.
+unfold Sum in H0.
 spliter.
 unfold Ar2 in H0.
 tauto.
 ex_and H1 P.
 
 
-unfold ltP.
+unfold LtP.
 exists P.
 split.
-unfold diff.
+unfold Diff.
 exists AB'.
 split; auto.
 
 
-assert(diff O E E' CD AB P).
-unfold diff.
+assert(Diff O E E' CD AB P).
+unfold Diff.
 exists AB'.
 split; auto.
 
@@ -181,7 +181,7 @@ apply diff_sum in H1.
 induction (eq_dec_points AB O).
 subst AB.
 unfold Ps in H2.
-unfold out in H2.
+unfold Out in H2.
 spliter.
 tauto.
 
@@ -197,7 +197,7 @@ apply(l4_6 O AB CD CD P O).
 assumption.
 repeat split; Cong.
 unfold Ps.
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst P.
@@ -211,7 +211,7 @@ subst E.
 apply H4.
 Col.
 unfold Ps in H3.
-unfold out in H3.
+unfold Out in H3.
 spliter.
 induction H17.
 left.
@@ -229,17 +229,17 @@ right; auto.
 Qed.
 
 Lemma leP_bet : forall O E E' AB CD,
-  leP O E E' AB CD -> leP O E E' O AB -> leP O E E' O CD -> Bet O AB CD.
+  LeP O E E' AB CD -> LeP O E E' O AB -> LeP O E E' O CD -> Bet O AB CD.
 Proof.
 intros.
-unfold leP in H.
+unfold LeP in H.
 induction H.
-unfold ltP in H.
+unfold LtP in H.
 ex_and H X.
 apply diff_sum in H.
 
-assert(out O AB X \/ AB=O).
-unfold leP in H0.
+assert(Out O AB X \/ AB=O).
+unfold LeP in H0.
 induction H0.
 left.
 apply ltP_pos in H0.
@@ -260,22 +260,22 @@ apply between_trivial.
 Qed.
 
 Lemma length_Ar2 : forall O E E' A B AB,
-  length O E E' A B AB -> (Col O E AB /\ ~Col O E E') \/ AB = O.
+  Length O E E' A B AB -> (Col O E AB /\ ~Col O E E') \/ AB = O.
 Proof.
 intros.
-unfold length in H.
+unfold Length in H.
 spliter.
 
-unfold leP in H1.
+unfold LeP in H1.
 induction H1.
 left.
 split.
 assumption.
-unfold ltP in H1.
+unfold LtP in H1.
 ex_and H1 P.
-unfold diff in H1.
+unfold Diff in H1.
 ex_and H1 Q.
-unfold sum in *.
+unfold Sum in *.
 spliter.
 unfold Ar2 in *.
 tauto.
@@ -283,10 +283,10 @@ right; auto.
 Qed.
 
 Lemma length_leP_le_1 : forall O E E' A B C D AB CD,
- length O E E' A B AB -> length O E E' C D CD -> leP O E E' AB CD -> le A B C D.
+ Length O E E' A B AB -> Length O E E' C D CD -> LeP O E E' AB CD -> Le A B C D.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
 assert(Bet O AB CD).
 apply (leP_bet O E E'); assumption.
@@ -294,19 +294,19 @@ apply (leP_bet O E E'); assumption.
 prolong D C M' A B.
 assert(HH:=symmetric_point_construction M' C).
 ex_and HH M.
-unfold is_midpoint in H11.
+unfold Midpoint in H11.
 spliter.
 
 assert(Cong A B C M).
 apply (cong_transitivity _ _ C M'); Cong.
 
 apply(le_transitivity _ _ C M).
-unfold le.
+unfold Le.
 exists M.
 split; Between.
 
-assert(le O AB O CD).
-unfold le.
+assert(Le O AB O CD).
+unfold Le.
 exists AB.
 split; Cong.
 
@@ -315,14 +315,14 @@ apply (cong_transitivity _ _ A B); Cong.
 Qed.
 
 Lemma length_leP_le_2 : forall O E E' A B C D AB CD,
- length O E E' A B AB -> length O E E' C D CD -> le A B C D -> leP O E E' AB CD.
+ Length O E E' A B AB -> Length O E E' C D CD -> Le A B C D -> LeP O E E' AB CD.
 Proof.
 intros.
 
 assert(HH1:= length_Ar2 O E E' A B AB H).
 assert(HH2:= length_Ar2 O E E' C D CD H0).
 spliter.
-unfold length in *.
+unfold Length in *.
 spliter.
 apply bet_leP; try assumption.
 
@@ -331,7 +331,7 @@ subst CD.
 apply cong_symmetry in H4.
 apply cong_identity in H4.
 subst D.
-unfold le in H1.
+unfold Le in H1.
 ex_and H1 X.
 apply between_identity in H1.
 subst X.
@@ -340,21 +340,21 @@ subst B.
 apply cong_identity in H7.
 subst AB.
 Between.
-assert(le O AB O CD).
+assert(Le O AB O CD).
 
 apply(l5_6 A B C D O AB O CD); Cong.
-unfold le in H8.
+unfold Le in H8.
 ex_and H9 M.
 
 induction HH1; induction HH2.
 spliter.
 
-unfold le in H1.
+unfold Le in H1.
 ex_and H1 P.
 
-unfold leP in *.
+unfold LeP in *.
 induction H6; induction H3.
-unfold ltP in *.
+unfold LtP in *.
 ex_and H6 X.
 ex_and H3 Y.
 apply diff_sum in H6.
@@ -371,11 +371,11 @@ apply cong_identity in H23.
 subst X.
 clean_trivial_hyps.
 
-assert(AB = M \/ is_midpoint O AB M).
+assert(AB = M \/ Midpoint O AB M).
 apply(l7_20 O AB M); Cong.
 
 unfold Ps in *.
-assert(out O AB CD).
+assert(Out O AB CD).
 apply (l6_7 O AB E CD); auto.
 apply l6_6.
 assumption.
@@ -387,10 +387,10 @@ apply (col_transitivity_1 _ CD); Col.
 induction H3.
 subst M.
 assumption.
-unfold is_midpoint in H3.
+unfold Midpoint in H3.
 spliter.
 
-assert(out O AB CD).
+assert(Out O AB CD).
 unfold Ps in *.
 
 apply (l6_7 O AB E CD); auto.
@@ -404,7 +404,7 @@ subst M.
 apply cong_identity in H6.
 subst AB.
 tauto.
-unfold out in H18.
+unfold Out in H18.
 spliter.
 induction H22.
 assert(AB = O).
@@ -422,13 +422,13 @@ right.
 intro.
 subst Y.
 unfold Ps in H17.
-unfold out in H17.
+unfold Out in H17.
 tauto.
 right.
 intro.
 subst X.
 unfold Ps in H16.
-unfold out in H16.
+unfold Out in H16.
 tauto.
 subst CD.
 tauto.
@@ -444,11 +444,11 @@ subst CD.
 tauto.
 Qed.
 
-Lemma l15_3 : forall O E E' A B C, sum O E E' A B C -> Cong O B A C.
+Lemma l15_3 : forall O E E' A B C, Sum O E E' A B C -> Cong O B A C.
 Proof.
 intros.
 assert(Ar2 O E E' A B C).
-unfold sum in H.
+unfold Sum in H.
 spliter.
 assumption.
 unfold Ar2 in H0.
@@ -469,7 +469,7 @@ Qed.
 (** Lemma 15.4. *)
 (** Triangular equality. *)
 Lemma length_unicity : forall O E E' A B AB AB',
-  length O E E' A B AB -> length O E E' A B AB' -> AB = AB'.
+  Length O E E' A B AB -> Length O E E' A B AB' -> AB = AB'.
 Proof.
 intros.
 assert(Col O E AB /\ ~ Col O E E' \/ AB = O).
@@ -477,26 +477,26 @@ eapply (length_Ar2 O E E' A B AB); assumption.
 assert(Col O E AB' /\ ~ Col O E E' \/ AB' = O).
 eapply (length_Ar2 O E E' A B AB'); assumption.
 
-unfold length in *.
+unfold Length in *.
 spliter.
 assert(Cong O AB O AB').
 eCong.
-assert(AB = AB' \/ is_midpoint O AB AB').
+assert(AB = AB' \/ Midpoint O AB AB').
 apply(l7_20 O AB AB').
 ColR.
 Cong.
 induction H10.
 assumption.
-unfold is_midpoint in H10.
+unfold Midpoint in H10.
 spliter.
 
 induction H1; induction H2.
 spliter.
 
-unfold leP in *.
+unfold LeP in *.
 induction H4; induction H7.
-unfold ltP in H4.
-unfold ltP in H7.
+unfold LtP in H4.
+unfold LtP in H7.
 ex_and H4 X.
 ex_and H7 Y.
 apply diff_sum in H4.
@@ -508,11 +508,11 @@ assert(Y = AB).
 apply(sum_O_B_eq O E E'); Col.
 subst Y.
 unfold Ps in *.
-assert(out O AB AB').
+assert(Out O AB AB').
 eapply (l6_7 _ _ E).
 assumption.
 apply l6_6; assumption.
-unfold out in H16.
+unfold Out in H16.
 spliter.
 induction H18.
 assert(AB = O).
@@ -548,23 +548,23 @@ subst AB'.
 reflexivity.
 Qed.
 
-Lemma length_cong : forall O E E' A B AB, length O E E' A B AB -> Cong A B O AB.
+Lemma length_cong : forall O E E' A B AB, Length O E E' A B AB -> Cong A B O AB.
 Proof.
 intros.
-unfold length in H.
+unfold Length in H.
 spliter.
 Cong.
 Qed.
 
 Lemma length_Ps : forall O E E' A B AB,
-  AB <> O -> length O E E' A B AB -> Ps O E AB.
+  AB <> O -> Length O E E' A B AB -> Ps O E AB.
 Proof.
 intros.
-unfold length in H0.
+unfold Length in H0.
 spliter.
-unfold leP in H2.
+unfold LeP in H2.
 induction H2.
-unfold ltP in H2.
+unfold LtP in H2.
 ex_and H2 X.
 apply diff_sum in H2.
 apply sum_cong in H2.
@@ -574,7 +574,7 @@ apply cong_symmetry in H6.
 apply cong_identity in H6.
 subst X.
 assumption.
-unfold sum in H2.
+unfold Sum in H2.
 spliter.
 unfold Ar2 in H2.
 tauto.
@@ -582,24 +582,24 @@ right.
 intro.
 subst X.
 unfold Ps in H4.
-unfold out in H4.
+unfold Out in H4.
 tauto.
 subst AB.
 tauto.
 Qed.
 
 Lemma length_not_col_null : forall O E E' A B AB,
-  Col O E E' -> length O E E' A B AB -> AB=O.
+  Col O E E' -> Length O E E' A B AB -> AB=O.
 Proof.
 intros.
-unfold length in H0.
+unfold Length in H0.
 spliter.
-unfold leP in H2.
+unfold LeP in H2.
 induction H2.
-unfold ltP in H2.
+unfold LtP in H2.
 ex_and H2 X.
 apply diff_sum in H2.
-unfold sum in H2.
+unfold Sum in H2.
 spliter.
 unfold Ar2 in H2.
 spliter.
@@ -610,12 +610,12 @@ Qed.
 Lemma triangular_equality_equiv :
   (forall O E A , O<>E -> (forall E' B C AB BC AC,
    Bet A B C ->
-   length O E E' A B AB -> length O E E' B C BC -> length O E E' A C AC ->
-   sum O E E' AB BC AC)) <->
+   Length O E E' A B AB -> Length O E E' B C BC -> Length O E E' A C AC ->
+   Sum O E E' AB BC AC)) <->
   (forall O E E' A B C AB BC AC,
    O<>E -> Bet A B C ->
-   length O E E' A B AB -> length O E E' B C BC -> length O E E' A C AC ->
-   sum O E E' AB BC AC).
+   Length O E E' A B AB -> Length O E E' B C BC -> Length O E E' A C AC ->
+   Sum O E E' AB BC AC).
 Proof.
 split.
 intros.
@@ -630,17 +630,17 @@ Lemma not_triangular_equality1 : forall O E A ,
   O<>E ->
   ~ (forall E' B C AB BC AC,
   Bet A B C ->
-  length O E E' A B AB -> length O E E' B C BC -> length O E E' A C AC ->
-  sum O E E' AB BC AC).
+  Length O E E' A B AB -> Length O E E' B C BC -> Length O E E' A C AC ->
+  Sum O E E' AB BC AC).
 Proof.
 intros.
 intro.
 assert(HH:=(H0 E A A O O O)).
 assert(Bet A A A); Between.
-assert(length O E E A A O).
+assert(Length O E E A A O).
 apply(length_id_2); auto.
 assert(HHH:= (HH H1 H2 H2 H2)).
-unfold sum in HHH.
+unfold Sum in HHH.
 spliter.
 ex_and H4 X.
 ex_and H5 Y.
@@ -650,28 +650,28 @@ apply H3.
 Col.
 Qed.
 
-Definition sumg O E E' A B C :=
-  sum O E E' A B C \/ (~ (Ar2 O E E' A B B) /\ C = O).
+Definition Sumg O E E' A B C :=
+  Sum O E E' A B C \/ (~ (Ar2 O E E' A B B) /\ C = O).
 
 Lemma triangular_equality : forall O E E' A B C AB BC AC,
   O<>E -> Bet A B C ->
-  is_length O E E' A B AB -> is_length O E E' B C BC ->
-  is_length O E E' A C AC ->
-  sumg O E E' AB BC AC.
+  Is_length O E E' A B AB -> Is_length O E E' B C BC ->
+  Is_length O E E' A C AC ->
+  Sumg O E E' AB BC AC.
 Proof.
 intros O E E' A B C AB BC AC H H0 Hl1 Hl2 Hl3.
 
-unfold is_length in *.
+unfold Is_length in *.
 
 induction Hl1; induction Hl2; induction Hl3; try(spliter; contradiction).
-unfold length in *.
+unfold Length in *.
 spliter.
-unfold leP in *.
+unfold LeP in *.
 induction H11; induction H8; induction H5.
 
 (* General Case *)
 
-unfold ltP in *.
+unfold LtP in *.
 ex_and H11 X.
 ex_and H8 Y.
 ex_and H5 Z.
@@ -681,7 +681,7 @@ apply diff_sum in H5.
 assert(AB = X).
 apply (sum_unicity O E E' O X).
 assumption.
-unfold sum in H11.
+unfold Sum in H11.
 spliter.
 unfold Ar2 in H11.
 apply(sum_O_B); tauto.
@@ -690,7 +690,7 @@ subst X.
 assert(BC = Y).
 apply (sum_unicity O E E' O Y).
 assumption.
-unfold sum in H8.
+unfold Sum in H8.
 spliter.
 unfold Ar2 in H8.
 apply(sum_O_B); tauto.
@@ -699,15 +699,15 @@ subst Y.
 assert(AC = Z).
 apply (sum_unicity O E E' O Z).
 assumption.
-unfold sum in H5.
+unfold Sum in H5.
 spliter.
 unfold Ar2 in H5.
 apply(sum_O_B); tauto.
 subst Z.
 
-assert(forall A B : Tpoint,Col O E A -> Col O E B -> exists C : Tpoint, sum O E E' A B C).
+assert(forall A B : Tpoint,Col O E A -> Col O E B -> exists C : Tpoint, Sum O E E' A B C).
 apply(sum_exists O E E' ).
-unfold sum in H11.
+unfold Sum in H11.
 spliter.
 unfold Ar2 in H11.
 tauto.
@@ -740,7 +740,7 @@ subst B.
 apply cong_identity in H6.
 subst AC.
 unfold Ps in H15.
-unfold out in H15.
+unfold Out in H15.
 tauto.
 unfold Ps in H15.
 assumption.
@@ -764,13 +764,13 @@ apply cong_identity in H12.
 subst AB.
 apply cong_identity in H9.
 subst BC.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H0.
 assert(X=O).
 apply(sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H0.
+unfold Sum in H0.
 spliter.
 unfold Ar2 in H0.
 tauto.
@@ -780,7 +780,7 @@ Col.
 assumption.
 subst X.
 unfold Ps in H5.
-unfold out in H5.
+unfold Out in H5.
 tauto.
 
 (* BC = O *)
@@ -791,13 +791,13 @@ apply cong_identity in H9.
 subst C.
 assert(Cong O AB O AC).
 eCong.
-unfold ltP in H11.
+unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
 assert(X = AB).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H9.
+unfold Sum in H9.
 spliter.
 unfold Ar2 in H9.
 tauto.
@@ -806,14 +806,14 @@ apply out_col in H11.
 Col.
 assumption.
 subst X.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 Y.
 apply diff_sum in H5.
 
 assert(Y = AC).
 apply (sum_unicity O E E' O Y).
 apply sum_O_B.
-unfold sum in H9.
+unfold Sum in H9.
 spliter.
 unfold Ar2 in H9.
 tauto.
@@ -827,14 +827,14 @@ apply(l6_11_unicity O A B E AB AC).
 intro.
 subst E.
 unfold Ps in H13.
-unfold out in H13.
+unfold Out in H13.
 tauto.
 intro.
 subst B.
 apply cong_identity in H6.
 subst AC.
 unfold Ps in H13.
-unfold out in H13.
+unfold Out in H13.
 tauto.
 unfold Ps in H11.
 assumption.
@@ -845,7 +845,7 @@ Cong.
 subst AB.
 left.
 apply sum_A_O.
-unfold sum in H9.
+unfold Sum in H9.
 unfold Ar2 in H9.
 tauto.
 unfold Ps in H11.
@@ -866,10 +866,10 @@ apply cong_identity in H12.
 subst AB.
 left.
 apply sum_O_O.
-unfold ltP in H11.
+unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -889,13 +889,13 @@ intro.
 subst C.
 apply cong_identity in H9.
 subst BC.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 assert(X = O).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H8.
+unfold Sum in H8.
 unfold Ar2 in H8.
 tauto;
 unfold Ps in H13.
@@ -905,19 +905,19 @@ Col.
 assumption.
 subst X.
 unfold Ps in H9.
-unfold out in H9.
+unfold Out in H9.
 tauto.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 
 assert(X = BC).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H8.
+unfold Sum in H8.
 unfold Ar2 in H8.
 tauto;
-unfold out in H13.
+unfold Out in H13.
 unfold Ps in H11.
 apply out_col in H11.
 Col.
@@ -927,16 +927,16 @@ unfold Ps in H11.
 assumption.
 Cong.
 
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
 assert(X = AC).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto;
-unfold out in H13.
+unfold Out in H13.
 unfold Ps in H11.
 apply out_col in H11.
 Col.
@@ -948,10 +948,10 @@ Cong.
 subst AC.
 left.
 apply sum_O_B.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 Col.
@@ -970,10 +970,10 @@ apply cong_identity in H9.
 subst BC.
 left.
 apply sum_O_O.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -991,10 +991,10 @@ apply cong_identity in H6.
 subst AC.
 left.
 apply sum_O_O.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -1016,12 +1016,12 @@ apply sum_O_O.
 auto.
 Qed.
 
-Lemma length_O : forall O E E', O <> E -> length O E E' O O O.
+Lemma length_O : forall O E E', O <> E -> Length O E E' O O O.
 Proof.
 intros.
-unfold length.
+unfold Length.
 repeat split; Col.
-unfold leP.
+unfold LeP.
 right;auto.
 Cong.
 Qed.
@@ -1029,21 +1029,21 @@ Qed.
 
 Lemma triangular_equality_bis : forall O E E' A B C AB BC AC,
   A <> B \/ A <> C \/ B <> C -> O<>E -> Bet A B C ->
-  length O E E' A B AB -> length O E E' B C BC -> length O E E' A C AC ->
-  sum O E E' AB BC AC.
+  Length O E E' A B AB -> Length O E E' B C BC -> Length O E E' A C AC ->
+  Sum O E E' AB BC AC.
 Proof.
 intros O E E' A B C AB BC AC.
 intro HH0.
 intros.
 
-unfold length in *.
+unfold Length in *.
 spliter.
-unfold leP in *.
+unfold LeP in *.
 induction H11; induction H8; induction H5.
 
 (* General Case *)
 
-unfold ltP in *.
+unfold LtP in *.
 ex_and H11 X.
 ex_and H8 Y.
 ex_and H5 Z.
@@ -1053,7 +1053,7 @@ apply diff_sum in H5.
 assert(AB = X).
 apply (sum_unicity O E E' O X).
 assumption.
-unfold sum in H11.
+unfold Sum in H11.
 spliter.
 unfold Ar2 in H11.
 apply(sum_O_B); tauto.
@@ -1062,7 +1062,7 @@ subst X.
 assert(BC = Y).
 apply (sum_unicity O E E' O Y).
 assumption.
-unfold sum in H8.
+unfold Sum in H8.
 spliter.
 unfold Ar2 in H8.
 apply(sum_O_B); tauto.
@@ -1071,15 +1071,15 @@ subst Y.
 assert(AC = Z).
 apply (sum_unicity O E E' O Z).
 assumption.
-unfold sum in H5.
+unfold Sum in H5.
 spliter.
 unfold Ar2 in H5.
 apply(sum_O_B); tauto.
 subst Z.
 
-assert(forall A B : Tpoint,Col O E A -> Col O E B -> exists C : Tpoint, sum O E E' A B C).
+assert(forall A B : Tpoint,Col O E A -> Col O E B -> exists C : Tpoint, Sum O E E' A B C).
 apply(sum_exists O E E' ).
-unfold sum in H11.
+unfold Sum in H11.
 spliter.
 unfold Ar2 in H11.
 tauto.
@@ -1105,7 +1105,7 @@ apply(l6_11_unicity O A C E AC AC').
 intro.
 subst E.
 unfold Ps in H15.
-unfold out in H15.
+unfold Out in H15.
 tauto.
 intro.
 subst C.
@@ -1114,7 +1114,7 @@ subst B.
 apply cong_identity in H6.
 subst AC.
 unfold Ps in H15.
-unfold out in H15.
+unfold Out in H15.
 tauto.
 unfold Ps in H15.
 assumption.
@@ -1137,13 +1137,13 @@ apply cong_identity in H12.
 subst AB.
 apply cong_identity in H9.
 subst BC.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H0.
 assert(X=O).
 apply(sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H0.
+unfold Sum in H0.
 spliter.
 unfold Ar2 in H0.
 tauto.
@@ -1153,7 +1153,7 @@ Col.
 assumption.
 subst X.
 unfold Ps in H5.
-unfold out in H5.
+unfold Out in H5.
 tauto.
 
 (* BC = O *)
@@ -1164,13 +1164,13 @@ apply cong_identity in H9.
 subst C.
 assert(Cong O AB O AC).
 eCong.
-unfold ltP in H11.
+unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
 assert(X = AB).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H9.
+unfold Sum in H9.
 spliter.
 unfold Ar2 in H9.
 tauto.
@@ -1179,14 +1179,14 @@ apply out_col in H11.
 Col.
 assumption.
 subst X.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 Y.
 apply diff_sum in H5.
 
 assert(Y = AC).
 apply (sum_unicity O E E' O Y).
 apply sum_O_B.
-unfold sum in H9.
+unfold Sum in H9.
 spliter.
 unfold Ar2 in H9.
 tauto.
@@ -1200,14 +1200,14 @@ apply(l6_11_unicity O A B E AB AC).
 intro.
 subst E.
 unfold Ps in H13.
-unfold out in H13.
+unfold Out in H13.
 tauto.
 intro.
 subst B.
 apply cong_identity in H6.
 subst AC.
 unfold Ps in H13.
-unfold out in H13.
+unfold Out in H13.
 tauto.
 unfold Ps in H11.
 assumption.
@@ -1217,7 +1217,7 @@ assumption.
 Cong.
 subst AB.
 apply sum_A_O.
-unfold sum in H9.
+unfold Sum in H9.
 unfold Ar2 in H9.
 tauto.
 unfold Ps in H11.
@@ -1237,10 +1237,10 @@ subst B.
 apply cong_identity in H12.
 subst AB.
 apply sum_O_O.
-unfold ltP in H11.
+unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -1260,13 +1260,13 @@ intro.
 subst C.
 apply cong_identity in H9.
 subst BC.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 assert(X = O).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H8.
+unfold Sum in H8.
 unfold Ar2 in H8.
 tauto;
 unfold Ps in H13.
@@ -1276,19 +1276,19 @@ Col.
 assumption.
 subst X.
 unfold Ps in H9.
-unfold out in H9.
+unfold Out in H9.
 tauto.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 
 assert(X = BC).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H8.
+unfold Sum in H8.
 unfold Ar2 in H8.
 tauto;
-unfold out in H13.
+unfold Out in H13.
 unfold Ps in H11.
 apply out_col in H11.
 Col.
@@ -1298,16 +1298,16 @@ unfold Ps in H11.
 assumption.
 Cong.
 
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
 assert(X = AC).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto;
-unfold out in H13.
+unfold Out in H13.
 unfold Ps in H11.
 apply out_col in H11.
 Col.
@@ -1318,10 +1318,10 @@ assumption.
 Cong.
 subst AC.
 apply sum_O_B.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 Col.
@@ -1339,10 +1339,10 @@ subst C.
 apply cong_identity in H9.
 subst BC.
 apply sum_O_O.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -1359,10 +1359,10 @@ subst B.
 apply cong_identity in H6.
 subst AC.
 apply sum_O_O.
-unfold ltP in H5.
+unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
-unfold sum in H5.
+unfold Sum in H5.
 unfold Ar2 in H5.
 tauto.
 
@@ -1385,15 +1385,15 @@ Qed.
 (** Lemma 15.5. *)
 (** Known as Thales theorem or intercept theorem. *)
 Lemma length_out : forall O E E' A B C D AB CD,
-  A <> B -> C <> D -> length O E E' A B AB -> length O E E' C D CD ->
-  out O AB CD.
+  A <> B -> C <> D -> Length O E E' A B AB -> Length O E E' C D CD ->
+  Out O AB CD.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
-unfold leP in *.
+unfold LeP in *.
 induction H7; induction H4.
-unfold ltP in *.
+unfold LtP in *.
 ex_and H7 X.
 ex_and H4 Y.
 apply diff_sum in H7.
@@ -1401,7 +1401,7 @@ apply diff_sum in H4.
 assert(X = AB).
 apply (sum_unicity O E E' O X).
 apply sum_O_B.
-unfold sum in H4.
+unfold Sum in H4.
 spliter.
 unfold Ar2 in H4.
 tauto.
@@ -1413,7 +1413,7 @@ subst X.
 assert(Y = CD).
 apply (sum_unicity O E E' O Y).
 apply sum_O_B.
-unfold sum in H4.
+unfold Sum in H4.
 spliter.
 unfold Ar2 in H4.
 tauto.
@@ -1442,13 +1442,13 @@ contradiction.
 Qed.
 
 Lemma image_preserves_bet1 : forall X Y A B C A' B' C',
-  Bet A B C -> is_image A A' X Y -> is_image B B' X Y -> is_image C C' X Y ->
+  Bet A B C -> Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y ->
   Bet A' B' C'.
 Proof.
 intros.
 induction(eq_dec_points X Y).
 subst Y.
-unfold is_image in *.
+unfold Reflect in *.
 induction H0.
 tauto.
 induction H1.
@@ -1464,12 +1464,12 @@ apply l7_2; auto.
 apply l7_2; auto.
 assumption.
 apply (image_preserves_bet A B C A' B' C' X Y).
-unfold is_image in H0.
+unfold Reflect in H0.
 induction H0.
 tauto.
 spliter.
 contradiction.
-unfold is_image in *.
+unfold Reflect in *.
 induction H0; induction H1; induction H2; try( spliter; contradiction).
 spliter.
 auto.
@@ -1483,7 +1483,7 @@ assumption.
 Qed.
 
 Lemma image_preserves_col : forall X Y A B C A' B' C',
-  Col A B C -> is_image A A' X Y -> is_image B B' X Y -> is_image C C' X Y ->
+  Col A B C -> Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y ->
   Col A' B' C'.
 Proof.
 intros.
@@ -1501,11 +1501,11 @@ apply (image_preserves_bet1 X Y C A B C' A' B'); auto.
 Qed.
 
 Lemma image_preserves_out : forall X Y A B C A' B' C',
-  out A B C -> is_image A A' X Y -> is_image B B' X Y -> is_image C C' X Y ->
-  out A' B' C'.
+  Out A B C -> Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y ->
+  Out A' B' C'.
 Proof.
 intros.
-unfold out in *.
+unfold Out in *.
 spliter.
 repeat split; auto.
 intro.
@@ -1528,18 +1528,18 @@ Qed.
 
 
 Lemma project_preserves_out : forall A B C A' B' C' P Q X Y,
-  out A B C -> ~Par A B X Y ->
-  project A A' P Q X Y -> project B B' P Q X Y -> project C C' P Q X Y ->
-  out A' B' C'.
+  Out A B C -> ~Par A B X Y ->
+  Proj A A' P Q X Y -> Proj B B' P Q X Y -> Proj C C' P Q X Y ->
+  Out A' B' C'.
 Proof.
 intros.
 repeat split.
 intro.
 subst B'.
-unfold out in H.
+unfold Out in H.
 spliter.
-unfold project in H1.
-unfold project in H2.
+unfold Proj in H1.
+unfold Proj in H2.
 spliter.
 induction H9; induction H13.
 assert(Par A A' B A').
@@ -1572,11 +1572,11 @@ contradiction.
 assert(HC:Col A B C).
 apply out_col in H.
 assumption.
-unfold out in H.
+unfold Out in H.
 spliter.
 intro.
 subst C'.
-unfold project in H1 ,H3.
+unfold Proj in H1 ,H3.
 spliter.
 induction H9; induction H13.
 assert(Par A A' C A').
@@ -1622,7 +1622,7 @@ assumption.
 Col.
 subst A'.
 contradiction.
-unfold out in H.
+unfold Out in H.
 spliter.
 induction H5.
 left.
@@ -1632,9 +1632,9 @@ apply (project_preserves_bet P Q X Y A C B A' C' B'); assumption.
 Qed.
 
 Lemma conga_bet_conga : forall A B C D E F A' C' D' F',
-  Conga A B C D E F -> A' <> B -> C' <> B -> D' <> E -> F' <> E ->
+  CongA A B C D E F -> A' <> B -> C' <> B -> D' <> E -> F' <> E ->
   Bet A B A' -> Bet C B C' -> Bet D E D' -> Bet F E F' ->
-  Conga A' B C' D' E F'.
+  CongA A' B C' D' E F'.
 Proof.
 intros.
 assert(HH:= l11_13 A B C D E F A' D' H H4 H0 H6 H2).
@@ -1644,29 +1644,28 @@ apply conga_comm.
 assumption.
 Qed.
 
-
-Definition prodg O E E' A B C :=
-  prod O E E' A B C \/ (~Ar2 O E E' A B B /\ C = O).
+Definition Prodg O E E' A B C :=
+  Prod O E E' A B C \/ (~Ar2 O E E' A B B /\ C = O).
 
 Lemma thales : forall O E E' P A B C D A1 B1 C1 D1 AD,
   O<>E -> Col P A B -> Col P C D -> ~ Col P A C -> Pj A C B D ->
-  length O E E' P A A1 -> length O E E' P B B1 ->
-  length O E E' P C C1 -> length O E E' P D D1 ->
-  prodg O E E' A1 D1 AD ->
-  prodg O E E' C1 B1 AD.
+  Length O E E' P A A1 -> Length O E E' P B B1 ->
+  Length O E E' P C C1 -> Length O E E' P D D1 ->
+  Prodg O E E' A1 D1 AD ->
+  Prodg O E E' C1 B1 AD.
 Proof.
 intros.
 induction(Col_dec O E E').
-unfold prodg.
+unfold Prodg.
 right.
 split.
 intro.
 unfold Ar2 in H10.
 spliter.
 contradiction.
-unfold prodg in H8.
+unfold Prodg in H8.
 induction H8.
-unfold prod in H8.
+unfold Prod in H8.
 spliter.
 unfold Ar2 in H8.
 spliter.
@@ -1701,7 +1700,7 @@ apply (prod_unicity O E E' A1 O).
 assumption.
 apply prod_0_r.
 assumption.
-unfold prod in H8.
+unfold Prod in H8.
 spliter.
 unfold Ar2 in H3.
 tauto.
@@ -1710,14 +1709,14 @@ left.
 apply prod_0_r.
 assumption.
 
-unfold length in H6.
+unfold Length in H6.
 spliter.
-unfold leP in H6.
+unfold LeP in H6.
 induction H6.
-unfold ltP in H6.
+unfold LtP in H6.
 ex_and H6 X.
 apply diff_sum in H6.
-unfold sum in H6.
+unfold Sum in H6.
 spliter.
 unfold Ar2 in H6.
 tauto.
@@ -1755,15 +1754,15 @@ assert(Hl1:= H5).
 assert(Hl2:= H6).
 assert(Hl3:= H7).
 
-unfold length in H4.
-unfold length in H5.
-unfold length in H6.
-unfold length in H7.
+unfold Length in H4.
+unfold Length in H5.
+unfold Length in H6.
+unfold Length in H7.
 spliter.
 clean_duplicated_hyps.
 
 
-assert(exists C' : Tpoint, Cong_3 P A C O A1 C' /\ one_side O A1 E' C').
+assert(exists C' : Tpoint, Cong_3 P A C O A1 C' /\ OS O A1 E' C').
 apply(l10_16 P A C O A1 E');
 Cong.
 apply length_Ar2 in Hl0.
@@ -1789,7 +1788,7 @@ Col.
 
 ex_and H4 C1'.
 
-assert(Conga P A C O A1 C1').
+assert(CongA P A C O A1 C1').
 apply(cong3_conga).
 intro.
 subst A.
@@ -1801,9 +1800,9 @@ assumption.
 
 assert(HN:~Col O C1 C1').
 intro.
-unfold one_side in H5.
+unfold OS in H5.
 ex_and H5 K.
-unfold two_sides in H23.
+unfold TS in H23.
 spliter.
 apply H24.
 apply col_permutation_2.
@@ -1821,14 +1820,14 @@ ex_and HH M.
 
 assert(HH:= l10_2_existence O M D1).
 ex_and HH D1'.
-unfold is_image in H23.
+unfold Reflect in H23.
 induction H23.
 spliter.
-unfold is_image_spec in H24.
+unfold ReflectL in H24.
 spliter.
 ex_and H24 N.
 
-assert(out O C1 D1).
+assert(Out O C1 D1).
 
 apply (length_out O E E' P C P D).
 intro.
@@ -1845,7 +1844,7 @@ apply (prod_unicity O E E' A1 O).
 assumption.
 apply prod_0_r.
 
-unfold prod in H8.
+unfold Prod in H8.
 spliter.
 unfold Ar2 in H8.
 tauto.
@@ -1864,7 +1863,7 @@ assumption.
 assumption.
 
 (*********************)
-assert(out O A1 C1).
+assert(Out O A1 C1).
 apply (length_out O E E' P A P C).
 intro.
 subst A.
@@ -1875,7 +1874,7 @@ intro.
 subst C.
 apply cong_identity in H16.
 subst C1.
-unfold out in H27.
+unfold Out in H27.
 tauto.
 assumption.
 assumption.
@@ -1909,23 +1908,23 @@ apply perp_in_comm in H30.
 apply perp_in_perp in H30.
 
 
-assert(out O C1' D1').
+assert(Out O C1' D1').
 apply(image_preserves_out O M O C1 D1).
 assumption.
-unfold is_image.
+unfold Reflect.
 left.
 split; auto.
-unfold is_image_spec.
+unfold ReflectL.
 split.
 exists O.
 split; finish.
 right.
 auto.
 
-unfold is_image.
+unfold Reflect.
 left.
 split; auto.
-unfold is_image_spec.
+unfold ReflectL.
 split.
 exists M.
 split; finish.
@@ -1940,15 +1939,15 @@ subst C1'.
 apply l7_3 in H7.
 contradiction.
 finish.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 finish.
 apply perp_distinct in H30.
 tauto.
-unfold is_image.
+unfold Reflect.
 left.
 split; auto.
-unfold is_image_spec.
+unfold ReflectL.
 split.
 exists N.
 split; finish.
@@ -1992,7 +1991,7 @@ apply (perp_col O M D1 N).
 intro.
 subst N.
 apply HN.
-unfold is_midpoint in H24.
+unfold Midpoint in H24.
 spliter.
 apply bet_col in H24.
 apply out_col in H31.
@@ -2034,7 +2033,7 @@ apply perp_sym.
 apply (perp_col _ D1').
 intro.
 subst N.
-unfold is_midpoint in H24.
+unfold Midpoint in H24.
 spliter.
 treat_equalities.
 apply HN.
@@ -2082,7 +2081,7 @@ subst B.
 tauto.
 Col.
 Col.
-unfold is_midpoint in H24.
+unfold Midpoint in H24.
 spliter.
 apply bet_col in H24.
 Col.
@@ -2114,7 +2113,7 @@ subst C1'.
 apply HN.
 Col.
 finish.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 finish.
 finish.
@@ -2138,7 +2137,7 @@ unfold Cong_3 in *.
 spliter.
 repeat split; Cong.
 
-assert(Conga P C A O C1' A1).
+assert(CongA P C A O C1' A1).
 apply cong3_conga.
 intro.
 subst C.
@@ -2151,7 +2150,7 @@ Col.
 assumption.
 unfold Cong_3 in H35.
 spliter.
-assert(Cong P A O A1 /\ (P <> A -> Conga C P A C1' O A1 /\ Conga C A P C1' A1 O)).
+assert(Cong P A O A1 /\ (P <> A -> CongA C P A C1' O A1 /\ CongA C A P C1' A1 O)).
 apply(l11_49 P C A O C1' A1); Cong.
 spliter.
 assert(P <> A).
@@ -2163,13 +2162,13 @@ apply H40 in H41.
 clear H40.
 spliter.
 
-assert(Conga C A P D B P).
+assert(CongA C A P D B P).
 induction(Bet_dec C P D).
 
 assert(Bet A P B).
 apply(project_preserves_bet A P A C C P D).
 assumption.
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2195,7 +2194,7 @@ intro.
 subst A.
 apply H2.
 Col.
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2216,7 +2215,7 @@ Col.
 Col.
 right.
 reflexivity.
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2246,9 +2245,9 @@ apply False_ind.
 apply H2.
 ColR.
 
-assert(Conga C A B D B A <-> Par A C B D).
+assert(CongA C A B D B A <-> Par A C B D).
 apply(l12_21 A C B D).
-unfold two_sides.
+unfold TS.
 split.
 assumption.
 repeat split.
@@ -2316,9 +2315,9 @@ apply False_ind.
 apply H2.
 ColR.
 
-assert(out P C D).
+assert(Out P C D).
 unfold Col in H1.
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst C.
@@ -2336,7 +2335,7 @@ apply False_ind.
 apply H42.
 Between.
 
-assert(out P A B).
+assert(Out P A B).
 apply (project_preserves_out P C D  P A B  P A A C).
 assumption.
 intro.
@@ -2346,7 +2345,7 @@ exists C.
 split; Col.
 spliter.
 contradiction.
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2367,7 +2366,7 @@ Col.
 right.
 reflexivity.
 
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2392,7 +2391,7 @@ intro.
 subst C.
 apply H2.
 Col.
-unfold project.
+unfold Proj.
 repeat split.
 intro.
 subst A.
@@ -2434,13 +2433,13 @@ ColR.
 assert(C <> A).
 intro.
 subst C.
-unfold Conga in H42.
+unfold CongA in H42.
 tauto.
 
 assert(P <> A).
 intro.
 subst A.
-unfold Conga in H42.
+unfold CongA in H42.
 tauto.
 
 assert(~Par P A C A).
@@ -2453,7 +2452,7 @@ spliter.
 apply H2.
 Col.
 
-assert(Conga C P A D P B).
+assert(CongA C P A D P B).
 induction(Bet_dec C P D).
 
 assert(Bet A P B).
@@ -2473,7 +2472,7 @@ auto.
 apply(l11_14 C P A D B); auto.
 intro.
 subst C.
-unfold Conga in H36.
+unfold CongA in H36.
 tauto.
 intro.
 subst D.
@@ -2488,11 +2487,11 @@ ColR.
 subst B.
 tauto.
 
-assert(out P C D).
+assert(Out P C D).
 apply(not_bet_out).
 Col.
 assumption.
-assert(out P A B).
+assert(Out P A B).
 apply(project_preserves_out P C D P A B P A C A).
 repeat split.
 intro.
@@ -2503,7 +2502,7 @@ intro.
 subst D.
 apply H46.
 Between.
-unfold out in H47.
+unfold Out in H47.
 spliter.
 tauto.
 intro.
@@ -2526,19 +2525,19 @@ induction H3.
 finish.
 subst D.
 apply False_ind.
-unfold Conga in H42.
+unfold CongA in H42.
 tauto.
 
 apply conga_sym.
 apply(out_conga C P A C P A D B C A); finish.
 apply conga_refl.
 apply out_trivial.
-unfold out in H47.
+unfold Out in H47.
 tauto.
-unfold out in H48.
+unfold Out in H48.
 tauto.
 apply out_trivial.
-unfold out in H47.
+unfold Out in H47.
 tauto.
 apply out_trivial.
 auto.
@@ -2552,7 +2551,7 @@ Col.
 assert(O <> C1').
 intro.
 subst C1'.
-unfold Conga in H36.
+unfold CongA in H36.
 tauto.
 
 assert(~Col O C1 C1').
@@ -2560,7 +2559,7 @@ intro.
 induction H30.
 apply perp_not_col in H30.
 apply H30.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 apply bet_col in H7.
 ColR.
@@ -2585,7 +2584,7 @@ split; Col.
 spliter.
 contradiction.
 
-assert(out O C1' D1').
+assert(Out O C1' D1').
 apply(project_preserves_out O C1 D1 O C1' D1' O C1' C1 C1'); auto.
 repeat split; Col.
 repeat split; Col.
@@ -2603,7 +2602,7 @@ subst N.
 apply perp_distinct in H32.
 tauto.
 finish.
-unfold is_midpoint in H24.
+unfold Midpoint in H24.
 spliter.
 apply bet_col in H24.
 Col.
@@ -2614,31 +2613,31 @@ finish.
 Col.
 induction H30.
 apply (perp_col C1 M O M C1'); finish.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 apply bet_col in H7.
 Col.
 apply perp_distinct in H30.
 tauto.
 
-assert(Conga C1' O A1 D1' O B1).
+assert(CongA C1' O A1 D1' O B1).
 apply(out_conga C1' O A1 C1' O A1 C1' A1 D1' B1); auto.
 apply conga_refl.
 auto.
 intro.
 subst A1.
-unfold out in H28.
+unfold Out in H28.
 tauto.
 apply out_trivial.
 auto.
 apply out_trivial.
 intro.
 subst A1.
-unfold out in H28.
+unfold Out in H28.
 tauto.
 apply(length_out O E E' P A  P B A1 B1); auto.
 
-assert(Conga D1' O B1 D P B).
+assert(CongA D1' O B1 D P B).
 apply (conga_trans _ _ _ C P A).
 apply (conga_trans _ _ _ C1' O A1).
 apply conga_sym.
@@ -2647,7 +2646,7 @@ apply conga_sym.
 assumption.
 assumption.
 
-assert((D1' <> B1 -> Conga O D1' B1 P D B /\ Conga O B1 D1' P B D)).
+assert((D1' <> B1 -> CongA O D1' B1 P D B /\ CongA O B1 D1' P B D)).
 apply (l11_49 D1' O B1 D P B).
 assumption.
 apply (cong_transitivity _ _ O D1); Cong.
@@ -2675,7 +2674,7 @@ spliter.
 clear H55.
 apply conga_comm in H57.
 
-assert(Conga C1' A1 O D1' B1 O <-> Par A1 C1' B1 D1').
+assert(CongA C1' A1 O D1' B1 O <-> Par A1 C1' B1 D1').
 apply(l12_22 A1 C1' B1 D1' O).
 apply (length_out O E E' P A P B); auto.
 apply out_one_side.
@@ -2685,7 +2684,7 @@ apply H49.
 assert(A1 <> O).
 intro.
 subst A1.
-unfold Conga in H53.
+unfold CongA in H53.
 tauto.
 ColR.
 assumption.
@@ -2701,8 +2700,8 @@ apply conga_sym.
 assumption.
 clear H55 H58.
 
-assert(prod O C1 C1' A1 D1 B1).
-unfold prod.
+assert(Prod O C1 C1' A1 D1 B1).
+unfold Prod.
 repeat split.
 assumption.
 ColR.
@@ -2717,7 +2716,7 @@ ColR.
 left.
 finish.
 
-assert(exists Y : Tpoint, prod O E C1' A1 D1 Y /\ prod O E C1' C1 B1 Y).
+assert(exists Y : Tpoint, Prod O E C1' A1 D1 Y /\ Prod O E C1' C1 B1 Y).
 apply(prod_x_axis_unit_change O C1 C1' A1 D1 C1 B1 E).
 repeat split; Col.
 ColR.
@@ -2741,7 +2740,7 @@ assumption.
 spliter.
 subst M.
 apply False_ind.
-unfold is_midpoint in H7.
+unfold Midpoint in H7.
 spliter.
 apply bet_col in H7.
 Col.
@@ -2754,17 +2753,17 @@ apply H8.
 unfold Ar2 in H11.
 spliter.
 repeat split; Col.
-unfold length in H4.
+unfold Length in H4.
 tauto.
-unfold length in H7.
+unfold Length in H7.
 tauto.
-unfold length in H7.
+unfold Length in H7.
 tauto.
 assumption.
 Qed.
 
 Lemma length_existence : forall O E E' A B,
-  ~ Col O E E' -> exists AB, length O E E' A B AB.
+  ~ Col O E E' -> exists AB, Length O E E' A B AB.
 Proof.
 intros.
 assert(NEO : E <> O).
@@ -2775,8 +2774,8 @@ Col.
 assert(HH:= segment_construction_2 E O A B NEO).
 ex_and HH AB.
 exists AB.
-unfold length.
-assert(AB = O \/ out O E AB).
+unfold Length.
+assert(AB = O \/ Out O E AB).
 induction(eq_dec_points AB O).
 left; assumption.
 right.
@@ -2788,15 +2787,15 @@ Col.
 apply out_col.
 assumption.
 repeat split; Col.
-unfold leP.
+unfold LeP.
 induction H2.
 right; auto.
 left.
-unfold ltP.
+unfold LtP.
 exists AB.
 repeat split.
 apply diff_A_O; Col.
-unfold out in H2.
+unfold Out in H2.
 tauto.
 auto.
 induction H0.
@@ -2806,9 +2805,9 @@ Qed.
 
 (** Known as Euklid *)
 Lemma l15_7 : forall O E E' A B C H AB AC AH AC2,
-  O<>E -> Per A C B -> Perp_in H C H A B ->
-  length O E E' A B AB -> length O E E' A C AC -> length O E E' A H AH ->
-  (prod O E E' AC AC AC2 <-> prod O E E' AB AH AC2).
+  O<>E -> Per A C B -> Perp_at H C H A B ->
+  Length O E E' A B AB -> Length O E E' A C AC -> Length O E E' A H AH ->
+  (Prod O E E' AC AC AC2 <-> Prod O E E' AB AH AC2).
 Proof.
 intros.
 
@@ -2821,11 +2820,11 @@ apply perp_in_distinct in H2.
 tauto.
 
 assert(~Col O E E' /\ Col O E AB).
-unfold length in H3.
+unfold Length in H3.
 spliter.
-unfold leP in H8.
+unfold LeP in H8.
 induction H8.
-unfold ltP in H8.
+unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 apply sum_ar2 in H8.
@@ -2872,8 +2871,8 @@ contradiction.
 
 assert(HH:= segment_construction_2 H A A C H9).
 ex_and HH C'.
-assert(out A H C').
-unfold out.
+assert(Out A H C').
+unfold Out.
 repeat split; auto.
 intro.
 subst C'.
@@ -2884,7 +2883,7 @@ tauto.
 
 assert(HH:= segment_construction_2 C A A H H10).
 ex_and HH H'.
-assert(out A C H').
+assert(Out A C H').
 repeat split;auto.
 intro.
 subst H'.
@@ -2899,7 +2898,7 @@ subst H.
 apply perp_in_distinct in H2.
 tauto.
 
-assert(Cong H C H' C' /\ (H <> C -> Conga A H C A H' C' /\ Conga A C H A C' H')).
+assert(Cong H C H' C' /\ (H <> C -> CongA A H C A H' C' /\ CongA A C H A C' H')).
 apply(l11_49 H A C H' A C').
 apply (l11_10 H A C C A H).
 apply conga_right_comm.
@@ -2975,12 +2974,12 @@ assert(HL1:=length_existence O E E' A H' H7).
 ex_and HL1 AH'.
 assert(HL1:=length_existence O E E' A C' H7).
 ex_and HL1 AC'.
-assert(exists P : Tpoint, prod O E E' AC' AC P).
+assert(exists P : Tpoint, Prod O E E' AC' AC P).
 
 apply(prod_exists O E E' H7 AC' AC).
-unfold length in H24.
+unfold Length in H24.
 tauto.
-unfold length in H4.
+unfold Length in H4.
 tauto.
 ex_and H25 P.
 
@@ -2991,7 +2990,7 @@ apply perp_distinct in H2.
 tauto.
 assumption.
 
-assert(prodg O E E' AH' AB P).
+assert(Prodg O E E' AH' AB P).
 apply(thales O E E' A C' B H' C  AC' AB AH' AC   P); Col.
 apply perp_in_col in H2.
 spliter.
@@ -3016,14 +3015,14 @@ apply H28.
 assert(A <> C').
 intro.
 subst C'.
-unfold Conga in H20.
+unfold CongA in H20.
 tauto.
 assert(Col A H H').
 ColR.
 assert(A <> H').
 intro.
 subst H'.
-unfold Conga in H19.
+unfold CongA in H19.
 tauto.
 ColR.
 
@@ -3032,25 +3031,25 @@ finish.
 left.
 assumption.
 
-assert(prod O E E' AH' AB P).
+assert(Prod O E E' AH' AB P).
 induction H27.
 assumption.
 spliter.
 apply False_ind.
 apply H27.
 repeat split; Col.
-unfold length in H23.
+unfold Length in H23.
 tauto.
 
 
-assert(length O E E' A H' AH).
+assert(Length O E E' A H' AH).
 apply(length_eq_cong_2 O E E' A H A H' AH H5).
 Cong.
 assert(AH = AH').
 apply (length_unicity O E E' A H'); auto.
 subst AH'.
 
-assert(length O E E' A C' AC).
+assert(Length O E E' A C' AC).
 apply(length_eq_cong_2 O E E' A C A C' AC H4).
 Cong.
 assert(AC = AC').
@@ -3075,10 +3074,10 @@ assumption.
 Qed.
 
 Lemma l15_7_1 : forall O E E' A B C H AB AC AH AC2,
-  O<>E -> Per A C B -> Perp_in H C H A B ->
-  length O E E' A B AB -> length O E E' A C AC -> length O E E' A H AH ->
-  prod O E E' AC AC AC2 ->
-  prod O E E' AB AH AC2.
+  O<>E -> Per A C B -> Perp_at H C H A B ->
+  Length O E E' A B AB -> Length O E E' A C AC -> Length O E E' A H AH ->
+  Prod O E E' AC AC AC2 ->
+  Prod O E E' AB AH AC2.
 Proof.
 intros.
 destruct(l15_7 O E E' A B C H AB AC AH AC2 H0 H1 H2 H3 H4 H5).
@@ -3087,10 +3086,10 @@ assumption.
 Qed.
 
 Lemma l15_7_2 : forall O E E' A B C H AB AC AH AC2,
-  O<>E -> Per A C B -> Perp_in H C H A B ->
-  length O E E' A B AB -> length O E E' A C AC -> length O E E' A H AH ->
-  prod O E E' AB AH AC2 ->
-  prod O E E' AC AC AC2.
+  O<>E -> Per A C B -> Perp_at H C H A B ->
+  Length O E E' A B AB -> Length O E E' A C AC -> Length O E E' A H AH ->
+  Prod O E E' AB AH AC2 ->
+  Prod O E E' AC AC AC2.
 Proof.
 intros.
 destruct(l15_7 O E E' A B C H AB AC AH AC2 H0 H1 H2 H3 H4 H5).
@@ -3100,10 +3099,10 @@ Qed.
 
 
 Lemma length_sym : forall O E E' A B AB,
-  length O E E' A B AB -> length O E E' B A AB.
+  Length O E E' A B AB -> Length O E E' B A AB.
 Proof.
 intros.
-unfold length in *.
+unfold Length in *.
 spliter.
 repeat split; auto.
 Cong.
@@ -3111,13 +3110,13 @@ Qed.
 
 Lemma pythagoras : forall O E E' A B C AC BC AB AC2 BC2 AB2,
   O<>E -> Per A C B ->
-  length O E E' A B AB -> length O E E' A C AC -> length O E E' B C BC ->
-  prod O E E' AC AC AC2 -> prod O E E' BC BC BC2 -> prod O E E' AB AB AB2 ->
-  sum  O E E' AC2 BC2 AB2.
+  Length O E E' A B AB -> Length O E E' A C AC -> Length O E E' B C BC ->
+  Prod O E E' AC AC AC2 -> Prod O E E' BC BC BC2 -> Prod O E E' AB AB AB2 ->
+  Sum  O E E' AC2 BC2 AB2.
 Proof.
 intros.
 assert(~Col O E E' /\ Col O E AB2 /\ Col O E AC2 /\ Col O E BC).
-unfold prod in *.
+unfold Prod in *.
 spliter.
 unfold Ar2 in H4 ,H5 ,H6.
 repeat split; tauto.
@@ -3173,7 +3172,7 @@ apply sum_A_O; Col.
 assert(exists X : Tpoint, Col A B X /\ Perp A B C X).
 apply(l8_18_existence A B C); Col.
 ex_and H12 P.
-assert(Perp_in P A B C P).
+assert(Perp_at P A B C P).
 apply(l8_14_2_1b_bis A B C P P H13); Col.
 assert(Bet A P B /\ A <> P /\ B <> P).
 apply(l11_47 A B C P H0).
@@ -3185,15 +3184,15 @@ assert(HL2:= length_existence O E E' B P H7).
 ex_and HL1 AP.
 ex_and HL2 BP.
 
-assert(sum O E E' AP BP AB).
+assert(Sum O E E' AP BP AB).
 apply(triangular_equality_bis O E E' A P B AP BP AB); auto.
 apply length_sym.
 assumption.
 
-assert(prod O E E' AB AP AC2).
+assert(Prod O E E' AB AP AC2).
 apply(l15_7_1 O E E' A B C P AB AC AP AC2 H H0); finish.
 
-assert(prod O E E' AB BP BC2).
+assert(Prod O E E' AB BP BC2).
 eapply(l15_7_1 O E E' B A C P AB BC); finish.
 apply length_sym;auto.
 
@@ -3202,7 +3201,7 @@ assumption.
 Qed.
 
 Lemma is_length_exists : forall O E E' X Y,
-  ~ Col O E E' -> exists XY, is_length O E E' X Y XY.
+  ~ Col O E E' -> exists XY, Is_length O E E' X Y XY.
 Proof.
 intros O E E' X Y HNC.
 elim (eq_dec_points X Y); intro HXY;

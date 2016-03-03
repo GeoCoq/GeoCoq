@@ -27,7 +27,7 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
 
   assert (HLineNew : ~ Col C1 B1 B2 \/ ~ Col C2 B1 B2) by (induction (Col_dec C1 B1 B2); induction (Col_dec C2 B1 B2);tauto).
   clear HLine; rename HLineNew into HLine.
-  assert(HC' : exists C', Col C1 C2 C' /\ two_sides B1 B2 A1 C').
+  assert(HC' : exists C', Col C1 C2 C' /\ TS B1 B2 A1 C').
     {
     elim HLine; clear HLine; intro HNC;
     [destruct (not_par_other_side B1 B2 C1 C2 P A1) as [C' [HCol HTS]]|
@@ -35,11 +35,11 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
     try exists C'; Col; intro; apply HPar1; exists A1; Col.
     }
   ex_and HC' C'.
-  unfold two_sides in H9.
+  unfold TS in H9.
   spliter.
   ex_and H12 B.
   double C' P C.
-  unfold is_midpoint in H14.
+  unfold Midpoint in H14.
   spliter.
   assert(HD : exists D, Bet B D C /\ Bet P D A1) by (apply inner_pasch with C'; Between).
   ex_and HD D.
@@ -83,15 +83,15 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
 
   assert(HPar4 : Par_strict A1 A2 P Y) by (apply (par_strict_col2_par_strict _ _ C1 C2); Col; apply (col3 C P); Col).
   apply Hy in HPar4.
-  assert(HOS : one_side A1 A2 X Y)
-     by (apply one_side_transitivity with P; try assumption; unfold one_side in *; ex_and H34 Z; exists Z; split; assumption).
+  assert(HOS : OS A1 A2 X Y)
+     by (apply one_side_transitivity with P; try assumption; unfold OS in *; ex_and H34 Z; exists Z; split; assumption).
   assert(Ho := HOS).
-  unfold one_side in HOS.
+  unfold OS in HOS.
   ex_and HOS Z.
-  unfold two_sides in H36.
-  unfold two_sides in H37.
+  unfold TS in H36.
+  unfold TS in H37.
   spliter.
-  assert(HTS : two_sides A1 A2 X Y) by (unfold two_sides; repeat split; try assumption; exists A1; split; Col).
+  assert(HTS : TS A1 A2 X Y) by (unfold TS; repeat split; try assumption; exists A1; split; Col).
   apply l9_9 in HTS.
   contradiction.
   }

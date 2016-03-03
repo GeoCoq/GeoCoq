@@ -2,8 +2,8 @@ Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Require Import GeoCoq.Highschool.circumcenter.
 Require Import GeoCoq.Highschool.orthocenter.
 Require Import GeoCoq.Highschool.midpoint_thales.
-Require Import GeoCoq.Highschool.gravityCenter.
 Require Import GeoCoq.Highschool.concyclic.
+Require Import GeoCoq.Highschool.gravityCenter.
 
 Section Euler_line.
 
@@ -36,8 +36,6 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 </applet>
 *)
 
-
-
 Lemma concyclic_not_col_or_eq_aux :
   forall A B C D, Concyclic A B C D -> A = B \/ A = C \/ B = C \/ ~ Col A B C.
 Proof.
@@ -64,10 +62,10 @@ assert (HOM2 : O <> M2).
   assert_cols; ColR.
   }
 assert (HM1M2 : M1 <> M2) by (intro; treat_equalities; Col).
-assert (HPerp1 : perp_bisect O M1 A B)
-  by (apply cong_perp_bisect; unfold is_midpoint in *; spliter; Cong).
-assert (HPerp2 : perp_bisect O M2 A C)
-  by (apply cong_perp_bisect; unfold is_midpoint in *; spliter; Cong).
+assert (HPerp1 : Perp_bisect O M1 A B)
+  by (apply cong_perp_bisect; unfold Midpoint in *; spliter; Cong).
+assert (HPerp2 : Perp_bisect O M2 A C)
+  by (apply cong_perp_bisect; unfold Midpoint in *; spliter; Cong).
 assert (HOM1M2 : ~ Col O M1 M2).
   {
   intro HOM1M2; assert (H := l7_20 O A B); elim H; clear H; try intro H; Cong;
@@ -111,7 +109,7 @@ intros.
 assert (H=B).
   apply orthocenter_per with A C;finish.
 subst.
-assert (is_midpoint O A C).
+assert (Midpoint O A C).
  apply circumcenter_per with B;finish.
  unfold is_orthocenter in *;spliter;assert_diffs;finish.
  unfold is_orthocenter in *;spliter;assert_diffs;finish.
@@ -123,27 +121,25 @@ Qed.
 Lemma gravity_center_change_triangle:
  forall A B C G I B' C',
  is_gravity_center G A B C ->
- is_midpoint I B C ->
- is_midpoint I B' C' ->
+ Midpoint I B C ->
+ Midpoint I B' C' ->
  ~ Col A B' C' ->
  is_gravity_center G A B' C'.
 Proof.
 intros.
 Name G' the midpoint of A and G.
-assert (is_midpoint G I G')
+assert (Midpoint G I G')
   by (apply (is_gravity_center_third A B C G G' I);finish).
 apply (is_gravity_center_third_reci A B' C' G I G');finish.
 Qed.
 
-
-(* TODO bug le hint resolve de gravityCenter.v n'est pas visible... *)
-
+(* Could be removed. See gravityCenter.v. *)
 Hint Resolve
      is_gravity_center_perm_1
      is_gravity_center_perm_2
      is_gravity_center_perm_3
      is_gravity_center_perm_4
-     is_gravity_center_perm_5 : gravityCenter.
+     is_gravity_center_perm_5 : gravitycenter.
 
 Hint Resolve
      is_orthocenter_perm_1
@@ -175,8 +171,8 @@ Name A' the midpoint of B and C.
 Name B' the midpoint of A and C.
 Name C' the midpoint of A and B.
 
-assert (perp_bisect A A' B C)
-  by (apply cong_perp_bisect; assert_diffs; unfold is_midpoint in *; spliter;
+assert (Perp_bisect A A' B C)
+  by (apply cong_perp_bisect; assert_diffs; unfold Midpoint in *; spliter;
       Cong; intro; treat_equalities; assert_cols; Col).
 
 assert (Col G A' A)
@@ -195,7 +191,7 @@ apply perp_sym; apply perp_col0 with A O; try apply perp_bisect_perp; Col.
 apply perp_sym; apply perp_col0 with A H; Col.
 
 assert (Col A A' H) by (apply perp_perp_col with B C; Col; apply perp_bisect_perp; Col).
-assert (perp_bisect O A' B C) by (apply circumcenter_perp with A; assert_diffs; Col).
+assert (Perp_bisect O A' B C) by (apply circumcenter_perp with A; assert_diffs; Col).
 assert (Col A' A O)
   by (apply perp_perp_col with B C; apply perp_left_comm; apply perp_bisect_perp; Col).
 show_distinct A A'; assert_cols; Col; ColR.
@@ -222,12 +218,14 @@ decompose [or] T;clear T;try contradiction.
     unfold is_circumcenter in *;spliter;finish.
    apply (Euler_line_special_case A B C G H O);finish.
  - subst.
-  assert (Per A C B).
+   assert (Per A C B).
     apply midpoint_thales with O;finish.
     unfold is_circumcenter in *;spliter.
     apply cong_transitivity with O B;finish.
 
    apply (Euler_line_special_case A C B G H O);finish.
+(* For 8.5
+   apply is_gravity_center_perm_1; assumption. *)
    auto with Orthocenter.
    auto with Circumcenter.
 
@@ -270,13 +268,13 @@ induction (Col_dec B H C).
  * assert (H=B \/ H=C) by (apply (orthocenter_col A B C H);finish).
    induction H26.
    + subst H.
-     assert (is_midpoint O A C) by (apply (circumcenter_per) with B;finish).
+     assert (Midpoint O A C) by (apply (circumcenter_per) with B;finish).
      perm_apply (is_gravity_center_col A C B G O).
    + subst H;assert_diffs; intuition.
  * assert (Parallelogram B H C A')
      by (apply par_2_plg;finish).
 
-   assert (T:exists I : Tpoint, is_midpoint I B C /\ is_midpoint I H A')
+   assert (T:exists I : Tpoint, Midpoint I B C /\ Midpoint I H A')
      by (apply plg_mid;finish).
 
    destruct T as [I [HI1 HI2]].
@@ -298,10 +296,10 @@ induction (Col_dec B H C).
      Name A'' the midpoint of B and C.
      show_distinct A'' O; treat_equalities.
      apply H27; apply perp_per_1; assert_diffs; Perp.
-     assert (perp_bisect O A'' B C) by (apply circumcenter_perp with A; Col).
+     assert (Perp_bisect O A'' B C) by (apply circumcenter_perp with A; Col).
      elim (eq_dec_points A A''); intro; treat_equalities.
      apply perp_bisect_cong_2 in H32; apply H4; Cong.
-     assert (perp_bisect A'' A B C).
+     assert (Perp_bisect A'' A B C).
      apply perp_mid_perp_bisect; Col.
      apply perp_sym; apply perp_col0 with O A''; Col;
      try (apply perp_bisect_perp; assumption); assert_cols; try ColR.

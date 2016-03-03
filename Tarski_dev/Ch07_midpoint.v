@@ -26,7 +26,7 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
-      | H:out ?A ?B ?C |- _ =>
+      | H:Out ?A ?B ?C |- _ =>
       let T:= fresh in (not_exist_hyp2 A B A C);
        assert (T:= out_distinct A B C H);
        decompose [and] T;clear T;clean_reap_hyps
@@ -37,66 +37,66 @@ Section T7_1.
 Context `{MT:Tarski_neutral_dimensionless}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Definition is_midpoint M A B := Bet A M B /\ Cong A M M B.
+Definition Midpoint M A B := Bet A M B /\ Cong A M M B.
 
 Lemma is_midpoint_dec :
- forall I A B, is_midpoint I A B \/ ~ is_midpoint I A B.
+ forall I A B, Midpoint I A B \/ ~ Midpoint I A B.
 Proof.
     intros.
-    unfold is_midpoint.
+    unfold Midpoint.
     elim (Bet_dec A I B);intro; elim (Cong_dec A I I B);intro; tauto.
 Qed.
 
-Lemma is_midpoint_id : forall A B, is_midpoint A A B -> A = B.
+Lemma is_midpoint_id : forall A B, Midpoint A A B -> A = B.
 Proof.
     intros.
-    unfold is_midpoint in H.
+    unfold Midpoint in H.
     spliter.
     treat_equalities;reflexivity.
 Qed.
 
-Lemma is_midpoint_id_2 : forall A B, is_midpoint A B A -> A=B.
+Lemma is_midpoint_id_2 : forall A B, Midpoint A B A -> A=B.
 Proof.
     intros.
-    unfold is_midpoint in *.
+    unfold Midpoint in *.
     spliter.
     apply cong_identity in H0.
     auto.
 Qed.
 
-Lemma l7_2 : forall M A B, is_midpoint M A B -> is_midpoint M B A.
+Lemma l7_2 : forall M A B, Midpoint M A B -> Midpoint M B A.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intuition.
 Qed.
 
-Lemma l7_3 : forall M A, is_midpoint M A A -> M=A.
+Lemma l7_3 : forall M A, Midpoint M A A -> M=A.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros;spliter;repeat split;Between;Cong.
 Qed.
 
 
-Lemma l7_3_2 : forall A, is_midpoint A A A.
+Lemma l7_3_2 : forall A, Midpoint A A A.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros;repeat split;Between;Cong.
 Qed.
 
 (** This corresponds to l7_8 in Tarski's book. *)
 
-Lemma symmetric_point_construction : forall A P, exists P', is_midpoint P A P'.
+Lemma symmetric_point_construction : forall A P, exists P', Midpoint P A P'.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     prolong A P E A P.
     exists E.
     split;Cong;Between.
 Qed.
 
-Lemma symmetric_point_unicity : forall A P P1 P2, is_midpoint P A P1 -> is_midpoint P A P2 -> P1=P2.
+Lemma symmetric_point_unicity : forall A P P1 P2, Midpoint P A P1 -> Midpoint P A P2 -> P1=P2.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     spliter.
     elim (eq_dec_points A P); intros.
@@ -104,9 +104,9 @@ Proof.
     apply (construction_unicity A P A P);Cong.
 Qed.
 
-Lemma l7_9 : forall P Q A X, is_midpoint A P X -> is_midpoint A Q X -> P=Q.
+Lemma l7_9 : forall P Q A X, Midpoint A P X -> Midpoint A Q X -> P=Q.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     spliter.
     induction (eq_dec_points A X).
@@ -114,9 +114,9 @@ Proof.
     apply (construction_unicity X A X A);Cong;Between.
 Qed.
 
-Lemma l7_9_bis : forall P Q A X, is_midpoint A P X -> is_midpoint A X Q -> P=Q.
+Lemma l7_9_bis : forall P Q A X, Midpoint A P X -> Midpoint A X Q -> P=Q.
 Proof.
-intros; apply l7_9 with A X; unfold is_midpoint in *; split; spliter; Cong; Between.
+intros; apply l7_9 with A X; unfold Midpoint in *; split; spliter; Cong; Between.
 Qed.
 
 Lemma diff_bet : forall A B C, A <> B -> Bet A B C -> A <> C.
@@ -127,9 +127,9 @@ Proof.
     auto.
 Qed.
 
-Lemma l7_13 : forall A P Q P' Q',  is_midpoint A P' P -> is_midpoint A Q' Q -> Cong P Q P' Q'.
+Lemma l7_13 : forall A P Q P' Q',  Midpoint A P' P -> Midpoint A Q' Q -> Cong P Q P' Q'.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     spliter.
     induction (eq_dec_points P A).
@@ -176,7 +176,7 @@ Proof.
 Qed.
 
 Lemma l7_15 : forall P Q R P' Q' R' A,
- is_midpoint A P P' -> is_midpoint A Q Q' -> is_midpoint A R R' -> Bet P Q R -> Bet P' Q' R'.
+ Midpoint A P P' -> Midpoint A Q Q' -> Midpoint A R R' -> Bet P Q R -> Bet P' Q' R'.
 Proof.
     intros.
     spliter.
@@ -203,8 +203,8 @@ Qed.
 
 
 Lemma l7_16 : forall P Q R S P' Q' R' S' A,
-  is_midpoint A P P' -> is_midpoint A Q Q' ->
-  is_midpoint A R R' -> is_midpoint A S S' ->
+  Midpoint A P P' -> Midpoint A Q Q' ->
+  Midpoint A R R' -> Midpoint A S S' ->
   Cong P Q R S -> Cong P' Q' R' S'.
 Proof.
     intros.
@@ -227,12 +227,12 @@ Qed.
 
 Lemma symmetry_preserves_midpoint :
    forall A B C D E F Z,
- is_midpoint Z A D -> is_midpoint Z B E ->
- is_midpoint Z C F -> is_midpoint B A C -> is_midpoint E D F.
+ Midpoint Z A D -> Midpoint Z B E ->
+ Midpoint Z C F -> Midpoint B A C -> Midpoint E D F.
 Proof.
     intros.
-    unfold is_midpoint.
-    unfold is_midpoint in H2.
+    unfold Midpoint.
+    unfold Midpoint in H2.
     spliter.
     split.
       eapply l7_15;eauto.
@@ -253,8 +253,8 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 Lemma Mid_cases :
   forall A B C,
-  is_midpoint A B C \/ is_midpoint A C B ->
-  is_midpoint A B C.
+  Midpoint A B C \/ Midpoint A C B ->
+  Midpoint A B C.
 Proof.
     intros.
     decompose [or] H; Midpoint.
@@ -262,49 +262,49 @@ Qed.
 
 Lemma Mid_perm :
   forall A B C,
-  is_midpoint A B C ->
-  is_midpoint A B C /\ is_midpoint A C B.
+  Midpoint A B C ->
+  Midpoint A B C /\ Midpoint A C B.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     spliter.
     repeat split; Between; Cong.
 Qed.
 
-Lemma l7_17 : forall P P' A B, is_midpoint A P P' -> is_midpoint B P P' -> A=B.
+Lemma l7_17 : forall P P' A B, Midpoint A P P' -> Midpoint B P P' -> A=B.
 Proof.
     intros.
     assert (Cong P B P' B).
-      unfold is_midpoint in *.
+      unfold Midpoint in *.
       spliter.
       Cong.
-    assert (exists B', is_midpoint A B B') by (apply symmetric_point_construction).
+    assert (exists B', Midpoint A B B') by (apply symmetric_point_construction).
     induction H2.
     assert (Cong P' B P x) by eauto with midpoint cong.
     assert (Cong P B P x) by (apply cong_transitivity with P' B; Cong).
     assert (Cong P B P' x) by eauto with midpoint cong.
     assert (Cong P' B P' x) by (apply cong_transitivity with P x; Cong; apply cong_transitivity with P B; Cong).
-    assert (Bet P B P') by (unfold is_midpoint in *;spliter;assumption).
+    assert (Bet P B P') by (unfold Midpoint in *;spliter;assumption).
     assert (B=x) by (apply (l4_19 P P' B x);Between).
     subst x.
     apply l7_3.
     assumption.
 Qed.
 
-Lemma l7_17_bis : forall P P' A B, is_midpoint A P P' -> is_midpoint B P' P -> A=B.
+Lemma l7_17_bis : forall P P' A B, Midpoint A P P' -> Midpoint B P' P -> A=B.
 Proof.
     intros.
     apply l7_17 with P P'; Midpoint.
 Qed.
 
 Lemma l7_20 : forall M A B,
-  Col A M B -> Cong M A M B -> A=B \/ is_midpoint M A B.
+  Col A M B -> Cong M A M B -> A=B \/ Midpoint M A B.
 Proof.
     unfold Col.
     intros.
     induction H.
       right.
-      unfold is_midpoint.
+      unfold Midpoint.
       split.
         assumption.
       Cong.
@@ -316,7 +316,7 @@ Proof.
 Qed.
 
 Lemma l7_20_bis : forall M A B, A<>B ->
-  Col A M B -> Cong M A M B -> is_midpoint M A B.
+  Col A M B -> Cong M A M B -> Midpoint M A B.
 Proof.
    intros.
    induction (l7_20 M A B H0 H1);intuition.
@@ -324,7 +324,7 @@ Qed.
 
 Lemma cong_col_mid : forall A B C,
  A <> C -> Col A B C -> Cong A B B C ->
- is_midpoint B A C.
+ Midpoint B A C.
 Proof.
     intros.
     apply l7_20 in H0.
@@ -336,7 +336,7 @@ Lemma l7_21 : forall A B C D P,
   ~ Col A B C -> B<>D ->
   Cong A B C D -> Cong B C D A ->
   Col A P C -> Col B P D ->
-  is_midpoint P A C /\ is_midpoint P B D.
+  Midpoint P A C /\ Midpoint P B D.
 Proof.
     intros.
     assert_diffs.
@@ -373,8 +373,8 @@ Qed.
 Lemma l7_22_aux : forall A1 A2 B1 B2 C M1 M2,
    Bet A1 C A2 -> Bet B1 C B2 ->
    Cong C A1 C B1 -> Cong C A2 C B2 ->
-   is_midpoint M1 A1 B1 -> is_midpoint M2 A2 B2 ->
-   le C A1 C A2 ->
+   Midpoint M1 A1 B1 -> Midpoint M2 A2 B2 ->
+   Le C A1 C A2 ->
    Bet M1 C M2.
 Proof.
     intros.
@@ -389,23 +389,23 @@ Proof.
       apply l7_3 in H4.
       subst A1.
       apply between_trivial.
-    assert (exists A, is_midpoint C A2 A).
+    assert (exists A, Midpoint C A2 A).
       apply symmetric_point_construction.
     induction H7.
-    assert (exists B, is_midpoint C B2 B).
+    assert (exists B, Midpoint C B2 B).
       apply symmetric_point_construction.
     induction H8.
-    assert (exists M, is_midpoint C M2 M).
+    assert (exists M, Midpoint C M2 M).
       apply symmetric_point_construction.
     induction H9.
-    assert(is_midpoint x1 x x0).
-      unfold is_midpoint.
+    assert(Midpoint x1 x x0).
+      unfold Midpoint.
       split.
         eapply l7_15.
           apply H7.
           apply H9.
           apply H8.
-        unfold is_midpoint in H4.
+        unfold Midpoint in H4.
         spliter.
         assumption.
       eapply l7_16.
@@ -413,15 +413,15 @@ Proof.
         apply H9.
         apply H9.
         apply H8.
-      unfold is_midpoint in H4.
+      unfold Midpoint in H4.
       spliter.
       assumption.
-    assert (le C A1 C x).
+    assert (Le C A1 C x).
       eapply l5_6.
       repeat split.
         apply H5.
         apply cong_reflexivity.
-      unfold is_midpoint in H7.
+      unfold Midpoint in H7.
       spliter.
       apply cong_left_commutativity.
       assumption.
@@ -430,7 +430,7 @@ Proof.
         subst A1.
         apply between_trivial2.
       eapply l6_13_1.
-        unfold out.
+        unfold Out.
         2:assumption.
       repeat split.
         assumption.
@@ -444,17 +444,17 @@ Proof.
         apply H6.
         apply between_symmetry.
         assumption; intro.
-      unfold is_midpoint in H7.
+      unfold Midpoint in H7.
       spliter.
       assumption.
     (* assert (M1=x).
     eauto with Midpoint.
     *)
-    assert (le C B1 C x0).
+    assert (Le C B1 C x0).
       eapply l5_6.
         apply H11.
         assumption.
-      unfold is_midpoint in *.
+      unfold Midpoint in *.
       spliter.
       eapply cong_transitivity.
         apply cong_symmetry.
@@ -488,7 +488,7 @@ Proof.
         apply H14.
         reflexivity.
       eapply l6_13_1.
-        unfold out.
+        unfold Out.
         repeat split.
           assumption.
           assumption.
@@ -497,7 +497,7 @@ Proof.
           2:apply H0.
           assumption.
         2:assumption.
-      unfold is_midpoint in H8.
+      unfold Midpoint in H8.
       spliter.
       assumption.
     assert (exists Q, Bet x1 Q C /\ Bet A1 Q B1).
@@ -506,13 +506,13 @@ Proof.
         apply H12.
         apply between_symmetry.
         apply H14.
-      unfold is_midpoint in H10.
+      unfold Midpoint in H10.
       spliter.
       assumption.
     ex_and H15 Q.
     assert (IFSC x A1 C x1 x0 B1 C x1).
       unfold IFSC.
-      unfold is_midpoint in *.
+      unfold Midpoint in *.
       spliter.
       repeat split.
         apply between_symmetry.
@@ -550,8 +550,8 @@ Proof.
         assumption.
       apply cong_commutativity.
       assumption.
-    assert (is_midpoint Q A1 B1).
-      unfold is_midpoint.
+    assert (Midpoint Q A1 B1).
+      unfold Midpoint.
       split.
         assumption.
       apply cong_left_commutativity.
@@ -563,7 +563,7 @@ Proof.
     subst Q.
     eapply between_exchange3.
       apply H15.
-    unfold is_midpoint in H9.
+    unfold Midpoint in H9.
     spliter.
     apply between_symmetry.
     assumption.
@@ -574,11 +574,11 @@ Qed.
 Lemma l7_22 : forall A1 A2 B1 B2 C M1 M2,
    Bet A1 C A2 -> Bet B1 C B2 ->
    Cong C A1 C B1 -> Cong C A2 C B2 ->
-   is_midpoint M1 A1 B1 -> is_midpoint M2 A2 B2 ->
+   Midpoint M1 A1 B1 -> Midpoint M2 A2 B2 ->
    Bet M1 C M2.
 Proof.
     intros.
-    assert (le C A1 C A2 \/ le C A2 C A1).
+    assert (Le C A1 C A2 \/ Le C A2 C A1).
       eapply le_cases.
     induction H5.
       eapply l7_22_aux.
@@ -640,11 +640,11 @@ Qed.
 
 Lemma l7_25 : forall A B C,
   Cong C A C B ->
-  exists X, is_midpoint X A B.
+  exists X, Midpoint X A B.
 Proof.
     intros.
     induction(Col_dec A B C).
-      assert(A = B \/ is_midpoint C A B).
+      assert(A = B \/ Midpoint C A B).
         apply l7_20.
           unfold Col in *.
           intuition.
@@ -672,7 +672,7 @@ Proof.
       assumption.
     ex_and H7 X.
     exists X.
-    unfold is_midpoint.
+    unfold Midpoint.
     split.
       assumption.
     apply cong_left_commutativity.
@@ -910,19 +910,19 @@ Qed.
 
 Lemma midpoint_distinct_1 : forall I A B,
  A<>B ->
- is_midpoint I A B ->
+ Midpoint I A B ->
  I<>A /\ I<>B.
 Proof.
     intros.
     split.
       intro.
       subst.
-      unfold is_midpoint in *.
+      unfold Midpoint in *.
       decompose [and] H0.
       treat_equalities.
       intuition.
     intro;subst.
-    unfold is_midpoint in *.
+    unfold Midpoint in *.
     decompose [and] H0.
     treat_equalities.
     intuition.
@@ -930,13 +930,13 @@ Qed.
 
 Lemma midpoint_distinct_2 : forall I A B,
  I<>A ->
- is_midpoint I A B ->
+ Midpoint I A B ->
  A<>B /\ I<>B.
 Proof.
     intros.
     assert (A<>B).
       intro.
-      unfold is_midpoint in *;spliter.
+      unfold Midpoint in *;spliter.
       treat_equalities.
       intuition.
     split.
@@ -949,13 +949,13 @@ Qed.
 
 Lemma midpoint_distinct_3 : forall I A B,
  I<>B ->
- is_midpoint I A B ->
+ Midpoint I A B ->
  A<>B /\ I<>A.
 Proof.
     intros.
     assert (A<>B).
       intro.
-      unfold is_midpoint in *;spliter.
+      unfold Midpoint in *;spliter.
       treat_equalities.
       intuition.
     split.
@@ -966,23 +966,23 @@ Proof.
 Qed.
 
 
-Lemma midpoint_def : forall A B C, Bet A B C -> Cong A B B C -> is_midpoint B A C.
+Lemma midpoint_def : forall A B C, Bet A B C -> Cong A B B C -> Midpoint B A C.
 Proof.
     intros.
-    unfold is_midpoint.
+    unfold Midpoint.
     split;assumption.
 Qed.
 
-Lemma midpoint_bet : forall A B C, is_midpoint B A C -> Bet A B C.
+Lemma midpoint_bet : forall A B C, Midpoint B A C -> Bet A B C.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     elim H.
     intros.
     assumption.
 Qed.
 
-Lemma midpoint_col : forall A M B, is_midpoint M A B -> Col M A B.
+Lemma midpoint_col : forall A M B, Midpoint M A B -> Col M A B.
 Proof.
     intros.
     unfold Col.
@@ -992,9 +992,9 @@ Proof.
     assumption.
 Qed.
 
-Lemma midpoint_cong : forall A B C, is_midpoint B A C -> Cong A B B C.
+Lemma midpoint_cong : forall A B C, Midpoint B A C -> Cong A B B C.
 Proof.
-    unfold is_midpoint.
+    unfold Midpoint.
     intros.
     elim H.
     intros.
@@ -1003,8 +1003,8 @@ Qed.
 
 Lemma midpoint_not_midpoint : forall I A B,
   A<>B ->
-  is_midpoint I A B ->
-~ is_midpoint B A I.
+  Midpoint I A B ->
+~ Midpoint B A I.
 Proof.
     intros.
     assert (I<>B).
@@ -1029,19 +1029,19 @@ Proof.
 Qed.
 
 Lemma cong_cong_half_1 : forall A M B A' M' B',
- is_midpoint M A B -> is_midpoint M' A' B' ->
+ Midpoint M A B -> Midpoint M' A' B' ->
  Cong A B A' B' -> Cong A M A' M'.
 Proof.
     intros.
-    unfold is_midpoint in *.
+    unfold Midpoint in *.
     spliter.
     assert(exists M'', Bet A' M'' B' /\ Cong_3 A M B A' M'' B').
       eapply l4_5.
         assumption.
       assumption.
     ex_and H4 M''.
-    assert (is_midpoint M'' A' B').
-      unfold is_midpoint.
+    assert (Midpoint M'' A' B').
+      unfold Midpoint.
       split.
         assumption.
       unfold Cong_3 in H5.
@@ -1053,11 +1053,11 @@ Proof.
         apply H3.
       assumption.
     assert(M'=M'').
-      eapply l7_17; unfold is_midpoint; split.
+      eapply l7_17; unfold Midpoint; split.
         apply H0.
         apply H2.
         apply H4.
-      unfold is_midpoint in H6.
+      unfold Midpoint in H6.
       spliter.
       assumption.
     subst M''.
@@ -1067,7 +1067,7 @@ Proof.
 Qed.
 
 Lemma cong_cong_half_2 : forall A M B A' M' B',
- is_midpoint M A B -> is_midpoint M' A' B' ->
+ Midpoint M A B -> Midpoint M' A' B' ->
  Cong A B A' B' -> Cong B M B' M'.
 Proof.
     intros.
@@ -1078,7 +1078,7 @@ Proof.
 Qed.
 
 Lemma cong_mid2__cong13 : forall A M B A' M' B',
- is_midpoint M A B -> is_midpoint M' A' B' ->
+ Midpoint M A B -> Midpoint M' A' B' ->
  Cong A M A' M' -> Cong A B A' B'.
 Proof.
     intros A M B A' M' B' HM HM' HCong.
@@ -1090,8 +1090,8 @@ Proof.
 Qed.
 
 Lemma le_mid2__le13 : forall A M B A' M' B',
- is_midpoint M A B -> is_midpoint M' A' B' ->
- le A M A' M' -> le A B A' B'.
+ Midpoint M A B -> Midpoint M' A' B' ->
+ Le A M A' M' -> Le A B A' B'.
 Proof.
     intros A M B A' M' B' HM HM' Hle.
     destruct HM.
@@ -1101,13 +1101,13 @@ Proof.
 Qed.
 
 Lemma le_mid2__le12 : forall A M B A' M' B',
- is_midpoint M A B -> is_midpoint M' A' B' ->
- le A B A' B' -> le A M A' M'.
+ Midpoint M A B -> Midpoint M' A' B' ->
+ Le A B A' B' -> Le A M A' M'.
 Proof.
     intros A M B A' M' B' HM HM' Hle.
     elim(le_cases A M A' M'); auto.
     intro.
-    assert(le A' B' A B) by (apply (le_mid2__le13 _ M' _ _ M); auto).
+    assert(Le A' B' A B) by (apply (le_mid2__le13 _ M' _ _ M); auto).
     apply cong__le.
     apply (cong_cong_half_1 _ _ B _ _ B'); auto.
     apply le_anti_symmetry; auto.

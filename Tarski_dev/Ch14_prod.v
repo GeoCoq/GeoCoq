@@ -8,20 +8,20 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 (** Definition 14.4 *)
 
-Definition prod O E E' A B C :=
+Definition Prod O E E' A B C :=
  Ar2 O E E' A B C /\
  exists B', Pj E E' B B' /\ Col O E' B' /\ Pj E' A B' C.
 
-Definition prodp O E E' A B C :=
+Definition Prodp O E E' A B C :=
  Col O E A /\ Col O E B /\
- exists B', project B B' O E' E E' /\ project B' C O E A E'.
+ exists B', Proj B B' O E' E E' /\ Proj B' C O E A E'.
 
-Lemma prod_to_prodp : forall O E E' A B C, prod O E E' A B C -> prodp O E E' A B C.
+Lemma prod_to_prodp : forall O E E' A B C, Prod O E E' A B C -> Prodp O E E' A B C.
 Proof.
     intros.
-    unfold prod in H.
+    unfold Prod in H.
     spliter.
-    unfold prodp.
+    unfold Prodp.
     ex_and H0 B'.
     unfold Ar2 in H.
     spliter.
@@ -71,10 +71,10 @@ Proof.
     right; auto.
 Qed.
 
-Lemma project_pj : forall P P' A B X Y, project P P' A B X Y -> Pj X Y P P'.
+Lemma project_pj : forall P P' A B X Y, Proj P P' A B X Y -> Pj X Y P P'.
 Proof.
     intros.
-    unfold project in H.
+    unfold Proj in H.
     spliter.
     unfold Pj.
     induction H3.
@@ -85,16 +85,16 @@ Proof.
     auto.
 Qed.
 
-Lemma prodp_to_prod : forall O E E' A B C, prodp O E E' A B C -> prod O E E' A B C.
+Lemma prodp_to_prod : forall O E E' A B C, Prodp O E E' A B C -> Prod O E E' A B C.
 Proof.
     intros.
-    unfold prodp in H.
+    unfold Prodp in H.
     spliter.
     ex_and H1 B'.
-    unfold prod.
+    unfold Prod.
     split.
       unfold Ar2.
-      unfold project in *.
+      unfold Proj in *.
       spliter.
       repeat split; Col.
       intro.
@@ -104,11 +104,11 @@ Proof.
     exists B'.
     repeat split.
       eapply (project_pj _ _ O E'); auto.
-      unfold project in H1.
+      unfold Proj in H1.
       tauto.
     eapply (project_pj _ _ O E); auto.
-    unfold project.
-    unfold project in H2.
+    unfold Proj.
+    unfold Proj in H2.
     spliter.
     repeat split; Col.
       intro.
@@ -136,11 +136,11 @@ Variable grid_ok : ~ Col O E E'.
 
 Lemma prod_exists : forall A B,
  Col O E A -> Col O E B ->
- exists C, prod O E E' A B C.
+ exists C, Prod O E E' A B C.
 Proof.
     intros.
     assert(NC:=grid_ok).
-    assert(exists! B' : Tpoint, project B B' O E' E E').
+    assert(exists! B' : Tpoint, Proj B B' O E' E E').
       apply(project_existence B O E' E E').
         intro.
         subst E'.
@@ -161,7 +161,7 @@ Proof.
     ex_and H1 B'.
     unfold unique in H2.
     spliter.
-    assert(exists! C, project B' C O E E' A).
+    assert(exists! C, Proj B' C O E E' A).
       apply(project_existence B' O E E' A).
         intro.
         subst E'.
@@ -183,49 +183,47 @@ Proof.
     unfold unique in H4.
     spliter.
     exists C.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
-      unfold project in H3.
+      unfold Proj in H3.
       tauto.
     exists B'.
     repeat split.
       apply (project_pj B B' O E').
       auto.
-      unfold project in H1.
+      unfold Proj in H1.
       tauto.
     apply (project_pj B' C O E).
     assumption.
 Qed.
 
 Lemma prod_unicity : forall A B C1 C2,
- prod O E E' A B C1 ->
- prod O E E' A B C2 ->
+ Prod O E E' A B C1 ->
+ Prod O E E' A B C2 ->
  C1 = C2.
 Proof.
     intros.
     apply prod_to_prodp in H.
     apply prod_to_prodp in H0.
-    unfold prodp in *.
+    unfold Prodp in *.
     spliter.
     ex_and H4 B'.
     ex_and H2 B''.
     assert(B'=B'').
-      eapply (project_unicity B B' B'' O E' E E'); auto; unfold prod in H.
+      eapply (project_unicity B B' B'' O E' E E'); auto; unfold Prod in H.
     subst B''.
     eapply (project_unicity B' C1 C2 O E A E'); auto.
 Qed.
 
 End Grid.
 
-Definition is_prod O E E' A B C :=
- prod O E E' A B C \/ ((Col O E E' \/ ~ Col O E A \/ ~ Col O E B) /\ C=O).
 
 (** Lemma 14.17 *)
 Lemma prod_0_l : forall O E E' A,
-  ~ Col O E E' -> Col O E A -> prod O E E' O A O.
+  ~ Col O E E' -> Col O E A -> Prod O E E' O A O.
 Proof.
     intros.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
     assert(HH:=(grid_not_par O E E' H)).
     spliter.
@@ -234,7 +232,7 @@ Proof.
       exists O.
       repeat split; try (apply pj_trivial).
       Col.
-    assert(exists ! P' : Tpoint, project A P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj A P' O E' E E').
       apply(project_existence A O E' E E' H6 H5).
       intro.
       apply H3.
@@ -243,7 +241,7 @@ Proof.
     unfold unique in H9.
     spliter.
     clear H9.
-    unfold project in H8.
+    unfold Proj in H8.
     spliter.
     exists B'.
     repeat split.
@@ -269,10 +267,10 @@ Proof.
 Qed.
 
 Lemma prod_0_r : forall O E E' A,
-  ~ Col O E E' -> Col O E A -> prod O E E' A O O.
+  ~ Col O E E' -> Col O E A -> Prod O E E' A O O.
 Proof.
     intros.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
     exists O.
     repeat split; try (apply pj_trivial).
@@ -282,14 +280,14 @@ Qed.
 
 (** Lemma 14.18 *)
 Lemma prod_1_l : forall O E E' A,
-  ~ Col O E E' -> Col O E A ->  prod O E E' E A A.
+  ~ Col O E E' -> Col O E A ->  Prod O E E' E A A.
 Proof.
     intros.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
     assert(HH:=(grid_not_par O E E' H)).
     spliter.
-    assert(exists ! P' : Tpoint, project A P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj A P' O E' E E').
       apply(project_existence A O E' E E' H6 H5).
       intro.
       apply H3.
@@ -298,7 +296,7 @@ Proof.
     unfold unique in H8.
     spliter.
     clear H8.
-    unfold project in H7.
+    unfold Proj in H7.
     spliter.
     exists B'.
     induction H11.
@@ -312,10 +310,10 @@ Proof.
 Qed.
 
 Lemma prod_1_r : forall O E E' A,
-  ~ Col O E E' -> Col O E A -> prod O E E' A E A.
+  ~ Col O E E' -> Col O E A -> Prod O E E' A E A.
 Proof.
     intros.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
     exists E'.
     assert(HH:=(grid_not_par O E E' H)).
@@ -337,14 +335,14 @@ Qed.
 (** Lemma 14.19 *)
 Lemma inv_exists : forall O E E' A,
   ~ Col O E E' -> Col O E A -> A <> O ->
-  exists IA, prod O E E' IA A E.
+  exists IA, Prod O E E' IA A E.
 Proof.
     intros.
-    unfold prod.
+    unfold Prod.
     repeat split; Col.
     assert(HH:=(grid_not_par O E E' H)).
     spliter.
-    assert(exists ! P' : Tpoint, project A P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj A P' O E' E E').
       apply(project_existence A O E' E E' H7 H6).
       intro.
       apply H4.
@@ -353,7 +351,7 @@ Proof.
     unfold unique in H9.
     spliter.
     clear H9.
-    unfold project in H8.
+    unfold Proj in H8.
     spliter.
     assert(B' <> O).
       intro.
@@ -366,7 +364,7 @@ Proof.
         spliter.
         contradiction.
       contradiction.
-    assert(exists ! P' : Tpoint, project E' P' O E B' E).
+    assert(exists ! P' : Tpoint, Proj E' P' O E B' E).
       apply(project_existence E' O E B' E); auto.
         intro.
         subst B'.
@@ -384,7 +382,7 @@ Proof.
     unfold unique in H15.
     spliter.
     clear H15.
-    unfold project in H14.
+    unfold Proj in H14.
     spliter.
     exists IA.
     repeat split; Col.
@@ -411,10 +409,10 @@ Qed.
 
 (** Lemma 14.20 *)
 (** The choice of E' does not affect product *)
-Lemma prod_null : forall O E E' A B, prod O E E' A B O -> A = O \/ B = O.
+Lemma prod_null : forall O E E' A B, Prod O E E' A B O -> A = O \/ B = O.
 Proof.
     intros.
-    unfold prod in H.
+    unfold Prod in H.
     spliter.
     ex_and H0 B'.
     induction(eq_dec_points B O).
@@ -472,11 +470,11 @@ Proof.
 Qed.
 
 Lemma prod_y_axis_change : forall O E E' E'' A B C,
-  prod O E E' A B C -> ~ Col O E E'' -> prod O E E'' A B C.
+  Prod O E E' A B C -> ~ Col O E E'' -> Prod O E E'' A B C.
 Proof.
     intros.
     assert(HP:=H).
-    unfold prod in H.
+    unfold Prod in H.
     spliter.
     unfold Ar2 in H.
     spliter.
@@ -485,14 +483,14 @@ Proof.
     ex_and H1 B'.
     induction(eq_dec_points B O).
       subst B.
-      assert(prod O E E' A O O).
+      assert(Prod O E E' A O O).
         apply(prod_0_r); Col.
       assert(HH:= prod_unicity O E E' A O C O HP H13).
       subst C.
       apply prod_0_r; Col.
     induction(eq_dec_points A O).
       subst A.
-      assert(prod O E E' O B O).
+      assert(Prod O E E' O B O).
         apply(prod_0_l); Col.
       assert(HH:= prod_unicity O E E' O B O C H14 HP).
       subst C.
@@ -502,7 +500,7 @@ Proof.
       subst C.
       apply prod_null in HP.
       induction HP; contradiction.
-    assert(exists ! P' : Tpoint, project B P' O E'' E E'').
+    assert(exists ! P' : Tpoint, Proj B P' O E'' E E'').
       apply(project_existence B O E'' E E'').
         intro.
         subst E''.
@@ -522,7 +520,7 @@ Proof.
     unfold unique in H17.
     spliter.
     clear H17.
-    unfold project in H16.
+    unfold Proj in H16.
     spliter.
     assert(Par B B'' E E'').
       induction H20.
@@ -557,7 +555,7 @@ Proof.
         apply(l6_21 O E'' E E''); Col.
       subst B''.
       assert(C = A).
-        assert(prod O E E' A E A).
+        assert(Prod O E E' A E A).
           apply(prod_1_r); Col.
         eapply (prod_unicity O E E' A E); auto.
       subst C.
@@ -611,7 +609,7 @@ Proof.
       ColR.
     induction(eq_dec_points A E).
       subst A.
-      assert(prod O E E' E B B).
+      assert(Prod O E E' E B B).
         apply prod_1_l; Col.
       assert(B = C).
         apply (prod_unicity O E E' E B); auto.
@@ -769,13 +767,13 @@ Qed.
 (** Lemma 14.22 *)
 (** Parallel projection on the second axis preserves products. *)
 Lemma proj_preserves_prod : forall O E E' A B C A' B' C',
- prod O E E' A B C -> Ar1 O E' A' B' C' ->
+ Prod O E E' A B C -> Ar1 O E' A' B' C' ->
  Pj E E' A A' -> Pj E E' B B' -> Pj E E' C C' ->
- prod O E' E A' B' C'.
+ Prod O E' E A' B' C'.
 Proof.
     intros.
     assert(Ar2 O E E' A B C).
-      unfold prod in H.
+      unfold Prod in H.
       tauto.
     assert(AR2:= H4).
     destruct H4.
@@ -868,7 +866,7 @@ Proof.
       contradiction.
     unfold Ar1 in H0.
     spliter.
-    unfold prod in *.
+    unfold Prod in *.
     spliter.
     unfold Ar2 in H.
     spliter.
@@ -919,18 +917,18 @@ Qed.
 (** Lemma 14.23 *)
 (** Product is associative.*)
 Lemma prod_assoc1 : forall O E E' A B C AB BC ABC,
- prod O E E' A B AB -> prod O E E' B C BC ->
- (prod O E E' A BC ABC -> prod O E E' AB C ABC).
+ Prod O E E' A B AB -> Prod O E E' B C BC ->
+ (Prod O E E' A BC ABC -> Prod O E E' AB C ABC).
 Proof.
     intros.
     assert(Ar2 O E E' A B AB).
-      unfold prod in H.
+      unfold Prod in H.
       tauto.
     assert(Ar2 O E E' B C BC).
-      unfold prod in H0.
+      unfold Prod in H0.
       tauto.
     assert(Ar2 O E E' A BC ABC).
-      unfold prod in H1.
+      unfold Prod in H1.
       tauto.
     unfold Ar2 in *.
     spliter.
@@ -974,20 +972,20 @@ Proof.
     assert(P1:=H).
     assert(P2:= H0).
     assert(P3:=H1).
-    unfold prod in H.
-    unfold prod in H0.
-    unfold prod in H1.
+    unfold Prod in H.
+    unfold Prod in H0.
+    unfold Prod in H1.
     spliter.
     repeat split; auto.
     assert(HH:=grid_not_par O E E' H2).
     spliter.
-    assert(exists ! P', project C P' O E' E E').
+    assert(exists ! P', Proj C P' O E' E E').
       apply(project_existence C O E' E E' H20 H19); Par.
     ex_and H21 C'.
     unfold unique in H22.
     spliter.
     clear H22.
-    unfold project in H21.
+    unfold Proj in H21.
     spliter.
     clean_duplicated_hyps.
     assert(Par C C' E E').
@@ -1090,18 +1088,18 @@ Proof.
 Qed.
 
 Lemma prod_assoc2 : forall O E E' A B C AB BC ABC,
- prod O E E' A B AB -> prod O E E' B C BC ->
- (prod O E E' AB C ABC -> prod O E E' A BC ABC).
+ Prod O E E' A B AB -> Prod O E E' B C BC ->
+ (Prod O E E' AB C ABC -> Prod O E E' A BC ABC).
 Proof.
     intros.
     assert(Ar2 O E E' A B AB).
-      unfold prod in H.
+      unfold Prod in H.
       tauto.
     assert(Ar2 O E E' B C BC).
-      unfold prod in H0.
+      unfold Prod in H0.
       tauto.
     assert(Ar2 O E E' AB C ABC).
-      unfold prod in H1.
+      unfold Prod in H1.
       tauto.
     unfold Ar2 in *.
     spliter.
@@ -1145,9 +1143,9 @@ Proof.
     assert(P1:=H).
     assert(P2:= H0).
     assert(P3:=H1).
-    unfold prod in H.
-    unfold prod in H0.
-    unfold prod in H1.
+    unfold Prod in H.
+    unfold Prod in H0.
+    unfold Prod in H1.
     spliter.
     repeat split; auto.
     assert(HH:=grid_not_par O E E' H2).
@@ -1157,13 +1155,13 @@ Proof.
       subst BC.
       apply prod_null in P2.
       induction P2; contradiction.
-    assert(exists ! P', project BC P' O E' E E').
+    assert(exists ! P', Proj BC P' O E' E E').
       apply(project_existence BC O E' E E' H20 H19); Par.
     ex_and H22 BC'.
     unfold unique in H23.
     spliter.
     clear H23.
-    unfold project in H22.
+    unfold Proj in H22.
     spliter.
     clean_duplicated_hyps.
     assert(Par BC BC' E E').
@@ -1277,8 +1275,8 @@ Proof.
 Qed.
 
 Lemma prod_assoc : forall O E E' A B C AB BC ABC,
- prod O E E' A B AB -> prod O E E' B C BC ->
- (prod O E E' A BC ABC <-> prod O E E' AB C ABC).
+ Prod O E E' A B AB -> Prod O E E' B C BC ->
+ (Prod O E E' A BC ABC <-> Prod O E E' AB C ABC).
 Proof.
     intros.
     split.
@@ -1288,11 +1286,11 @@ Proof.
     eapply (prod_assoc2 O E E' A B C AB  ); auto.
 Qed.
 
-Lemma prod_comm : forall O E E' A B C, prod O E E' A B C -> prod O E E' B A C.
+Lemma prod_comm : forall O E E' A B C, Prod O E E' A B C -> Prod O E E' B A C.
 Proof.
     intros.
     assert(Ar2 O E E' A B C).
-      unfold prod in H.
+      unfold Prod in H.
       tauto.
     unfold Ar2 in H0.
     spliter.
@@ -1314,13 +1312,13 @@ Proof.
       subst C.
       apply prod_null in H.
       induction H;  contradiction.
-    unfold prod in *.
+    unfold Prod in *.
     repeat split; auto.
     spliter.
     ex_and H7 B'.
     assert(HG:=grid_not_par O E E' H0).
     spliter.
-    assert(exists ! P' : Tpoint, project A P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj A P' O E' E E').
       apply(project_existence A O E' E E'); Col.
       intro.
       apply H12.
@@ -1329,7 +1327,7 @@ Proof.
     unfold unique in H17.
     spliter.
     clear H17.
-    unfold project in H16.
+    unfold Proj in H16.
     spliter.
     clean_duplicated_hyps.
     assert(Par A A' E E').
@@ -1385,11 +1383,11 @@ Qed.
 
 (** Lemma 14.24 *)
 (** Left distributivity of product over sum.*)
-Lemma prod_O_l_eq : forall O E E' B C, prod O E E' O B C -> C = O.
+Lemma prod_O_l_eq : forall O E E' B C, Prod O E E' O B C -> C = O.
 Proof.
     intros.
     assert(HH:=H).
-    unfold prod in HH.
+    unfold Prod in HH.
     spliter.
     unfold Ar2 in H0.
     spliter.
@@ -1397,11 +1395,11 @@ Proof.
     apply (prod_unicity O E E' O B); auto.
 Qed.
 
-Lemma prod_O_r_eq : forall O E E' A C, prod O E E' A O C -> C = O.
+Lemma prod_O_r_eq : forall O E E' A C, Prod O E E' A O C -> C = O.
 Proof.
     intros.
     assert(HH:=H).
-    unfold prod in HH.
+    unfold Prod in HH.
     spliter.
     unfold Ar2 in H0.
     spliter.
@@ -1410,13 +1408,13 @@ Proof.
 Qed.
 
 Lemma prod_unicityA : forall O E E' A A' B C,
-  B <> O -> prod O E E' A B C -> prod O E E' A' B C -> A = A'.
+  B <> O -> Prod O E E' A B C -> Prod O E E' A' B C -> A = A'.
 Proof.
     intros.
     assert(HP1:= H0).
     assert(HP2:= H1).
-    unfold prod in H0.
-    unfold prod in H1.
+    unfold Prod in H0.
+    unfold Prod in H1.
     spliter.
     unfold Ar2 in *.
     spliter.
@@ -1488,7 +1486,7 @@ Proof.
 Qed.
 
 Lemma prod_unicityB : forall O E E' A B B' C,
-  A <> O -> prod O E E' A B C -> prod O E E' A B' C -> B = B'.
+  A <> O -> Prod O E E' A B C -> Prod O E E' A B' C -> B = B'.
 Proof.
     intros.
     apply prod_comm in H0.
@@ -1499,19 +1497,19 @@ Qed.
 (** Lemma 14.25 *)
 (** Left distributivity of product over sum.*)
 Lemma distr_l : forall O E E' A B C D AB AC AD,
- sum O E E' B C D -> prod O E E' A B AB -> prod O E E' A C AC ->
- (prod O E E' A D AD -> sum O E E' AB AC AD).
+ Sum O E E' B C D -> Prod O E E' A B AB -> Prod O E E' A C AC ->
+ (Prod O E E' A D AD -> Sum O E E' AB AC AD).
 Proof.
     intros.
     assert(HS:=H).
-    unfold sum in H.
+    unfold Sum in H.
     spliter.
     ex_and H3 B'.
     ex_and H4 C1.
     assert(HP1:=H0).
     assert(HP2:=H1).
     assert(HPS:=H2).
-    unfold prod in H0.
+    unfold Prod in H0.
     spliter.
     ex_and H8 B''.
     assert(~Col O E E' /\ Col O E A /\ Col O E B /\ Col O E C /\ Col O E D).
@@ -1524,13 +1522,13 @@ Proof.
     assert(B' = B'').
       apply(pj_unicity O E E' B); Col.
     subst B''.
-    unfold prod in H1.
+    unfold Prod in H1.
     spliter.
     ex_and H22 C'.
-    unfold prod in H2.
+    unfold Prod in H2.
     spliter.
     ex_and H25 D'.
-    assert(sum O E' E B' C' D').
+    assert(Sum O E' E B' C' D').
       apply(proj_preserves_sum O E E' B C D B' C' D'); auto.
       repeat split; Col.
     (* case A = O) *)
@@ -1549,12 +1547,12 @@ Proof.
         apply (prod_unicity O E E' O D); auto.
       subst AD.
       apply sum_O_O; Col.
-    assert(sum O E' A B' C' D').
+    assert(Sum O E' A B' C' D').
       apply(sum_y_axis_change O E' E A B' C' D'); auto.
       intro.
       apply H11.
       ColR.
-    assert(sum O A E' AB AC AD).
+    assert(Sum O A E' AB AC AD).
       unfold Ar2 in *.
       spliter.
       apply(proj_preserves_sum O E' A B' C' D' AB AC AD); auto.
@@ -1568,8 +1566,8 @@ Qed.
 (** Lemma 14.24 *)
 (** Right distributivity of product over sum.*)
 Lemma distr_r : forall O E E' A B C D AC BC DC,
- sum O E E' A B D -> prod O E E' A C AC -> prod O E E' B C BC ->
- (prod O E E' D C DC -> sum O E E' AC BC DC).
+ Sum O E E' A B D -> Prod O E E' A C AC -> Prod O E E' B C BC ->
+ (Prod O E E' D C DC -> Sum O E E' AC BC DC).
 Proof.
     intros.
     apply prod_comm in H0.
@@ -1583,11 +1581,11 @@ Qed.
 (** Lemma 14.27. *)
 (** Sum and product are preserved by parallel projection on a different x-axis.*)
 (** This lemma is used to prove that there is an isomorphism between number lines.*)
-Lemma prod_1_l_eq : forall O E E' A B, prod O E E' A B B -> A = E \/ B = O.
+Lemma prod_1_l_eq : forall O E E' A B, Prod O E E' A B B -> A = E \/ B = O.
 Proof.
     intros.
     assert(HP:=H).
-    unfold prod in H.
+    unfold Prod in H.
     spliter.
     unfold Ar2 in H.
     spliter.
@@ -1599,7 +1597,7 @@ Proof.
     apply (prod_unicityA O E E' A E B B H0); assumption.
 Qed.
 
-Lemma prod_1_r_eq : forall O E E' A B, prod O E E' A B A -> B = E \/ A = O.
+Lemma prod_1_r_eq : forall O E E' A B, Prod O E E' A B A -> B = E \/ A = O.
 Proof.
     intros.
     apply prod_comm in H.
@@ -1610,12 +1608,12 @@ Qed.
 Lemma change_grid_prod_l_O : forall O E E' B C O' A' B' C',
   Par_strict O E O' E' -> Ar1 O E O B C -> Ar1 O' E' A' B' C' ->
   Pj O O' E E' -> Pj O O' O A' -> Pj O O' B B' -> Pj O O' C C' ->
-  prod O E E' O B C ->
-  prod O' E' E A' B' C'.
+  Prod O E E' O B C ->
+  Prod O' E' E A' B' C'.
 Proof.
     intros.
     assert(HP:= H6).
-    unfold prod in H6.
+    unfold Prod in H6.
     spliter.
     unfold Ar2 in H6.
     clear H7.
@@ -1696,8 +1694,8 @@ Qed.
 Lemma change_grid_prod1 : forall O E E' B C O' A' B' C',
   Par_strict O E O' E' -> Ar1 O E E B C -> Ar1 O' E' A' B' C' ->
   Pj O O' E E' -> Pj O O' E A' -> Pj O O' B B' -> Pj O O' C C' ->
-  prod O E E' E B C ->
-  prod O' E' E A' B' C'.
+  Prod O E E' E B C ->
+  Prod O' E' E A' B' C'.
 Proof.
     intros.
     induction (eq_dec_points B O).
@@ -1720,7 +1718,7 @@ Proof.
       subst B.
       tauto.
     assert(HP:= H6).
-    unfold prod in H6.
+    unfold Prod in H6.
     spliter.
     unfold Ar2 in H6.
     spliter.
@@ -1805,8 +1803,8 @@ Qed.
 Lemma change_grid_prod : forall O E E' A B C O' A' B' C',
   Par_strict O E O' E' -> Ar1 O E A B C -> Ar1 O' E' A' B' C' ->
   Pj O O' E E' -> Pj O O' A A' -> Pj O O' B B' -> Pj O O' C C' ->
-  prod O E E' A B C ->
-  prod O' E' E A' B' C'.
+  Prod O E E' A B C ->
+  Prod O' E' E A' B' C'.
 Proof.
     intros.
     induction (eq_dec_points A O).
@@ -1831,7 +1829,7 @@ Proof.
       apply (change_grid_prod1 O E E' B C); auto.
     rename H10 into ANE.
     assert(HP:=H6).
-    unfold prod in H6.
+    unfold Prod in H6.
     spliter.
     clear H10.
     unfold Ar1 in *.
@@ -1856,14 +1854,14 @@ Proof.
       ColR.
     assert(HH:= prod_y_axis_change O E E' E'' A B C  HP H19).
     assert(HP1:= HH).
-    unfold prod in  HH.
+    unfold Prod in HH.
     spliter.
     ex_and H21 B''.
     assert(~Col O E'' E).
       intro.
       apply H19.
       Col.
-    assert(exists C : Tpoint, sum O E'' E E'' O' C).
+    assert(exists C : Tpoint, Sum O E'' E E'' O' C).
       apply(sum_exists O E'' E H24 E'' O'); Col.
     ex_and H25 C2.
     assert(~ Col O E'' A).
@@ -1872,7 +1870,7 @@ Proof.
       ColR.
     assert(HH:= sum_y_axis_change O E'' E A  E'' O' C2 H26 H25).
     assert(HS1:= HH).
-    unfold sum in HH.
+    unfold Sum in HH.
     spliter.
     unfold Ar2 in H27.
     spliter.
@@ -2093,7 +2091,7 @@ Proof.
       apply H19.
       ColR.
     clear H21.
-    assert(exists C : Tpoint, sum O E'' E B'' O' C).
+    assert(exists C : Tpoint, Sum O E'' E B'' O' C).
       apply(sum_exists O E'' E H24 B'' O'); Col.
     ex_and H21 C3.
     assert(HS2:= H28).
@@ -2213,7 +2211,7 @@ Proof.
     clear H28.
     assert(HH:= sum_y_axis_change O E'' E A  B'' O' C3 HS2 H25).
     assert(HS3 := HH).
-    unfold sum in HH.
+    unfold Sum in HH.
     spliter.
     unfold Ar2 in H28.
     spliter.
@@ -2362,7 +2360,7 @@ Proof.
       apply H24.
       Col.
     (*  *)
-    assert(prod O' E' C2 A' B' C').
+    assert(Prod O' E' C2 A' B' C').
       repeat split; Col.
         intro.
         assert(C2 <> O').
@@ -2417,7 +2415,7 @@ Qed.
 (* already done : prod_comm *)
 
 Lemma prod_sym : forall O E E' A B C,
-  prod O E E' A B C -> prod O E E' B A C.
+  Prod O E E' A B C -> Prod O E E' B A C.
 Proof.
     intros.
     apply (prod_comm O E E').
@@ -2431,7 +2429,7 @@ Definition Ar2_4 O E E' A B C D :=
 (** Lemma 14.31 *)
 Lemma l14_31_1 : forall O E E' A B C D,
   Ar2_4 O E E' A B C D -> C <> O ->
-  (exists X, prod O E E' A B X /\ prod O E E' C D X) -> prod O C E' A B D.
+  (exists X, Prod O E E' A B X /\ Prod O E E' C D X) -> Prod O C E' A B D.
 Proof.
     intros.
     ex_and H1 X.
@@ -2484,7 +2482,7 @@ Proof.
       contradiction.
     assert(HG:=grid_not_par O E E' H).
     spliter.
-    assert(exists ! P' : Tpoint, project B P' O E' E' C).
+    assert(exists ! P' : Tpoint, Proj B P' O E' E' C).
       apply(project_existence B O E' E' C).
         intro.
         subst C.
@@ -2502,7 +2500,7 @@ Proof.
     unfold unique in H17.
     spliter.
     clear H17.
-    unfold project in H16.
+    unfold Proj in H16.
     spliter.
     assert(Par B B'' E' C).
       induction H20.
@@ -2512,7 +2510,7 @@ Proof.
       apply H.
       ColR.
     clear H20.
-    unfold prod.
+    unfold Prod.
     repeat split; try ColR.
       intro.
       apply H.
@@ -2525,8 +2523,8 @@ Proof.
       Col.
     assert(HP1:=H1).
     assert(HP2:=H2).
-    unfold prod in H1.
-    unfold prod in H2.
+    unfold Prod in H1.
+    unfold Prod in H2.
     spliter.
     ex_and H22 B'.
     ex_and H20 D'.
@@ -2648,8 +2646,8 @@ Proof.
 Qed.
 
 Lemma l14_31_2 : forall O E E' A B C D ,
-  Ar2_4 O E E' A B C D -> C <> O -> prod O C E' A B D ->
-  (exists X, prod O E E' A B X /\ prod O E E' C D X).
+  Ar2_4 O E E' A B C D -> C <> O -> Prod O C E' A B D ->
+  (exists X, Prod O E E' A B X /\ Prod O E E' C D X).
 Proof.
     intros.
     unfold Ar2_4 in H.
@@ -2687,7 +2685,7 @@ Proof.
       split.
         apply(prod_0_r O E E' A); Col.
       apply(prod_0_r O E E' C); Col.
-    assert(exists ! P' : Tpoint, project B P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj B P' O E' E E').
       apply(project_existence B O E' E E'); auto.
       intro.
       apply H8.
@@ -2696,7 +2694,7 @@ Proof.
     unfold unique in H16.
     spliter.
     clear H16.
-    unfold project in H15.
+    unfold Proj in H15.
     spliter.
     assert(Par B B' E E').
       induction H19.
@@ -2706,7 +2704,7 @@ Proof.
       apply H.
       ColR.
     clear H19.
-    assert(exists ! P' : Tpoint, project B' P' O E E' A).
+    assert(exists ! P' : Tpoint, Proj B' P' O E E' A).
       apply(project_existence B' O E E' A); auto.
         intro.
         subst A.
@@ -2723,7 +2721,7 @@ Proof.
     unfold unique in H21.
     spliter.
     clear H21.
-    unfold project in H19.
+    unfold Proj in H19.
     spliter.
     clean_duplicated_hyps.
     assert(X <> O).
@@ -2753,7 +2751,7 @@ Proof.
       ColR.
     clear H24.
     exists X.
-    unfold prod in *.
+    unfold Prod in *.
     spliter.
     ex_and H17 B''.
     repeat split; Col.
@@ -2770,7 +2768,7 @@ Proof.
       apply False_ind.
       apply H.
       ColR.
-    assert(exists ! P' : Tpoint, project D P' O E' E E').
+    assert(exists ! P' : Tpoint, Proj D P' O E' E E').
       apply(project_existence D O E' E E'); Col.
       intro.
       apply H8.
@@ -2779,7 +2777,7 @@ Proof.
     unfold unique in H26.
     spliter.
     clear H26.
-    unfold project in H25.
+    unfold Proj in H25.
     spliter.
     clean_duplicated_hyps.
     assert(Par D D' E E').
@@ -2852,8 +2850,8 @@ Qed.
 
 Lemma prod_x_axis_unit_change : forall O E E' A B C D U,
   Ar2_4 O E E' A B C D -> Col O E U -> U <> O ->
-  ( exists X, prod O E E' A B X /\ prod O E E' C D X) ->
-  ( exists Y, prod O U E' A B Y /\ prod O U E' C D Y).
+  ( exists X, Prod O E E' A B X /\ Prod O E E' C D X) ->
+  ( exists Y, Prod O U E' A B Y /\ Prod O U E' C D Y).
 Proof.
     intros.
     ex_and H2 X.
@@ -2993,7 +2991,7 @@ Proof.
         apply H.
         ColR.
       ColR.
-    assert(exists ! P' : Tpoint, project B P' O E' U E').
+    assert(exists ! P' : Tpoint, Proj B P' O E' U E').
       apply(project_existence B O E' U E').
         intro.
         subst U.
@@ -3011,7 +3009,7 @@ Proof.
     unfold unique in H19.
     spliter.
     clear H19.
-    unfold project in H18.
+    unfold Proj in H18.
     spliter.
     assert(Par B Bu U E').
       induction H22.
@@ -3021,7 +3019,7 @@ Proof.
       apply H.
       ColR.
     clear H22.
-    assert(exists ! P' : Tpoint, project Bu P' O E A E').
+    assert(exists ! P' : Tpoint, Proj Bu P' O E A E').
       apply(project_existence Bu O E A E').
         intro.
         subst A.
@@ -3039,7 +3037,7 @@ Proof.
     unfold unique in H24.
     spliter.
     clear H24.
-    unfold project in H22.
+    unfold Proj in H22.
     spliter.
     assert(Par Bu Xu A E').
       induction H27.
@@ -3057,7 +3055,7 @@ Proof.
     clear H27.
     exists Xu.
     split.
-      unfold prod.
+      unfold Prod.
       repeat split; try ColR.
         intro.
         apply H.
@@ -3070,7 +3068,7 @@ Proof.
         ColR.
       left.
       Par.
-    assert(exists ! P' : Tpoint, project D P' O E' U E').
+    assert(exists ! P' : Tpoint, Proj D P' O E' U E').
       apply(project_existence D O E' U E').
         intro.
         subst U.
@@ -3089,7 +3087,7 @@ Proof.
     unfold unique in H29.
     spliter.
     clear H29.
-    unfold project in H27.
+    unfold Proj in H27.
     spliter.
     assert(Par D Du U E').
       induction H32.
@@ -3099,7 +3097,7 @@ Proof.
       apply H.
       ColR.
     clear H32.
-    unfold prod.
+    unfold Prod.
     repeat split; try ColR.
       intro.
       apply H.
@@ -3110,19 +3108,19 @@ Proof.
       Par.
     split.
       Col.
-    assert(prod O C E' A B D).
+    assert(Prod O C E' A B D).
       apply(l14_31_1 O E E' A B C D).
         repeat split; Col.
         auto.
       exists X.
       split; Col.
-    unfold prod in H2.
+    unfold Prod in H2.
     spliter.
     ex_and H34 B'.
-    unfold prod in H3.
+    unfold Prod in H3.
     spliter.
     ex_and H37 D'.
-    unfold prod in H32.
+    unfold Prod in H32.
     spliter.
     ex_and H40 D''.
     assert(Xu <> O).
@@ -3196,15 +3194,15 @@ Proof.
 Qed.
 
 Lemma opp_prod : forall O E E' ME X MX,
-  opp O E E' E ME -> opp O E E' X MX -> prod O E E' X ME MX.
+  Opp O E E' E ME -> Opp O E E' X MX -> Prod O E E' X ME MX.
 Proof.
 intros O E E' ME X MX HOpp1 HOpp2.
 assert (HNC : ~ Col O E E')
-  by (unfold opp, sum, Ar2 in *; spliter; Col).
+  by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 assert (HCol1 : Col O E ME)
-  by (unfold opp, sum, Ar2 in *; spliter; Col).
+  by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 assert (HCol2 : Col O E X)
-  by (unfold opp, sum, Ar2 in *; spliter; Col).
+  by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 destruct (sum_exists O E E' HNC E ME) as [EPME HEPME]; Col.
 assert (O = EPME)
   by (apply sum_unicity with O E E' E ME; auto; apply diff_sum; apply diff_O_A; Col).
@@ -3213,15 +3211,15 @@ assert (X = X') by (apply prod_unicity with O E E' X E; auto; apply prod_1_r; Co
 treat_equalities; destruct (prod_exists O E E' HNC X O) as [O' HProd]; Col.
 assert (O = O') by (apply prod_unicity with O E E' X O; auto; apply prod_0_r; Col).
 treat_equalities; destruct (prod_exists O E E' HNC X ME) as [MX' HMX]; Col.
-assert (HOpp3 : sum O E E' X MX' O) by (apply distr_l with X E ME O; auto).
+assert (HOpp3 : Sum O E E' X MX' O) by (apply distr_l with X E ME O; auto).
 apply sum_opp in HOpp3; assert (MX = MX') by (apply opp_unicity with O E E' X; Col).
 treat_equalities; auto.
 Qed.
 
 Lemma distr_l_diff : forall O E E' A B C BMC AB AC ABMC,
-  diff O E E' B C BMC -> prod O E E' A B AB ->
-  prod O E E' A C AC -> prod O E E' A BMC ABMC ->
-  diff O E E' AB AC ABMC.
+  Diff O E E' B C BMC -> Prod O E E' A B AB ->
+  Prod O E E' A C AC -> Prod O E E' A BMC ABMC ->
+  Diff O E E' AB AC ABMC.
 Proof.
 intros O E E' A B C BMC AB AC ABMC HBMC HAB HAC HABMC.
 apply diff_sum in HBMC; apply sum_diff.
@@ -3229,20 +3227,20 @@ apply distr_l with A C BMC B; auto.
 Qed.
 
 Lemma diff_of_squares : forall O E E' A B A2 B2 A2MB2 APB AMB F,
-  prod O E E' A A A2 -> prod O E E' B B B2 -> diff O E E' A2 B2 A2MB2 ->
-  sum O E E' A B APB -> diff O E E' A B AMB -> prod O E E' APB AMB F ->
+  Prod O E E' A A A2 -> Prod O E E' B B B2 -> Diff O E E' A2 B2 A2MB2 ->
+  Sum O E E' A B APB -> Diff O E E' A B AMB -> Prod O E E' APB AMB F ->
   A2MB2 = F.
 Proof.
 intros O E E' A B A2 B2 A2MB2 APB AMB F HA2 HB2 HA2MB2 HAPB HAMB HF.
 assert (HNC : ~ Col O E E')
   by (apply diff_ar2 in HA2MB2; unfold Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColB : Col O E B) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColAMB : Col O E AMB) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColB : Col O E B) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColAMB : Col O E AMB) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (prod_exists O E E' HNC A AMB) as [F1 HF1]; Col.
-assert (HColF1 : Col O E F1) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColF1 : Col O E F1) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (prod_exists O E E' HNC B AMB) as [F2 HF2]; Col.
-assert (HColF2 : Col O E F2) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColF2 : Col O E F2) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (sum_exists O E E' HNC F1 F2) as [F' HF']; Col.
 assert (F = F').
   {
@@ -3250,8 +3248,8 @@ assert (F = F').
   apply distr_r with A B AMB APB; auto.
   }
 treat_equalities; destruct (prod_exists O E E' HNC A B) as [AB HAB]; Col.
-assert (HColA2 : Col O E A2) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColAB : Col O E AB) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColA2 : Col O E A2) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColAB : Col O E AB) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A2 AB) as [A2MAB HA2MAB]; Col.
 assert (A2MAB = F1).
   {
@@ -3259,8 +3257,8 @@ assert (A2MAB = F1).
   apply distr_l_diff with A A B AMB; auto.
   }
 destruct (prod_exists O E E' HNC B A) as [BA HBA]; Col.
-assert (HColB2 : Col O E B2) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColBA : Col O E BA) by (unfold prod, Ar2 in *; spliter; Col).
+assert (HColB2 : Col O E B2) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColBA : Col O E BA) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' BA B2) as [BAMB2 HBAMB2]; Col.
 assert (BAMB2 = F2).
   {
@@ -3277,22 +3275,22 @@ apply sum_diff_diff_b with AB BAMB2 A2MAB; auto.
 Qed.
 
 Lemma eq_squares_eq_or_opp : forall O E E' A B A2,
-  prod O E E' A A A2 -> prod O E E' B B A2 -> A = B \/ opp O E E' A B.
+  Prod O E E' A A A2 -> Prod O E E' B B A2 -> A = B \/ Opp O E E' A B.
 Proof.
 intros O E E' A B A2 HA2 HB2.
 assert (HNC : ~ Col O E E')
-  by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA : Col O E A) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColA2 : Col O E A2) by (unfold prod, Ar2 in *; spliter; Col).
-assert (HColB : Col O E B) by (unfold prod, Ar2 in *; spliter; Col).
+  by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColA2 : Col O E A2) by (unfold Prod, Ar2 in *; spliter; Col).
+assert (HColB : Col O E B) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A2 A2) as [O' HA2MA2]; Col.
 assert (O = O')
   by (apply diff_unicity with O E E' A2 A2; auto; apply diff_null; Col).
 destruct (sum_exists O E E' HNC A B) as [APB HAPB]; Col.
-assert (HColAPB : Col O E APB) by (unfold sum, Ar2 in *; spliter; Col).
+assert (HColAPB : Col O E APB) by (unfold Sum, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A B) as [AMB HAMB]; Col; treat_equalities.
 assert (HColAMB : Col O E AMB)
-  by (apply diff_sum in HAMB; unfold sum, Ar2 in *; spliter; Col).
+  by (apply diff_sum in HAMB; unfold Sum, Ar2 in *; spliter; Col).
 destruct (prod_exists O E E' HNC APB AMB) as [O' H]; Col.
 assert (O = O')
   by (apply diff_of_squares with O E E' A B A2 A2 APB AMB; auto).
@@ -3301,8 +3299,8 @@ treat_equalities; apply prod_null in H; induction H; treat_equalities;
 Qed.
 
 Lemma diff_2_prod : forall O E E' A B AMB BMA ME,
-  opp O E E' E ME -> diff O E E' A B AMB -> diff O E E' B A BMA ->
-  prod O E E' AMB ME BMA.
+  Opp O E E' E ME -> Diff O E E' A B AMB -> Diff O E E' B A BMA ->
+  Prod O E E' AMB ME BMA.
 Proof.
 intros O E E' A B AMB BMA ME HOpp HAMB HBMA.
 apply opp_prod; auto; apply diff_opp with A B; auto.

@@ -10,18 +10,16 @@ Context `{EqDec:EqDecidability Tpoint}.
 (************************************* angle *****************************)
 
 
-Definition ang (A : Tpoint -> Tpoint -> Tpoint -> Prop) := exists a, exists b, exists c, a <> b /\ c <> b /\
-                                                            forall x y z, Conga a b c x y z <-> A x y z.
+Definition Q_CongA A :=
+  exists a, exists b, exists c, a <> b /\ c <> b /\
+  forall x y z, CongA a b c x y z <-> A x y z.
 
-Definition angle  A B C := fun x y z => Conga A B C x y z.
-
-
-Lemma ang_exists : forall A B C, A <> B -> C <> B -> exists a, ang a /\ a A B C.
+Lemma ang_exists : forall A B C, A <> B -> C <> B -> exists a, Q_CongA a /\ a A B C.
 Proof.
     intros.
-    exists (angle A B C).
+    exists (fun D E F => CongA A B C D E F).
     split.
-      unfold ang.
+      unfold Q_CongA.
       exists A.
       exists B.
       exists C.
@@ -31,14 +29,13 @@ Proof.
       split.
         auto.
       auto.
-    unfold angle.
     apply conga_refl; auto.
 Qed.
 
-Lemma ex_points_ang : forall a , ang a ->  exists A, exists B, exists C, a A B C.
+Lemma ex_points_ang : forall a , Q_CongA a ->  exists A, exists B, exists C, a A B C.
 Proof.
     intros.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A.
     ex_and H0 B.
     ex_and H C.
@@ -56,7 +53,7 @@ End Angles_1.
 Ltac ang_instance a A B C :=
   assert(tempo_ang:= ex_points_ang a);
   match goal with
-    |H: ang a |-  _ => assert(tempo_H:=H); apply tempo_ang in tempo_H;
+    |H: Q_CongA a |-  _ => assert(tempo_H:=H); apply tempo_ang in tempo_H;
                        elim tempo_H; intros A ; intro tempo_HP; clear tempo_H;
                        elim tempo_HP; intro B; intro tempo_HQ ; clear tempo_HP ;
                        elim tempo_HQ; intro C; intro;  clear tempo_HQ
@@ -68,10 +65,10 @@ Section Angles_2.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma ang_conga : forall a A B C A' B' C', ang a -> a A B C -> a A' B' C' -> Conga A B C A' B' C'.
+Lemma ang_conga : forall a A B C A' B' C', Q_CongA a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
     intros.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H2 B0.
     ex_and H C0.
@@ -87,24 +84,24 @@ Proof.
     auto.
 Qed.
 
-Definition is_ang := fun A B C a => ang a /\ a A B C.
+Definition Ang A B C a := Q_CongA a /\ a A B C.
 
-Lemma is_ang_conga : forall A B C A' B' C' a, is_ang A B C a -> is_ang A' B' C' a -> Conga A B C A' B' C'.
+Lemma is_ang_conga : forall A B C A' B' C' a, Ang A B C a -> Ang A' B' C' a -> CongA A B C A' B' C'.
 Proof.
     intros.
-    unfold is_ang in *.
+    unfold Ang in *.
     spliter.
     eapply (ang_conga a); auto.
 Qed.
 
-Lemma is_ang_conga_is_ang : forall A B C A' B' C' a, is_ang A B C a -> Conga A B C A' B' C' -> is_ang A' B' C' a.
+Lemma is_ang_conga_is_ang : forall A B C A' B' C' a, Ang A B C a -> CongA A B C A' B' C' -> Ang A' B' C' a.
 Proof.
     intros.
-    unfold is_ang in *.
+    unfold Ang in *.
     spliter.
     split.
       auto.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H2 B0.
     ex_and H C0.
@@ -119,7 +116,7 @@ Proof.
     auto.
 Qed.
 
-Lemma not_conga_not_ang : forall A B C A' B' C' a , ang a -> ~(Conga A B C A' B' C') -> a A B C -> ~(a A' B' C').
+Lemma not_conga_not_ang : forall A B C A' B' C' a , Q_CongA a -> ~(CongA A B C A' B' C') -> a A B C -> ~(a A' B' C').
 Proof.
     intros.
     intro.
@@ -127,29 +124,29 @@ Proof.
     contradiction.
 Qed.
 
-Lemma not_conga_is_ang : forall A B C A' B' C' a , ~(Conga A B C A' B' C') -> is_ang A B C a -> ~(a A' B' C').
+Lemma not_conga_is_ang : forall A B C A' B' C' a , ~(CongA A B C A' B' C') -> Ang A B C a -> ~(a A' B' C').
 Proof.
     intros.
-    unfold is_ang in H0.
+    unfold Ang in H0.
     spliter.
     intro.
     apply H.
     apply (ang_conga a); auto.
 Qed.
 
-Lemma not_cong_is_ang1 : forall A B C A' B' C' a , ~(Conga A B C A' B' C') -> is_ang A B C a -> ~(is_ang A' B' C' a).
+Lemma not_cong_is_ang1 : forall A B C A' B' C' a , ~(CongA A B C A' B' C') -> Ang A B C a -> ~(Ang A' B' C' a).
 Proof.
     intros.
     intro.
-    unfold is_ang in *.
+    unfold Ang in *.
     spliter.
     apply H.
     apply (ang_conga a); auto.
 Qed.
 
-Definition eqA (a1 a2 : Tpoint -> Tpoint -> Tpoint -> Prop) := forall A B C, a1 A B C <-> a2 A B C.
+Definition EqA (a1 a2 : Tpoint -> Tpoint -> Tpoint -> Prop) := forall A B C, a1 A B C <-> a2 A B C.
 
-Lemma ex_eqa : forall a1 a2, (exists A , exists B, exists C, is_ang A B C a1 /\ is_ang A B C a2)  -> eqA a1 a2.
+Lemma ex_eqa : forall a1 a2, (exists A , exists B, exists C, Ang A B C a1 /\ Ang A B C a2)  -> EqA a1 a2.
 Proof.
     intros.
     ex_and H A.
@@ -157,28 +154,28 @@ Proof.
     ex_and H C.
     assert(HH:=H).
     assert(HH0:=H0).
-    unfold is_ang in HH.
-    unfold is_ang in HH0.
+    unfold Ang in HH.
+    unfold Ang in HH0.
     spliter.
-    unfold eqA.
+    unfold EqA.
     repeat split; auto; intro.
-      assert(Conga A B C A0 B0 C0).
+      assert(CongA A B C A0 B0 C0).
         eapply (is_ang_conga _ _ _ _ _ _ a1); auto.
         split; auto.
-      assert(is_ang A0 B0 C0 a2).
+      assert(Ang A0 B0 C0 a2).
         apply (is_ang_conga_is_ang A B C); auto.
-      unfold is_ang in H7.
+      unfold Ang in H7.
       tauto.
-    assert(Conga A B C A0 B0 C0).
+    assert(CongA A B C A0 B0 C0).
       eapply (is_ang_conga _ _ _ _ _ _ a2); auto.
       split; auto.
-    assert(is_ang A0 B0 C0 a1).
+    assert(Ang A0 B0 C0 a1).
       apply (is_ang_conga_is_ang A B C); auto.
-    unfold is_ang in H7.
+    unfold Ang in H7.
     tauto.
 Qed.
 
-Lemma all_eqa : forall A B C a1 a2, is_ang A B C a1 -> is_ang A B C a2 -> eqA a1 a2.
+Lemma all_eqa : forall A B C a1 a2, Ang A B C a1 -> Ang A B C a2 -> EqA a1 a2.
 Proof.
     intros.
     apply ex_eqa.
@@ -188,25 +185,25 @@ Proof.
     split; auto.
 Qed.
 
-Lemma is_ang_distinct : forall A B C a , is_ang A B C a -> A <> B /\ C <> B.
+Lemma is_ang_distinct : forall A B C a , Ang A B C a -> A <> B /\ C <> B.
 Proof.
     intros.
-    unfold is_ang in H.
+    unfold Ang in H.
     spliter.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
     assert(HH:= H2 A B C).
     destruct HH.
     apply H4 in H0.
-    unfold Conga in H0.
+    unfold CongA in H0.
     spliter.
     tauto.
 Qed.
 
 
-Lemma null_ang : forall A B C D a1 a2, is_ang A B A a1 -> is_ang C D C a2 -> eqA a1 a2.
+Lemma null_ang : forall A B C D a1 a2, Ang A B A a1 -> Ang C D C a2 -> EqA a1 a2.
 Proof.
     intros.
     eapply (all_eqa A B A).
@@ -222,7 +219,7 @@ Proof.
     tauto.
 Qed.
 
-Lemma flat_ang : forall A B C A' B' C' a1 a2, Bet A B C -> Bet A' B' C' -> is_ang A B C a1 -> is_ang A' B' C' a2  -> eqA a1 a2.
+Lemma flat_ang : forall A B C A' B' C' a1 a2, Bet A B C -> Bet A' B' C' -> Ang A B C a1 -> Ang A' B' C' a2  -> EqA a1 a2.
 Proof.
     intros.
     eapply (all_eqa A B C).
@@ -235,19 +232,19 @@ Proof.
     eapply conga_line; auto.
 Qed.
 
-Lemma ang_distinct: forall a A B C, ang a -> a A B C -> A <> B /\ C <> B.
+Lemma ang_distinct: forall a A B C, Q_CongA a -> a A B C -> A <> B /\ C <> B.
 Proof.
     intros.
-    assert(is_ang A B C a).
+    assert(Ang A B C a).
       split; auto.
     apply (is_ang_distinct _ _ _ a); auto.
 Qed.
 
-Lemma ex_ang : forall A B C, B <> A -> B <> C -> exists a, ang a /\ a A B C.
+Lemma ex_ang : forall A B C, B <> A -> B <> C -> exists a, Q_CongA a /\ a A B C.
 Proof.
     intros.
-    exists (fun X Y Z => Conga A B C X Y Z).
-    unfold ang.
+    exists (fun X Y Z => CongA A B C X Y Z).
+    unfold Q_CongA.
     split.
       exists A.
       exists B.
@@ -265,18 +262,18 @@ Proof.
     apply conga_refl; auto.
 Qed.
 
-(************************************* acute angle *****************************************)
+(************************************* Acute angle *****************************************)
 
-Definition anga (A : Tpoint -> Tpoint -> Tpoint -> Prop) := exists a, exists b, exists c, acute a b c /\
-                                                            forall x y z, Conga a b c x y z <-> A x y z.
-Definition anglea  A B C := fun x y z => Conga A B C x y z.
+Definition Q_CongA_Acute A :=
+  exists a, exists b, exists c, Acute a b c /\
+  forall x y z, CongA a b c x y z <-> A x y z.
 
-Lemma anga_exists : forall A B C, A <> B -> C <> B -> acute A B C -> exists a, anga a /\ a A B C.
+Lemma anga_exists : forall A B C, A <> B -> C <> B -> Acute A B C -> exists a, Q_CongA_Acute a /\ a A B C.
 Proof.
     intros.
-    exists (angle A B C).
+    exists (fun D E F => CongA A B C D E F).
     split.
-      unfold ang.
+      unfold Q_CongA.
       exists A.
       exists B.
       exists C.
@@ -284,15 +281,14 @@ Proof.
         auto.
       intros.
       split; auto.
-    unfold angle.
     apply conga_refl; auto.
 Qed.
 
-Lemma anga_is_ang : forall a, anga a -> ang a.
+Lemma anga_is_ang : forall a, Q_CongA_Acute a -> Q_CongA a.
 Proof.
     intros.
-    unfold anga in H.
-    unfold ang.
+    unfold Q_CongA_Acute in H.
+    unfold Q_CongA.
     ex_and H A.
     ex_and H0 B.
     ex_and H C.
@@ -308,10 +304,10 @@ Proof.
     intros.
     split.
       intro.
-      assert(is_ang x y z a).
-        unfold is_ang.
+      assert(Ang x y z a).
+        unfold Ang.
         split.
-          unfold ang.
+          unfold Q_CongA.
           exists A.
           exists B.
           exists C.
@@ -326,7 +322,7 @@ Proof.
         destruct HH.
         apply H4.
         auto.
-      unfold is_ang in H4.
+      unfold Ang in H4.
       spliter.
       auto.
     intro.
@@ -336,7 +332,7 @@ Proof.
     auto.
 Qed.
 
-Lemma ex_points_anga : forall a , anga a ->  exists A, exists B, exists C, a A B C.
+Lemma ex_points_anga : forall a , Q_CongA_Acute a ->  exists A, exists B, exists C, a A B C.
 Proof.
     intros.
     assert(HH:=H).
@@ -353,7 +349,7 @@ End Angles_2.
 Ltac anga_instance a A B C :=
   assert(tempo_anga:= ex_points_anga a);
   match goal with
-    |H: anga a |-  _ => assert(tempo_H:=H); apply tempo_anga in tempo_H;
+    |H: Q_CongA_Acute a |-  _ => assert(tempo_H:=H); apply tempo_anga in tempo_H;
                         elim tempo_H; intros A ; intro tempo_HP; clear tempo_H;
                         elim tempo_HP; intro B; intro tempo_HQ ; clear tempo_HP ;
                         elim tempo_HQ; intro C; intro;  clear tempo_HQ
@@ -366,7 +362,7 @@ Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
 
-Lemma anga_conga : forall a A B C A' B' C', anga a -> a A B C -> a A' B' C' -> Conga A B C A' B' C'.
+Lemma anga_conga : forall a A B C A' B' C', Q_CongA_Acute a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
     intros.
     apply (ang_conga a); auto.
@@ -374,13 +370,13 @@ Proof.
     auto.
 Qed.
 
-Definition is_anga := fun A B C a => anga a /\ a A B C.
+Definition Ang_Acute A B C a := Q_CongA_Acute a /\ a A B C.
 
-Lemma is_anga_to_is_ang : forall A B C a, is_anga A B C a -> is_ang A B C a.
+Lemma is_anga_to_is_ang : forall A B C a, Ang_Acute A B C a -> Ang A B C a.
 Proof.
     intros.
-    unfold is_anga in H.
-    unfold is_ang.
+    unfold Ang_Acute in H.
+    unfold Ang.
     spliter.
     split.
       apply anga_is_ang.
@@ -388,23 +384,23 @@ Proof.
     auto.
 Qed.
 
-Lemma is_anga_conga : forall A B C A' B' C' a, is_anga A B C a -> is_anga A' B' C' a -> Conga A B C A' B' C'.
+Lemma is_anga_conga : forall A B C A' B' C' a, Ang_Acute A B C a -> Ang_Acute A' B' C' a -> CongA A B C A' B' C'.
 Proof.
     intros.
-    unfold is_anga in *.
+    unfold Ang_Acute in *.
     spliter.
     apply (anga_conga a); auto.
 Qed.
 
-Lemma is_anga_conga_is_anga : forall A B C A' B' C' a, is_anga A B C a -> Conga A B C A' B' C' -> is_anga A' B' C' a.
+Lemma is_anga_conga_is_anga : forall A B C A' B' C' a, Ang_Acute A B C a -> CongA A B C A' B' C' -> Ang_Acute A' B' C' a.
 Proof.
     intros.
-    unfold is_anga in *.
+    unfold Ang_Acute in *.
     spliter.
     split.
       auto.
     apply anga_is_ang in H.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H2 B0.
     ex_and H C0.
@@ -419,27 +415,27 @@ Proof.
     auto.
 Qed.
 
-Lemma not_conga_is_anga : forall A B C A' B' C' a , ~ Conga A B C A' B' C' -> is_anga A B C a -> ~(a A' B' C').
+Lemma not_conga_is_anga : forall A B C A' B' C' a , ~ CongA A B C A' B' C' -> Ang_Acute A B C a -> ~(a A' B' C').
 Proof.
     intros.
-    unfold is_anga in H0.
+    unfold Ang_Acute in H0.
     spliter.
     intro.
     apply H.
     apply (anga_conga a); auto.
 Qed.
 
-Lemma not_cong_is_anga1 : forall A B C A' B' C' a , ~Conga A B C A' B' C' -> is_anga A B C a -> ~ is_anga A' B' C' a.
+Lemma not_cong_is_anga1 : forall A B C A' B' C' a , ~ CongA A B C A' B' C' -> Ang_Acute A B C a -> ~ Ang_Acute A' B' C' a.
 Proof.
     intros.
     intro.
-    unfold is_anga in *.
+    unfold Ang_Acute in *.
     spliter.
     apply H.
     apply (anga_conga a); auto.
 Qed.
 
-Lemma ex_eqaa : forall a1 a2, (exists A , exists B, exists C, is_anga A B C a1 /\ is_anga A B C a2)  -> eqA a1 a2.
+Lemma ex_eqaa : forall a1 a2, (exists A , exists B, exists C, Ang_Acute A B C a1 /\ Ang_Acute A B C a2)  -> EqA a1 a2.
 Proof.
     intros.
     apply ex_eqa.
@@ -452,7 +448,7 @@ Proof.
     split; apply is_anga_to_is_ang; auto.
 Qed.
 
-Lemma all_eqaa : forall A B C a1 a2, is_anga A B C a1 -> is_anga A B C a2 -> eqA a1 a2.
+Lemma all_eqaa : forall A B C a1 a2, Ang_Acute A B C a1 -> Ang_Acute A B C a2 -> EqA a1 a2.
 Proof.
     intros.
     apply ex_eqaa.
@@ -462,7 +458,7 @@ Proof.
     split; auto.
 Qed.
 
-Lemma is_anga_distinct : forall A B C a , is_anga A B C a -> A <> B /\ C <> B.
+Lemma is_anga_distinct : forall A B C a , Ang_Acute A B C a -> A <> B /\ C <> B.
 Proof.
     intros.
     apply (is_ang_distinct A B C a).
@@ -470,23 +466,23 @@ Proof.
     auto.
 Qed.
 
-Global Instance eqA_equivalence : Equivalence eqA.
+Global Instance eqA_equivalence : Equivalence EqA.
 Proof.
 split.
 unfold Reflexive.
 intros.
-unfold eqA.
+unfold EqA.
 intros;tauto.
-unfold Symmetric, eqA.
+unfold Symmetric, EqA.
 intros.
 firstorder.
-unfold Transitive, eqA.
+unfold Transitive, EqA.
 intros.
 rewrite H.
 apply H0.
 Qed.
 
-Lemma null_anga : forall A B C D a1 a2, is_anga A B A a1 -> is_anga C D C a2 -> eqA a1 a2.
+Lemma null_anga : forall A B C D a1 a2, Ang_Acute A B A a1 -> Ang_Acute C D C a2 -> EqA a1 a2.
 Proof.
     intros.
     eapply (all_eqaa A B A).
@@ -502,21 +498,21 @@ Proof.
     tauto.
 Qed.
 
-Lemma anga_distinct: forall a A B C, anga a -> a A B C -> A <> B /\ C <> B.
+Lemma anga_distinct: forall a A B C, Q_CongA_Acute a -> a A B C -> A <> B /\ C <> B.
 Proof.
     intros.
-    assert(is_anga A B C a).
+    assert(Ang_Acute A B C a).
       split; auto.
     apply (is_anga_distinct _ _ _ a); auto.
 Qed.
 
-Lemma out_is_len_eq : forall A B C l, out A B C -> is_len A B l -> is_len A C l -> B = C.
+Lemma out_is_len_eq : forall A B C l, Out A B C -> Len A B l -> Len A C l -> B = C.
 Proof.
     intros.
     assert(Cong A B A C).
       apply (is_len_cong _ _ _ _ l); auto.
     assert(A <> C).
-      unfold out in H.
+      unfold Out in H.
       spliter.
       auto.
     eapply (l6_11_unicity A A C C ); Cong.
@@ -524,7 +520,7 @@ Proof.
     auto.
 Qed.
 
-Lemma out_len_eq : forall A B C l, lg l -> out A B C -> l A B -> l A C -> B = C.
+Lemma out_len_eq : forall A B C l, Q_Cong l -> Out A B C -> l A B -> l A C -> B = C.
 Proof.
     intros.
     apply (out_is_len_eq A _ _ l).
@@ -533,11 +529,11 @@ Proof.
     split; auto.
 Qed.
 
-Lemma ex_anga : forall A B C, acute A B C -> exists a, anga a /\ a A B C.
+Lemma ex_anga : forall A B C, Acute A B C -> exists a, Q_CongA_Acute a /\ a A B C.
 Proof.
     intros.
-    exists (fun X Y Z => Conga A B C X Y Z).
-    unfold anga.
+    exists (fun X Y Z => CongA A B C X Y Z).
+    unfold Q_CongA_Acute.
     apply acute_distinct in H.
     spliter.
     split.
@@ -555,38 +551,33 @@ Proof.
     apply conga_refl; auto.
 Qed.
 
-Definition not_null_ang := fun a => ang a /\ forall A B C, a A B C -> ~out B A C.
-Definition not_flat_ang := fun a => ang a /\ forall A B C, a A B C -> ~Bet A B C.
+Definition Q_CongA_nNull a := Q_CongA a /\ forall A B C, a A B C -> ~Out B A C.
+Definition Q_CongA_nFlat a := Q_CongA a /\ forall A B C, a A B C -> ~Bet A B C.
 
-Definition not_null_ang' := fun a => ang a /\ exists A, exists B, exists C, a A B C /\  ~out B A C.
-Definition not_flat_ang' := fun a => ang a /\ exists A, exists B, exists C, a A B C /\  ~Bet A B C.
+Definition Q_CongA_Null a := Q_CongA a /\ forall A B C, a A B C -> Out B A C.
+Definition Ang_Flat a := Q_CongA a /\ forall A B C, a A B C -> Bet A B C.
 
-Definition is_null_ang := fun a => ang a /\ forall A B C, a A B C -> out B A C.
-Definition is_flat_ang := fun a => ang a /\ forall A B C, a A B C -> Bet A B C.
 
-Definition is_null_ang' := fun a => ang a /\ exists A, exists B, exists C, a A B C /\ out B A C.
-Definition is_flat_ang' := fun a => ang a /\ exists A, exists B, exists C, a A B C /\ Bet A B C.
 
-Lemma not_null_ang_ang : forall a, not_null_ang a -> ang a.
+Lemma not_null_ang_ang : forall a, Q_CongA_nNull a -> Q_CongA a.
 Proof.
     intros.
-    unfold not_null_ang  in H.
+    unfold Q_CongA_nNull  in H.
     spliter; auto.
 Qed.
 
-Lemma not_null_ang_def_equiv : forall a, not_null_ang a <-> not_null_ang' a.
+Lemma not_null_ang_def_equiv : forall a, Q_CongA_nNull a <-> (Q_CongA a /\ exists A, exists B, exists C, a A B C /\  ~Out B A C).
 Proof.
     intros.
     split.
       intro.
-      unfold not_null_ang in H.
+      unfold Q_CongA_nNull in H.
       spliter.
       assert(HH:= H).
-      unfold ang in HH.
+      unfold Q_CongA in HH.
       ex_and HH A.
       ex_and H1 B.
       ex_and H2 C.
-      unfold not_null_ang'.
       split.
         auto.
       exists A.
@@ -602,34 +593,32 @@ Proof.
       apply (H0 A B C).
       auto.
     intros.
-    unfold not_null_ang' in H.
     spliter.
     ex_and H0 A.
     ex_and H1 B.
     ex_and H0 C.
-    unfold not_null_ang.
+    unfold Q_CongA_nNull.
     split; auto.
     intros.
-    assert(Conga A0 B0 C0 A B C).
+    assert(CongA A0 B0 C0 A B C).
       apply (ang_conga a); auto.
     intro.
     apply H1.
     apply (out_conga_out A0 B0 C0); auto.
 Qed.
 
-Lemma not_flat_ang_def_equiv : forall a, not_flat_ang a <-> not_flat_ang' a.
+Lemma not_flat_ang_def_equiv : forall a, Q_CongA_nFlat a <-> (Q_CongA a /\ exists A, exists B, exists C, a A B C /\  ~Bet A B C).
 Proof.
     intros.
     split.
       intro.
-      unfold not_flat_ang in H.
+      unfold Q_CongA_nFlat in H.
       spliter.
       assert(HH:= H).
-      unfold ang in HH.
+      unfold Q_CongA in HH.
       ex_and HH A.
       ex_and H1 B.
       ex_and H2 C.
-      unfold not_flat_ang'.
       split.
         auto.
       exists A.
@@ -645,30 +634,29 @@ Proof.
       apply (H0 A B C).
       auto.
     intros.
-    unfold not_flat_ang' in H.
     spliter.
     ex_and H0 A.
     ex_and H1 B.
     ex_and H0 C.
-    unfold not_flat_ang.
+    unfold Q_CongA_nFlat.
     split; auto.
     intros.
-    assert(Conga A0 B0 C0 A B C).
+    assert(CongA A0 B0 C0 A B C).
       apply (ang_conga a); auto.
     intro.
     apply H1.
     apply (bet_conga_bet A0 B0 C0); auto.
 Qed.
 
-Definition is_null_anga := fun a => anga a /\ forall A B C, a A B C -> out B A C.
-Definition is_null_anga' := fun a => anga a /\ exists A, exists B, exists C, a A B C /\ out B A C.
+Definition Q_CongA_Null_Acute a := Q_CongA_Acute a /\ forall A B C, a A B C -> Out B A C.
+Definition is_null_anga' a := Q_CongA_Acute a /\ exists A, exists B, exists C, a A B C /\ Out B A C.
 
-Definition not_null_anga := fun a => anga a /\ forall A B C, a A B C -> ~out B A C.
+Definition Q_CongA_nNull_Acute a := Q_CongA_Acute a /\ forall A B C, a A B C -> ~Out B A C.
 
-Lemma ang_const : forall a A B, ang a -> A <> B -> exists C, a A B C.
+Lemma ang_const : forall a A B, Q_CongA a -> A <> B -> exists C, a A B C.
 Proof.
     intros.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
@@ -699,7 +687,7 @@ End Angles_3.
 Ltac ang_instance1 a A B C :=
 	assert(tempo_ang:= ang_const a A B);
         match goal with
-           |H: ang a |-  _ => assert(tempo_H:= H);apply tempo_ang in tempo_H; ex_elim tempo_H C
+           |H: Q_CongA a |-  _ => assert(tempo_H:= H);apply tempo_ang in tempo_H; ex_elim tempo_H C
         end;
         clear tempo_ang.
 
@@ -708,10 +696,10 @@ Section Angles_4.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma ang_sym : forall a A B C, ang a -> a A B C -> a C B A.
+Lemma ang_sym : forall a A B C, Q_CongA a -> a A B C -> a C B A.
 Proof.
     intros.
-    unfold ang in H.
+    unfold Q_CongA in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
@@ -725,20 +713,20 @@ Proof.
     auto.
 Qed.
 
-Lemma ang_not_null_lg : forall a l A B C, ang a -> lg l -> a A B C -> l A B -> ~lg_null l.
+Lemma ang_not_null_lg : forall a l A B C, Q_CongA a -> Q_Cong l -> a A B C -> l A B -> ~ Q_Cong_Null l.
 Proof.
     intros.
     intro.
-    unfold ang in H.
-    unfold lg_null in H3.
+    unfold Q_CongA in H.
+    unfold Q_Cong_Null in H3.
     spliter.
-    unfold lg in H0.
+    unfold Q_Cong in H0.
     ex_and H A0.
     ex_and H5 B0.
     ex_and H C0.
     assert(HH:= H6 A B C).
     destruct HH.
-    assert(Conga A0 B0 C0 A B C).
+    assert(CongA A0 B0 C0 A B C).
       apply H8.
       auto.
     apply conga_distinct in H8.
@@ -765,7 +753,7 @@ Proof.
     auto.
 Qed.
 
-Lemma ang_distincts : forall a A B C, ang a -> a A B C -> A <> B /\ C <> B.
+Lemma ang_distincts : forall a A B C, Q_CongA a -> a A B C -> A <> B /\ C <> B.
 Proof.
     intros.
     assert(HH:= ex_lg A B).
@@ -778,23 +766,23 @@ Proof.
     assert(HQ:= ang_not_null_lg a lc C B A H H3 H5 H4).
     split; intro; subst B.
       apply HH.
-      unfold lg_null.
+      unfold Q_Cong_Null.
       split.
         auto.
       exists A.
       auto.
     apply HQ.
-    unfold lg_null.
+    unfold Q_Cong_Null.
     split.
       auto.
     exists C.
     auto.
 Qed.
 
-Lemma anga_sym : forall a A B C, anga a -> a A B C -> a C B A.
+Lemma anga_sym : forall a A B C, Q_CongA_Acute a -> a A B C -> a C B A.
 Proof.
     intros.
-    unfold anga in H.
+    unfold Q_CongA_Acute in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
@@ -808,20 +796,20 @@ Proof.
     auto.
 Qed.
 
-Lemma anga_not_null_lg : forall a l A B C, anga a -> lg l -> a A B C -> l A B -> ~lg_null l.
+Lemma anga_not_null_lg : forall a l A B C, Q_CongA_Acute a -> Q_Cong l -> a A B C -> l A B -> ~ Q_Cong_Null l.
 Proof.
     intros.
     intro.
-    unfold anga in H.
-    unfold lg_null in H3.
+    unfold Q_CongA_Acute in H.
+    unfold Q_Cong_Null in H3.
     spliter.
-    unfold lg in H0.
+    unfold Q_Cong in H0.
     ex_and H A0.
     ex_and H5 B0.
     ex_and H C0.
     assert(HH:= H5 A B C).
     destruct HH.
-    assert(Conga A0 B0 C0 A B C).
+    assert(CongA A0 B0 C0 A B C).
       apply H7.
       auto.
     apply conga_distinct in H8.
@@ -846,7 +834,7 @@ Proof.
     contradiction.
 Qed.
 
-Lemma anga_distincts : forall a A B C, anga a -> a A B C -> A <> B /\ C <> B.
+Lemma anga_distincts : forall a A B C, Q_CongA_Acute a -> a A B C -> A <> B /\ C <> B.
 Proof.
     intros.
     assert(HH:= ex_lg A B).
@@ -859,24 +847,24 @@ Proof.
     assert(HQ:= anga_not_null_lg a lc C B A H H3 H5 H4).
     split; intro; subst B.
       apply HH.
-      unfold lg_null.
+      unfold Q_Cong_Null.
       split.
         auto.
       exists A.
       auto.
     apply HQ.
-    unfold lg_null.
+    unfold Q_Cong_Null.
     split.
       auto.
     exists C.
     auto.
 Qed.
 
-Lemma ang_const_o : forall a A B P, ~Col A B P -> ang a -> not_null_ang a -> not_flat_ang a -> exists C, a A B C /\ one_side A B C P.
+Lemma ang_const_o : forall a A B P, ~Col A B P -> Q_CongA a -> Q_CongA_nNull a -> Q_CongA_nFlat a -> exists C, a A B C /\ OS A B C P.
 Proof.
     intros.
     assert(HH:= H0).
-    unfold ang in HH.
+    unfold Q_CongA in HH.
     ex_and HH A0.
     ex_and H3 B0.
     ex_and H4 C0.
@@ -890,7 +878,7 @@ Proof.
     assert(A0 <> C0).
       intro.
       subst C0.
-      unfold not_null_ang in H1.
+      unfold Q_CongA_nNull in H1.
       spliter.
       assert(HH:=H11 A0 B0 A0 H8).
       apply HH.
@@ -913,10 +901,10 @@ Proof.
       auto.
     induction H14.
       auto.
-    unfold not_null_ang in H1.
+    unfold Q_CongA_nNull in H1.
     spliter.
     assert(HH:= H16 A B C H15).
-    unfold not_flat_ang in H2.
+    unfold Q_CongA_nFlat in H2.
     spliter.
     assert(Hh:=H17 A B C H15).
     apply False_ind.
@@ -930,7 +918,7 @@ Proof.
     contradiction.
 Qed.
 
-Lemma anga_const : forall a A B, anga a -> A <> B -> exists C, a A B C.
+Lemma anga_const : forall a A B, Q_CongA_Acute a -> A <> B -> exists C, a A B C.
 Proof.
     intros.
     apply anga_is_ang in H.
@@ -942,7 +930,7 @@ End Angles_4.
 Ltac anga_instance1 a A B C :=
 	assert(tempo_anga:= anga_const a A B);
         match goal with
-           |H: anga a |-  _ => assert(tempo_H:= H); apply tempo_anga in tempo_H; ex_elim tempo_H C
+           |H: Q_CongA_Acute a |-  _ => assert(tempo_H:= H); apply tempo_anga in tempo_H; ex_elim tempo_H C
         end;
         clear tempo_anga.
 
@@ -951,12 +939,12 @@ Section Angles_5.
 Context `{MT:Tarski_2D}.
 Context `{EqDec:EqDecidability Tpoint}.
 
-Lemma null_anga_null_anga' : forall a, is_null_anga a <-> is_null_anga' a.
+Lemma null_anga_null_anga' : forall a, Q_CongA_Null_Acute a <-> is_null_anga' a.
 Proof.
     intro.
     split.
       intro.
-      unfold is_null_anga in H.
+      unfold Q_CongA_Null_Acute in H.
       unfold is_null_anga'.
       spliter.
       split.
@@ -969,22 +957,22 @@ Proof.
       split; auto.
     intro.
     unfold is_null_anga' in H.
-    unfold is_null_anga.
+    unfold Q_CongA_Null_Acute.
     spliter.
     ex_and H0 A.
     ex_and H1 B.
     ex_and H0 C.
     split; auto.
     intros.
-    assert(Conga A B C A0 B0 C0).
+    assert(CongA A B C A0 B0 C0).
       apply (anga_conga a); auto.
     apply (out_conga_out A B C); auto.
 Qed.
 
-Lemma is_null_anga_out : forall a A B C, anga a -> a A B C -> is_null_anga a -> out B A C.
+Lemma is_null_anga_out : forall a A B C, Q_CongA_Acute a -> a A B C -> Q_CongA_Null_Acute a -> Out B A C.
 Proof.
     intros.
-    unfold is_null_anga in H1.
+    unfold Q_CongA_Null_Acute in H1.
     spliter.
     assert(HH:= (H2 A B C)).
     apply HH.
@@ -992,16 +980,16 @@ Proof.
 Qed.
 
 
-Lemma acute_not_bet : forall A B C, acute A B C -> ~Bet A B C.
+Lemma acute_not_bet : forall A B C, Acute A B C -> ~Bet A B C.
 Proof.
     intros.
-    unfold acute in H.
+    unfold Acute in H.
     ex_and H A0.
     ex_and H0 B0.
     ex_and H C0.
-    unfold lta in H0.
+    unfold LtA in H0.
     spliter.
-    unfold lea in H0.
+    unfold LeA in H0.
     ex_and H0 P.
     unfold InAngle in H0.
     spliter.
@@ -1017,7 +1005,7 @@ Proof.
     assert(Bet A0 B0 P).
       apply (bet_conga_bet A B C); auto.
     assert(Bet A0 B0 C0).
-      unfold out in H6.
+      unfold Out in H6.
       spliter.
       induction H15.
         eBetween.
@@ -1026,17 +1014,17 @@ Proof.
     apply (conga_line A B C); auto.
 Qed.
 
-Lemma anga_acute : forall a A B C , anga a -> a A B C -> acute A B C.
+Lemma anga_acute : forall a A B C , Q_CongA_Acute a -> a A B C -> Acute A B C.
 Proof.
     intros.
-    unfold anga in H.
+    unfold Q_CongA_Acute in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
     assert(HH:= acute_lea_acute A B C A0 B0 C0).
     apply HH.
       auto.
-    unfold lea.
+    unfold LeA.
     exists C0.
     split.
       unfold InAngle.
@@ -1056,13 +1044,13 @@ Proof.
     auto.
 Qed.
 
-Lemma acute_col_out : forall A B C, acute A B C -> Col A B C -> out B A C.
+Lemma acute_col_out : forall A B C, Acute A B C -> Col A B C -> Out B A C.
 Proof.
     intros.
     assert(HH:= acute_not_bet A B C H).
     induction H0.
       contradiction.
-    unfold out.
+    unfold Out.
     apply acute_distinct in H.
     spliter.
     repeat split; auto.
@@ -1073,50 +1061,50 @@ Proof.
     Between.
 Qed.
 
-Lemma not_null_not_col : forall a A B C, anga a -> ~is_null_anga a -> a A B C -> ~Col A B C.
+Lemma not_null_not_col : forall a A B C, Q_CongA_Acute a -> ~ Q_CongA_Null_Acute a -> a A B C -> ~Col A B C.
 Proof.
     intros.
     intro.
     apply H0.
-    unfold is_null_anga.
+    unfold Q_CongA_Null_Acute.
     split.
       auto.
-    assert(acute A B C).
+    assert(Acute A B C).
       apply (anga_acute a); auto.
     intros.
-    assert(out B A C).
+    assert(Out B A C).
       apply acute_col_out; auto.
     assert(HH:= anga_conga a A B C A0 B0 C0 H H1 H4).
     apply (out_conga_out A B C); auto.
 Qed.
 
 
-Lemma ang_cong_ang : forall a A B C A' B' C', ang a -> a A B C -> Conga A B C A' B' C' -> a A' B' C'.
+Lemma ang_cong_ang : forall a A B C A' B' C', Q_CongA a -> a A B C -> CongA A B C A' B' C' -> a A' B' C'.
 Proof.
     intros.
-    assert(is_ang A B C a).
-      unfold is_ang.
+    assert(Ang A B C a).
+      unfold Ang.
       split; auto.
-    assert(is_ang A' B' C' a).
+    assert(Ang A' B' C' a).
       apply (is_ang_conga_is_ang A B C); auto.
-    unfold is_ang in H3.
+    unfold Ang in H3.
     tauto.
 Qed.
 
-Lemma is_null_ang_out : forall a A B C, ang a -> a A B C -> is_null_ang a -> out B A C.
+Lemma is_null_ang_out : forall a A B C, Q_CongA a -> a A B C -> Q_CongA_Null a -> Out B A C.
 Proof.
     intros.
-    unfold is_null_ang in H1.
+    unfold Q_CongA_Null in H1.
     spliter.
     assert(HH:= (H2 A B C)).
     apply HH.
     auto.
 Qed.
 
-Lemma out_null_ang : forall a A B C, ang a -> a A B C -> out B A C -> is_null_ang a.
+Lemma out_null_ang : forall a A B C, Q_CongA a -> a A B C -> Out B A C -> Q_CongA_Null a.
 Proof.
     intros.
-    unfold is_null_ang.
+    unfold Q_CongA_Null.
     split.
       auto.
     intros.
@@ -1125,10 +1113,10 @@ Proof.
     apply (ang_conga a); auto.
 Qed.
 
-Lemma bet_flat_ang : forall a A B C, ang a -> a A B C -> Bet A B C -> is_flat_ang a.
+Lemma bet_flat_ang : forall a A B C, Q_CongA a -> a A B C -> Bet A B C -> Ang_Flat a.
 Proof.
     intros.
-    unfold is_flat_ang.
+    unfold Ang_Flat.
     split.
       auto.
     intros.
@@ -1137,10 +1125,10 @@ Proof.
     apply (ang_conga a); auto.
 Qed.
 
-Lemma out_null_anga : forall a A B C, anga a -> a A B C -> out B A C -> is_null_anga a.
+Lemma out_null_anga : forall a A B C, Q_CongA_Acute a -> a A B C -> Out B A C -> Q_CongA_Null_Acute a.
 Proof.
     intros.
-    unfold is_null_anga.
+    unfold Q_CongA_Null_Acute.
     split.
       auto.
     intros.
@@ -1149,16 +1137,16 @@ Proof.
     apply (anga_conga a); auto.
 Qed.
 
-Lemma anga_not_flat : forall a, anga a -> not_flat_ang a.
+Lemma anga_not_flat : forall a, Q_CongA_Acute a -> Q_CongA_nFlat a.
 Proof.
     intros.
-    unfold not_flat_ang.
+    unfold Q_CongA_nFlat.
     split.
       apply anga_is_ang in H.
       auto.
     intros.
     assert(HH:= anga_acute a A B C H H0).
-    unfold anga in H.
+    unfold Q_CongA_Acute in H.
     ex_and H A0.
     ex_and H1 B0.
     ex_and H C0.
@@ -1168,24 +1156,261 @@ Proof.
 Qed.
 
 
-Lemma anga_const_o : forall a A B P, ~Col A B P -> ~ is_null_anga a -> anga a -> exists C, a A B C /\ one_side A B C P.
+Lemma anga_const_o : forall a A B P, ~Col A B P -> ~ Q_CongA_Null_Acute a -> Q_CongA_Acute a -> exists C, a A B C /\ OS A B C P.
 Proof.
     intros.
-    assert(ang a).
+    assert(Q_CongA a).
       apply anga_is_ang; auto.
-    assert(not_null_ang a).
-      unfold not_null_ang.
+    assert(Q_CongA_nNull a).
+      unfold Q_CongA_nNull.
       split.
         auto.
       intros A' B' C' HP.
       intro.
       apply H0.
       eapply (out_null_anga a A' B' C'); auto.
-    assert(not_flat_ang a).
+    assert(Q_CongA_nFlat a).
       apply anga_not_flat.
       auto.
     assert(HH:= ang_const_o a A B P H H2 H3 H4).
     auto.
+Qed.
+
+Lemma anga_conga_anga : forall a A B C A' B' C' , Q_CongA_Acute a -> a A B C -> CongA A B C A' B' C' -> a A' B' C'.
+Proof.
+    intros.
+    unfold Q_CongA_Acute in H.
+    ex_and H A0.
+    ex_and H2 B0.
+    ex_and H C0.
+    assert(HH := H2 A B C).
+    assert(HP := H2 A' B' C').
+    destruct HH.
+    destruct HP.
+    apply H4 in H0.
+    assert(CongA A0 B0 C0 A' B' C').
+      eapply conga_trans.
+        apply H0.
+      apply H1.
+    apply H5.
+    auto.
+Qed.
+
+Lemma anga_out_anga : forall a A B C A' C', Q_CongA_Acute a -> a A B C -> Out B A A' -> Out B C C' -> a A' B C'.
+Proof.
+    intros.
+    assert(HH:= H).
+    unfold Q_CongA_Acute in HH.
+    ex_and HH A0.
+    ex_and H3 B0.
+    ex_and H4 C0.
+    assert(HP:= H4 A B C).
+    destruct HP.
+    assert(CongA A0 B0 C0 A B C).
+      apply H6.
+      auto.
+    assert(HP:= anga_distincts a A B C H H0).
+    spliter.
+    assert(CongA A B C A' B C').
+      apply (out_conga A B C A B C).
+        apply conga_refl; auto.
+        apply out_trivial; auto.
+        apply out_trivial; auto.
+        auto.
+      auto.
+    assert(HH:= H4 A' B C').
+    destruct HH.
+    apply H11.
+    apply (conga_trans _ _ _ A B C); auto.
+Qed.
+
+Lemma out_out_anga : forall a A B C A' B' C', Q_CongA_Acute a -> Out B A C -> Out B' A' C' -> a A B C -> a A' B' C'.
+Proof.
+    intros.
+    assert(CongA A B C A' B' C').
+      apply l11_21_b; auto.
+    apply (anga_conga_anga a A B C); auto.
+Qed.
+
+Lemma is_null_all : forall a A B, A <> B -> Q_CongA_Null_Acute a -> a A B A.
+Proof.
+    intros.
+    unfold Q_CongA_Null_Acute in H0.
+    spliter.
+    assert(HH:= H0).
+    unfold Q_CongA_Acute in HH.
+    ex_and HH A0.
+    ex_and H2 B0.
+    ex_and H3 C0.
+    apply acute_distinct in H2.
+    spliter.
+    assert (HH:= H3 A0 B0 C0).
+    destruct HH.
+    assert (a A0 B0 C0).
+      apply H6.
+      apply conga_refl; auto.
+    assert(HH:= (H1 A0 B0 C0)).
+    eapply (out_out_anga a A0 B0 C0); auto.
+    apply out_trivial.
+    auto.
+Qed.
+
+Lemma anga_col_out : forall a A B C, Q_CongA_Acute a -> a A B C -> Col A B C -> Out B A C.
+Proof.
+    intros.
+    assert(Acute A B C).
+      apply (anga_acute a); auto.
+    unfold Col in H1.
+    induction H1.
+      apply acute_not_bet in H2.
+      contradiction.
+    unfold Out.
+    apply (anga_distinct a A B C) in H.
+      spliter.
+      repeat split; auto.
+      induction H1.
+        right.
+        auto.
+      left.
+      Between.
+    auto.
+Qed.
+
+Lemma ang_not_lg_null : forall a la lc A B C, Q_Cong la -> Q_Cong lc -> Q_CongA a ->
+ la A B -> lc C B -> a A B C -> ~ Q_Cong_Null la /\ ~ Q_Cong_Null lc.
+Proof.
+    intros.
+    assert(HH:=ang_distincts a A B C H1 H4).
+    spliter.
+    split.
+      intro.
+      unfold Q_Cong_Null in H7.
+      spliter.
+      ex_and H8 P.
+      assert(HH:= lg_cong la A B P P H H2 H9).
+      apply cong_identity in HH.
+      contradiction.
+    intro.
+    unfold Q_Cong_Null in H7.
+    spliter.
+    ex_and H8 P.
+    assert(HH:= lg_cong lc C B P P H0 H3 H9).
+    apply cong_identity in HH.
+    contradiction.
+Qed.
+
+Lemma anga_not_lg_null : forall a la lc A B C, Q_Cong la -> Q_Cong lc ->
+ Q_CongA_Acute a -> la A B -> lc C B -> a A B C -> ~ Q_Cong_Null la /\ ~ Q_Cong_Null lc.
+Proof.
+    intros.
+    apply anga_is_ang in H1.
+    apply(ang_not_lg_null a la lc A B C); auto.
+Qed.
+
+Lemma anga_col_null : forall a A B C, Q_CongA_Acute a -> a A B C -> Col A B C -> Out B A C /\ Q_CongA_Null_Acute a.
+Proof.
+    intros.
+    assert(HH:= anga_distincts a A B C H H0).
+    spliter.
+    assert(Out B A C).
+      induction H1.
+        assert(HP:=anga_acute a A B C H H0).
+        assert(HH:=acute_not_bet A B C HP).
+        contradiction.
+      induction H1.
+        unfold Out.
+        repeat split; auto.
+      unfold Out.
+      repeat split; auto.
+      left.
+      Between.
+    split.
+      auto.
+    apply (out_null_anga a A B C); auto.
+Qed.
+
+Lemma eqA_preserves_ang: forall a b, Q_CongA a -> EqA a b -> Q_CongA b.
+Proof.
+intros.
+unfold Q_CongA in *.
+decompose [ex and] H.
+exists x. exists x0. exists x1.
+split.
+assumption.
+split.
+assumption.
+intros.
+rewrite H4.
+unfold EqA in H0.
+apply H0.
+Qed.
+
+Lemma eqA_preserves_anga : forall a b, Q_CongA_Acute a -> Q_CongA b -> EqA a b -> Q_CongA_Acute b.
+Proof.
+    intros.
+    assert (Q_CongA a).
+        apply eqA_preserves_ang with b;auto.
+        symmetry;auto.
+    unfold EqA in H1.
+    anga_instance a A B C.
+
+    assert(HH:= H1 A B C).
+    destruct HH.
+    unfold Q_CongA_Acute.
+    exists A.
+    exists B.
+    exists C.
+    split.
+      unfold Q_CongA_Acute in H.
+      ex_and H A'.
+      ex_and H6 B'.
+      ex_and H C'.
+      assert(a A' B' C').
+        assert(HP:= H6 A B C).
+        destruct HP.
+        assert(CongA A B C A' B' C') by (apply conga_sym;auto).
+        assert(HP:=is_ang_conga_is_ang A B C A' B' C' a).
+        assert(Ang A' B' C' a).
+          apply HP.
+            split; auto.
+          auto.
+        unfold Ang in H10.
+        spliter.
+        auto.
+      apply (acute_lea_acute _ _ _ A' B' C').
+        auto.
+      unfold LeA.
+      exists C'.
+      split.
+        assert (HH:= is_ang_distinct A' B' C' a).
+        assert( A' <> B' /\ C' <> B').
+          apply HH.
+          split; auto.
+        spliter.
+        apply in_angle_trivial_2; auto.
+      eapply (is_ang_conga _ _ _ _ _ _ a).
+        split; auto.
+      split; auto.
+    intros.
+    split.
+      intro.
+      assert(HH:= H1 x y z).
+      destruct HH.
+      assert(Ang x y z a).
+        eapply (is_ang_conga_is_ang A B C).
+          split; auto.
+        auto.
+      unfold Ang in H9.
+      spliter.
+      auto.
+    intro.
+    assert(HH:= H1 x y z).
+    destruct HH.
+    assert(a x y z).
+      auto.
+    eapply (is_ang_conga _ _ _ _ _ _ a).
+      split; auto.
+    split; auto.
 Qed.
 
 End Angles_5.

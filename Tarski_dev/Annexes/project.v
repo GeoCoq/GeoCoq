@@ -9,13 +9,13 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 (** Projections *)
 
-Definition project  P P' A B X Y :=
-  A <> B /\ X <> Y /\ ~Par A B X Y  /\ Col A B P' /\ (Par P P' X Y \/ P = P').
+Definition Proj P Q A B X Y :=
+  A <> B /\ X <> Y /\ ~Par A B X Y  /\ Col A B Q /\ (Par P Q X Y \/ P = Q).
 
-Lemma project_id : forall A B X Y P P', project P P' A B X Y -> Col A B P -> P = P'.
+Lemma project_id : forall A B X Y P P', Proj P P' A B X Y -> Col A B P -> P = P'.
 Proof.
 intros.
-unfold project in H.
+unfold Proj in H.
 spliter.
 induction H4.
 
@@ -35,26 +35,26 @@ Par.
 assumption.
 Qed.
 
-Lemma project_not_id : forall A B X Y P P', project P P' A B X Y -> ~Col A B P -> P <> P'.
+Lemma project_not_id : forall A B X Y P P', Proj P P' A B X Y -> ~Col A B P -> P <> P'.
 Proof.
 intros.
 intro.
 apply H0.
 subst P'.
-unfold project in H.
+unfold Proj in H.
 spliter.
 assumption.
 Qed.
 
-Lemma project_col : forall A B X Y P , project P P A B X Y -> Col A B P.
+Lemma project_col : forall A B X Y P , Proj P P A B X Y -> Col A B P.
 Proof.
 intros.
-unfold project in H.
+unfold Proj in H.
 spliter.
 assumption.
 Qed.
 
-Lemma project_not_col : forall A B X Y P P', project P P' A B X Y -> P <> P' -> ~Col A B P.
+Lemma project_not_col : forall A B X Y P P', Proj P P' A B X Y -> P <> P' -> ~Col A B P.
 Proof.
 intros.
 intro.
@@ -64,13 +64,13 @@ apply H.
 assumption.
 Qed.
 
-Lemma project_par : forall A B X Y P Q P' Q', project P P' A B X Y -> project Q Q' A B X Y -> Par P Q X Y -> P' = Q'.
+Lemma project_par : forall A B X Y P Q P' Q', Proj P P' A B X Y -> Proj Q Q' A B X Y -> Par P Q X Y -> P' = Q'.
 Proof.
 intros.
 assert(HH:=H).
 assert(HH0:=H0).
-unfold project in HH.
-unfold project in HH0.
+unfold Proj in HH.
+unfold Proj in HH0.
 spliter.
 
 apply par_distincts in H1.
@@ -148,10 +148,10 @@ eapply (par_col_par_2 _ Q); Col.
 ColR.
 Qed.
 
-Lemma ker_col : forall P Q P' A B X Y, project P P' A B X Y -> project Q P' A B X Y -> Col P Q P'.
+Lemma ker_col : forall P Q P' A B X Y, Proj P P' A B X Y -> Proj Q P' A B X Y -> Col P Q P'.
 Proof.
 intros.
-unfold project in *.
+unfold Proj in *.
 spliter.
 clean_duplicated_hyps.
 induction H8; induction H4; try(subst P';Col).
@@ -168,7 +168,7 @@ Col.
 Qed.
 
 
-Lemma ker_par : forall P Q P' A B X Y, P <> Q -> project P P' A B X Y -> project Q P' A B X Y -> Par P Q X Y.
+Lemma ker_par : forall P Q P' A B X Y, P <> Q -> Proj P P' A B X Y -> Proj Q P' A B X Y -> Par P Q X Y.
 Proof.
 intros.
 assert(Col P Q P').
@@ -176,7 +176,7 @@ eapply ker_col.
 apply H0.
 apply H1.
 
-unfold project in *.
+unfold Proj in *.
 spliter.
 clean_duplicated_hyps.
 induction H10; induction H6.
@@ -194,13 +194,13 @@ apply H.
 auto.
 Qed.
 
-Lemma project_unicity : forall P P' Q' A B X Y, project P P' A B X Y -> project P Q' A B X Y -> P' = Q'.
+Lemma project_unicity : forall P P' Q' A B X Y, Proj P P' A B X Y -> Proj P Q' A B X Y -> P' = Q'.
 Proof.
 intros.
 assert(HH:=H).
 assert(HH0:=H0).
-unfold project in HH.
-unfold project in HH0.
+unfold Proj in HH.
+unfold Proj in HH0.
 spliter.
 clean_duplicated_hyps.
 
@@ -241,7 +241,7 @@ Qed.
 Lemma project_existence : forall P A B X Y,
  X<>Y -> A<>B ->
  ~ Par X Y A B ->
- exists! P', project P P' A B X Y.
+ exists! P', Proj P P' A B X Y.
 Proof.
 intros.
 assert (T:=parallel_existence X Y P H).
@@ -257,8 +257,8 @@ exists P'.
 unfold unique.
 
 
-assert (project P P' A B X Y).
-unfold project.
+assert (Proj P P' A B X Y).
+unfold Proj.
 repeat split.
 assumption.
 assumption.
@@ -280,8 +280,8 @@ Qed.
 Lemma project_col_eq : forall P Q P' Q' A B X Y,
  P <> P' ->
  Col P Q P' ->
- project P P' A B X Y ->
- project Q Q' A B X Y ->
+ Proj P P' A B X Y ->
+ Proj Q Q' A B X Y ->
  P' = Q'.
 Proof.
 intros.
@@ -293,7 +293,7 @@ apply H2.
 eapply project_par.
 apply H1.
 apply H2.
-unfold project in *.
+unfold Proj in *.
 spliter.
 induction H11; induction H7.
 eapply (par_col_par_2 _ P'); Col.
@@ -310,12 +310,12 @@ Lemma par_col_project :
   ~ Par A B X Y ->
   Par P P' X Y ->
   Col A B P' ->
- project P P' A B X Y.
+  Proj P P' A B X Y.
 Proof.
 intros.
 apply par_distincts in H1.
 spliter.
-unfold project.
+unfold Proj.
 repeat split;auto.
 Qed.
 
@@ -323,18 +323,18 @@ Qed.
 Lemma project_preserves_bet :
  forall A B X Y P Q R P' Q' R',
   Bet P Q R ->
-  project P P' A B X Y ->
-  project Q Q' A B X Y ->
-  project R R' A B X Y ->
+  Proj P P' A B X Y ->
+  Proj Q Q' A B X Y ->
+  Proj R R' A B X Y ->
   Bet P' Q' R'.
 Proof.
 intros.
 assert(HH0:= H0).
 assert(HH1:=H1).
 assert(HH2:=H2).
-unfold project in HH0.
-unfold project in HH1.
-unfold project in HH2.
+unfold Proj in HH0.
+unfold Proj in HH1.
+unfold Proj in HH2.
 spliter.
 clean_duplicated_hyps.
 
@@ -391,7 +391,7 @@ apply (project_col_eq Q P Q' P' A B X Y); Col.
 subst Q'.
 tauto.
 
-assert(one_side  Q Q' P P').
+assert(OS  Q Q' P P').
 
 eapply (par_strict_one_side).
 apply H21.
@@ -412,12 +412,12 @@ assert(Q'=R').
 apply(project_col_eq Q R Q' R' A B X Y); Col.
 subst Q'.
 tauto.
-assert(one_side Q Q' R R').
+assert(OS Q Q' R R').
 eapply (par_strict_one_side).
 apply H24.
 Col.
 
-assert(two_sides Q Q' P R).
+assert(TS Q Q' P R).
 repeat split.
 auto.
 intro.
@@ -431,7 +431,7 @@ split; Col.
 exists Q.
 split; Col.
 
-assert(two_sides Q Q' P' R').
+assert(TS Q Q' P' R').
 eapply l9_8_2.
 2: apply H22.
 apply l9_2.
@@ -440,7 +440,7 @@ apply l9_2.
 apply H26.
 assumption.
 
-unfold two_sides in H27.
+unfold TS in H27.
 spliter.
 ex_and H30 QQ.
 
@@ -461,7 +461,7 @@ assumption.
 
 subst R'.
 
-assert(two_sides Q Q' P' R).
+assert(TS Q Q' P' R).
 
 eapply l9_8_2.
 2:apply H22.
@@ -486,7 +486,7 @@ subst Q'.
 tauto.
 exists Q.
 split; Col.
-unfold two_sides in H7.
+unfold TS in H7.
 spliter.
 ex_and H25 QQ.
 
@@ -538,7 +538,7 @@ apply par_col_project; auto.
 eapply (par_col_par_2 _ Qy); Col.
 Par.
 contradiction.
-assert(one_side Qx Qy P P').
+assert(OS Qx Qy P P').
 eapply (par_strict_one_side _ _ _ P'); Col.
 
 assert(Par Qx Qy R R').
@@ -567,11 +567,11 @@ apply par_col_project; auto.
 eapply (par_col_par_2 _ Qy); Col.
 Par.
 contradiction.
-assert(one_side Qx Qy R R').
+assert(OS Qx Qy R R').
 eapply (par_strict_one_side _ _ _ R'); Col.
 
-assert(two_sides Qx Qy P R).
-unfold two_sides.
+assert(TS Qx Qy P R).
+unfold TS.
 repeat split.
 auto.
 intro.
@@ -585,7 +585,7 @@ split; Col.
 exists Q.
 split; Col.
 
-assert(two_sides Qx Qy P' R').
+assert(TS Qx Qy P' R').
 eapply l9_8_2.
 2:apply H23.
 apply l9_2.
@@ -593,7 +593,7 @@ eapply l9_8_2.
 eapply l9_2.
 apply H27.
 assumption.
-unfold two_sides in H28.
+unfold TS in H28.
 spliter.
 ex_and H31 QQ.
 
@@ -650,10 +650,10 @@ spliter.
 apply False_ind.
 apply H9.
 eapply (project_col_eq R Q _ _ A B X Y); Col.
-assert(one_side Q Q' R R').
+assert(OS Q Q' R R').
 eapply (par_strict_one_side _ _ _ R'); Col.
 
-assert(two_sides Q Q' P R').
+assert(TS Q Q' P R').
 apply l9_2.
 eapply l9_8_2.
 2:apply H22.
@@ -670,7 +670,7 @@ exists Q.
 split; Col.
 Between.
 
-unfold two_sides in H23.
+unfold TS in H23.
 spliter.
 ex_and H26 QQ.
 
@@ -742,10 +742,10 @@ Qed.
 
 Lemma symmetry_preserves_conga :
  forall A B C A' B' C' M, A <> B -> C <> B ->
-  is_midpoint M A A' ->
-  is_midpoint M B B' ->
-  is_midpoint M C C' ->
-  Conga A B C A' B' C'.
+  Midpoint M A A' ->
+  Midpoint M B B' ->
+  Midpoint M C C' ->
+  CongA A B C A' B' C'.
 Proof.
 intros.
 assert(Cong A B A' B').
@@ -764,7 +764,7 @@ Lemma triangle_par :
   Par A B A' B' ->
   Par B C B' C' ->
   Par A C A' C' ->
- Conga A B C A' B' C'.
+ CongA A B C A' B' C'.
 Proof.
 intros.
 
@@ -773,9 +773,9 @@ ex_and HH M.
 prolong A' M A'' A' M.
 prolong C' M C'' C' M.
 
-assert(is_midpoint M A' A'')
+assert(Midpoint M A' A'')
  by (split;Cong).
-assert(is_midpoint M C' C'')
+assert(Midpoint M C' C'')
  by (split;Cong).
 
 assert(A' <> B').
@@ -811,7 +811,7 @@ spliter.
 clear H13.
 clear H15.
 
-assert(Conga A' B' C' A'' B C'').
+assert(CongA A' B' C' A'' B C'').
 
 apply (symmetry_preserves_conga _ _ _ _ _ _ M); Midpoint.
 eapply conga_trans.
@@ -879,7 +879,7 @@ split; Col.
 
 induction H16.
 
-assert(two_sides A C A'' B).
+assert(TS A C A'' B).
 repeat split; Col.
 intro.
 apply H.
@@ -890,9 +890,9 @@ exists A.
 split; Col.
 Between.
 
-assert(one_side A C B C'').
+assert(OS A C B C'').
 eapply (out_one_side_1 _ _ _ _ C); Col.
-unfold out.
+unfold Out.
 repeat split; auto.
 intro.
 subst C''.
@@ -901,13 +901,13 @@ subst C.
 tauto.
 left.
 Between.
-assert(two_sides A C A'' C'').
+assert(TS A C A'' C'').
 apply l9_2.
 eapply l9_8_2.
 apply l9_2.
 apply H26.
 assumption.
-unfold two_sides in H28.
+unfold TS in H28.
 spliter.
 ex_and H31 T.
 apply H24.
@@ -915,7 +915,7 @@ exists T.
 apply bet_col in H32.
 split; Col.
 
-assert(two_sides A'' C'' A B).
+assert(TS A'' C'' A B).
 repeat split; Col.
 intro.
 apply H.
@@ -940,7 +940,7 @@ apply (col3 B A''); Col.
 exists A''.
 split; Col.
 
-assert(one_side A'' C'' B C).
+assert(OS A'' C'' B C).
 apply out_one_side_1 with C''; Col.
 intro.
 apply H.
@@ -959,13 +959,13 @@ spliter.
 apply H29.
 exists C''; Col.
 
-assert(two_sides A'' C'' A C).
+assert(TS A'' C'' A C).
 apply l9_2.
 eapply l9_8_2.
 apply l9_2.
 apply H26.
 assumption.
-unfold two_sides in H28.
+unfold TS in H28.
 spliter.
 ex_and H31 T.
 apply H24.
@@ -1003,7 +1003,7 @@ apply H24.
 exists C.
 split; Col.
 
-assert(two_sides A C C'' B).
+assert(TS A C C'' B).
 repeat split; Col.
 intro.
 apply H.
@@ -1014,9 +1014,9 @@ exists C.
 split; Col.
 Between.
 
-assert(one_side A C B A'').
+assert(OS A C B A'').
 eapply (out_one_side _ _ _ _); Col.
-unfold out.
+unfold Out.
 repeat split; auto.
 intro.
 subst A''.
@@ -1024,13 +1024,13 @@ apply between_identity in H16.
 contradiction.
 left.
 Between.
-assert(two_sides A C A'' C'').
+assert(TS A C A'' C'').
 
 eapply l9_8_2.
 apply l9_2.
 apply H26.
 assumption.
-unfold two_sides in H28.
+unfold TS in H28.
 spliter.
 ex_and H31 T.
 apply H24.
@@ -1050,9 +1050,9 @@ apply out_trivial.
 auto.
 apply out_trivial.
 auto.
-unfold out.
+unfold Out.
 repeat split; auto.
-unfold out.
+unfold Out.
 repeat split; auto.
 
 eapply (out_conga A B C A B C).
@@ -1063,11 +1063,11 @@ apply out_trivial.
 auto.
 apply out_trivial.
 auto.
-unfold out.
+unfold Out.
 repeat split; auto.
 right.
 Between.
-unfold out.
+unfold Out.
 repeat split; auto.
 
 induction H16.
@@ -1099,7 +1099,7 @@ exists C.
 split; Col.
 
 
-assert(two_sides A'' C'' C B).
+assert(TS A'' C'' C B).
 repeat split; Col.
 intro.
 apply H.
@@ -1124,7 +1124,7 @@ apply (col3 B A''); Col.
 exists C''.
 split; Col.
 
-assert(one_side A'' C'' B A).
+assert(OS A'' C'' B A).
 apply out_one_side.
 left.
 intro.
@@ -1145,12 +1145,12 @@ apply H29.
 exists A''.
 Col.
 
-assert(two_sides A'' C'' A C).
+assert(TS A'' C'' A C).
 eapply l9_8_2.
 apply l9_2.
 apply H26.
 assumption.
-unfold two_sides in H28.
+unfold TS in H28.
 spliter.
 ex_and H31 T.
 apply H24.
@@ -1168,9 +1168,9 @@ apply out_trivial.
 auto.
 apply out_trivial.
 auto.
-unfold out.
+unfold Out.
 repeat split; auto.
-unfold out.
+unfold Out.
 repeat split; auto.
 right.
 Between.
@@ -1183,17 +1183,17 @@ apply out_trivial.
 auto.
 apply out_trivial.
 auto.
-unfold out.
+unfold Out.
 repeat split; auto.
 right.
 Between.
-unfold out.
+unfold Out.
 repeat split; auto.
 right.
 Between.
 Qed.
 
-Definition Conga_3 := fun A B C A' B' C' => Conga A B C A' B' C' /\ Conga B C A B' C' A' /\ Conga C A B C' A' B'.
+Definition Conga_3 := fun A B C A' B' C' => CongA A B C A' B' C' /\ CongA B C A B' C' A' /\ CongA C A B C' A' B'.
 
 
 Lemma par3_conga3 :
@@ -1239,7 +1239,7 @@ Proof.
 intros.
 unfold Conga_3 in H1.
 spliter.
-assert(Cong A C A' C' /\ Cong B C B' C' /\ Conga C A B C' A' B').
+assert(Cong A C A' C' /\ Cong B C B' C' /\ CongA C A B C' A' B').
 apply( l11_50_2 A B C A' B' C' H); auto.
 spliter.
 repeat split; auto.
@@ -1247,18 +1247,18 @@ Qed.
 
 Lemma project_par_eqv :
  forall P P' Q Q' A B X Y,
- project P P' A B X Y ->
- project Q Q' A B X Y ->
+ Proj P P' A B X Y ->
+ Proj Q Q' A B X Y ->
  Par P Q A B ->
- eqV P Q P' Q'.
+ EqV P Q P' Q'.
 Proof.
 intros.
 assert(HH:=H).
 assert(HH0:=H0).
-unfold project in HH.
-unfold project in HH0.
+unfold Proj in HH.
+unfold Proj in HH0.
 spliter.
-unfold eqV.
+unfold EqV.
 apply par_distincts in H1.
 spliter.
 
@@ -1340,11 +1340,11 @@ Qed.
 
 Lemma eqv_project_eq_eq :
  forall P Q R S P' Q' S' A B X Y,
-  eqV P Q R S ->
-  project P P' A B X Y ->
-  project Q Q' A B X Y ->
-  project R P' A B X Y ->
-  project S S' A B X Y ->
+  EqV P Q R S ->
+  Proj P P' A B X Y ->
+  Proj Q Q' A B X Y ->
+  Proj R P' A B X Y ->
+  Proj S S' A B X Y ->
   Q' = S'.
 Proof.
 intros.
@@ -1372,7 +1372,7 @@ apply H4.
 eapply null_vector.
 apply eqv_sym in H.
 apply H.
-assert(eqV P R Q S).
+assert(EqV P R Q S).
 apply eqv_permut.
 assumption.
 
@@ -1399,8 +1399,8 @@ eapply par_trans.
 apply par_symmetry.
 apply eqv_par in H6; auto.
 apply H6.
-unfold project in H0.
-unfold project in H2.
+unfold Proj in H0.
+unfold Proj in H2.
 spliter.
 induction H16; induction H12.
 
@@ -1425,15 +1425,15 @@ Qed.
 
 Lemma eqv_eq_project :
   forall P Q R S P' Q' A B X Y,
-  eqV P Q R S ->
-  project P P' A B X Y ->
-  project Q Q' A B X Y ->
-  project R P' A B X Y ->
-  project S Q' A B X Y.
+  EqV P Q R S ->
+  Proj P P' A B X Y ->
+  Proj Q Q' A B X Y ->
+  Proj R P' A B X Y ->
+  Proj S Q' A B X Y.
 Proof.
 intros.
 assert(HH1:=H1).
-unfold project in HH1.
+unfold Proj in HH1.
 spliter.
 repeat split; Col.
 apply eqv_permut in H.
@@ -1447,7 +1447,7 @@ induction(eq_dec_points P R).
 subst R.
 apply null_vector in H.
 subst S.
-unfold project in H1.
+unfold Proj in H1.
 spliter.
 induction H11.
 assumption.
@@ -1460,7 +1460,7 @@ eapply ker_col.
 apply H0.
 assumption.
 
-unfold project in H0.
+unfold Proj in H0.
 spliter.
 
 induction H14.
@@ -1489,7 +1489,7 @@ assumption.
 subst P'.
 
 assert(Par P R X Y).
-unfold project in H2.
+unfold Proj in H2.
 spliter.
 induction H17.
 Par.
@@ -1521,23 +1521,23 @@ assumption.
 Qed.
 
 
-Lemma project_par_dir : forall P P' A B X Y, P <> P' -> project P P' A B X Y -> Par P P' X Y.
+Lemma project_par_dir : forall P P' A B X Y, P <> P' -> Proj P P' A B X Y -> Par P P' X Y.
 intros.
-unfold project in H0.
+unfold Proj in H0.
 spliter.
 induction H4; tauto.
 Qed.
 
-Lemma project_idem : forall P P' A B X Y, project P P' A B X Y -> project P' P' A B X Y.
+Lemma project_idem : forall P P' A B X Y, Proj P P' A B X Y -> Proj P' P' A B X Y.
 intros.
-unfold project in *.
+unfold Proj in *.
 spliter.
 repeat split; Col.
 Qed.
 
-Lemma eqv_cong : forall A B C D, eqV A B C D -> Cong A B C D.
+Lemma eqv_cong : forall A B C D, EqV A B C D -> Cong A B C D.
 intros.
-unfold eqV in H.
+unfold EqV in H.
 induction H.
 apply plg_cong.
 apply plg_permut.
@@ -1550,12 +1550,12 @@ Cong.
 Qed.
 
 Lemma project_preserves_eqv :
- forall P Q R S P' Q' R' S' A B X Y, eqV P Q R S ->
-  project P P' A B X Y ->
-  project Q Q' A B X Y ->
-  project R R' A B X Y ->
-  project S S' A B X Y ->
-  eqV P' Q' R' S'.
+ forall P Q R S P' Q' R' S' A B X Y, EqV P Q R S ->
+  Proj P P' A B X Y ->
+  Proj Q Q' A B X Y ->
+  Proj R R' A B X Y ->
+  Proj S S' A B X Y ->
+  EqV P' Q' R' S'.
 Proof.
 intros.
 
@@ -1584,13 +1584,13 @@ contradiction.
 
 induction (Par_dec P Q A B).
 
-assert(eqV P Q P' Q').
+assert(EqV P Q P' Q').
 eapply project_par_eqv.
 apply H0.
 assumption.
 assumption.
 
-assert(eqV R S R' S').
+assert(EqV R S R' S').
 eapply project_par_eqv.
 apply H2.
 assumption.
@@ -1656,7 +1656,7 @@ ex_and HH1 Q''.
 assert(HH1:= vector_construction R S R').
 ex_and HH1 S''.
 
-assert(eqV P' Q'' R' S'').
+assert(EqV P' Q'' R' S'').
 eapply eqv_trans.
 apply eqv_sym.
 apply H11.
@@ -1679,7 +1679,7 @@ tauto.
 apply eqv_par in H13; auto.
 assert(Par P' Q' A B).
 right.
-unfold project in *.
+unfold Proj in *.
 spliter.
 repeat split; Col.
 
@@ -1706,7 +1706,7 @@ tauto.
 apply eqv_par in H13; auto.
 assert(Par R' S' A B).
 right.
-unfold project in *.
+unfold Proj in *.
 spliter.
 repeat split; Col.
 apply H6.
@@ -1726,7 +1726,7 @@ assert(HP1:=eqv_permut P Q P' Q'' H11).
 assert(HP2:=eqv_permut R S R'  S'' H12).
 assert(HP3:=eqv_permut P' Q'' R'  S'' H13).
 
-assert(project Q'' Q' A B X Y).
+assert(Proj Q'' Q' A B X Y).
 eapply eqv_eq_project.
 apply H11.
 apply H0.
@@ -1734,7 +1734,7 @@ assumption.
 eapply project_idem.
 apply H0.
 
-assert(project S'' S' A B X Y).
+assert(Proj S'' S' A B X Y).
 eapply eqv_eq_project.
 apply H12.
 apply H2.
@@ -1756,7 +1756,7 @@ auto.
 assert(~ Col P' Q'' Q').
 intro.
 apply H19.
-unfold project in *.
+unfold Proj in *.
 spliter.
 assert(Col P' Q' A).
 ColR.
@@ -1781,15 +1781,15 @@ Col.
 assumption.
 assumption.
 right.
-unfold project in *.
+unfold Proj in *.
 spliter.
 repeat split; try assumption.
 
 apply (col3 A B); Col.
 apply (col3 A B); Col.
 
-assert(eqV Q'' Q' S'' S').
-unfold eqV.
+assert(EqV Q'' Q' S'' S').
+unfold EqV.
 left.
 
 induction(eq_dec_points Q' S').
@@ -1837,7 +1837,7 @@ left.
 intro.
 subst Q''.
 apply H19.
-unfold project in *.
+unfold Proj in *.
 spliter.
 Col.
 
@@ -1853,7 +1853,7 @@ auto.
 
 apply H27.
 
-unfold project in *.
+unfold Proj in *.
 spliter.
 assert(Col Q' S' A).
 ColR.
@@ -1863,7 +1863,7 @@ apply (col3 Q' S'); Col.
 unfold Cong_3 in H21.
 spliter.
 Cong.
-unfold eqV in H13.
+unfold EqV in H13.
 induction H13.
 
 apply plg_permut in H13.
@@ -1877,7 +1877,7 @@ spliter.
 apply False_ind.
 apply H19.
 
-unfold project in *.
+unfold Proj in *.
 spliter.
 
 assert(Col P' R' A).
@@ -1894,10 +1894,10 @@ eapply par_strict_col2_par_strict.
 auto.
 apply par_strict_symmetry.
 apply H25.
-unfold project in *.
+unfold Proj in *.
 spliter.
 apply (col3 A B); Col.
-unfold project in *.
+unfold Proj in *.
 spliter.
 apply (col3 A B); Col.
 apply l12_6.
@@ -1914,11 +1914,11 @@ apply H13.
 assumption.
 Qed.
 
-Definition projp := fun P P' A B => A <> B /\ ((Col A B P' /\ Perp A B P P') \/ (Col A B P /\ P = P')).
+Definition Projp P Q A B := A <> B /\ ((Col A B Q /\ Perp A B P Q) \/ (Col A B P /\ P = Q)).
 
-Lemma perp_projp : forall P P' A B, Perp_in P' A B P P' -> projp P P' A B.
+Lemma perp_projp : forall P P' A B, Perp_at P' A B P P' -> Projp P P' A B.
 intros.
-unfold projp.
+unfold Projp.
 split.
 apply l8_14_2_1a in H.
 apply perp_not_eq_1 in H.
@@ -1932,9 +1932,9 @@ apply l8_14_2_1a in H.
 assumption.
 Qed.
 
-Lemma proj_distinct : forall P P' A B, projp P P' A B -> P' <> A \/ P' <> B.
+Lemma proj_distinct : forall P P' A B, Projp P P' A B -> P' <> A \/ P' <> B.
 intros.
-unfold projp in H.
+unfold Projp in H.
 spliter.
 induction H0.
 spliter.
@@ -1956,15 +1956,15 @@ left.
 assumption.
 Qed.
 
-Lemma projp_is_project : 
+Lemma projp_is_project :
  forall P P' A B,
-  projp P P' A B ->
-  exists X, exists Y, project P P' A B X Y.
+  Projp P P' A B ->
+  exists X, exists Y, Proj P P' A B X Y.
 Proof.
 intros.
 
 assert(A <> B).
-unfold projp in H.
+unfold Projp in H.
 tauto.
 assert(HH:=perp_vector A B H0).
 ex_and HH X.
@@ -1976,11 +1976,11 @@ assert(X <> Y).
 apply perp_not_eq_2 in H2.
 assumption.
 
-unfold project.
+unfold Proj.
 repeat split; auto.
 apply perp_not_par.
 assumption.
-unfold projp in H.
+unfold Projp in H.
 spliter.
 induction H3.
 tauto.
@@ -1988,7 +1988,7 @@ spliter.
 subst P'.
 assumption.
 
-unfold projp in H.
+unfold Projp in H.
 spliter.
 induction H3.
 spliter.
@@ -2003,13 +2003,13 @@ Qed.
 
 Lemma projp_is_project_perp :
  forall P P' A B,
- projp P P' A B ->
- exists X, exists Y, project P P' A B X Y /\ Perp A B X Y.
+ Projp P P' A B ->
+ exists X, exists Y, Proj P P' A B X Y /\ Perp A B X Y.
 Proof.
 intros.
 
 assert(A <> B).
-unfold projp in H.
+unfold Projp in H.
 tauto.
 assert(HH:=perp_vector A B H0).
 ex_and HH X.
@@ -2022,11 +2022,11 @@ apply perp_not_eq_2 in H2.
 assumption.
 split.
 
-unfold project.
+unfold Proj.
 repeat split; auto.
 apply perp_not_par.
 assumption.
-unfold projp in H.
+unfold Projp in H.
 spliter.
 induction H3.
 tauto.
@@ -2034,7 +2034,7 @@ spliter.
 subst P'.
 assumption.
 
-unfold projp in H.
+unfold Projp in H.
 spliter.
 induction H3.
 spliter.
@@ -2051,11 +2051,11 @@ Qed.
 Lemma projp_to_project :
  forall P P' A B X Y,
   Perp A B X Y ->
-  projp P P' A B ->
-  project P P' A B X Y.
+  Projp P P' A B ->
+  Proj P P' A B X Y.
 Proof.
 intros.
-unfold project.
+unfold Proj.
 
 repeat split.
 eapply perp_not_eq_1.
@@ -2064,7 +2064,7 @@ eapply perp_not_eq_2.
 apply H.
 apply perp_not_par.
 assumption.
-unfold projp in H0.
+unfold Projp in H0.
 spliter.
 induction H1.
 spliter.
@@ -2072,7 +2072,7 @@ assumption.
 spliter.
 subst P'.
 assumption.
-unfold projp in H0.
+unfold Projp in H0.
 spliter.
 induction H1.
 spliter.
@@ -2088,14 +2088,14 @@ Qed.
 
 Lemma project_to_projp :
  forall P P' A B X Y,
-  project P P' A B X Y ->
+  Proj P P' A B X Y ->
   Perp A B X Y ->
-  projp P P' A B.
+  Projp P P' A B.
 Proof.
 intros.
-unfold project in H.
+unfold Proj in H.
 spliter.
-unfold projp.
+unfold Projp.
 split.
 apply perp_not_eq_1 in H0.
 assumption.
@@ -2117,13 +2117,13 @@ Qed.
 Lemma projp_project_to_perp :
  forall P P' A B X Y,
  P <> P' ->
- projp P P' A B ->
- project P P' A B X Y ->
+ Projp P P' A B ->
+ Proj P P' A B X Y ->
  Perp A B X Y.
 Proof.
 intros.
-unfold projp in H0.
-unfold project in H1.
+unfold Projp in H0.
+unfold Proj in H1.
 spliter.
 induction H6;
 induction H5.
@@ -2140,12 +2140,12 @@ Qed.
 
 Lemma project_par_project :
  forall P P' A B X Y X' Y',
-  project P P' A B X Y ->
+  Proj P P' A B X Y ->
   Par X Y X' Y' ->
-  project P P' A B X' Y'.
+  Proj P P' A B X' Y'.
 Proof.
 intros.
-unfold project in *.
+unfold Proj in *.
 spliter.
 apply par_distincts in H0.
 spliter.
@@ -2167,12 +2167,12 @@ Qed.
 Lemma project_project_par :
  forall P P' A B X Y X' Y',
  P <> P' ->
- project P P' A B X Y ->
- project P P' A B X' Y' ->
+ Proj P P' A B X Y ->
+ Proj P P' A B X' Y' ->
  Par X Y X' Y'.
 Proof.
 intros.
-unfold project in *.
+unfold Proj in *.
 spliter.
 induction H9;
 induction H5;
@@ -2184,9 +2184,9 @@ apply H9.
 assumption.
 Qed.
 
-Lemma projp_id : forall P P' Q' A B, projp P P' A B -> projp P Q' A B -> P' = Q'.
+Lemma projp_id : forall P P' Q' A B, Projp P P' A B -> Projp P Q' A B -> P' = Q'.
 intros.
-unfold projp in *.
+unfold Projp in *.
 spliter.
 induction H1; induction H2.
 spliter.
@@ -2213,9 +2213,9 @@ Qed.
 Lemma projp_preserves_bet :
  forall A B C A' B' C' X Y,
   Bet A B C ->
-  projp A A' X Y ->
-  projp B B' X Y ->
-  projp C C' X Y ->
+  Projp A A' X Y ->
+  Projp B B' X Y ->
+  Projp C C' X Y ->
   Bet A' B' C'.
 Proof.
 intros.
@@ -2238,12 +2238,12 @@ Qed.
 
 Lemma projp_preserves_eqv :
  forall A B C A' B' C' D D' X Y,
- eqV A B C D ->
- projp A A' X Y ->
- projp B B' X Y ->
- projp C C' X Y ->
- projp D D' X Y ->
- eqV A' B' C' D'.
+ EqV A B C D ->
+ Projp A A' X Y ->
+ Projp B B' X Y ->
+ Projp C C' X Y ->
+ Projp D D' X Y ->
+ EqV A' B' C' D'.
 Proof.
 intros.
 
@@ -2266,11 +2266,11 @@ auto.
 Qed.
 
 Lemma projp_idem : forall P P' A B,
- projp P P' A B ->
- projp P' P' A B.
+ Projp P P' A B ->
+ Projp P' P' A B.
 Proof.
 intros.
-unfold projp in *.
+unfold Projp in *.
 spliter.
 split.
 auto.
@@ -2287,7 +2287,7 @@ tauto.
 Qed.
 
 Lemma projp2_col : forall A B C P Q,
-  projp P A B C -> projp Q A B C -> Col A P Q.
+  Projp P A B C -> Projp Q A B C -> Col A P Q.
 Proof.
 intros A B C P Q H1 H2.
 destruct H1 as [H1 H3]; destruct H2 as [H2 H4];
@@ -2296,7 +2296,7 @@ apply perp_perp_col with B C; Perp.
 Qed.
 
 Lemma projp_projp_perp : forall P P1 P2 Q1 Q2,
-  P1 <> P2 -> projp P1 P Q1 Q2 -> projp P2 P Q1 Q2 -> Perp P1 P2 Q1 Q2.
+  P1 <> P2 -> Projp P1 P Q1 Q2 -> Projp P2 P Q1 Q2 -> Perp P1 P2 Q1 Q2.
 Proof.
 intros P P1 P2 Q1 Q2 HP1P2 H1 H2.
 destruct H1 as [H H1]; clear H; destruct H2 as [H H2]; clear H.
@@ -2306,7 +2306,7 @@ apply perp_sym; apply perp_col0 with P1 P; Perp; Col.
 apply col_permutation_2; apply perp_perp_col with Q1 Q2; Perp.
 Qed.
 
-Lemma col_projp_eq : forall A B P P', Col A B P -> projp P P' A B -> P = P'.
+Lemma col_projp_eq : forall A B P P', Col A B P -> Projp P P' A B -> P = P'.
 Proof.
 intros A B P P' HCol1 HProjp.
 destruct HProjp as [HDiff HProjp]; elim HProjp; clear HProjp; intro HProjp;
@@ -2314,15 +2314,15 @@ destruct HProjp as [HDiff HProjp]; elim HProjp; clear HProjp; intro HProjp;
 apply perp_not_col2 in HPerp; induction HPerp; intuition.
 Qed.
 
-Lemma projp_col : forall A B P P', projp P P' A B -> Col A B P'.
+Lemma projp_col : forall A B P P', Projp P P' A B -> Col A B P'.
 Proof.
 intros A B P P' H; destruct H as [H' H]; clear H'.
 induction H; spliter; treat_equalities; Col.
 Qed.
 
 Lemma perp_projp2_eq : forall A A' B B' C D,
-  projp A A' C D ->
-  projp B B' C D ->
+  Projp A A' C D ->
+  Projp B B' C D ->
   Perp A B C D ->
   A' = B'.
 Proof.
@@ -2396,7 +2396,7 @@ Qed.
 Lemma col_par_projp2_eq : forall L11 L12 L21 L22 P P' P'',
   Col L11 L12 P ->
   Par L11 L12 L21 L22 ->
-  projp P P' L21 L22 -> projp P' P'' L11 L12 ->
+  Projp P P' L21 L22 -> Projp P' P'' L11 L12 ->
   P = P''.
 Proof.
 intros L11 L12 L21 L22 P P' P'' HCol1 HPar HP' HP''.
@@ -2438,7 +2438,7 @@ Qed.
 Lemma col_2_par_projp2_cong : forall A A' B B' L11 L12 L21 L22,
   Col L11 L12 A' -> Col L11 L12 B' ->
   Par L11 L12 L21 L22 ->
-  projp A' A L21 L22 -> projp B' B L21 L22 ->
+  Projp A' A L21 L22 -> Projp B' B L21 L22 ->
   Cong A B A' B'.
 Proof.
 intros A A' B B' L11 L12 L21 L22 HColA' HColB' HPar HProjpA HProjpB.
@@ -2469,7 +2469,7 @@ elim HPar; clear HPar; intro HPar.
         }
 
         {
-        unfold projp in *.
+        unfold Projp in *.
         destruct HProjpA as [H HElim]; clear H;
         elim HElim; clear HElim; intro H; destruct H as [HColA HPerp1];
         [|exfalso; apply HPar; exists A'; Col].

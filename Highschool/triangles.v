@@ -24,7 +24,7 @@ Qed.
 Lemma isosceles_conga :
   A<>C -> A <> B ->
   isosceles A B C ->
-  Conga C A B A C B.
+  CongA C A B A C B.
 Proof.
 intros.
 apply cong3_conga.
@@ -211,7 +211,7 @@ equilateral_strict_swap_3 equilateral_strict_swap_4 equilateral_strict_swap_5 : 
 
 Lemma equilateral_strict_conga_1 :
  equilateral_strict A B C ->
- Conga C A B A C B.
+ CongA C A B A C B.
 Proof.
 intros.
 assert (T:= equilateral_strict_neq H).
@@ -228,7 +228,7 @@ End ABC.
 Lemma equilateral_strict_conga_2 :
  forall A B C,
  equilateral_strict A B C ->
- Conga B A C A B C.
+ CongA B A C A B C.
 Proof.
 intros.
 apply equilateral_strict_swap_1 in H.
@@ -239,7 +239,7 @@ Qed.
 Lemma equilateral_strict_conga_3 :
  forall A B C,
  equilateral_strict A B C ->
- Conga C B A B C A.
+ CongA C B A B C A.
 Proof.
 intros.
 apply equilateral_strict_swap_2 in H.

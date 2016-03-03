@@ -191,7 +191,7 @@ Proof.
 Qed.
 
 
-Definition FSC := fun A B C D A' B' C' D' =>
+Definition FSC A B C D A' B' C' D' :=
   Col A B C /\ Cong_3 A B C A' B' C' /\ Cong A D A' D' /\ Cong B D B' D'.
 
 Lemma l4_16 : forall A B C D A' B' C' D',

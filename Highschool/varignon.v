@@ -10,10 +10,10 @@ Context `{EqDec:EqDecidability Tpoint}.
 Lemma varignon :
  forall A B C D I J K L,
   A<>C -> B<>D -> ~ Col I J K ->
-  is_midpoint I A B ->
-  is_midpoint J B C ->
-  is_midpoint K C D ->
-  is_midpoint L A D ->
+  Midpoint I A B ->
+  Midpoint J B C ->
+  Midpoint K C D ->
+  Midpoint L A D ->
   Parallelogram I J K L.
 Proof.
 intros.
@@ -40,10 +40,10 @@ Lemma varignon_aux :
  forall A B C D I J K L,
   (A<>C \/ B<>D) ->
   J<>L ->
-  is_midpoint I A B ->
-  is_midpoint J B C ->
-  is_midpoint K C D ->
-  is_midpoint L A D ->
+  Midpoint I A B ->
+  Midpoint J B C ->
+  Midpoint K C D ->
+  Midpoint L A D ->
   Parallelogram I J K L.
 Proof.
 intros.
@@ -111,10 +111,10 @@ Qed.
 Lemma varignon' :
  forall A B C D I J K L,
   (A<>C \/ B<>D) ->
-  is_midpoint I A B ->
-  is_midpoint J B C ->
-  is_midpoint K C D ->
-  is_midpoint L A D ->
+  Midpoint I A B ->
+  Midpoint J B C ->
+  Midpoint K C D ->
+  Midpoint L A D ->
   Parallelogram I J K L.
 Proof.
 intros.
@@ -157,7 +157,7 @@ induction (eq_dec_points A D).
  left;auto.
 induction (eq_dec_points B D).
  treat_equalities. intuition.
-assert (is_midpoint L I K).
+assert (Midpoint L I K).
 assert (Par A B L X /\
        Par A D X I /\
        Par B D L I /\

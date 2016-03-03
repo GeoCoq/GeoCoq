@@ -9,12 +9,12 @@ Context `{EqDec:EqDecidability Tpoint}.
 
 (** Vertor *)
 
-Definition eqV := fun A B C D => Parallelogram A B D C \/ A = B /\ C = D.
+Definition EqV A B C D := Parallelogram A B D C \/ A = B /\ C = D.
 
-Lemma eqv_refl : forall A B, eqV A B A B.
+Lemma eqv_refl : forall A B, EqV A B A B.
 Proof.
 intros.
-unfold eqV.
+unfold EqV.
 induction (eq_dec_points A B).
 right.
 split; auto.
@@ -24,10 +24,10 @@ apply plgf_trivial.
 assumption.
 Qed.
 
-Lemma eqv_sym : forall A B C D, eqV A B C D -> eqV C D A B.
+Lemma eqv_sym : forall A B C D, EqV A B C D -> EqV C D A B.
 Proof.
 intros.
-unfold eqV in *.
+unfold EqV in *.
 induction H.
 left.
 apply plg_sym.
@@ -37,10 +37,10 @@ right.
 tauto.
 Qed.
 
-Lemma eqv_trans : forall A B C D E F, eqV A B C D -> eqV C D E F -> eqV A B E F.
+Lemma eqv_trans : forall A B C D E F, EqV A B C D -> EqV C D E F -> EqV A B E F.
 Proof.
 intros.
-unfold eqV in *.
+unfold EqV in *.
 
 induction H; induction H0.
 assert(Parallelogram A B F E \/ A = B /\ D = C /\ E = F /\ A = E).
@@ -61,7 +61,7 @@ tauto.
 left.
 induction H.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H4.
@@ -74,7 +74,7 @@ subst B.
 subst D.
 induction H0.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H2.
@@ -88,10 +88,10 @@ right.
 tauto.
 Qed.
 
-Lemma eqv_comm : forall A B C D, eqV A B C D -> eqV B A D C.
+Lemma eqv_comm : forall A B C D, EqV A B C D -> EqV B A D C.
 Proof.
 intros.
-unfold eqV in *.
+unfold EqV in *.
 induction H.
 left.
 apply plg_comm2.
@@ -103,7 +103,7 @@ subst D.
 tauto.
 Qed.
 
-Lemma vector_construction : forall A B C, exists D, eqV A B C D.
+Lemma vector_construction : forall A B C, exists D, EqV A B C D.
 Proof.
 intros.
 induction (eq_dec_points A B).
@@ -134,12 +134,12 @@ Qed.
 
 Lemma vector_construction_unicity :
  forall A B C D D',
- eqV A B C D ->
- eqV A B C D' ->
+ EqV A B C D ->
+ EqV A B C D' ->
  D = D'.
 Proof.
 intros.
-unfold eqV in *.
+unfold EqV in *.
 induction H; induction H0.
 apply plg_comm2 in H.
 apply plg_comm2 in H0.
@@ -149,7 +149,7 @@ subst B.
 subst D'.
 induction H.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H2.
@@ -161,7 +161,7 @@ subst B.
 subst D.
 induction H0.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H2.
@@ -174,14 +174,14 @@ subst C.
 auto.
 Qed.
 
-Lemma null_vector : forall A B C, eqV A A B C -> B = C.
+Lemma null_vector : forall A B C, EqV A A B C -> B = C.
 Proof.
 intros.
-unfold eqV in H.
+unfold EqV in H.
 induction H.
 induction H.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H2.
@@ -193,14 +193,14 @@ tauto.
 tauto.
 Qed.
 
-Lemma vector_unicity : forall A B C, eqV A B A C -> B = C.
+Lemma vector_unicity : forall A B C, EqV A B A C -> B = C.
 Proof.
 intros.
-unfold eqV in H.
+unfold EqV in H.
 induction H.
 induction H.
 induction H.
-unfold two_sides in H.
+unfold TS in H.
 spliter.
 apply False_ind.
 apply H3.
@@ -214,18 +214,18 @@ subst A.
 auto.
 Qed.
 
-Lemma eqv_trivial : forall A B , eqV A A B B.
+Lemma eqv_trivial : forall A B , EqV A A B B.
 Proof.
 intros.
-unfold eqV.
+unfold EqV.
 right.
 tauto.
 Qed.
 
 Lemma eqv_permut :
   forall A B C D,
-  eqV A B C D ->
-  eqV A C B D.
+  EqV A B C D ->
+  EqV A C B D.
 Proof.
 intros.
 induction (eq_dec_points A C).
@@ -236,7 +236,7 @@ assumption.
 subst D.
 apply eqv_trivial.
 
-unfold eqV in *.
+unfold EqV in *.
 induction H.
 left.
 apply plg_permut.
@@ -253,11 +253,11 @@ Qed.
 Lemma eqv_par :
  forall A B C D,
   A <> B ->
-  eqV A B C D ->
+  EqV A B C D ->
   Par A B C D.
 Proof.
 intros.
-unfold eqV in H0.
+unfold EqV in H0.
 induction H0.
 unfold Parallelogram in H0.
 induction H0.
@@ -283,11 +283,11 @@ Qed.
 
 Lemma eqv_opp_null :
   forall A B,
-  eqV A B B A ->
+  EqV A B B A ->
   A = B.
 Proof.
 intros.
-unfold eqV in H.
+unfold EqV in H.
 induction H.
 apply plg_irreflexive in H.
 tauto.
@@ -296,13 +296,13 @@ Qed.
 
 Lemma eqv_sum :
   forall A B C A' B' C',
-  eqV A B A' B' ->
-  eqV B C B' C' ->
-  eqV A C A' C'.
+  EqV A B A' B' ->
+  EqV B C B' C' ->
+  EqV A C A' C'.
 Proof.
 intros.
 
-unfold eqV in *.
+unfold EqV in *.
 induction H.
 induction H0.
 apply plg_comm2 in H.
@@ -331,15 +331,15 @@ subst B'.
 assumption.
 Qed.
 
-Definition is_sum := fun A B C D E F => forall D', eqV C D B D' -> eqV A D' E F.
+Definition SumV A B C D E F := forall D', EqV C D B D' -> EqV A D' E F.
 
 
 Lemma null_sum :
  forall A B C,
-  is_sum A B B A C C.
+  SumV A B B A C C.
 Proof.
 intros.
-unfold is_sum.
+unfold SumV.
 intros D H.
 assert(A = D).
 apply (vector_unicity B).
@@ -350,10 +350,10 @@ Qed.
 
 Lemma chasles :
  forall A B C,
-  is_sum A B B C A C.
+  SumV A B B C A C.
 Proof.
 intros.
-unfold is_sum.
+unfold SumV.
 intros D H.
 assert(C = D).
 apply (vector_unicity B).
@@ -364,11 +364,11 @@ Qed.
 
 Lemma eqv_mid :
  forall A B C,
-  eqV A B B C ->
-  is_midpoint B A C.
+  EqV A B B C ->
+  Midpoint B A C.
 Proof.
 intros.
-unfold eqV in H.
+unfold EqV in H.
 induction H.
 apply plg_mid in H.
 ex_and H M.
@@ -382,11 +382,11 @@ apply l7_3_2.
 Qed.
 
 Lemma mid_eqv :
-  forall A B C, is_midpoint A B C ->
-  eqV B A A C.
+  forall A B C, Midpoint A B C ->
+  EqV B A A C.
 Proof.
 intros.
-unfold eqV.
+unfold EqV.
 induction(eq_dec_points A B).
 subst B.
 apply is_midpoint_id in H.
@@ -408,11 +408,11 @@ Qed.
 
 Lemma sum_sym :
   forall A B C D E F,
-  is_sum A B C D E F ->
-  is_sum C D A B E F.
+  SumV A B C D E F ->
+  SumV C D A B E F.
 Proof.
 intros.
-unfold is_sum in *.
+unfold SumV in *.
 assert(HH:=vector_construction C D B).
 ex_and HH D'.
 
@@ -420,11 +420,11 @@ ex_and HH D'.
 assert(HH:= (H D' H0)).
 clear H.
 
-assert(eqV C B D D').
+assert(EqV C B D D').
 apply eqv_permut.
 assumption.
 
-assert(eqV A D B D'0).
+assert(EqV A D B D'0).
 apply eqv_permut.
 assumption.
 
@@ -434,7 +434,7 @@ subst D'0.
 apply eqv_comm in H1.
 assert(HP:= (eqv_mid B A D H1)).
 
-unfold eqV in H0.
+unfold EqV in H0.
 induction H0.
 apply plg_mid in H0.
 ex_and H0 M.
@@ -475,8 +475,8 @@ left.
 assumption.
 assumption.
 Midpoint.
-assert(eqV C D'0 A D').
-unfold eqV.
+assert(EqV C D'0 A D').
+unfold EqV.
 left.
 apply plg_comm2.
 apply plg_sym.
@@ -487,7 +487,7 @@ assumption.
 spliter.
 subst B.
 subst D'0.
-assert(eqV C D A D').
+assert(EqV C D A D').
 apply eqv_permut.
 assumption.
 apply (eqv_trans _ _ A D').
@@ -497,7 +497,7 @@ spliter.
 subst D.
 subst D'.
 
-assert(eqV A B C D'0).
+assert(EqV A B C D'0).
 apply eqv_permut.
 assumption.
 apply (eqv_trans _ _ A B).
@@ -517,18 +517,18 @@ Qed.
 
 Lemma opposite_sum :
   forall A B C D E F,
-  is_sum A B C D E F ->
-  is_sum B A D C F E.
+  SumV A B C D E F ->
+  SumV B A D C F E.
 Proof.
 intros.
-unfold is_sum in *.
+unfold SumV in *.
 intros D0 H0.
 assert(HH:=vector_construction C D B).
 ex_and HH D'.
 assert(HH:= (H D' H1)).
 clear H.
 
-assert(eqV D' B A D0).
+assert(EqV D' B A D0).
 apply (eqv_trans _ _ D C).
 apply eqv_sym.
 apply eqv_comm.
@@ -544,11 +544,11 @@ Qed.
 
 Lemma null_sum_eq :
   forall A B C D,
-  is_sum A B B C D D ->
+  SumV A B B C D D ->
   A = C.
 Proof.
 intros.
-unfold is_sum in H.
+unfold SumV in H.
 assert(HH:= vector_construction B C B).
 ex_and HH D'.
 assert(HH:= (H D' H0)).
@@ -561,16 +561,16 @@ apply vector_unicity in H0.
 auto.
 Qed.
 
-Definition is_sum_exists := fun A B C D E F => exists D', eqV B D' C D /\ eqV A D' E F.
+Definition SumV_exists A B C D E F := exists D', EqV B D' C D /\ EqV A D' E F.
 
 Lemma is_to_ise :
   forall A B C D E F,
-  is_sum A B C D E F ->
-  is_sum_exists A B C D E F.
+  SumV A B C D E F ->
+  SumV_exists A B C D E F.
 Proof.
 intros.
-unfold is_sum in H.
-unfold is_sum_exists.
+unfold SumV in H.
+unfold SumV_exists.
 assert(HH:= (vector_construction C D B)).
 ex_and HH D'.
 assert(HH:=(H D' H0)).
@@ -584,12 +584,12 @@ Qed.
 
 Lemma ise_to_is :
  forall A B C D E F,
-  is_sum_exists A B C D E F ->
-  is_sum A B C D E F.
+  SumV_exists A B C D E F ->
+  SumV A B C D E F.
 Proof.
 intros.
 ex_and H D'.
-unfold is_sum.
+unfold SumV.
 intros.
 assert(D'= D'0).
 apply (vector_construction_unicity C D B).
@@ -601,13 +601,13 @@ assumption.
 Qed.
 
 Lemma sum_exists :
- forall A B C D, exists E, exists F, is_sum A B C D E F.
+ forall A B C D, exists E, exists F, SumV A B C D E F.
 intros.
 assert(HH:= vector_construction C D B).
 ex_and HH F.
 exists A.
 exists F.
-unfold is_sum.
+unfold SumV.
 intros.
 assert(D' = F).
 apply (vector_construction_unicity C D B); auto.
@@ -617,12 +617,12 @@ Qed.
 
 Lemma sum_unicity :
  forall A B C D E F E' F',
- is_sum A B C D E F ->
- is_sum A B C D E' F' ->
- eqV E F E' F'.
+ SumV A B C D E F ->
+ SumV A B C D E' F' ->
+ EqV E F E' F'.
 Proof.
 intros.
-unfold is_sum in *.
+unfold SumV in *.
 assert(HH:= vector_construction C D B).
 ex_and HH D'.
 assert(HH:= (H D' H1)).
@@ -634,11 +634,11 @@ auto.
 Qed.
 
 
-Definition same_dir := fun A B C D => A = B /\ C = D \/ exists D', out C D D' /\ eqV A B C D'.
+Definition Same_dir A B C D := A = B /\ C = D \/ exists D', Out C D D' /\ EqV A B C D'.
 
-Lemma same_dir_refl : forall A B, same_dir A B A B.
+Lemma same_dir_refl : forall A B, Same_dir A B A B.
 intros.
-unfold same_dir.
+unfold Same_dir.
 induction (eq_dec_points A B).
 left.
 tauto.
@@ -652,7 +652,7 @@ Qed.
 
 Lemma same_dir_ts :
   forall A B C D,
-  same_dir A B C D ->
+  Same_dir A B C D ->
   exists M, Bet A M D /\ Bet B M C.
 Proof.
 intros.
@@ -666,11 +666,11 @@ split; Between.
 ex_and H D'.
 induction H0.
 
-assert(exists M : Tpoint, is_midpoint M A D' /\ is_midpoint M B C).
+assert(exists M : Tpoint, Midpoint M A D' /\ Midpoint M B C).
 apply plg_mid.
 assumption.
 ex_and H1 M.
-unfold is_midpoint in *.
+unfold Midpoint in *.
 spliter.
 
 induction H0.
@@ -680,20 +680,20 @@ spliter.
 assert(B <> C).
 intro.
 subst C.
-unfold two_sides in H6.
+unfold TS in H6.
 tauto.
 assert(~ Col B C D').
 intro.
-unfold two_sides in H6.
+unfold TS in H6.
 spliter.
 apply H10.
 Col.
 
-assert(one_side B C D' D).
+assert(OS B C D' D).
 apply l6_6 in H.
 apply (out_one_side_1 _ _ _ _ C); Col.
 
-assert(two_sides B C A D).
+assert(TS B C A D).
 apply l9_2.
 apply (l9_8_2 _ _ D').
 apply l9_2.
@@ -704,7 +704,7 @@ induction H10.
 spliter.
 ex_and H13 T.
 
-assert(one_side A B D' C /\ one_side D' C A B).
+assert(OS A B D' C /\ OS D' C A B).
 apply(plgs_one_side A B D' C).
 assumption.
 spliter.
@@ -733,7 +733,7 @@ split; Col.
 
 assert(Par C D A B).
 apply (par_col_par_2 _ D').
-unfold out in H.
+unfold Out in H.
 spliter.
 auto.
 apply out_col in H.
@@ -774,10 +774,10 @@ split; Col.
 
 induction H13.
 
-assert(one_side B A T D).
+assert(OS B A T D).
 apply (out_one_side_1 _ _ _ _ A); Col.
 
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst T.
@@ -791,7 +791,7 @@ split; Col.
 left.
 auto.
 
-assert(one_side B A T C).
+assert(OS B A T C).
 apply (one_side_transitivity _ _ _ D).
 apply H25.
 apply (par_strict_one_side _ _ _ C).
@@ -799,8 +799,8 @@ apply par_strict_comm.
 apply H22.
 Col.
 
-assert(two_sides B A T C).
-unfold two_sides.
+assert(TS B A T C).
+unfold TS.
 repeat split; Col.
 exists B.
 split; Col.
@@ -810,7 +810,7 @@ assumption.
 
 induction H13.
 
-assert(one_side C D T A).
+assert(OS C D T A).
 apply (out_one_side_1 _ _ _ _ D).
 intro.
 subst D.
@@ -819,7 +819,7 @@ exists A.
 split; Col.
 auto.
 Col.
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst T.
@@ -832,7 +832,7 @@ exists A.
 split; Col.
 left.
 Between.
-assert(one_side C D T B).
+assert(OS C D T B).
 apply (one_side_transitivity _ _ _ A).
 apply H25.
 apply (par_strict_one_side _ _ _ B).
@@ -840,10 +840,10 @@ apply par_strict_symmetry.
 apply H22.
 Col.
 
-assert(two_sides C D T B).
-unfold two_sides.
+assert(TS C D T B).
+unfold TS.
 repeat split.
-unfold out in H.
+unfold Out in H.
 spliter.
 auto.
 
@@ -869,7 +869,7 @@ induction (eq_dec_points A D').
 subst D'.
 unfold Parallelogram_flat in H0.
 spliter.
-assert(B = C \/ is_midpoint A B C).
+assert(B = C \/ Midpoint A B C).
 apply l7_20.
 Col.
 Cong.
@@ -886,7 +886,7 @@ induction (eq_dec_points B C).
 subst C.
 unfold Parallelogram_flat in H0.
 spliter.
-assert(A = D' \/ is_midpoint B A D').
+assert(A = D' \/ Midpoint B A D').
 apply l7_20.
 Col.
 Cong.
@@ -896,7 +896,7 @@ tauto.
 exists B.
 split.
 induction H10.
-unfold out in H.
+unfold Out in H.
 spliter.
 induction H13.
 apply (between_inner_transitivity _ _ _ D').
@@ -946,7 +946,7 @@ spliter.
 
 exists B.
 split.
-unfold out in H.
+unfold Out in H.
 spliter.
 induction H10.
 assert(Bet B C D).
@@ -973,14 +973,14 @@ Qed.
 Lemma one_side_col_out :
  forall A B X Y,
   Col A X Y ->
-  one_side A B X Y ->
-  out A X Y.
+  OS A B X Y ->
+  Out A X Y.
 Proof.
 intros.
 assert(A <> B /\ ~ Col X A B /\ ~ Col Y A B /\ X <> A /\ Y <> A).
-unfold one_side in H0.
+unfold OS in H0.
 ex_and H0 T.
-unfold two_sides in *.
+unfold TS in *.
 spliter.
 repeat split; auto.
 intro.
@@ -1001,8 +1001,8 @@ repeat split; auto.
 right.
 Between.
 
-assert(two_sides A B X Y).
-unfold two_sides.
+assert(TS A B X Y).
+unfold TS.
 repeat split; auto.
 exists A.
 split.
@@ -1015,11 +1015,11 @@ Qed.
 Lemma par_ts_same_dir :
  forall A B C D, Par_strict A B C D ->
  (exists M, Bet A M D /\ Bet B M C) ->
- same_dir A B C D.
+ Same_dir A B C D.
 Proof.
 intros.
 ex_and H0 M.
-unfold same_dir.
+unfold Same_dir.
 right.
 
 assert(HH:=vector_construction A B C).
@@ -1056,7 +1056,7 @@ apply (l5_1 _ M).
 apply H5.
 auto.
 Between.
-unfold out.
+unfold Out.
 repeat split; auto.
 induction H2.
 
@@ -1080,9 +1080,9 @@ induction H2.
 assert(HH := (plgs_two_sides A B D' C H2)).
 spliter.
 
-assert(two_sides B C A D).
-unfold two_sides.
-unfold two_sides in H10.
+assert(TS B C A D).
+unfold TS.
+unfold TS in H10.
 spliter.
 repeat split;
 auto.
@@ -1095,7 +1095,7 @@ apply bet_col in H1.
 Col.
 auto.
 
-assert(one_side B C D D').
+assert(OS B C D D').
 apply (l9_8_1 _ _ _ _ A).
 apply l9_2.
 apply H11.
@@ -1120,14 +1120,14 @@ subst B.
 tauto.
 Qed.
 
-Lemma same_dir_out : forall A B C, same_dir A B A C -> out A B C \/ A = B /\ A = C.
+Lemma same_dir_out : forall A B C, Same_dir A B A C -> Out A B C \/ A = B /\ A = C.
 intros.
-unfold same_dir in H.
+unfold Same_dir in H.
 induction H.
 right.
 auto.
 ex_and H D'.
-unfold eqV in H0.
+unfold EqV in H0.
 induction H0.
 induction H0.
 apply plgs_par_strict in H0.
@@ -1147,20 +1147,20 @@ assumption.
 spliter.
 subst D'.
 subst B.
-unfold out in H.
+unfold Out in H.
 tauto.
 Qed.
 
-Lemma same_dir_out1 : forall A B C, same_dir A B B C -> out A B C \/ A = B /\ A = C.
+Lemma same_dir_out1 : forall A B C, Same_dir A B B C -> Out A B C \/ A = B /\ A = C.
 intros.
-unfold same_dir in H.
+unfold Same_dir in H.
 induction H.
 right.
 spliter.
 subst B.
 tauto.
 ex_and H D'.
-unfold eqV in H0.
+unfold EqV in H0.
 
 induction H0.
 induction H0.
@@ -1172,7 +1172,7 @@ exists B.
 split; Col.
 unfold Parallelogram_flat in H0.
 spliter.
-assert(A = D' \/ is_midpoint B A D').
+assert(A = D' \/ Midpoint B A D').
 apply l7_20.
 Col.
 Cong.
@@ -1180,9 +1180,9 @@ induction H5.
 subst D'.
 tauto.
 left.
-unfold is_midpoint in H5.
+unfold Midpoint in H5.
 spliter.
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst B.
@@ -1191,7 +1191,7 @@ apply cong_identity in H6.
 induction H4; tauto.
 intro.
 subst C.
-unfold out in H.
+unfold Out in H.
 spliter.
 induction H8.
 apply H.
@@ -1215,19 +1215,19 @@ auto.
 spliter.
 subst B.
 subst D'.
-unfold out in H.
+unfold Out in H.
 tauto.
 Qed.
 
-Lemma same_dir_null : forall A B C, same_dir A A B C -> B = C.
+Lemma same_dir_null : forall A B C, Same_dir A A B C -> B = C.
 intros.
-unfold same_dir in H.
+unfold Same_dir in H.
 induction H.
 tauto.
 ex_and H D.
 apply null_vector in H0.
 subst D.
-unfold out in H.
+unfold Out in H.
 tauto.
 Qed.
 
@@ -1236,20 +1236,20 @@ Qed.
 Lemma plgs_out_plgs :
  forall A B C D B' C',
  Parallelogram_strict A B C D ->
- out A B B' ->
- out D C C' ->
+ Out A B B' ->
+ Out D C C' ->
  Cong A B' D C' ->
  Parallelogram_strict A B' C' D.
 Proof.
 intros.
-assert(one_side A D C B /\ one_side C B A D).
+assert(OS A D C B /\ OS C B A D).
 apply plgs_one_side.
 apply plgs_permut.
 apply plgs_comm2.
 assumption.
 
 assert( A <> B /\ A <> B' /\ D <> C /\ D <> C').
-unfold out in *.
+unfold Out in *.
 spliter.
 repeat split; auto.
 spliter.
@@ -1289,7 +1289,7 @@ split; Col.
 apply H14.
 ColR.
 
-assert(one_side A D B B').
+assert(OS A D B B').
 apply (out_one_side_1 A _ _ _ A).
 intro.
 subst D.
@@ -1303,7 +1303,7 @@ split; Col.
 Col.
 auto.
 
-assert(one_side A D C C').
+assert(OS A D C C').
 apply (out_one_side_1 _ D _ _ D).
 intro.
 subst D.
@@ -1317,7 +1317,7 @@ split; Col.
 Col.
 auto.
 
-assert(one_side A D B' C').
+assert(OS A D B' C').
 apply (one_side_transitivity _ _ _ B).
 apply one_side_symmetry.
 apply H11.
@@ -1380,7 +1380,7 @@ apply plgs_permut in H1.
 assert(HH1:=plgs_one_side B C D A H).
 assert(HH2:=plgs_one_side B' C' D A H1).
 spliter.
-assert(one_side D A C C').
+assert(OS D A C C').
 apply (one_side_transitivity _ _ _ B).
 apply one_side_symmetry.
 apply H6.
@@ -1411,7 +1411,7 @@ apply H.
 Col.
 right.
 assumption.
-assert(two_sides D A C C').
+assert(TS D A C C').
 repeat split.
 intro.
 subst D.
@@ -1472,8 +1472,8 @@ spliter.
 
 (*******************************)
 
-assert(two_sides B C A B').
-unfold two_sides.
+assert(TS B C A B').
+unfold TS.
 repeat split.
 intro.
 subst C.
@@ -1499,7 +1499,7 @@ split.
 Col.
 assumption.
 
-assert(one_side B C C' D).
+assert(OS B C C' D).
 apply (out_one_side_1 _ _ _ _ C).
 intro.
 subst C.
@@ -1527,7 +1527,7 @@ split; Col.
 left.
 Between.
 
-assert(one_side B C A B').
+assert(OS B C A B').
 apply (one_side_transitivity _ _ _ D).
 apply one_side_symmetry.
 apply H7.
@@ -1815,14 +1815,14 @@ Qed.
 Lemma plgf_out_plgf :
  forall A B C D B' C',
  Parallelogram_flat A B C D ->
- out A B B' ->
- out D C C' ->
+ Out A B B' ->
+ Out D C C' ->
  Cong A B' D C' ->
  Parallelogram_flat A B' C' D.
 Proof.
 intros.
 assert( A <> B /\ A <> B' /\ D <> C /\ D <> C').
-unfold out in *.
+unfold Out in *.
 spliter.
 repeat split; auto.
 spliter.
@@ -1929,7 +1929,7 @@ apply H10.
 auto.
 repeat split; auto.
 
-unfold out in H0.
+unfold Out in H0.
 spliter.
 induction H19.
 left.
@@ -1977,8 +1977,8 @@ Qed.
 Lemma plg_out_plg : 
  forall A B C D B' C',
  Parallelogram A B C D ->
- out A B B' ->
- out D C C' ->
+ Out A B B' ->
+ Out D C C' ->
  Cong A B' D C' ->
  Parallelogram A B' C' D.
 Proof.
@@ -1999,7 +1999,7 @@ auto.
 Qed.
 
 
-Lemma same_dir_sym : forall A B C D, same_dir A B C D -> same_dir C D A B.
+Lemma same_dir_sym : forall A B C D, Same_dir A B C D -> Same_dir C D A B.
 intros.
 
 induction (eq_dec_points A B).
@@ -2009,7 +2009,7 @@ subst D.
 left.
 tauto.
 
-unfold same_dir in *.
+unfold Same_dir in *.
 induction H.
 left.
 tauto.
@@ -2020,9 +2020,9 @@ assert(HH:=vector_construction C D A).
 ex_and HH B'.
 exists B'.
 split.
-unfold eqV in H1.
-unfold eqV in H2.
-unfold out in *.
+unfold EqV in H1.
+unfold EqV in H2.
+unfold Out in *.
 spliter.
 induction H1; induction H2.
 
@@ -2069,9 +2069,9 @@ assumption.
 Qed.
 
 
-Lemma same_dir_trans : forall A B C D E F, same_dir A B C D -> same_dir C D E F -> same_dir A B E F.
+Lemma same_dir_trans : forall A B C D E F, Same_dir A B C D -> Same_dir C D E F -> Same_dir A B E F.
 intros.
-unfold same_dir in *.
+unfold Same_dir in *.
 induction H; induction H0; spliter.
 left.
 tauto.
@@ -2080,12 +2080,12 @@ subst B.
 subst D.
 apply null_vector in H2.
 subst F'.
-unfold out in H0.
+unfold Out in H0.
 tauto.
 ex_and H D'.
 subst D.
 subst F.
-unfold out in H.
+unfold Out in H.
 tauto.
 ex_and H D'.
 ex_and H0 F'.
@@ -2096,7 +2096,7 @@ induction(eq_dec_points A B).
 subst B.
 apply null_vector in H1.
 subst D'.
-unfold out in H.
+unfold Out in H.
 tauto.
 
 assert(HH:=vector_construction A B E).
@@ -2106,15 +2106,15 @@ split.
 
 2: auto.
 assert(C <> D /\ C <> D' /\ E <> F /\ E <> F').
-unfold out in *.
+unfold Out in *.
 spliter.
 repeat split;
 auto.
 spliter.
 
-unfold eqV in *.
+unfold EqV in *.
 induction H1; induction H2; induction H4.
-unfold out in *.
+unfold Out in *.
 spliter.
 induction H10; induction H12.
 repeat split.
@@ -2253,10 +2253,10 @@ tauto.
 tauto.
 Qed.
 
-Lemma same_dir_comm : forall A B C D, same_dir A B C D -> same_dir B A D C.
+Lemma same_dir_comm : forall A B C D, Same_dir A B C D -> Same_dir B A D C.
 intros.
 
-unfold same_dir in *.
+unfold Same_dir in *.
 induction H.
 left.
 auto.
@@ -2269,7 +2269,7 @@ assert(A <> B).
 intro.
 subst B.
 apply null_vector in H0.
-unfold out in H.
+unfold Out in H.
 spliter.
 auto.
 
@@ -2279,10 +2279,10 @@ exists C'.
 split.
 2: auto.
 
-unfold out in *.
+unfold Out in *.
 spliter.
 
-unfold eqV in *.
+unfold EqV in *.
 
 induction H4.
 repeat split.
@@ -2418,13 +2418,13 @@ subst B.
 tauto.
 Qed.
 
-Lemma bet_same_dir1 : forall A B C, A <> B -> B <> C -> Bet A B C -> same_dir A B A C.
+Lemma bet_same_dir1 : forall A B C, A <> B -> B <> C -> Bet A B C -> Same_dir A B A C.
 intros.
-unfold same_dir.
+unfold Same_dir.
 right.
 exists B.
 split.
-unfold out.
+unfold Out.
 repeat split.
 intro.
 subst C.
@@ -2436,16 +2436,16 @@ assumption.
 apply eqv_refl.
 Qed.
 
-Lemma bet_same_dir2 : forall A B C, A <> B -> B <> C -> Bet A B C -> same_dir A B B C.
+Lemma bet_same_dir2 : forall A B C, A <> B -> B <> C -> Bet A B C -> Same_dir A B B C.
 intros.
-unfold same_dir.
+unfold Same_dir.
 right.
 assert(HH:=vector_construction A B B).
 ex_and HH C'.
 exists C'.
 split.
 2: auto.
-unfold eqV in H2.
+unfold EqV in H2.
 induction H2.
 2:tauto.
 
@@ -2461,7 +2461,7 @@ unfold Parallelogram_flat in HH.
 apply plgf_bet in H2.
 spliter.
 
-unfold out.
+unfold Out.
 repeat split.
 auto.
 intro.
@@ -2498,7 +2498,7 @@ tauto.
 
 induction H2.
 
-assert( A = C' \/ is_midpoint B A C').
+assert( A = C' \/ Midpoint B A C').
 apply l7_20.
 Col.
 Cong.
@@ -2506,11 +2506,11 @@ induction H8.
 induction H7.
 tauto.
 tauto.
-unfold is_midpoint in H8.
+unfold Midpoint in H8.
 spliter.
 apply (l5_2 A); auto.
 
-assert( A = C' \/ is_midpoint B A C').
+assert( A = C' \/ Midpoint B A C').
 apply l7_20.
 Col.
 Cong.
@@ -2518,14 +2518,14 @@ induction H8.
 induction H7.
 tauto.
 tauto.
-unfold is_midpoint in H8.
+unfold Midpoint in H8.
 spliter.
 apply (l5_2 A); auto.
 Qed.
 
-Definition opp_dir := fun A B C D => same_dir A B D C.
+Definition Opp_dir A B C D := Same_dir A B D C.
 
-Lemma plg_opp_dir : forall A B C D, Parallelogram A B C D -> same_dir A B D C.
+Lemma plg_opp_dir : forall A B C D, Parallelogram A B C D -> Same_dir A B D C.
 intros.
 
 induction(eq_dec_points A B).
@@ -2541,7 +2541,7 @@ subst D.
 left.
 tauto.
 
-unfold same_dir.
+unfold Same_dir.
 right.
 exists C.
 split.
@@ -2554,17 +2554,17 @@ Col.
 apply plgf_sym in H.
 apply plgf_trivial_neq in H.
 tauto.
-unfold eqV.
+unfold EqV.
 left.
 assumption.
 Qed.
 
 Lemma same_dir_dec : forall A B C D,
-  same_dir A B C D \/ ~ same_dir A B C D.
+  Same_dir A B C D \/ ~ Same_dir A B C D.
 Proof.
 intros.
-unfold same_dir.
-unfold eqV.
+unfold Same_dir.
+unfold EqV.
 elim (eq_dec_points A B); intro HAB;
 elim (eq_dec_points C D); intro HCD; try tauto.
 
@@ -2625,22 +2625,22 @@ elim (eq_dec_points C D); intro HCD; try tauto.
         spliter; intuition.
 Qed.
 
-Lemma same_or_opp_dir : forall A B C D, Par A B C D -> same_dir A B C D \/ opp_dir A B C D.
+Lemma same_or_opp_dir : forall A B C D, Par A B C D -> Same_dir A B C D \/ Opp_dir A B C D.
 intros.
 induction (same_dir_dec A B C D).
 left.
 assumption.
 right.
-unfold opp_dir.
+unfold Opp_dir.
 
-unfold same_dir.
+unfold Same_dir.
 right.
 assert(HH:= vector_construction A B D).
 ex_and HH C'.
 exists C'.
 split.
 2:auto.
-unfold eqV in H1.
+unfold EqV in H1.
 
 induction (eq_dec_points B C').
 subst C'.
@@ -2663,18 +2663,18 @@ exists A.
 split; Col.
 spliter.
 induction H4.
-unfold out.
+unfold Out.
 repeat split; auto.
 left.
 Between.
 induction H4.
-unfold out.
+unfold Out.
 repeat split; auto.
 apply False_ind.
 apply H0.
 apply same_dir_sym.
 apply bet_same_dir2; auto.
-unfold out.
+unfold Out.
 repeat split.
 auto.
 auto.
@@ -2699,7 +2699,7 @@ assumption.
 spliter.
 clear H4.
 
-unfold out.
+unfold Out.
 repeat split.
 apply par_distinct in H.
 tauto.
@@ -2720,11 +2720,11 @@ Between.
 induction H3.
 apply False_ind.
 
-assert(same_dir A B D C').
+assert(Same_dir A B D C').
 apply plg_opp_dir.
 assumption.
 
-assert(same_dir C D D C').
+assert(Same_dir C D D C').
 apply bet_same_dir2.
 apply par_distinct in H.
 spliter.
@@ -2752,15 +2752,15 @@ apply par_distinct in H.
 tauto.
 Qed.
 
-Lemma same_dir_id : forall A B, same_dir A B B A -> A = B.
+Lemma same_dir_id : forall A B, Same_dir A B B A -> A = B.
 intros.
-unfold same_dir in H.
+unfold Same_dir in H.
 induction H.
 tauto.
 ex_and H C.
 apply eqv_mid in H0.
-unfold is_midpoint in H0.
-unfold out in H.
+unfold Midpoint in H0.
+unfold Out in H.
 spliter.
 induction H3.
 apply (between_equality _ _ C).
@@ -2773,18 +2773,18 @@ Between.
 assumption.
 Qed.
 
-Lemma opp_dir_id : forall A B, opp_dir A B A B -> A = B.
+Lemma opp_dir_id : forall A B, Opp_dir A B A B -> A = B.
 intros.
-unfold opp_dir in H.
+unfold Opp_dir in H.
 apply same_dir_id in H.
 auto.
 Qed.
 
 
-Lemma same_dir_to_null : forall A B C D, same_dir A B C D -> same_dir A B D C -> A = B /\ C = D.
+Lemma same_dir_to_null : forall A B C D, Same_dir A B C D -> Same_dir A B D C -> A = B /\ C = D.
 intros.
 
-assert(same_dir C D D C).
+assert(Same_dir C D D C).
 apply (same_dir_trans _ _ A B).
 apply same_dir_sym.
 apply H.
@@ -2797,13 +2797,13 @@ subst B.
 tauto.
 Qed.
 
-Lemma opp_dir_to_null : forall A B C D, opp_dir A B C D -> opp_dir A B D C -> A = B /\ C = D.
-unfold opp_dir.
+Lemma opp_dir_to_null : forall A B C D, Opp_dir A B C D -> Opp_dir A B D C -> A = B /\ C = D.
+unfold Opp_dir.
 intros.
 apply same_dir_to_null; auto.
 Qed.
 
-Lemma same_not_opp_dir : forall A B C D, A <> B -> same_dir A B C D -> ~opp_dir A B C D.
+Lemma same_not_opp_dir : forall A B C D, A <> B -> Same_dir A B C D -> ~ Opp_dir A B C D.
 intros.
 intro.
 apply same_dir_to_null in H0.
@@ -2811,8 +2811,8 @@ tauto.
 assumption.
 Qed.
 
-Lemma opp_not_same_dir : forall A B C D, A <> B -> opp_dir A B C D -> ~same_dir A B C D.
-unfold opp_dir.
+Lemma opp_not_same_dir : forall A B C D, A <> B -> Opp_dir A B C D -> ~ Same_dir A B C D.
+unfold Opp_dir.
 intros.
 intro.
 apply same_dir_to_null in H0.
@@ -2820,14 +2820,14 @@ tauto.
 assumption.
 Qed.
 
-Lemma vector_same_dir_cong : forall A B C D, A <> B -> C <> D -> exists X, exists Y, same_dir A B X Y /\ Cong X Y C D.
+Lemma vector_same_dir_cong : forall A B C D, A <> B -> C <> D -> exists X, exists Y, Same_dir A B X Y /\ Cong X Y C D.
 intros.
 exists A.
 assert(HH:=segment_construction_3 A B C D H H0).
 ex_and HH P.
 exists P.
 split; auto.
-unfold same_dir.
+unfold Same_dir.
 right.
 exists B.
 split.
