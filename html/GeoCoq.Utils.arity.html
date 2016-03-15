@@ -58,7 +58,7 @@
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <a name="arity"><span class="id" title="definition">arity</span></a> (<span class="id" title="var">T</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <br/>
+<span class="id" title="keyword">Fixpoint</span> <a name="arity"><span class="id" title="definition">arity</span></a> (<span class="id" title="var">T</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">n</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=<br/>
 &nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="GeoCoq.Utils.arity.html#n"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
 &nbsp;| 0 ⇒ <span class="id" title="keyword">Prop</span><br/>
 &nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="GeoCoq.Utils.arity.html#T"><span class="id" title="variable">T</span></a> → <a class="idref" href="GeoCoq.Utils.arity.html#arity"><span class="id" title="definition">arity</span></a> <a class="idref" href="GeoCoq.Utils.arity.html#T"><span class="id" title="variable">T</span></a> <span class="id" title="var">p</span><br/>

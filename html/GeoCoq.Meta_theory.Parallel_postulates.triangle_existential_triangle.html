@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#"><span class="id" title="library">GeoCoq.Meta_theory.Parallel_postulates.Euclid_def</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a name="triangle_existential_triangle"><span class="id" title="section">triangle_existential_triangle</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="triangle__existential_triangle"><span class="id" title="lemma">triangle__existential_triangle</span></a> : <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#triangle_postulate"><span class="id" title="definition">triangle_postulate</span></a> → <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#existential_triangle"><span class="id" title="definition">existential_triangle</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span> <span class="id" title="var">triangle</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#lower_dim"><span class="id" title="method">lower_dim</span></a> <span class="id" title="keyword">as</span> [<span class="id" title="var">A</span> [<span class="id" title="var">B</span> [<span class="id" title="var">C</span>]]].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span>(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#611abc97cba304de784fa909dbdea1fa"><span class="id" title="notation">¬</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Ch03_bet.html#Col"><span class="id" title="definition">Col</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>) <span class="id" title="tactic">by</span> (<span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch03_bet.html#Col"><span class="id" title="definition">Col</span></a>; <span class="id" title="tactic">assumption</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">assert_diffs</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<a class="idref" href="GeoCoq.Tarski_dev.Annexes.suma.html#ex_trisuma"><span class="id" title="lemma">ex_trisuma</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>) <span class="id" title="keyword">as</span> [<span class="id" title="var">D</span> [<span class="id" title="var">E</span> [<span class="id" title="var">F</span>]]]; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">A</span>; <span class="id" title="tactic">∃</span> <span class="id" title="var">B</span>; <span class="id" title="tactic">∃</span> <span class="id" title="var">C</span>; <span class="id" title="tactic">∃</span> <span class="id" title="var">D</span>; <span class="id" title="tactic">∃</span> <span class="id" title="var">E</span>; <span class="id" title="tactic">∃</span> <span class="id" title="var">F</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">triangle</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>); <span class="id" title="tactic">assumption</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle.html#triangle_existential_triangle"><span class="id" title="section">triangle_existential_triangle</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

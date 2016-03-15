@@ -368,14 +368,14 @@
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#SSWP.add_cardinal_1"><span class="id" title="lemma">SSWP.add_cardinal_1</span></a>; <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">HR2</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">HR1</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Peano.html#le_S"><span class="id" title="constructor">le_S</span></a>;<span class="id" title="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Peano.html#le_n"><span class="id" title="constructor">le_n</span></a>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">HR2</span> : <a class="idref" href="GeoCoq.Utils.sets.html#SS.cardinal"><span class="id" title="definition">SS.cardinal</span></a> (<a class="idref" href="GeoCoq.Utils.sets.html#SS.add"><span class="id" title="definition">SS.add</span></a> (<a class="idref" href="GeoCoq.Utils.sets.html#S.union"><span class="id" title="definition">S.union</span></a> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span>) (<a class="idref" href="GeoCoq.Utils.sets.html#SS.remove"><span class="id" title="definition">SS.remove</span></a> <span class="id" title="var">s2</span> (<a class="idref" href="GeoCoq.Utils.sets.html#SS.remove"><span class="id" title="definition">SS.remove</span></a> <span class="id" title="var">s1</span> <span class="id" title="var">ss</span>))) <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a>( <a class="idref" href="GeoCoq.Utils.sets.html#SS.cardinal"><span class="id" title="definition">SS.cardinal</span></a> (<a class="idref" href="GeoCoq.Utils.sets.html#SS.remove"><span class="id" title="definition">SS.remove</span></a> <span class="id" title="var">s2</span> (<a class="idref" href="GeoCoq.Utils.sets.html#SS.remove"><span class="id" title="definition">SS.remove</span></a> <span class="id" title="var">s1</span> <span class="id" title="var">ss</span>)))).<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#SSWP.add_cardinal_2"><span class="id" title="lemma">SSWP.add_cardinal_2</span></a>; <span class="id" title="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">HR2</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">HR1</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Peano.html#le_n"><span class="id" title="constructor">le_n</span></a>.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
 
 <br/>
@@ -608,7 +608,7 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <a name="ss_ok_empty"><span class="id" title="lemma">ss_ok_empty</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">interp</span>, <br/>
+<span class="id" title="keyword">Lemma</span> <a name="ss_ok_empty"><span class="id" title="lemma">ss_ok_empty</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">interp</span>,<br/>
 &nbsp;&nbsp;<a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#ss_ok"><span class="id" title="definition">ss_ok</span></a> <a class="idref" href="GeoCoq.Utils.sets.html#SS.empty"><span class="id" title="definition">SS.empty</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#interp"><span class="id" title="variable">interp</span></a>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="tactic">intros</span> <span class="id" title="var">interp</span> <span class="id" title="var">ss</span> <span class="id" title="var">Hmem1</span> <span class="id" title="var">p1</span> <span class="id" title="var">p2</span> <span class="id" title="var">p3</span> <span class="id" title="var">Hmem2</span>.<br/>
@@ -617,7 +617,7 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <a name="sp_ok_empty"><span class="id" title="lemma">sp_ok_empty</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">interp</span>, <br/>
+<span class="id" title="keyword">Lemma</span> <a name="sp_ok_empty"><span class="id" title="lemma">sp_ok_empty</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">interp</span>,<br/>
 &nbsp;&nbsp;<a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#sp_ok"><span class="id" title="definition">sp_ok</span></a> <a class="idref" href="GeoCoq.Utils.sets.html#SP.empty"><span class="id" title="definition">SP.empty</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#interp"><span class="id" title="variable">interp</span></a>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="tactic">intros</span>.<br/>
@@ -628,7 +628,7 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <a name="collect_cols"><span class="id" title="lemma">collect_cols</span></a> : <br/>
+<span class="id" title="keyword">Lemma</span> <a name="collect_cols"><span class="id" title="lemma">collect_cols</span></a> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> : <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#Col_refl.COLTpoint"><span class="id" title="variable">COLTpoint</span></a>) (<span class="id" title="var">HCol</span> : <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#Col_refl.CTCol"><span class="id" title="variable">CTCol</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#C"><span class="id" title="variable">C</span></a>) <span class="id" title="var">pa</span> <span class="id" title="var">pb</span> <span class="id" title="var">pc</span> <span class="id" title="var">ss</span> (<span class="id" title="var">interp</span> :  <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> → <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#Col_refl.COLTpoint"><span class="id" title="variable">COLTpoint</span></a>),<br/>
 &nbsp;&nbsp;<a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#interp"><span class="id" title="variable">interp</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#pa"><span class="id" title="variable">pa</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#A"><span class="id" title="variable">A</span></a> →<br/>
 &nbsp;&nbsp;<a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#interp"><span class="id" title="variable">interp</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#pb"><span class="id" title="variable">pb</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tactics.Coinc.ColR.html#B"><span class="id" title="variable">B</span></a> →<br/>
