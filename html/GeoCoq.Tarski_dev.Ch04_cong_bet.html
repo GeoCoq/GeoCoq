@@ -25,8 +25,7 @@
 <span class="id" title="keyword">Section</span> <a name="T3"><span class="id" title="section">T3</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">M</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_neutral_dimensionless"><span class="id" title="class">Tarski_neutral_dimensionless</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TnEQD</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_neutral_dimensionless_with_decidable_point_equality"><span class="id" title="class">Tarski_neutral_dimensionless_with_decidable_point_equality</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <a name="IFSC"><span class="id" title="definition">IFSC</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">A&acute;</span> <span class="id" title="var">B&acute;</span> <span class="id" title="var">C&acute;</span> <span class="id" title="var">D&acute;</span> :=<br/>
@@ -42,7 +41,7 @@
 <span class="id" title="var">spliter</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
+<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
 
 <br/>
 <span class="id" title="var">treat_equalities</span>;<span class="id" title="tactic">assumption</span>.<br/>

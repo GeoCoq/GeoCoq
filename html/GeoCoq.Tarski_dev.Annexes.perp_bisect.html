@@ -25,8 +25,7 @@
 <span class="id" title="keyword">Section</span> <a name="PerpBisect_1"><span class="id" title="section">PerpBisect_1</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">T2D</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
 
 <br/>
 </div>
@@ -188,8 +187,7 @@ PQ is the perpendicular bisector of segment AB
 <span class="id" title="keyword">Section</span> <a name="PerpBisect_2"><span class="id" title="section">PerpBisect_2</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">T2D</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="perp_bisect_cong_1"><span class="id" title="lemma">perp_bisect_cong_1</span></a> :<br/>
@@ -235,8 +233,7 @@ PQ is the perpendicular bisector of segment AB
 <span class="id" title="keyword">Section</span> <a name="PerpBisect_3"><span class="id" title="section">PerpBisect_3</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">T2D</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="perp_bisect_cong"><span class="id" title="lemma">perp_bisect_cong</span></a> :<br/>
@@ -295,7 +292,7 @@ PQ is the perpendicular bisector of segment AB
 <span class="id" title="tactic">intuition</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">P</span> <span class="id" title="var">I</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">P</span> <span class="id" title="var">I</span>).<br/>
 <span class="id" title="tactic">subst</span>.<br/>
 <span class="id" title="tactic">eapply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#l8_13_2"><span class="id" title="lemma">l8_13_2</span></a>;<span class="id" title="var">Col</span>.<br/>
 <span class="id" title="tactic">∃</span> <span class="id" title="var">Q</span>. <span class="id" title="tactic">∃</span> <span class="id" title="var">B</span>;<span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>;<span class="id" title="var">Col</span>.<br/>
@@ -363,7 +360,7 @@ PQ is the perpendicular bisector of segment AB
 <span class="id" title="tactic">assert</span> (<span class="id" title="var">HDE</span> : <span class="id" title="var">D</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <span class="id" title="var">E</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">assert_diffs</span>; <span class="id" title="tactic">auto</span>).<br/>
 <span class="id" title="tactic">assert</span> (<span class="id" title="var">HCol</span> := <span class="id" title="var">HPerp</span>); <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_in_col"><span class="id" title="lemma">perp_in_col</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HCol</span>; <span class="id" title="tactic">destruct</span> <span class="id" title="var">HCol</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">HCol</span> <span class="id" title="var">Hc</span>]; <span class="id" title="tactic">clear</span> <span class="id" title="var">Hc</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#l8_14_2_1a"><span class="id" title="lemma">l8_14_2_1a</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HPerp</span>.<br/>
-<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>); <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">subst</span>; <span class="id" title="var">Col</span>).<br/>
+<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>); <span class="id" title="tactic">intro</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">subst</span>; <span class="id" title="var">Col</span>).<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.html#perp_perp_col"><span class="id" title="lemma">perp_perp_col</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span>; <span class="id" title="var">Perp</span>. <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.perp_bisect.html#perp_bisect_perp"><span class="id" title="lemma">perp_bisect_perp</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.perp_bisect.html#cong_perp_bisect"><span class="id" title="lemma">cong_perp_bisect</span></a>; <span class="id" title="var">Cong</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 

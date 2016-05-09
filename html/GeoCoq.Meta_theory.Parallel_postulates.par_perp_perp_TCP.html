@@ -26,7 +26,6 @@
 
 <br/>
 <span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="par_perp_perp_implies_perp_bisect_existence"><span class="id" title="lemma">par_perp_perp_implies_perp_bisect_existence</span></a> :<br/>
@@ -67,7 +66,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">CC</span>; <span class="id" title="tactic">split</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">CC</span> <span class="id" title="var">C1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HEq</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">CC</span> <span class="id" title="var">C1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HEq</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">subst</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.perp_bisect.html#perp_bisect_cong_1"><span class="id" title="lemma">perp_bisect_cong_1</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">C2</span>; <span class="id" title="tactic">assumption</span>.<br/>
@@ -85,7 +84,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assumption</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">CC</span> <span class="id" title="var">B1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HEq</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">subst</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">CC</span> <span class="id" title="var">B1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HEq</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">subst</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.perp_bisect.html#perp_bisect_cong_1"><span class="id" title="lemma">perp_bisect_cong_1</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">B2</span>; <span class="id" title="tactic">assumption</span>.<br/>

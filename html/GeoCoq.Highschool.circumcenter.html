@@ -26,8 +26,7 @@
 <span class="id" title="keyword">Section</span> <a name="Circumcenter"><span class="id" title="section">Circumcenter</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">T2D</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <a name="is_circumcenter"><span class="id" title="definition">is_circumcenter</span></a> <span class="id" title="var">G</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> := <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#G"><span class="id" title="variable">G</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#G"><span class="id" title="variable">G</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#G"><span class="id" title="variable">G</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Highschool.circumcenter.html#G"><span class="id" title="variable">G</span></a>.<br/>
@@ -127,8 +126,7 @@
 <span class="id" title="keyword">Section</span> <a name="Circumcenter2"><span class="id" title="section">Circumcenter2</span></a> .<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 </div>
@@ -216,7 +214,7 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 <span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Tarski_dev.Annexes.perp_bisect.html#Perp_bisect"><span class="id" title="definition">Perp_bisect</span></a> <span class="id" title="var">G</span> <span class="id" title="var">C&acute;</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
 <span class="id" title="tactic">assert</span> (<span class="id" title="var">T</span>:=<a class="idref" href="GeoCoq.Highschool.circumcenter.html#circumcenter_perp_all"><span class="id" title="lemma">circumcenter_perp_all</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">A&acute;</span> <span class="id" title="var">B&acute;</span> <span class="id" title="var">C&acute;</span> <span class="id" title="var">G</span> ).<br/>
 <span class="id" title="tactic">intuition</span>.<br/>
-<span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">Perp_bisect</span>.<br/>
+<span class="id" title="tactic">eauto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">Perp_bisect</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -281,7 +279,7 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 <br/>
 &nbsp;&nbsp;{<br/>
 &nbsp;&nbsp;<span class="id" title="var">Name</span> <span class="id" title="var">C&acute;</span> <span class="id" title="var">the</span> <span class="id" title="var">midpoint</span> <span class="id" title="var">of</span> <span class="id" title="var">A</span> <span class="id" title="var">and</span> <span class="id" title="var">B</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">C&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOC&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">C&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;C&acute;</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">C&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOC&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">C&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;C&acute;</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>.<br/>
 
 <br/>
@@ -461,7 +459,7 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Name</span> <span class="id" title="var">B&acute;</span> <span class="id" title="var">the</span> <span class="id" title="var">midpoint</span> <span class="id" title="var">of</span> <span class="id" title="var">A</span> <span class="id" title="var">and</span> <span class="id" title="var">C</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">B&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOB&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">B&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;B&acute;</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">B&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOB&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">B&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;B&acute;</span>;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>.<br/>
 
 <br/>
@@ -605,7 +603,7 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Name</span> <span class="id" title="var">A&acute;</span> <span class="id" title="var">the</span> <span class="id" title="var">midpoint</span> <span class="id" title="var">of</span> <span class="id" title="var">B</span> <span class="id" title="var">and</span> <span class="id" title="var">C</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">A&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOA&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">A&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;A&acute;</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O</span> <span class="id" title="var">A&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HOA&acute;</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">O&acute;</span> <span class="id" title="var">A&acute;</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HO&acute;A&acute;</span>;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>.<br/>
 
 <br/>
@@ -754,8 +752,7 @@ data-param-showResetIcon="false" data-param-enableLabelDrags="false" data-param-
 <span class="id" title="keyword">Section</span> <a name="Circumcenter3"><span class="id" title="section">Circumcenter3</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="midpoint_thales_reci_circum"><span class="id" title="lemma">midpoint_thales_reci_circum</span></a> :<br/>

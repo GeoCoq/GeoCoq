@@ -232,8 +232,7 @@
 <span class="id" title="keyword">Section</span> <a name="Quadrilateral_inter_dec_1"><span class="id" title="section">Quadrilateral_inter_dec_1</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="par_cong_mid_ts"><span class="id" title="lemma">par_cong_mid_ts</span></a> :<br/>
@@ -2890,8 +2889,7 @@
 <span class="id" title="keyword">Section</span> <a name="Quadrilateral_inter_dec_2"><span class="id" title="section">Quadrilateral_inter_dec_2</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="parallelogram_strict_midpoint"><span class="id" title="lemma">parallelogram_strict_midpoint</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">I</span>,<br/>
@@ -2959,7 +2957,7 @@
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#per_perp_in"><span class="id" title="lemma">per_perp_in</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HH</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp"><span class="id" title="lemma">perp_in_perp</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HH</span>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp_bis"><span class="id" title="lemma">perp_in_perp_bis</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HH</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">HH</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_not_eq_1"><span class="id" title="lemma">perp_not_eq_1</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H5</span>.<br/>
 <span class="id" title="tactic">tauto</span>.<br/>
@@ -2995,9 +2993,9 @@
 <span class="id" title="keyword">Lemma</span> <a name="par_perp_perp"><span class="id" title="lemma">par_perp_perp</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>, <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel.html#Par"><span class="id" title="definition">Par</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> → <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#Perp"><span class="id" title="definition">Perp</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#Q"><span class="id" title="variable">Q</span></a> → <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#Perp"><span class="id" title="definition">Perp</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#Q"><span class="id" title="variable">Q</span></a>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="tactic">intros</span>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.playfair_par_trans_par_perp_perp.html#playfair_implies_par_perp_perp"><span class="id" title="lemma">playfair_implies_par_perp_perp</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>; <span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>.<br/>
-<span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#playfair_s_postulate"><span class="id" title="definition">playfair_s_postulate</span></a>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.html#parallel_unicity"><span class="id" title="lemma">parallel_unicity</span></a>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.proclus_second_postulate_par_perp_perp.html#proclus_second_postulate__perpendicular_transversal_postulate"><span class="id" title="lemma">proclus_second_postulate__perpendicular_transversal_postulate</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>;<br/>
+<span class="id" title="tactic">try</span> <span class="id" title="tactic">assumption</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.playfair_proclus_second_postulate.html#playfair__proclus_second_postulate"><span class="id" title="lemma">playfair__proclus_second_postulate</span></a>.<br/>
+<span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#playfair_s_postulate"><span class="id" title="definition">playfair_s_postulate</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.html#parallel_unicity"><span class="id" title="lemma">parallel_unicity</span></a>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -3009,9 +3007,9 @@
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="tactic">intros</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_par_perp_2_par.html#par_perp_perp_implies_par_perp_2_par"><span class="id" title="lemma">par_perp_perp_implies_par_perp_2_par</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>; <span class="id" title="tactic">auto</span>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.playfair_par_trans_par_perp_perp.html#playfair_implies_par_perp_perp"><span class="id" title="lemma">playfair_implies_par_perp_perp</span></a>.<br/>
-<span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#playfair_s_postulate"><span class="id" title="definition">playfair_s_postulate</span></a>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.html#parallel_unicity"><span class="id" title="lemma">parallel_unicity</span></a>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.proclus_second_postulate_par_perp_perp.html#proclus_second_postulate__perpendicular_transversal_postulate"><span class="id" title="lemma">proclus_second_postulate__perpendicular_transversal_postulate</span></a>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.playfair_proclus_second_postulate.html#playfair__proclus_second_postulate"><span class="id" title="lemma">playfair__proclus_second_postulate</span></a>.<br/>
+<span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#playfair_s_postulate"><span class="id" title="definition">playfair_s_postulate</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.html#parallel_unicity"><span class="id" title="lemma">parallel_unicity</span></a>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -3128,7 +3126,7 @@
 <span class="id" title="tactic">eapply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#par_perp_perp"><span class="id" title="lemma">par_perp_perp</span></a>.<br/>
 <span class="id" title="tactic">apply</span> <span class="id" title="var">H6</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#per_perp_in"><span class="id" title="lemma">per_perp_in</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H9</span>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp"><span class="id" title="lemma">perp_in_perp</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H9</span>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp_bis"><span class="id" title="lemma">perp_in_perp_bis</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H9</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">H9</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_not_eq_1"><span class="id" title="lemma">perp_not_eq_1</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H9</span>.<br/>
 <span class="id" title="tactic">tauto</span>.<br/>
@@ -3247,7 +3245,7 @@
 <span class="id" title="var">Par</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#per_perp_in"><span class="id" title="lemma">per_perp_in</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_in_comm"><span class="id" title="lemma">perp_in_comm</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
-<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp"><span class="id" title="lemma">perp_in_perp</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
+<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch09_plane.html#perp_in_perp_bis"><span class="id" title="lemma">perp_in_perp_bis</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_right_comm"><span class="id" title="lemma">perp_right_comm</span></a>.<br/>
 <span class="id" title="tactic">assumption</span>.<br/>
@@ -3804,15 +3802,14 @@
 <span class="id" title="keyword">Section</span> <a name="Quadrilateral_inter_dec_3"><span class="id" title="section">Quadrilateral_inter_dec_3</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="par_cong_cong"><span class="id" title="lemma">par_cong_cong</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>, <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel.html#Par"><span class="id" title="definition">Par</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> → <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> → <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">∨</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a>.<br/>
 <span class="id" title="tactic">intros</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">B</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#cong_symmetry"><span class="id" title="lemma">cong_symmetry</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#cong_identity"><span class="id" title="method">cong_identity</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H0</span>.<br/>
@@ -3821,7 +3818,7 @@
 <span class="id" title="var">Cong</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">D</span>.<br/>
 
 <br/>
@@ -3860,7 +3857,7 @@
 <span class="id" title="var">Cong</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">C</span>.<br/>
 <span class="id" title="tactic">assert</span>(<span class="id" title="var">B</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <span class="id" title="var">D</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">∨</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Ch07_midpoint.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">eapply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch07_midpoint.html#l7_20"><span class="id" title="lemma">l7_20</span></a>.<br/>
@@ -3897,7 +3894,7 @@
 <span class="id" title="tactic">intros</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">B</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#cong_symmetry"><span class="id" title="lemma">cong_symmetry</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#cong_identity"><span class="id" title="method">cong_identity</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H1</span>.<br/>
@@ -3906,7 +3903,7 @@
 <span class="id" title="var">Cong</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">D</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#cong_identity"><span class="id" title="method">cong_identity</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">B</span>.<br/>
@@ -3931,13 +3928,13 @@
 <br/>
 &nbsp;&nbsp;{<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">left</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">∃</span> <span class="id" title="var">M</span>; <span class="id" title="var">Col</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HAC</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>; <span class="id" title="tactic">right</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HAC</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>; <span class="id" title="tactic">right</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel.html#par_distincts"><span class="id" title="lemma">par_distincts</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HPar</span>; <span class="id" title="var">spliter</span>; <span class="id" title="var">Col</span>.<br/>
 &nbsp;&nbsp;}<br/>
 <br/>
 &nbsp;&nbsp;{<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">right</span>; <span class="id" title="tactic">split</span>; <span class="id" title="tactic">try</span> (<span class="id" title="tactic">∃</span> <span class="id" title="var">M</span>; <span class="id" title="var">Col</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HAD</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>; <span class="id" title="tactic">right</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HAD</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="var">Col</span>; <span class="id" title="tactic">right</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intro</span>; <span class="id" title="var">treat_equalities</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch12_parallel.html#par_distincts"><span class="id" title="lemma">par_distincts</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HPar</span>; <span class="id" title="var">spliter</span>; <span class="id" title="var">Col</span>.<br/>
 &nbsp;&nbsp;}<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -4013,7 +4010,7 @@
 <span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Parallelogram_flat"><span class="id" title="definition">Parallelogram_flat</span></a>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">C</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">D</span>.<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#cong_identity"><span class="id" title="method">cong_identity</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H1</span>.<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">B</span>.<br/>
@@ -4319,7 +4316,7 @@
 <span class="id" title="tactic">intros</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">E</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">E</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">E</span>.<br/>
 <span class="id" title="tactic">eapply</span> (<a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#plgs_trans_trivial"><span class="id" title="lemma">plgs_trans_trivial</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>); <span class="id" title="tactic">assumption</span>.<br/>
 
@@ -4499,7 +4496,7 @@
 <span class="id" title="var">ColR</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">F</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">F</span>).<br/>
 <span class="id" title="tactic">right</span>.<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">F</span>.<br/>
 <span class="id" title="tactic">intro</span>.<br/>
@@ -4579,7 +4576,7 @@
 <span class="id" title="tactic">intros</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">D</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="var">spliter</span>.<br/>
@@ -4591,7 +4588,7 @@
 <span class="id" title="tactic">assumption</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">C</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">H0</span>.<br/>
 <span class="id" title="var">spliter</span>.<br/>
@@ -4672,7 +4669,7 @@
 <span class="id" title="tactic">assumption</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">C</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">C</span>.<br/>
 <span class="id" title="tactic">assert</span>(<span class="id" title="var">B</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a><span class="id" title="var">D</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">∨</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Ch07_midpoint.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">eapply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch07_midpoint.html#l7_20"><span class="id" title="lemma">l7_20</span></a>.<br/>
@@ -4728,7 +4725,7 @@
 <span class="id" title="var">eCong</span>.<br/>
 
 <br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">D</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">D</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">D</span>.<br/>
 
 <br/>
@@ -5183,7 +5180,7 @@
 <br/>
 <span class="id" title="keyword">Lemma</span> <a name="plg_pseudo_trans"><span class="id" title="lemma">plg_pseudo_trans</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span>, <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Parallelogram"><span class="id" title="definition">Parallelogram</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> → <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Parallelogram"><span class="id" title="definition">Parallelogram</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#E"><span class="id" title="variable">E</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#F"><span class="id" title="variable">F</span></a> → <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Parallelogram"><span class="id" title="definition">Parallelogram</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#F"><span class="id" title="variable">F</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#E"><span class="id" title="variable">E</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">∨</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">(</span></a><a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#E"><span class="id" title="variable">E</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#F"><span class="id" title="variable">F</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#E"><span class="id" title="variable">E</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl6/stdlib/Coq.Init.Logic.html#7a45dffb109c3069e5c675be68643e60"><span class="id" title="notation">)</span></a>.<br/>
 <span class="id" title="tactic">intros</span>.<br/>
-<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
+<span class="id" title="tactic">induction</span>(<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">B</span>).<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">B</span>.<br/>
 <span class="id" title="tactic">induction</span> <span class="id" title="var">H</span>.<br/>
 <span class="id" title="tactic">unfold</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Parallelogram_strict"><span class="id" title="definition">Parallelogram_strict</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">H</span>.<br/>
@@ -5211,7 +5208,7 @@
 <span class="id" title="var">spliter</span>.<br/>
 <span class="id" title="tactic">assumption</span>.<br/>
 <span class="id" title="tactic">subst</span> <span class="id" title="var">F</span>.<br/>
-<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">E</span>).<br/>
+<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">E</span>).<br/>
 <span class="id" title="tactic">right</span>.<br/>
 <span class="id" title="tactic">repeat</span> <span class="id" title="tactic">split</span>; <span class="id" title="tactic">auto</span>.<br/>
 <span class="id" title="tactic">left</span>.<br/>
@@ -5407,7 +5404,7 @@
 &nbsp;&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals.html#Rectangle"><span class="id" title="definition">Rectangle</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C1"><span class="id" title="variable">C1</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D1"><span class="id" title="variable">D1</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#D2"><span class="id" title="variable">D2</span></a> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#C2"><span class="id" title="variable">C2</span></a>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C1</span> <span class="id" title="var">C2</span> <span class="id" title="var">D1</span> <span class="id" title="var">D2</span> <span class="id" title="var">HDiff</span> <span class="id" title="var">HRect1</span> <span class="id" title="var">HRect2</span>.<br/>
-<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">C1</span> <span class="id" title="var">C2</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HC1C2</span>; <span class="id" title="var">treat_equalities</span>.<br/>
+<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">C1</span> <span class="id" title="var">C2</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HC1C2</span>; <span class="id" title="var">treat_equalities</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;{<br/>
@@ -5419,7 +5416,7 @@
 &nbsp;&nbsp;}<br/>
 <br/>
 &nbsp;&nbsp;{<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HBC1</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C2</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HBC2</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C1</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HBC1</span>; <span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C2</span>); <span class="id" title="tactic">intro</span> <span class="id" title="var">HBC2</span>;<br/>
 &nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; [<span class="id" title="tactic">intuition</span>|<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#degenerated_rect_eq"><span class="id" title="lemma">degenerated_rect_eq</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HRect1</span>; <span class="id" title="var">treat_equalities</span>|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#degenerated_rect_eq"><span class="id" title="lemma">degenerated_rect_eq</span></a> <span class="id" title="keyword">in</span> <span class="id" title="var">HRect2</span>; <span class="id" title="var">treat_equalities</span>|];<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#rect_comm2"><span class="id" title="lemma">rect_comm2</span></a>; <span class="id" title="tactic">auto</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#rect_comm2"><span class="id" title="lemma">rect_comm2</span></a>; <span class="id" title="tactic">do</span> 2 (<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.html#rect_permut"><span class="id" title="lemma">rect_permut</span></a>); <span class="id" title="tactic">auto</span>.<br/>

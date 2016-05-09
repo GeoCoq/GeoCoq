@@ -25,8 +25,7 @@
 <span class="id" title="keyword">Section</span> <a name="Orthocenter"><span class="id" title="section">Orthocenter</span></a>.<br/>
 
 <br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">MT</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
-<span class="id" title="keyword">Context</span> `{<span class="id" title="var">EqDec</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#EqDecidability"><span class="id" title="class">EqDecidability</span></a> <a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tpoint"><span class="id" title="method">Tpoint</span></a>}.<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D_euclidean"><span class="id" title="class">Tarski_2D_euclidean</span></a>}.<br/>
 
 <br/>
 </div>
@@ -207,21 +206,21 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 
 <br/>
 <span class="id" title="var">assert_diffs</span>.<br/>
-<span class="id" title="var">cases_equality</span> <span class="id" title="var">A</span> <span class="id" title="var">O</span>.<br/>
+<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">A</span> <span class="id" title="var">O</span>); <span class="id" title="tactic">intro</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch04_col.html#col_permutation_4"><span class="id" title="lemma">col_permutation_4</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.html#perp_perp_col"><span class="id" title="lemma">perp_perp_col</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>...<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_right_comm"><span class="id" title="lemma">perp_right_comm</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_col1"><span class="id" title="lemma">perp_col1</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">B1</span>...<br/>
 
 <br/>
-<span class="id" title="var">cases_equality</span> <span class="id" title="var">B</span> <span class="id" title="var">O</span>.<br/>
+<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">O</span>); <span class="id" title="tactic">intro</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="var">treat_equalities</span>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch04_col.html#col_permutation_4"><span class="id" title="lemma">col_permutation_4</span></a>; <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.html#perp_perp_col"><span class="id" title="lemma">perp_perp_col</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span>...<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_col1"><span class="id" title="lemma">perp_col1</span></a> <span class="id" title="keyword">with</span> <span class="id" title="var">A1</span>...<br/>
 
 <br/>
-<span class="id" title="var">cases_equality</span> <span class="id" title="var">C</span> <span class="id" title="var">O</span>.<br/>
+<span class="id" title="tactic">elim</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">C</span> <span class="id" title="var">O</span>); <span class="id" title="tactic">intro</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" title="tactic">subst</span>; <span class="id" title="var">Col</span>.<br/>
@@ -355,7 +354,7 @@ C'est une appliquette Java créée avec GeoGebra ( www.geogebra.org) - Il semble
 <span class="id" title="var">spliter</span>.<br/>
 <span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#Perp_at"><span class="id" title="definition">Perp_at</span></a> <span class="id" title="var">H</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">A</span> <span class="id" title="var">H</span>).<br/>
 <span class="id" title="tactic">apply</span> <a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#l8_14_2_1b_bis"><span class="id" title="lemma">l8_14_2_1b_bis</span></a>;<span class="id" title="var">finish</span>.<br/>
-<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#eq_dec_points"><span class="id" title="method">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">H</span>).<br/>
+<span class="id" title="tactic">induction</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch02_cong.html#eq_dec_points"><span class="id" title="lemma">eq_dec_points</span></a> <span class="id" title="var">B</span> <span class="id" title="var">H</span>).<br/>
 <span class="id" title="tactic">subst</span>;<span class="id" title="tactic">auto</span>.<br/>
 <span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#Perp"><span class="id" title="definition">Perp</span></a> <span class="id" title="var">A</span> <span class="id" title="var">H</span> <span class="id" title="var">B</span> <span class="id" title="var">H</span>)<br/>
 &nbsp;<span class="id" title="tactic">by</span> (<span class="id" title="tactic">apply</span> (<a class="idref" href="GeoCoq.Tarski_dev.Ch08_orthogonality.html#perp_col1"><span class="id" title="lemma">perp_col1</span></a> <span class="id" title="var">A</span> <span class="id" title="var">H</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">H</span>);<span class="id" title="var">finish</span>).<br/>
