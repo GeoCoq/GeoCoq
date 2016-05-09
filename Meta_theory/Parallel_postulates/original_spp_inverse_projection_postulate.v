@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section original_spp_inverse_projection_postulate.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma original_spp__inverse_projection_postulate : original_spp -> inverse_projection_postulate.
+Lemma original_spp__inverse_projection_postulate : alternative_strong_parallel_postulate -> inverse_projection_postulate.
 Proof.
   intros ospp A B C P Q Hacute Hout HPQ HPer.
   assert_diffs.

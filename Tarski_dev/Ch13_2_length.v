@@ -4,12 +4,9 @@ Require Export GeoCoq.Tarski_dev.Ch13_1.
 
 Section Length_1.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** Pappus Desargues *)
-
-
 
 (******************** length *********************)
 
@@ -92,8 +89,7 @@ Ltac lg_instance l A B :=
 
 Section Length_2.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Definition Len A B l := Q_Cong l /\ l A B.
 
@@ -328,8 +324,7 @@ Tactic Notation "soit" ident(B) "sur" "la" "demie" "droite" ident(A) ident(P) "/
 
 Section Length_3.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma ex_points_lg_not_col : forall l P, Q_Cong l -> ~ Q_Cong_Null l -> exists A, exists B, l A B /\ ~Col A B P.
 Proof.
@@ -385,8 +380,7 @@ Tactic Notation "soit" ident(B) "sur" "la" "demie" "droite" ident(A) ident(P) "/
 
 Section Length_4.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Definition EqL (l1 l2 : Tpoint -> Tpoint -> Prop) := forall A B, l1 A B <-> l2 A B.
 

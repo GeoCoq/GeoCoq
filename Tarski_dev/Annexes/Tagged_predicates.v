@@ -2,8 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.quadrilaterals.
 
 Section Tagged_predicates.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Definition Diff_tagged (A B: Tpoint) := A <> B.
 

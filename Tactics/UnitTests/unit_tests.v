@@ -2,8 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.
 
 Section UnitTests.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Goal forall A B I, A <> B -> Midpoint I A B -> I <> A /\ I <> B.
 Proof.

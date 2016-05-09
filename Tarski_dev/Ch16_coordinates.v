@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch15_lengths.
 
 Section T16.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** We skip the case of dimension 1. *)
 

@@ -5,8 +5,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_alternate_interio
 
 Section proclus_aristotle.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma proclus__aristotle : proclus_postulate -> aristotle_s_postulate.
 Proof.

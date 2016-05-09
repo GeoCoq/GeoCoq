@@ -195,8 +195,7 @@ Ltac perm_apply t :=
 
 Section Quadrilateral_inter_dec_1.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma par_cong_mid_ts :
  forall A B A' B',
@@ -2667,8 +2666,7 @@ Hint Resolve parallelogram_strict_not_col
 
 Section Quadrilateral_inter_dec_2.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma parallelogram_strict_midpoint : forall A B C D I,
   Parallelogram_strict A B C D ->
@@ -2734,7 +2732,7 @@ assert(HH:= H1).
 eapply (rmb_per _ _ _ _ M) in HH.
 apply per_perp_in in HH.
 
-apply perp_in_perp in HH.
+apply perp_in_perp_bis in HH.
 induction HH.
 apply perp_not_eq_1 in H5.
 tauto.
@@ -2769,9 +2767,9 @@ Qed.
 Lemma par_perp_perp : forall A B C D P Q, Par A B C D -> Perp A B P Q -> Perp C D P Q.
 Proof.
 intros.
-apply playfair_implies_par_perp_perp with A B; try assumption.
-unfold playfair_s_postulate.
-apply parallel_unicity.
+apply proclus_second_postulate__perpendicular_transversal_postulate with A B;
+try assumption; apply playfair__proclus_second_postulate.
+unfold playfair_s_postulate; apply parallel_unicity.
 Qed.
 
 Lemma par_perp_2_par : forall A B C D E F G H,
@@ -2782,9 +2780,9 @@ Lemma par_perp_2_par : forall A B C D E F G H,
 Proof.
 intros.
 apply par_perp_perp_implies_par_perp_2_par with A B C D; auto.
-apply playfair_implies_par_perp_perp.
-unfold playfair_s_postulate.
-apply parallel_unicity.
+apply proclus_second_postulate__perpendicular_transversal_postulate.
+apply playfair__proclus_second_postulate.
+unfold playfair_s_postulate; apply parallel_unicity.
 Qed.
 
 Lemma rect_permut : forall A B C D, Rectangle A B C D -> Rectangle B C D A.
@@ -2891,7 +2889,7 @@ apply perp_left_comm.
 eapply par_perp_perp.
 apply H6.
 apply per_perp_in in H9.
-apply perp_in_perp in H9.
+apply perp_in_perp_bis in H9.
 induction H9.
 apply perp_not_eq_1 in H9.
 tauto.
@@ -2999,7 +2997,7 @@ apply (par_perp_perp A D P Q A B).
 Par.
 apply per_perp_in in H0.
 apply perp_in_comm in H0.
-apply perp_in_perp in H0.
+apply perp_in_perp_bis in H0.
 induction H0.
 apply perp_right_comm.
 assumption.
@@ -3503,8 +3501,7 @@ Ltac assert_pars_perm := permutation_intro_in_hyps; assert_pars_1; assert_pars_2
 
 Section Quadrilateral_inter_dec_3.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma par_cong_cong : forall A B C D, Par A B C D -> Cong A B C D -> Cong A C B D \/ Cong A D B C.
 intros.

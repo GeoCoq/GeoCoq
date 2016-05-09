@@ -3,8 +3,7 @@ Require Import GeoCoq.Highschool.varignon.
 
 Section GravityCenter.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (**
 Center of gravity
@@ -514,7 +513,7 @@ apply is_gravity_center_perm in H0;intuition.
 Qed.
 
 End GravityCenter.
-(* If we prove it with "Context `{M:Tarski_neutral_dimensionless}." we do not get the warning
+(* If we prove it with "Context `{Tn:Tarski_neutral_dimensionless}." we do not get the warning
 "the hint: eapply @is_gravity_center_perm_1 will only be used by eauto".
 There must be a bug with the handling of bases of hints. *)
 Hint Resolve

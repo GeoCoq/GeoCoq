@@ -4,8 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_2_length.
 
 Section Angles_1.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (************************************* angle *****************************)
 
@@ -62,8 +61,7 @@ Ltac ang_instance a A B C :=
 
 Section Angles_2.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma ang_conga : forall a A B C A' B' C', Q_CongA a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
@@ -358,9 +356,7 @@ Ltac anga_instance a A B C :=
 
 Section Angles_3.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
-
+Context `{T2D:Tarski_2D}.
 
 Lemma anga_conga : forall a A B C A' B' C', Q_CongA_Acute a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
@@ -693,8 +689,7 @@ Ltac ang_instance1 a A B C :=
 
 Section Angles_4.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma ang_sym : forall a A B C, Q_CongA a -> a A B C -> a C B A.
 Proof.
@@ -936,8 +931,7 @@ Ltac anga_instance1 a A B C :=
 
 Section Angles_5.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma null_anga_null_anga' : forall a, Q_CongA_Null_Acute a <-> is_null_anga' a.
 Proof.

@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section par_perp_2_par_par_perp_perp.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma par_perp_2_par_implies_par_perp_perp :
   postulate_of_parallelism_of_perpendicular_transversals ->

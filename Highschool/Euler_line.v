@@ -7,8 +7,7 @@ Require Import GeoCoq.Highschool.gravityCenter.
 
 Section Euler_line.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (**
 <applet name="ggbApplet" code="geogebra.GeoGebraApplet" archive="geogebra.jar"

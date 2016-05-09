@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section par_perp_perp_playfair.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma par_perp_perp_implies_playfair :
   perpendicular_transversal_postulate ->

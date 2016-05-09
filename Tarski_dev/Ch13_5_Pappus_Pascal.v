@@ -5,8 +5,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.project.
 
 Section Pappus_Pascal.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
  Col O A B -> Col O P Q -> Perp O P P A -> Perp O Q Q B ->
@@ -491,7 +490,7 @@ contradiction.
 assert(Perp B A' A' A).
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 Perp.
 apply perp_distinct in H3.
@@ -500,7 +499,7 @@ tauto.
 assert(Perp B C' C' C).
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 Perp.
 apply perp_distinct in H4.
@@ -888,7 +887,7 @@ Proof.
     induction H1.
       assert(HH:=H2).
       apply per_perp_in in H2; auto.
-      apply perp_in_perp in H2.
+      apply perp_in_perp_bis in H2.
       induction H2.
         apply perp_not_eq_1 in H2.
         tauto.
@@ -899,7 +898,7 @@ Proof.
       eapply (per_per_col _ _ A); Perp.
     assert(HH:=H3).
     apply per_perp_in in H3; auto.
-    apply perp_in_perp in H3.
+    apply perp_in_perp_bis in H3.
     induction H3.
       apply perp_not_eq_1 in H3.
       tauto.
@@ -972,14 +971,14 @@ Proof.
         assert(HH:=lg_exists O N).
         ex_and HH ln.
         assert(O <> L).
-          apply perp_in_perp in H17.
+          apply perp_in_perp_bis in H17.
           induction H17.
             apply perp_not_eq_1 in H17.
             tauto.
           apply perp_not_eq_1 in H17.
           auto.
         assert(O <> L').
-          apply perp_in_perp in H18.
+          apply perp_in_perp_bis in H18.
           induction H18.
             apply perp_not_eq_1 in H18.
             tauto.
@@ -1008,7 +1007,7 @@ Proof.
             subst L'.
             apply (l13_10_aux2 O B C); Col.
           apply (l13_10_aux1 O B C L L'); Col.
-            apply perp_in_perp in H17.
+            apply perp_in_perp_bis in H17.
             induction H17.
               apply perp_not_eq_1 in H17.
               tauto.
@@ -1016,7 +1015,7 @@ Proof.
             apply perp_comm.
             eapply (perp_col _ C');auto.
             Perp.
-          apply perp_in_perp in H18.
+          apply perp_in_perp_bis in H18.
           induction H18.
             apply perp_not_eq_1 in H18.
             tauto.
@@ -1047,7 +1046,7 @@ Proof.
             subst L'.
             eapply (l13_10_aux2 O C' B'); Col.
           apply (l13_10_aux1 O C' B' L L'); Col.
-            apply perp_in_perp in H17.
+            apply perp_in_perp_bis in H17.
             induction H17.
               apply perp_not_eq_1 in H17.
               tauto.
@@ -1055,7 +1054,7 @@ Proof.
             apply perp_comm.
             eapply (perp_col _ B); Col.
             Perp.
-          apply perp_in_perp in H18.
+          apply perp_in_perp_bis in H18.
           induction H18.
             apply perp_not_eq_1 in H18.
             tauto.
@@ -1085,7 +1084,7 @@ Proof.
             subst M'.
             apply (l13_10_aux2 O C A); Col.
           apply (l13_10_aux1 O C A M M'); Col.
-            apply perp_in_perp in H22.
+            apply perp_in_perp_bis in H22.
             induction H22.
               apply perp_not_eq_1 in H22.
               tauto.
@@ -1093,7 +1092,7 @@ Proof.
             apply perp_comm.
             eapply (perp_col _ A');auto.
             Perp.
-          apply perp_in_perp in H23.
+          apply perp_in_perp_bis in H23.
           induction H23.
             apply perp_not_eq_1 in H23.
             tauto.
@@ -1128,7 +1127,7 @@ Proof.
             apply H.
             Col.
           apply (l13_10_aux1 O A' C' M M'); Col.
-            apply perp_in_perp in H22.
+            apply perp_in_perp_bis in H22.
             induction H22.
               apply perp_not_eq_1 in H22.
               tauto.
@@ -1136,7 +1135,7 @@ Proof.
             apply perp_comm.
             eapply (perp_col _ C);Col.
             Perp.
-          apply perp_in_perp in H23.
+          apply perp_in_perp_bis in H23.
           induction H23.
             apply perp_not_eq_1 in H23.
             tauto.
@@ -1571,8 +1570,7 @@ End Pappus_Pascal.
 
 Section Pappus_Pascal_2.
 
-Context `{MT:Tarski_2D_euclidean}.
-  Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D_euclidean}.
 
 Lemma par_perp2 : forall A B C D P, Par A B C D -> Perp2 A B C D P.
 Proof.

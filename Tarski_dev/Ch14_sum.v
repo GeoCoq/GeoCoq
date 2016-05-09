@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_6_Desargues_Hessenberg.
 
 Section T14_sum.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** Definition 14.1 *)
 
@@ -2341,7 +2340,7 @@ intros.
 apply sum_cong2.
 assumption.
 destruct H.
-cases_equality A O.
+elim (eq_dec_points A O); intro.
 subst.
 right.
 intro.
@@ -2936,9 +2935,9 @@ Proof.
 Qed.
 
 Lemma sum_assoc : forall O E E' A B C AB BC ABC,
- Sum O E E' A B AB ->
- Sum O E E' B C BC ->
-(Sum O E E' A BC ABC <-> Sum O E E' AB C ABC).
+  Sum O E E' A B AB ->
+  Sum O E E' B C BC ->
+  (Sum O E E' A BC ABC <-> Sum O E E' AB C ABC).
 Proof.
     intros.
     split; intro.

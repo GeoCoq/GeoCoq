@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Coplanar_perm.
 
 Section Coplanar_trans.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma coplanar_trans_1_aux_1_1_1 : forall P Q R A B X1 X2,
   ~ Col P Q R ->

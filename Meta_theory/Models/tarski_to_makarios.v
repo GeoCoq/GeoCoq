@@ -6,7 +6,7 @@ Require Export GeoCoq.Axioms.makarios_variant_axioms.
 
 Section Tarski83_to_Makarios_variant.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma cong_reflexivity : forall A B,
  Cong A B A B.
@@ -51,12 +51,13 @@ Instance Makarios_Variant_follows_from_Tarski : Tarski_neutral_dimensionless_var
 Proof.
 exact (Build_Tarski_neutral_dimensionless_variant
  Tpoint Bet Cong
- between_identity
+ point_equality_decidability
  cong_identity
  cong_inner_transitivity
- inner_pasch
- five_segment'
  segment_construction
+ five_segment'
+ between_identity
+ inner_pasch
  lower_dim).
 Qed.
 
@@ -64,8 +65,7 @@ End Tarski83_to_Makarios_variant.
 
 Section Makarios_variant_to_Tarski83.
 
-Context `{M:Tarski_neutral_dimensionless_variant}.
-Context `{EqDec:EqDecidability MTpoint}.
+Context `{MTn:Tarski_neutral_dimensionless_variant}.
 
 Ltac prolong A B x C D :=
  assert (sg:= Msegment_construction A B C D);
@@ -114,7 +114,7 @@ Lemma cong_pseudo_reflexivity : forall A B : MTpoint, CongM A B B A.
 Proof.
 intros.
 prolong B A x B A.
-induction (eq_dec_points x A).
+induction (Mpoint_equality_decidability x A).
 subst.
 apply Mcong_symmetry in H0.
 assert (B=A)
@@ -150,19 +150,22 @@ apply Mcong_left_commutativity.
 apply Mfive_segment with A A' B B';auto.
 Qed.
 
-
 Instance Tarski_follows_from_Makarios_Variant : Tarski_neutral_dimensionless.
 Proof.
 exact (Build_Tarski_neutral_dimensionless
  MTpoint BetM CongM
- Mbetween_identity
  cong_pseudo_reflexivity
- Mcong_identity
  Mcong_inner_transitivity
- Minner_pasch
- five_segment
+ Mcong_identity
  Msegment_construction
+ five_segment
+ Mbetween_identity
+ Minner_pasch
  Mlower_dim).
-Qed.
+Defined.
+
+Instance Tarski_follows_from_Makarios_Variant' :
+  Tarski_neutral_dimensionless_with_decidable_point_equality Tarski_follows_from_Makarios_Variant.
+Proof. split; apply Mpoint_equality_decidability. Defined.
 
 End Makarios_variant_to_Tarski83.

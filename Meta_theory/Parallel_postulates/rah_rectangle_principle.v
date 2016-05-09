@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section rah_rectangle_principle.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma rah__rectangle_principle : saccheri_s_right_angle_hypothesis -> rectangle_principle.
+Lemma rah__rectangle_principle : postulate_of_right_saccheri_quadrilaterals -> postulate_of_right_lambert_quadrilaterals.
 Proof.
   intros rah A B C D HLam.
   apply (lam_per__rah A); assumption.

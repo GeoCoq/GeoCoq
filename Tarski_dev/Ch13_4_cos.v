@@ -4,7 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_3_angles.
 
 
 Ltac anga_instance_o a A B P C :=
-	assert(tempo_anga:= anga_const_o a A B P);
+        assert(tempo_anga:= anga_const_o a A B P);
         match goal with
            |H: Q_CongA_Acute a |-  _ => assert(tempo_H:= H); apply tempo_anga in tempo_H; ex_elim tempo_H C
         end;
@@ -12,8 +12,7 @@ Ltac anga_instance_o a A B P C :=
 
 Section Cosinus.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (************************************* cos *****************************)
 
@@ -288,7 +287,7 @@ Proof.
           auto.
         apply l8_2.
         auto.
-      assert(HH:= perp_in_perp Q  B A B B H21).
+      assert(HH:= perp_in_perp_bis Q  B A B B H21).
       induction HH.
         apply perp_distinct in H22.
         tauto.
@@ -397,8 +396,7 @@ End Cosinus.
 
 Section Cosinus2.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma perp_out__acute : forall A B C C', Perp A B C C' -> Col A B C' -> (Acute A B C <-> Out B A C').
 Proof.
@@ -1359,7 +1357,7 @@ Proof.
           subst A.
           assert(Perp_at B B P C B).
             apply perp_perp_in.
-            apply perp_in_perp in H0.
+            apply perp_in_perp_bis in H0.
             induction H0.
               apply perp_not_eq_1 in H0.
               tauto.
@@ -1367,13 +1365,13 @@ Proof.
           assert(P=B).
             eapply(l8_14_3 B P B C); Perp.
           subst P.
-          apply perp_in_perp in H0.
+          apply perp_in_perp_bis in H0.
           induction H0.
             apply perp_not_eq_1 in H0.
             tauto.
           apply perp_not_eq_1 in H0.
           tauto.
-          apply perp_in_perp in H0.
+          apply perp_in_perp_bis in H0.
           induction H0.
             apply perp_not_eq_1 in H0.
             tauto.
@@ -1388,14 +1386,14 @@ Proof.
           eapply(l8_14_3 A C B P); Perp.
         subst P.
         apply out_acute.
-        apply perp_in_perp in H2.
+        apply perp_in_perp_bis in H2.
         induction H2.
           apply out_trivial.
           apply perp_not_eq_2 in H2.
           auto.
         apply perp_not_eq_1 in H2.
         tauto.
-        apply perp_in_perp in H0.
+        apply perp_in_perp_bis in H0.
         induction H0; apply perp_not_eq_1 in H0; tauto.
       Col.
     apply acute_sym.
@@ -2178,6 +2176,5 @@ Proof.
     exists lq.
     split; apply lcos3_lcos_2_1; exists lp; split; auto.
 Qed.
-
 
 End Cosinus2.

@@ -1700,8 +1700,8 @@ Ltac Col_refl_test Tpoint Col := deduce_cols_hide_gen Tpoint Col; cols_gen Tpoin
 (*
 Section Test.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless}.
+
 
 Goal forall Q R A B C D E F G H I J K L M N,
   False -> L = M -> D <> E -> J <> K -> Q <> R -> G <> H ->

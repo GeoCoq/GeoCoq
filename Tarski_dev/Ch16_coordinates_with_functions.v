@@ -39,8 +39,7 @@ Ltac scnf :=
 
 Section T17.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Variable O E E' : Tpoint.
 Variable ncolOEE' : ~ Col O E E'.
@@ -157,8 +156,7 @@ End T17.
 
 Section T18.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Variable O E E' SS U1 U2 : Tpoint.
 Variable ncolOEE' : ~ Col O E E'.

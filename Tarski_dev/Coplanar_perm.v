@@ -2,11 +2,13 @@ Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity.
 
 Section Coplanar_perm.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{Tn:Tarski_neutral_dimensionless}.
+
 
 Definition Coplanar A B C D :=
-  exists X, (Col A B X /\ Col C D X) \/ (Col A C X /\ Col B D X) \/ (Col A D X /\ Col B C X).
+  exists X, (Col A B X /\ Col C D X) \/
+            (Col A C X /\ Col B D X) \/
+            (Col A D X /\ Col B C X).
 
 Lemma coplanar_perm_1 : forall A B C D,
   Coplanar A B C D -> Coplanar A B D C.

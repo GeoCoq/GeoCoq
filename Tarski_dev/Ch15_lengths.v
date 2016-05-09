@@ -3,8 +3,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals.
 
 Section T15.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** Definition 15.1. *)
 (** Length of a segment.*)
@@ -1905,7 +1904,7 @@ apply (cong_transitivity _ _ P C); Cong.
 
 apply per_perp_in in H30; auto.
 apply perp_in_comm in H30.
-apply perp_in_perp in H30.
+apply perp_in_perp_bis in H30.
 
 
 assert(Out O C1' D1').
@@ -2923,7 +2922,7 @@ apply perp_perp_in.
 apply perp_comm.
 apply (perp_col  _ B).
 auto.
-apply perp_in_perp in H2.
+apply perp_in_perp_bis in H2.
 induction H2.
 apply perp_distinct in H2.
 tauto.
@@ -2938,7 +2937,7 @@ assert(Par C B H' C').
 apply(l12_9 C B H' C' A C).
 apply per_perp_in in H1.
 apply perp_in_comm in H1.
-apply perp_in_perp in H1.
+apply perp_in_perp_bis in H1.
 induction H1.
 finish.
 apply perp_distinct in H1.
@@ -2950,7 +2949,7 @@ apply perp_in_id in H2.
 contradiction.
 apply per_perp_in in HH.
 apply perp_in_comm in HH.
-apply perp_in_perp in HH.
+apply perp_in_perp_bis in HH.
 apply perp_sym.
 apply perp_right_comm.
 apply(perp_col A H' C' H' C).
@@ -2984,7 +2983,7 @@ tauto.
 ex_and H25 P.
 
 assert(Perp C H A B).
-apply perp_in_perp in H2.
+apply perp_in_perp_bis in H2.
 induction H2.
 apply perp_distinct in H2.
 tauto.

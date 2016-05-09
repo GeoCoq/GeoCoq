@@ -2,8 +2,7 @@ Require Import GeoCoq.Highschool.circumcenter.
 
 Section Orthocenter.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (**
 Orthocenter
@@ -164,17 +163,17 @@ assert (Midpoint B D F) by (apply diff_not_col_col_par4_mid with A C; finish).
 assert (Midpoint C D E) by (apply diff_not_col_col_par4_mid with A B; finish).
 
 assert_diffs.
-cases_equality A O.
+elim (eq_dec_points A O); intro.
 
   treat_equalities; apply col_permutation_4; apply perp_perp_col with A B...
   apply perp_right_comm; apply perp_col1 with B1...
 
-cases_equality B O.
+elim (eq_dec_points B O); intro.
 
   treat_equalities; apply col_permutation_4; apply perp_perp_col with A B...
   apply perp_col1 with A1...
 
-cases_equality C O.
+elim (eq_dec_points C O); intro.
 
   subst; Col.
 

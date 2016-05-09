@@ -5,8 +5,7 @@ Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section L13_1.
 
-  Context `{MT:Tarski_2D}.
-  Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** Pappus Desargues *)
 
@@ -32,8 +31,8 @@ apply per_perp_in in H2; auto.
 
 apply perp_in_comm in H1.
 apply perp_in_comm in H2.
-apply perp_in_perp in H1.
-apply perp_in_perp in H2.
+apply perp_in_perp_bis in H1.
+apply perp_in_perp_bis in H2.
 induction H1; induction H2.
 apply(l8_18_unicity P A B P P'); Col.
 apply perp_not_col; auto.
@@ -107,7 +106,7 @@ induction H8; contradiction.
 assert(Perp A B' B' B).
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3; Perp.
 apply perp_distinct in H3.
 tauto.
@@ -115,7 +114,7 @@ tauto.
 assert(Perp A C' C' C).
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4; Perp.
 apply perp_distinct in H4.
 tauto.
@@ -204,7 +203,7 @@ assumption.
 assert(Perp A B' B' B).
 apply per_perp_in in H2.
 apply perp_in_comm in H2.
-apply perp_in_perp in H2.
+apply perp_in_perp_bis in H2.
 induction H2.
 Perp.
 apply perp_distinct in H2.
@@ -216,7 +215,7 @@ auto.
 assert(Perp A C' C' C).
 apply per_perp_in in H3.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 Perp.
 apply perp_distinct in H3.
@@ -348,7 +347,7 @@ induction H8; tauto.
 assert(Perp B A' A' A).
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 Perp.
 apply perp_distinct in H3.
@@ -357,7 +356,7 @@ tauto.
 assert(Perp B C' C' C).
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 Perp.
 apply perp_distinct in H4.
@@ -494,7 +493,7 @@ contradiction.
 assert(Perp B A' A' A).
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 Perp.
 apply perp_distinct in H3.
@@ -503,7 +502,7 @@ tauto.
 assert(Perp B C' C' C).
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 Perp.
 apply perp_distinct in H4.
@@ -679,7 +678,7 @@ ColR.
 assert(Perp B B' O A).
 
 apply per_perp_in in H4; auto.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 apply perp_distinct in H4.
 tauto.
@@ -691,7 +690,7 @@ Col.
 assert(Perp C C' O A).
 
 apply per_perp_in in H5; auto.
-apply perp_in_perp in H5.
+apply perp_in_perp_bis in H5.
 induction H5.
 apply perp_distinct in H5.
 tauto.
@@ -786,7 +785,7 @@ ColR.
 assert(Perp A A' O A').
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 finish.
 apply perp_distinct in H3.
@@ -795,7 +794,7 @@ tauto.
 assert(Perp C C' O A').
 apply per_perp_in in H5; auto.
 apply perp_in_comm in H5.
-apply perp_in_perp in H5.
+apply perp_in_perp_bis in H5.
 induction H5.
 apply perp_sym.
 apply (perp_col _ C'); auto.
@@ -1020,7 +1019,7 @@ ColR.
 assert(Perp A A' O A').
 apply per_perp_in in H3; auto.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 finish.
 apply perp_distinct in H3.
@@ -1029,7 +1028,7 @@ tauto.
 assert(Perp B B' O A').
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 apply perp_sym.
 apply (perp_col _ B'); Col.
@@ -1093,7 +1092,7 @@ assumption.
 assert(Perp C C' O A').
 apply per_perp_in in H5; auto.
 apply perp_in_comm in H5.
-apply perp_in_perp in H5.
+apply perp_in_perp_bis in H5.
 induction H5.
 apply perp_sym.
 apply (perp_col _ C'); finish.
@@ -1180,7 +1179,7 @@ ColR.
 assert(Perp O A C C').
 apply per_perp_in in H5; auto.
 apply perp_in_comm in H5.
-apply perp_in_perp in H5.
+apply perp_in_perp_bis in H5.
 induction H5.
 apply (perp_col _ C'); finish.
 apply perp_distinct in H5.
@@ -1189,7 +1188,7 @@ tauto.
 assert(Perp O A B B').
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 apply (perp_col _ B'); finish.
 apply perp_distinct in H4.
@@ -1284,7 +1283,7 @@ apply(per3_preserves_bet2_aux O C B A B' A'); finish.
 assert(Perp O A' C C').
 apply per_perp_in in H6; auto.
 apply perp_in_comm in H6.
-apply perp_in_perp in H6.
+apply perp_in_perp_bis in H6.
 induction H6.
 apply (perp_col _ C'); finish.
 apply perp_distinct in H6.
@@ -1293,7 +1292,7 @@ tauto.
 assert(Perp O A' A A').
 apply per_perp_in in H4; auto.
 apply perp_in_comm in H4.
-apply perp_in_perp in H4.
+apply perp_in_perp_bis in H4.
 induction H4.
 finish.
 apply perp_distinct in H4.
@@ -1384,7 +1383,7 @@ Between.
 assert(Perp O A' B B').
 apply per_perp_in in H5; auto.
 apply perp_in_comm in H5.
-apply perp_in_perp in H5.
+apply perp_in_perp_bis in H5.
 induction H5.
 apply (perp_col _ B'); finish.
 apply bet_col in H0.
@@ -2168,7 +2167,7 @@ Proof.
     repeat split; Col.
       assert(~ Col T A B).
         apply perp_not_col.
-        apply perp_in_perp in H12.
+        apply perp_in_perp_bis in H12.
         induction H12.
           apply perp_not_eq_1 in H12.
           tauto.
@@ -2178,7 +2177,7 @@ Proof.
       ColR.
       assert(~ Col T C B).
         apply perp_not_col.
-        apply perp_in_perp in H13.
+        apply perp_in_perp_bis in H13.
         induction H13.
           apply perp_not_eq_1 in H13.
           tauto.
@@ -2554,7 +2553,7 @@ Qed.
    ex_and H3 Y.
 assert(HH:= perp_in_col X Y A B R H3).
 spliter.
-   apply perp_in_perp in H3.
+   apply perp_in_perp_bis in H3.
 unfold Midpoint in H2.
 spliter.
 apply bet_col in H2.
@@ -3299,7 +3298,7 @@ exists D'.
 split; finish.
 apply per_perp_in in H63; auto.
 apply perp_in_sym in H63.
-apply perp_in_perp in H63.
+apply perp_in_perp_bis in H63.
 induction H63.
 apply perp_comm in H63.
 assert(Perp C' D' R A).
@@ -3363,7 +3362,8 @@ Perp.
     Between.
 Qed.
 
-Definition Perp2 A B C D P := exists X, exists Y, Col P X Y /\ Perp X Y A B /\ Perp X Y C D.
+Definition Perp2 A B C D P :=
+  exists X, exists Y, Col P X Y /\ Perp X Y A B /\ Perp X Y C D.
 
 Lemma perp2_refl : forall A B P, A <> B -> Perp2 A B A B P.
 Proof.

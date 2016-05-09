@@ -3,8 +3,7 @@ Require Import GeoCoq.Highschool.varignon.
 
 Section Exercises.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma Per_mid_rectangle : forall A B C I J K,
   A <> B ->

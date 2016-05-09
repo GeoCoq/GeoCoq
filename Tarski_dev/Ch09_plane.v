@@ -134,11 +134,10 @@ end.
 
 Section T9.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition TS A B P Q :=
-  A<>B /\ ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
+  A <> B /\ ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
 
 Lemma l9_2 : forall A B P Q, TS A B P Q -> TS A B Q P.
 Proof.
@@ -603,7 +602,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma perp_in_perp : forall A B C D X,
+Lemma perp_in_perp_bis : forall A B C D X,
  Perp_at X A B C D -> Perp X B C D \/ Perp A X C D.
 Proof.
     intros.
@@ -1611,8 +1610,7 @@ Proof.
     subst T;Between.
 Qed.
 
-Definition OS P Q A B :=
- exists C, TS P Q A C /\ TS P Q B C.
+Definition OS P Q A B := exists C, TS P Q A C /\ TS P Q B C.
 
 Lemma invert_one_side : forall A B P Q,
  OS A B P Q -> OS B A P Q.

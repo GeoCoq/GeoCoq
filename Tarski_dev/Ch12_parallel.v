@@ -2,14 +2,13 @@ Require Export GeoCoq.Tarski_dev.Ch11_angles.
 
 Section T12_1.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Par_strict A B C D :=
-  A<>B /\ C<>D /\ Coplanar A B C D /\ ~ exists X, Col X A B /\ Col X C D.
+  A <> B /\ C <> D /\ Coplanar A B C D /\ ~ exists X, Col X A B /\ Col X C D.
 
 Definition Par A B C D :=
-  Par_strict A B C D \/ (A<>B /\ C<>D /\ Col A C D /\ Col B C D).
+  Par_strict A B C D \/ (A <> B /\ C <> D /\ Col A C D /\ Col B C D).
 
 Lemma par_reflexivity : forall A B, A<>B -> Par A B A B.
 Proof.
@@ -403,8 +402,7 @@ Ltac Par := eauto with par.
 
 Section T12_2.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma Par_cases :
   forall A B C D,
@@ -450,8 +448,7 @@ End T12_2.
 
 Section T12_2'.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma l12_6 : forall A B C D,
  Par_strict A B C D -> OS A B C D.
@@ -651,7 +648,7 @@ Proof.
         apply l12_9 with P A.
           apply H2.
         apply per_perp_in in H4.
-          apply perp_in_perp in H4.
+          apply perp_in_perp_bis in H4.
           induction H4.
             apply perp_distinct in H4.
             spliter.
@@ -684,7 +681,7 @@ Proof.
       apply l12_9 with P P'.
         apply H2.
       apply per_perp_in in H5.
-        apply perp_in_perp in H5.
+        apply perp_in_perp_bis in H5.
         induction H5.
           apply perp_distinct in H5.
           spliter.
@@ -1384,7 +1381,7 @@ Proof.
         exists D'.
         split; assumption.
       apply per_perp_in in H14.
-        apply perp_in_perp in H14.
+        apply perp_in_perp_bis in H14.
         induction H14.
           apply perp_distinct in H14.
           intuition.
@@ -1474,7 +1471,7 @@ Proof.
       assumption.
     apply per_perp_in in H17.
       apply perp_in_comm in H17.
-      apply perp_in_perp in H17.
+      apply perp_in_perp_bis in H17.
       induction H17.
         apply l12_9 with P E.
           apply H4.
@@ -2172,8 +2169,7 @@ end.
 
 Section T12_3.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma perp_not_par : forall A B X Y, Perp A B X Y -> ~ Par A B X Y.
 Proof.
@@ -2241,7 +2237,6 @@ Proof.
     induction (Bet_dec A B C).
       assert(Per P B A).
         apply(l11_18_2 P B A C); auto.
-          repeat split; auto.
         apply conga_comm.
         assumption.
       eapply (col_per_perp _ _ _ C) in H12; auto.

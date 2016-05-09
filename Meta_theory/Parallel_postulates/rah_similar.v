@@ -2,10 +2,9 @@ Require Export Meta_theory.Parallel_postulates.Euclid_def.
 
 Section rah_similar.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma rah__similar : saccheri_s_right_angle_hypothesis -> similar_triangles_existence.
+Lemma rah__similar : postulate_of_right_saccheri_quadrilaterals -> postulate_of_existence_of_similar_triangles.
 Proof.
   intro rah.
   destruct lower_dim as [A [B0 [C]]].
@@ -36,16 +35,21 @@ Proof.
   assert(CongA C A B C' A B').
     apply (out_conga C A B C A B); try (apply out_trivial); CongA; apply bet_out; Between.
   split; Col; split.
-  { apply (isi2_suma2__conga456 C A B _ _ _ _ _ _ B C A).
-      SumA.
-      apply (conga2_isi__isi C' A B' A B' C'); CongA; SumA.
-      apply t22_12__rah; Perp.
-      apply (conga3_suma__suma C' A B' A B' C' B' C' A); CongA; apply t22_12__rah; auto.
-  }
-  repeat (split; auto).
-  intro.
-  absurd(B = B'); auto.
-  apply (between_cong A); Between.
+
+    {
+    intro.
+    absurd(B = B'); auto.
+    apply (between_cong A); Between.
+    }
+
+    {
+    split; [|repeat (split; auto)].
+    apply (isi2_suma2__conga456 C A B _ _ _ _ _ _ B C A).
+    eauto with suma.
+    apply (conga2_isi__isi C' A B' A B' C'); CongA; eauto with suma.
+    apply t22_12__rah; Perp.
+    apply (conga3_suma__suma C' A B' A B' C' B' C' A); CongA; apply t22_12__rah; auto.
+    }
 Qed.
 
 End rah_similar.

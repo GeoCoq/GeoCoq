@@ -2,8 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 
 Section Varignon.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** This is the usual proof using midpoints theorem but this proof needs the fact that IJK are not collinear. *)
 

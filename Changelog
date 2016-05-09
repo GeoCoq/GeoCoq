@@ -1,14 +1,8 @@
-Release 2.0.0 (2016-03-03)
-==========================
-	
-	- Definition of new statements equivalent to the parallel postulate and related proofs.
-	- Rename the predicates.
-
 Release 1.1.1 (2015-12-03)
 ==========================
 	
 	- Definition of new statements equivalent to the parallel postulate and related proofs.
-	- Characterization of right triangle, parallelism and perpendicularity using coordinates.
+	- Algebraic characterization of right triangle, parallelism and perpendicularity using coordinates.
 	- The Gröbner basis method can now be used to prove statements within Tarski's system of geometry.
 
 Release 1.1.0 (2015-10-27)
@@ -18,7 +12,7 @@ Release 1.1.0 (2015-10-27)
 	- Creation of a ./configure.
 	- Formalization of Chapter 16 of SST:
 	  definition of coordinates and characterization of Cong and Bet using coordinates.
-	- Characterization of Midpoint and Col using coordinates.
+	- Algebraic characterization of Midpoint and Col using coordinates.
 	- Proof of the equivalence between upper-dimension axiom and the fact that all points are coplanar.
 	- Proof of the pseudo-transitivity and permutation properties of the generalized con-cyclic predicate.
 	- Definition of the sum of angles and related proofs.

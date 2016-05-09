@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section inverse_projection_postulate_proclus_bis.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma inverse_projection_postulate__proclus_bis : inverse_projection_postulate -> proclus_bis.
+Lemma inverse_projection_postulate__proclus_bis : inverse_projection_postulate -> alternative_proclus_postulate.
 Proof.
   intros ip A B C D P Q HPerp2 HInter HNCol.
   elim(Col_dec C D P).
@@ -64,25 +63,38 @@ Proof.
 
   assert(HY := ip C0 P Q0 C0 C1).
   destruct HY as [Y []]; auto.
-  2: apply out_trivial; auto.
-  2: assert(HPer := l8_16_1 C D P C1 C0); destruct HPer; Col; Perp.
-  2: exists Y; split; assert_diffs; ColR.
-  exists C0.
-  exists P.
-  exists A0.
-  split.
+
+    {
+    exists C0, P, A0; split.
     assert(HPer := l8_16_1 A B C0 A0 P); destruct HPer; Col; Perp.
-  split.
-  { exists Q0.
-    split; CongA.
-    apply os2__inangle; Side.
-    apply (col2_os__os A B); auto.
-  }
-  intro.
-  assert(Habs := l11_22_aux C0 P Q0 A0).
-  destruct Habs as [Habs|Habs]; auto.
-    apply HNCol4; ColR.
-    apply l9_9 in Habs; apply Habs; Side.
+    split.
+
+      {
+      exists Q0; split; CongA.
+      apply os2__inangle; Side.
+      apply (col2_os__os A B); auto.
+      }
+
+      {
+      intro.
+      assert(Habs := l11_22_aux C0 P Q0 A0).
+      destruct Habs as [Habs|Habs]; auto.
+      apply HNCol4; ColR.
+      apply l9_9 in Habs; apply Habs; Side.
+      }
+    }
+
+    {
+    apply out_trivial; auto.
+    }
+
+    {
+    assert(HPer := l8_16_1 C D P C1 C0); destruct HPer; Col; Perp.
+    }
+
+    {
+    exists Y; split; assert_diffs; ColR.
+    }
 Qed.
 
 End inverse_projection_postulate_proclus_bis.

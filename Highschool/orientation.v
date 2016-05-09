@@ -1,9 +1,8 @@
 Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
-Section Ch12.
+Section Orientation.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Definition proj := fun  T A B P => A <> B /\ (~Col A B T /\ Perp A B T P /\ Col A B P \/ Col A B T /\ P = T).
 
@@ -157,7 +156,7 @@ repeat split; auto.
 
 apply per_perp_in in H1.
 apply perp_in_comm in H1.
-apply perp_in_perp in H1.
+apply perp_in_perp_bis in H1.
 induction H1.
 Perp.
 
@@ -171,7 +170,7 @@ assumption.
 repeat split; auto.
 apply per_perp_in in H0.
 apply perp_in_comm in H0.
-apply perp_in_perp in H0.
+apply perp_in_perp_bis in H0.
 induction H0.
 eapply perp_col.
 assumption.
@@ -325,7 +324,7 @@ contradiction.
 
 assert(Perp T A A B).
 apply per_perp_in in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 apply perp_not_eq_1 in H3.
 tauto.
@@ -420,7 +419,7 @@ clear HH; clear H1.
 
 apply per_perp_in in H3.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 apply perp_comm.
 apply perp_sym.
@@ -440,7 +439,7 @@ Col.
 
 apply per_perp_in in H3.
 apply perp_in_comm in H3.
-apply perp_in_perp in H3.
+apply perp_in_perp_bis in H3.
 induction H3.
 apply perp_comm.
 apply perp_sym.
@@ -3603,7 +3602,7 @@ apply between_trivial.
 
 
 assert(Perp B' B' B' P \/ Perp B B' B' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 
 apply per_perp_in.
 auto.
@@ -3614,7 +3613,7 @@ apply perp_not_eq_1 in H15.
 tauto.
 
 assert(Perp C' C' C' P \/ Perp C C' C' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 
 apply per_perp_in.
 auto.
@@ -3862,7 +3861,7 @@ ex_and H15 T.
 clear HH.
 
 assert(Perp B B B P \/ Perp T B B P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 
 apply per_perp_in.
 intro.
@@ -3877,7 +3876,7 @@ apply perp_not_eq_1 in H18.
 tauto.
 
 assert(Perp C' C' C' P \/ Perp C C' C' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 
 apply per_perp_in.
 auto.
@@ -3901,7 +3900,7 @@ eapply (col_transitivity_1 _ Q);
 auto.
 
 assert(Perp A' A' A' P \/ Perp A A' A' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 
 apply per_perp_in.
 auto.
@@ -4122,7 +4121,7 @@ apply between_identity in H0.
 contradiction.
 
 assert(Perp B' B' B' P \/ Perp B B' B' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 apply per_perp_in.
 auto.
 auto.
@@ -4132,7 +4131,7 @@ apply perp_not_eq_1 in H16.
 tauto.
 
 assert(Perp C' C' C' P \/ Perp C C' C' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 apply per_perp_in.
 auto.
 auto.
@@ -4142,7 +4141,7 @@ apply perp_not_eq_1 in H17.
 tauto.
 
 assert(Perp A' A' A' P \/ Perp A A' A' P).
-eapply perp_in_perp.
+eapply perp_in_perp_bis.
 apply per_perp_in.
 auto.
 auto.
@@ -4839,7 +4838,7 @@ Col.
 
 assert(Perp C C' C' P).
 eapply per_perp_in in H5.
-eapply perp_in_perp in H5.
+eapply perp_in_perp_bis in H5.
 induction H5.
 apply perp_not_eq_1 in H5.
 tauto.
@@ -5151,4 +5150,4 @@ subst B.
 tauto.
 Qed.
 
-End Ch12.
+End Orientation.

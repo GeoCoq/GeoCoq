@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Decidability.equivalence_between_decidability_
 
 Section T5.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l5_1 : forall A B C D,
   A<>B -> Bet A B C -> Bet A B D -> Bet A C D \/ Bet A D C.
@@ -34,8 +33,7 @@ Proof.
     apply (l5_2 P);auto.
 Qed.
 
-Definition Le A B C D :=
-   exists E, Bet C E D /\ Cong A B C E.
+Definition Le A B C D := exists E, Bet C E D /\ Cong A B C E.
 
 Definition Ge A B C D := Le C D A B.
 

@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section existential_triangle_rah.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma existential_triangle__rah : existential_triangle -> saccheri_s_right_angle_hypothesis.
+Lemma existential_triangle__rah : postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights -> postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intro et.
   destruct et as [A [B [C [D [E [F]]]]]].

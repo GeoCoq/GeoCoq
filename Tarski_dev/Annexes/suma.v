@@ -2,22 +2,20 @@ Require Export GeoCoq.Tarski_dev.Ch11_angles.
 
 Section Sec.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** Definition of the sum of angles.
     SumA A B C D E F G H I means that ABC+DEF = GHI. *)
 
 Definition SumA A B C D E F G H I:=
-   exists J, CongA C B J D E F /\ ~ OS B C A J /\ CongA A B J G H I.
+  exists J, CongA C B J D E F /\ ~ OS B C A J /\ CongA A B J G H I.
 
 (** The Isi predicate describes the fact that the sum of the two angles is "interior", 
 i.e doesn't exceed a flat angle. *)
 
 Definition Isi A B C D E F:=
-   A<>B /\ (Out E D F \/ ~ Bet A B C) /\
-   exists J, CongA C B J D E F /\ ~ OS B C A J /\ ~ TS A B C J.
-
+  A<>B /\ (Out E D F \/ ~ Bet A B C) /\
+  exists J, CongA C B J D E F /\ ~ OS B C A J /\ ~ TS A B C J.
 
 Lemma suma_distincts : forall A B C D E F G H I, SumA A B C D E F G H I ->
    A<>B /\ B<>C /\ D<>E /\ E<>F /\ G<>H /\ H<>I.
@@ -458,7 +456,7 @@ Lemma isi_distincts : forall A B C D E F, Isi A B C D E F ->
    A<>B /\ B<>C /\ D<>E /\ E<>F.
 Proof.
   intros A B C D E F Hisi.
-  destruct Hisi as [HP1 [HP2 [J HJ]]]. 
+  destruct Hisi as [HP1 [HP2 [J HJ]]].
   spliter.
   assert_diffs.
   repeat split; auto.
@@ -647,11 +645,9 @@ Hint Resolve suma_sym suma_left_comm suma_middle_comm
 
 Ltac SumA := auto with suma.
 
-
 Section Sec2.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** ABC <= ABC + DEF. *)
 
@@ -754,7 +750,7 @@ Lemma isi_suma__lea456789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
    Isi A B C D E F -> LeA D E F G H I.
 Proof.
   intros A B C D E F G H I Hsuma Hisi.
-  apply (isi_suma__lea123789 D E F A B C G H I); SumA.
+  apply (isi_suma__lea123789 D E F A B C G H I); eauto with suma.
 Qed.
 
 (** LeA preserves Isi. *)
@@ -879,7 +875,7 @@ Lemma isi_lea123_suma2__lea : forall A B C D E F G H I A' B' C' G' H' I',
 Proof.
   intros A B C D E F G H I A' B' C'.
   intros.
-  apply (isi_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); SumA.
+  apply (isi_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); eauto with suma.
 Qed.
 
 (** SumA preserves LeA. *)
@@ -952,7 +948,7 @@ Lemma isi2_suma2__conga123 : forall A B C A' B' C' D E F G H I,
    CongA A B C A' B' C'.
 Proof.
   intros A B C A' B' C' D E F G H I Hisi Hisi' Hsuma Hsuma'.
-  apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ G H I); SumA.
+  apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ G H I); eauto with suma.
 Qed.
 
 Lemma suma_assoc_1 : forall A B C D E F G H I K L M A' B' C' D' E' F',
@@ -1062,7 +1058,7 @@ Proof.
           apply (conga3_suma__suma A' B' C' G H I K L M); try (apply conga_refl); auto; try solve [apply conga_line; auto].
           apply conga_sym.
           apply (conga_trans _ _ _ D0 E F).
-          - apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); SumA.
+          - apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); eauto with suma.
             apply suma_sym.
             exists D0.
             split.
@@ -1256,7 +1252,7 @@ Proof.
   intros A B C D E F G H I K L M A' B' C' D' E' F'.
   intros.
   apply suma_sym.
-  apply (suma_assoc_1 G H I D E F A B C K L M D' E' F'); SumA.
+  apply (suma_assoc_1 G H I D E F A B C K L M D' E' F'); eauto with suma.
 Qed.
 
 (** Associativity of sum of angles. *)
@@ -1408,7 +1404,7 @@ Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
   apply isi_sym.
-  apply (isi_assoc_1 G H I D E F A B C D' E' F'); SumA.
+  apply (isi_assoc_1 G H I D E F A B C D' E' F'); eauto with suma.
 Qed.
 
 Lemma isi_assoc : forall A B C D E F G H I A' B' C' D' E' F',
@@ -1446,7 +1442,7 @@ Lemma isi_lea2_suma2__conga456 : forall A B C D E F G H I A' B' C' D' E' F',
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
-  apply (isi_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); SumA.
+  apply (isi_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); eauto with suma.
 Qed.
 
 Lemma isi_lea_lta123_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
@@ -1470,7 +1466,7 @@ Lemma isi_lea_lta456_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' 
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); SumA.
+  apply (isi_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); eauto with suma.
 Qed.
 
 Lemma isi_lta2_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
@@ -1707,7 +1703,7 @@ Lemma bet_per_suma__per123 : forall A B C D E F G H I, Per D E F -> Bet G H I ->
    SumA A B C D E F G H I -> Per A B C.
 Proof.
   intros A B C D E F G H I HPer HBet HSuma.
-  apply (bet_per_suma__per456 D E F _ _ _ G H I); SumA.
+  apply (bet_per_suma__per456 D E F _ _ _ G H I); eauto with suma.
 Qed.
 
 (** If x+x=180 then x=90. *)
@@ -1816,7 +1812,8 @@ Qed.
 
 (** The sum of angles of a triangle.*)
 
-Definition TriSumA A B C D E F:= exists G H I, SumA A B C B C A G H I /\ SumA G H I C A B D E F.
+Definition TriSumA A B C D E F:=
+  exists G H I, SumA A B C B C A G H I /\ SumA G H I C A B D E F.
 
 Lemma ex_trisuma : forall A B C, A <> B -> B <> C -> A <> C ->
    exists D E F, TriSumA A B C D E F.
@@ -1863,7 +1860,7 @@ Proof.
   exists A2.
   exists B2.
   split.
-  SumA.
+  eauto with suma.
   apply suma_middle_comm.
   apply (suma_assoc C A B A B C B C A D E F C2 A2 B2 A1 B1 C1); try (apply isi123231); auto.
 Qed.

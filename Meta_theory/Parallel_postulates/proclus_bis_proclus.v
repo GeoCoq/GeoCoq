@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section proclus_bis_proclus.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma proclus_bis__proclus : proclus_bis -> proclus_postulate.
+Lemma proclus_bis__proclus : alternative_proclus_postulate -> proclus_postulate.
 Proof.
   intros proclus_bis A B C D P Q HPar HInter HNCol.
   elim(Col_dec C D P).

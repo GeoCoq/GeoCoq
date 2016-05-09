@@ -8,8 +8,8 @@ Require Export GeoCoq.Tarski_dev.Ch08_orthogonality.
 
 Section Tarski_to_intuitionistic_Tarski.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
 
 Lemma cong_stability : forall A B C D, ~ ~ Cong A B C D -> Cong A B C D.
 Proof.
@@ -338,15 +338,15 @@ exact (Build_intuitionistic_Tarski_neutral_dimensionless
  Tpoint BetH Cong
  cong_stability
  bet_stability
- between_identity_B
  cong_identity
- cong_pseudo_reflexivity
  cong_inner_transitivity
- inner_pasch_B
+ cong_pseudo_reflexivity
+ segment_construction_B
+ five_segment_B
+ between_identity_B
  between_symmetry_B
  between_inner_transitivity_B
- five_segment_B
- segment_construction_B
+ inner_pasch_B
  lower_dim_B).
 Qed.
 
@@ -354,7 +354,7 @@ End Tarski_to_intuitionistic_Tarski.
 
 Section Proof_of_eq_stability_in_IT.
 
-Context `{MIT:intuitionistic_Tarski_neutral_dimensionless}.
+Context `{BTn:intuitionistic_Tarski_neutral_dimensionless}.
 
 Lemma cong_stability_eq_stability : forall A B : ITpoint, ~ A <> B -> A = B.
 Proof.
@@ -375,7 +375,7 @@ Require Import Classical.
 
 Section Intuitionistic_Tarski_to_Tarski.
 
-Context `{MIT:intuitionistic_Tarski_neutral_dimensionless}.
+Context `{BTn:intuitionistic_Tarski_neutral_dimensionless}.
 
 Lemma Col_dec : forall A B C, ICol A B C \/ ~ ICol A B C.
 Proof.
@@ -704,11 +704,23 @@ unfold IT in *.
 firstorder using Ibetween_symmetry.
 Qed.
 
+Lemma eq_dec_points_from_classic : forall A B : ITpoint, A = B \/ A <> B.
+Proof.
+intros.
+apply classic.
+Qed.
+
 Instance IT_to_T : Tarski_neutral_dimensionless.
 exact
-(Build_Tarski_neutral_dimensionless ITpoint BetT ICong
-  bet_id Icong_pseudo_reflexivity Icong_identity Icong_inner_transitivity
-  pasch five_segment segment_construction lower_dim).
-Qed.
+(Build_Tarski_neutral_dimensionless
+   ITpoint BetT ICong
+   Icong_pseudo_reflexivity Icong_inner_transitivity Icong_identity
+   segment_construction five_segment
+   bet_id pasch lower_dim).
+Defined.
+
+Instance IT_to_TID :
+  Tarski_neutral_dimensionless_with_decidable_point_equality IT_to_T.
+Proof. split; apply eq_dec_points_from_classic. Defined.
 
 End Intuitionistic_Tarski_to_Tarski.

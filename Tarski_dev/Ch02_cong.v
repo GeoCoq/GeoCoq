@@ -4,11 +4,9 @@ Ltac prolong A B x C D :=
  assert (sg:= segment_construction A B C D);
  ex_and sg x.
 
-Ltac cases_equality A B := elim (eq_dec_points A B);intros.
-
 Section T1_1.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Lemma cong_reflexivity : forall A B,
  Cong A B A B.
@@ -96,7 +94,7 @@ Ltac eCong := eauto with cong.
 
 Section T1_2.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Definition OFSC A B C D A' B' C' D' :=
   Bet A B C /\ Bet A' B' C' /\
@@ -190,8 +188,10 @@ Hint Unfold Cong_3 : cong3.
 
 Section T1_3.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+Lemma eq_dec_points : forall A B : Tpoint, A=B \/ ~ A=B.
+Proof. exact point_equality_decidability. Qed.
 
 Lemma l2_11 : forall A B C A' B' C',
  Bet A B C -> Bet A' B' C' -> Cong A B A' B' -> Cong B C B' C' -> Cong A C A' C'.

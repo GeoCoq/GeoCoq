@@ -4,9 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Quadrilateral.
 
-
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma cong_identity_inv :
  forall A B C, A <> B -> ~ Cong A B C C.
@@ -1390,7 +1388,7 @@ Lemma mid_par_cong :
  forall A B A' B' M,
   A <> B -> A <> B' ->
   Midpoint M A A' ->
-  Midpoint M B B' -> 
+  Midpoint M B B' ->
   Cong A B A' B' /\ Cong A B' A' B /\ Par A B A' B' /\ Par A B' A' B.
 Proof.
 intros.

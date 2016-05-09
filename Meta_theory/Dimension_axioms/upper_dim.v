@@ -2,8 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity.
 Require Export GeoCoq.Tarski_dev.Coplanar_perm.
 
 Section Upper_dim.
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition upper_dim_axiom := forall A B C P Q : Tpoint,
   P <> Q -> Cong A P A Q -> Cong B P B Q -> Cong C P C Q ->

@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.
 
 Section PerpBisect_1.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** PQ is the perpendicular bisector of segment AB *)
 
@@ -142,8 +141,7 @@ Hint Resolve perp_bisect_perp : Perp_bisect.
 
 Section PerpBisect_2.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma perp_bisect_cong_1 :
  forall P Q A B,
@@ -183,8 +181,7 @@ Hint Resolve perp_bisect_cong_1 perp_bisect_cong_2 : Perp_bisect.
 
 Section PerpBisect_3.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma perp_bisect_cong :
  forall P Q A B,

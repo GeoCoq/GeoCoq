@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section tarski_playfair.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma tarski_s_euclid_implies_playfair :
  tarski_s_parallel_postulate ->

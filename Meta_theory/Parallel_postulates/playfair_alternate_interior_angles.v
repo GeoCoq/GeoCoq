@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section playfair_alternate_interior_angles.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma playfair__alternate_interior :  playfair_s_postulate -> alternate_interior_angles_postulate.
 Proof.
@@ -16,10 +15,10 @@ CongA.
 assert_diffs.
 apply (out_conga D C A D C A); try (apply out_trivial); CongA.
 apply (col_one_side_out _ A).
-2: apply invert_one_side; exists B; split; Side.
 assert (HP := playfair A B C D C D' C).
 destruct HP; Col.
 apply l12_21_b; CongA; Side.
+apply invert_one_side; exists B; split; Side.
 Qed.
 
 End playfair_alternate_interior_angles.

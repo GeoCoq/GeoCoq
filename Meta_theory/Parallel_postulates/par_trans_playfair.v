@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section par_trans_playfair.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma par_trans_implies_playfair :
   postulate_of_transitivity_of_parallelism -> playfair_s_postulate.

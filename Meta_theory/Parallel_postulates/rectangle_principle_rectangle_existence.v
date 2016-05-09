@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section rectangle_principle_rectangle_existence.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma rectangle_principle__rectangle_existence : rectangle_principle -> rectangle_existence.
+Lemma rectangle_principle__rectangle_existence : postulate_of_right_lambert_quadrilaterals -> postulate_of_existence_of_a_right_lambert_quadrialteral.
 Proof.
   intros rectangle.
   destruct ex_saccheri as [A [B [C [D HSac]]]].

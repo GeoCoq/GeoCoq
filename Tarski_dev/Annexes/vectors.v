@@ -4,8 +4,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.
 
 Section Vectors.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** Vertor *)
 

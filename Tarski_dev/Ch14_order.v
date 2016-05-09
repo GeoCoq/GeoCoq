@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch14_prod.
 
 Section Order.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Definition Ps O E A := Out O A E.
 

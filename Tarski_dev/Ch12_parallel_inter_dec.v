@@ -1,9 +1,9 @@
 Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.par_trans_NID.
 
 Section T13.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma perp_vector : forall A B, A <> B -> (exists X, exists Y, Perp A B X Y).
 Proof.
@@ -22,7 +22,7 @@ Proof.
 apply strong_parallel_postulate_implies_inter_dec.
 apply strong_parallel_postulate_SPP.
 cut tarski_s_parallel_postulate.
-apply result_similar_to_beeson_s_one; simpl; tauto.
+apply equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis; simpl; tauto.
 unfold tarski_s_parallel_postulate; apply euclid.
 Qed.
 
@@ -36,8 +36,20 @@ Lemma not_par_inter_exists : forall A1 B1 A2 B2,
   ~Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
 Proof.
     intros.
-    apply inter_dec_implies_not_par_inter_exists; try assumption.
-    apply inter_dec.
+induction (eq_dec_points A1 B1).
+subst; exists A2; Col.
+induction (eq_dec_points A2 B2).
+subst; exists A1; Col.
+induction (inter_dec A1 B1 A2 B2).
+
+  assumption.
+
+  exfalso.
+  apply H.
+  unfold Par.
+  left.
+  unfold Par_strict.
+  repeat split; try apply all_coplanar; assumption.
 Qed.
 
 Lemma parallel_unicity :
@@ -516,45 +528,14 @@ Proof.
 Qed.
 
 Lemma Par_dec : forall A B C D, Par A B C D \/ ~ Par A B C D.
-Proof.
-    intros.
-    intros.
-    elim (eq_dec_points A B); intro HAB.
-      subst.
-      right.
-      unfold Par.
-      intro H.
-      induction H.
-        unfold Par_strict in *.
-        intuition.
-      intuition.
-    elim (eq_dec_points C D); intro HCD.
-      subst.
-      right.
-      unfold Par.
-      intro H.
-      induction H.
-        unfold Par_strict in *.
-        intuition.
-      intuition.
-    elim (parallel_existence_spec A B C HAB);intros D' HD'.
-    destruct HD' as [HCD' HPar].
-    elim (Col_dec C D D'); intro HCol.
-      left.
-      apply par_col_par with D';Par;Col.
-    right.
-    intro H.
-    apply HCol.
-    assert (Par C D C D') by (apply par_trans with A B;Par;apply par_symmetry;assumption).
-    apply par_id_3;apply par_symmetry;assumption.
-Qed.
+Proof. exact (par_trans__par_dec par_trans). Qed.
 
 Lemma par_not_par : forall A B C D P Q, Par A B C D -> ~Par A B P Q -> ~Par C D P Q.
 Proof.
-    intros.
-    apply par_trans_implies_par_not_par with A B; Par.
-    unfold postulate_of_transitivity_of_parallelism.
-    apply par_trans.
+intros A B C D P Q HPar HNPar.
+intro HNPar'.
+apply HNPar.
+apply par_trans with C D; Par.
 Qed.
 
 Lemma par_inter : forall A B C D P Q X, Par A B C D -> ~Par A B P Q -> Col P Q X -> Col A B X -> exists Y, Col P Q Y /\ Col C D Y.
@@ -577,10 +558,11 @@ Proof.
         {
         assert (HY : exists Y : Tpoint, Col X Q Y /\ Col C D Y).
           {
-          apply inter_dec_plus_par_trans_imply_proclus with A B; Col.
-          apply inter_dec.
-          unfold postulate_of_transitivity_of_parallelism.
-          apply par_trans.
+          assert (~ Par A B X Q)
+            by (apply col_not_col_not_par; [exists P; Col | exists Q; Col]).
+          assert(~ Par C D X Q) by (apply par_not_par with A B; Par).
+          destruct (not_par_inter_exists X Q C D) as [Y HY]; Par.
+          exists Y; spliter; Col.
           }
         show_distinct Q X; Col.
         destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
@@ -589,10 +571,11 @@ Proof.
         {
         assert (HY : exists Y : Tpoint, Col X P Y /\ Col C D Y).
           {
-          apply inter_dec_plus_par_trans_imply_proclus with A B; Col.
-          apply inter_dec.
-          unfold postulate_of_transitivity_of_parallelism.
-          apply par_trans.
+          assert (~ Par A B X P)
+            by (apply col_not_col_not_par; [exists Q; Col | exists P; Col]).
+          assert(~ Par C D X P) by (apply par_not_par with A B; Par).
+          destruct (not_par_inter_exists X P C D) as [Y HY]; Par.
+          exists Y; spliter; Col.
           }
         show_distinct P X; Col.
         destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
@@ -601,10 +584,11 @@ Proof.
         {
         assert (HY : exists Y : Tpoint, Col X Q Y /\ Col C D Y).
           {
-          apply inter_dec_plus_par_trans_imply_proclus with A B; Col.
-          apply inter_dec.
-          unfold postulate_of_transitivity_of_parallelism.
-          apply par_trans.
+          assert (~ Par A B X Q)
+            by (apply col_not_col_not_par; [exists X; Col | exists Q; Col]).
+          assert(~ Par C D X Q) by (apply par_not_par with A B; Par).
+          destruct (not_par_inter_exists X Q C D) as [Y HY]; Par.
+          exists Y; spliter; Col.
           }
         show_distinct Q X; Col.
         destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
