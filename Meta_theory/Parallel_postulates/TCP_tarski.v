@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_s_euclid_remove_deg
 
 Section TCP_tarski.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma impossible_case_1 :
   forall A B C D T x y,

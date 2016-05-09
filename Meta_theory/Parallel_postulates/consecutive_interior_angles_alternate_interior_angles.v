@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section consecutive_interior_angles_alternate_interior_angles.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma consecutive_interior__alternate_interior :
    consecutive_interior_angles_postulate -> alternate_interior_angles_postulate.

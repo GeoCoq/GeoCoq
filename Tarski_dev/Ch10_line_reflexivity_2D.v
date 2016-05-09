@@ -1,8 +1,8 @@
 Require Export GeoCoq.Meta_theory.Dimension_axioms.upper_dim.
 
 Section T10_2D.
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+
+Context `{T2D:Tarski_2D}.
 
 Lemma all_coplanar : forall A B C D, Coplanar A B C D.
 Proof.

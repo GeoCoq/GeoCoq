@@ -3,8 +3,7 @@
 Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Section T_42.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma midpoint_thales : forall o a b c : Tpoint,
    ~ Col a b c ->

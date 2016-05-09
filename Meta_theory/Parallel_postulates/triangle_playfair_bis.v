@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section triangle_playfair_bis.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma legendre_aux1 : greenberg_s_postulate -> triangle_postulate ->
    forall A1 A2 B1 B2 C1 C2 P, Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
@@ -232,10 +231,9 @@ Proof.
   apply (legendre_aux1 greenberg triangle A1 A2 _ _ _ C2 P); auto.
 Qed.
 
-Lemma triangle_playfair_bis : greenberg_s_postulate -> triangle_postulate -> playfair_bis.
+Lemma triangle_playfair_bis : greenberg_s_postulate -> triangle_postulate -> alternative_playfair_s_postulate.
 Proof.
   intros greenberg triangle.
-  unfold playfair_bis.
   intros A1 A2 B1 B2 C1 C2 P.
   split.
   apply (legendre_aux2 greenberg triangle A1 A2 _ _ _ C2 P); auto.

@@ -2,8 +2,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section alternate_interior_angles_playfair_bis.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma alternate_interior__playfair_aux : alternate_interior_angles_postulate ->
    forall A1 A2 B1 B2 C1 C2 P,
@@ -76,7 +75,7 @@ Proof.
   apply par_strict_par; Par.
 Qed.
 
-Lemma alternate_interior__playfair_bis : alternate_interior_angles_postulate -> playfair_bis.
+Lemma alternate_interior__playfair_bis : alternate_interior_angles_postulate -> alternative_playfair_s_postulate.
 Proof.
 intros aia.
 intros A1 A2 B1 B2 C1 C2 P HPerp2 HPB HParAC HPC.

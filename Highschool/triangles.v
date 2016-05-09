@@ -2,8 +2,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Triangles.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Section ABC.
 

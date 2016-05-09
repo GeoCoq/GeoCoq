@@ -2,7 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch02_cong.
 
 Section T2_1.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Definition Col A B C := Bet A B C \/ Bet B C A \/ Bet C A B.
 
@@ -23,7 +23,7 @@ Lemma between_symmetry : forall A B C : Tpoint, Bet A B C -> Bet C B A.
 Proof.
     intros.
     assert (Bet B C C) by (apply between_trivial).
-    assert(exists x, Bet B x B /\ Bet C x A) by (eapply inner_pasch;eauto).
+    assert(exists x, Bet B x B /\ Bet C x A) by (apply inner_pasch with C;auto).
     ex_and H1 x.
     apply between_identity in H1; subst; assumption.
 Qed.
@@ -153,13 +153,12 @@ Ltac Between := treat_equalities;auto with between between_no_eauto.
 
 Section T2_2.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma between_inner_transitivity : forall A B C D, Bet A B D -> Bet B C D -> Bet A B C.
 Proof.
     intros.
-    assert (exists x, Bet B x B /\ Bet C x A) by (eapply inner_pasch;eauto).
+    assert (exists x, Bet B x B /\ Bet C x A) by (apply inner_pasch with D;auto).
     ex_and H1 x.
     Between.
 Qed.
@@ -178,8 +177,7 @@ Hint Resolve outer_transitivity_between2 between_inner_transitivity between_exch
 
 Section T2_3.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma between_exchange2 : forall A B C D, Bet A B D -> Bet B C D -> Bet A C D.
 Proof.
@@ -199,8 +197,7 @@ Hint Resolve between_exchange2 : between.
 
 Section T2_4.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma between_exchange4 : forall A B C D, Bet A B C -> Bet A C D -> Bet A B D.
 Proof.
@@ -214,8 +211,7 @@ Hint Resolve outer_transitivity_between between_exchange4 : between.
 
 Section T2_5.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Bet_4 A1 A2 A3 A4 :=
    Bet A1 A2 A3 /\ Bet A2 A3 A4 /\ Bet A1 A3 A4 /\ Bet A1 A2 A4.
@@ -276,7 +272,7 @@ Section Beeson_1.
 (** Another proof of l2_11 without eq_dec_points but using Cong stability
 inspired by Micheal Beeson. #<a href="http://www.michaelbeeson.com/research/papers/AxiomatizingConstructiveGeometry.pdf"></a> # *)
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Variable Cong_stability : forall A B C D, ~ ~ Cong A B C D -> Cong A B C D.
 
@@ -311,7 +307,7 @@ End Beeson_1.
 
 Section Beeson_2.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Variable Bet_stability : forall A B C, ~ ~ Bet A B C -> Bet A B C.
 

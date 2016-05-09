@@ -4,8 +4,7 @@ Require Import GeoCoq.Axioms.hilbert_axioms.
 
 Section T.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (** We need a notion of line. *)
 
@@ -46,7 +45,7 @@ replace (P2 (Lin A B H)) with B.
 2:auto.
 split;intro.
 assert (T:=Cond l).
-cases_equality X B.
+elim (eq_dec_points X B); intro.
 subst X.
 auto.
 assert (Col (P1 l) A B).
@@ -64,7 +63,7 @@ Col.
 
 
 assert (U:=Cond l).
-cases_equality X (P1 l).
+elim (eq_dec_points X (P1 l)); intro.
 smart_subst X.
 eCol.
 
@@ -134,6 +133,20 @@ apply eq_incident.
 assumption.
 Qed.
 
+Lemma axiom_Incid_morphism : 
+ forall P l m, Incident P l -> Eq l m -> Incident P m.
+Proof.
+intros.
+destruct (eq_incident P l m H0).
+intuition.
+Qed.
+
+Lemma axiom_Incid_dec : forall P l, Incident P l \/ ~Incident P l.
+Proof.
+intros.
+unfold Incident.
+apply Col_dec.
+Qed.
 
 (** There is only one line going through two points. *)
 Lemma axiom_line_unicity : forall A B l m, A <> B ->
@@ -182,7 +195,7 @@ assert (Col (P1 l) A B).
 eapply col_transitivity_1;try apply T;Col.
 assert (Col (P1 l) A C).
 eapply col_transitivity_1;try apply T;Col.
-cases_equality (P1 l) A.
+elim (eq_dec_points (P1 l) A); intro.
 smart_subst A.
 eapply col_transitivity_1;try apply T;Col.
 eapply col_transitivity_2;try apply H2;Col.
@@ -192,9 +205,9 @@ Lemma cols_coincide_2 : forall A B C, Col A B C -> Col_H A B C.
 Proof.
 intros.
 unfold Col_H.
-cases_equality A B.
+elim (eq_dec_points A B); intro.
 subst B.
-cases_equality A C.
+elim (eq_dec_points A C); intro.
 subst C.
 assert (exists B, A<>B).
 eapply another_point.
@@ -208,9 +221,33 @@ unfold Incident;intuition.
 Qed.
 
 
+Lemma cols_coincide : forall A B C, Col A B C <-> Col_H A B C.
+Proof.
+intros.
+split.
+apply cols_coincide_2.
+apply cols_coincide_1.
+Qed.
+
 (** There exists three non collinear points. *)
 
-Lemma axiom_plan :
+Lemma axiom_plan : exists l, exists P, ~ Incident P l.
+Proof.
+assert (T:=lower_dim).
+DecompEx T A.
+DecompEx H B.
+DecompEx H0 C.
+assert (~ Col A B  C) by auto.
+assert_diffs.
+exists (Lin A B H4).
+exists C.
+unfold Incident.
+simpl.
+Col.
+Qed.
+
+
+Lemma axiom_plan' :
  exists A , exists B, exists C, ~ Col_H A B C.
 Proof.
 assert (T:=lower_dim).
@@ -250,6 +287,14 @@ unfold Incident.
 intuition.
 Qed.
 
+Lemma axiom_between_diff : 
+ forall A B C, Between_H A B C -> A<>C.
+Proof.
+intros.
+unfold Between_H in *.
+intuition.
+Qed.
+
 (** If B is between A and C, it is also between C and A. *)
 
 Lemma axiom_between_comm : forall A B C, Between_H A B C -> Between_H C B A.
@@ -258,6 +303,8 @@ unfold Between_H in |- *.
 intros.
 intuition.
 Qed.
+
+
 
 Lemma axiom_between_out :
  forall A B, A <> B -> exists C, Between_H A B C.
@@ -275,20 +322,15 @@ Qed.
 
 Lemma axiom_between_only_one :
  forall A B C,
- Between_H A B C -> ~ Between_H B C A /\ ~ Between_H B A C.
+ Between_H A B C -> ~ Between_H B C A.
 Proof.
 unfold Between_H in |- *.
 intros.
-split;
 intro;
 spliter.
 assert (B=C) by
  (apply (between_equality B C A);Between).
 solve [intuition].
-
-assert (A = B) by
- (apply (between_equality A B C);Between).
-intuition.
 Qed.
 
 Lemma between_one : forall A B C,
@@ -402,91 +444,15 @@ assert (Col D A B) by eCol.
 assert (Col C A B) by eCol.
 assert (Col A D P) by eCol.
 assert (Col A D C) by eCol.
-cases_equality A D.
+elim (eq_dec_points A D); intro.
 subst.
 clear H3 H5 H6.
 eCol.
 eCol.
 Qed.
 
-(** * Group III Parallels *)
 
-(** We use a definition of parallel which is valid only in 2D: *)
 
-Definition Para l m := ~ exists X, Incident X l /\ Incident X m.
-
-Lemma axiom_euclid_existence :
- forall l P, ~ Incident P l -> exists m, Para l m.
-Proof.
-intros.
-destruct l as [A B HC].
-
-assert (T:=parallel_existence A B P HC).
-decompose [ex and] T;clear T.
-elim (axiom_line_existence x x0 H0);intros m Hm.
-exists m.
-
-unfold Par in H1.
-destruct H1.
-unfold Par_strict in *.
-decompose [and] H1.
-intro.
-decompose [ex and] H6;clear H6.
-apply H7.
-exists x1.
-split.
-unfold Incident in H9.
-simpl in *.
-assumption.
-apply cols_coincide_1.
-exists m.
-intuition.
-
-unfold Incident in *.
-simpl in *.
-decompose [ex and] H1;clear H1.
-decompose [and] Hm;clear Hm.
-
-assert (Incident A m) by (eapply Incid_line;eauto).
-assert (Incident B m) by (eapply Incid_line;eauto).
-assert (Incident P m) by (eapply Incid_line;eauto).
-cut False.
-intuition.
-apply H.
-apply cols_coincide_1.
-exists m;intuition.
-Qed.
-
-Lemma Para_Par : forall A B C D, forall HAB: A<>B, forall HCD: C<>D,
- Para (Lin A B HAB) (Lin C D HCD) -> Par A B C D.
-Proof.
-intros.
-unfold Para in H.
-unfold Incident in *;simpl in *.
-unfold Par.
-left.
-unfold Par_strict.
-repeat split;auto;try apply all_coplanar.
-Qed.
-
-Lemma axiom_euclid_unicity :
-  forall l P m1 m2,
-  ~ Incident P l ->
-   Para l m1 -> Incident P m1 ->
-   Para l m2 -> Incident P m2 ->
-   m1 =l= m2.
-Proof.
-intros.
-destruct l as [A B HAB].
-destruct m1 as [C D HCD].
-destruct m2 as [C' D' HCD'].
-unfold Incident in *;simpl in *.
-apply Para_Par in H0.
-apply Para_Par in H2.
-elim (parallel_unicity A B C D C' D' P H0 H1 H2 H3);intros.
-apply axiom_line_unicity with (A:=C') (B:=D');
-unfold Incident;simpl;Col.
-Qed.
 
 (** * Goup IV Congruence *)
 
@@ -841,255 +807,6 @@ assumption.
 eapply l2_11;eauto.
 Qed.
 
-(** We define the notion of half ray. **)
-
-Definition HLine := @Couple Tpoint.
-Definition hlin := build_couple Tpoint.
-
-(** We define incidence with an half ray **)
-
-Definition IncidentH (A : Tpoint) (l : HLine) :=
- A = (P1 l) \/ A = (P2 l) \/ Between_H (P1 l) A (P2 l) \/  Between_H (P1 l) (P2 l) A.
-
-(** Definition of half ray equality. **)
-
-Definition hEq : relation HLine := fun h1 h2 => (P1 h1) = (P1 h2) /\
-                          ((P2 h1) = (P2 h2) \/ Between_H (P1 h1) (P2 h2) (P2 h1) \/ 
-                                                  Between_H (P1 h1) (P2 h1) (P2 h2)).
-
-Infix "=h=" := hEq (at level 70):type_scope.
-
-(** This is an equivalence relation. *)
-
-Lemma hEq_refl : forall h, h =h= h.
-Proof.
-intros.
-unfold hEq.
-tauto.
-Qed.
-
-Lemma hEq_sym : forall h1 h2, h1 =h= h2 -> h2 =h= h1.
-Proof.
-intros.
-unfold hEq in *.
-spliter.
-split.
-auto.
-rewrite H in H0.
-induction H0.
-left.
-auto.
-tauto.
-Qed.
-
-Lemma hEq_trans : forall h1 h2 h3, h1 =h= h2 -> h2 =h= h3 -> h1 =h= h3.
-Proof.
-intros.
-unfold hEq in *.
-spliter.
-rewrite <-H in *.
-rewrite <-H0 in *.
-
-split.
-reflexivity.
-
-induction H2;
-induction H1.
-left.
-rewrite H2.
-assumption.
-
-induction H1.
-right; left.
-rewrite H2.
-assumption.
-right; right.
-rewrite H2.
-assumption.
-
-induction H2.
-right; left.
-rewrite <-H1.
-assumption.
-right; right.
-rewrite <-H1.
-assumption.
-
-
-induction H2; induction H1; spliter.
-right; left.
-repeat split.
-eapply between_exchange4.
-apply H1.
-unfold Between_H in *.
-spliter.
-assumption.
-rewrite H0.
-apply (Cond h3).
-intro.
-
-rewrite H3 in H1.
-unfold Between_H in *.
-spliter.
-apply between_symmetry in H2.
-apply between_symmetry in H1.
-assert(P2 h2 = P2 h1).
-eapply between_equality.
-apply H1.
-assumption.
-auto.
-intro.
-assert(HH:= Cond h1).
-contradiction.
-
-induction(eq_dec_points (P2 h1) (P2 h3)).
-left.
-assumption.
-
-assert((Bet (P1 h1) (P2 h3) (P2 h1) \/ Bet (P1 h1) (P2 h1) (P2 h3)) /\
-  (P1 h1 <> P2 h3 /\ P2 h3 <> P2 h1 /\ P1 h1 <> P2 h1)).
-split.
-eapply l5_1.
-2: apply H1.
-unfold Between_H in *.
-spliter.
-assumption.
-unfold Between_H in *.
-spliter.
-assumption.
-repeat split.
-unfold Between_H in *.
-spliter.
-assumption.
-auto.
-apply (Cond h1).
-
-right.
-unfold Between_H.
-spliter.
-induction H4.
-left.
-repeat split;
-assumption.
-right.
-repeat split;
-assumption.
-
-induction(eq_dec_points (P2 h1) (P2 h3)).
-left.
-assumption.
-
-assert((Bet (P1 h1) (P2 h3) (P2 h1) \/ Bet (P1 h1) (P2 h1) (P2 h3)) /\
- (P1 h1 <> P2 h3 /\ P2 h3 <> P2 h1 /\ P1 h1 <> P2 h1)).
-split.
-eapply l5_3.
-apply H1.
-unfold Between_H in *.
-spliter.
-assumption.
-repeat split.
-unfold Between_H in *.
-spliter.
-assumption.
-auto.
-apply (Cond h1).
-
-right.
-unfold Between_H.
-spliter.
-induction H4.
-left.
-repeat split;
-assumption.
-right.
-repeat split;
-assumption.
-
-right; right.
-unfold Between_H in *.
-spliter.
-repeat split.
-eapply between_exchange4.
-apply H2.
-assumption.
-apply (Cond h1).
-
-intro.
-
-rewrite <-H9 in H1.
-apply between_symmetry in H2.
-apply between_symmetry in H1.
-assert(P2 h2 = P2 h1).
-eapply between_equality.
-apply H2.
-assumption.
-auto.
-assumption.
-Qed.
-
-Instance hEq_Equiv : Equivalence hEq.
-Proof.
-split.
-unfold Reflexive.
-apply hEq_refl.
-unfold Symmetric.
-apply hEq_sym.
-unfold Transitive.
-apply hEq_trans.
-Qed.
-
-(** We define the concept of angle. *)
-
-Definition Angle : Type := @Triple Tpoint.
-Definition angle := build_triple Tpoint.
-
-(**  The congruence of angles of Hilbert is the same as the congruence of angles of Tarski. *)
-
-Definition Hconga : relation Angle := fun A1 A2 => CongA  (V1 A1) (V A1) (V2 A1)  (V1 A2) (V A2) (V2 A2).
-
-(** This is an equivalence relation. *)
-
-Lemma hconga_refl : forall a, Hconga a a.
-Proof.
-intros.
-unfold Hconga.
-assert(H:= Pred a).
-spliter.
-apply conga_refl.
-assumption.
-assumption.
-Qed.
-
-Lemma hconga_sym : forall a b, Hconga a b -> Hconga b a.
-Proof.
-intros.
-unfold Hconga in *.
-spliter.
-apply conga_sym.
-assumption.
-Qed.
-
-Lemma hconga_trans : forall a b c, Hconga a b -> Hconga b c -> Hconga a c.
-Proof.
-intros.
-unfold Hconga in *.
-eapply conga_trans.
-apply H.
-assumption.
-Qed.
-
-Instance hconga_Equiv :  Equivalence Hconga.
-split.
-unfold Reflexive.
-apply hconga_refl.
-unfold Symmetric.
-apply hconga_sym.
-unfold Transitive.
-apply hconga_trans.
-Qed.
-
-
-
 Lemma exists_not_incident : forall A B : Tpoint, forall  HH : A <> B , exists C, ~ Incident C (Lin A B HH).
 Proof.
 intros.
@@ -1102,9 +819,6 @@ apply H.
 simpl in H0.
 Col.
 Qed.
-
-
-Definition line_of_hline := fun hl => Lin (P1 hl) (P2 hl) (Cond hl).
 
 Definition same_side := fun A B l => exists P, cut l A P /\ cut l B P.
 
@@ -1121,6 +835,8 @@ eapply l9_8_1.
 apply H.
 apply H0.
 Qed.
+
+
 
 Lemma one_side_same_side : forall A B l, OS (P1 l) (P2 l) A B -> same_side A B l.
 Proof.
@@ -1167,6 +883,49 @@ subst T.
 contradiction.
 Qed.
 
+Definition same_side' := fun A B X Y => X<>Y /\ forall l, Incident X l -> Incident Y l -> same_side A B l.
+
+Lemma OS_distinct : forall P Q A B,
+  OS P Q A B -> P<>Q.
+Proof.
+intros.
+apply one_side_not_col in H.
+assert_diffs;assumption.
+Qed.
+
+
+Lemma OS_same_side' :
+ forall P Q A B, OS P Q A B -> same_side' A B P Q.
+Proof.
+intros.
+unfold same_side'.
+intros.
+split.
+apply OS_distinct with A B;assumption.
+intros.
+
+apply  one_side_same_side.
+destruct l.
+unfold Incident in *.
+simpl in *.
+apply col2_os__os with P Q;try assumption;ColR.
+Qed.
+
+Lemma same_side_OS :
+ forall P Q A B, same_side' P Q A B -> OS A B P Q.
+Proof.
+intros.
+unfold same_side' in *.
+destruct H.
+destruct (axiom_line_existence A B H).
+destruct H1.
+assert (T:=H0 x H1 H2).
+assert (U:=same_side_one_side P Q x T).
+destruct x.
+unfold Incident in *.
+simpl in *.
+apply col2_os__os with P1 P2;Col.
+Qed.
 
 Definition outH := fun P A B => Between_H P A B \/ Between_H P B A \/ (P <> A /\ A = B).
 
@@ -1218,124 +977,7 @@ unfold Between_H.
 repeat split; auto.
 Qed.
 
-(** Definition of a point inside an angle. *)
-
-Definition InAngleH a P :=
- (exists M, Between_H (V1 a) M (V2 a) /\ ((outH (V a) M P) \/ M = (V a))) \/
-                                   outH (V a) (V1 a) P \/ outH (V a) (V2 a) P.
-
-(** This is (almost) equivalent to the same notion in Tarski's. *)
-
-Lemma in_angle_equiv : forall a P, (P <> (V a) /\ InAngleH a P) <-> InAngle P (V1 a) (V a) (V2 a).
-Proof.
-unfold InAngle.
-unfold InAngleH.
-
-intros.
-split.
-intros.
-assert(HH:= Pred a).
-spliter.
-repeat split; try auto.
-induction H2.
-ex_and H2 M.
-exists M.
-unfold Between_H in H2.
-spliter.
-split.
-assumption.
-induction H3.
-right.
-apply outH_out.
-assumption.
-left.
-assumption.
-
-induction H2.
-exists (V1 a).
-split.
-apply between_symmetry.
-apply between_trivial.
-right.
-apply outH_out.
-assumption.
-exists (V2 a).
-split.
-apply between_trivial.
-right.
-apply outH_out.
-assumption.
-
-
-intros.
-spliter.
-split.
-assumption.
-ex_and H2 M.
-induction H3.
-subst M.
-left.
-exists (V a).
-unfold Between_H.
-repeat split; try auto.
-intro.
-rewrite H3 in *.
-apply between_identity in H2.
-contradiction.
-
-induction(eq_dec_points M (V1 a)).
-subst M.
-right.
-left.
-apply out_outH.
-assumption.
-induction(eq_dec_points M (V2 a)).
-subst M.
-right.
-right.
-apply out_outH.
-assumption.
-
-left.
-exists M.
-unfold Between_H.
-repeat split; try auto.
-intro.
-rewrite H6 in *.
-apply between_identity in H2.
-rewrite H2 in *.
-tauto.
-left.
-apply out_outH.
-assumption.
-Qed.
-
-Lemma in_angleH_in_angle : forall a P, (P <> (V a) /\ InAngleH a P) -> InAngle P (V1 a) (V a) (V2 a).
-Proof.
-intros.
-edestruct in_angle_equiv.
-apply H0 in H.
-assumption.
-Qed.
-
 (** The 2D version of the fourth congruence axiom **)
-
-Lemma outH_in_angleH_colH : forall a P, outH (V a) (V1 a) (V2 a) -> InAngleH a P -> Col_H (V a) (V1 a) P.
-Proof.
-intros.
-apply cols_coincide_2.
-apply outH_out in H.
-induction(eq_dec_points P (V a)).
-subst P.
-Col.
-assert(HH:=in_angleH_in_angle a P (conj H1 H0)).
-assert(Out (V a) (V1 a) P).
-apply (in_angle_out _ _ (V2 a)).
-assumption.
-assumption.
-apply out_col in H2.
-assumption.
-Qed.
 
 Lemma incident_col : forall M l, Incident M l -> Col M (P1 l)(P2 l).
 Proof.
@@ -1363,233 +1005,46 @@ treat_equalities.
 intuition.
 Qed.
 
-Lemma aux : forall (h h1 : HLine),
- P1 h = P1 h1 ->
- P2 h1 <> P1 h.
+Lemma axiom_cong_5' : forall A B C A' B' C', ~ Col_H A B C -> ~ Col_H A' B' C' ->
+           Hcong A B A' B' -> Hcong A C A' C' -> CongA B A C B' A' C' -> CongA A B C A' B' C'.
 Proof.
+intros A B C A' B' C'.
 intros.
+unfold Hcong in *.
+assert (T:=l11_49 B A C B' A' C').
+assert (~ Col A B C).
 intro.
-rewrite H in H0.
-assert (T:= Cond h1).
-auto.
+apply cols_coincide_2 in H4.
+intuition.
+assert_diffs.
+intuition.
 Qed.
 
-Lemma axiom_hcong_4_existence :
- forall a h P,
- ~Incident P (line_of_hline h) -> ~Between_H (V1 a)(V a)(V2 a) ->
-  exists h1, (P1 h) = (P1 h1) /\
- (forall CondAux : P1 h = P1 h1,
-       Hconga a (angle (P2 h) (P1 h) (P2 h1) (conj (sym_not_equal (Cond h)) (aux h h1 CondAux)))
-        /\ (forall M, ~Incident M (line_of_hline h) /\ InAngleH (angle (P2 h) (P1 h) (P2 h1) (conj (sym_not_equal (Cond h)) (aux h h1 CondAux))) M
-      -> same_side P M  (line_of_hline h))).
+
+Lemma axiom_hcong_4_existence :  forall A B C O X P,
+   ~ Col_H P O X -> ~ Col_H A B C ->
+  exists Y, CongA A B C X O Y  (* /\ ~Col O X Y *) /\ same_side' P Y O X.
 Proof.
 intros.
+rewrite <- cols_coincide in H.
+rewrite <- cols_coincide in H0.
 
-assert (~Bet (V1 a) (V a) (V2 a)) by
- (intro;apply H0;
- assert (T:=Pred a);
- apply Bet_Between_H;intuition).
-
-clear H0; rename H1 into H0.
-
-assert(HP:=Pred a).
-spliter.
-assert(HC:=Cond h).
-unfold Incident in H.
-simpl in H.
-
-induction (Col_dec (V1 a) (V a) (V2 a)).
-induction H3.
-contradiction.
-
-induction H3.
-
-exists h.
-(* erreur ici *)
-split.
-reflexivity.
-intros.
-unfold Hconga.
-simpl.
-split.
-eapply l11_21_b.
-unfold Out.
-repeat split; auto.
-unfold Out.
-repeat split; auto.
-left.
-apply between_trivial.
-intros.
-spliter.
-unfold InAngleH in H5.
-simpl in H5.
-induction H5.
-ex_and H5 M0.
-induction H6.
-apply outH_out in H6.
-apply out_col in H6.
-unfold Between_H in H5.
-spliter.
-apply between_identity in H5.
-subst M0.
-unfold Incident in H4.
-simpl in H4.
-apply False_ind.
-apply H4.
-Col.
-subst M0.
-unfold Between_H in H5.
-spliter.
-tauto.
-
-induction H5.
-apply outH_out in H5.
-apply out_col in H5.
-unfold Incident in H4.
-simpl in H4.
-apply False_ind.
-apply H4.
-Col.
-
-apply outH_out in H5.
-apply out_col in H5.
-unfold Incident in H4.
-simpl in H4.
-apply False_ind.
-apply H4.
-Col.
-
-exists h.
-split.
-reflexivity.
-intros.
-unfold Hconga.
-simpl.
-split.
-eapply l11_21_b.
-unfold Out.
-repeat split; auto.
-left.
-apply between_symmetry.
-assumption.
-apply out_trivial.
-auto.
-intros.
-spliter.
-unfold InAngleH in H5.
-simpl in H5.
-induction H5.
-ex_and H5 M0.
-unfold Between_H in H5.
-spliter.
-induction H6.
-apply outH_out in H6.
-apply between_identity in H5.
-subst M0.
-apply out_col in H6.
-unfold Incident in H4.
-simpl in H4.
-apply False_ind.
-apply H4.
-Col.
-subst M0.
-apply between_identity in H5.
-contradiction.
-induction H5.
-unfold Incident in H4.
-simpl in H4.
-apply outH_out in H5.
-apply out_col in H5.
-apply False_ind.
-apply H4.
-Col.
-unfold Incident in H4.
-simpl in H4.
-apply outH_out in H5.
-apply out_col in H5.
-apply False_ind.
-apply H4.
-Col.
-
-(** general case **)
-
-assert(~Col (P2 h) (P1 h) P).
+assert(~Col X O P).
 intro.
 apply H.
 Col.
+assert(HH:=angle_construction_1 A B C X O P H0 H1).
 
-assert(HH:=angle_construction_1 (V1 a)(V a)(V2 a) (P2 h) (P1 h) P H3 H4).
-ex_and HH C.
+ex_and HH Y.
 
-assert((P1 h) <> C).
-intro.
-subst C.
-unfold OS in H6.
-ex_and H6 X.
-unfold TS in *.
-spliter.
-apply H11.
-Col.
-
-exists (hlin (P1 h) C H7).
-simpl.
-split.
-reflexivity.
-intros.
-unfold Hconga.
-simpl.
+exists Y.
 split.
 assumption.
-intros.
-
-spliter.
-
-assert(M <> V (angle (P2 h) (P1 h) C (conj (sym_not_equal (Cond h)) (sym_not_equal H7))) /\
-     InAngleH (angle (P2 h) (P1 h) C (conj (sym_not_equal (Cond h)) (sym_not_equal H7))) M).
-simpl.
-split.
-intro.
-subst M.
-apply H8.
-unfold Incident.
-simpl.
-Col.
-assumption.
-
-assert(HH:= (in_angleH_in_angle (angle (P2 h) (P1 h) C (conj (sym_not_equal (Cond h)) (sym_not_equal H7))) M H10)).
-simpl in *.
-
-
-apply in_angle_one_side in HH.
-
-assert(HS:=one_side_same_side P M (line_of_hline h)).
-apply HS.
-simpl.
-eapply one_side_transitivity.
+apply OS_same_side'.
 apply invert_one_side.
 apply one_side_symmetry.
-apply H6.
-apply one_side_symmetry.
-apply invert_one_side.
 assumption.
-unfold OS in H6.
-ex_and H6 T.
-unfold TS in *.
-spliter.
-Col.
-unfold Incident in H8.
-simpl in H8.
-intro.
-apply H8.
-Col.
 Qed.
-
-Definition hline_construction a h P hc H :=
- (P1 h) = (P1 hc) /\
- Hconga a (angle (P2 h) (P1 h) (P2 hc) (conj (sym_not_equal (Cond h)) H)) /\
-  (forall M, InAngleH (angle (P2 h) (P1 h) (P2 hc) (conj (sym_not_equal (Cond h)) H)) M ->
-   same_side P M  (line_of_hline h)).
-
 
 Lemma same_side_trans :
  forall A B C l,
@@ -1615,177 +1070,150 @@ apply one_side_symmetry.
 assumption.
 Qed.
 
-Lemma in_angleH_trivial :
- forall A B C H,
-  InAngleH (angle A B C H) A /\ InAngleH (angle A B C H) C.
-Proof.
-intros.
-elim H.
-intros.
-unfold InAngleH.
-simpl.
-split.
-right; left.
-apply out_outH.
-apply out_trivial.
-assumption.
-right; right.
-apply out_outH.
-apply out_trivial.
-assumption.
-Qed.
 
 Lemma axiom_hcong_4_unicity :
-  forall a h P h1 h2 HH1 HH2,
-  ~Incident P (line_of_hline h) -> ~Between_H (V1 a)(V a)(V2 a) ->
-  hline_construction a h P h1 HH1 -> hline_construction a h P h2 HH2 ->
-  h1 =h= h2.
+  forall A B C O P X Y Y', ~ Col_H P O X  -> ~ Col_H A B C -> CongA A B C X O Y -> CongA A B C X O Y' -> 
+  same_side' P Y O X -> same_side' P Y' O X -> outH O Y Y'.
 Proof.
 intros.
-
-assert (~Bet (V1 a) (V a) (V2 a)) by
- (intro;apply H0;
- assert (T:=Pred a);
- apply Bet_Between_H;intuition).
-
-clear H0.
-rename H3 into H0.
-
-unfold hEq.
-unfold hline_construction in *.
-spliter.
-split.
-rewrite H1 in H2.
-assumption.
-
-unfold Hconga in *.
-simpl in *.
-
-assert(CongA (P2 h)(P1 h)(P2 h1) (P2 h)(P1 h)(P2 h2)).
+rewrite <- cols_coincide in H.
+rewrite <- cols_coincide in H0.
+assert (T:CongA X O Y X O Y').
 eapply conga_trans.
 apply conga_sym.
-apply H5.
+apply H1.
 assumption.
 
-apply l11_22_aux in H7.
-induction(eq_dec_points (P2 h1) (P2 h2)).
-left.
+apply l11_22_aux in T.
+induction T.
+apply out_outH.
 assumption.
 
-induction H7.
-unfold Out in H7.
-spliter.
-induction H10.
-rewrite <-H1.
-rewrite H2 in *.
-right; right.
-unfold Between_H.
-repeat split; auto.
-rewrite <-H1.
-rewrite H2 in *.
-right; left.
-unfold Between_H.
-repeat split; auto.
-
-assert(CongA (P2 h)(P1 h)(P2 h2) (P2 h) (P1 h)(P2 h1)).
-eapply conga_trans.
-apply conga_sym.
-apply H3.
+apply same_side_OS in H3.
+apply same_side_OS in H4.
+exfalso.
+assert (OS O X Y Y').
+apply one_side_transitivity with P.
+apply one_side_symmetry.
 assumption.
-
-
-induction(Col_dec (V1 a) (V a) (V2 a)).
-assert(HC0:=col_conga_col (V1 a)(V a)(V2 a)(P2 h)(P1 h)(P2 h1) H10 H5).
-assert(HC1:=col_conga_col (V1 a)(V a)(V2 a)(P2 h)(P1 h)(P2 h2) H10 H3).
-unfold TS in H7.
-spliter.
-apply False_ind.
-apply H11.
-Col.
-
-assert(H11:=H10).
-
-eapply ncol_conga_ncol in H10.
-2: apply H5.
-eapply ncol_conga_ncol in H11.
-2: apply H3.
-
-assert(HH4 := H4 (P2 h2)).
-assert(HH6 := H6 (P2 h1)).
-
-assert(same_side (P2 h1) (P2 h2) (line_of_hline h)).
-eapply same_side_trans.
-apply same_side_sym.
-apply HH6.
-
-assert(P2 h <> P1 h /\ P2 h1 <> P1 h).
-split.
-exact(sym_not_equal(Cond h)).
-rewrite H1.
-exact(sym_not_equal(Cond h1)).
-
-assert(HH:= in_angleH_trivial (P2 h)(P1 h)(P2 h1) H12).
-spliter.
-apply H14.
-apply HH4.
-assert(P2 h <> P1 h /\ P2 h2 <> P1 h).
-split.
-exact(sym_not_equal(Cond h)).
-rewrite H2.
-exact(sym_not_equal(Cond h2)).
-
-assert(HH:= in_angleH_trivial (P2 h)(P1 h)(P2 h2)H12).
-spliter.
-apply H14.
-
-apply same_side_one_side in H12.
-simpl in H12.
-apply invert_one_side in H12.
-
-apply l9_9 in H7.
-contradiction.
+assumption.
+apply invert_one_side in H6.
+apply l9_9 in H5.
+intuition.
 Qed.
 
-
-Lemma axiom_cong_5':
- forall (A B C A' B' C' : Tpoint) (H1 : B <> A /\ C <> A)
-          (H2 : B' <> A' /\ C' <> A') ,
- forall H3 : (A<>B /\ C<>B), forall H4: A' <> B' /\ C' <> B',
-  Hcong A B A' B' ->
-  Hcong A C A' C' ->
-  Hconga {| V1 := B ; V := A ; V2:= C ; Pred := H1 |}
-         {| V1 := B'; V := A'; V2:= C'; Pred := H2 |} ->
-  Hconga {| V1 := A ; V := B ; V2:= C ; Pred := H3 |}
-         {| V1 := A'; V := B'; V2:= C'; Pred := H4 |}.
+Lemma axiom_conga_comm : forall A B C,
+ ~ Col_H A B C -> CongA A B C C B A.
 Proof.
-intros A B C A' B' C'.
 intros.
+rewrite <- cols_coincide in H.
+assert_diffs.
+apply conga_pseudo_refl;auto.
+Qed.
 
-unfold Hconga in *.
-simpl in *.
+Lemma axiom_cong_permr : forall A B C D, Hcong A B C D -> Hcong A B D C.
+Proof.
+intros;unfold Hcong.
+Cong.
+Qed.
 
+Lemma axiom_congaH_outH_congaH :
+ forall A B C D E F A' C' D' F' : Tpoint,
+  CongA A B C D E F ->
+  Between_H B A A' \/ Between_H B A' A \/ B <> A /\ A = A' ->
+  Between_H B C C' \/ Between_H B C' C \/ B <> C /\ C = C' ->
+  Between_H E D D' \/ Between_H E D' D \/ E <> D /\ D = D' ->
+  Between_H E F F' \/ Between_H E F' F \/ E <> F /\ F = F' ->
+  CongA A' B C' D' E F'.
+Proof.
+intros.
+apply out_conga with A C D F;auto using outH_out.
+Qed.
 
-assert (T:=l11_49 B A C B' A' C' ).
-unfold Hcong.
-intuition.
+Lemma axiom_conga_permlr:
+forall A B C D E F : Tpoint, CongA A B C D E F -> CongA C B A F E D.
+Proof.
+intros.
+auto using conga_right_comm, conga_left_comm.
+Qed.
+
+Lemma axiom_inter_dec : forall l m,
+  (exists P, Incident P l /\ Incident P m) \/ ~ (exists P, Incident P l /\ Incident P m).
+Proof.
+intros l m;
+elim (Ch12_parallel_inter_dec.inter_dec (P1 l) (P2 l) (P1 m) (P2 m));
+intro; [left|right]; auto.
+Qed.
+
+Lemma axiom_conga_refl : forall A B C, ~ Col_H A B C -> CongA A B C A B C.
+Proof.
+intros A B C H. apply Ch11_angles.conga_refl;
+intro; subst; apply H; apply cols_coincide; Col.
 Qed.
 
 End T.
 
-Section Hilbert_to_Tarski.
+Section Hilbert_neutral_to_Tarski_neutral.
 
-Context `{T:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
-Instance Hilbert_follow_from_Tarski : Hilbert.
+Instance Hilbert_neutral_follows_from_Tarski_neutral : Hilbert_neutral_2D.
 Proof.
- exact (Build_Hilbert Tpoint Line Eq Eq_Equiv Incident
-       axiom_line_existence axiom_line_unicity axiom_two_points_on_line axiom_plan
-       Between_H axiom_between_col axiom_between_comm axiom_between_out
-       axiom_between_only_one axiom_between_one axiom_pasch
-       axiom_euclid_existence axiom_euclid_unicity
-       Hcong axiom_hcong_trans axiom_hcong_refl axiom_hcong_1_existence axiom_hcong_1_unicity
-       axiom_hcong_3 Hconga axiom_cong_5' line_of_hline aux axiom_hcong_4_existence axiom_hcong_4_unicity).
+ exact (Build_Hilbert_neutral_2D Tpoint Line Eq Eq_Equiv Incident
+       axiom_Incid_morphism axiom_Incid_dec eq_dec_points axiom_line_existence axiom_line_unicity axiom_two_points_on_line axiom_plan
+       Between_H axiom_between_col axiom_between_diff axiom_between_comm axiom_between_out
+       axiom_between_only_one axiom_pasch
+       Hcong axiom_cong_permr axiom_hcong_trans axiom_hcong_1_existence
+       axiom_hcong_3 CongA axiom_conga_refl axiom_conga_comm axiom_conga_permlr axiom_cong_5' axiom_congaH_outH_congaH axiom_hcong_4_existence axiom_hcong_4_unicity).
+Defined.
+
+End Hilbert_neutral_to_Tarski_neutral.
+
+Section Hilbert_Euclidean_to_Tarski_Euclidean.
+
+Context `{TE:Tarski_2D_euclidean}.
+
+(** * Group Parallels *)
+
+(** We use a definition of parallel which is valid only in 2D: *)
+
+Definition Para l m := ~ exists X, Incident X l /\ Incident X m.
+
+Lemma Para_Par : forall A B C D, forall HAB: A<>B, forall HCD: C<>D,
+ Para (Lin A B HAB) (Lin C D HCD) -> Par A B C D.
+Proof.
+intros.
+unfold Para in H.
+unfold Incident in *;simpl in *.
+unfold Par.
+left.
+unfold Par_strict.
+repeat split;auto;try apply all_coplanar.
 Qed.
 
-End Hilbert_to_Tarski.
+Lemma axiom_euclid_unicity :
+  forall l P m1 m2,
+  ~ Incident P l ->
+   Para l m1 -> Incident P m1 ->
+   Para l m2 -> Incident P m2 ->
+   Eq m1 m2.
+Proof.
+intros.
+destruct l as [A B HAB].
+destruct m1 as [C D HCD].
+destruct m2 as [C' D' HCD'].
+unfold Incident in *;simpl in *.
+apply Para_Par in H0.
+apply Para_Par in H2.
+elim (parallel_unicity A B C D C' D' P H0 H1 H2 H3);intros.
+apply axiom_line_unicity with C' D';
+unfold Incident;simpl;Col.
+Qed.
+
+Instance Hilbert_euclidean_follows_from_Tarski_euclidean : Hilbert_euclidean_2D Hilbert_neutral_follows_from_Tarski_neutral.
+Proof.
+split.
+apply axiom_euclid_unicity.
+Qed.
+
+End Hilbert_Euclidean_to_Tarski_Euclidean.

@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section rah_existential_saccheri.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma rah__existential_saccheri : saccheri_s_right_angle_hypothesis -> existential_saccheri.
+Lemma rah__existential_saccheri : postulate_of_right_saccheri_quadrilaterals -> postulate_of_existence_of_a_right_saccheri_quadrialteral.
 Proof.
   intro rah.
   destruct ex_saccheri as [A [B [C [D HSac]]]].

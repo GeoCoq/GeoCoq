@@ -5,8 +5,8 @@ Require Import GeoCoq.Tactics.Coinc.tarski_to_coinc_theory_for_col.
 
 Section CoincR_for_col.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
 
 Definition ss_ok_for_col ss interp :=
   @ss_ok Tarski_is_a_Arity_for_col
@@ -119,8 +119,8 @@ Ltac Col_refl Tpoint Col :=
 (*
 Section Test.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless}.
+
 
 Goal forall Q R A B C D E F G H I J K L M N,
   D <> E -> J <> K -> Q <> R -> G <> H ->

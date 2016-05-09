@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section triangle_existential_triangle.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma triangle__existential_triangle : triangle_postulate -> existential_triangle.
+Lemma triangle__existential_triangle : triangle_postulate -> postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights.
 Proof.
   intro triangle.
   destruct lower_dim as [A [B [C]]].

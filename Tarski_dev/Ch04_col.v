@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch04_cong_bet.
 
 Section T4_1.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma col_permutation_1 : forall A B C,Col A B C -> Col B C A.
 Proof.
@@ -50,8 +49,7 @@ Ltac Col5 := auto with col.
 
 Section T4_2.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma not_col_permutation_1 :
  forall (A B C : Tpoint), ~ Col A B C -> ~ Col B C A.
@@ -105,8 +103,7 @@ not_col_permutation_3 not_col_permutation_4 not_col_permutation_5 : col.
 
 Section T4_3.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 (** This lemma is used by tactics for trying several permutations. *)
 Lemma Col_cases :
@@ -156,8 +153,7 @@ Hint Immediate col_trivial_1 col_trivial_2 col_trivial_3: col.
 
 Section T4_4.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l4_13 : forall A B C A' B' C',
  Col A B C -> Cong_3 A B C A' B' C' -> Col A' B' C'.

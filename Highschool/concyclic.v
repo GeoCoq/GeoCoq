@@ -2,8 +2,7 @@ Require Import GeoCoq.Highschool.circumcenter.
 
 Section Concyclic.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Definition Concyclic A B C D := Coplanar A B C D /\ exists O, Cong O A O B /\ Cong O A O C /\ Cong O A O D.
 

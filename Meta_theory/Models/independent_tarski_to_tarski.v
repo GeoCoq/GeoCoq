@@ -4,8 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch05_bet_le.
 
 Section Independent_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
 
-Context `{M:independent_Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability TpointG}.
+Context `{ITnEQD:independent_Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma g2_1 : forall A B, CongG A B A B.
 Proof.
@@ -63,7 +62,7 @@ Lemma g2_7 : forall A B C A' B' C',
   CongG A C A' C'.
 Proof.
 intros A B C A' B' C' HCong1 HCong2 HBet1 HBet2.
-elim (eq_dec_points A B); intro HDiff1; [rewrite HDiff1 in *; clear HDiff1|].
+elim (point_equality_decidabilityG A B); intro HDiff1; [rewrite HDiff1 in *; clear HDiff1|].
 
   {
   assert (HEq : A' = B') by (apply g2_5 with B B; try apply g2_2; auto).
@@ -148,7 +147,7 @@ Qed.
 Lemma g2_16 : forall A B C D E, ~ BetG C D E -> BetG A B A -> A = B.
 Proof.
 intros A B C D E HNBet HBet.
-elim (eq_dec_points A B); intro HDiff; auto.
+elim (point_equality_decidabilityG A B); intro HDiff; auto.
 exfalso; apply HNBet; apply g2_15 with A B; auto.
 Qed.
 
@@ -167,7 +166,7 @@ Lemma l2_11T : forall A B C A' B' C',
   CongG A C A' C'.
 Proof.
 intros A B C A' B' C' HBet1 HBet2 HCong1 HCong2.
-elim (eq_dec_points A B); intro HDiff; [rewrite HDiff in *; clear HDiff|].
+elim (point_equality_decidabilityG A B); intro HDiff; [rewrite HDiff in *; clear HDiff|].
 
   {
   assert (HEq : A' = B') by (apply g2_5 with B B; try apply g2_2; auto).
@@ -198,8 +197,8 @@ Lemma Bet_decG : forall A B C, BetG A B C \/ ~ BetG A B C.
 Proof.
 intros A B C.
 destruct (segment_constructionG A B B C) as [D [HBet1 HCong]].
-elim (eq_dec_points C D); intro HDiff1; [rewrite HDiff1 in *; auto|].
-elim (eq_dec_points A B); intro HDiff2;
+elim (point_equality_decidabilityG C D); intro HDiff1; [rewrite HDiff1 in *; auto|].
+elim (point_equality_decidabilityG A B); intro HDiff2;
 [rewrite HDiff2 in *; left; apply bet_symmetryG; apply between_trivialT|].
 right; intro HBet2; apply HDiff1; apply construction_unicityT with A B B C;
 auto; apply g2_1.
@@ -218,16 +217,16 @@ Lemma inner_paschT : forall A B C P Q,
   exists x, BetG P x B /\ BetG Q x A.
 Proof.
 intros A B C P Q HBet1 HBet2.
-elim (eq_dec_points A P); intro HDiff1;
+elim (point_equality_decidabilityG A P); intro HDiff1;
 [rewrite HDiff1 in *; exists P; split;
  [apply bet_symmetryG|]; apply between_trivialT|].
-elim (eq_dec_points P C); intro HDiff2;
+elim (point_equality_decidabilityG P C); intro HDiff2;
 [rewrite HDiff2 in *; exists Q; split; apply bet_symmetryG;
  try apply between_trivialT; auto|].
-elim (eq_dec_points B Q); intro HDiff3;
+elim (point_equality_decidabilityG B Q); intro HDiff3;
 [rewrite HDiff3 in *; exists Q; split;
  [|apply bet_symmetryG]; apply between_trivialT|].
-elim (eq_dec_points Q C); intro HDiff4;
+elim (point_equality_decidabilityG Q C); intro HDiff4;
 [rewrite HDiff4 in *; exists P; split; apply bet_symmetryG;
  try apply between_trivialT; auto|].
 elim (Col_decG A B C); intro HCol; [|apply inner_paschG with C; auto].
@@ -263,26 +262,30 @@ Global Instance TG_to_T : Tarski_neutral_dimensionless.
 Proof.
 exact
 (Build_Tarski_neutral_dimensionless TpointG BetG CongG
-  between_identityT cong_pseudo_reflexivityG cong_identityG
-  cong_inner_transitivityT inner_paschT five_segmentG
-  segment_constructionG lower_dimG).
+   cong_pseudo_reflexivityG cong_inner_transitivityT cong_identityG
+   segment_constructionG five_segmentG
+   between_identityT inner_paschT
+   lower_dimG).
 Defined.
+
+Global Instance TG_to_TID :
+  Tarski_neutral_dimensionless_with_decidable_point_equality TG_to_T.
+Proof. split; exact point_equality_decidabilityG. Defined.
 
 End Independent_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
 
 Section Independent_Tarski_2D_to_Tarski_2D.
 
-Context `{M:independent_Tarski_2D}.
-Context `{EqDec:EqDecidability TpointG}.
+Context `{IT2D:independent_Tarski_2D}.
 
 Lemma upper_dimT : forall A B C P Q,
   P <> Q -> CongG A P A Q -> CongG B P B Q -> CongG C P C Q ->
   (BetG A B C \/ BetG B C A \/ BetG C A B).
 Proof.
 intros A B C P Q HPQ HCong1 HCong2 HCong3.
-elim (eq_dec_points A B); intro HAB; try (rewrite HAB in *; clear HAB);
-elim (eq_dec_points A C); intro HAC; try (rewrite HAC in *; clear HAC);
-elim (eq_dec_points B C); intro HBC; try (rewrite HBC in *; clear HBC).
+elim (point_equality_decidabilityG A B); intro HAB; try (rewrite HAB in *; clear HAB);
+elim (point_equality_decidabilityG A C); intro HAC; try (rewrite HAC in *; clear HAC);
+elim (point_equality_decidabilityG B C); intro HBC; try (rewrite HBC in *; clear HBC).
 
   {
   left; apply between_trivialT.
@@ -317,20 +320,19 @@ elim (eq_dec_points B C); intro HBC; try (rewrite HBC in *; clear HBC).
   }
 Qed.
 
-Global Instance TG2D_to_T2D :
-  Tarski_2D TG_to_T.
-Proof. exact (Build_Tarski_2D TG_to_T upper_dimT). Defined.
+Global Instance TG2D_to_T2D : Tarski_2D TG_to_TID.
+Proof. split; exact upper_dimT. Defined.
 
 End Independent_Tarski_2D_to_Tarski_2D.
 
 Section Independent_Tarski_2D_euclidean_to_Tarski_2D_euclidean.
 
-Context `{M:independent_Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability TpointG}.
+Context `{ITE:independent_Tarski_2D_euclidean}.
 
 Global Instance TG2D_euclidean_to_T2D_euclidean :
   Tarski_2D_euclidean TG2D_to_T2D.
 Proof.
+assert (H := TG_to_TID).
 split; intros A B C D T HBet1 HBet2 HDiff1.
 elim (Col_dec A B C); intro HCol; [|apply euclidG with D; auto].
 do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
@@ -343,8 +345,7 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
     {
     elim (eq_dec_points B C); intro HDiff3;
     [treat_equalities; exists T; exists T; Between|].
-    exists B; exists T; do 2 (split; Between).
-    apply outer_transitivity_between2 with B; auto.
+    exists B; exists T; do 2 (split; Between); eBetween.
     }
 
     {
@@ -362,8 +363,7 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
     {
     elim (eq_dec_points B C); intro HDiff3;
     [treat_equalities; exists T; exists T; Between|].
-    exists T; exists C; repeat (split; Between).
-    apply outer_transitivity_between2 with C; Between.
+    exists T; exists C; repeat (split; Between); eBetween.
     }
 
     {
@@ -396,14 +396,13 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
       {
       elim (eq_dec_points B D); intro HDiff2;
       [treat_equalities; exists T; exists C; Between|].
-      exists T; exists C; do 2 (try split; Between).
-      apply outer_transitivity_between2 with D; Between.
+      exists T; exists C; do 2 (try split; Between); eBetween.
       }
 
       {
       exists B; exists C; do 2 (split; Between).
-      apply outer_transitivity_between with A; eBetween.
-      intro; treat_equalities; intuition.
+      apply outer_transitivity_between with A; eBetween;
+      try (intro; treat_equalities; intuition).
       }
     }
   }

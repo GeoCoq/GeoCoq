@@ -3,8 +3,7 @@ Require Import GeoCoq.Highschool.exercises.
 
 Section Circumcenter.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Definition is_circumcenter G A B C := Cong A G B G /\ Cong B G C G.
 
@@ -93,8 +92,7 @@ Hint Resolve
 
 Section Circumcenter2 .
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 (**
 #
@@ -174,7 +172,7 @@ assert (is_circumcenter G A B C).
 assert (Perp_bisect G C' A B).
 assert (T:=circumcenter_perp_all A B C A' B' C' G ).
 intuition.
-auto with Perp_bisect.
+eauto with Perp_bisect.
 Qed.
 
 Lemma is_circumcenter_unicity :
@@ -697,8 +695,7 @@ End Circumcenter2.
 
 Section Circumcenter3.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma midpoint_thales_reci_circum :
   forall A B C O: Tpoint,

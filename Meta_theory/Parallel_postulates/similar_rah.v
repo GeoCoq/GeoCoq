@@ -2,14 +2,13 @@ Require Export Meta_theory.Parallel_postulates.Euclid_def.
 
 Section similar_rah.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 (** This is an adaptation of the proof of Martin's Theorem 23.6 *)
 
 Lemma similar__rah_aux : forall A B C D E F,
   ~ Col A B C -> CongA A B C D E F -> CongA B C A E F D -> CongA C A B F D E ->
-  LeA B C A A B C -> Lt D E A B -> saccheri_s_right_angle_hypothesis.
+  LeA B C A A B C -> Lt D E A B -> postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intros A B C D E F HNCol HCongaB HCongaC HCongaA Hlea Hlt.
   assert(H := A).
@@ -60,7 +59,7 @@ Proof.
   assert(TS G H A B) by (repeat split; auto; exists G; Col).
   assert(TS G H A C) by (repeat split; Col; exists H; Col).
   assert(TS C G B H).
-  { apply l9_31; Side.
+  { apply l9_31; eauto with side.
     apply (col_one_side _ A); Col.
     apply invert_one_side; apply out_one_side; try (apply l6_6); Col.
   }
@@ -91,9 +90,9 @@ Proof.
   suma.assert_diffs.
   assert(HInter : Isi I J K L M N /\ SumA H G B B C H U V W).
   { assert(Isi H G B B C G).
-    { apply (isi_lea2__isi _ _ _ _ _ _ H G B B C H); try (apply lea_refl); SumA.
+    { apply (isi_lea2__isi _ _ _ _ _ _ H G B B C H); try (apply lea_refl); eauto with suma.
       exists G; split; CongA.
-      apply os_ts__inangle; Side.
+      apply os_ts__inangle; eauto with suma; eauto with side.
     }
     destruct(ex_suma B C G H G B) as [X [Y [Z]]]; auto.
     assert(SumA B G C C G H H G B) by (exists H; repeat (split; CongA); Side).
@@ -106,16 +105,16 @@ Proof.
       apply (col_one_side _ A); Col.
       apply invert_one_side; apply out_one_side; Col.
     }
-    assert(Isi I J K C G H) by (apply (isi_assoc B C G C G B _ _ _ _ _ _ H G B); SumA).
-    assert(SumA I J K C G H X Y Z) by (apply (suma_assoc B C G C G B _ _ _ _ _ _ _ _ _ H G B); SumA).
+    assert(Isi I J K C G H) by (apply (isi_assoc B C G C G B _ _ _ _ _ _ H G B);eauto with suma).
+    assert(SumA I J K C G H X Y Z) by (apply (suma_assoc B C G C G B _ _ _ _ _ _ _ _ _ H G B); eauto with suma).
     assert(Isi B C G H C G).
-      repeat split; auto; [right; intro; Col|exists H; split; CongA; split; Side].
+      repeat split; auto; [right; intro; Col|exists H; split; CongA; split; eauto with side].
     assert(SumA B C G H C G H C B) by (exists H; repeat (split; CongA); Side).
     split.
-    - assert(Isi X Y Z H C G) by (apply (isi_assoc H G B B C G _ _ _ _ _ _ H C B); SumA).
-      apply (isi_assoc _ _ _ C G H H C G X Y Z); SumA.
-    - assert(SumA X Y Z H C G U V W) by (apply (suma_assoc I J K C G H _ _ _ _ _ _ _ _ _ L M N); SumA).
-      apply (suma_assoc _ _ _ B C G H C G _ _ _ X Y Z); SumA.
+    - assert(Isi X Y Z H C G) by (apply (isi_assoc H G B B C G _ _ _ _ _ _ H C B); eauto with suma).
+      apply (isi_assoc _ _ _ C G H H C G X Y Z); eauto with suma.
+    - assert(SumA X Y Z H C G U V W) by (apply (suma_assoc I J K C G H _ _ _ _ _ _ _ _ _ L M N); eauto with suma).
+      apply (suma_assoc _ _ _ B C G H C G _ _ _ X Y Z); eauto with suma.
   }
   destruct HInter.
 
@@ -123,15 +122,15 @@ Proof.
   - intro aah.
     exfalso.
     apply(nlta U V W).
-    apply (isi_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); SumA.
+    apply (isi_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); eauto with suma.
     { destruct (t22_14__isi_nbet aah C G B I J K O P Q) as [HIsi HNBet]; Col.
       apply (isi_lea_lta789_suma2__lta123 _ _ _ G B C O P Q _ _ _ G B C A G B); Lea.
-        split; Lea; intro; apply HNBet; apply (bet_conga_bet A G B); CongA.
+        split; eauto with LeA; intro; apply HNBet; apply (bet_conga_bet A G B); CongA.
         apply (conga3_suma__suma B G H H G A A G B); CongA; exists A; repeat (split; CongA); Side.
     }
     destruct (t22_14__isi_nbet aah C G H L M N R S T) as [HIsi HNBet]; Col.
     apply (isi_lea_lta789_suma2__lta123 _ _ _ G H C R S T _ _ _ G H C A H C); Lea.
-      split; Lea; intro; apply HNBet; apply (bet_conga_bet A H C); CongA.
+      split; eauto with LeA; intro; apply HNBet; apply (bet_conga_bet A H C); CongA.
       apply (conga3_suma__suma A H G G H C A H C); CongA; exists C; repeat (split; CongA); Side.
 
   - intro HUn.
@@ -140,13 +139,13 @@ Proof.
     apply(nlta U V W).
     apply (isi_lta2_suma2__lta H G B B C H _ _ _ I J K L M N); SumA; apply nlea__lta; auto; intro.
     { apply (t22_14__nisi oah C G B I J K); Col.
-      apply (isi_lea2__isi _ _ _ _ _ _ H G B G B C); Lea; SumA.
+      apply (isi_lea2__isi _ _ _ _ _ _ H G B G B C); Lea; eauto with suma.
     }
     apply (t22_14__nisi oah C G H L M N); Col.
-    apply (isi_lea2__isi _ _ _ _ _ _ B C H G H C); Lea; SumA.
+    apply (isi_lea2__isi _ _ _ _ _ _ B C H G H C); Lea; eauto with suma.
 Qed.
 
-Lemma similar__rah : similar_triangles_existence -> saccheri_s_right_angle_hypothesis.
+Lemma similar__rah : postulate_of_existence_of_similar_triangles -> postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intro similar.
   destruct similar as [A [B [C [D [E [F]]]]]].
@@ -164,7 +163,7 @@ Proof.
       split; auto.
 
   - intro.
-    apply (similar__rah_aux A C B D F E); Col; CongA; Lea.
+    apply (similar__rah_aux A C B D F E); Col; CongA; eauto with LeA.
     split; auto; intro; destruct(l11_50_1 A C B D F E); Col; CongA; Cong.
 
   - intro.

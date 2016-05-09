@@ -2,11 +2,10 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section alternate_interior_angles_proclus.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
 Lemma alternate_interior__proclus : greenberg_s_postulate -> alternate_interior_angles_postulate ->
-   proclus_postulate.
+  proclus_postulate.
 Proof.
   intros greenberg aia.
   intros A B C D P Q HPar HP HQ.

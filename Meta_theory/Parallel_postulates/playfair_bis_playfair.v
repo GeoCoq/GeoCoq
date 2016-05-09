@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section playfair_bis_playfair.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma playfair_bis__playfair : playfair_bis -> playfair_s_postulate.
+Lemma playfair_bis__playfair : alternative_playfair_s_postulate -> playfair_s_postulate.
 Proof.
 intros playfair_bis.
 unfold playfair_s_postulate.

@@ -1,6 +1,5 @@
 Require Export GeoCoq.Axioms.tarski_axioms.
 
-
 Section segment_construction_independent.
 
 Inductive Point :=

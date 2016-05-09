@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch03_bet.
 
 Section T3.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition IFSC A B C D A' B' C' D' :=
    Bet A B C /\ Bet A' B' C' /\

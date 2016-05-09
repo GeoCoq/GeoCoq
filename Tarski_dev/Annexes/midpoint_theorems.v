@@ -4,8 +4,7 @@ Ltac assert_all := treat_equalities; assert_cols_perm; assert_diffs; assert_cong
 
 Section TriangleMidpointsTheorems.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma col_permut132 : forall A B C, Col A B C -> Col A C B.
 Proof. exact col_permutation_5. Qed.
@@ -114,8 +113,8 @@ Lemma triangle_par_mid : forall A B C P Q,
  Col Q A C ->
  Midpoint Q A C.
 Proof.
-assert (H:=playfair_s_postulate_implies_midpoints_converse_postulate);
-unfold midpoints_converse_postulate in H; intros; apply H with B P; Col.
+assert (H:=playfair_s_postulate_implies_midpoint_converse_postulate);
+unfold midpoint_converse_postulate in H; intros; apply H with B P; Col.
 unfold playfair_s_postulate.
 apply parallel_unicity.
 Qed.

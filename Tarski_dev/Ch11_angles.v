@@ -54,19 +54,18 @@ match goal with
    |_ : _ |- _ => idtac
 end.
 
-Section T11.
+Section T11_1.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition CongA A B C D E F :=
- A <> B /\ C <> B /\ D <> E /\ F <> E /\
- exists A', exists C', exists D', exists F',
- Bet B A A' /\ Cong A A' E D /\
- Bet B C C' /\ Cong C C' E F /\
- Bet E D D' /\ Cong D D' B A /\
- Bet E F F' /\ Cong F F' B C /\
- Cong A' C' D' F'.
+  A <> B /\ C <> B /\ D <> E /\ F <> E /\
+  exists A', exists C', exists D', exists F',
+  Bet B A A' /\ Cong A A' E D /\
+  Bet B C C' /\ Cong C C' E F /\
+  Bet E D D' /\ Cong D D' B A /\
+  Bet E F F' /\ Cong F F' B C /\
+  Cong A' C' D' F'.
 
 Lemma l11_3 : forall A B C D E F,
  CongA A B C D E F ->
@@ -702,7 +701,6 @@ spliter.
 assert_diffs.
 auto.
 Qed.
- 
 
 Lemma cong3_conga : forall A B C A' B' C',
  A <> B -> C <> B ->
@@ -716,7 +714,7 @@ Proof.
     exists A. exists C. exists A'. exists C'.
     intuition (auto using out_trivial).
 Qed.
-  
+
 Lemma cong3_conga2 : forall A B C A' B' C' A'' B'' C'',
   Cong_3 A B C A' B' C' ->
   CongA A B C A'' B'' C'' ->
@@ -1086,7 +1084,7 @@ Qed.
 Lemma conga_right_comm : forall A B C D E F, CongA A B C D E F -> CongA A B C F E D.
 Proof.
     intros.
-    eapply conga_trans.
+    apply conga_trans with D E F.
       apply H.
     unfold CongA in H.
     spliter.
@@ -1099,7 +1097,7 @@ Lemma conga_left_comm : forall A B C D E F, CongA A B C D E F -> CongA C B A D E
 Proof.
     intros.
     apply conga_sym.
-    eapply conga_trans.
+    apply conga_trans with A B C.
       apply conga_sym.
       apply H.
     unfold CongA in H.
@@ -1205,6 +1203,11 @@ Proof.
     assumption.
 Qed.
 
+End T11_1.
+
+Section T11_2.
+
+Context `{T2D:Tarski_2D}.
 
 Lemma l11_16 : forall A B C A' B' C',
  Per A B C    -> A <> B  -> C <> B ->
@@ -1225,7 +1228,7 @@ Proof.
     repeat split; try assumption.
     eapply (l10_12 A0 B C0 A1 B' C1).
       eapply (per_col _ _ C).
-        intro; subst.
+        intro;subst.
         auto.
         apply l8_2.
         eapply (per_col _ _ A).
@@ -3216,7 +3219,6 @@ Proof.
     absurde.
 Qed.
 
-
 Lemma l11_22 :
  forall A B C P A' B' C' P',
  ((TS B P A C /\ TS B' P' A' C')\/
@@ -3232,7 +3234,7 @@ Proof.
 Qed.
 
 Definition InAngle P A B C :=
-  A<>B /\ C<>B /\ P<>B /\ exists X, Bet A X C /\ (X=B \/ Out B X P).
+  A <> B /\ C <> B /\ P <> B /\ exists X, Bet A X C /\ (X = B \/ Out B X P).
 
 Lemma l11_24 :
  forall P A B C,
@@ -3614,7 +3616,6 @@ Proof.
     assumption.
 Qed.
 
-
 Lemma l11_25_aux : forall P A B C A' ,
  InAngle P A B C ->
  ~ Bet A B C ->
@@ -3778,8 +3779,7 @@ Proof.
     assumption.
 Qed.
 
-Definition LeA A B C D E F :=
-   exists P, InAngle P D E F /\ CongA A B C D E P.
+Definition LeA A B C D E F := exists P, InAngle P D E F /\ CongA A B C D E P.
 
 Lemma segment_construction_0 : forall A B A', exists B', Cong A' B' A B.
 Proof.
@@ -3973,7 +3973,6 @@ Proof.
     apply cong_symmetry.
     assumption.
 Qed.
-
 
 Lemma bet_conga_bet :
  forall A B C A' B' C',
@@ -5460,7 +5459,6 @@ Proof.
     contradiction.
 Qed.
 
-
 Lemma l11_30 : forall A B C D E F A' B' C' D' E' F',
  LeA A B C D E F ->
  CongA A B C A' B' C' ->
@@ -5613,8 +5611,6 @@ Proof.
     assumption.
 Qed.
 
-
-
 Lemma l11_31_1 : forall A B C D E F,
  Out B A C -> D <> E -> F <> E ->
  LeA A B C D E F.
@@ -5630,27 +5626,13 @@ Proof.
     auto.
 Qed.
 
-
 Lemma l11_31_2 : forall A B C D E F,
  A <> B -> C <> B -> D <> E -> F <> E ->
  Bet D E F ->
  LeA A B C D E F.
 Proof.
-    intros.
-    unfold LeA.
-    assert(exists P, CongA A B C D E P).
-      apply angle_construction_3; assumption.
-    ex_and H4 P.
-    exists P.
-    split.
-      apply in_angle_line.
-        unfold CongA in H5.
-        spliter.
-        assumption.
-        assumption.
-        assumption.
-      assumption.
-    assumption.
+intros; destruct (angle_construction_3 A B C D E) as [P HCongA]; auto.
+exists P; split; try apply in_angle_line; unfold CongA in *; spliter; auto.
 Qed.
 
 Lemma lea_refl : forall A B C,
@@ -6628,7 +6610,8 @@ Definition LtA A B C D E F := LeA A B C D E F /\ ~ CongA A B C D E F.
 
 Definition GtA A B C D E F := LtA D E F A B C.
 
-Definition Acute A B C := exists A', exists B', exists C', Per A' B' C' /\ LtA A B C A' B' C'.
+Definition Acute A B C :=
+  exists A', exists B', exists C', Per A' B' C' /\ LtA A B C A' B' C'.
 
 Definition Obtuse A B C := exists A', exists B', exists C', Per A' B' C' /\ GtA A B C A' B' C'.
 
@@ -9435,7 +9418,7 @@ Qed.
 
 Lemma bet_lea__bet : forall A B C D E F, Bet A B C -> LeA A B C D E F -> Bet D E F.
 Proof.
-  intros A B C D E F HBet Hlea.  
+  intros A B C D E F HBet Hlea.
   apply (bet_conga_bet A B C); auto.
   apply lea_asym; auto.
   apply lea_distincts in Hlea.
@@ -9780,7 +9763,7 @@ Proof.
     elim(out_dec B A P).
     { left.
       repeat split; auto.
-      exists A; Between.   
+      exists A; Between.
     }
     right.
     intro Habs.
@@ -9971,7 +9954,7 @@ Proof.
     - intro; right; apply l11_31_1; auto.
     - intro; left; apply l11_31_2; auto; apply not_out_bet; auto.
   }
-  intro.  
+  intro.
   elim(lea_dec A B C D E F).
     intro; left; auto.
   intro HNlea.
@@ -10306,7 +10289,6 @@ Proof.
     assert(Habs := l11_22_aux D C B A).
     destruct Habs as [Hout|Hts]; auto.
     apply HNCol; Col.
-    
 
   - assert(HE := symmetric_point_construction B C).
     destruct HE as [E []].
@@ -10672,7 +10654,7 @@ Proof.
       auto.
     assert(Perp C B B A).
       apply per_perp_in in H1; auto.
-      apply perp_in_perp in H1.
+      apply perp_in_perp_bis in H1.
       induction H1.
         apply perp_not_eq_1 in H1.
         tauto.
@@ -10706,9 +10688,7 @@ Proof.
     apply(l11_16 A B C A' B' C'); auto.
 Qed.
 
-
-
-End T11.
+End T11_2.
 
 Ltac not_exist_hyp4 A B C D E F G H := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D | not_exist_hyp_comm E F | not_exist_hyp_comm G H].
 

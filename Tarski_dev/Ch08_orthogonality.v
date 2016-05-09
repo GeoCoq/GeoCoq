@@ -2,10 +2,11 @@ Require Export GeoCoq.Tarski_dev.Ch07_midpoint.
 (*
 We choose to use ColR as it is faster than CoincR.
 *)
-Require Export GeoCoq.Tactics.Coinc.CoincR_for_col.
 (*
-Require Export GeoCoq.Tactics.Coinc.ColR.
+Require Export GeoCoq.Tactics.Coinc.CoincR_for_col.
 *)
+Require Export GeoCoq.Tactics.Coinc.ColR.
+
 Ltac not_exist_hyp_comm A B := not_exist_hyp (A<>B);not_exist_hyp (B<>A).
 
 Ltac not_exist_hyp2 A B C D := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D].
@@ -305,8 +306,7 @@ Ltac assert_ndc_by_contradiction :=
 *)
 Section T8_1.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Per A B C := exists C', Midpoint B C C' /\ Cong A C A C'.
 
@@ -355,8 +355,7 @@ Ltac Perp := auto with perp.
 
 Section T8_2.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma Per_cases :
  forall A B C,
@@ -439,8 +438,7 @@ assert(sp:= symmetric_point_construction B A); ex_and sp B'.
 
 Section T8_3.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l8_7 : forall A B C, Per A B C -> Per A C B -> B=C.
 Proof.
@@ -559,7 +557,8 @@ Proof.
 Qed.
 
 Definition Perp_at X A B C D :=
-   A<>B /\ C<>D /\ Col X A B /\ Col X C D /\ (forall U V, Col U A B -> Col V C D -> Per U X V).
+  A <> B /\ C <> D /\ Col X A B /\ Col X C D /\
+  (forall U V, Col U A B -> Col V C D -> Per U X V).
 
 Lemma col_col_per_per : forall A X C U V,
  A<>X -> C<>X ->
@@ -1022,9 +1021,7 @@ Ltac double A B A' :=
 
 Section T8_4.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
-
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma Perp_cases :
   forall A B C D,
@@ -2267,8 +2264,7 @@ Hint Resolve perp_per_1 perp_per_2 perp_col perp_perp_in perp_in_perp : perp.
 
 Section T8_5.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma perp_proj : forall A B C D, Perp A B C D -> ~Col A C D -> exists X, Col A B X /\ Perp A X C D.
 Proof.
@@ -2620,8 +2616,6 @@ Proof.
     apply cong_left_commutativity.
     assumption.
 Qed.
-
-
 
 End T8_5.
 

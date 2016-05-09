@@ -4,8 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_5_Pappus_Pascal.
 
 Section Desargues_Hessenberg.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Lemma l13_15_1 : forall A B C A' B' C' O ,
   ~ Col A B C -> ~ Par O B A C ->

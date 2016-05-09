@@ -34,8 +34,7 @@ repeat
 
 Section T7_1.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Midpoint M A B := Bet A M B /\ Cong A M M B.
 
@@ -248,8 +247,8 @@ Ltac Midpoint := auto with midpoint.
 
 Section T7_2.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context {Tn:Tarski_neutral_dimensionless}.
+Context {TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality Tn}.
 
 Lemma Mid_cases :
   forall A B C,

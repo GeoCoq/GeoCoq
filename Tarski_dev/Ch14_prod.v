@@ -2,9 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch14_sum.
 
 Section T14_prod.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
-
+Context `{TE:Tarski_2D_euclidean}.
 
 (** Definition 14.4 *)
 

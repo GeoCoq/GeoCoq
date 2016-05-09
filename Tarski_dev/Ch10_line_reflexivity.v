@@ -2,8 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch09_plane.
 
 Section T10.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition ReflectL P' P A B :=
   (exists X, Midpoint X P P' /\ Col A B X) /\
@@ -820,7 +819,7 @@ Proof.
     spliter.
     ex_and H1 X.
     induction H4.
-      double X M0 Y.
+      double X M Y.
       assert (Midpoint Y Q Q').
         eapply symmetry_preserves_midpoint.
           apply H2.
@@ -858,7 +857,7 @@ Proof.
         assert_diffs.
         ColR.
       left.
-      assert(Per M0 Y Q).
+      assert(Per M Y Q).
         unfold Per.
         exists Q'.
         split.
@@ -897,7 +896,7 @@ Proof.
             apply is_midpoint_id in H1.
             subst P.
             absurde.
-          eapply (col_transitivity_2 M0).
+          eapply (col_transitivity_2 M).
             intro.
             subst P'.
             apply is_midpoint_id in H1.
@@ -913,7 +912,7 @@ Proof.
           apply midpoint_bet.
           apply l7_2.
           assumption.
-        eapply (col_transitivity_2 M0).
+        eapply (col_transitivity_2 M).
           intro.
           subst Q'.
           apply l7_2 in H7.
@@ -929,7 +928,7 @@ Proof.
         apply midpoint_bet.
         assumption.
       apply per_perp_in in H10.
-        apply perp_in_perp in H10.
+        apply perp_in_perp_bis in H10.
         induction H10.
           apply perp_distinct in H10.
           spliter.
@@ -946,19 +945,19 @@ Proof.
             spliter.
             absurde.
             apply perp_sym.
-            induction (eq_dec_points A M0).
+            induction (eq_dec_points A M).
               subst A.
               apply perp_left_comm.
-              eapply (perp_col _ M0).
+              eapply (perp_col _ M).
                 auto.
                 apply perp_left_comm.
                 eapply (perp_col _ Y).
                   assumption.
                   assumption.
-                induction (eq_dec_points M0 X).
+                induction (eq_dec_points M X).
                   subst X.
                   apply is_midpoint_id in H6.
-                  subst M0.
+                  subst M.
                   apply col_trivial_1.
                 eapply (col_transitivity_1 _ X).
                   assumption.
@@ -970,8 +969,8 @@ Proof.
                 apply col_permutation_5.
                 assumption.
               apply col_trivial_2.
-            induction (eq_dec_points B M0).
-              subst M0.
+            induction (eq_dec_points B M).
+              subst M.
               apply perp_left_comm.
               apply (perp_col _ Y).
                 auto.
@@ -993,19 +992,19 @@ Proof.
             eapply perp_col.
               assumption.
               apply perp_left_comm.
-              eapply (perp_col M0 Y).
+              eapply (perp_col M Y).
                 auto.
                 assumption.
-              assert(Col B X M0).
+              assert(Col B X M).
                 eapply col_transitivity_2.
                   apply H.
                   assumption.
                 assumption.
-              induction (eq_dec_points M0 X).
+              induction (eq_dec_points M X).
                 subst X.
                 apply is_midpoint_id in H6.
                 contradiction.
-              assert(Col B Y M0).
+              assert(Col B Y M).
                 apply col_permutation_1.
                 eapply (col_transitivity_2  X).
                   auto.
@@ -1053,9 +1052,9 @@ Proof.
       exists Q.
       split.
         apply l7_3_2.
-      induction (eq_dec_points M0 X).
+      induction (eq_dec_points M X).
         subst X.
-        assert(M0=Q).
+        assert(M=Q).
           apply is_midpoint_id.
           assumption.
         subst Q.
@@ -1081,7 +1080,7 @@ Proof.
     spliter.
     unfold ReflectL.
     split.
-      exists M0.
+      exists M.
       split; assumption.
     assumption.
 Qed.
@@ -1134,7 +1133,7 @@ Proof.
             right; left.
             apply midpoint_bet.
             assumption.
-          assert (M'=M0).
+          assert (M'=M).
             eapply l6_21.
               2: apply H.
               2: apply H4.
@@ -1268,7 +1267,7 @@ Proof.
     intros.
     unfold Per in *.
     ex_and H C'.
-    double C' M0 C1'.
+    double C' M C1'.
     exists C1'.
     split.
       eapply symmetry_preserves_midpoint.
@@ -1292,7 +1291,7 @@ Lemma col_per_perp : forall A B C D,
 Proof.
     intros.
     apply per_perp_in in H4.
-      apply perp_in_perp in H4.
+      apply perp_in_perp_bis in H4.
       induction H4.
         apply perp_distinct in H4.
         spliter.

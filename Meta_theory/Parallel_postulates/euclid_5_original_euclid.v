@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section euclid_5_original_euclid.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma euclid_5__original_euclid : euclid_5 -> original_euclid.
+Lemma euclid_5__original_euclid : euclid_5 -> euclid_s_parallel_postulate.
 Proof.
   intros eucl A B C D P Q R Hos HIsi HSuma HNBet.
   assert(HM := midpoint_existence B C).
@@ -33,7 +32,7 @@ Proof.
   assert(HA' : InAngle A C B E).
   { apply lea_in_angle; auto.
     - apply (l11_30 A B C B C D').
-        apply (isi_chara D); Between; SumA.
+        apply (isi_chara D); Between; eauto with suma.
         apply conga_pseudo_refl; auto.
       apply (out_conga M C D' M B E); try (apply bet_out); Between.
 

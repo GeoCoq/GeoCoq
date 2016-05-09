@@ -3,7 +3,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 Section par_perp_perp_TCP.
 
 Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+
 
 Lemma par_perp_perp_implies_perp_bisect_existence :
   perpendicular_transversal_postulate ->

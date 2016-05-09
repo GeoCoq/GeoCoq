@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section original_euclid_original_spp.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma original_euclid__original_spp : original_euclid -> original_spp.
+Lemma original_euclid__original_spp : euclid_s_parallel_postulate -> alternative_strong_parallel_postulate.
 Proof.
   intros oe A B C D P Q R Hos HSuma HNBet.
   assert(HA' := symmetric_point_construction A B).
@@ -33,7 +32,7 @@ Proof.
   apply suma_distincts in Hdiff.
   spliter.
   assert(HY := oe A' B C D' P' Q' R').
-  destruct HY as [Y []]; SumA.
+  destruct HY as [Y []]; eauto with suma.
   3: exists Y; split; ColR.
   { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
     assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
@@ -62,7 +61,7 @@ Proof.
       exists C; Col; Between.
     }
     apply (isi2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
-      SumA.
+      eauto with suma.
     { apply isi_left_comm.
       repeat split; Col.
         right; intro; assert_cols; Col.
@@ -84,7 +83,7 @@ Proof.
       exists B; Col; Between.
     }
     apply (isi2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
-      SumA.
+      eauto with suma.
     { apply isi_left_comm.
       apply isi_sym.
       repeat split; Col.

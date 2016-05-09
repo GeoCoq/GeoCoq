@@ -3,7 +3,7 @@ Require Import GeoCoq.Utils.all_equiv.
 
 Section Equivalence_between_decidability_properties_of_basic_relations.
 
-Context `{M:Tarski_neutral_dimensionless}.
+Context `{Tn:Tarski_neutral_dimensionless}.
 
 Lemma cong_dec_eq_dec :
   (forall A B C D, Cong A B C D \/ ~ Cong A B C D) ->

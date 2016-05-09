@@ -2,9 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.suma.
 
 Section UnitTests.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
-
+Context `{T2D:Tarski_2D}.
 
 Goal forall A B C D E F G H:Tpoint, A<>B -> B<>A -> C<>D -> D<>C ->
  E<>F -> F<>E -> G<>H -> H<>G -> True.
@@ -45,7 +43,6 @@ first [not_exist_hyp4 A B C D E F G H | clear H7].
 not_exist_hyp4 A B C D E F G H.
 auto.
 Qed.
-
 
 Goal forall A B C D E F, CongA A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.

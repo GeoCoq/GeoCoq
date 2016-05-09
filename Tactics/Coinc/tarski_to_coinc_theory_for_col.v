@@ -5,8 +5,7 @@ Require Import GeoCoq.Tactics.Coinc.tactics_axioms.
 
 Section Tarski_is_a_Coinc_theory_for_col.
 
-Context `{MT:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition diff : arity Tpoint 2 := fun A B : Tpoint => A <> B.
 

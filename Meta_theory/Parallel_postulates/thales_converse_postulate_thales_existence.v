@@ -2,10 +2,9 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section thales_converse_postulate_thales_existence.
 
-Context `{MT:Tarski_2D}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{T2D:Tarski_2D}.
 
-Lemma thales_converse_postulate__thales_existence : thales_converse_postulate -> thales_existence.
+Lemma thales_converse_postulate__thales_existence : thales_converse_postulate -> existential_thales_postulate.
 Proof.
   intro thales.
   destruct lower_dim as [C [A [B0]]].

@@ -5,8 +5,7 @@ Require Import GeoCoq.Meta_theory.Parallel_postulates.Euclid.
 
 Section Tarski_is_a_Coinc_theory_for_cocyclic.
 
-Context `{MT:Tarski_2D_euclidean}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TE:Tarski_2D_euclidean}.
 
 Definition not_col : arity Tpoint 3 := fun A B C : Tpoint => ~ Col A B C.
 

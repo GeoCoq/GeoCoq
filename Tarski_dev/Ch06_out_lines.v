@@ -4,10 +4,9 @@ Ltac eCol := eauto with col.
 
 Section T6_1.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition Out P A B := A<>P /\ B<>P /\ (Bet P A B \/ Bet P B A).
+Definition Out P A B := A <> P /\ B <> P /\ (Bet P A B \/ Bet P B A).
 
 Lemma bet_out : forall A B C, B <> A -> C <> A -> Bet A B C -> Out A B C.
 Proof.
@@ -324,8 +323,7 @@ Hint Resolve col_transitivity_1 col_transitivity_2 out_col : col.
 
 Section T6_2.
 
-Context `{M:Tarski_neutral_dimensionless}.
-Context `{EqDec:EqDecidability Tpoint}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l6_25 : forall A B,
  A<>B -> exists C, ~ Col A B C.
