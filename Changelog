@@ -1,3 +1,18 @@
+Release 2.1.0 (2016-05-09)
+==========================
+
+	- Proof that Tarski's axioms follow from Hilbert's axioms
+	- Definition of new statements equivalent to the parallel postulate and related proofs.
+	
+
+Release 2.0.0 (2016-03-03)
+==========================
+
+	This version does not bring many new results but we cleaned up the names of the definitions.
+
+	- Definition of new statements equivalent to the parallel postulate and related proofs.
+	- Many predicates renamed.
+
 Release 1.1.1 (2015-12-03)
 ==========================
 	
