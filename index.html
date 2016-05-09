@@ -100,7 +100,7 @@
 	define coordinates.</br>
 	Our main axiom system is the one of
 	Tarski, but we define also Hilbert's axiom system because we
-	prove that Tarski's axiom (except continuity) imply Hilbert's
+	prove that Tarski's axioms (except continuity) are equivalent to Hilbert's
 	axioms (except continuity).
 	
 	<ul>
@@ -198,20 +198,30 @@
 
 	</ul>
 	
-	  <h2>Proving Hilbert's axioms</h2>
+	  <h2>Connection with Hilbert's axioms</h2>
 
  <div style="padding:10px; float:right;">
 	<a title="David Hilbert" href="https://commons.wikimedia.org/wiki/File:Hilbert.jpg#filelinks">
 	<img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" height="137" src="https://upload.wikimedia.org/wikipedia/commons/7/79/Hilbert.jpg" alt="Hilbert"/></a>
       </div>
+ <div style="padding:10px; float:right;">
+	<a title="Grundlagen der Geometrie" href="">
+	  <img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" height="137" src="images/grundlagen.jpg" alt="Grundlagen der Geometrie"/></a>
+      </div>
+
+
 
 	  Most of the axioms of Hilbert are implicitely proved in the
 	  book, but we explicit all the proofs here. We define lines
 	  by couple of points... This work is described in <a href="https://hal.inria.fr/hal-00727117v2">this paper</a>.
+          We also proved that Tarski's axioms follow from Hilbert's axioms. 
 	  <ul>
             <li><a href="html/GeoCoq.Meta_theory.Models.tarski_to_hilbert.html">Tarski to
             Hilbert</a> A proof that Hilbert's axioms (without
 	    continuity) follows from Tarski's axioms.</li>
+	    <li><a href="html/GeoCoq.Meta_theory.Models.hilbert_to_tarski.html">Hilbert to
+            Tarski</a> A proof that Tarski's axioms (without
+	    continuity) follows from Hilbert's axioms.</li>
 	  </ul>
 	  <h2>Variants of Tarski's axiom system</h2>
 	  <ul>
