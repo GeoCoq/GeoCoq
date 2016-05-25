@@ -1,10 +1,10 @@
 Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
-Section playfair_proclus_second_postulate.
+Section playfair_posidonius_second_postulate.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma playfair__proclus_second_postulate : playfair_s_postulate -> proclus_second_postulate.
+Lemma playfair__posidonius_second_postulate : playfair_s_postulate -> posidonius_second_postulate.
 Proof.
 intros HP A1 A2 A3 A4 B1 B2 B3 B4 HPar HC1 HC2 HPerp1 HC3 HC4 HPerp2.
 elim HPar; intro HParS; [|destruct HParS as [HD1 [HD2 [HC5 HC6]]];
@@ -71,4 +71,4 @@ destruct (segment_construction_2 B3 A3 A1' B1) as [B3' [HC4 HCong]];
   }
 Qed.
 
-End playfair_proclus_second_postulate.
+End playfair_posidonius_second_postulate.

@@ -4,7 +4,7 @@ Section rectangle_existence_rah.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma rectangle_existence__rah : postulate_of_existence_of_a_right_lambert_quadrialteral -> postulate_of_right_saccheri_quadrilaterals.
+Lemma rectangle_existence__rah : postulate_of_existence_of_a_right_lambert_quadrilateral -> postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intros HABCD.
   destruct HABCD as [A [B [C [D []]]]].

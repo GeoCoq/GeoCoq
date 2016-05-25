@@ -32,11 +32,13 @@ Class Tarski_neutral_dimensionless := {
    ~ (Bet A B C \/ Bet B C A \/ Bet C A B)
 }.
 
-Class Tarski_neutral_dimensionless_with_decidable_point_equality `(Tn : Tarski_neutral_dimensionless) := {
+Class Tarski_neutral_dimensionless_with_decidable_point_equality
+ `(Tn : Tarski_neutral_dimensionless) := {
  point_equality_decidability : forall A B : Tpoint, A = B \/ ~ A = B
 }.
 
-Class Tarski_2D `(TnEQD : Tarski_neutral_dimensionless_with_decidable_point_equality) := {
+Class Tarski_2D
+ `(TnEQD : Tarski_neutral_dimensionless_with_decidable_point_equality) := {
  upper_dim : forall A B C P Q,
    P <> Q -> Cong A P A Q -> Cong B P B Q -> Cong C P C Q ->
    (Bet A B C \/ Bet B C A \/ Bet C A B)

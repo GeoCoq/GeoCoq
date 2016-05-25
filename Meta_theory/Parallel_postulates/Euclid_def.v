@@ -69,7 +69,7 @@ Definition perpendicular_transversal_postulate := forall A B C D P Q,
   Par A B C D -> Perp A B P Q ->
   Perp C D P Q.
 
-Definition proclus_second_postulate := forall A1 A2 A3 A4 B1 B2 B3 B4,
+Definition posidonius_second_postulate := forall A1 A2 A3 A4 B1 B2 B3 B4,
   Par A1 A2 B1 B2 ->
   Col A1 A2 A3 -> Col B1 B2 B3 -> Perp A1 A2 A3 B3 ->
   Col A1 A2 A4 -> Col B1 B2 B4 -> Perp A1 A2 A4 B4 ->
@@ -174,13 +174,13 @@ Definition postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights :=
 Definition postulate_of_right_saccheri_quadrilaterals := forall A B C D,
   Saccheri A B C D -> Per A B C.
 
-Definition postulate_of_existence_of_a_right_saccheri_quadrialteral :=
+Definition postulate_of_existence_of_a_right_saccheri_quadrilateral :=
   exists A B C D, Saccheri A B C D /\ Per A B C.
 
 Definition postulate_of_right_lambert_quadrilaterals := forall A B C D,
   Lambert A B C D -> Per B C D.
 
-Definition postulate_of_existence_of_a_right_lambert_quadrialteral :=
+Definition postulate_of_existence_of_a_right_lambert_quadrilateral :=
   exists A B C D, Lambert A B C D /\ Per B C D.
 
 Definition thales_postulate := forall A B C M,
