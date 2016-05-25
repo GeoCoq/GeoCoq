@@ -11,11 +11,11 @@ Class Hilbert_neutral_2D := {
  Incid : Point -> Line -> Prop;
 
  Incid_morphism : forall P l m, Incid P l -> EqL l m -> Incid P m;
- Incid_dec : forall P l, Incid P l \/ ~Incid P l;
+ Incid_dec : forall P l, Incid P l \/ ~ Incid P l;
  eq_dec_pointsH : forall A B : Point, A=B \/ ~ A=B;
 
  (** Group I Incidence *)
- line_existence : forall A B, A<>B -> exists l, Incid A l /\ Incid B l;
+ line_existence : forall A B, A <> B -> exists l, Incid A l /\ Incid B l;
  line_unicity : forall A B l m, A <> B -> Incid A l -> Incid B l -> Incid A m -> Incid B m -> EqL l m;
  two_points_on_line : forall l, exists A, exists B, Incid B l /\ Incid A l /\ A <> B;
  ColH := fun A B C => exists l, Incid A l /\ Incid B l /\ Incid C l;
@@ -65,11 +65,9 @@ Class Hilbert_neutral_2D := {
 
   hcong_4_unicity :
    forall A B C O P X Y Y', ~ ColH P O X  -> ~ ColH A B C -> CongaH A B C X O Y -> CongaH A B C X O Y' -> same_side' P Y O X -> same_side' P Y' O X -> outH O Y Y'
-
 }.
 
 Class Hilbert_euclidean_2D `(Hilbert2 : Hilbert_neutral_2D) := {
  Para := fun l m => ~ exists X, Incid X l /\ Incid X m;
  euclid_unicity :  forall l P m1 m2, ~ Incid P l -> Para l m1 -> Incid P m1-> Para l m2 -> Incid P m2 -> EqL m1 m2
-
 }.

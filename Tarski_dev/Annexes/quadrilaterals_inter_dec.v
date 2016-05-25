@@ -2767,8 +2767,8 @@ Qed.
 Lemma par_perp_perp : forall A B C D P Q, Par A B C D -> Perp A B P Q -> Perp C D P Q.
 Proof.
 intros.
-apply proclus_second_postulate__perpendicular_transversal_postulate with A B;
-try assumption; apply playfair__proclus_second_postulate.
+apply posidonius_second_postulate__perpendicular_transversal_postulate with A B;
+try assumption; apply playfair__posidonius_second_postulate.
 unfold playfair_s_postulate; apply parallel_unicity.
 Qed.
 
@@ -2780,8 +2780,8 @@ Lemma par_perp_2_par : forall A B C D E F G H,
 Proof.
 intros.
 apply par_perp_perp_implies_par_perp_2_par with A B C D; auto.
-apply proclus_second_postulate__perpendicular_transversal_postulate.
-apply playfair__proclus_second_postulate.
+apply posidonius_second_postulate__perpendicular_transversal_postulate.
+apply playfair__posidonius_second_postulate.
 unfold playfair_s_postulate; apply parallel_unicity.
 Qed.
 

@@ -28,12 +28,12 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_bis_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_existential_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_midpoint.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_par_trans.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_proclus_second_postulate.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_posidonius_second_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.posidonius_postulate_rah.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.posidonius_second_postulate_par_perp_perp.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_SPP.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_aristotle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_bis_proclus.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_second_postulate_par_perp_perp.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_existential_saccheri.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_rectangle_principle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_similar.
@@ -75,9 +75,9 @@ Theorem equivalent_parallel_postulates_without_decidability_of_intersection_of_l
      midpoint_converse_postulate::
      perpendicular_transversal_postulate::
      playfair_s_postulate::
+     posidonius_second_postulate::
      postulate_of_parallelism_of_perpendicular_transversals::
      postulate_of_transitivity_of_parallelism::
-     proclus_second_postulate::
      nil).
 Proof.
 assert (K:=alternate_interior__consecutive_interior).
@@ -92,8 +92,8 @@ assert (S:=playfair_bis__playfair).
 assert (T:=playfair_implies_par_trans).
 assert (U:=playfair_s_postulate_implies_midpoint_converse_postulate).
 assert (V:=playfair__alternate_interior).
-assert (W:=playfair__proclus_second_postulate).
-assert (X:=proclus_second_postulate__perpendicular_transversal_postulate).
+assert (W:=playfair__posidonius_second_postulate).
+assert (X:=posidonius_second_postulate__perpendicular_transversal_postulate).
 apply all_equiv_equiv; unfold all_equiv'; simpl; repeat (split; tauto).
 Qed.
 
@@ -101,8 +101,8 @@ Theorem equivalent_parallel_postulates_without_any_continuity :
   all_equiv
     (existential_thales_postulate::
      posidonius_postulate::
-     postulate_of_existence_of_a_right_lambert_quadrialteral::
-     postulate_of_existence_of_a_right_saccheri_quadrialteral::
+     postulate_of_existence_of_a_right_lambert_quadrilateral::
+     postulate_of_existence_of_a_right_saccheri_quadrilateral::
      postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights::
      postulate_of_existence_of_similar_triangles::
      postulate_of_right_lambert_quadrilaterals::
@@ -145,10 +145,10 @@ Theorem equivalent_parallel_postulates_with_decidability_of_intersection_of_line
      midpoint_converse_postulate::
      perpendicular_transversal_postulate::
      playfair_s_postulate::
+     posidonius_second_postulate::
      postulate_of_parallelism_of_perpendicular_transversals::
      postulate_of_transitivity_of_parallelism::
      proclus_postulate::
-     proclus_second_postulate::
      strong_parallel_postulate::
      tarski_s_parallel_postulate::
      triangle_circumscription_principle::
@@ -229,9 +229,9 @@ Theorem stronger_parallel_postulates :
      midpoint_converse_postulate::
      perpendicular_transversal_postulate::
      playfair_s_postulate::
+     posidonius_second_postulate::
      postulate_of_parallelism_of_perpendicular_transversals::
      postulate_of_transitivity_of_parallelism::
-     proclus_second_postulate::
      nil).
 Proof.
 assert(H:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis).
@@ -254,15 +254,15 @@ Theorem stronger_parallel_postulates_bis :
      midpoint_converse_postulate::
      perpendicular_transversal_postulate::
      playfair_s_postulate::
+     posidonius_second_postulate::
      postulate_of_parallelism_of_perpendicular_transversals::
      postulate_of_transitivity_of_parallelism::
-     proclus_second_postulate::
      nil)
 
     (existential_thales_postulate::
      posidonius_postulate::
-     postulate_of_existence_of_a_right_lambert_quadrialteral::
-     postulate_of_existence_of_a_right_saccheri_quadrialteral::
+     postulate_of_existence_of_a_right_lambert_quadrilateral::
+     postulate_of_existence_of_a_right_saccheri_quadrilateral::
      postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights::
      postulate_of_existence_of_similar_triangles::
      postulate_of_right_lambert_quadrilaterals::
@@ -298,10 +298,10 @@ Theorem equivalence_of_aristotle_greenberg_and_decidability_of_intersection :
      midpoint_converse_postulate::
      perpendicular_transversal_postulate::
      playfair_s_postulate::
+     posidonius_second_postulate::
      postulate_of_parallelism_of_perpendicular_transversals::
      postulate_of_transitivity_of_parallelism::
      proclus_postulate::
-     proclus_second_postulate::
      strong_parallel_postulate::
      tarski_s_parallel_postulate::
      triangle_circumscription_principle::
@@ -372,8 +372,9 @@ Theorem equivalent_parallel_postulates_assuming_greenberg_s_postulate :
      perpendicular_transversal_postulate::
      playfair_s_postulate::
      posidonius_postulate::
-     postulate_of_existence_of_a_right_lambert_quadrialteral::
-     postulate_of_existence_of_a_right_saccheri_quadrialteral::
+     posidonius_second_postulate::
+     postulate_of_existence_of_a_right_lambert_quadrilateral::
+     postulate_of_existence_of_a_right_saccheri_quadrilateral::
      postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights::
      postulate_of_existence_of_similar_triangles::
      postulate_of_parallelism_of_perpendicular_transversals::
@@ -381,7 +382,6 @@ Theorem equivalent_parallel_postulates_assuming_greenberg_s_postulate :
      postulate_of_right_saccheri_quadrilaterals::
      postulate_of_transitivity_of_parallelism::
      proclus_postulate::
-     proclus_second_postulate::
      strong_parallel_postulate::
      tarski_s_parallel_postulate::
      thales_postulate::
@@ -434,8 +434,8 @@ Theorem stronger_parallel_postulates_ter :
   stronger
     (existential_thales_postulate::
      posidonius_postulate::
-     postulate_of_existence_of_a_right_lambert_quadrialteral::
-     postulate_of_existence_of_a_right_saccheri_quadrialteral::
+     postulate_of_existence_of_a_right_lambert_quadrilateral::
+     postulate_of_existence_of_a_right_saccheri_quadrilateral::
      postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights::
      postulate_of_existence_of_similar_triangles::
      postulate_of_right_lambert_quadrilaterals::

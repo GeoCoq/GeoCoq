@@ -17,10 +17,8 @@ Context `{Hi:Hilbert_neutral_2D}.
 
 Definition Bet A B C := BetH A B C \/ A = B \/ B = C.
 
-(** Hilbert's congruence is 'defined' only for non degenerated segments, 
+(** Hilbert's congruence is 'defined' only for non degenerated segments,
     while Tarski's segment congruence allows the null segment. *)
-
-Definition Cong A B C D := (CongH A B C D /\ A <> B /\ C <> D) \/ (A = B /\ C = D).
 
 Global Instance Incid_morphism : Proper(eq ==> EqL ==> iff) Incid.
 Proof.
@@ -44,6 +42,8 @@ destruct HH.
 apply Equivalence_Symmetric.
 assumption.
 Qed.
+
+Definition Cong A B C D := (CongH A B C D /\ A <> B /\ C <> D) \/ (A = B /\ C = D).
 
 Ltac line A B l Hdiff := let H:=fresh in (assert(H:= line_existence A B Hdiff); destruct H as [l]; spliter).
 Lemma between_only_one' : forall A B C, BetH A B C -> ~ BetH B C A /\ ~ BetH B A C.
@@ -70,8 +70,6 @@ Ltac line_col A B C := match goal with
                           => let HH := fresh in assert(ColH A B C) by (unfold ColH; exists l; repeat split; auto); auto
                        end.
 
-
-
 Lemma congH_perm : forall A B, A<>B -> CongH A B B A.
 Proof.
 intros.
@@ -84,7 +82,6 @@ assumption.
 apply cong_permr.
 assumption.
 Qed.
-
 
 Lemma congH_refl : forall A B, A<>B -> CongH A B A B.
 Proof.
@@ -492,7 +489,7 @@ ColHR.
 Qed.
 
 Lemma inter_incid_unicityH : forall P X Y l m,
-  ~Incid P l -> 
+  ~Incid P l ->
   Incid P m -> Incid X l -> Incid Y l -> Incid X m -> Incid Y m ->
   X = Y.
 Proof.
@@ -2490,7 +2487,6 @@ left; auto.
 right; left; auto.
 Qed.
 
-
 Definition Para := fun l m => ~ exists X, Incid X l /\ Incid X m.
 
 Definition ParaP A B C D := forall l m, Incid A l -> Incid B l -> Incid C m -> Incid D m -> Para l m.
@@ -2518,7 +2514,7 @@ induction H2.
 tauto.
 tauto.
 Qed.
-
+(*
 Lemma EqL_dec : forall l m, EqL l m \/ ~EqL l m.
 Proof.
 intros.
@@ -2546,7 +2542,7 @@ intro.
 rewrite <-H4 in H2.
 contradiction.
 Qed.
-
+*)
 Definition is_line A B l := A <> B /\ Incid A l /\ Incid B l.
 
 Lemma cut_exists : forall A l, ~Incid A l -> exists B, cut l A B.
@@ -3488,6 +3484,7 @@ elim (eq_dec_pointsH A B); [intro; subst; right; apply same_side_prime_refl;
                             intro; apply HNC1; Col|intro HD2].
 assert (HD3 : A <> C) by (apply cut_distinct with l; auto).
 elim (eq_dec_pointsH B C).
+
   {
   intro; subst; left; split; auto; intro m; intros.
   destruct HC1 as [HNI1 [HNI2 [I [HI HBet]]]].

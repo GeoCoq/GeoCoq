@@ -1610,7 +1610,7 @@ Proof.
     subst T;Between.
 Qed.
 
-Definition OS P Q A B := exists C, TS P Q A C /\ TS P Q B C.
+Definition OS A B X Y := exists Z, TS A B X Z /\ TS A B Y Z.
 
 Lemma invert_one_side : forall A B P Q,
  OS A B P Q -> OS B A P Q.

@@ -4,7 +4,7 @@ Section rectangle_principle_rectangle_existence.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma rectangle_principle__rectangle_existence : postulate_of_right_lambert_quadrilaterals -> postulate_of_existence_of_a_right_lambert_quadrialteral.
+Lemma rectangle_principle__rectangle_existence : postulate_of_right_lambert_quadrilaterals -> postulate_of_existence_of_a_right_lambert_quadrilateral.
 Proof.
   intros rectangle.
   destruct ex_saccheri as [A [B [C [D HSac]]]].
