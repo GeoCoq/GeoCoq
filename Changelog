@@ -1,7 +1,8 @@
 
 Release 2.2.0
 ==========================
-	
+
+	- Add compatibility with Coq 8.5.
 	- Definition of Archimedes' postulate (geometric version).
 	- Archimedes postulate for angles.
 	- Archimedes postulate implies Aristotle postulate.
