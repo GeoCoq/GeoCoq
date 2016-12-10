@@ -221,7 +221,7 @@ intros I HI.
 exists I.
 split;try assumption.
 assert (Per P I A)
- by (unfold Per;exists B;Cong).
+ by (unfold Per;exists B;eCong).
 
 show_distinct A I.
 unfold Midpoint in *.

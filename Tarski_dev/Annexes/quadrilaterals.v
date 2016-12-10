@@ -1722,7 +1722,6 @@ apply is_midpoint_id in H0.
 contradiction.
 repeat split.
 
-assumption.
 intro.
 apply H.
 Col.
@@ -2043,7 +2042,7 @@ intros.
 apply mid_plg with M; intuition.
 Qed.
 
-Lemma midpoint_cong_unicity :
+Lemma midpoint_cong_uniqueness :
  forall A B C D M,
   Col A B C ->
   Midpoint M A B /\ Midpoint M C D ->
@@ -2070,7 +2069,7 @@ split.
 assumption.
 subst C.
 spliter.
-eapply symmetric_point_unicity.
+eapply symmetric_point_uniqueness.
 apply H0.
 assumption.
 right.
@@ -2087,12 +2086,12 @@ Cong.
 induction H5.
 contradiction.
 assert(B = C).
-eapply symmetric_point_unicity.
+eapply symmetric_point_uniqueness.
 apply H0.
 assumption.
 split.
 subst C.
-eapply symmetric_point_unicity.
+eapply symmetric_point_uniqueness.
 apply l7_2.
 apply H0.
 assumption.
@@ -2118,7 +2117,7 @@ spliter.
 ex_and HH0 M.
 
 assert(A = B /\ C = D \/ A = D /\ C = B).
-apply(midpoint_cong_unicity A C B D M).
+apply(midpoint_cong_uniqueness A C B D M).
 Col.
 split; assumption.
 Cong.
@@ -2135,7 +2134,7 @@ unfold Parallelogram_flat in *.
 intro.
 spliter.
 assert(A = B /\ C = D \/ A = D /\ C = B).
-apply(midpoint_cong_unicity A C B D M).
+apply(midpoint_cong_uniqueness A C B D M).
 Col.
 split; assumption.
 Cong.
@@ -2191,7 +2190,7 @@ apply False_ind.
 spliter.
 unfold TS in H.
 spliter.
-apply H6.
+apply H5.
 Col.
 Qed.
 
@@ -2348,7 +2347,7 @@ spliter.
 unfold TS in H0.
 repeat split.
 spliter.
-apply H3.
+apply H0.
 Col.
 Qed.
 
@@ -2446,7 +2445,7 @@ eapply cong_transitivity.
 apply H0.
 Cong.
 assert(D = D2).
-eapply symmetric_point_unicity.
+eapply symmetric_point_uniqueness.
 apply l7_2.
 apply H7.
 apply l7_2.
@@ -2672,7 +2671,7 @@ ex_and H6 M.
 
 induction H7.
 
-eapply midpoint_cong_unicity.
+eapply midpoint_cong_uniqueness.
 Col.
 spliter.
 split.
@@ -2687,7 +2686,7 @@ ColR.
 assert(Cong A D C B).
 Cong.
 
-assert(HH:= midpoint_cong_unicity A D C B M H7 H6 H8).
+assert(HH:= midpoint_cong_uniqueness A D C B M H7 H6 H8).
 induction HH.
 spliter.
 contradiction.
@@ -2736,7 +2735,7 @@ induction H5.
 
 assert(A = B /\ C = D \/ A = D /\ C = B).
 
-apply (midpoint_cong_unicity A C B D M).
+apply (midpoint_cong_uniqueness A C B D M).
 Col.
 assumption.
 assumption.
@@ -2794,7 +2793,7 @@ assumption.
 
 assert(A = B /\ D = C \/ A = C /\ D = B).
 
-apply (midpoint_cong_unicity A D B C M).
+apply (midpoint_cong_uniqueness A D B C M).
 Col.
 assumption.
 assumption.
@@ -2819,7 +2818,7 @@ spliter.
 
 assert(~Col A B C).
 intro.
-apply H2.
+apply H.
 Col.
 split.
 assumption.
@@ -2828,11 +2827,11 @@ intro.
 induction H0.
 unfold Par_strict in H0.
 spliter.
-apply H9.
+apply H8.
 exists D.
 split; Col.
 spliter.
-apply H5.
+apply H4.
 ColR.
 Qed.
 
@@ -2898,23 +2897,23 @@ unfold TS in H.
 spliter.
 repeat split; intro.
 subst B.
+apply H.
+Col.
+subst C.
+apply H.
+Col.
+subst D.
+apply H2.
+Col.
+subst D.
 apply H2.
 Col.
 subst C.
-apply H2.
+apply H.
 Col.
 subst D.
-apply H3.
-Col.
-subst D.
-apply H3.
-Col.
-subst C.
-apply H2.
-Col.
-subst D.
-ex_and H4 T.
-apply between_identity in H5.
+ex_and H3 T.
+apply between_identity in H4.
 subst T.
 contradiction.
 Qed.
@@ -2932,7 +2931,10 @@ intros.
 assert(X <> Y /\ ~Col A X Y /\ ~Col B X Y).
 unfold TS in H0.
 spliter.
-split; auto.
+repeat split; auto.
+intro.
+subst Y.
+Col.
 spliter.
 
 assert(A <> M).
@@ -3031,7 +3033,10 @@ ex_and H0 P.
 unfold TS in H0.
 unfold TS in H3.
 spliter.
-split; auto.
+repeat split; auto.
+intro.
+subst Y.
+Col.
 spliter.
 
 assert(A <> M).

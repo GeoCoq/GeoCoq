@@ -35,7 +35,7 @@ assert (HTS : TS Q S P Y).
   apply l9_8_2 with X.
 
     {
-    assert_diffs; split; Col.
+    assert_diffs.
     assert (P <> R)
       by (intro; treat_equalities; apply par_strict_distinct in HPar; spliter; Col).
     assert (P <> X)
@@ -73,8 +73,8 @@ assert (HTS : TS Q S P Y).
     assert_cols; ColR.
     }
   }
-destruct HTS as [Hc1 [Hc2 [Hc3 [I [HCol HBet]]]]];
-clear Hc1; clear Hc2; clear Hc3; exists I.
+destruct HTS as [Hc1 [Hc2 [I [HCol HBet]]]];
+clear Hc1; clear Hc2; exists I.
 assert (HPUI : BetS P U I).
  {
   assert (P <> Y)  by (intro; treat_equalities; Col).
@@ -88,7 +88,6 @@ assert (HPUI : BetS P U I).
       {
       assert (HFalse : TS Q S P U).
         {
-        assert_diffs; split; Col.
         split; Col.
         split; try (exists I; split; Col; Between).
         intro.
@@ -118,8 +117,6 @@ assert (HPUI : BetS P U I).
       {
       assert (HFalse : TS P R I U).
         {
-        split; try (intro; treat_equalities; apply par_strict_distinct in HPar;
-                    spliter; Col).
         split; try (intro; apply HPar; exists I; Col).
         split; try (exists P; split; Col; Between).
         intro.
@@ -171,7 +168,7 @@ assert (HTS : TS Q R S I).
 
     {
     apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR;
-    apply BetSEq in HPUI; spliter; assert_diffs; split; Col.
+    apply BetSEq in HPUI; spliter; assert_diffs.
     assert_cols; repeat split; try (exists U; Col).
     intro; apply HNC; ColR.
     intro; apply par_strict_not_col_4 in HPar; apply HPar; ColR.

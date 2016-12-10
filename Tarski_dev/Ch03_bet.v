@@ -73,6 +73,39 @@ ex_and H1 x.
 assert (C = x) by (apply between_identity; auto); subst; auto.
 Qed.
 
+Lemma bet_neq12__neq : forall A B C, Bet A B C -> A <> B -> A <> C.
+Proof.
+    intros A B C HBet HAB Heq.
+    subst C; apply HAB, between_identity; trivial.
+Qed.
+
+Lemma bet_neq21__neq : forall A B C, Bet A B C -> B <> A -> A <> C.
+Proof.
+    intros A B C HBet HAB.
+    apply bet_neq12__neq with B; auto.
+Qed.
+
+Lemma bet_neq23__neq : forall A B C, Bet A B C -> B <> C -> A <> C.
+Proof.
+    intros A B C HBet HBC Heq.
+    subst C; apply HBC; symmetry.
+    apply between_identity; trivial.
+Qed.
+
+Lemma bet_neq32__neq : forall A B C, Bet A B C -> C <> B -> A <> C.
+Proof.
+    intros A B C HBet HAB.
+    apply bet_neq23__neq with B; auto.
+Qed.
+
+Lemma not_bet_distincts : forall A B C, ~ Bet A B C -> A <> B /\ B <> C.
+Proof.
+    intros A B C HNBet.
+    repeat split; intro; subst B; apply HNBet.
+      apply between_trivial2.
+      apply between_trivial.
+Qed.
+
 End T2_1.
 
 (* Some tactics *)
@@ -167,7 +200,7 @@ Lemma outer_transitivity_between2 : forall A B C D, Bet A B C -> Bet B C D -> B<
 Proof.
     intros.
     prolong A C x C D.
-    assert (x = D) by (apply (construction_unicity B C C D); try apply (between_exchange3 A B C x); Cong).
+    assert (x = D) by (apply (construction_uniqueness B C C D); try apply (between_exchange3 A B C x); Cong).
     subst x;assumption.
 Qed.
 
@@ -219,7 +252,7 @@ Definition Bet_4 A1 A2 A3 A4 :=
 Lemma l_3_9_4 : forall A1 A2 A3 A4, Bet_4 A1 A2 A3 A4 -> Bet_4 A4 A3 A2 A1.
 Proof.
     unfold Bet_4.
-    intros;spliter;Between.
+    intros;spliter; auto with between.
 Qed.
 
 Lemma l3_17 : forall A B C A' B' P,
@@ -233,14 +266,25 @@ Proof.
     exists y;eBetween.
 Qed.
 
+(** The prove the former version of lower dimension axiom for compatibility. *)
+
+Lemma lower_dim_ex : exists A B C,
+  ~ (Bet A B C \/ Bet B C A \/ Bet C A B).
+Proof.
+exists PA.
+exists PB.
+exists PC.
+apply lower_dim.
+Qed.
+
 Lemma two_distinct_points : exists X, exists Y: Tpoint, X <> Y.
 Proof.
-    assert (ld:=lower_dim).
+    assert (ld:=lower_dim_ex).
     ex_elim ld A.
     ex_elim H B.
     ex_elim H0 C.
     induction (eq_dec_points A B).
-      subst A; exists B; exists C; Between.
+      subst A; exists B; exists C; auto with between between_no_eauto.
     exists A; exists B; assumption.
 Qed.
 

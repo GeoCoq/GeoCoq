@@ -46,6 +46,14 @@ unfold IFSC.
 repeat split;Cong.
 Qed.
 
+Lemma l4_3_1 : forall A B C A' B' C',
+ Bet A B C -> Bet A' B' C' -> Cong A B A' B' -> Cong A C A' C' -> Cong B C B' C'.
+Proof.
+    intros.
+    apply cong_commutativity.
+    eapply l4_3;eBetween;Cong.
+Qed.
+
 Lemma l4_5 : forall A B C A' C',
   Bet A B C -> Cong A C A' C' ->
   exists B', Bet A' B' C' /\ Cong_3 A B C A' B' C'.
@@ -62,7 +70,7 @@ prolong x' B' C'' B C.
 assert (Bet A' B' C'') by eBetween.
 
 assert (C'' = C').
-eapply (construction_unicity x' A' ).
+eapply (construction_uniqueness x' A' ).
 
 auto.
 eBetween.
@@ -74,7 +82,7 @@ Cong.
 
 subst C''.
 exists B'.
-Cong.
+repeat split;Cong.
 Qed.
 
 Lemma l4_6 : forall A B C A' B' C', Bet A B C -> Cong_3 A B C A' B' C' -> Bet A' B' C'.

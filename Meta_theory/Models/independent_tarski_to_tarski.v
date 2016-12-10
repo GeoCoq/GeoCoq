@@ -153,8 +153,7 @@ Qed.
 
 Lemma between_identityT : forall A B, BetG A B A -> A = B.
 Proof.
-destruct (lower_dimG) as [C [D [E HNC]]].
-intros A B; apply g2_16 with C D E; intro HNBet; apply HNC; left; auto.
+intros A B; apply g2_16 with GPA GPB GPC; intro HNBet; apply lower_dimG; left; auto.
 Qed.
 
 Lemma cong_trivial_identityT : forall A B, CongG A A B B.
@@ -179,7 +178,7 @@ elim (point_equality_decidabilityG A B); intro HDiff; [rewrite HDiff in *; clear
   }
 Qed.
 
-Lemma construction_unicityT : forall Q A B C X Y,
+Lemma construction_uniquenessT : forall Q A B C X Y,
   Q <> A -> BetG Q A X -> CongG A X B C -> BetG Q A Y -> CongG A Y B C -> X = Y.
 Proof.
 intros Q A B C X Y HDiff HBet1 HCong1 HBet2 HCong2.
@@ -193,14 +192,14 @@ Qed.
 Lemma between_trivialT : forall A B, BetG A B B.
 Proof. intros A B; destruct (g2_6 A B); auto. Qed.
 
-Lemma Bet_decG : forall A B C, BetG A B C \/ ~ BetG A B C.
+Lemma bet_decG : forall A B C, BetG A B C \/ ~ BetG A B C.
 Proof.
 intros A B C.
 destruct (segment_constructionG A B B C) as [D [HBet1 HCong]].
 elim (point_equality_decidabilityG C D); intro HDiff1; [rewrite HDiff1 in *; auto|].
 elim (point_equality_decidabilityG A B); intro HDiff2;
 [rewrite HDiff2 in *; left; apply bet_symmetryG; apply between_trivialT|].
-right; intro HBet2; apply HDiff1; apply construction_unicityT with A B B C;
+right; intro HBet2; apply HDiff1; apply construction_uniquenessT with A B B C;
 auto; apply g2_1.
 Qed.
 
@@ -208,8 +207,8 @@ Definition ColG A B C := BetG A B C \/ BetG B C A \/ BetG C A B.
 
 Lemma Col_decG : forall A B C, ColG A B C \/ ~ ColG A B C.
 Proof.
-intros A B C; unfold ColG; induction (Bet_decG A B C); induction (Bet_decG B C A);
-induction (Bet_decG C A B); tauto.
+intros A B C; unfold ColG; induction (bet_decG A B C); induction (bet_decG B C A);
+induction (bet_decG C A B); tauto.
 Qed.
 
 Lemma inner_paschT : forall A B C P Q,
@@ -265,6 +264,7 @@ exact
    cong_pseudo_reflexivityG cong_inner_transitivityT cong_identityG
    segment_constructionG five_segmentG
    between_identityT inner_paschT
+   GPA GPB GPC
    lower_dimG).
 Defined.
 

@@ -32,7 +32,7 @@ Proof.
   assert(Par_strict B1 B2 A1 A3).
   { apply (par_strict_col_par_strict _ _ _ A2); auto.
     apply par_strict_symmetry.
-    apply sac__par_strict; assumption.
+    apply sac__par_strict1423; assumption.
   }
   apply (l6_21 B1 B2 A3 B3); Col.
     apply (par_strict_not_col_4 _ _ A1); auto.
@@ -46,7 +46,7 @@ Proof.
   { intro.
     subst B3.
     assert(A1 = A3); auto.
-    apply (l8_18_unicity A1 A2 B1); Col; Perp.
+    apply (l8_18_uniqueness A1 A2 B1); Col; Perp.
     apply not_col_permutation_1; apply per_not_col; auto.
   }
   assert(Per A1 A3 B'3).
@@ -67,7 +67,7 @@ Proof.
 intro HP.
 destruct ex_saccheri as [A1 [B1 [B2 [A2 [HPer1 [HPer2 [HCong HOS]]]]]]].
 exists A1; exists A2; exists B1; exists B2.
-assert (HNE : A1 <> A2) by (destruct HOS as [X [[H ?] ?]]; auto).
+assert (HNE : A1 <> A2) by (destruct HOS as [X [[H ?] ?]]; intro; subst A2; Col).
 split; [destruct HOS; unfold TS in *; spliter; Col|].
 split; [intro; treat_equalities; apply l8_7 in HPer1; intuition|].
 intros A3 A4 B3 B4 HC1 HC2 HPerp1 HC3 HC4 HPerp2.

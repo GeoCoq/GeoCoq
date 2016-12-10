@@ -23,7 +23,6 @@ assert(Hid2 : Perp o x c a)
  by perm_apply (col_per_perp o x a c).
 assert (Perp b c c a).
  apply (par_perp_perp o x b c c a);finish.
- apply par_strict_par;finish. (* TODO sous typage *)
 apply perp_per_1;Perp.
 Qed.
 

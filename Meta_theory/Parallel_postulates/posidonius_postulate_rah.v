@@ -32,7 +32,7 @@ assert (HF : exists A1 A2 B1 B2,
         {
         intro; assert (A1 = A3); treat_equalities.
           {
-          apply l8_18_unicity with A1' A2' B1; Col.
+          apply l8_18_uniqueness with A1' A2' B1; Col.
           apply perp_col0 with A3 B3; Col; Perp.
           }
         assert (HFalse : B3 <> B1) by (assert_diffs; auto).
@@ -42,12 +42,12 @@ assert (HF : exists A1 A2 B1 B2,
       assert (HNE'''' : B3 <> B2).
         {
         intro; assert (A1 = A3); treat_equalities; [|intuition].
-        apply l8_18_unicity with A1' A2' B1; Col.
+        apply l8_18_uniqueness with A1' A2' B1; Col.
         }
       assert (HNE''''' : A1 <> B2).
         {
         intro; treat_equalities; apply HNE''';
-        apply l8_18_unicity with A1' A2' B3; Col; Perp;
+        apply l8_18_uniqueness with A1' A2' B3; Col; Perp;
         try (intro; assert_diffs; assert_cols; apply HNC; ColR).
         apply perp_col0 with A1 B1; assert_cols; Col; Perp;
         try (intro; treat_equalities; Col).
@@ -72,7 +72,6 @@ assert (HF : exists A1 A2 B1 B2,
         [assert_diffs; assert_cols; ColR|apply l9_2; apply l9_8_2 with B1].
 
           {
-          split; [assert_diffs; auto|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
                   try (intro; treat_equalities; auto); assert_diffs; ColR|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
@@ -108,8 +107,9 @@ assert (HF : exists A1 A2 B1 B2,
     elim (l7_20 A1 B1 M); try apply HF; Col; Perp; try (assert_diffs; ColR);
     try (apply perp_col0 with A1 B1; assert_diffs; Col; Perp).
     intro; treat_equalities; intuition.
-    intro; treat_equalities; assert (HNE' : A1 <> M) by (assert_diffs; auto).
-    apply HNE'; apply between_equality with B1;
+    assert_diffs.
+     apply H2.
+    apply between_equality with B1; 
     unfold Midpoint in *; spliter; Between.
     }
   exists A1, A2, B1, B2.
@@ -120,7 +120,7 @@ assert (HF : exists A1 A2 B1 B2,
     {
     apply not_two_sides_one_side; auto; intro HTS;
     try (apply HNC; assert_diffs; ColR); try (apply HNC'; assert_diffs; ColR).
-    destruct HTS as [_ [HNC'' [_ [I [HC3 HBet]]]]].
+    destruct HTS as [HNC'' [_ [I [HC3 HBet]]]].
     destruct (midpoint_existence B1 I) as [B3 HB3].
     assert (HNE'' : B1 <> I) by (intro; treat_equalities; Col).
     destruct (l8_18_existence A1' A2' B3) as [A3 [HC4 HPerp3]];
@@ -133,21 +133,21 @@ assert (HF : exists A1 A2 B1 B2,
         {
         intro; assert (A1 = A3); treat_equalities.
           {
-          apply l8_18_unicity with A1' A2' B1; Col.
+          apply l8_18_uniqueness with A1' A2' B1; Col.
           apply perp_col0 with A3 B3; Col; Perp.
           }
-        apply HNE'; apply l8_18_unicity with A1' A2' B2; Col.
+        apply HNE'; apply l8_18_uniqueness with A1' A2' B2; Col.
         apply perp_col0 with A1 B1; Col; Perp; intro; treat_equalities; Col.
         }
       assert (HNE'''' : B3 <> I).
         {
         intro; assert (A1 = A3); treat_equalities; [|intuition].
-        apply l8_18_unicity with A1' A2' B1; Col.
+        apply l8_18_uniqueness with A1' A2' B1; Col.
         }
       assert (HNE''''' : A1 <> I).
         {
         intro; treat_equalities; apply HNE';
-        apply l8_18_unicity with A1' A2' B2; Col; Perp.
+        apply l8_18_uniqueness with A1' A2' B2; Col; Perp.
         apply perp_col0 with A1 B1; assert_cols; Col; Perp.
         intro; treat_equalities; Col.
         }
@@ -171,7 +171,6 @@ assert (HF : exists A1 A2 B1 B2,
         [assert_diffs; assert_cols; ColR|apply l9_2; apply l9_8_2 with B1].
 
           {
-          split; [assert_diffs; auto|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
                   try (intro; treat_equalities; auto); assert_diffs; ColR|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;

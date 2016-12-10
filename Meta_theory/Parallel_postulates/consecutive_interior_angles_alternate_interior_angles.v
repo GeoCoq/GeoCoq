@@ -10,8 +10,8 @@ Proof.
   intros cia A B C D Hts HPar.
   assert (HD' := symmetric_point_construction D C).
   destruct HD' as [D'].
-  assert(HNCol1 : ~ Col B A C) by (destruct Hts as [_ []]; auto).
-  assert(HNCol2 : ~ Col D A C) by (destruct Hts as [_ [_ []]]; auto).
+  assert(HNCol1 : ~ Col B A C) by (destruct Hts; auto).
+  assert(HNCol2 : ~ Col D A C) by (destruct Hts as [_ []]; auto).
   assert_diffs.
   assert(~ Col A C D') by (intro; apply HNCol2; ColR).
   assert (HB' := ex_conga_ts A C D' C A B).
@@ -22,7 +22,7 @@ Proof.
   assert(TS A C D' D).
     repeat (split; Col); exists C; split; Col; Between.
   assert(Bet B A B').
-  { apply (cia B A C D'); SumA.
+  { apply (cia B A C D'); trivial.
     exists D; split; auto.
     apply (par_col_par B A C D); Par; Col.
   }
@@ -35,7 +35,7 @@ Proof.
     split.
     apply l9_9; Side.
     intro HNts.
-    destruct HNts as [_ [_ []]]; assert_cols; Col.
+    destruct HNts as [_ []]; assert_cols; Col.
 
   - apply (isi_chara _ _ _ _ _ _ D'); Between; Lea.
 

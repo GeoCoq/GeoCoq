@@ -144,7 +144,7 @@ Lemma col_trivial_3 : forall A B, Col A B A.
 Proof.
     unfold Col.
     intros.
-    Between.
+    right;Between.
 Qed.
 
 End T4_3.
@@ -160,10 +160,8 @@ Lemma l4_13 : forall A B C A' B' C',
 Proof.
     unfold Col.
     intros.
-    decompose [or] H.
-      left; eauto using l4_6.
-      right;left; eapply l4_6;eauto with cong3.
-    right;right; eapply l4_6;eauto with cong3.
+    decompose [or] H;
+      eauto 6  using l4_6 with cong3.
 Qed.
 
 Lemma l4_14 : forall A B C A' B',
@@ -212,7 +210,7 @@ Lemma l4_17 : forall A B C P Q,
   A<>B -> Col A B C -> Cong A P A Q -> Cong B P B Q -> Cong C P C Q.
 Proof.
     intros.
-    assert (FSC A B C P A B C Q) by (unfold FSC; unfold Cong_3; Cong).
+    assert (FSC A B C P A B C Q) by (unfold FSC; unfold Cong_3;repeat split; Cong).
     eapply l4_16; eauto.
 Qed.
 

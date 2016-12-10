@@ -56,7 +56,6 @@ intros T HInAngle; elim (Col_dec A B T); intro HABT.
     apply l9_2; apply l9_8_2 with X.
 
       {
-      split; [assert_diffs; auto|].
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       exists Y; assert_cols; split; Col; Between.
@@ -74,7 +73,6 @@ intros T HInAngle; elim (Col_dec A B T); intro HABT.
     apply l9_2; apply l9_8_2 with Y.
 
       {
-      split; [assert_diffs; auto|].
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       exists X; assert_cols; split; Col; Between.

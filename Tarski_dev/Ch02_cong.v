@@ -51,6 +51,25 @@ Proof.
     assumption.
 Qed.
 
+Lemma cong_3421 : forall A B C D,
+ Cong A B C D -> Cong C D B A.
+Proof.
+    auto using cong_symmetry, cong_right_commutativity.
+Qed.
+
+Lemma cong_4312 : forall A B C D,
+ Cong A B C D -> Cong D C A B.
+Proof.
+    auto using cong_symmetry, cong_right_commutativity.
+Qed.
+
+Lemma cong_4321 : forall A B C D,
+ Cong A B C D -> Cong D C B A.
+Proof.
+    auto using cong_symmetry, cong_right_commutativity.
+Qed.
+
+
 Lemma cong_trivial_identity : forall A B : Tpoint,
  Cong A A B B.
 Proof.
@@ -85,16 +104,64 @@ Qed.
 
 End T1_1.
 
-Hint Resolve cong_commutativity cong_reverse_identity cong_trivial_identity
+Hint Resolve cong_commutativity cong_3421 cong_4312 cong_4321 cong_reverse_identity cong_trivial_identity
              cong_left_commutativity cong_right_commutativity
              cong_transitivity cong_symmetry cong_reflexivity cong_identity : cong.
 
-Ltac Cong := auto with cong.
+Ltac Cong := auto 2 with cong.
 Ltac eCong := eauto with cong.
 
 Section T1_2.
 
 Context `{Tn:Tarski_neutral_dimensionless}.
+
+(* We pre-compute some trivial lemmas to have more efficient automatic proofs. *)
+
+Lemma not_cong_2134 : forall A B C D, ~ Cong A B C D -> ~ Cong B A C D.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_1243 : forall A B C D, ~ Cong A B C D -> ~ Cong A B D C.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_2143 : forall A B C D, ~ Cong A B C D -> ~ Cong B A D C.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_3412 : forall A B C D, ~ Cong A B C D -> ~ Cong C D A B.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_4312 : forall A B C D, ~ Cong A B C D -> ~ Cong D C A B.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_3421 : forall A B C D, ~ Cong A B C D -> ~ Cong C D B A.
+Proof.
+auto with cong.
+Qed.
+
+Lemma not_cong_4321 : forall A B C D, ~ Cong A B C D -> ~ Cong D C B A.
+Proof.
+auto with cong.
+Qed.
+
+End T1_2.
+
+Hint Resolve not_cong_2134 not_cong_1243 not_cong_2143 
+             not_cong_3412 not_cong_4312 not_cong_3421 not_cong_4321 : cong.
+
+Section T1_3.
+
+
+Context `{Tn:Tarski_neutral_dimensionless}.
+
 
 Definition OFSC A B C D A' B' C' D' :=
   Bet A B C /\ Bet A' B' C' /\
@@ -180,13 +247,13 @@ Proof.
     repeat split; eCong.
 Qed.
 
-End T1_2.
+End T1_3.
 
 Hint Resolve cong_3_sym : cong.
 Hint Resolve cong_3_swap cong_3_swap_2 cong3_transitivity : cong3.
 Hint Unfold Cong_3 : cong3.
 
-Section T1_3.
+Section T1_4.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
@@ -199,12 +266,27 @@ Proof.
     intros.
     induction (eq_dec_points A B).
       subst B.
-      assert (A' = B') by (apply (cong_identity A' B' A); Cong).
+      assert (A' = B') by
+     (apply (cong_identity A' B' A); Cong).
       subst; Cong.
     apply cong_commutativity; apply (five_segment A A' B B' C C' A A'); Cong.
 Qed.
 
-Lemma construction_unicity : forall Q A B C X Y,
+Lemma bet_cong3 : forall A B C A' B',  Bet A B C -> Cong A B A' B' -> exists C', Cong_3 A B C A' B' C'.
+Proof.
+    intros.
+    assert (exists x, Bet A' B' x /\ Cong B' x B C) by (apply segment_construction).
+    ex_and H1 x.
+    assert (Cong A C A' x).
+      eapply l2_11.
+        apply H.
+        apply H1.
+        assumption.
+      Cong.
+    exists x;unfold Cong_3; repeat split;Cong.
+Qed.
+
+Lemma construction_uniqueness : forall Q A B C X Y,
  Q <> A -> Bet Q A X -> Cong A X B C -> Bet Q A Y -> Cong A Y B C -> X=Y.
 Proof.
     intros.
@@ -222,7 +304,7 @@ Lemma Cong_cases :
  Cong A B C D.
 Proof.
     intros.
-    decompose [or] H; Cong.
+    decompose [or] H;clear H; Cong.
 Qed.
 
 Lemma Cong_perm :
@@ -235,4 +317,4 @@ Proof.
     repeat split; Cong.
 Qed.
 
-End T1_3.
+End T1_4.

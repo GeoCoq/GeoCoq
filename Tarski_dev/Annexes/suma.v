@@ -7,7 +7,7 @@ Context `{T2D:Tarski_2D}.
 (** Definition of the sum of angles.
     SumA A B C D E F G H I means that ABC+DEF = GHI. *)
 
-Definition SumA A B C D E F G H I:=
+Definition SumA A B C D E F G H I :=
   exists J, CongA C B J D E F /\ ~ OS B C A J /\ CongA A B J G H I.
 
 (** The Isi predicate describes the fact that the sum of the two angles is "interior", 
@@ -46,7 +46,7 @@ Proof.
   intro HNColB.
   elim (Col_dec D E F).
   { intro HColE.
-    elim (Bet_dec D E F).
+    elim (bet_dec D E F).
     { intro HEBet.
       assert (HJ : exists J, Midpoint B C J) by (apply symmetric_point_construction).
       destruct HJ as [J HMid].
@@ -91,7 +91,7 @@ Proof.
   assert (HcongaA : CongA A B J A B J').
   { elim (Col_dec A B C).
     { intro HColB.
-      elim (Bet_dec A B C).
+      elim (bet_dec A B C).
       { intro HBBet.
         apply (l11_13 C B J C B J'); Between.
       }
@@ -103,7 +103,7 @@ Proof.
     elim (Col_dec D E F).
     { intro HColE.
       apply (out_conga A B J A B J); try (apply out_trivial); CongA.
-      elim (Bet_dec D E F).
+      elim (bet_dec D E F).
       { intro HEBet.
         apply l6_3_2; repeat split; auto.
         exists C.
@@ -131,7 +131,7 @@ Proof.
   assert_diffs.
   elim (Col_dec A B C).
   { intro HColB.
-    elim (Bet_dec A B C).
+    elim (bet_dec A B C).
     { intro HBBet.
       assert (HK : exists K, Midpoint E F K) by (apply symmetric_point_construction).
       destruct HK as [K [HKBet HCong]].
@@ -166,7 +166,7 @@ Proof.
     split.
     intro HOne; assert (~ Col E F D) by (apply (one_side_not_col E F D K); auto); Col.
     apply (conga_trans D E K A B J); auto.
-    elim (Bet_dec D E F).
+    elim (bet_dec D E F).
     { intro HEBet.
       apply conga_sym; apply conga_left_comm.
       apply (l11_13 C B A F); CongA; Between.
@@ -195,32 +195,6 @@ Proof.
   split.
   apply invert_two_sides; auto.
   split; CongA.
-Qed.
-
-(** ABC + 0 =  ABC *)
-
-Lemma out546_suma__conga : forall A B C D E F G H I, SumA A B C D E F G H I ->
-   Out E D F -> CongA A B C G H I.
-Proof.
-  intros A B C D E F G H I Hsuma Hout.
-  assert(A<>B/\B<>C/\D<>E/\E<>F/\G<>H/\H<>I) by (apply suma_distincts; auto).
-  spliter.
-  apply (suma2__conga A B C D E F A B C); auto.
-  exists C.
-  split.
-  apply (out_conga C B C D E D); try (apply out_trivial); CongA.
-  split; CongA.
-  apply col124__nos; Col.
-Qed.
-
-(** 0 + DEF = DEF *)
-
-Lemma out213_suma__conga : forall A B C D E F G H I, SumA A B C D E F G H I ->
-   Out B A C -> CongA D E F G H I.
-Proof.
-  intros A B C D E F G H I Hsuma Hout.
-  apply (out546_suma__conga D E F A B C); auto.
-  apply suma_sym; auto.
 Qed.
 
 (** CongA preserves SumA. *)
@@ -264,6 +238,46 @@ Proof.
     apply (out_conga G H I G H I); try (apply out_trivial); CongA.
 Qed.
 
+(** ABC + 0 =  ABC (two lemmas) *)
+
+Lemma out546_suma__conga : forall A B C D E F G H I, SumA A B C D E F G H I ->
+   Out E D F -> CongA A B C G H I.
+Proof.
+  intros A B C D E F G H I Hsuma Hout.
+  assert(A<>B/\B<>C/\D<>E/\E<>F/\G<>H/\H<>I) by (apply suma_distincts; auto).
+  spliter.
+  apply (suma2__conga A B C D E F A B C); auto.
+  exists C.
+  split.
+  apply (out_conga C B C D E D); try (apply out_trivial); CongA.
+  split; CongA.
+  apply col124__nos; Col.
+Qed.
+
+Lemma out546__suma : forall A B C D E F, A <> B -> B <> C -> Out E D F -> SumA A B C D E F A B C.
+Proof.
+  intros A B C D E F HAB HBC Hout.
+  assert_diffs.
+  destruct (ex_suma A B C D E F) as [G [H [I Hsuma]]]; auto.
+  apply (conga3_suma__suma A B C D E F G H I); try (apply conga_refl); auto.
+  apply conga_sym, out546_suma__conga with D E F; auto.
+Qed.
+
+(** 0 + DEF = DEF (two lemmas) *)
+
+Lemma out213_suma__conga : forall A B C D E F G H I, SumA A B C D E F G H I ->
+   Out B A C -> CongA D E F G H I.
+Proof.
+  intros A B C D E F G H I Hsuma Hout.
+  apply (out546_suma__conga D E F A B C); auto.
+  apply suma_sym; auto.
+Qed.
+
+Lemma out213__suma : forall A B C D E F, D <> E -> E <> F -> Out B A C -> SumA A B C D E F D E F.
+Proof.
+  intros; apply suma_sym, out546__suma; auto.
+Qed.
+
 (** Some permutation properties:*)
 
 Lemma suma_left_comm : forall A B C D E F G H I,
@@ -302,6 +316,22 @@ Proof.
   apply (conga3_suma__suma A B C D E F G H I); CongA.
 Qed.
 
+(** Basic case of sum *)
+
+Lemma inangle__suma : forall A B C P, InAngle P A B C -> SumA A B P P B C A B C.
+Proof.
+  intros A B C P HInangle.
+  assert (Hcopy := HInangle); destruct Hcopy as [HAB [HCB [HPB _]]].
+  exists C; repeat (split; CongA).
+  elim (Col_dec B P A).
+    apply col123__nos.
+  intro HNCol.
+  elim (Col_dec B P C).
+    apply col124__nos.
+  intro HNCol2.
+  apply l9_9, invert_two_sides, in_angle_two_sides; Col.
+Qed.
+
 (** Characterization of Isi using LeA. *)
 
 Lemma isi_chara : forall A B C D E F A', A<>B -> A'<>B -> Bet A B A' ->
@@ -323,7 +353,7 @@ Proof.
     intro HNColB.
     elim (Col_dec D E F).
     { intro HColE.
-      elim (Bet_dec D E F).
+      elim (bet_dec D E F).
       { intro HDEF.
         exfalso.
         apply HJ3.
@@ -344,7 +374,7 @@ Proof.
     { apply not_one_side_two_sides; auto.
       apply (ncol_conga_ncol D E F); CongA.
     }
-    destruct HTwo as [_ [_ [_ [X [HXCol HXBet]]]]].
+    destruct HTwo as [_ [_ [X [HXCol HXBet]]]].
     repeat split; auto.
     exists X.
     split; auto.
@@ -370,7 +400,7 @@ Proof.
     split; auto.
     elim (Col_dec A B C).
     { intro HColB.
-      elim (Bet_dec A B C).
+      elim (bet_dec A B C).
       { intro HBBet.
         assert (HEOut : Out E D F).
         { assert (Out B C A') by (apply (l6_3_2); repeat split; auto; exists A; repeat split; Between).
@@ -532,6 +562,61 @@ Proof.
   apply (l11_13 A B C A'); Between.
 Qed.
 
+Lemma out546__isi : forall A B C D E F, A <> B -> B <> C -> Out E D F -> Isi A B C D E F.
+Proof.
+  intros A B C D E F HAB HBC HOut.
+  destruct (segment_construction A B A B) as [A' [HBet HCong]].
+  assert_diffs.
+  apply isi_chara with A'; auto.
+  apply l11_31_1; auto.
+Qed.
+
+Lemma out213__isi : forall A B C D E F, D <> E -> E <> F -> Out B A C -> Isi A B C D E F.
+Proof.
+  intros; apply isi_sym, out546__isi; trivial.
+Qed.
+
+Lemma bet_suma__isi : forall A B C D E F G H I, SumA A B C D E F G H I -> Bet G H I ->
+  Isi A B C D E F.
+Proof.
+  intros A B C D E F G H I HSuma HBet.
+  destruct HSuma as [A' [HConga1 [HNOS HConga2]]].
+  apply (bet_conga_bet _ _ _ A B A') in HBet; CongA.
+  assert_diffs.
+  repeat split; auto.
+  - elim (bet_dec A B C).
+    { intro HBet'; left.
+      apply (l11_21_a C B A'); trivial.
+      apply l6_2 with A; Between.
+    }
+    intro HNBet; auto.
+  - exists A'; repeat (split; auto).
+    intro HTS; destruct HTS as [_ []]; assert_cols; Col.
+Qed.
+
+Lemma inangle__isi : forall A B C P, InAngle P A B C -> Isi A B P P B C.
+Proof.
+  intros A B C P HInangle.
+  assert (Hcopy := HInangle); destruct Hcopy as [HAB [HCB [HPB HX]]].
+  repeat split; auto.
+  { destruct (bet_dec A B P) as [HBet|]; [left|auto].
+    apply l6_2 with A; Between.
+    destruct HX as [X [HBet1 [HXB|HOut]]]; [subst X; Between|].
+    assert (HBet2 : Bet X B A) by (assert_diffs; apply (l6_2 P); Between; apply l6_6, HOut).
+    eBetween.
+  }
+  exists C; split; CongA.
+  destruct (Col_dec B P A) as [HCol|HNCol].
+    split; [apply col123__nos, HCol|intro HTS; destruct HTS as []; Col].
+  split.
+  - destruct (Col_dec B P C) as [HCol1|HNCol1].
+      apply col124__nos, HCol1.
+    apply l9_9, invert_two_sides, in_angle_two_sides; Col.
+  - destruct (Col_dec A B C) as [HCol1|HNCol1].
+      intro HTS; destruct HTS as [_ []]; Col.
+    apply l9_9_bis, in_angle_one_side; Col.
+Qed.
+
 End Sec.
 
 
@@ -544,6 +629,23 @@ repeat
       let h := fresh in
       not_exist_hyp3 X1 X2 X1 X3 X2 X3;
       assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
+      let h := fresh in
+      not_exist_hyp2 X1 X2 X2 X3;
+      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
 
       | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
@@ -640,10 +742,11 @@ repeat
  end.
 
 Hint Resolve suma_sym suma_left_comm suma_middle_comm
-             suma_right_comm suma_comm isi_comm isi_left_comm
-             isi_right_comm isi_sym : suma.
+             suma_right_comm suma_comm inangle__suma
+             isi_right_comm isi_comm isi_left_comm
+             isi_sym out213__isi out546__isi inangle__isi : suma.
 
-Ltac SumA := auto with suma.
+Ltac SumA := eauto with suma.
 
 Section Sec2.
 
@@ -659,7 +762,7 @@ Proof.
   spliter.
   elim(Col_dec A B C).
   { intro HColB.
-    elim(Bet_dec A B C).
+    elim(bet_dec A B C).
     { intro HBBet.
       destruct Hisi as [_[[HEout|]]]; try solve[exfalso; auto].
       apply conga__lea.
@@ -672,7 +775,7 @@ Proof.
   intro HNColB.
   elim(Col_dec D E F).
   { intro HColE.
-    elim(Bet_dec D E F).
+    elim(bet_dec D E F).
     { intro HEBet.
       apply isi_sym in Hisi.
       destruct Hisi as [_[[HBout|]]]; try solve[exfalso; auto].
@@ -686,7 +789,7 @@ Proof.
   intro HNColE.
   elim(Col_dec G H I).
   { intro HColH.
-    elim(Bet_dec G H I).
+    elim(bet_dec G H I).
       apply l11_31_2; auto.
     intro HHout.
     apply not_bet_out in HHout; auto.
@@ -722,7 +825,7 @@ Proof.
   exists C.
   split; CongA.
   apply not_one_side_two_sides in HJ2; auto.
-  destruct HJ2 as [a [b [c [X [HColX HXBet]]]]].
+  destruct HJ2 as [a [b [X [HColX HXBet]]]].
   repeat split; auto.
   exists X.
   split; auto.
@@ -750,7 +853,7 @@ Lemma isi_suma__lea456789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
    Isi A B C D E F -> LeA D E F G H I.
 Proof.
   intros A B C D E F G H I Hsuma Hisi.
-  apply (isi_suma__lea123789 D E F A B C G H I); eauto with suma.
+  apply (isi_suma__lea123789 D E F A B C G H I); SumA.
 Qed.
 
 (** LeA preserves Isi. *)
@@ -815,7 +918,7 @@ Proof.
   intro HNColE.
   elim(Col_dec G' H' I').
   { intro HColH'.
-    elim(Bet_dec G' H' I').
+    elim(bet_dec G' H' I').
     apply l11_31_2; auto.
     intro HH'out.
     apply not_bet_out in HH'out; auto.
@@ -844,7 +947,7 @@ Proof.
     apply (in_angle_trans _ _ _ C).
     apply l11_24; auto.
     assert(Hts : TS B C A F'1) by (apply not_one_side_two_sides; Col).
-    destruct Hts as [_ [_ [_ [X]]]].
+    destruct Hts as [_ [_ [X]]].
     spliter.
     repeat split; auto.
     exists X.
@@ -875,7 +978,7 @@ Lemma isi_lea123_suma2__lea : forall A B C D E F G H I A' B' C' G' H' I',
 Proof.
   intros A B C D E F G H I A' B' C'.
   intros.
-  apply (isi_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); eauto with suma.
+  apply (isi_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); SumA.
 Qed.
 
 (** SumA preserves LeA. *)
@@ -905,7 +1008,7 @@ Proof.
   assert_diffs.
   elim(Col_dec A B C).
   { intro HColB.
-    elim(Bet_dec A B C).
+    elim(bet_dec A B C).
     { intro HBBet.
       destruct Hisi as [_ [[HEout|]_]]; try solve [exfalso; Between].
       destruct Hisi' as [_ [[HE'out|]_]]; try solve [exfalso; Between].
@@ -948,7 +1051,7 @@ Lemma isi2_suma2__conga123 : forall A B C A' B' C' D E F G H I,
    CongA A B C A' B' C'.
 Proof.
   intros A B C A' B' C' D E F G H I Hisi Hisi' Hsuma Hsuma'.
-  apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ G H I); eauto with suma.
+  apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ G H I); SumA.
 Qed.
 
 Lemma suma_assoc_1 : forall A B C D E F G H I K L M A' B' C' D' E' F',
@@ -964,7 +1067,7 @@ Proof.
   assert_diffs.
   elim(Col_dec A B C).
   { intro HColB.
-    elim(Bet_dec A B C).
+    elim(bet_dec A B C).
     { intro HBBet.
       destruct HisiBE as [_ [[HEout | HBNBet] HJ]]; try solve [exfalso; Between].
       apply (conga3_suma__suma A' B' C' G H I K L M); try (apply conga_refl); auto.
@@ -987,7 +1090,7 @@ Proof.
   assert(~ Col C B A0) by (intro; apply HNColB; apply (l6_16_1 _ A0); Col).
   elim(Col_dec D E F).
   { intro HColE.
-    elim(Bet_dec D E F).
+    elim(bet_dec D E F).
     { intro HEBet.
       destruct HisiEH as [_ [[HHout | HENBet] HJ]]; try solve [exfalso; Between].
       apply (conga3_suma__suma A B C D E F A' B' C'); try (apply conga_refl); try (apply (out546_suma__conga _ _ _ G H I)); auto.
@@ -1002,7 +1105,7 @@ Proof.
   assert(~ Col F E D0) by (intro; apply HNColE; apply (l6_16_1 _ D0); Col).
   elim(Col_dec G H I).
   { intro HColH.
-    elim(Bet_dec G H I).
+    elim(bet_dec G H I).
     { intro HHBet.
       apply isi_sym in HisiEH.
       destruct HisiEH as [_ [[HEout | HHNBet] HJ]]; try solve [exfalso; Between].
@@ -1048,17 +1151,17 @@ Proof.
   }
   elim(Col_dec A' B' C').
   { intro HColB'.
-    elim(Bet_dec A' B' C').
+    elim(bet_dec A' B' C').
     { intro HB'Bet.
       elim(Col_dec D' E' F').
       { intro HColE'.
-        elim(Bet_dec D' E' F').
+        elim(bet_dec D' E' F').
         { intro HE'Bet.
           apply suma_sym.
           apply (conga3_suma__suma A' B' C' G H I K L M); try (apply conga_refl); auto; try solve [apply conga_line; auto].
           apply conga_sym.
           apply (conga_trans _ _ _ D0 E F).
-          - apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); eauto with suma.
+          - apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); SumA.
             apply suma_sym.
             exists D0.
             split.
@@ -1166,7 +1269,7 @@ Proof.
   }
   elim(Col_dec D' E' F').
   { intro HColE'.
-    elim(Bet_dec D' E' F').
+    elim(bet_dec D' E' F').
     { intro HE'Bet.
       assert(HC0 : exists C0, Midpoint B C C0) by apply symmetric_point_construction.
       destruct HC0 as [C0].
@@ -1252,10 +1355,10 @@ Proof.
   intros A B C D E F G H I K L M A' B' C' D' E' F'.
   intros.
   apply suma_sym.
-  apply (suma_assoc_1 G H I D E F A B C K L M D' E' F'); eauto with suma.
+  apply (suma_assoc_1 G H I D E F A B C K L M D' E' F'); SumA.
 Qed.
 
-(** Associativity of sum of angles. *)
+(** Associativity of the sum of angles. *)
 
 Lemma suma_assoc : forall A B C D E F G H I K L M A' B' C' D' E' F',
    Isi A B C D E F -> Isi D E F G H I ->
@@ -1404,7 +1507,7 @@ Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
   apply isi_sym.
-  apply (isi_assoc_1 G H I D E F A B C D' E' F'); eauto with suma.
+  apply (isi_assoc_1 G H I D E F A B C D' E' F'); SumA.
 Qed.
 
 Lemma isi_assoc : forall A B C D E F G H I A' B' C' D' E' F',
@@ -1416,6 +1519,40 @@ Proof.
   split.
   apply (isi_assoc_1 _ _ _ D E F); auto.
   apply (isi_assoc_2 _ _ _ D E F); auto.
+Qed.
+
+Lemma conga_isi_nos__nts : forall A B C D E F J, Isi A B C D E F -> CongA C B J D E F -> ~ OS B C A J ->
+  ~ TS A B C J.
+Proof.
+  intros A B C D E F J HIsi HConga HNOS.
+  elim (Col_dec D E F).
+  { intro HCol.
+    apply isi_sym in HIsi.
+    assert_diffs.
+    destruct HIsi as [_ [HUn HJ']].
+    destruct HUn as [HOut|HNBet].
+      intro HTS; destruct HTS; assert_cols; Col.
+    elim (Col_dec A B C).
+      intros HCol1 HTS; destruct HTS; assert_cols; Col.
+    intro HNCol.
+    apply l9_9_bis, invert_one_side, out_one_side; Col.
+    apply (l11_21_a D E F); CongA.
+    apply not_bet_out; trivial.
+  }
+  intro HNCol.
+  destruct HIsi as [_ [HUn [J' [HConga' [HNOS' HNTS]]]]].
+  destruct (l11_22_aux C B J J') as [HOut|HTS].
+  - apply conga_trans with D E F; CongA.
+  - intro HTS; apply HNTS.
+    apply l9_2, l9_8_2 with J; Side.
+    apply invert_one_side, out_one_side; trivial.
+    destruct HTS as [_ []]; Col.
+  - intro HTS1.
+    destruct HTS1 as [HNCol1 [HNCol2 HT]].
+    assert_diffs.
+    absurd (OS B C J J'); Side.
+    exists A; split; apply not_one_side_two_sides; Col; Side;
+    apply not_col_permutation_3, ncol_conga_ncol with D E F; CongA.
 Qed.
 
 Lemma isi_lea2_suma2__conga123 : forall A B C D E F G H I A' B' C' D' E' F',
@@ -1442,7 +1579,26 @@ Lemma isi_lea2_suma2__conga456 : forall A B C D E F G H I A' B' C' D' E' F',
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
-  apply (isi_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); eauto with suma.
+  apply (isi_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); SumA.
+Qed.
+
+Lemma isi_suma__out213 : forall A B C D E F, SumA A B C D E F D E F -> Isi A B C D E F -> Out B A C.
+Proof.
+  intros A B C D E F HSuma HIsi.
+  assert_diffs.
+  apply (l11_21_a D E D).
+    apply out_trivial; auto.
+  apply isi_lea2_suma2__conga123 with D E F D E F D E F; Lea.
+  exists F; repeat (split; CongA).
+  apply col123__nos; Col.
+Qed.
+
+Lemma isi_suma__out546 : forall A B C D E F, SumA A B C D E F A B C -> Isi A B C D E F -> Out E D F.
+Proof.
+  intros A B C D E F HSuma HIsi.
+  apply isi_suma__out213 with A B C.
+    apply suma_sym; trivial.
+  apply isi_sym; trivial.
 Qed.
 
 Lemma isi_lea_lta123_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
@@ -1466,7 +1622,7 @@ Lemma isi_lea_lta456_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' 
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); eauto with suma.
+  apply (isi_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); SumA.
 Qed.
 
 Lemma isi_lta2_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
@@ -1588,7 +1744,7 @@ Proof.
   apply (isi_chara _ _ _ _ _ _ A'); Between.
   elim(Col_dec A B C).
   { intro HCol.
-    elim(Bet_dec A C B).
+    elim(bet_dec A C B).
     { intro HCBet.
       apply conga__lea.
       apply conga_line; Between.
@@ -1607,7 +1763,7 @@ Qed.
 Lemma ncol_suma__ncol : forall A B C D E F, ~ Col A B C -> SumA A B C B C A D E F -> ~ Col D E F.
 Proof.
   intros A B C D E F HNCol HSuma HCol.
-  elim(Bet_dec D E F).
+  elim(bet_dec D E F).
   - intro.
     assert(HP := symmetric_point_construction A B).
     destruct HP as [P].
@@ -1628,7 +1784,7 @@ Proof.
     split; CongA.
     split; Side.
     intro Hts.
-    destruct Hts as [_ [_ [Habs]]].
+    destruct Hts as [_ [Habs]].
     apply Habs; Col.
 
   - intro.
@@ -1683,7 +1839,7 @@ Proof.
     exists F1.
     repeat (split; auto).
     intro Habs.
-    destruct Habs as [_ [_ [Habs _]]].
+    destruct Habs as [_ [Habs]].
     apply Habs.
     apply col_permutation_2.
     apply bet_col.
@@ -1703,7 +1859,7 @@ Lemma bet_per_suma__per123 : forall A B C D E F G H I, Per D E F -> Bet G H I ->
    SumA A B C D E F G H I -> Per A B C.
 Proof.
   intros A B C D E F G H I HPer HBet HSuma.
-  apply (bet_per_suma__per456 D E F _ _ _ G H I); eauto with suma.
+  apply (bet_per_suma__per456 D E F _ _ _ G H I); SumA.
 Qed.
 
 (** If x+x=180 then x=90. *)
@@ -1802,7 +1958,7 @@ Proof.
     split.
       apply conga_right_comm; apply conga_sym; apply l11_18_1; Between; Perp.
     split.
-    2: intro Hts; destruct Hts as [_ [_ []]]; assert_cols; Col.
+    2: intro Hts; destruct Hts as [_ []]; assert_cols; Col.
     apply l9_9.
     repeat split; Col.
     intro; apply HNCol; ColR.
@@ -1812,11 +1968,19 @@ Qed.
 
 (** The sum of angles of a triangle.*)
 
-Definition TriSumA A B C D E F:=
+Definition TriSumA A B C D E F :=
   exists G H I, SumA A B C B C A G H I /\ SumA G H I C A B D E F.
 
+Lemma trisuma_distincts : forall A B C D E F, TriSumA A B C D E F ->
+  A <> B /\ B <> C /\ A <> C /\ D <> E /\ E <> F.
+Proof.
+  intros A B C D E F HTri.
+  destruct HTri as [G [H [I [HSuma HSuma1]]]].
+  assert_diffs; repeat split; auto.
+Qed.
+
 Lemma ex_trisuma : forall A B C, A <> B -> B <> C -> A <> C ->
-   exists D E F, TriSumA A B C D E F.
+  exists D E F, TriSumA A B C D E F.
 Proof.
   intros A B C HAB HBC HAC.
   destruct (ex_suma A B C B C A) as [G [H [I HSuma1]]]; auto.
@@ -1860,7 +2024,7 @@ Proof.
   exists A2.
   exists B2.
   split.
-  eauto with suma.
+  SumA.
   apply suma_middle_comm.
   apply (suma_assoc C A B A B C B C A D E F C2 A2 B2 A1 B1 C1); try (apply isi123231); auto.
 Qed.
@@ -1879,6 +2043,37 @@ Proof.
   apply trisuma_perm_321.
   apply trisuma_perm_231.
   assumption.
+Qed.
+
+Lemma conga_trisuma__trisuma : forall A B C D E F D' E' F', TriSumA A B C D E F -> CongA D E F D' E' F' ->
+  TriSumA A B C D' E' F'.
+Proof.
+  intros A B C D E F D' E' F' HTri HConga.
+  destruct HTri as [G [H [I [HSuma1 HSuma2]]]].
+  exists G; exists H; exists I; split; trivial.
+  assert_diffs; apply (conga3_suma__suma G H I C A B D E F); CongA.
+Qed.
+
+Lemma trisuma2__conga : forall A B C D E F D' E' F', TriSumA A B C D E F -> TriSumA A B C D' E' F' ->
+  CongA D E F D' E' F'.
+Proof.
+  intros A B C D E F D' E' F' HTri HTri'.
+  destruct HTri as [G [H [I [HSuma1 HSuma2]]]].
+  destruct HTri' as [G' [H' [I' [HSuma1' HSuma2']]]].
+  apply (suma2__conga G H I C A B); trivial.
+  assert_diffs.
+  apply (conga3_suma__suma G' H' I' C A B D' E' F'); CongA.
+  apply (suma2__conga A B C B C A); trivial.
+Qed.
+
+Lemma conga3_trisuma__trisuma : forall A B C D E F A' B' C', TriSumA A B C D E F ->
+  CongA A B C A' B' C' -> CongA B C A B' C' A' -> CongA C A B C' A' B' ->
+  TriSumA A' B' C' D E F.
+Proof.
+  intros A B C D E F A' B' C' HTri HCongaB HCongaC HCongaA.
+  destruct HTri as [G [H [I [HSuma HSuma']]]].
+  assert_diffs; exists G; exists H; exists I; split;
+  [apply (conga3_suma__suma A B C B C A G H I)|apply (conga3_suma__suma G H I C A B D E F)]; CongA.
 Qed.
 
 Lemma col_trisuma__bet : forall A B C P Q R, Col A B C -> TriSumA A B C P Q R -> Bet P Q R.

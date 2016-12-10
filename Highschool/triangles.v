@@ -31,7 +31,7 @@ auto.
 auto.
 unfold Cong_3.
 unfold isosceles in H.
-Cong.
+repeat split;Cong.
 Qed.
 
 Definition equilateral A B C :=
@@ -207,6 +207,20 @@ Qed.
 
 Hint Resolve equilateral_strict_swap_1 equilateral_strict_swap_2
 equilateral_strict_swap_3 equilateral_strict_swap_4 equilateral_strict_swap_5 : equilateral.
+
+Lemma equilateral_strict__not_col : 
+ equilateral_strict A B C -> ~ Col A B C.
+Proof.
+intros.
+assert (T:=(equilateral_strict_neq H)).
+unfold equilateral_strict in *.
+unfold equilateral in *.
+spliter.
+intro.
+assert (Midpoint B A C) by (apply (l7_20_bis B A C);finish).
+assert (Midpoint C A B) by (apply (l7_20_bis C A B);finish).
+apply midpoint_not_midpoint with C A B;auto.
+Qed.
 
 Lemma equilateral_strict_conga_1 :
  equilateral_strict A B C ->

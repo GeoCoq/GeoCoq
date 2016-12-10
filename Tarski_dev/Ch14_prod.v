@@ -195,7 +195,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma prod_unicity : forall A B C1 C2,
+Lemma prod_uniqueness : forall A B C1 C2,
  Prod O E E' A B C1 ->
  Prod O E E' A B C2 ->
  C1 = C2.
@@ -208,9 +208,9 @@ Proof.
     ex_and H4 B'.
     ex_and H2 B''.
     assert(B'=B'').
-      eapply (project_unicity B B' B'' O E' E E'); auto; unfold Prod in H.
+      eapply (project_uniqueness B B' B'' O E' E E'); auto; unfold Prod in H.
     subst B''.
-    eapply (project_unicity B' C1 C2 O E A E'); auto.
+    eapply (project_uniqueness B' C1 C2 O E A E'); auto.
 Qed.
 
 End Grid.
@@ -483,14 +483,14 @@ Proof.
       subst B.
       assert(Prod O E E' A O O).
         apply(prod_0_r); Col.
-      assert(HH:= prod_unicity O E E' A O C O HP H13).
+      assert(HH:= prod_uniqueness O E E' A O C O HP H13).
       subst C.
       apply prod_0_r; Col.
     induction(eq_dec_points A O).
       subst A.
       assert(Prod O E E' O B O).
         apply(prod_0_l); Col.
-      assert(HH:= prod_unicity O E E' O B O C H14 HP).
+      assert(HH:= prod_uniqueness O E E' O B O C H14 HP).
       subst C.
       apply(prod_0_l); Col.
     assert(C <> O).
@@ -555,7 +555,7 @@ Proof.
       assert(C = A).
         assert(Prod O E E' A E A).
           apply(prod_1_r); Col.
-        eapply (prod_unicity O E E' A E); auto.
+        eapply (prod_uniqueness O E E' A E); auto.
       subst C.
       left.
       right.
@@ -610,7 +610,7 @@ Proof.
       assert(Prod O E E' E B B).
         apply prod_1_l; Col.
       assert(B = C).
-        apply (prod_unicity O E E' E B); auto.
+        apply (prod_uniqueness O E E' E B); auto.
       subst C.
       left.
       Par.
@@ -781,12 +781,12 @@ Proof.
     induction(eq_dec_points A O).
       subst A.
       assert(A' = O).
-        eapply (pj_unicity O E E' O); Col.
+        eapply (pj_uniqueness O E E' O); Col.
         apply pj_trivial.
       subst A'.
       assert(C = O).
         assert(HH:= prod_0_l O E E' B H4 H6).
-        apply(prod_unicity O E E' O B); auto.
+        apply(prod_uniqueness O E E' O B); auto.
       subst C.
       induction H3.
         apply False_ind.
@@ -803,12 +803,12 @@ Proof.
     induction(eq_dec_points B O).
       subst B.
       assert(B' = O).
-        apply (pj_unicity O E E' O); Col.
+        apply (pj_uniqueness O E E' O); Col.
         apply pj_trivial.
       subst B'.
       assert(C = O).
         assert(HH:= prod_0_r O E E' A H4 H5).
-        apply(prod_unicity O E E' A O); auto.
+        apply(prod_uniqueness O E E' A O); auto.
       subst C.
       induction H3.
         apply False_ind.
@@ -871,7 +871,7 @@ Proof.
     repeat split; Col.
     ex_and H17 B''.
     assert(B' = B'').
-      apply(pj_unicity O  E E' B B' B''); Col.
+      apply(pj_uniqueness O  E E' B B' B''); Col.
     subst B''.
     exists B.
     repeat split; Col.
@@ -935,36 +935,36 @@ Proof.
       subst A.
       assert(HH:=prod_0_l O E E' B H2 H12).
       assert(AB = O).
-        apply(prod_unicity O E E' O B); assumption.
+        apply(prod_uniqueness O E E' O B); assumption.
       subst AB.
       assert(HP:=prod_0_l O E E' BC H2 H10).
       assert(ABC=O).
-        apply(prod_unicity O E E' O BC); assumption.
+        apply(prod_uniqueness O E E' O BC); assumption.
       subst ABC.
       apply prod_0_l; assumption.
     induction(eq_dec_points B  O).
       subst B.
       assert(HH:=prod_0_r O E E' A H2  H11).
       assert(AB = O).
-        apply(prod_unicity O E E' A O); assumption.
+        apply(prod_uniqueness O E E' A O); assumption.
       subst AB.
       assert(HP:=prod_0_l O E E' C H2 H9).
       assert(BC=O).
-        apply(prod_unicity O E E' O C); assumption.
+        apply(prod_uniqueness O E E' O C); assumption.
       subst BC.
       assert(ABC=O).
-        apply(prod_unicity O E E' A O); assumption.
+        apply(prod_uniqueness O E E' A O); assumption.
       subst ABC.
       apply prod_0_l; assumption.
     induction(eq_dec_points C O).
       subst C.
       assert(HH:=prod_0_r O E E' B H2  H12).
       assert(BC = O).
-        apply(prod_unicity O E E' B O); assumption.
+        apply(prod_uniqueness O E E' B O); assumption.
       subst BC.
       assert(HP:=prod_0_r O E E' A H2 H11).
       assert(ABC=O).
-        apply(prod_unicity O E E' A O); assumption.
+        apply(prod_uniqueness O E E' A O); assumption.
       subst ABC.
       apply prod_0_r; assumption.
     assert(P1:=H).
@@ -1002,7 +1002,7 @@ Proof.
     ex_and H14 B'.
     ex_and H8 C''.
     assert(C' = C'').
-      apply(pj_unicity O E E' C); Col.
+      apply(pj_uniqueness O E E' C); Col.
       left.
       Par.
     subst C''.
@@ -1106,25 +1106,25 @@ Proof.
       subst A.
       assert(HH:=prod_0_l O E E' B H2 H12).
       assert(AB = O).
-        apply(prod_unicity O E E' O B); assumption.
+        apply(prod_uniqueness O E E' O B); assumption.
       subst AB.
       assert(HP:=prod_0_l O E E' C H2 H9).
       assert(ABC=O).
-        apply(prod_unicity O E E' O C); assumption.
+        apply(prod_uniqueness O E E' O C); assumption.
       subst ABC.
       apply prod_0_l; assumption.
     induction(eq_dec_points B  O).
       subst B.
       assert(HH:=prod_0_l O E E' C H2  H9).
       assert(BC = O).
-        apply(prod_unicity O E E' O C); assumption.
+        apply(prod_uniqueness O E E' O C); assumption.
       subst BC.
       assert(HP:=prod_0_r O E E' A H2 H11).
       assert(AB=O).
-        apply(prod_unicity O E E' A O); assumption.
+        apply(prod_uniqueness O E E' A O); assumption.
       subst AB.
       assert(ABC=O).
-        apply(prod_unicity O E E' O C); assumption.
+        apply(prod_uniqueness O E E' O C); assumption.
       subst ABC.
       apply prod_0_r; assumption.
     induction(eq_dec_points C O).
@@ -1132,10 +1132,10 @@ Proof.
       assert(HH:=prod_0_r O E E' B H2  H12).
       assert(ABC=O).
         assert(HP:=prod_0_r O E E' AB H2  H13).
-        apply(prod_unicity O E E' AB O); assumption.
+        apply(prod_uniqueness O E E' AB O); assumption.
       subst ABC.
       assert(BC=O).
-        apply(prod_unicity O E E' B O); assumption.
+        apply(prod_uniqueness O E E' B O); assumption.
       subst BC.
       apply prod_0_r; assumption.
     assert(P1:=H).
@@ -1179,7 +1179,7 @@ Proof.
     ex_and H8 C'.
     ex_and H6 C''.
     assert(C' = C'').
-      apply(pj_unicity O E E' C); Col.
+      apply(pj_uniqueness O E E' C); Col.
     left.
     Par.
     subst C''.
@@ -1296,14 +1296,14 @@ Proof.
       subst A.
       assert(HH:=prod_0_l O E E' B H0 H2).
       assert(C = O).
-        apply(prod_unicity O E E' O B); auto.
+        apply(prod_uniqueness O E E' O B); auto.
       subst C.
       eapply (prod_0_r O E E'); Col.
     induction(eq_dec_points B O).
       subst B.
       assert(HH:=prod_0_r O E E' A H0 H1).
       assert(C = O).
-        apply(prod_unicity O E E' A O); auto.
+        apply(prod_uniqueness O E E' A O); auto.
       subst C.
       apply (prod_0_l O E E'); Col.
     induction(eq_dec_points C O).
@@ -1390,7 +1390,7 @@ Proof.
     unfold Ar2 in H0.
     spliter.
     assert(HH:=prod_0_l O E E' B H0 H3).
-    apply (prod_unicity O E E' O B); auto.
+    apply (prod_uniqueness O E E' O B); auto.
 Qed.
 
 Lemma prod_O_r_eq : forall O E E' A C, Prod O E E' A O C -> C = O.
@@ -1402,10 +1402,10 @@ Proof.
     unfold Ar2 in H0.
     spliter.
     assert(HH:=prod_0_r O E E' A H0 H2).
-    apply (prod_unicity O E E' A O); auto.
+    apply (prod_uniqueness O E E' A O); auto.
 Qed.
 
-Lemma prod_unicityA : forall O E E' A A' B C,
+Lemma prod_uniquenessA : forall O E E' A A' B C,
   B <> O -> Prod O E E' A B C -> Prod O E E' A' B C -> A = A'.
 Proof.
     intros.
@@ -1421,7 +1421,7 @@ Proof.
       subst A'.
       assert(C = O).
         assert(HH:= prod_0_l O E E' B H0 H8).
-        apply(prod_unicity O E E' O B); auto.
+        apply(prod_uniqueness O E E' O B); auto.
       subst C.
       apply prod_null in HP1.
       induction HP1.
@@ -1483,13 +1483,13 @@ Proof.
     ColR.
 Qed.
 
-Lemma prod_unicityB : forall O E E' A B B' C,
+Lemma prod_uniquenessB : forall O E E' A B B' C,
   A <> O -> Prod O E E' A B C -> Prod O E E' A B' C -> B = B'.
 Proof.
     intros.
     apply prod_comm in H0.
     apply prod_comm in H1.
-    apply (prod_unicityA O E E' B B' A C); auto.
+    apply (prod_uniquenessA O E E' B B' A C); auto.
 Qed.
 
 (** Lemma 14.25 *)
@@ -1518,7 +1518,7 @@ Proof.
     assert(HH:=grid_not_par O E E' H11).
     spliter.
     assert(B' = B'').
-      apply(pj_unicity O E E' B); Col.
+      apply(pj_uniqueness O E E' B); Col.
     subst B''.
     unfold Prod in H1.
     spliter.
@@ -1534,15 +1534,15 @@ Proof.
       subst A.
       assert(HH1:= prod_0_l O E E' B H11 H13).
       assert( AB = O).
-        apply (prod_unicity O E E' O B); auto.
+        apply (prod_uniqueness O E E' O B); auto.
       subst AB.
       assert(HH2:= prod_0_l O E E' C H11 H14).
       assert( AC = O).
-        apply (prod_unicity O E E' O C); auto.
+        apply (prod_uniqueness O E E' O C); auto.
       subst AC.
       assert(HH3:= prod_0_l O E E' D H11 H15).
       assert( AD = O).
-        apply (prod_unicity O E E' O D); auto.
+        apply (prod_uniqueness O E E' O D); auto.
       subst AD.
       apply sum_O_O; Col.
     assert(Sum O E' A B' C' D').
@@ -1592,7 +1592,7 @@ Proof.
     induction(eq_dec_points B O).
       right; assumption.
     left.
-    apply (prod_unicityA O E E' A E B B H0); assumption.
+    apply (prod_uniquenessA O E E' A E B B H0); assumption.
 Qed.
 
 Lemma prod_1_r_eq : forall O E E' A B, Prod O E E' A B A -> B = E \/ A = O.
@@ -1725,7 +1725,7 @@ Proof.
     spliter.
     assert(HH:=prod_1_l O E E' B H6 H11).
     assert(B = C).
-      apply (prod_unicity O E E' E B); auto.
+      apply (prod_uniqueness O E E' E B); auto.
     subst C.
     assert(A' = E').
       apply(l6_21 E E' O' E'); Col.
@@ -2039,8 +2039,6 @@ Proof.
         induction H30.
           assert(Par O' E' O' E0').
             apply(par_trans _ _ O E); Par.
-            left.
-            Par.
           induction H40.
             apply False_ind.
             apply H40.
@@ -2141,8 +2139,6 @@ Proof.
         induction H31.
           assert(Par O' E' O' B0').
             apply(par_trans _ _ O E); Par.
-            left.
-            Par.
           induction H41.
             apply False_ind.
             apply H41.
@@ -2347,8 +2343,6 @@ Proof.
             ColR.
             Par.
           ColR.
-        left.
-        Par.
       apply False_ind.
       induction H45.
         apply H45.
@@ -2366,8 +2360,6 @@ Proof.
           subst C2.
           assert(Par O E E E'').
             apply(par_trans _ _ O' E'); Par.
-            left.
-            Par.
           induction H49.
             apply H49.
             exists E.
@@ -3203,14 +3195,14 @@ assert (HCol2 : Col O E X)
   by (unfold Opp, Sum, Ar2 in *; spliter; Col).
 destruct (sum_exists O E E' HNC E ME) as [EPME HEPME]; Col.
 assert (O = EPME)
-  by (apply sum_unicity with O E E' E ME; auto; apply diff_sum; apply diff_O_A; Col).
+  by (apply sum_uniqueness with O E E' E ME; auto; apply diff_sum; apply diff_O_A; Col).
 treat_equalities; destruct (prod_exists O E E' HNC X E) as [X' HX]; Col.
-assert (X = X') by (apply prod_unicity with O E E' X E; auto; apply prod_1_r; Col).
+assert (X = X') by (apply prod_uniqueness with O E E' X E; auto; apply prod_1_r; Col).
 treat_equalities; destruct (prod_exists O E E' HNC X O) as [O' HProd]; Col.
-assert (O = O') by (apply prod_unicity with O E E' X O; auto; apply prod_0_r; Col).
+assert (O = O') by (apply prod_uniqueness with O E E' X O; auto; apply prod_0_r; Col).
 treat_equalities; destruct (prod_exists O E E' HNC X ME) as [MX' HMX]; Col.
 assert (HOpp3 : Sum O E E' X MX' O) by (apply distr_l with X E ME O; auto).
-apply sum_opp in HOpp3; assert (MX = MX') by (apply opp_unicity with O E E' X; Col).
+apply sum_opp in HOpp3; assert (MX = MX') by (apply opp_uniqueness with O E E' X; Col).
 treat_equalities; auto.
 Qed.
 
@@ -3242,7 +3234,7 @@ assert (HColF2 : Col O E F2) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (sum_exists O E E' HNC F1 F2) as [F' HF']; Col.
 assert (F = F').
   {
-  apply sum_unicity with O E E' F1 F2; auto.
+  apply sum_uniqueness with O E E' F1 F2; auto.
   apply distr_r with A B AMB APB; auto.
   }
 treat_equalities; destruct (prod_exists O E E' HNC A B) as [AB HAB]; Col.
@@ -3251,7 +3243,7 @@ assert (HColAB : Col O E AB) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A2 AB) as [A2MAB HA2MAB]; Col.
 assert (A2MAB = F1).
   {
-  apply diff_unicity with O E E' A2 AB; auto.
+  apply diff_uniqueness with O E E' A2 AB; auto.
   apply distr_l_diff with A A B AMB; auto.
   }
 destruct (prod_exists O E E' HNC B A) as [BA HBA]; Col.
@@ -3260,15 +3252,15 @@ assert (HColBA : Col O E BA) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' BA B2) as [BAMB2 HBAMB2]; Col.
 assert (BAMB2 = F2).
   {
-  apply diff_unicity with O E E' BA B2; auto.
+  apply diff_uniqueness with O E E' BA B2; auto.
   apply distr_l_diff with B A B AMB; auto.
   }
 assert (AB = BA).
   {
-  apply prod_unicity with O E E' A B; auto.
+  apply prod_uniqueness with O E E' A B; auto.
   apply prod_comm; auto.
   }
-treat_equalities; apply diff_unicity with O E E' A2 B2; auto.
+treat_equalities; apply diff_uniqueness with O E E' A2 B2; auto.
 apply sum_diff_diff_b with AB BAMB2 A2MAB; auto.
 Qed.
 
@@ -3283,7 +3275,7 @@ assert (HColA2 : Col O E A2) by (unfold Prod, Ar2 in *; spliter; Col).
 assert (HColB : Col O E B) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A2 A2) as [O' HA2MA2]; Col.
 assert (O = O')
-  by (apply diff_unicity with O E E' A2 A2; auto; apply diff_null; Col).
+  by (apply diff_uniqueness with O E E' A2 A2; auto; apply diff_null; Col).
 destruct (sum_exists O E E' HNC A B) as [APB HAPB]; Col.
 assert (HColAPB : Col O E APB) by (unfold Sum, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' A B) as [AMB HAMB]; Col; treat_equalities.

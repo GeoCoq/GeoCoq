@@ -116,7 +116,7 @@ Proof.
 assert (H:=playfair_s_postulate_implies_midpoint_converse_postulate);
 unfold midpoint_converse_postulate in H; intros; apply H with B P; Col.
 unfold playfair_s_postulate.
-apply parallel_unicity.
+apply parallel_uniqueness.
 Qed.
 
 Lemma triangle_mid_par_strict_cong_1 : forall A B C P Q R,
@@ -194,12 +194,12 @@ intros.
 elim (eq_dec_points A C); intro.
 
   assert_all.
-  split; try Cong.
+  split; try eCong.
   perm_apply (col_par)...
 
 elim (eq_dec_points B C); intro.
   assert_all.
-  split; try Cong.
+  split; try eCong.
   perm_apply (col_par)...
 
 elim (eq_dec_points A P); intro.

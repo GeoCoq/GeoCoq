@@ -78,7 +78,7 @@ Proof.
 intros HUD A B C X HPer1 HDiff HPer2.
 destruct HPer1 as [C' HPer1].
 destruct HPer2 as [C'' HPer2].
-assert (C' = C'') by (apply symmetric_point_unicity with C X; spliter; auto); treat_equalities.
+assert (C' = C'') by (apply symmetric_point_uniqueness with C X; spliter; auto); treat_equalities.
 unfold upper_dim_axiom in HUD.
 spliter; assert_diffs; unfold Midpoint in *; spliter; apply HUD with C C'; Cong.
 Qed.
@@ -124,13 +124,16 @@ Proof.
         unfold TS in H2.
         spliter.
         auto.
+        intro.
+        subst B.
+        Col.
       apply invert_one_side.
       apply out_one_side.
         left.
         intro.
         unfold TS in H2.
         spliter.
-        apply H4.
+        apply H2.
         ColR.
       apply l6_6.
       assumption.
@@ -164,7 +167,6 @@ apply H6.
 ColR.
 assert(TS PX A P Y).
 repeat split.
-assumption.
 intro.
 apply H9.
 ColR.
@@ -328,7 +330,7 @@ apply l9_2.
 assumption.
 unfold TS in H11.
 spliter.
-ex_and H14 T'.
+ex_and H13 T'.
 exists T'.
 split; auto.
 Qed.
@@ -563,23 +565,23 @@ elim (upper_dim_implies_one_or_two_sides HUD A B C D); Col;
 elim (upper_dim_implies_one_or_two_sides HUD A C B D); Col.
 
   {
-  intros HTS1 HTS2; destruct HTS1 as [Hc1 [Hc2 [Hc3 [I [HCol HBet]]]]].
-  clear Hc1; clear Hc2; clear Hc3; exists I; right; left; assert_cols; Col.
+  intros HTS1 HTS2; destruct HTS1 as [Hc1 [Hc2 [I [HCol HBet]]]].
+  clear Hc1; clear Hc2; exists I; right; left; assert_cols; Col.
   }
 
   {
-  intros HOS HTS; destruct HTS as [Hc1 [Hc2 [Hc3 [I [HCol HBet]]]]].
-  clear Hc1; clear Hc2; clear Hc3; exists I; left; assert_cols; Col.
+  intros HOS HTS; destruct HTS as [Hc1 [Hc2 [I [HCol HBet]]]].
+  clear Hc1; clear Hc2; exists I; left; assert_cols; Col.
   }
 
   {
-  intros HTS HOS; destruct HTS as [Hc1 [Hc2 [Hc3 [I [HCol HBet]]]]].
-  clear Hc1; clear Hc2; clear Hc3; exists I; right; left; assert_cols; Col.
+  intros HTS HOS; destruct HTS as [Hc1 [Hc2 [I [HCol HBet]]]].
+  clear Hc1; clear Hc2; exists I; right; left; assert_cols; Col.
   }
 
   {
-  intros HOS1 HOS2; destruct (l9_31 A B D C) as [Hc1 [Hc2 [Hc3 [I [HCol HBet]]]]];
-  try (apply one_side_symmetry; auto); clear Hc1; clear Hc2; clear Hc3;
+  intros HOS1 HOS2; destruct (l9_31 A B D C) as [Hc1 [Hc2 [I [HCol HBet]]]];
+  try (apply one_side_symmetry; auto); clear Hc1; clear Hc2;
   exists I; right; right; assert_cols; Col.
   }
 Qed.
@@ -621,7 +623,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
       apply l4_3 with A B; Cong; Between.
       }
-    assert (H : A = B) by (apply construction_unicity with I X X A; Cong; Between);
+    assert (H : A = B) by (apply construction_uniqueness with I X X A; Cong; Between);
     treat_equalities; intuition.
     }
 
@@ -635,7 +637,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       {
       apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
       }
-    assert (H : A = B) by (apply construction_unicity with X I I A; Cong; Between);
+    assert (H : A = B) by (apply construction_uniqueness with X I I A; Cong; Between);
     treat_equalities; intuition.
     }
 
@@ -679,7 +681,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
       apply l4_3 with A B; Cong; Between.
       }
-    assert (H : A = B) by (apply construction_unicity with I Y Y A; Cong; Between);
+    assert (H : A = B) by (apply construction_uniqueness with I Y Y A; Cong; Between);
     treat_equalities; intuition.
     }
 
@@ -693,7 +695,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       {
       apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
       }
-    assert (H : A = B) by (apply construction_unicity with Y I I A; Cong; Between);
+    assert (H : A = B) by (apply construction_uniqueness with Y I I A; Cong; Between);
     treat_equalities; intuition.
     }
 

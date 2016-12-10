@@ -4,12 +4,12 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_converse_postulate_
 Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_postulate_thales_converse_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.weak_triangle_circumscription_principle_bachmann_s_lotschnittaxiom.
 
-Section posidonius_second_postulate_perpendicular_transversal_postulate.
+Section universal_posidonius_postulate_perpendicular_transversal_postulate.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma posidonius_second_postulate__perpendicular_transversal_postulate :
-  posidonius_second_postulate -> perpendicular_transversal_postulate.
+Lemma universal_posidonius_postulate__perpendicular_transversal_postulate :
+  universal_posidonius_postulate -> perpendicular_transversal_postulate.
 Proof.
 intros HP A B C D P Q HPar HPerp1.
 elim HPar; intro HParS; [|destruct HParS as [_ [_ [HC1 HC2]]]; assert_diffs;
@@ -125,4 +125,4 @@ apply per_perp; try solve[apply sac_distincts in HSacc3; spliter; auto].
 apply l8_2; apply HRAH with E; apply sac_perm; assumption.
 Qed.
 
-End posidonius_second_postulate_perpendicular_transversal_postulate.
+End universal_posidonius_postulate_perpendicular_transversal_postulate.

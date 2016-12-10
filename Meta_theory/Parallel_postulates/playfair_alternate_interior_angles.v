@@ -7,7 +7,7 @@ Context `{T2D:Tarski_2D}.
 Lemma playfair__alternate_interior :  playfair_s_postulate -> alternate_interior_angles_postulate.
 Proof.
 intros playfair A B C D Hts HPar.
-assert(~ Col B A C) by (destruct Hts as [_ []]; auto).
+assert(~ Col B A C) by (destruct Hts; auto).
 assert(HD' := ex_conga_ts B A C A C B).
 destruct HD' as [D' []]; Col.
 apply (conga_trans _ _ _ D' C A).

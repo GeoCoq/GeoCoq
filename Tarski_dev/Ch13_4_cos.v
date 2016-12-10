@@ -322,7 +322,7 @@ Proof.
           Col.
           intro.
           apply H11.
-          eapply (l8_18_unicity A B Q).
+          eapply (l8_18_uniqueness A B Q).
             intro.
             assert(~Col B A Q).
               apply perp_not_col.
@@ -340,7 +340,7 @@ Proof.
               ex_and H24 T.
               unfold TS in H26.
               spliter.
-              apply H27.
+              apply H26.
               Col.
               Perp.
             unfold Par in H23.
@@ -556,7 +556,7 @@ Proof.
         unfold TS in H10.
         spliter.
         intro.
-        apply H16.
+        apply H10.
         Col.
       assert(HP:=out_one_side_1 A B C' C B H11 H15).
       eapply (one_side_transitivity _ _ _ C').
@@ -1202,7 +1202,7 @@ Proof.
               spliter.
               intro.
               subst D.
-              apply H31.
+              apply H21.
               Col.
               apply l8_2.
               auto.
@@ -1212,7 +1212,7 @@ Proof.
           subst D.
           unfold TS in H25.
           spliter.
-          ex_and H33 T.
+          ex_and H32 T.
           assert(C=T).
             apply between_identity.
             auto.
@@ -1531,7 +1531,7 @@ Proof.
 Qed.
 
 
-Lemma lcos_unicity : forall l a l1 l2, Lcos l1 l a-> Lcos l2 l a -> EqL l1 l2.
+Lemma lcos_uniqueness : forall l a l1 l2, Lcos l1 l a-> Lcos l2 l a -> EqL l1 l2.
 Proof.
 intros.
 unfold Lcos in *.
@@ -1785,7 +1785,7 @@ Proof.
     auto.
 Qed.
 
-Lemma lcos2_unicity: forall l l1 l2 a b, lcos2 l1 l a b -> lcos2 l2 l a b -> EqL l1 l2.
+Lemma lcos2_uniqueness: forall l l1 l2 a b, lcos2 l1 l a b -> lcos2 l2 l a b -> EqL l1 l2.
 Proof.
     intros.
     unfold lcos2 in *.
@@ -1837,7 +1837,7 @@ Proof.
     exists lp.
     split; auto.
     assert(EqL lp lq).
-      eapply (lcos2_unicity l2 _ _ c d); auto.
+      eapply (lcos2_uniqueness l2 _ _ c d); auto.
     apply lcos2_lg_anga in H2.
     apply lcos2_lg_anga in H1.
     spliter.
@@ -2030,7 +2030,7 @@ Proof.
     auto.
 Qed.
 
-Lemma lcos3_unicity: forall l l1 l2 a b c, Lcos3 l1 l a b c -> Lcos3 l2 l a b c -> EqL l1 l2.
+Lemma lcos3_uniqueness: forall l l1 l2 a b c, Lcos3 l1 l a b c -> Lcos3 l2 l a b c -> EqL l1 l2.
 Proof.
     intros.
     unfold Lcos3 in *.
@@ -2110,7 +2110,7 @@ Proof.
     exists lp.
     split; auto.
     assert(EqL lp lq).
-      eapply (lcos3_unicity l2 _ _ d e f); auto.
+      eapply (lcos3_uniqueness l2 _ _ d e f); auto.
     apply lcos3_lg_anga in H2.
     apply lcos3_lg_anga in H1.
     spliter.

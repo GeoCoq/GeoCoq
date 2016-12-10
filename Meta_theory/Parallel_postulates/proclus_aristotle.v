@@ -46,7 +46,7 @@ Proof.
   }
   assert(HNCol2 : ~ Col B C D).
   { intro.
-    elim(Bet_dec C B D).
+    elim(bet_dec C B D).
     { intro.
       assert(~ OS B A C D); auto.
       apply l9_9.

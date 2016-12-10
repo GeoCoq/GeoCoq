@@ -158,7 +158,7 @@ Proof.
     right; intro; assert_cols; Col.
     exists B3; repeat (split; CongA).
     intro Habs.
-    destruct Habs as [_ [_ [Habs _]]].
+    destruct Habs as [_ [Habs]].
     assert_cols; Col.
   }
   assert(LeA C1 P B3 R P B3).
@@ -210,7 +210,7 @@ Proof.
   elim(two_sides_dec B1 B2 A1 C1).
   { intro Hts.
     exfalso.
-    assert(HC1NotB : ~ Col C1 B1 B2) by (destruct Hts as [_ [_ []]]; auto).
+    assert(HC1NotB : ~ Col C1 B1 B2) by (destruct Hts as [_ []]; auto).
     assert(C1<>P) by (intro; subst C1; Col).
     assert(HC3 := (symmetric_point_construction C1 P)).
     destruct HC3 as [C3].
@@ -231,7 +231,7 @@ Proof.
   apply (legendre_aux1 greenberg triangle A1 A2 _ _ _ C2 P); auto.
 Qed.
 
-Lemma triangle_playfair_bis : greenberg_s_postulate -> triangle_postulate -> alternative_playfair_s_postulate.
+Lemma triangle__playfair_bis : greenberg_s_postulate -> triangle_postulate -> alternative_playfair_s_postulate.
 Proof.
   intros greenberg triangle.
   intros A1 A2 B1 B2 C1 C2 P.

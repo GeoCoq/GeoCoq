@@ -140,7 +140,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma l10_2_unicity : forall A B P P1 P2,
+Lemma l10_2_uniqueness : forall A B P P1 P2,
  Reflect P1 P A B -> Reflect P2 P A B -> P1=P2.
 Proof.
     intros.
@@ -152,7 +152,7 @@ Proof.
       induction H0.
         intuition.
       spliter.
-      eapply symmetric_point_unicity with P B;auto.
+      eapply symmetric_point_uniqueness with P B;auto.
     rewrite -> (is_image_is_image_spec) in * by apply H1.
     unfold ReflectL in *.
     spliter.
@@ -207,7 +207,7 @@ Proof.
           assumption.
         spliter.
         assert (Y = A).
-          eapply l8_18_unicity.
+          eapply l8_18_uniqueness.
             apply H10.
             assumption.
             apply perp_sym.
@@ -216,7 +216,7 @@ Proof.
           apply perp_sym.
           assumption.
         subst Y.
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H.
         apply H0.
       assert (~ Col A B P /\ Per P X A).
@@ -229,7 +229,7 @@ Proof.
         assumption.
       spliter.
       assert (Y = X).
-        eapply l8_18_unicity.
+        eapply l8_18_uniqueness.
           apply H11.
           assumption.
           apply perp_sym.
@@ -238,7 +238,7 @@ Proof.
         apply perp_sym.
         assumption.
       subst Y.
-      eapply symmetric_point_unicity.
+      eapply symmetric_point_uniqueness.
         apply H.
       apply H0.
       subst P1.
@@ -448,12 +448,12 @@ Proof.
       induction H0.
         intuition.
       spliter.
-      apply symmetric_point_unicity with P' B.
+      apply symmetric_point_uniqueness with P' B.
         apply l7_2.
         assumption.
       assumption.
     rewrite -> (is_image_is_image_spec) in * by apply H1.
-    eapply l10_2_unicity.
+    eapply l10_2_uniqueness.
       eapply l10_4.
       apply is_image_is_image_spec.
         apply H1.
@@ -463,7 +463,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma l10_6_unicity : forall A B P P1 P2, Reflect P P1 A B -> Reflect P P2 A B -> P1 = P2.
+Lemma l10_6_uniqueness : forall A B P P1 P2, Reflect P P1 A B -> Reflect P P2 A B -> P1 = P2.
 Proof.
     intros.
     induction (eq_dec_points A B).
@@ -474,12 +474,12 @@ Proof.
       induction H0.
         intuition.
       spliter.
-      apply symmetric_point_unicity with P B.
+      apply symmetric_point_uniqueness with P B.
         apply l7_2.
         assumption.
       apply l7_2.
       assumption.
-    eapply l10_2_unicity.
+    eapply l10_2_uniqueness.
       apply l10_4.
       apply H.
     apply l10_4.
@@ -514,7 +514,7 @@ Lemma l10_7 : forall A B P P' Q Q',
 Proof.
     intros.
     subst Q'.
-    eapply l10_2_unicity.
+    eapply l10_2_uniqueness.
       apply l10_4.
       apply H.
     apply l10_4.
@@ -584,7 +584,7 @@ Proof.
       unfold Per in H9.
       ex_and H9 P0.
       assert (P0 = P').
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H9.
         apply l7_2.
         assumption.
@@ -638,7 +638,7 @@ Proof.
       unfold Per in H8.
       ex_and H8 P0.
       assert (P0 = P').
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H8.
         apply l7_2.
         assumption.
@@ -1240,23 +1240,6 @@ Proof.
     spliter. subst. tauto.
 Qed.
 
-(* TODO move *)
-Lemma per_double_cong : forall A B C C',
- Per A B C -> Midpoint B C C' -> Cong A C A C'.
-Proof.
-    intros.
-    unfold Per in H.
-    ex_and H C''.
-    assert (C' = C'').
-      eapply l7_9.
-        apply l7_2.
-        apply H0.
-      apply l7_2.
-      assumption.
-    subst C''.
-    assumption.
-Qed.
-
 Lemma midpoint_preserves_per : forall A B C A1 B1 C1 M,
  Per A B C ->
  Midpoint M A A1 ->
@@ -1280,30 +1263,6 @@ Proof.
       apply H2.
       apply H0.
       apply H4.
-    assumption.
-Qed.
-
-
-(* TODO move chapter 8 *)
-Lemma col_per_perp : forall A B C D,
- A <> B -> B <> C -> D <> B -> D <> C ->
- Col B C D -> Per A B C -> Perp C D A B.
-Proof.
-    intros.
-    apply per_perp_in in H4.
-      apply perp_in_perp_bis in H4.
-      induction H4.
-        apply perp_distinct in H4.
-        spliter.
-        absurde.
-      eapply (perp_col _ B).
-        auto.
-        apply perp_sym.
-        apply perp_right_comm.
-        assumption.
-      apply col_permutation_4.
-      assumption.
-      assumption.
     assumption.
 Qed.
 
@@ -1352,7 +1311,7 @@ Proof.
     right.
     intro H.
     apply HBB'.
-    apply l10_6_unicity with C D A.
+    apply l10_6_uniqueness with C D A.
       unfold Reflect.
       tauto.
     unfold Reflect.
@@ -1455,7 +1414,6 @@ Proof.
           apply perp_in_comm.
           assumption.
         repeat split.
-          assumption.
           assert (~Col A M0 P).
             eapply per_not_col.
               assumption.
@@ -1493,9 +1451,6 @@ Proof.
         apply l7_2.
         assumption.
       repeat split.
-        apply perp_distinct in H2.
-        spliter.
-        assumption.
         assert(Perp  P M0 A B).
           eapply perp_col.
             assumption.
@@ -1599,7 +1554,6 @@ Proof.
         apply H3.
       unfold TS.
       repeat split.
-        assumption.
         apply perp_not_col in H2.
         intro.
         apply H2.
@@ -1631,7 +1585,6 @@ Proof.
       apply H3.
     unfold TS.
     repeat split.
-      assumption.
       eapply perp_not_col in H4.
       intro.
       apply H4.

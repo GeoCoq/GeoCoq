@@ -303,7 +303,7 @@ assert (Cong3 : Cong A'' B'' A' B''').
   }
 assert (HCol : Col A' B' B''').
   {
-  assert (H := parallel_unicity A B A' B' A' B''' A'); destruct H as [HCol1 HCol2]; Col; Par.
+  assert (H := parallel_uniqueness A B A' B' A' B''' A'); destruct H as [HCol1 HCol2]; Col; Par.
   apply par_trans with A'' B''; Par.
   }
 assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Col; eCong.
@@ -354,7 +354,6 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
 
     {
     assert (A' <> B'') by (intro; treat_equalities; Col).
-    split; Col.
     assert_diffs; assert_cols; show_distinct G A'; treat_equalities; Col.
     show_distinct G A''; treat_equalities; Col.
     show_distinct G B''; treat_equalities; Col.
@@ -393,7 +392,6 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
 
           {
           assert (A' <> B'') by (intro; treat_equalities; Col).
-          split; Col.
           assert_diffs; assert_cols; show_distinct G A'; treat_equalities; Col.
           show_distinct G A''; treat_equalities; Col.
           show_distinct G B''; treat_equalities; Col.
@@ -405,7 +403,6 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
 
           {
           assert (A' <> B'') by (intro; treat_equalities; Col).
-          split; Col.
           assert_diffs; assert_cols; show_distinct G A'; treat_equalities; Col.
           show_distinct G A''; treat_equalities; Col.
           show_distinct G B''; treat_equalities; Col.

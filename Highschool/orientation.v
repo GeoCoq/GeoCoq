@@ -64,13 +64,13 @@ Perp.
 assumption.
 Qed.
 
-Lemma proj_unicity : forall A B T P P', proj T A B P -> proj T A B P' -> P = P'.
+Lemma proj_uniqueness : forall A B T P P', proj T A B P -> proj T A B P' -> P = P'.
 intros.
 unfold proj in *.
 spliter.
 induction H1; induction H2; spliter; assert(Col A P P').
 ColR.
-eapply (l8_18_unicity A B T P P');
+eapply (l8_18_uniqueness A B T P P');
 auto.
 subst T.
 contradiction.
@@ -489,7 +489,7 @@ unfold OS in H1.
 ex_and H1 U.
 unfold TS in H1.
 spliter.
-tauto.
+assert_diffs; tauto.
 
 unfold proj in H8.
 spliter.
@@ -620,7 +620,7 @@ apply H2.
 apply perp_comm.
 Perp.
 assert(C=C1).
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H1.
 assumption.
 subst C1.
@@ -781,7 +781,7 @@ Lemma proj_not_eq : forall A B A' B' P Q, A' <> B' -> proj A P Q A' -> proj B P 
 intros.
 intro.
 apply H.
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H0.
 subst B.
 assumption.
@@ -1002,7 +1002,7 @@ eapply col_proj_proj.
 apply H.
 assumption.
 assumption.
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H3.
 assumption.
 Qed.
@@ -1167,7 +1167,7 @@ intro.
 assert(proj B P Q A').
 eapply (col_proj_proj A); auto.
 apply H2.
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H4.
 assumption.
 intro.
@@ -1194,7 +1194,7 @@ intros.
 induction(eq_dec_points A B).
 subst B.
 assert(A = B').
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H0.
 assumption.
 subst B'.
@@ -1202,7 +1202,7 @@ apply between_trivial2.
 induction(eq_dec_points B C).
 subst C.
 assert(B' = C').
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H1.
 assumption.
 subst C'.
@@ -1250,7 +1250,7 @@ eapply col_proj_proj.
 auto.
 Col.
 assert(A = B').
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H13.
 assumption.
 subst B'.
@@ -1293,7 +1293,6 @@ ColR.
 assert(TS B B' A C).
 unfold TS.
 repeat split.
-assumption.
 assert(~Col B B' A).
 eapply proj_not_eq_not_col; auto.
 apply H1.
@@ -1319,15 +1318,15 @@ apply H17.
 assumption.
 unfold TS in H18.
 spliter.
-ex_and H21 BB.
+ex_and H20 BB.
 
 assert(BB= B').
 eapply l6_21.
 apply not_col_permutation_1.
-apply H20.
+apply H19.
 4: apply col_permutation_2.
 4: apply bet_col.
-4: apply H22.
+4: apply H21.
 auto.
 Col.
 Col.
@@ -1345,7 +1344,7 @@ intros.
 induction(eq_dec_points A B).
 subst B.
 assert(A' = B').
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H0.
 assumption.
 subst B'.
@@ -1353,7 +1352,7 @@ apply between_trivial2.
 induction(eq_dec_points B C).
 subst C.
 assert(B' = C').
-eapply proj_unicity.
+eapply proj_uniqueness.
 apply H1.
 assumption.
 subst C'.
@@ -1466,7 +1465,6 @@ destruct HH.
 assert(TS B B' A C).
 unfold TS.
 repeat split.
-assumption.
 
 intro.
 assert(B' = A').
@@ -1510,15 +1508,15 @@ apply H29.
 assumption.
 unfold TS in H30.
 spliter.
-ex_and H33 BB.
+ex_and H32 BB.
 
 assert(BB= B').
 eapply l6_21.
 apply not_col_permutation_1.
-apply H32.
+apply H31.
 4: apply col_permutation_2.
 4: apply bet_col.
-4: apply H34.
+4: apply H33.
 assumption.
 Col.
 Col.
@@ -1565,7 +1563,6 @@ destruct HH.
 assert(TS B B' A C).
 unfold TS.
 repeat split.
-assumption.
 
 intro.
 assert(B' = A').
@@ -1609,15 +1606,15 @@ apply H27.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 BB.
+ex_and H30 BB.
 
 assert(BB= B').
 eapply l6_21.
 apply not_col_permutation_1.
-apply H30.
+apply H29.
 4: apply col_permutation_2.
 4: apply bet_col.
-4: apply H32.
+4: apply H31.
 auto.
 Col.
 Col.
@@ -1631,7 +1628,15 @@ intros.
 assert(HH:= H0).
 unfold OS in HH.
 ex_and HH P.
-unfold TS in *.
+unfold TS in H2.
+assert(~ Col D A B).
+spliter.
+assumption.
+spliter.
+unfold TS in H1.
+assert(~ Col C A B).
+spliter.
+assumption.
 spliter.
 clear H7 H8 H4 H5.
 unfold eq_o.
@@ -1810,7 +1815,7 @@ apply H6.
 assumption.
 Col.
 assert(C= C1).
-eapply proj_unicity.
+eapply proj_uniqueness.
 2:apply H17.
 assumption.
 subst C1.
@@ -2475,6 +2480,9 @@ induction H5.
 clear HH.
 assert(HH:= H5).
 unfold TS in HH.
+assert(~ Col B A A').
+spliter.
+assumption.
 spliter.
 ex_and H9 M.
 exists M.
@@ -2557,7 +2565,7 @@ assert(Par_strict B A B'' A').
 apply (midpoint_par_strict B A B'' A' X); auto.
 
 assert(Col B'' B' A' /\ Col A' B' A').
-apply(parallel_unicity B A B' A' B'' A' A').
+apply(parallel_uniqueness B A B' A' B'' A' A').
 
 apply par_comm.
 unfold Par.
@@ -2630,7 +2638,6 @@ assumption.
 assert(TS A A' B' B'').
 unfold TS.
 repeat split.
-assumption.
 intro.
 apply H8.
 Col.
@@ -2719,7 +2726,7 @@ apply l7_2.
 assumption.
 
 assert(Col B'' B' A' /\ Col A' B' A').
-apply (parallel_unicity B A B' A' B'' A' A').
+apply (parallel_uniqueness B A B' A' B'' A' A').
 
 (*
 assert (Col A' A' B' /\ Col B'' A' B').
@@ -2810,10 +2817,6 @@ assert(TS A A' B' B'').
 unfold TS.
 repeat split.
 intro.
-subst A'.
-apply H9.
-Col.
-intro.
 apply H4.
 exists A.
 split; Col.
@@ -2867,7 +2870,7 @@ intro.
 subst X.
 unfold TS in H18.
 spliter.
-apply H19.
+apply H18.
 Col.
 intro.
 subst A'.
@@ -3700,16 +3703,16 @@ assumption.
 
 unfold TS in H22.
 spliter.
-ex_and H25 T.
+ex_and H24 T.
 
 
 assert(T = B').
 eapply l6_21.
 apply not_col_permutation_1.
-apply H24.
-4: apply bet_col in H26.
+apply H23.
+4: apply bet_col in H25.
 4: apply col_permutation_2.
-4: apply H26.
+4: apply H25.
 auto.
 Col.
 Col.
@@ -4001,8 +4004,6 @@ assumption.
 assert(TS T B A C).
 unfold TS.
 repeat split.
-apply perp_not_eq_1 in H18.
-assumption.
 intro.
 unfold Par_strict in H24.
 spliter.
@@ -4037,7 +4038,7 @@ apply H28.
 assumption.
 unfold TS in H29.
 spliter.
-ex_and H32 BB.
+ex_and H31 BB.
 
 assert(B=BB).
 eapply (l6_21 T B A' C'); Col.
@@ -4415,15 +4416,15 @@ apply H31.
 assumption.
 unfold TS in H32.
 spliter.
-ex_and H35 BB.
+ex_and H34 BB.
 
 assert(BB = B').
 eapply l6_21.
 apply not_col_permutation_1.
-apply H34.
+apply H33.
 4:apply col_permutation_2.
 4:apply bet_col.
-4:apply H36.
+4:apply H35.
 auto.
 Col.
 Col.
@@ -4532,7 +4533,7 @@ ColR.
 intros.
 
 assert(B=B2).
-eapply l6_11_unicity.
+eapply l6_11_uniqueness.
 3:apply H0.
 unfold Out in H0.
 spliter.
@@ -4658,7 +4659,7 @@ Col.
 intros.
 
 assert(B = B2).
-eapply l6_11_unicity.
+eapply l6_11_uniqueness.
 4: apply H8.
 3: apply H0.
 intro.
@@ -4929,7 +4930,7 @@ ex_and H T.
 unfold TS in H.
 spliter.
 intro.
-apply H22.
+apply H.
 Col.
 
 assert(~Col A B Y).
@@ -4938,7 +4939,7 @@ ex_and H T.
 unfold TS in H22.
 spliter.
 intro.
-apply H23.
+apply H22.
 Col.
 
 assert(OS A B X C).
@@ -5030,19 +5031,19 @@ Col.
 
 unfold TS in H29.
 spliter.
-ex_and H33 AA.
+ex_and H32 AA.
 assert(AA=A).
 eapply l6_21.
 apply not_col_permutation_1.
-apply H32.
+apply H31.
 4: apply col_permutation_2.
 4: apply bet_col.
-4: apply H34.
+4: apply H33.
 intro.
 subst C'.
-apply between_identity in H34.
+apply between_identity in H33.
 subst AA.
-apply H32.
+apply H31.
 assumption.
 Col.
 Col.

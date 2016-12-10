@@ -52,6 +52,23 @@ repeat
       not_exist_hyp3 X1 X2 X1 X3 X2 X3;
       assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
 
+      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
+      let h := fresh in
+      not_exist_hyp2 X1 X2 X2 X3;
+      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
+
       | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
         assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
@@ -137,7 +154,7 @@ Section T9.
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition TS A B P Q :=
-  A <> B /\ ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
+  ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
 
 Lemma l9_2 : forall A B P Q, TS A B P Q -> TS A B Q P.
 Proof.
@@ -145,7 +162,7 @@ Proof.
     intros.
     spliter.
     repeat split; try Col.
-    destruct H2 as [T [HCol1 HCol2]].
+    destruct H1 as [T [HCol1 HCol2]].
     exists T; Col; Between.
 Qed.
 
@@ -156,7 +173,7 @@ Proof with finish.
     intros.
     spliter.
     repeat split...
-    ex_and H2 T.
+    ex_and H1 T.
     exists T;split...
 Qed.
 
@@ -174,7 +191,15 @@ Lemma l9_3 : forall P Q A C M R B,
 Proof with finish.
     intros.
     unfold TS in *.
+    assert (~ Col A P Q).
+      spliter.
+      assumption.
     spliter.
+    clear H.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      Col.
     ex_and H6 T.
     show_distinct A C.
       intuition.
@@ -282,7 +307,7 @@ Proof with finish.
         assert (M <> R).
           intro.
           subst R.
-          eapply (symmetric_point_unicity) in H12.
+          eapply (symmetric_point_uniqueness) in H12.
             apply H19.
             apply H12.
           apply l7_3_2.
@@ -602,42 +627,6 @@ Proof.
     assumption.
 Qed.
 
-Lemma perp_in_perp_bis : forall A B C D X,
- Perp_at X A B C D -> Perp X B C D \/ Perp A X C D.
-Proof.
-    intros.
-    induction (eq_dec_points X A).
-      subst X.
-      left.
-      unfold Perp.
-      exists A.
-      assumption.
-    right.
-    unfold Perp.
-    exists X.
-    unfold Perp_at in *.
-    spliter.
-    repeat split.
-      intro.
-      apply H0.
-      subst X.
-      reflexivity.
-      assumption.
-      apply col_trivial_3.
-      assumption.
-    intros.
-    apply H4.
-      apply col_permutation_2.
-      eapply col_transitivity_1.
-        intro.
-        apply H0.
-        apply sym_equal.
-        apply H7.
-        Col.
-      Col.
-    assumption.
-Qed.
-
 
 Lemma sym_preserve_diff : forall A B M A' B',
  A <> B -> Midpoint M A A' -> Midpoint M B B' -> A'<> B'.
@@ -665,7 +654,15 @@ Proof.
       apply l7_3 in H5.
       subst R.
       unfold TS in H0.
+      assert (~ Col A P Q).
+        spliter.
+        assumption.
       spliter.
+      clear H0.
+      assert (P <> Q).
+        intro.
+        subst Q.
+        Col.
       ex_and H8 T.
       induction (eq_dec_points M T).
         subst T.
@@ -682,7 +679,7 @@ Proof.
             intro.
             subst C'.
             apply l7_2 in H6.
-            eapply (symmetric_point_unicity _ _ M) in H6.
+            eapply (symmetric_point_uniqueness _ _ M) in H6.
               apply H10.
               apply sym_equal.
               apply H6.
@@ -803,7 +800,15 @@ Proof.
         assumption.
     assert(exists M, Midpoint M S R /\ Midpoint M C D).
       unfold TS in H0.
+      assert (~ Col A P Q).
+        spliter.
+        assumption.
       spliter.
+      clear H0.
+      assert (P <> Q).
+        intro.
+        subst Q.
+        Col.
       ex_and H14 T.
       eapply (l8_24 S R C A D T).
         apply perp_sym.
@@ -989,7 +994,6 @@ Proof.
     intros.
     unfold TS.
     repeat split.
-      assumption.
       intro.
       apply col_permutation_1 in H3.
       contradiction.
@@ -1067,15 +1071,24 @@ Proof.
 Qed.
 
 Lemma col_preserves_two_sides : forall A B C D X Y,
- A <> B -> C <> D -> Col A B C -> Col A B D ->
+ C <> D -> Col A B C -> Col A B D ->
  TS A B X Y ->
  TS C D X Y.
 Proof.
+    intros A B C D X Y.
+    assert (H := A).
     intros.
     unfold TS in *.
+    assert (~ Col X A B).
+      spliter.
+      assumption.
+    clear H.
+    assert (A <> B).
+      intro.
+      subst B.
+      Col.
     spliter.
     repeat split.
-      assumption.
       intro.
       apply H4.
       apply col_permutation_1.
@@ -1084,7 +1097,7 @@ Proof.
         apply col_permutation_1.
         eapply col_transitivity_1.
           intro.
-          apply H3.
+          apply H.
           apply sym_equal.
           apply H8.
           apply col_permutation_4.
@@ -1106,7 +1119,7 @@ Proof.
         apply col_permutation_1.
         eapply col_transitivity_1.
           intro.
-          apply H3.
+          apply H.
           apply sym_equal.
           apply H8.
           apply col_permutation_4.
@@ -1124,7 +1137,7 @@ Proof.
     exists T.
     split.
       eapply col3.
-        apply H3.
+        apply H.
         apply col_permutation_1.
         assumption.
         assumption.
@@ -1142,9 +1155,11 @@ Lemma out_out_two_sides : forall A B X Y U V I,
 Proof.
     intros.
     unfold TS in *.
+    assert (~ Col X A B).
+      spliter.
+      assumption.
     spliter.
     repeat split.
-      assumption.
       intro.
       apply H5.
       unfold Out in H3.
@@ -1222,7 +1237,15 @@ Proof.
       subst S.
       assert (TT:= H0).
       unfold TS in H0.
+      assert (~ Col A P Q).
+        spliter.
+        assumption.
       spliter.
+      clear H0.
+      assert (P <> Q).
+        intro.
+        subst Q.
+        Col.
       ex_and H9 T.
       induction (eq_dec_points R T).
         subst T.
@@ -1250,7 +1273,6 @@ Proof.
       assumption.
     assert (TS R S A C).
       eapply (col_preserves_two_sides P Q).
-        assumption.
         apply H7.
         apply col_permutation_1.
         assumption.
@@ -1258,7 +1280,6 @@ Proof.
         assumption.
       assumption.
     eapply (col_preserves_two_sides R S).
-      assumption.
       assumption.
       eapply col_permutation_1.
       eapply col_transitivity_1.
@@ -1292,6 +1313,9 @@ Proof.
         assumption.
     assert (HH9:=H9).
     unfold TS in HH9.
+    assert (~ Col A R S).
+      spliter.
+      assumption.
     spliter.
     ex_and H15 T.
     unfold Le in H.
@@ -1394,13 +1418,15 @@ Proof.
     assert (P <> Q).
       unfold TS in H.
       spliter.
-      assumption.
+      intro.
+      subst Q.
+      Col.
     assert(exists A0, Col P Q A0 /\ Perp P Q A A0).
       eapply l8_18_existence.
       intro.
       unfold TS in H.
       spliter.
-      apply H4.
+      apply H.
       apply col_permutation_2.
       assumption.
     assert(exists C0, Col P Q C0 /\ Perp P Q C C0).
@@ -1408,7 +1434,7 @@ Proof.
       unfold TS in H.
       spliter.
       intro.
-      apply H5.
+      apply H4.
       apply col_permutation_2.
       assumption.
     assert(exists B0, Col P Q B0 /\ Perp P Q B B0).
@@ -1420,7 +1446,7 @@ Proof.
       intro.
       assert (Col P B R).
         eapply col_transitivity_1.
-          apply H.
+          apply H2.
           assumption.
         apply col_permutation_1.
         assumption.
@@ -1430,13 +1456,13 @@ Proof.
         absurde.
       assert(Col R P A ).
         eapply col_transitivity_1.
-          apply H13.
+          apply H12.
           eapply col_permutation_3.
           assumption.
         apply col_permutation_5.
         apply out_col.
         assumption.
-      apply H8.
+      apply H.
       ColR.
     ex_and H3 A'.
     ex_and H4 C'.
@@ -1553,7 +1579,7 @@ Lemma outer_pasch : forall A B C P Q,
 Proof.
     intros.
     induction(Col_dec P Q C).
-      induction(Bet_dec P Q C).
+      induction(bet_dec P Q C).
         exists A.
         split.
           Between.
@@ -1578,14 +1604,13 @@ Proof.
     assert(TS P Q C B).
       unfold TS.
       repeat split.
-        assumption.
         Col.
         assert_cols.
         intro;apply H1; ColR.
       exists Q; split;Col;Between.
     assert_diffs.
     assert (TS P Q A B) by (apply l9_5 with C P;unfold Out;intuition).
-    unfold TS in H7.
+    unfold TS in H8.
     spliter.
     ex_and H11 X.
     exists X.
@@ -1604,7 +1629,7 @@ Proof.
         2:Col.
         intro.
         treat_equalities.
-        apply H8.
+        apply H10.
         ColR.
       Col.
     subst T;Between.
@@ -1636,11 +1661,11 @@ Proof.
     intro.
     unfold TS in H.
     spliter.
-    ex_and H2 T.
-    apply between_identity in H3.
+    ex_and H1 T.
+    apply between_identity in H2.
     subst T.
     apply H0.
-    apply H2.
+    apply H1.
 Qed.
 
 Lemma l9_8_2 : forall P Q A B C,
@@ -1654,9 +1679,26 @@ Proof.
     assert (HH:= H).
     assert (HH0:=H0).
     assert (HH1:=H1).
-    unfold TS in HH.
-    unfold TS in HH0.
     unfold TS in HH1.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      spliter.
+      Col.
+    spliter.
+    unfold TS in HH0.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      spliter.
+      Col.
+    spliter.
+    unfold TS in HH.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      spliter.
+      Col.
     spliter.
     ex_and H13 T.
     ex_and H9 X.
@@ -1896,7 +1938,6 @@ Proof.
     repeat split.
       assumption.
       assumption.
-      assumption.
     exists X.
     intuition.
 Qed.
@@ -1909,7 +1950,6 @@ Proof.
     exists A'.
     unfold TS.
     repeat split.
-      assumption.
       assumption.
       intro.
       apply H0.
@@ -1946,10 +1986,6 @@ Proof.
     exists C.
     assert (TS P Q A C).
       repeat split.
-        intro.
-        subst Q.
-        apply H.
-        apply col_trivial_2.
         assumption.
         intro.
         apply H.
@@ -2030,8 +2066,19 @@ Proof.
     unfold OS in H.
     ex_and H D.
     assert(HH1:=H).
-    unfold TS in H.
     unfold TS in H2.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      spliter.
+      Col.
+    spliter.
+    unfold TS in H.
+    assert (P <> Q).
+      intro.
+      subst Q.
+      spliter.
+      Col.
     spliter.
     ex_and H8 X.
     ex_and H5 Y.
@@ -2047,13 +2094,11 @@ Proof.
       assumption.
     unfold TS.
     repeat split.
-      assumption.
       apply l9_9_bis in HH.
       intro.
       apply HH.
       unfold TS.
       repeat split.
-        assumption.
         assumption.
         assumption.
       exists B.
@@ -2080,7 +2125,7 @@ Proof.
             subst D.
             apply between_identity in H10.
             subst Y.
-            apply H3.
+            apply H4.
             assumption.
             assert_cols; Col.
             Col.
@@ -2117,14 +2162,14 @@ Proof.
         apply between_symmetry.
         assumption.
         eapply col3.
-          apply H.
+          apply H3.
           apply col_permutation_1.
           assumption.
           apply col_permutation_1.
           assumption.
         apply col_trivial_3.
       eapply col3.
-        apply H.
+        apply H3.
         apply col_permutation_1.
         assumption.
         apply col_permutation_1.
@@ -2140,7 +2185,16 @@ Proof.
     split.
       intros.
       unfold TS in H2.
+      assert (~ Col A X Y).
+        spliter.
+        assumption.
       spliter.
+      clear H2.
+      assert (X <> Y).
+        intro.
+        subst Y.
+        spliter.
+        Col.
       ex_and H5 T.
       assert (P=T).
         apply l6_21 with X Y A B; Col.
@@ -2164,7 +2218,6 @@ Proof.
     unfold TS.
     spliter.
     repeat split.
-      assumption.
       intro.
       apply H3.
       apply col_permutation_1.
@@ -2189,7 +2242,29 @@ Proof.
       assert (HH2:=H2).
       unfold OS in H2.
       ex_and H2 D.
-      unfold TS in *.
+      unfold TS in H3.
+      assert (~ Col B X Y).
+        spliter.
+        assumption.
+      spliter.
+      clear H3.
+      assert (X <> Y).
+        intro.
+        subst Y.
+        spliter.
+        Col.
+      spliter.
+      unfold TS in H2.
+      assert (~ Col A X Y).
+        spliter.
+        assumption.
+      spliter.
+      clear H2.
+      assert (X <> Y).
+        intro.
+        subst Y.
+        spliter.
+        Col.
       spliter.
       ex_and H6 M.
       ex_and H9 N.
@@ -2216,7 +2291,6 @@ Proof.
           assert (TS X Y A B).
             unfold TS.
             repeat split.
-              assumption.
               assumption.
               assumption.
             exists P.
@@ -2264,7 +2338,7 @@ Proof.
     unfold TS in *.
     spliter.
     intro.
-    apply H4.
+    apply H.
     apply col_permutation_2.
     assumption.
 Qed.
@@ -2276,8 +2350,16 @@ Proof.
     intros.
     unfold TS in *.
     spliter.
-    ex_and H4 T.
+    ex_and H3 T.
     repeat split.
+      intro.
+      apply H1.
+      apply col_permutation_2.
+      eapply col_transitivity_1.
+        apply H0.
+        apply col_permutation_5.
+        assumption.
+      apply col_permutation_1.
       assumption.
       intro.
       apply H2.
@@ -2288,20 +2370,13 @@ Proof.
         assumption.
       apply col_permutation_1.
       assumption.
-      intro.
-      apply H3.
-      apply col_permutation_2.
-      eapply col_transitivity_1.
-        apply H0.
-        apply col_permutation_5.
-        assumption.
-      apply col_permutation_1.
-      assumption.
     exists T.
     split.
       apply col_permutation_2.
-      eapply col_transitivity_1.
-        apply H1.
+      apply col_transitivity_1 with B.
+        intro.
+        subst B.
+        Col.
         assumption.
       apply col_permutation_1.
       assumption.
@@ -2330,7 +2405,9 @@ Proof.
       ex_and H C.
       unfold TS in H.
       spliter.
-      assumption.
+      intro.
+      subst B.
+      Col.
     prolong Y A Y' A Y.
     assert(OS A B Y Z).
       unfold OS.
@@ -2338,7 +2415,6 @@ Proof.
       split.
         unfold TS.
         repeat split.
-          assumption.
           apply one_side_symmetry in H.
           eapply one_side_not_col in H.
           intro.
@@ -2371,7 +2447,6 @@ Proof.
         assumption.
       unfold TS.
       repeat split.
-        assumption.
         intro.
         apply one_side_symmetry in H.
         eapply one_side_not_col in H.
@@ -2462,6 +2537,14 @@ Proof.
       ex_and H0 D.
       unfold TS in *.
       spliter.
+      split.
+        intro.
+        subst X.
+        Col.
+      split.
+        intro.
+        subst Z.
+        Col.
       repeat split; assumption.
     spliter.
     prolong Z A Z' Z A.
@@ -2476,7 +2559,6 @@ Proof.
       eapply (l9_8_2 _ _ Z).
         unfold TS.
         repeat split.
-          assumption.
           assumption.
           intro.
           apply H4.
@@ -2495,6 +2577,9 @@ Proof.
       apply one_side_symmetry.
       assumption.
     unfold TS in H9.
+    assert (~ Col Y A X).
+      spliter.
+      assumption.
     spliter.
     ex_and H12 T.
     assert(T <> A).
@@ -2584,9 +2669,6 @@ Proof.
       assert(TS A Z X T).
         repeat split.
           intro.
-          subst Z.
-          absurde.
-          intro.
           apply H11.
           apply col_permutation_2.
           eapply (col_transitivity_1 _ Z).
@@ -2632,16 +2714,12 @@ Proof.
       assumption.
     assert(TS A Y Z' Z).
       repeat split.
-        intro.
-        subst Y.
-        apply H3.
-        apply col_trivial_1.
         unfold OS in H5.
         ex_and H15 C.
         unfold TS in H15.
         spliter.
         intro.
-        apply H18.
+        apply H15.
         apply col_permutation_5.
         assumption.
         intro.
@@ -2661,7 +2739,7 @@ Proof.
         unfold TS in H18.
         spliter.
         intro.
-        apply H19.
+        apply H18.
         apply col_permutation_3.
         assumption.
       repeat split.
@@ -2704,7 +2782,6 @@ Lemma col2_os__os : forall A B C D X Y, C <> D -> Col A B C ->
 Proof.
   intros A B C D X Y HCD HColC HColD Hos.
   destruct Hos as [Z [Hts1 Hts2]].
-  assert(A<>B) by (destruct Hts1; auto).
   exists Z.
   split; apply (col_preserves_two_sides A B); auto.
 Qed.
@@ -2716,7 +2793,12 @@ Proof.
       unfold OS in H0.
       ex_and H0 T.
       unfold TS in H0.
-      tauto.
+      spliter.
+      split.
+        intro.
+        subst B.
+        Col.
+      assumption.
     spliter.
     prolong C P T C P.
     assert(P <> T).
@@ -2752,18 +2834,20 @@ Proof.
     intros.
     unfold TS in *.
     spliter.
-    ex_and H6 T1.
-    ex_and H3 T.
+    ex_and H4 T1.
+    ex_and H2 T.
     assert(T1 = T).
       assert_cols.
       apply (l6_21 C D A B); Col.
+      intro.
+      subst B.
+      Col.
     subst T1.
 
 assert(OS A C T B).
 apply(out_one_side A C T B).
 right.
 intro.
-apply H4.
 Col.
 unfold Out.
 repeat split.
@@ -2772,7 +2856,6 @@ subst T.
 contradiction.
 intro.
 subst B.
-apply H4.
 Col.
 left.
 assumption.
@@ -2781,7 +2864,7 @@ assert(OS C A T D).
 apply(out_one_side C A T D).
 right.
 intro.
-apply H1.
+apply H0.
 Col.
 unfold Out.
 repeat split.
@@ -2790,11 +2873,10 @@ subst T.
 contradiction.
 intro.
 subst D.
-apply H1.
 Col.
 left.
 assumption.
-apply invert_one_side in H10.
+apply invert_one_side in H8.
 apply (one_side_transitivity A C B T).
 apply one_side_symmetry.
 assumption.
@@ -2810,7 +2892,7 @@ Proof.
     unfold TS in H.
     spliter.
     intro.
-    apply H0.
+    apply H.
     apply col_permutation_2.
     assumption.
 Qed.
@@ -2826,17 +2908,15 @@ Proof.
       ex_and H0 Z.
       unfold TS in *.
       spliter.
-      ex_and H7 T0.
-      ex_and H4 T1.
+      ex_and H5 T0.
+      ex_and H3 T1.
       split.
         intro.
         subst X.
-        apply H5.
-        apply col_trivial_1.
+        Col.
       intro.
       subst Y.
-      apply H2.
-      apply col_trivial_1.
+      Col.
     spliter.
     unfold Col in H.
     induction H.
@@ -2860,7 +2940,6 @@ Proof.
       repeat split.
         assumption.
         assumption.
-        assumption.
       exists A.
       split.
         apply col_trivial_1.
@@ -2881,9 +2960,9 @@ Proof.
     induction H.
       unfold TS in H0.
       spliter.
-      ex_and H3 T.
+      ex_and H2 T.
       apply False_ind.
-      apply H2.
+      apply H1.
       apply col_permutation_2.
       eapply (col_transitivity_1 _ T).
         intro.
@@ -2893,7 +2972,7 @@ Proof.
             apply H.
           assumption.
         subst X.
-        apply H1.
+        apply H0.
         apply col_trivial_1.
         apply col_permutation_4.
         assumption.
@@ -2901,7 +2980,7 @@ Proof.
       eapply (col_transitivity_1 _ X).
         intro.
         subst Y.
-        apply between_identity in H4.
+        apply between_identity in H3.
         subst X.
         contradiction.
         apply bet_col in H.
@@ -2913,12 +2992,12 @@ Proof.
     induction H.
       unfold TS in H0.
       spliter.
-      ex_and H3 T.
+      ex_and H2 T.
       assert(Col Y A T).
         eapply (col_transitivity_1 _ X).
           intro.
           subst Y.
-          apply between_identity in H4.
+          apply between_identity in H3.
           subst X.
           contradiction.
           apply col_permutation_4.
@@ -2928,7 +3007,7 @@ Proof.
         apply bet_col.
         assumption.
       apply False_ind.
-      apply H2.
+      apply H1.
       apply col_permutation_2.
       eapply (col_transitivity_1 _ T).
         intro.
@@ -2940,7 +3019,7 @@ Proof.
           apply between_symmetry.
           assumption.
         subst Y.
-        apply H2.
+        apply H1.
         apply col_trivial_1.
         apply col_permutation_4.
         assumption.
@@ -2956,7 +3035,7 @@ Lemma os_ts1324__os : forall A X Y Z,
   OS A Z X Y.
 Proof.
   intros A X Y Z Hos Hts.
-  destruct Hts as [HAY [HNColXY [HNColYZ [P [HColP HPBet]]]]].
+  destruct Hts as [HNColXY [HNColYZ [P [HColP HPBet]]]].
   apply (one_side_transitivity _ _ _ P).
   - apply invert_one_side.
     apply one_side_symmetry.
@@ -2976,8 +3055,20 @@ Proof.
     apply bet_out; auto; intro; subst X; Col.
 Qed.
 
+Lemma ts2__ex_bet2 : forall A B C D, TS A C B D -> TS B D A C ->
+  exists X, Bet A X C /\ Bet B X D.
+Proof.
+  intros A B C D HTS HTS'.
+  destruct HTS as [HNCol [HNCol1 [X [HCol HBet]]]].
+  exists X; split; trivial.
+  apply col_two_sides_bet with B; trivial.
+  assert_diffs.
+  apply invert_two_sides, col_two_sides with D; Col.
+  intro; subst X; auto.
+Qed.
+
 End T9.
 
 Hint Resolve l9_2 invert_two_sides invert_one_side one_side_symmetry l9_9 l9_9_bis : side.
 
-Ltac Side := auto with side.
+Ltac Side := eauto with side.

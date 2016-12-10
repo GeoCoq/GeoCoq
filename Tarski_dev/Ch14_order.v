@@ -84,7 +84,7 @@ Proof.
       apply (sum_A_O). assumption.
     assumption.
     assert(B = O).
-        apply (sum_unicityB O E E' H A B O A); auto.
+        apply (sum_uniquenessB O E E' H A B O A); auto.
       contradiction.
 Qed.
 
@@ -348,7 +348,7 @@ Proof.
     subst B.
     ex_and H OO.
     assert(OO=O).
-      apply (diff_unicity O E E' A A).
+      apply (diff_uniqueness O E E' A A).
         assumption.
       apply diff_null; Col.
     subst OO.
@@ -541,7 +541,7 @@ Proof.
     subst X.
     subst Y.
     right.
-    apply(sum_unicity O E E' A B); auto.
+    apply(sum_uniqueness O E E' A B); auto.
 Qed.
 
 Lemma square_pos : forall O E E' A A2,
@@ -593,7 +593,7 @@ Lemma lt_diff_ps : forall O E E' X Y XMY,
 Proof.
 intros O E E' X Y XMY HCol1 HCol2 HLt HXMY.
 destruct HLt as [XMY' [HDiff HPs]].
-apply (diff_unicity _ _ _ _ _ XMY) in HDiff; treat_equalities; auto.
+apply (diff_uniqueness _ _ _ _ _ XMY) in HDiff; treat_equalities; auto.
 Qed.
 
 Lemma col_2_le_or_ge : forall O E E' A B,
@@ -631,7 +631,7 @@ elim HLe; clear HLe; intro HLe.
 
   {
   treat_equalities.
-  assert (APC = BPC) by (apply sum_unicity with O E E' A C; auto).
+  assert (APC = BPC) by (apply sum_uniqueness with O E E' A C; auto).
   treat_equalities; apply leP_refl.
   }
 Qed.
@@ -652,9 +652,9 @@ assert (HColAB : Col O E AB) by (unfold Prod, Ar2 in *; spliter; Col).
 left; exists AB; split; try (apply diff_A_O); Col.
 destruct HLeA as [A' [HDiff1 HPsA]]; destruct HLeB as [B' [HDiff2 HPsB]].
 assert (A = A')
-  by (apply diff_unicity with O E E' A O; auto; apply diff_A_O; Col).
+  by (apply diff_uniqueness with O E E' A O; auto; apply diff_A_O; Col).
 assert (B = B')
-  by (apply diff_unicity with O E E' B O; auto; apply diff_A_O; Col).
+  by (apply diff_uniqueness with O E E' B O; auto; apply diff_A_O; Col).
 treat_equalities; apply prod_pos_pos with E' A B; auto.
 Qed.
 
@@ -667,10 +667,10 @@ assert (HNC : ~ Col O E E') by (unfold Prod, Ar2 in *; spliter; Col).
 assert (HColA : Col O E A) by (unfold Prod, Ar2 in *; spliter; Col).
 assert (HColIA : Col O E IA) by (unfold Prod, Ar2 in *; spliter; Col).
 destruct (diff_exists O E E' IA O) as [IA' HIA']; Col.
-assert (IA = IA') by (apply diff_unicity with O E E' IA O; auto; apply diff_A_O; Col).
+assert (IA = IA') by (apply diff_uniqueness with O E E' IA O; auto; apply diff_A_O; Col).
 treat_equalities; left; exists IA; split; auto; clear HIA'.
 destruct HLe as [A' [HDiff HPs1]].
-assert (A = A') by (apply diff_unicity with O E E' A O; auto; apply diff_A_O; Col).
+assert (A = A') by (apply diff_uniqueness with O E E' A O; auto; apply diff_A_O; Col).
 treat_equalities; clear HDiff; destruct (opp_exists O E E' HNC IA) as [MIA HMIA]; Col.
 assert (HElim := HMIA); apply pos_null_neg in HElim.
 elim HElim; clear HElim; intro HElim; auto.
@@ -678,7 +678,7 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
 
   {
   assert (O = E)
-    by (apply prod_unicity with O E E' O A; auto; apply prod_0_l; Col).
+    by (apply prod_uniqueness with O E E' O A; auto; apply prod_0_l; Col).
   treat_equalities; intuition.
   }
 
@@ -722,7 +722,7 @@ assert (H : Diff O E E' BC AC BCMAC').
   apply sum_diff; apply diff_sum in HBMA;
   apply distr_r with A BMA C B; auto.
   }
-assert (BCMAC = BCMAC') by (apply diff_unicity with O E E' BC AC; auto).
+assert (BCMAC = BCMAC') by (apply diff_uniqueness with O E E' BC AC; auto).
 clear H; treat_equalities;
 apply compatibility_of_prod_with_order with BMA C; auto.
 destruct (opp_exists O E E' HNC A) as [MA HMA]; Col.
@@ -755,7 +755,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
 
   {
   destruct HLt as [B' [HB' HPs]].
-  assert (B = B') by (apply diff_unicity with O E E' B O; auto; apply diff_A_O; Col).
+  assert (B = B') by (apply diff_uniqueness with O E E' B O; auto; apply diff_A_O; Col).
   treat_equalities; left; exists CMB; split; auto.
   split; try (intro; treat_equalities; apply HDiff2; apply eq_sym;
               apply diff_null_eq with CMB E E'; auto).
@@ -842,7 +842,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
   {
   left; exists CMB; split; auto; apply diff_sum in HCMB; assert (HCMB' := HCMB).
   split; try (intro; treat_equalities; apply HDiff2;
-              apply sum_unicity with CMB E E' B CMB; auto; apply sum_A_O; Col).
+              apply sum_uniqueness with CMB E E' B CMB; auto; apply sum_A_O; Col).
   split; auto; apply sum_cong in HCMB; Col; apply plgf_bet in HCMB.
   apply col_pos_or_neg in HColA; try (intro; treat_equalities; Col).
   apply col_pos_or_neg in HColB; try (intro; treat_equalities; Col).
@@ -1848,7 +1848,7 @@ assert (HColMBMMA : Col O E MBMMA)
   by (apply diff_ar2 in HMBMMA; unfold Ar2 in *; spliter; Col).
 assert (HOppMAMMB : Opp O E E' MAMMB MBMMA) by (apply diff_opp with MA MB; auto).
 assert (AMB = MBMMA)
-  by (apply opp_unicity with O E E' MAMMB; auto; apply opp_comm; auto).
+  by (apply opp_uniqueness with O E E' MAMMB; auto; apply opp_comm; auto).
 treat_equalities.
 assert (HBet' : Bet MA MB MC)
   by (apply l7_15 with A B C O; auto; try apply opp_midpoint with E E'; auto).
@@ -1877,7 +1877,7 @@ assert (HOppAMC : Opp O E E' BMC MBMMC).
 destruct (diff_exists O E E' MC MB) as [MCMMB HMCMMB]; Col.
 assert (HOppMBMMC : Opp O E E' MBMMC MCMMB) by (apply diff_opp with MB MC; auto).
 assert (BMC = MCMMB)
-  by (apply opp_unicity with O E E' MBMMC; auto; apply opp_comm; auto).
+  by (apply opp_uniqueness with O E E' MBMMC; auto; apply opp_comm; auto).
 treat_equalities.
 assert (HLt' : LtP O E E' MA MB)
   by (exists AMB; split; auto; apply lt_diff_ps with E' A B; auto).
@@ -1885,7 +1885,7 @@ assert (HLe : LeP O E E' MB MC) by (apply bet_lt12_le23 with MA; auto).
 left; exists BMC; split; auto; apply lt_diff_ps with E' MC MB; auto.
 elim HLe; clear HLe; intro HFalse; auto; treat_equalities.
 assert (O = BMC)
-  by (apply diff_unicity with O E E' MB MB; auto; apply diff_null; Col).
+  by (apply diff_uniqueness with O E E' MB MB; auto; apply diff_null; Col).
 treat_equalities; apply diff_null_eq in HBMC; treat_equalities; intuition.
 Qed.
 

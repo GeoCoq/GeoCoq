@@ -19,7 +19,10 @@ Class independent_Tarski_neutral_dimensionless_with_decidable_point_equality := 
    A <> P -> P <> C -> B <> Q -> Q <> C ->
    ~ (BetG A B C \/ BetG B C A \/ BetG C A B) ->
    exists x, BetG P x B /\ BetG Q x A;
- lower_dimG : exists A, exists B, exists C, ~ (BetG A B C \/ BetG B C A \/ BetG C A B)
+ GPA : TpointG;
+ GPB : TpointG;
+ GPC : TpointG;
+ lower_dimG : ~ (BetG GPA GPB GPC \/ BetG GPB GPC GPA \/ BetG GPC GPA GPB)
 }.
 
 Class independent_Tarski_2D `(TnG : independent_Tarski_neutral_dimensionless_with_decidable_point_equality) := {

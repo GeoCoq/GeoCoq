@@ -271,4 +271,39 @@ assert_congs_perm.
 finish.
 Qed.
 
+Goal forall A B C, Bet A B C -> A <> B -> A <> C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, Bet A B C -> B <> A -> A <> C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, Bet A B C -> B <> C -> A <> C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, Bet A B C -> C <> B -> A <> C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, ~ Bet A B C -> A <> B /\ B <> C.
+Proof.
+intros.
+assert_diffs.
+split; assumption.
+Qed.
+
 End UnitTests.

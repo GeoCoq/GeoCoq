@@ -35,6 +35,7 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
     }
   ex_and HC' C'.
   unfold TS in H9.
+  assert (~ Col A1 B1 B2) by (spliter; auto).
   spliter.
   ex_and H12 B.
   double C' P C.

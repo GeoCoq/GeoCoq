@@ -49,7 +49,7 @@ assert (HOM1 : O <> M1).
   {
   intro; treat_equalities.
   assert (H := l7_20 O A C); elim H; clear H; try intro H; Cong;
-  try (apply HBC; apply symmetric_point_unicity with A O; Col);
+  try (apply HBC; apply symmetric_point_uniqueness with A O; Col);
   assert_cols; ColR.
   }
 assert (H := midpoint_existence A C); destruct H as [M2 HMid2].
@@ -57,7 +57,7 @@ assert (HOM2 : O <> M2).
   {
   intro; treat_equalities.
   assert (H := l7_20 O A B); elim H; clear H; try intro H; Cong;
-  try (apply HBC; apply symmetric_point_unicity with A O; Col);
+  try (apply HBC; apply symmetric_point_uniqueness with A O; Col);
   assert_cols; ColR.
   }
 assert (HM1M2 : M1 <> M2) by (intro; treat_equalities; Col).
@@ -223,8 +223,8 @@ decompose [or] T;clear T;try contradiction.
     apply cong_transitivity with O B;finish.
 
    apply (Euler_line_special_case A C B G H O);finish.
-(* For 8.5
-   apply is_gravity_center_perm_1; assumption. *)
+(* For 8.5  bug *)
+   try (apply is_gravity_center_perm_1; assumption). 
    auto with Orthocenter.
    auto with Circumcenter.
 
@@ -268,7 +268,12 @@ induction (Col_dec B H C).
    induction H26.
    + subst H.
      assert (Midpoint O A C) by (apply (circumcenter_per) with B;finish).
-     perm_apply (is_gravity_center_col A C B G O).
+     assert (Col G O B).
+        apply (is_gravity_center_col A C B G O).
+        apply is_gravity_center_perm in H1;intuition idtac.
+        assumption.
+     Col.
+   (*  perm_apply (is_gravity_center_col A C B G O). bug in 8.5 *) 
    + subst H;assert_diffs; intuition.
  * assert (Parallelogram B H C A')
      by (apply par_2_plg;finish).

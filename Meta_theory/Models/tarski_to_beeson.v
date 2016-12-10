@@ -27,7 +27,7 @@ Lemma bet_stability : forall A B C, ~ ~ BetH A B C -> BetH A B C.
 Proof.
 intros A B C HNNBet.
 unfold BetH in *.
-elim (Bet_dec A B C); intro HBet; elim (eq_dec_points A B); intro HAB; elim (eq_dec_points B C); intro HBC.
+elim (bet_dec A B C); intro HBet; elim (eq_dec_points A B); intro HAB; elim (eq_dec_points B C); intro HBC.
 
   subst.
   exfalso.
@@ -112,7 +112,7 @@ Lemma T_Bet : forall A B C, T A B C -> Bet A B C.
 Proof.
 intros A B C HT.
 unfold T in HT.
-elim (Bet_dec A B C); intro HBet.
+elim (bet_dec A B C); intro HBet.
 
   assumption.
 
@@ -141,7 +141,7 @@ Qed.
 Lemma T_dec : forall A B C, T A B C \/ ~ T A B C.
 Proof.
 intros A B C.
-elim (Bet_dec A B C); intro HBet.
+elim (bet_dec A B C); intro HBet.
 
   left; apply Bet_T; assumption.
 
@@ -308,12 +308,10 @@ apply Bet_T in HBet.
 exists E; intuition.
 Qed.
 
-Lemma lower_dim_B : exists A, exists B, exists C, ~ T C A B /\ ~ T A C B /\ ~ T A B C.
+Lemma lower_dim_B : ~ T PC PA PB /\ ~ T PA PC PB /\ ~ T PA PB PC.
 Proof.
-assert (HLD := lower_dim).
-destruct HLD as [A [B [C HNBet]]].
-exists A; exists B; exists C.
-elim (T_dec C A B); intro HT1; elim (T_dec A C B); intro HT2; elim (T_dec A B C); intro HT3.
+assert (HNBet := lower_dim).
+elim (T_dec PC PA PB); intro HT1; elim (T_dec PA PC PB); intro HT2; elim (T_dec PA PB PC); intro HT3.
 
   exfalso; apply HNBet; left; apply T_Bet; assumption.
 
@@ -347,6 +345,7 @@ exact (Build_intuitionistic_Tarski_neutral_dimensionless
  between_symmetry_B
  between_inner_transitivity_B
  inner_pasch_B
+ PA PB PC
  lower_dim_B).
 Qed.
 
@@ -646,21 +645,29 @@ spliter.
 intuition.
 Qed.
 
+Lemma IT_trivial2 : forall A B, IT A B B.
+Proof.
+intros.
+unfold IT.
+intro.
+spliter.
+intuition.
+Qed.
+
 Lemma another_point : forall A, exists B:ITpoint, A<>B.
 Proof.
 intros.
 assert (T:=Ilower_dim).
-decompose [ex] T.
-elim (eq_dec A x);intro.
+elim (eq_dec A beeson_s_axioms.PA);intro.
 subst.
-elim (eq_dec x x0);intro.
-subst.
+elim (eq_dec beeson_s_axioms.PA beeson_s_axioms.PB);intro.
+rewrite <- H in *.
 exfalso.
-apply H.
+apply T.
 apply IT_trivial.
-exists x0.
+exists beeson_s_axioms.PB.
 assumption.
-exists x.
+exists beeson_s_axioms.PA.
 assumption.
 Qed.
 
@@ -690,14 +697,11 @@ tauto.
 Qed.
 
 Lemma lower_dim :
- exists A B C : ITpoint, ~ (BetT A B C \/ BetT B C A \/ BetT C A B).
+  ~ (BetT beeson_s_axioms.PA beeson_s_axioms.PB beeson_s_axioms.PC \/ 
+     BetT beeson_s_axioms.PB beeson_s_axioms.PC beeson_s_axioms.PA \/ 
+     BetT beeson_s_axioms.PC beeson_s_axioms.PA beeson_s_axioms.PB).
 Proof.
 assert (T:=Ilower_dim).
-decompose [ex] T;clear T.
-exists x.
-exists x0.
-exists x1.
-
 unfold BetT in *.
 unfold ICol in  *.
 unfold IT in *.
@@ -716,7 +720,7 @@ exact
    ITpoint BetT ICong
    Icong_pseudo_reflexivity Icong_inner_transitivity Icong_identity
    segment_construction five_segment
-   bet_id pasch lower_dim).
+   bet_id pasch beeson_s_axioms.PA beeson_s_axioms.PB beeson_s_axioms.PC lower_dim).
 Defined.
 
 Instance IT_to_TID :

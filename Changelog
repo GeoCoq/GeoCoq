@@ -1,3 +1,17 @@
+
+Release 2.2.0
+==========================
+	
+	- Definition of Archimedes' postulate (geometric version).
+	- Archimedes postulate for angles.
+	- Archimedes postulate implies Aristotle postulate.
+	- Legendre's theorems.
+	- Predicate TS (Two Sides) cleared of a redundant condition.
+	- Definition of the interior bisector and related properties.
+	- Existence of the incenter of a triangle.
+	- Proof of the existence of an equilateral triangle build on a given base without any continuity axiom (in any Pythagorean field).
+	- Justification of the axioms of the area method.
+
 Release 2.1.1 (2016-05-25)
 ==========================
 
@@ -19,6 +33,7 @@ Release 2.0.0 (2016-03-03)
 	- Definition of new statements equivalent to the parallel postulate and related proofs.
 	- Many predicates renamed.
 
+	
 Release 1.1.1 (2015-12-03)
 ==========================
 	
@@ -44,6 +59,7 @@ Release 1.1.0 (2015-10-27)
 
 Release 1.0.1 (2015-07-16)
 ==========================
+
 	- Add -R . GeoCoq to fix compilation for the release as an opam package.
 
 Release 1.0.0 (2015-07-15)

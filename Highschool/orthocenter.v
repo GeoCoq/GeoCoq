@@ -49,7 +49,7 @@ intros A B C X1 X2 X3 HNC HPar1 HPar2 HPar3.
 apply not_par_inter_exists.
 intro HNPar; apply HNC.
 assert (HFalsePar : Par B C A C)
-  by (apply (parallel_trans B C B X1 A C); finish; apply (parallel_trans B C A X3 B); finish).
+  by (apply (par_trans B C B X1 A C); finish; apply (par_trans B C A X3 B); finish).
 apply par_id_2...
 Qed.
 

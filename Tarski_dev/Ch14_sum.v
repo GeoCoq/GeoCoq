@@ -460,10 +460,10 @@ Proof.
     contradiction.
 Qed.
 
-(** We are not faithful to Tarski's def because for unicity we do not need the assumption that
+(** We are not faithful to Tarski's def because for uniqueness we do not need the assumption that
  A and B are on line OE as it is implied by the definition of sum. *)
 
-Lemma sum_unicity : forall A B C1 C2,
+Lemma sum_uniqueness : forall A B C1 C2,
  Sum O E E' A B C1 ->
  Sum O E E' A B C2 ->
  C1 = C2.
@@ -482,7 +482,7 @@ Proof.
     ex_and H6 C''.
     ex_and H2 P''.
     assert(A'=A'').
-      apply(project_unicity A A' A'' O E' E E');auto.
+      apply(project_uniqueness A A' A'' O E' E E');auto.
     subst A''.
     assert(Col A' P' P'').
       assert(Par A' P' A' P'').
@@ -502,9 +502,9 @@ Proof.
       unfold Proj in H4.
       tauto.
     assert(C' = C'').
-      apply(project_unicity B C' C'' A' P' O E');auto.
+      apply(project_uniqueness B C' C'' A' P' O E');auto.
     subst C''.
-    apply(project_unicity C' C1 C2 O E E E');auto.
+    apply(project_uniqueness C' C1 C2 O E E E');auto.
 Qed.
 
 Definition Opp O E E' A B :=
@@ -721,7 +721,7 @@ Proof.
       unfold Parallelogram_strict in H22.
       spliter.
       unfold TS in H22; unfold Parallelogram.
-      tauto.
+      spliter; Col.
     unfold Parallelogram_flat in H22.
     spliter.
     apply NC.
@@ -901,7 +901,7 @@ Proof.
     Col.
 Qed.
 
-Lemma opp0_unicity : forall M, Opp O E E' O M -> M = O.
+Lemma opp0_uniqueness : forall M, Opp O E E' O M -> M = O.
 Proof.
     intros.
     assert(NC:= grid_ok).
@@ -1083,7 +1083,7 @@ Proof.
     unfold Ar2 in H.
     spliter.
     assert(HH:=sum_O_B B H2).
-    apply (sum_unicity O B); auto.
+    apply (sum_uniqueness O B); auto.
 Qed.
 
 Lemma sum_A_O_eq : forall A C, Sum O E E' A O C -> A = C.
@@ -1095,7 +1095,7 @@ Proof.
     unfold Ar2 in H.
     spliter.
     assert(HH:=sum_A_O A H1).
-    apply (sum_unicity A O); auto.
+    apply (sum_uniqueness A O); auto.
 Qed.
 
 Lemma sum_par_strict : forall A B C A' C', Ar2 O E E' A B C -> A <> O -> Pj E E' A A' -> Col O E' A' -> Pj O E A' C' -> Pj O E' B C' -> Pj E' E C' C
@@ -1312,7 +1312,7 @@ Proof.
     tauto.
 Qed.
 
-Lemma sum_unicityB : forall A X Y C, Sum O E E' A X C -> Sum O E E' A Y C -> X = Y.
+Lemma sum_uniquenessB : forall A X Y C, Sum O E E' A X C -> Sum O E E' A Y C -> X = Y.
 Proof.
     intros.
     induction (eq_dec_points A O).
@@ -1349,7 +1349,7 @@ Proof.
       subst X.
       assert(HH:=sum_A_O A H7).
       assert(C = A).
-        apply (sum_unicity A O); auto.
+        apply (sum_uniqueness A O); auto.
       subst C.
       assert(Y=O).
         apply (sum_A_B_A A ); auto.
@@ -1476,7 +1476,7 @@ Proof.
     apply (sum_A_B_A A _ HSx).
 Qed.
 
-Lemma sum_unicityA : forall B X Y C, Sum O E E' X B C -> Sum O E E' Y B C -> X = Y.
+Lemma sum_uniquenessA : forall B X Y C, Sum O E E' X B C -> Sum O E E' Y B C -> X = Y.
 Proof.
     intros.
     induction (eq_dec_points B O).
@@ -1508,7 +1508,7 @@ Proof.
       subst X.
       assert(HH:=sum_O_B B H8).
       assert(B = C).
-        apply (sum_unicity O B); auto.
+        apply (sum_uniqueness O B); auto.
       subst C.
       apply sym_equal.
       apply (sum_A_B_B Y B); auto.
@@ -1516,7 +1516,7 @@ Proof.
       subst Y.
       assert(HH:=sum_O_B B H8).
       assert(B = C).
-        apply (sum_unicity O B); auto.
+        apply (sum_uniqueness O B); auto.
       subst C.
       apply (sum_A_B_B X B); auto.
     assert(A' <> O /\ (Par_strict O E A' C' \/ B = O)).
@@ -1696,7 +1696,7 @@ Proof.
     unfold Ar2 in H.
     spliter.
     assert(HP:= sum_A_O A H1).
-    apply(sum_unicityB A B O A); auto.
+    apply(sum_uniquenessB A B O A); auto.
 Qed.
 
 Lemma sum_A_null : forall A B, Sum O E E' A B B -> A = O.
@@ -1708,7 +1708,7 @@ Proof.
     unfold Ar2 in H.
     spliter.
     assert(HP:= sum_O_B B H2).
-    apply(sum_unicityA B A O B); auto.
+    apply(sum_uniquenessA B A O B); auto.
 Qed.
 
 Lemma sum_plg : forall A B C, Sum O E E' A B C -> (A <> O ) \/ ( B <> O) -> exists A', exists C', Plg O B C' A' /\ Plg C' A' A C.
@@ -1728,7 +1728,7 @@ Proof.
     induction(eq_dec_points O B).
       subst B.
       assert(HH:=sum_A_O A H12).
-      assert(HP:=sum_unicity A O C A HS HH).
+      assert(HP:=sum_uniqueness A O C A HS HH).
       subst C.
       induction H4.
         induction H4.
@@ -1769,7 +1769,7 @@ Proof.
     induction(eq_dec_points A O).
       subst A.
       assert(HH:=sum_O_B B H13 ).
-      assert(HP:=sum_unicity O B C B HS HH).
+      assert(HP:=sum_uniqueness O B C B HS HH).
       subst C.
       clean_trivial_hyps.
       induction H1.
@@ -1809,15 +1809,6 @@ Proof.
       assert(Par O B C' A').
         apply par_symmetry.
         apply (par_col_par _ _ _ E); finish.
-        apply par_strict_par.
-        assert(Par_strict O B C' A').
-          (* TODO bug Par tactic *)
-          apply par_strict_symmetry.
-          apply par_strict_left_comm.
-          apply par_strict_col_par_strict with E; finish.
-        apply par_strict_left_comm.
-        apply par_strict_symmetry.
-        assumption.
       assert(Par_strict O B C' A').
         induction H20.
           auto.
@@ -1927,7 +1918,7 @@ Proof.
 intros.
 apply sum_cong in H.
 unfold Parallelogram_flat in *.
-spliter;Cong.
+spliter;eCong.
 assumption.
 Qed.
 
@@ -1942,7 +1933,7 @@ Proof.
         unfold Ar2 in H.
         tauto.
       assert(C = A).
-        apply (sum_unicity A O).
+        apply (sum_uniqueness A O).
           auto.
         apply sum_A_O.
         auto.
@@ -1957,7 +1948,7 @@ Proof.
         unfold Ar2 in H.
         tauto.
       assert(B = C).
-        apply (sum_unicity O B).
+        apply (sum_uniqueness O B).
           apply sum_O_B.
           Col.
         auto.
@@ -2348,7 +2339,7 @@ subst.
 assert (T:= sum_O_O).
 destruct H0.
 apply H0.
-eauto using sum_unicity.
+eauto using sum_uniqueness.
 intuition.
 intuition.
 Qed.
@@ -2361,7 +2352,7 @@ Proof.
     auto.
 Qed.
 
-Lemma opp_unicity :
+Lemma opp_uniqueness :
  forall A MA1 MA2,
  Opp O E E' A MA1 ->
  Opp O E E' A MA2 ->
@@ -2373,7 +2364,7 @@ Proof.
     apply sum_comm in H0.
     induction(eq_dec_points A O).
       subst A.
-      assert(HH:=sum_unicityB O MA1 MA2 O H H0).
+      assert(HH:=sum_uniquenessB O MA1 MA2 O H H0).
       assumption.
     apply sum_plg in H.
       apply sum_plg in H0.
@@ -2407,7 +2398,7 @@ Proof.
                 unfold TS in H6.
                 spliter.
                 apply False_ind.
-                apply H10.
+                apply H9.
                 Col.
               unfold Parallelogram_flat in H6.
               spliter.
@@ -2441,7 +2432,7 @@ Qed.
 
 End Grid.
 
-Lemma pj_unicity : forall O E E' A A' A'', ~Col O E E' -> Col O E A -> Col O E' A' -> Col O E' A'' -> Pj E E' A A' -> Pj E E' A A'' -> A' = A''.
+Lemma pj_uniqueness : forall O E E' A A' A'', ~Col O E E' -> Col O E A -> Col O E' A' -> Col O E' A'' -> Pj E E' A A' -> Pj E E' A A'' -> A' = A''.
 Proof.
     intros.
     unfold Pj in *.
@@ -2553,7 +2544,7 @@ Proof.
         apply (sum_O_B_eq O E E'); auto.
       subst C.
       assert(B' = C').
-        apply (pj_unicity O E E' B); Col.
+        apply (pj_uniqueness O E E' B); Col.
       subst C'.
       apply sum_O_B; Col.
     induction(eq_dec_points B O).
@@ -2569,7 +2560,7 @@ Proof.
         apply (sum_A_O_eq O E E'); auto.
       subst C.
       assert(A' = C').
-        apply (pj_unicity O E E' A); Col.
+        apply (pj_uniqueness O E E' A); Col.
       subst C'.
       apply sum_A_O; Col.
     assert(A' <> O).
@@ -2720,7 +2711,7 @@ Proof.
       subst C.
       assert(HH:= sum_A_O_eq O E E' H B BC HS2).
       subst BC.
-      assert(HH:=sum_unicity O E E' A B AB ABC HS1 HS3).
+      assert(HH:=sum_uniqueness O E E' A B AB ABC HS1 HS3).
       subst AB.
       apply sum_A_O; Col.
     assert(HH:= grid_not_par O E E' H).
@@ -2741,7 +2732,7 @@ Proof.
     ex_and H16 BC3'.
     ex_and H29 A3.
     assert(B1'=B1'').
-      apply (pj_unicity O E E' B B1' B1''); Col.
+      apply (pj_uniqueness O E E' B B1' B1''); Col.
     subst B1''.
     clean_duplicated_hyps.
     assert(HH:=sum_par_strict O E E' H B A AB B1' A1 H19 H1 H20 H21 H22 H23 H24).
@@ -2775,7 +2766,7 @@ Proof.
     assert(ABC <> AB).
       intro.
       subst ABC.
-      assert(HP := sum_unicityA O E E' H A BC B AB S3 S1).
+      assert(HP := sum_uniquenessA O E E' H A BC B AB S3 S1).
       subst BC.
       apply sum_A_B_A in S2; auto.
     assert(HH:=plg_existence C O AB2' H2).
@@ -2791,7 +2782,7 @@ Proof.
         intro.
         subst AB2'.
         assert(HH:=plg_trivial C O H2).
-        assert(HP:= plg_unicity C O O C C2 HH Pl).
+        assert(HP:= plg_uniqueness C O O C C2 HH Pl).
         subst C2.
         induction H35.
           apply H35.
@@ -2877,7 +2868,7 @@ Proof.
       apply(l6_21 O E E' O); Col.
     subst AB.
     assert(HH:= plg_trivial C O H2).
-    assert(Hp:= plg_unicity C O O C C2 HH H34).
+    assert(Hp:= plg_uniqueness C O O C C2 HH H34).
     subst C2.
     assert(Parallelogram_flat O B BC C).
       apply(sum_cong O E E' H B C BC);auto.
@@ -2905,7 +2896,7 @@ Proof.
     apply plg_permut in H38.
     apply plg_permut in H39.
     apply plg_permut in H39.
-    assert(HP:=plg_unicity A O BC C ABC H39 H38).
+    assert(HP:=plg_uniqueness A O BC C ABC H39 H38).
     subst ABC.
     apply sum_O_B; Col.
 Qed.
@@ -3057,7 +3048,7 @@ Proof.
       subst C.
       assert(Parallelogram O A A O).
         apply(plg_trivial O A); auto.
-      assert(HH:=plg_unicity O A A O B H23 H22).
+      assert(HH:=plg_uniqueness O A A O B H23 H22).
       subst B.
       tauto.
     assert(A <> A'').
@@ -3070,7 +3061,7 @@ Proof.
       subst C''.
       assert(Parallelogram A'' A'' A A).
         apply(plg_trivial1); auto.
-      assert(HH:= plg_unicity A'' A'' A A C H26 H24).
+      assert(HH:= plg_uniqueness A'' A'' A A C H26 H24).
       contradiction.
     apply plg_par in H24; auto.
     spliter.
@@ -3155,7 +3146,7 @@ Proof.
       subst A''.
       assert(HH:=plg_trivial B O H21).
       assert(B = C'').
-        apply (plg_unicity B O O B C''); auto.
+        apply (plg_uniqueness B O O B C''); auto.
       subst C''.
       induction H18.
         apply H18.
@@ -3271,7 +3262,7 @@ Proof.
       apply sum_O_B. assumption. Col.
     unfold Sum in H7.
       assert(B = C).
-        apply(sum_unicity O E E' O B); auto.
+        apply(sum_uniqueness O E E' O B); auto.
       subst C.
       assert(B' = C').
         apply(l6_21 O' E' B B'); Col.
@@ -3513,7 +3504,7 @@ Proof.
     spliter.
     assert(HH:= sum_O_O O E E' H).
     apply H0.
-    apply (sum_unicity O E E' O O); assumption.
+    apply (sum_uniqueness O E E' O O); assumption.
 Qed.
 
 (** Definition 14.38. *)
@@ -3565,7 +3556,7 @@ Proof.
     split; assumption.
 Qed.
 
-Lemma diff_unicity : forall O E E' A B D1 D2, Diff O E E' A B D1 -> Diff O E E' A B D2 -> D1 = D2.
+Lemma diff_uniqueness : forall O E E' A B D1 D2, Diff O E E' A B D1 -> Diff O E E' A B D2 -> D1 = D2.
 Proof.
     intros.
     assert(Ar2 O E E' A B D1).
@@ -3576,9 +3567,9 @@ Proof.
     ex_and H MB1.
     ex_and H0 MB2.
     assert(MB1 = MB2).
-      apply (opp_unicity O E E' H1 B); assumption.
+      apply (opp_uniqueness O E E' H1 B); assumption.
     subst MB2.
-    apply(sum_unicity O E E'  A MB1); assumption.
+    apply(sum_uniqueness O E E'  A MB1); assumption.
 Qed.
 
 Lemma sum_ar2 : forall O E E' A B C, Sum O E E' A B C -> Ar2 O E E' A B C.
@@ -3628,12 +3619,12 @@ Proof.
     assert(Sum O E E' O A' A').
       apply (sum_O_B); auto.
     assert(mA = A').
-      apply(sum_unicity O E E' O A'); auto.
+      apply(sum_uniqueness O E E' O A'); auto.
     subst A'.
     assumption.
 Qed.
 
-Lemma diff_unicityA : forall O E E' A A' B C,
+Lemma diff_uniquenessA : forall O E E' A A' B C,
   Diff O E E' A B C -> Diff O E E' A' B C -> A = A'.
 Proof.
     intros.
@@ -3648,12 +3639,12 @@ Proof.
     ex_and H mB.
     ex_and H0 mB'.
     assert(mB = mB').
-      apply(opp_unicity O E E' H1 B); auto.
+      apply(opp_uniqueness O E E' H1 B); auto.
     subst mB'.
-    apply (sum_unicityA O E E' H1 mB A A' C); auto.
+    apply (sum_uniquenessA O E E' H1 mB A A' C); auto.
 Qed.
 
-Lemma diff_unicityB : forall O E E' A B B' C,
+Lemma diff_uniquenessB : forall O E E' A B B' C,
   Diff O E E' A B C -> Diff O E E' A B' C -> B = B'.
 Proof.
     intros.
@@ -3668,9 +3659,9 @@ Proof.
     ex_and H mB.
     ex_and H0 mB'.
     assert(mB = mB').
-      apply (sum_unicityA O E E' H1 A mB mB' C); apply sum_comm; auto.
+      apply (sum_uniquenessA O E E' H1 A mB mB' C); apply sum_comm; auto.
     subst mB'.
-    apply (opp_unicity O E E' H1 mB); apply opp_comm; auto.
+    apply (opp_uniqueness O E E' H1 mB); apply opp_comm; auto.
 Qed.
 
 Lemma diff_null_eq : forall O E E' A B, Diff O E E' A B O -> A = B.
@@ -3683,7 +3674,7 @@ Proof.
     clear H3.
     assert(Diff O E E' A A O).
       apply diff_null; Col.
-    apply (diff_unicityB O E E' A _ _ O); auto.
+    apply (diff_uniquenessB O E E' A _ _ O); auto.
 Qed.
 
 Lemma midpoint_opp: forall O E E' A B,
@@ -3730,18 +3721,18 @@ Proof.
     induction(eq_dec_points A O).
       subst A.
       assert(B = S).
-        apply (sum_unicity O E E' O B); auto.
+        apply (sum_uniqueness O E E' O B); auto.
         apply sum_O_B; auto.
       subst S.
       assert(mA = O).
-        apply (sum_unicity O E E' mA O); auto.
+        apply (sum_uniqueness O E E' mA O); auto.
         apply sum_A_O; auto.
       subst mA.
       apply sum_A_O; auto.
     induction(eq_dec_points B O).
       subst B.
       assert(A = S).
-        apply (sum_unicity O E E' A O); auto.
+        apply (sum_uniqueness O E E' A O); auto.
         apply sum_A_O; auto.
       subst S.
       apply sum_comm; auto.
@@ -3763,7 +3754,7 @@ Proof.
         spliter.
         unfold TS in H9.
         spliter.
-        apply H13.
+        apply H12.
         ColR.
       unfold Parallelogram_flat in H.
       unfold Parallelogram_flat in H4.
@@ -3789,7 +3780,7 @@ induction(eq_dec_points A O).
 subst A.
 assert(HH:=diff_A_O O E E' S H0 H1).
 assert(S = B).
-apply (diff_unicity O E E' S O); auto.
+apply (diff_uniqueness O E E' S O); auto.
 subst B.
 apply sum_O_B; auto.
 unfold Diff in H.
@@ -3799,7 +3790,7 @@ intro.
 subst mA.
 assert(HH:=opp0 O E E' H0).
 apply H4.
-apply (opp_unicity O E E' H0 O); auto.
+apply (opp_uniqueness O E E' H0 O); auto.
 apply opp_comm; auto.
 unfold Opp in H.
 induction(eq_dec_points S O).
@@ -3925,14 +3916,14 @@ Lemma sum_stable : forall O E E' A B C S1 S2 , A = B -> Sum O E E' A C S1 -> Sum
 Proof.
     intros.
     subst B.
-    apply (sum_unicity O E E' A C); auto.
+    apply (sum_uniqueness O E E' A C); auto.
 Qed.
 
 Lemma diff_stable : forall O E E' A B C D1 D2 , A = B -> Diff O E E' A C D1 -> Diff O E E' B C D2 -> D1 = D2.
 Proof.
     intros.
     subst B.
-    apply(diff_unicity O E E' A C); auto.
+    apply(diff_uniqueness O E E' A C); auto.
 Qed.
 
 Lemma plg_to_sum : forall O E E' A B C, Ar2 O E E' A B C ->Parallelogram_flat O A C B -> Sum O E E' A B C.
@@ -4119,7 +4110,7 @@ Proof.
     split; auto.
 Qed.
 
-Lemma sum3_unicity : forall O E E' A B C S1 S2, sum3 O E E' A B C S1 -> sum3 O E E' A B C S2 -> S1 = S2.
+Lemma sum3_uniqueness : forall O E E' A B C S1 S2, sum3 O E E' A B C S1 -> sum3 O E E' A B C S2 -> S1 = S2.
 Proof.
     intros.
     unfold sum3 in H.
@@ -4127,9 +4118,9 @@ Proof.
     ex_and H AB1.
     ex_and H0 AB2.
     assert(AB1 = AB2).
-      apply(sum_unicity O E E' A B); auto.
+      apply(sum_uniqueness O E E' A B); auto.
     subst AB2.
-    apply (sum_unicity O E E' AB1 C); auto.
+    apply (sum_uniqueness O E E' AB1 C); auto.
 Qed.
 
 
@@ -4243,7 +4234,7 @@ Proof.
       unfold sum3 in H.
       ex_and H AB'.
       assert(AB' = AB).
-        apply(sum_unicity O E E' A B); auto.
+        apply(sum_uniqueness O E E' A B); auto.
       subst AB'.
       assert(HH:= sum_assoc O E E' AB C D ABC CD S H9 H7).
       destruct HH.
@@ -4326,7 +4317,7 @@ Proof.
     unfold sum3 in H.
     ex_and H AB'.
     assert(AB'=AB).
-      apply (sum_unicity O E E' A B); auto.
+      apply (sum_uniqueness O E E' A B); auto.
     subst AB'.
     assert(HP:= sum_assoc O E E' D AB C ABD ABC S H24 H27).
     destruct HP.
@@ -4421,10 +4412,10 @@ Proof.
     ex_and H6 BC'.
     assert(AD' = AD).
       apply sum_comm in H2; auto.
-      apply (sum_unicity O E E' D A); auto.
+      apply (sum_uniqueness O E E' D A); auto.
     subst AD'.
     assert(BC' = BC).
-      apply (sum_unicity O E E' B C); auto.
+      apply (sum_uniqueness O E E' B C); auto.
     subst BC'.
     apply sum_comm; auto.
 Qed.
@@ -4451,7 +4442,7 @@ Proof.
     unfold Diff in H1.
     ex_and H1 mA'.
     assert(mA' = mA).
-      apply (opp_unicity O E E' H2 A); auto.
+      apply (opp_uniqueness O E E' H2 A); auto.
     subst mA'.
     assert(HH:=sum_exists O E E' H2 dBA dCB H13 H10).
     ex_and HH Sd.
@@ -4465,10 +4456,10 @@ Proof.
     ex_and H9 O'.
     ex_and H14 dCA'.
     assert(O' = O).
-      apply (sum_unicity O E E' mB B); auto.
+      apply (sum_uniqueness O E E' mB B); auto.
     subst O'.
     assert(dCA'=dCA).
-      apply (sum_unicity O E E' C mA); auto.
+      apply (sum_uniqueness O E E' C mA); auto.
       apply sum_comm; auto.
     subst dCA'.
     assert(dCA=Sd).
@@ -4507,7 +4498,7 @@ Proof.
     ex_and H5 O'.
     ex_and H6 dCA'.
     assert(O'=O).
-      apply (sum_unicity O E E' mB B); auto.
+      apply (sum_uniqueness O E E' mB B); auto.
     subst O'.
     assert(dCA' = dCA).
       apply(sum_O_B_eq O E E'); auto.
@@ -4551,13 +4542,13 @@ Proof.
     ex_and H6 Y'.
     ex_and H16 X'.
     assert(X' = X).
-      apply(sum_unicity O E E' A dXA); auto.
+      apply(sum_uniqueness O E E' A dXA); auto.
     subst X'.
     assert(Y'=Y).
-      apply(sum_unicity O E E' B dYB); auto.
+      apply(sum_uniqueness O E E' B dYB); auto.
     subst Y'.
     assert( Z'= Z).
-      apply(sum_unicity O E E' X Y); auto.
+      apply(sum_uniqueness O E E' X Y); auto.
       apply sum_comm; auto.
     subst Z'.
     assumption.
@@ -4586,7 +4577,7 @@ Proof.
     ex_and HH dZC'.
     assert(HH:=sum_diff2_diff_sum2_a O E E' A B C X Y Z dXA dYB dZC' H H0 H1 H2 H5).
     assert( dZC' = dZC).
-      apply(diff_unicity O E E' Z C); auto.
+      apply(diff_uniqueness O E E' Z C); auto.
     subst dZC'.
     assumption.
 Qed.

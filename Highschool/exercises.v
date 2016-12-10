@@ -38,7 +38,7 @@ elim (eq_dec_points A C); intro; apply plg_per_rect.
 
     assumption.
 
-    right; intro; subst; assert (B = C) by (apply symmetric_point_unicity with A K; assumption); contradiction.
+    right; intro; subst; assert (B = C) by (apply symmetric_point_uniqueness with A K; assumption); contradiction.
 
     apply pars_par_plg.
 

@@ -24,5 +24,8 @@ Class Tarski_neutral_dimensionless_variant := {
  Minner_pasch : forall A B C P Q,
    BetM A P C -> BetM B Q C ->
    exists X, BetM P X B /\ BetM Q X A;
- Mlower_dim : exists A, exists B, exists C, ~ (BetM A B C \/ BetM B C A \/ BetM C A B)
+ MPA : MTpoint;
+ MPB : MTpoint;
+ MPC : MTpoint;
+ Mlower_dim : ~ (BetM MPA MPB MPC \/ BetM MPB MPC MPA \/ BetM MPC MPA MPB)
  }.

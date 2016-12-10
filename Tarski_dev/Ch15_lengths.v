@@ -101,7 +101,7 @@ spliter.
 
 assert(HH:= diff_A_O O E E' A H1 H2).
 assert(A = A').
-apply(diff_unicity O E E' A O A A'); assumption.
+apply(diff_uniqueness O E E' A O A A'); assumption.
 subst A'.
 assumption.
 Qed.
@@ -133,12 +133,12 @@ unfold Ar2 in H4.
 spliter.
 
 assert(P = AB).
-apply (diff_unicity O E E' AB O); auto.
+apply (diff_uniqueness O E E' AB O); auto.
 apply diff_A_O; auto.
 subst P.
 
 assert(Q = CD).
-apply (diff_unicity O E E' CD O); auto.
+apply (diff_uniqueness O E E' CD O); auto.
 apply diff_A_O; auto.
 subst Q.
 clean_duplicated_hyps.
@@ -455,7 +455,7 @@ spliter.
 induction (eq_dec_points A O).
 subst A.
 assert(B = C).
-apply (sum_unicity O E E' O B); auto.
+apply (sum_uniqueness O E E' O B); auto.
 apply sum_O_B; auto.
 subst C.
 Cong.
@@ -467,7 +467,7 @@ Qed.
 
 (** Lemma 15.4. *)
 (** Triangular equality. *)
-Lemma length_unicity : forall O E E' A B AB AB',
+Lemma length_uniqueness : forall O E E' A B AB AB',
   Length O E E' A B AB -> Length O E E' A B AB' -> AB = AB'.
 Proof.
 intros.
@@ -678,7 +678,7 @@ apply diff_sum in H11.
 apply diff_sum in H8.
 apply diff_sum in H5.
 assert(AB = X).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 assumption.
 unfold Sum in H11.
 spliter.
@@ -687,7 +687,7 @@ apply(sum_O_B); tauto.
 subst X.
 
 assert(BC = Y).
-apply (sum_unicity O E E' O Y).
+apply (sum_uniqueness O E E' O Y).
 assumption.
 unfold Sum in H8.
 spliter.
@@ -696,7 +696,7 @@ apply(sum_O_B); tauto.
 subst Y.
 
 assert(AC = Z).
-apply (sum_unicity O E E' O Z).
+apply (sum_uniqueness O E E' O Z).
 assumption.
 unfold Sum in H5.
 spliter.
@@ -728,7 +728,7 @@ eCong.
 
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
-apply(l6_11_unicity O A C E AC AC').
+apply(l6_11_uniqueness O A C E AC AC').
 intro.
 subst E.
 tauto.
@@ -767,7 +767,7 @@ unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H0.
 assert(X=O).
-apply(sum_unicity O E E' O X).
+apply(sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H0.
 spliter.
@@ -794,7 +794,7 @@ unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
 assert(X = AB).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H9.
 spliter.
@@ -810,7 +810,7 @@ ex_and H5 Y.
 apply diff_sum in H5.
 
 assert(Y = AC).
-apply (sum_unicity O E E' O Y).
+apply (sum_uniqueness O E E' O Y).
 apply sum_O_B.
 unfold Sum in H9.
 spliter.
@@ -822,7 +822,7 @@ Col.
 assumption.
 subst Y.
 assert(AB = AC).
-apply(l6_11_unicity O A B E AB AC).
+apply(l6_11_uniqueness O A B E AB AC).
 intro.
 subst E.
 unfold Ps in H13.
@@ -880,7 +880,7 @@ apply cong_identity in H12.
 subst B.
 
 assert(BC = AC).
-apply(l6_11_unicity O A C E BC AC).
+apply(l6_11_uniqueness O A C E BC AC).
 intro.
 subst E.
 tauto.
@@ -892,7 +892,7 @@ unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 assert(X = O).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H8.
 unfold Ar2 in H8.
@@ -911,7 +911,7 @@ ex_and H8 X.
 apply diff_sum in H8.
 
 assert(X = BC).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H8.
 unfold Ar2 in H8.
@@ -930,7 +930,7 @@ unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
 assert(X = AC).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H5.
 unfold Ar2 in H5.
@@ -1050,7 +1050,7 @@ apply diff_sum in H11.
 apply diff_sum in H8.
 apply diff_sum in H5.
 assert(AB = X).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 assumption.
 unfold Sum in H11.
 spliter.
@@ -1059,7 +1059,7 @@ apply(sum_O_B); tauto.
 subst X.
 
 assert(BC = Y).
-apply (sum_unicity O E E' O Y).
+apply (sum_uniqueness O E E' O Y).
 assumption.
 unfold Sum in H8.
 spliter.
@@ -1068,7 +1068,7 @@ apply(sum_O_B); tauto.
 subst Y.
 
 assert(AC = Z).
-apply (sum_unicity O E E' O Z).
+apply (sum_uniqueness O E E' O Z).
 assumption.
 unfold Sum in H5.
 spliter.
@@ -1100,7 +1100,7 @@ eCong.
 
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
-apply(l6_11_unicity O A C E AC AC').
+apply(l6_11_uniqueness O A C E AC AC').
 intro.
 subst E.
 unfold Ps in H15.
@@ -1140,7 +1140,7 @@ unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H0.
 assert(X=O).
-apply(sum_unicity O E E' O X).
+apply(sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H0.
 spliter.
@@ -1167,7 +1167,7 @@ unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
 assert(X = AB).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H9.
 spliter.
@@ -1183,7 +1183,7 @@ ex_and H5 Y.
 apply diff_sum in H5.
 
 assert(Y = AC).
-apply (sum_unicity O E E' O Y).
+apply (sum_uniqueness O E E' O Y).
 apply sum_O_B.
 unfold Sum in H9.
 spliter.
@@ -1195,7 +1195,7 @@ Col.
 assumption.
 subst Y.
 assert(AB = AC).
-apply(l6_11_unicity O A B E AB AC).
+apply(l6_11_uniqueness O A B E AB AC).
 intro.
 subst E.
 unfold Ps in H13.
@@ -1251,7 +1251,7 @@ apply cong_identity in H12.
 subst B.
 
 assert(BC = AC).
-apply(l6_11_unicity O A C E BC AC).
+apply(l6_11_uniqueness O A C E BC AC).
 intro.
 subst E.
 tauto.
@@ -1263,7 +1263,7 @@ unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
 assert(X = O).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H8.
 unfold Ar2 in H8.
@@ -1282,7 +1282,7 @@ ex_and H8 X.
 apply diff_sum in H8.
 
 assert(X = BC).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H8.
 unfold Ar2 in H8.
@@ -1301,7 +1301,7 @@ unfold LtP in H5.
 ex_and H5 X.
 apply diff_sum in H5.
 assert(X = AC).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H5.
 unfold Ar2 in H5.
@@ -1398,7 +1398,7 @@ ex_and H4 Y.
 apply diff_sum in H7.
 apply diff_sum in H4.
 assert(X = AB).
-apply (sum_unicity O E E' O X).
+apply (sum_uniqueness O E E' O X).
 apply sum_O_B.
 unfold Sum in H4.
 spliter.
@@ -1410,7 +1410,7 @@ Col.
 assumption.
 subst X.
 assert(Y = CD).
-apply (sum_unicity O E E' O Y).
+apply (sum_uniqueness O E E' O Y).
 apply sum_O_B.
 unfold Sum in H4.
 spliter.
@@ -1510,13 +1510,13 @@ repeat split; auto.
 intro.
 subst B'.
 assert(B = A).
-apply (l10_2_unicity X Y A' B A H1 H0).
+apply (l10_2_uniqueness X Y A' B A H1 H0).
 contradiction.
 
 intro.
 subst C'.
 assert(C=A).
-apply (l10_2_unicity X Y A' C A H2 H0).
+apply (l10_2_uniqueness X Y A' C A H2 H0).
 contradiction.
 induction H4.
 left.
@@ -1695,7 +1695,7 @@ apply cong_symmetry in H7.
 apply cong_identity in H7.
 subst D1.
 assert (AD = O).
-apply (prod_unicity O E E' A1 O).
+apply (prod_uniqueness O E E' A1 O).
 assumption.
 apply prod_0_r.
 assumption.
@@ -1722,6 +1722,7 @@ tauto.
 subst C1; Col.
 
 induction(eq_dec_points A B).
+{
 subst B.
 induction H3.
 induction H3.
@@ -1734,10 +1735,10 @@ assert(C=D).
 apply(l6_21 P C A C); Col.
 subst D.
 assert(A1=B1).
-apply (length_unicity O E E' P A);auto.
+apply (length_uniqueness O E E' P A);auto.
 subst B1.
 assert(C1 = D1).
-apply (length_unicity O E E' P C);auto.
+apply (length_uniqueness O E E' P C);auto.
 subst D1.
 left.
 apply prod_comm.
@@ -1745,6 +1746,7 @@ assumption.
 subst D.
 apply False_ind.
 apply H2; Col.
+}
 
 rename H11 into HAB.
 
@@ -1762,6 +1764,7 @@ clean_duplicated_hyps.
 
 
 assert(exists C' : Tpoint, Cong_3 P A C O A1 C' /\ OS O A1 E' C').
+{
 apply(l10_16 P A C O A1 E');
 Cong.
 apply length_Ar2 in Hl0.
@@ -1784,10 +1787,12 @@ apply cong_identity in H22.
 subst A.
 apply H2.
 Col.
+}
 
 ex_and H4 C1'.
 
 assert(CongA P A C O A1 C1').
+{
 apply(cong3_conga).
 intro.
 subst A.
@@ -1796,14 +1801,16 @@ intro.
 subst C.
 apply H2; Col.
 assumption.
+}
 
 assert(HN:~Col O C1 C1').
+{
 intro.
 unfold OS in H5.
 ex_and H5 K.
 unfold TS in H23.
 spliter.
-apply H24.
+apply H23.
 apply col_permutation_2.
 apply (col_transitivity_1 _ C1).
 intro.
@@ -1813,6 +1820,7 @@ apply H2.
 Col.
 ColR.
 Col.
+}
 
 assert(HH:= midpoint_existence C1 C1').
 ex_and HH M.
@@ -1827,7 +1835,7 @@ spliter.
 ex_and H24 N.
 
 assert(Out O C1 D1).
-
+{
 apply (length_out O E E' P C P D).
 intro.
 subst C.
@@ -1839,15 +1847,16 @@ subst D.
 apply cong_identity in H13.
 subst D1.
 assert(AD=O).
-apply (prod_unicity O E E' A1 O).
+{
+apply (prod_uniqueness O E E' A1 O).
 assumption.
 apply prod_0_r.
-
 unfold Prod in H8.
 spliter.
 unfold Ar2 in H8.
 tauto.
 Col.
+}
 subst AD.
 induction H3.
 induction H3.
@@ -1860,9 +1869,11 @@ ColR.
 subst B; tauto.
 assumption.
 assumption.
+}
 
 (*********************)
 assert(Out O A1 C1).
+{
 apply (length_out O E E' P A P C).
 intro.
 subst A.
@@ -1877,12 +1888,14 @@ unfold Out in H27.
 tauto.
 assumption.
 assumption.
+}
 (*********************)
 
 assert(M <> C1).
+{
 intro.
 subst M.
-eapply (symmetric_point_unicity _ _ C1) in H7.
+eapply (symmetric_point_uniqueness _ _ C1) in H7.
 subst C1'.
 apply H2.
 apply out_col.
@@ -1892,8 +1905,10 @@ unfold Cong_3 in *.
 spliter.
 repeat split; Cong.
 apply l7_3_2.
+}
 
 assert(Per O M C1).
+{
 unfold Per.
 exists C1'.
 split.
@@ -1901,6 +1916,7 @@ assumption.
 unfold Cong_3 in H4.
 spliter.
 apply (cong_transitivity _ _ P C); Cong.
+}
 
 apply per_perp_in in H30; auto.
 apply perp_in_comm in H30.
@@ -1908,6 +1924,7 @@ apply perp_in_perp_bis in H30.
 
 
 assert(Out O C1' D1').
+{
 apply(image_preserves_out O M O C1 D1).
 assumption.
 unfold Reflect.
@@ -1984,8 +2001,10 @@ Col.
 Col.
 apply perp_distinct in H24.
 tauto.
+}
 
 assert(Perp O N D1 N).
+{
 apply (perp_col O M D1 N).
 intro.
 subst N.
@@ -2085,9 +2104,11 @@ spliter.
 apply bet_col in H24.
 Col.
 Col.
+}
 apply perp_left_comm in H32.
 
 assert(Cong O D1 O D1').
+{
 apply perp_perp_in in H32.
 apply perp_in_comm in H32.
 apply perp_in_per in H32.
@@ -2098,13 +2119,13 @@ eapply (l7_9 _ _ N D1);
 finish.
 subst D2.
 assumption.
+}
 
 assert(Pj C1 C1' D1 D1').
+{
 unfold Pj.
 left.
 induction H25; induction H30.
-
-
 apply (l12_9 _ _ _ _ O M).
 apply (perp_col _ M).
 intro.
@@ -2128,15 +2149,15 @@ apply l7_3 in H24.
 subst N.
 apply perp_distinct in H32.
 tauto.
-
-
-
+}
 assert(Cong_3 P C A O C1' A1).
+{
 unfold Cong_3 in *.
 spliter.
 repeat split; Cong.
-
+}
 assert(CongA P C A O C1' A1).
+{
 apply cong3_conga.
 intro.
 subst C.
@@ -2147,23 +2168,28 @@ subst C.
 apply H2.
 Col.
 assumption.
+}
 unfold Cong_3 in H35.
 spliter.
 assert(Cong P A O A1 /\ (P <> A -> CongA C P A C1' O A1 /\ CongA C A P C1' A1 O)).
+{
 apply(l11_49 P C A O C1' A1); Cong.
+}
 spliter.
 assert(P <> A).
+{
 intro.
 subst A.
 apply H2.
 Col.
+}
 apply H40 in H41.
 clear H40.
 spliter.
 
 assert(CongA C A P D B P).
-induction(Bet_dec C P D).
-
+{
+induction(bet_dec C P D).
 assert(Bet A P B).
 apply(project_preserves_bet A P A C C P D).
 assumption.
@@ -2247,8 +2273,6 @@ ColR.
 assert(CongA C A B D B A <-> Par A C B D).
 apply(l12_21 A C B D).
 unfold TS.
-split.
-assumption.
 repeat split.
 intro.
 apply H2.
@@ -2428,20 +2452,25 @@ subst D.
 apply False_ind.
 apply H2.
 ColR.
-
+}
 assert(C <> A).
+{
 intro.
 subst C.
 unfold CongA in H42.
 tauto.
+}
 
 assert(P <> A).
+{
 intro.
 subst A.
 unfold CongA in H42.
 tauto.
+}
 
 assert(~Par P A C A).
+{
 intro.
 induction H45.
 apply H45.
@@ -2450,9 +2479,11 @@ split; Col.
 spliter.
 apply H2.
 Col.
+}
 
 assert(CongA C P A D P B).
-induction(Bet_dec C P D).
+{
+induction(bet_dec C P D).
 
 assert(Bet A P B).
 apply (project_preserves_bet P A C A C P D A P B); auto.
@@ -2485,6 +2516,7 @@ apply H2.
 ColR.
 subst B.
 tauto.
+
 
 assert(Out P C D).
 apply(not_bet_out).
@@ -2540,20 +2572,26 @@ unfold Out in H47.
 tauto.
 apply out_trivial.
 auto.
+}
 
 assert(C1 <> C1').
+{
 intro.
 subst C1'.
 apply HN.
 Col.
+}
 
 assert(O <> C1').
+{
 intro.
 subst C1'.
 unfold CongA in H36.
 tauto.
+}
 
 assert(~Col O C1 C1').
+{
 intro.
 induction H30.
 apply perp_not_col in H30.
@@ -2564,8 +2602,9 @@ apply bet_col in H7.
 ColR.
 apply perp_distinct in H30.
 tauto.
-
+}
 assert(~Par O C1' C1 C1').
+{
 intro.
 induction H50.
 apply H50.
@@ -2573,8 +2612,10 @@ exists C1'.
 split; Col.
 spliter.
 contradiction.
+}
 
 assert(~Par O C1 C1 C1').
+{
 intro.
 induction H51.
 apply H51.
@@ -2582,8 +2623,9 @@ exists C1.
 split; Col.
 spliter.
 contradiction.
-
+}
 assert(Out O C1' D1').
+{
 apply(project_preserves_out O C1 D1 O C1' D1' O C1' C1 C1'); auto.
 repeat split; Col.
 repeat split; Col.
@@ -2618,8 +2660,9 @@ apply bet_col in H7.
 Col.
 apply perp_distinct in H30.
 tauto.
-
+}
 assert(CongA C1' O A1 D1' O B1).
+{
 apply(out_conga C1' O A1 C1' O A1 C1' A1 D1' B1); auto.
 apply conga_refl.
 auto.
@@ -2635,8 +2678,9 @@ subst A1.
 unfold Out in H28.
 tauto.
 apply(length_out O E E' P A  P B A1 B1); auto.
-
+}
 assert(CongA D1' O B1 D P B).
+{
 apply (conga_trans _ _ _ C P A).
 apply (conga_trans _ _ _ C1' O A1).
 apply conga_sym.
@@ -2644,14 +2688,17 @@ assumption.
 apply conga_sym.
 assumption.
 assumption.
-
+}
 assert((D1' <> B1 -> CongA O D1' B1 P D B /\ CongA O B1 D1' P B D)).
+{
 apply (l11_49 D1' O B1 D P B).
 assumption.
 apply (cong_transitivity _ _ O D1); Cong.
 assumption.
+}
 
 assert(D1' <> B1).
+{
 intro.
 subst D1'.
 induction H34.
@@ -2668,12 +2715,14 @@ apply l7_3 in H24.
 subst N.
 apply perp_distinct in H32.
 tauto.
+}
 apply H55 in H56.
 spliter.
 clear H55.
 apply conga_comm in H57.
 
 assert(CongA C1' A1 O D1' B1 O <-> Par A1 C1' B1 D1').
+{
 apply(l12_22 A1 C1' B1 D1' O).
 apply (length_out O E E' P A P B); auto.
 apply out_one_side.
@@ -2687,8 +2736,10 @@ unfold CongA in H53.
 tauto.
 ColR.
 assumption.
+}
 destruct H55.
 assert(Par A1 C1' B1 D1').
+{
 apply H55.
 apply (conga_trans _ _ _ D B P).
 apply (conga_trans _ _ _ C A P).
@@ -2697,9 +2748,10 @@ assumption.
 assumption.
 apply conga_sym.
 assumption.
+}
 clear H55 H58.
-
 assert(Prod O C1 C1' A1 D1 B1).
+{
 unfold Prod.
 repeat split.
 assumption.
@@ -2714,8 +2766,10 @@ apply out_col in H31.
 ColR.
 left.
 finish.
+}
 
 assert(exists Y : Tpoint, Prod O E C1' A1 D1 Y /\ Prod O E C1' C1 B1 Y).
+{
 apply(prod_x_axis_unit_change O C1 C1' A1 D1 C1 B1 E).
 repeat split; Col.
 ColR.
@@ -2725,17 +2779,17 @@ exists B1.
 split; auto.
 apply prod_1_l; Col.
 ColR.
+}
 ex_and H58 Y.
-
-
 assert(HH:=prod_y_axis_change O E C1' E' A1 D1 Y H58 H9).
+{
 assert(Y = AD).
-apply(prod_unicity O E E' A1 D1); auto.
+apply(prod_uniqueness O E E' A1 D1); auto.
 subst Y.
 assert(HP:=prod_y_axis_change O E C1' E' C1 B1 AD H60 H9).
 left.
 assumption.
-
+}
 spliter.
 subst M.
 apply False_ind.
@@ -2836,7 +2890,7 @@ spliter.
 induction(eq_dec_points H A).
 subst H.
 assert(AH=O).
-apply (length_unicity O E E' A A); auto.
+apply (length_uniqueness O E E' A A); auto.
 apply length_id_2.
 assumption.
 subst AH.
@@ -2846,15 +2900,15 @@ apply (l8_7 B);
 finish.
 subst C.
 assert(AC = O).
-apply (length_unicity O E E' A A); auto.
+apply (length_uniqueness O E E' A A); auto.
 subst AC.
 split;intros;
 assert(AC2=O).
-apply (prod_unicity O E E' O O); auto.
+apply (prod_uniqueness O E E' O O); auto.
 apply prod_0_r; Col.
 subst AC2.
 apply prod_0_r; Col.
-apply (prod_unicity O E E' AB O); auto.
+apply (prod_uniqueness O E E' AB O); auto.
 apply prod_0_r; Col.
 subst AC2.
 apply prod_0_r; Col.
@@ -3045,27 +3099,27 @@ assert(Length O E E' A H' AH).
 apply(length_eq_cong_2 O E E' A H A H' AH H5).
 Cong.
 assert(AH = AH').
-apply (length_unicity O E E' A H'); auto.
+apply (length_uniqueness O E E' A H'); auto.
 subst AH'.
 
 assert(Length O E E' A C' AC).
 apply(length_eq_cong_2 O E E' A C A C' AC H4).
 Cong.
 assert(AC = AC').
-apply (length_unicity O E E' A C'); auto.
+apply (length_uniqueness O E E' A C'); auto.
 subst AC'.
 
 split.
 intro.
 assert(P = AC2).
-apply (prod_unicity O E E' AC AC); auto.
+apply (prod_uniqueness O E E' AC AC); auto.
 subst P.
 apply prod_comm.
 assumption.
 
 intro.
 assert(P = AC2).
-apply (prod_unicity O E E' AB AH); auto.
+apply (prod_uniqueness O E E' AB AH); auto.
 apply prod_sym.
 assumption.
 subst P.
@@ -3126,22 +3180,22 @@ assert(HH:=l8_9 A C B H0 H11).
 induction HH.
 subst C.
 assert(AB = BC).
-apply(length_unicity O E E' A B).
+apply(length_uniqueness O E E' A B).
 assumption.
 apply length_sym.
 assumption.
 subst BC.
 assert(AB2 = BC2).
-apply(prod_unicity O E E' AB AB); auto.
+apply(prod_uniqueness O E E' AB AB); auto.
 subst BC2.
 
 assert(AC = O).
-apply(length_unicity O E E' A A).
+apply(length_uniqueness O E E' A A).
 assumption.
 apply length_id_2; assumption.
 subst AC.
 assert(AC2=O).
-apply(prod_unicity O E E' O O).
+apply(prod_uniqueness O E E' O O).
 assumption.
 apply prod_0_l; Col.
 subst AC2.
@@ -3149,25 +3203,28 @@ apply sum_O_B; Col.
 
 subst C.
 assert(AB = AC).
-apply(length_unicity O E E' A B).
+apply(length_uniqueness O E E' A B).
 assumption.
 assumption.
 subst AC.
 assert(AB2 = AC2).
-apply(prod_unicity O E E' AB AB); auto.
+apply(prod_uniqueness O E E' AB AB); auto.
 subst AC2.
 
 assert(BC = O).
-apply(length_unicity O E E' B B).
+apply(length_uniqueness O E E' B B).
 assumption.
 apply length_id_2; assumption.
 subst BC.
 assert(BC2=O).
-apply(prod_unicity O E E' O O).
+apply(prod_uniqueness O E E' O O).
 assumption.
 apply prod_0_l; Col.
 subst BC2.
 apply sum_A_O; Col.
+
+
+
 assert(exists X : Tpoint, Col A B X /\ Perp A B C X).
 apply(l8_18_existence A B C); Col.
 ex_and H12 P.
