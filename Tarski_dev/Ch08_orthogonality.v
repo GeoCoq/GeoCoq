@@ -84,6 +84,23 @@ repeat
       not_exist_hyp3 X1 X2 X1 X3 X2 X3;
       assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
 
+      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
+      let h := fresh in
+      not_exist_hyp2 X1 X2 X2 X3;
+      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
+
       | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
         assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
@@ -161,7 +178,7 @@ repeat
                        smart_subst A;clean_reap_hyps
    | H : Midpoint ?P ?A ?P1, H2 : Midpoint ?P ?A ?P2 |- _ =>
      let T := fresh in not_exist_hyp (P1=P2);
-                      assert (T := symmetric_point_unicity A P P1 P2 H H2);
+                      assert (T := symmetric_point_uniqueness A P P1 P2 H H2);
                       smart_subst P1;clean_reap_hyps
    | H : Midpoint ?A ?P ?X, H2 : Midpoint ?A ?Q ?X |- _ =>
      let T := fresh in not_exist_hyp (P=Q); assert (T := l7_9 P Q A X H H2);
@@ -189,7 +206,7 @@ end.
 Ltac ColR :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in
-   treat_equalities; assert_cols; Col_refl tpoint col.
+   treat_equalities; assert_cols; try (solve [Col]); Col_refl tpoint col.
 
 Ltac search_contradiction :=
  match goal with
@@ -258,7 +275,7 @@ repeat
    | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
      let T := fresh in not_exist_hyp (A=B); assert (T : between_equality A B C H H2); smart_subst'
    | H : Midpoint ?P ?A ?P1, H2 : Midpoint ?P ?A ?P2 |- _ =>
-     let T := fresh in not_exist_hyp (P1=P2); assert (T : symmetric_point_unicity A P P1 P2 H H2); smart_subst'
+     let T := fresh in not_exist_hyp (P1=P2); assert (T : symmetric_point_uniqueness A P P1 P2 H H2); smart_subst'
    | H : Midpoint ?A ?P ?X, H2 : Midpoint ?A ?Q ?X |- _ =>
      let T := fresh in not_exist_hyp (P=Q); assert (T : l7_9 P Q A X H H2); smart_subst'
    | H : Midpoint ?M ?A ?A |- _ =>
@@ -322,7 +339,7 @@ Proof.
     right.
     intro.
     decompose [ex and] H0;clear H0.
-    assert (C'=x) by (apply symmetric_point_unicity with C B;assumption).
+    assert (C'=x) by (apply symmetric_point_uniqueness with C B;assumption).
     subst.
     intuition.
 Qed.
@@ -384,7 +401,8 @@ Proof.
     exists C'.
     split.
       assumption.
-    eapply l4_17 with A B;Cong;Col.
+    unfold Midpoint in *;spliter.
+    eapply l4_17 with A B;finish.
 Qed.
 
 Lemma l8_4 : forall A B C C', Per A B C -> Midpoint B C C' -> Per A B C'.
@@ -396,7 +414,7 @@ Proof.
     split.
       apply l7_2.
       assumption.
-    assert (B' = C') by (eapply symmetric_point_unicity;eauto).
+    assert (B' = C') by (eapply symmetric_point_uniqueness;eauto).
     subst B'.
     Cong.
 Qed.
@@ -417,7 +435,7 @@ Proof.
     intros.
     ex_and H C'.
     ex_and H0 C''.
-    assert (C'=C'') by (eapply symmetric_point_unicity;eauto).
+    assert (C'=C'') by (eapply symmetric_point_uniqueness;eauto).
     subst C''.
     assert (C = C') by (eapply l4_19;eauto).
     subst C'.
@@ -461,7 +479,7 @@ Proof.
     assert (Cong A C' A' C').
       unfold Per in H4.
       ex_and H4 Z.
-      assert (A' = Z) by (eapply (symmetric_point_unicity A C A');auto).
+      assert (A' = Z) by (eapply (symmetric_point_uniqueness A C A');auto).
       subst Z.
       Cong.
     unfold Midpoint in *.
@@ -612,14 +630,6 @@ Proof.
     spliter.
     repeat split;try assumption.
     intros;eapply l8_2;eauto.
-Qed.
-
-Lemma l4_3_1 : forall A B C A' B' C',
- Bet A B C -> Bet A' B' C' -> Cong A B A' B' -> Cong A C A' C' -> Cong B C B' C'.
-Proof.
-    intros.
-    apply cong_commutativity.
-    eapply l4_3;eBetween;eCong.
 Qed.
 
 Lemma per_col : forall A B C D,
@@ -1086,7 +1096,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma l8_18_unicity : forall A B C X Y,
+Lemma l8_18_uniqueness : forall A B C X Y,
   ~ Col A B C -> Col A B X -> Perp A B C X -> Col A B Y -> Perp A B C Y -> X=Y.
 Proof.
     intros.
@@ -1169,7 +1179,7 @@ Proof.
     unfold Per in H7.
     ex_and H7 D''.
     assert (D''= D).
-      eapply symmetric_point_unicity.
+      eapply symmetric_point_uniqueness.
         apply H7.
       apply l7_2.
       assumption.
@@ -1177,7 +1187,7 @@ Proof.
     unfold Per in H8.
     ex_and H8 D''.
     assert (D' = D'').
-      eapply symmetric_point_unicity.
+      eapply symmetric_point_uniqueness.
         apply l7_2.
         apply H9.
       assumption.
@@ -1246,7 +1256,7 @@ Proof.
     intro.
     subst P.
     assert (C = D).
-      eapply symmetric_point_unicity.
+      eapply symmetric_point_uniqueness.
         apply H1.
       assumption.
     subst D.
@@ -1308,7 +1318,7 @@ Proof.
     prolong A Y Z Y P.
     prolong P Y Q Y A.
     prolong Q Z Q' Q Z.
-    assert (Midpoint Z Q Q') by (unfold Midpoint;Cong).
+    assert (Midpoint Z Q Q') by (unfold Midpoint;split;Cong).
     prolong Q' Y C' Y C.
     assert (exists X, Midpoint X C C') by (apply l7_25 with Y;Cong).
     ex_and H13 X.
@@ -1316,7 +1326,7 @@ Proof.
     show_distinct A Y.
       intuition.
     assert (Cong Z Q P A) by (eauto using five_segment_with_def).
-    assert (Cong_3 A P Y Q Z Y) by (unfold Cong_3;Cong).
+    assert (Cong_3 A P Y Q Z Y) by (unfold Cong_3;repeat split;Cong).
     assert (Per Q Z Y) by (eauto using l8_10).
     assert (Per Y Z Q) by eauto using l8_2.
     (* diversion *)
@@ -1329,7 +1339,7 @@ Proof.
     unfold Per in H19.
     ex_and H19 Q''.
     assert (Q' = Q'').
-      eapply symmetric_point_unicity.
+      eapply symmetric_point_uniqueness.
         apply H10.
       assumption.
     subst Q''.
@@ -1341,7 +1351,7 @@ Proof.
       apply T;Between.
     show_distinct Q Y.
       intuition.
-    assert (Per Y X C) by (unfold Per;exists C';Cong).
+    assert (Per Y X C) by (unfold Per;exists C';split;Cong).
     assert_diffs.
     assert (Col P Y Q).
       unfold Col.
@@ -1458,12 +1468,12 @@ Proof.
     intros.
     unfold Perp_at in H52.
     spliter.
-    apply H59;ColR.
+    apply H57;ColR.
 Qed.
 
 
 Lemma l8_21_aux : forall A B C,
- A<> B -> ~ Col A B C -> exists P, exists T, Perp A B P A /\ Col A B T /\ Bet C T P.
+ A <> B -> ~ Col A B C -> exists P, exists T, Perp A B P A /\ Col A B T /\ Bet C T P.
 Proof.
     intros.
     assert (exists X : Tpoint, Col A B X /\ Perp A B C X).
@@ -1535,7 +1545,7 @@ Proof.
       apply between_identity in H12.
       subst T.
       assert (C'= C'').
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H4.
         assumption.
       subst C''.
@@ -1676,31 +1686,6 @@ Proof.
     apply H.
 Qed.
 
-(* TODO move *)
-Lemma le_bet : forall A B C D, Le C D A B -> exists X, Bet A X B /\ Cong A X C D.
-Proof.
-    intros.
-    unfold Le in H.
-    ex_and H Y.
-    exists Y;Cong.
-Qed.
-
-(* TODO move *)
-Lemma bet_cong3 : forall A B C A' B',  Bet A B C -> Cong A B A' B' -> exists C', Cong_3 A B C A' B' C'.
-Proof.
-    unfold Col.
-    intros.
-    assert (exists x, Bet A' B' x /\ Cong B' x B C) by (apply segment_construction).
-    ex_and H1 x.
-    assert (Cong A C A' x).
-      eapply l2_11.
-        apply H.
-        apply H1.
-        assumption.
-      Cong.
-    exists x;unfold Cong_3;Cong.
-Qed.
-
 Lemma diff_per_diff : forall A B P R ,
       A <> B -> Cong A P B R -> Per B A P -> Per A B R -> P <> R.
 Proof.
@@ -1831,7 +1816,7 @@ Proof.
       unfold Per in H10.
       ex_and H10 P''.
       assert (P'=P'').
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H14.
         apply H10.
       subst P''.
@@ -1917,7 +1902,7 @@ Proof.
       right; right.
       assumption.
     assert (M = B).
-      eapply (l8_18_unicity A X R).
+      eapply (l8_18_uniqueness A X R).
         intro.
         assert (Col A B R).
           eapply col_transitivity_1.
@@ -1947,7 +1932,7 @@ Proof.
           auto.
         intro.
         subst M.
-        apply (symmetric_point_unicity R R R R')  in H18.
+        apply (symmetric_point_uniqueness R R R R')  in H18.
           subst R'.
           apply H22.
           eapply col_transitivity_1.
@@ -2207,7 +2192,7 @@ Proof.
     spliter.
     unfold Perp_at in H.
     spliter.
-    eapply l8_18_unicity with A B C;finish.
+    eapply l8_18_uniqueness with A B C;finish.
       apply perp_sym.
       eapply perp_col with A;finish.
         intro.
@@ -2545,6 +2530,63 @@ apply perp_sym.
 apply perp_col2 with P Q; Perp; ColR.
 Qed.
 
+Lemma perp_in_perp_bis : forall A B C D X,
+ Perp_at X A B C D -> Perp X B C D \/ Perp A X C D.
+Proof.
+    intros.
+    induction (eq_dec_points X A).
+      subst X.
+      left.
+      unfold Perp.
+      exists A.
+      assumption.
+    right.
+    unfold Perp.
+    exists X.
+    unfold Perp_at in *.
+    spliter.
+    repeat split.
+      intro.
+      apply H0.
+      subst X.
+      reflexivity.
+      assumption.
+      apply col_trivial_3.
+      assumption.
+    intros.
+    apply H4.
+      apply col_permutation_2.
+      eapply col_transitivity_1.
+        intro.
+        apply H0.
+        apply sym_equal.
+        apply H7.
+        Col.
+      Col.
+    assumption.
+Qed.
+
+Lemma col_per_perp : forall A B C D,
+ A <> B -> B <> C -> D <> B -> D <> C ->
+ Col B C D -> Per A B C -> Perp C D A B.
+Proof.
+    intros.
+    apply per_perp_in in H4.
+      apply perp_in_perp_bis in H4.
+      induction H4.
+        apply perp_distinct in H4.
+        spliter.
+        absurde.
+      eapply (perp_col _ B).
+        auto.
+        apply perp_sym.
+        apply perp_right_comm.
+        assumption.
+      apply col_permutation_4.
+      assumption.
+      assumption.
+    assumption.
+Qed.
 
 Lemma per_cong_mid : forall A B C H,
  B <> C -> Bet A B C -> Cong A H C H -> Per H B C ->
@@ -2577,7 +2619,7 @@ Proof.
     ex_and H6 A'.
     ex_and H7 H''.
     assert (H' = H'').
-      eapply construction_unicity.
+      eapply construction_uniqueness.
         2: apply  midpoint_bet.
         2:apply H5.
         assumption.
@@ -2614,6 +2656,22 @@ Proof.
     split.
       assumption.
     apply cong_left_commutativity.
+    assumption.
+Qed.
+
+Lemma per_double_cong : forall A B C C',
+ Per A B C -> Midpoint B C C' -> Cong A C A C'.
+Proof.
+    intros.
+    unfold Per in H.
+    ex_and H C''.
+    assert (C' = C'').
+      eapply l7_9.
+        apply l7_2.
+        apply H0.
+      apply l7_2.
+      assumption.
+    subst C''.
     assumption.
 Qed.
 

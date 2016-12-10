@@ -4,10 +4,10 @@ Section triangle_existential_triangle.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma triangle__existential_triangle : triangle_postulate -> postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights.
+Lemma triangle__existential_triangle : triangle_postulate -> postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights.
 Proof.
   intro triangle.
-  destruct lower_dim as [A [B [C]]].
+  destruct lower_dim_ex as [A [B [C]]].
   assert(~ Col A B C) by (unfold Col; assumption).
   assert_diffs.
   destruct (ex_trisuma A B C) as [D [E [F]]]; auto.

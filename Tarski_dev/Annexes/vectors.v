@@ -63,7 +63,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H4.
+apply H3.
 Col.
 apply plgf_sym in H.
 apply plgf_trivial_neq in H.
@@ -76,7 +76,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H2.
+apply H.
 Col.
 apply plgf_trivial_neq in H.
 right.
@@ -131,7 +131,7 @@ split; Cong.
 assumption.
 Qed.
 
-Lemma vector_construction_unicity :
+Lemma vector_construction_uniqueness :
  forall A B C D D',
  EqV A B C D ->
  EqV A B C D' ->
@@ -142,7 +142,7 @@ unfold EqV in *.
 induction H; induction H0.
 apply plg_comm2 in H.
 apply plg_comm2 in H0.
-apply (plg_unicity B A C); auto.
+apply (plg_uniqueness B A C); auto.
 spliter.
 subst B.
 subst D'.
@@ -151,7 +151,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H2.
+apply H.
 Col.
 apply (plgf_trivial_neq A D C ).
 assumption.
@@ -163,7 +163,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H2.
+apply H.
 Col.
 apply plgf_comm2 in H.
 apply (plgf_trivial_neq A C D').
@@ -183,7 +183,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H2.
+apply H.
 Col.
 apply plgf_trivial_neq in H.
 spliter.
@@ -192,7 +192,7 @@ tauto.
 tauto.
 Qed.
 
-Lemma vector_unicity : forall A B C, EqV A B A C -> B = C.
+Lemma vector_uniqueness : forall A B C, EqV A B A C -> B = C.
 Proof.
 intros.
 unfold EqV in H.
@@ -202,7 +202,7 @@ induction H.
 unfold TS in H.
 spliter.
 apply False_ind.
-apply H3.
+apply H2.
 Col.
 apply plgf_permut in H.
 apply plgf_sym in H.
@@ -230,7 +230,7 @@ intros.
 induction (eq_dec_points A C).
 subst C.
 assert(B = D).
-apply (vector_unicity A).
+apply (vector_uniqueness A).
 assumption.
 subst D.
 apply eqv_trivial.
@@ -341,7 +341,7 @@ intros.
 unfold SumV.
 intros D H.
 assert(A = D).
-apply (vector_unicity B).
+apply (vector_uniqueness B).
 apply H.
 subst D.
 apply eqv_trivial.
@@ -355,7 +355,7 @@ intros.
 unfold SumV.
 intros D H.
 assert(C = D).
-apply (vector_unicity B).
+apply (vector_uniqueness B).
 assumption.
 subst D.
 apply eqv_refl.
@@ -556,7 +556,7 @@ apply (null_vector D).
 apply eqv_sym.
 apply HH.
 subst D'.
-apply vector_unicity in H0.
+apply vector_uniqueness in H0.
 auto.
 Qed.
 
@@ -591,7 +591,7 @@ ex_and H D'.
 unfold SumV.
 intros.
 assert(D'= D'0).
-apply (vector_construction_unicity C D B).
+apply (vector_construction_uniqueness C D B).
 apply eqv_sym.
 apply H.
 assumption.
@@ -609,12 +609,12 @@ exists F.
 unfold SumV.
 intros.
 assert(D' = F).
-apply (vector_construction_unicity C D B); auto.
+apply (vector_construction_uniqueness C D B); auto.
 subst D'.
 apply eqv_refl.
 Qed.
 
-Lemma sum_unicity :
+Lemma sum_uniqueness :
  forall A B C D E F E' F',
  SumV A B C D E F ->
  SumV A B C D E' F' ->
@@ -680,12 +680,13 @@ assert(B <> C).
 intro.
 subst C.
 unfold TS in H6.
-tauto.
+spliter.
+Col.
 assert(~ Col B C D').
 intro.
 unfold TS in H6.
 spliter.
-apply H10.
+apply H9.
 Col.
 
 assert(OS B C D' D).
@@ -699,6 +700,9 @@ apply l9_2.
 apply H6.
 auto.
 
+assert(~ Col A B C).
+induction H10.
+assumption.
 induction H10.
 spliter.
 ex_and H13 T.
@@ -709,13 +713,7 @@ assumption.
 spliter.
 
 assert(~Col A B C).
-induction H15.
-spliter.
-induction H17.
-spliter.
-intro.
-apply H18.
-Col.
+assumption.
 
 assert(Par_strict A B D' C /\ Par_strict A C B D').
 
@@ -983,13 +981,16 @@ unfold TS in *.
 spliter.
 repeat split; auto.
 intro.
+subst B.
+Col.
+intro.
 subst X.
-apply H5.
+apply H0.
 Col.
 intro;
 spliter.
 subst Y.
-apply H2.
+apply H1.
 Col.
 spliter.
 
@@ -1045,7 +1046,7 @@ split; Col.
 induction (eq_dec_points B D').
 subst D'.
 assert( A = C).
-apply (vector_unicity B).
+apply (vector_uniqueness B).
 apply eqv_comm.
 apply H2.
 subst C.
@@ -1066,7 +1067,7 @@ auto.
 
 assert(Col C D D').
 apply col_permutation_1.
-apply (parallel_unicity A B _ _ C _ C).
+apply (parallel_uniqueness A B _ _ C _ C).
 left.
 apply H.
 2: apply par_right_comm.
@@ -1086,7 +1087,7 @@ spliter.
 repeat split;
 auto.
 intro.
-apply H12.
+apply H11.
 ColR.
 exists M.
 split.
@@ -1347,7 +1348,7 @@ Lemma plgs_plgs_bet :
 Proof.
 intros.
 assert(Col C' C D /\ Col D C D).
-apply (parallel_unicity A B C D C' D D); Col.
+apply (parallel_uniqueness A B C D C' D D); Col.
 left.
 apply plgs_par_strict in H.
 spliter.
@@ -1413,10 +1414,6 @@ assumption.
 assert(TS D A C C').
 repeat split.
 intro.
-subst D.
-apply H.
-Col.
-intro.
 apply plgs_par_strict in H.
 spliter.
 apply H.
@@ -1474,13 +1471,6 @@ spliter.
 assert(TS B C A B').
 unfold TS.
 repeat split.
-intro.
-subst C.
-apply plgs_par_strict in H3.
-spliter.
-apply H3.
-exists A.
-split; Col.
 intro.
 apply plgs_par_strict in H.
 spliter.
@@ -1630,7 +1620,7 @@ spliter.
 assumption.
 
 assert(Col P' P Q /\ Col Q P Q).
-apply(parallel_unicity A B' P Q P' Q Q ); Col.
+apply(parallel_uniqueness A B' P Q P' Q Q ); Col.
 apply plg_par in H8; auto.
 spliter.
 auto.
@@ -1770,7 +1760,7 @@ Col.
 
 assert(Col C' C D /\ Col D C D).
 
-apply(parallel_unicity A B C D C' D D); Col.
+apply(parallel_uniqueness A B C D C' D D); Col.
 spliter.
 clear H10.
 
@@ -1887,7 +1877,7 @@ apply H0.
 assumption.
 
 assert(Col P' P Q /\ Col Q P Q).
-apply(parallel_unicity A B' P Q P' Q Q); Col.
+apply(parallel_uniqueness A B' P Q P' Q Q); Col.
 spliter.
 Col.
 
@@ -2618,7 +2608,7 @@ elim (eq_dec_points C D); intro HCD; try tauto.
       elim HElim; clear HElim; intro HElim.
 
         apply plg_comm2 in HElim.
-        assert (HEF := plg_unicity B A C E F HPar HElim).
+        assert (HEF := plg_uniqueness B A C E F HPar HElim).
         subst; intuition.
 
         spliter; intuition.
@@ -2691,7 +2681,7 @@ assert(Col C' C D /\ Col D C D).
 apply plg_par in H1.
 spliter.
 
-apply(parallel_unicity A B C D C' D D); Col.
+apply(parallel_uniqueness A B C D C' D D); Col.
 apply par_distinct in H.
 tauto.
 assumption.

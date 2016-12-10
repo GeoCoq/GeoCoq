@@ -37,6 +37,14 @@ Definition Le A B C D := exists E, Bet C E D /\ Cong A B C E.
 
 Definition Ge A B C D := Le C D A B.
 
+Lemma le_bet : forall A B C D, Le C D A B -> exists X, Bet A X B /\ Cong A X C D.
+Proof.
+    intros.
+    unfold Le in H.
+    ex_and H Y.
+    exists Y;split;Cong.
+Qed.
+
 Lemma l5_5_1 : forall A B C D,
   Le A B C D -> exists x, Bet A B x /\ Cong A x C D.
 Proof.
@@ -151,7 +159,7 @@ Proof.
 apply eq_dec_cong_dec; apply eq_dec_points.
 Qed.
 
-Lemma Bet_dec : forall A B C, Bet A B C  \/  ~ Bet A B C.
+Lemma bet_dec : forall A B C, Bet A B C  \/  ~ Bet A B C.
 Proof.
 apply eq_dec_bet_dec; apply eq_dec_points.
 Qed.
@@ -160,7 +168,7 @@ Lemma Col_dec : forall A B C, Col A B C \/ ~ Col A B C.
 Proof.
     intros.
     unfold Col.
-    elim (Bet_dec A B C); intro; elim (Bet_dec B C A); intro; elim (Bet_dec C A B); intro; tauto.
+    elim (bet_dec A B C); intro; elim (bet_dec B C A); intro; elim (bet_dec C A B); intro; tauto.
 Qed.
 
 
@@ -397,6 +405,18 @@ Proof.
     apply cong_reflexivity.
 Qed.
 
+Lemma bet__le1213 : forall A B C, Bet A B C -> Le A B A C.
+Proof.
+    intros A B C HBet.
+    destruct (l5_12_a A B C HBet); trivial.
+Qed.
+
+Lemma bet__le2313 : forall A B C, Bet A B C -> Le B C A C.
+Proof.
+    intros A B C HBet.
+    destruct (l5_12_a A B C HBet); trivial.
+Qed.
+
 Lemma l5_12_b : forall A B C, Col A B C -> Le A B A C -> Le B C A C -> Bet A B C.
 Proof.
     intros.
@@ -537,9 +557,18 @@ Proof.
     split; assumption.
 Qed.
 
+Lemma le__nlt : forall A B C D, Le A B C D -> ~ Lt C D A B.
+Proof.
+    intros.
+    intro.
+    apply (not_and_lt A B C D); split; auto.
+    split; auto.
+    unfold Lt in *; spliter; auto with cong.
+Qed.
+
 End T5.
 
 Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le le1221
-             le_left_comm le_right_comm le_comm lt__le : Le.
+             le_left_comm le_right_comm le_comm lt__le bet__le1213 bet__le2313 : Le.
 
 Ltac Le := auto with Le.

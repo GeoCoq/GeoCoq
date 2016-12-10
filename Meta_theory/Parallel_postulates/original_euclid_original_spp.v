@@ -32,7 +32,7 @@ Proof.
   apply suma_distincts in Hdiff.
   spliter.
   assert(HY := oe A' B C D' P' Q' R').
-  destruct HY as [Y []]; eauto with suma.
+  destruct HY as [Y []]; SumA.
   3: exists Y; split; ColR.
   { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
     assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
@@ -61,14 +61,14 @@ Proof.
       exists C; Col; Between.
     }
     apply (isi2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
-      eauto with suma.
+      SumA.
     { apply isi_left_comm.
       repeat split; Col.
         right; intro; assert_cols; Col.
       exists D'.
       split; CongA; split.
       apply l9_9; auto.
-      intro HNts; destruct HNts as [_ [_ []]]; assert_cols; Col.
+      intro HNts; destruct HNts as [_ []]; assert_cols; Col.
     }
     apply suma_left_comm.
     exists D'.
@@ -83,7 +83,7 @@ Proof.
       exists B; Col; Between.
     }
     apply (isi2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
-      eauto with suma.
+      SumA.
     { apply isi_left_comm.
       apply isi_sym.
       repeat split; Col.
@@ -91,7 +91,7 @@ Proof.
       exists A'.
       split; CongA; split.
       apply l9_9; auto.
-      intro HNts; destruct HNts as [_ [_ []]]; assert_cols; Col.
+      intro HNts; destruct HNts as [_ []]; assert_cols; Col.
     }
     apply suma_sym.
     exists A'.

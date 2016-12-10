@@ -20,7 +20,7 @@ exists x.
 repeat split;Cong.
 assert (x=x0).
 assert_diffs.
-apply is_circumcenter_unicity with A B C;try assumption.
+apply is_circumcenter_uniqueness with A B C;try assumption.
 unfold is_circumcenter;split;eCong.
 unfold is_circumcenter;split;eCong.
 subst.
@@ -221,7 +221,7 @@ split.
 apply coplanar_trivial.
 destruct (exists_circumcenter A B C HABC) as [G HG].
 exists G.
-apply circumcenter_cong in HG;spliter;Cong.
+apply circumcenter_cong in HG;spliter;repeat split;Cong.
 Qed.
 
 End Concyclic.

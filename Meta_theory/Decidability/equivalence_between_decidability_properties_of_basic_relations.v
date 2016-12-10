@@ -29,7 +29,7 @@ subst; Cong.
 apply cong_commutativity; apply (five_segment A A' B B' C C' A A'); Cong.
 Qed.
 
-Lemma eq_dec_implies_construction_unicity :
+Lemma eq_dec_implies_construction_uniqueness :
   (forall A B:Tpoint, A=B \/ A<>B) ->
   forall Q A B C X Y,
   Q <> A -> Bet Q A X -> Cong A X B C -> Bet Q A Y -> Cong A Y B C -> X=Y.
@@ -48,7 +48,7 @@ Lemma eq_dec_implies_outer_transitivity_between2 :
 Proof.
 intro eq_dec; intros.
 prolong A C x C D.
-assert (x = D) by (apply (eq_dec_implies_construction_unicity eq_dec B C C D); try apply (between_exchange3 A B C x); Cong).
+assert (x = D) by (apply (eq_dec_implies_construction_uniqueness eq_dec B C C D); try apply (between_exchange3 A B C x); Cong).
 subst x;assumption.
 Qed.
 
@@ -67,7 +67,7 @@ Lemma eq_dec_implies_two_distinct_points :
   exists X, exists Y: Tpoint, X <> Y.
 Proof.
 intro eq_dec.
-assert (ld:=lower_dim).
+assert (ld:=lower_dim_ex).
 ex_elim ld A.
 ex_elim H B.
 ex_elim H0 C.
@@ -138,7 +138,7 @@ prolong x' B' C'' B C.
 assert (Bet A' B' C'') by eBetween.
 
 assert (C'' = C').
-eapply (eq_dec_implies_construction_unicity eq_dec x' A' ).
+eapply (eq_dec_implies_construction_uniqueness eq_dec x' A' ).
 
 auto.
 
@@ -151,7 +151,7 @@ Cong.
 
 subst C''.
 exists B'.
-Cong.
+repeat split;Cong.
 Qed.
 
 Lemma eq_dec_implies_l4_6 :
@@ -202,7 +202,7 @@ Lemma eq_dec_implies_l4_17 :
   A<>B -> Col A B C -> Cong A P A Q -> Cong B P B Q -> Cong C P C Q.
 Proof.
 intros.
-assert (FSC A B C P A B C Q) by (unfold FSC; unfold Cong_3; Cong).
+assert (FSC A B C P A B C Q) by (unfold FSC; unfold Cong_3; repeat split;Cong).
 eapply eq_dec_implies_l4_16; eauto.
 Qed.
 
@@ -239,7 +239,7 @@ assert (Cong B B' B'' B).
     }
   }
 assert(B'' =  B').
-apply (eq_dec_implies_construction_unicity eq_dec A B B B''); try Cong.
+apply (eq_dec_implies_construction_uniqueness eq_dec A B B B''); try Cong.
 apply eq_dec_implies_between_exchange4 with D'; Between;
 apply eq_dec_implies_between_exchange4 with C; Between.
 apply eq_dec_implies_between_exchange4 with C'; Between;

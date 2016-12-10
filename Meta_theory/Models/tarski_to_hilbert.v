@@ -149,7 +149,7 @@ apply Col_dec.
 Qed.
 
 (** There is only one line going through two points. *)
-Lemma axiom_line_unicity : forall A B l m, A <> B ->
+Lemma axiom_line_uniqueness : forall A B l m, A <> B ->
  (Incident A l) -> (Incident B l) -> (Incident A m) -> (Incident B m) ->
  l =l= m.
 Proof.
@@ -165,7 +165,7 @@ Qed.
 (** Every line contains at least two points. *)
 
 Lemma axiom_two_points_on_line : forall l,
-  exists A, exists B, Incident B l /\ Incident A l /\ A <> B.
+  { A : Tpoint & { B | Incident B l /\ Incident A l /\ A <> B}}.
 Proof.
 intros.
 exists (P1 l).
@@ -233,7 +233,7 @@ Qed.
 
 Lemma axiom_plan : exists l, exists P, ~ Incident P l.
 Proof.
-assert (T:=lower_dim).
+assert (T:=lower_dim_ex).
 DecompEx T A.
 DecompEx H B.
 DecompEx H0 C.
@@ -250,7 +250,7 @@ Qed.
 Lemma axiom_plan' :
  exists A , exists B, exists C, ~ Col_H A B C.
 Proof.
-assert (T:=lower_dim).
+assert (T:=lower_dim_ex).
 DecompEx T A.
 DecompEx H B.
 DecompEx H0 C.
@@ -370,8 +370,6 @@ split.
 intros.
 spliter.
 repeat split; intuition.
-apply (Cond l).
-assumption.
 ex_and H1 T.
 exists T.
 unfold Incident in H1.
@@ -380,7 +378,7 @@ intuition.
 
 intros.
 spliter.
-ex_and H2 T.
+ex_and H1 T.
 unfold Incident.
 repeat split; try assumption.
 exists T.
@@ -418,7 +416,7 @@ spliter.
 
 unfold Incident in H0.
 
-assert(HH:= one_or_two_sides (P1 l)(P2 l) A C H4 H0 ).
+assert(HH:= one_or_two_sides (P1 l)(P2 l) A C H3 H0 ).
 
 induction HH.
 left.
@@ -547,7 +545,7 @@ assumption.
 assumption.
 Qed.
 
-Lemma axiom_hcong_1_unicity :
+Lemma axiom_hcong_1_uniqueness :
  forall A B l M A' B' A'' B'', A <> B -> Incident M l ->
   Incident A' l -> Incident B' l ->
   Incident A'' l -> Incident B'' l ->
@@ -569,7 +567,7 @@ spliter.
 induction(out_dec M A' A'').
 left.
 assert(A' = A'').
-eapply (l6_11_unicity M A B A''); try assumption.
+eapply (l6_11_uniqueness M A B A''); try assumption.
 apply out_trivial.
 assumption.
 
@@ -577,7 +575,7 @@ split.
 assumption.
 subst A''.
 
-eapply (l6_11_unicity M A B B''); try assumption.
+eapply (l6_11_uniqueness M A B B''); try assumption.
 
 unfold Out.
 repeat split; try assumption.
@@ -592,7 +590,7 @@ right.
 apply not_out_bet in H23.
 
 assert(A' = B'').
-eapply (l6_11_unicity M A B A'); try assumption.
+eapply (l6_11_uniqueness M A B A'); try assumption.
 apply out_trivial.
 assumption.
 
@@ -609,7 +607,7 @@ split.
 assumption.
 
 subst B''.
-eapply (l6_11_unicity M A B B'); try assumption.
+eapply (l6_11_uniqueness M A B B'); try assumption.
 apply out_trivial.
 assumption.
 unfold Out.
@@ -851,7 +849,7 @@ unfold TS in H.
 unfold TS in H0.
 spliter.
 repeat split; auto.
-ex_and H6 T.
+ex_and H4 T.
 exists T.
 unfold Between_H.
 repeat split; auto.
@@ -863,10 +861,10 @@ subst T.
 contradiction.
 intro.
 subst P.
-apply between_identity in H7.
+apply between_identity in H5.
 subst T.
 contradiction.
-ex_and H3 T.
+ex_and H2 T.
 exists T.
 unfold Between_H.
 repeat split; auto.
@@ -878,7 +876,7 @@ subst T.
 contradiction.
 intro.
 subst P.
-apply between_identity in H7.
+apply between_identity in H5.
 subst T.
 contradiction.
 Qed.
@@ -1071,7 +1069,7 @@ assumption.
 Qed.
 
 
-Lemma axiom_hcong_4_unicity :
+Lemma axiom_hcong_4_uniqueness :
   forall A B C O P X Y Y', ~ Col_H P O X  -> ~ Col_H A B C -> CongA A B C X O Y -> CongA A B C X O Y' -> 
   same_side' P Y O X -> same_side' P Y' O X -> outH O Y Y'.
 Proof.
@@ -1157,14 +1155,36 @@ Section Hilbert_neutral_to_Tarski_neutral.
 
 Context `{TE:Tarski_2D_euclidean}.
 
+Lemma PAneqPB : PA <> PB.
+Proof.
+assert (T:= lower_dim).
+intro.
+rewrite H in *.
+apply T.
+left.
+Between.
+Qed.
+
+Definition l0 := Lin PA PB PAneqPB.
+
+Lemma plan : ~ Incident PC l0.
+Proof.
+unfold Incident.
+unfold Col.
+assert (T:= lower_dim).
+unfold l0;simpl.
+intro;apply T.
+intuition.
+Qed.
+
 Instance Hilbert_neutral_follows_from_Tarski_neutral : Hilbert_neutral_2D.
 Proof.
  exact (Build_Hilbert_neutral_2D Tpoint Line Eq Eq_Equiv Incident
-       axiom_Incid_morphism axiom_Incid_dec eq_dec_points axiom_line_existence axiom_line_unicity axiom_two_points_on_line axiom_plan
+       axiom_Incid_morphism axiom_Incid_dec eq_dec_points axiom_line_existence axiom_line_uniqueness axiom_two_points_on_line l0 PC plan
        Between_H axiom_between_col axiom_between_diff axiom_between_comm axiom_between_out
        axiom_between_only_one axiom_pasch
        Hcong axiom_cong_permr axiom_hcong_trans axiom_hcong_1_existence
-       axiom_hcong_3 CongA axiom_conga_refl axiom_conga_comm axiom_conga_permlr axiom_cong_5' axiom_congaH_outH_congaH axiom_hcong_4_existence axiom_hcong_4_unicity).
+       axiom_hcong_3 CongA axiom_conga_refl axiom_conga_comm axiom_conga_permlr axiom_cong_5' axiom_congaH_outH_congaH axiom_hcong_4_existence axiom_hcong_4_uniqueness).
 Defined.
 
 End Hilbert_neutral_to_Tarski_neutral.
@@ -1191,7 +1211,7 @@ unfold Par_strict.
 repeat split;auto;try apply all_coplanar.
 Qed.
 
-Lemma axiom_euclid_unicity :
+Lemma axiom_euclid_uniqueness :
   forall l P m1 m2,
   ~ Incident P l ->
    Para l m1 -> Incident P m1 ->
@@ -1205,15 +1225,15 @@ destruct m2 as [C' D' HCD'].
 unfold Incident in *;simpl in *.
 apply Para_Par in H0.
 apply Para_Par in H2.
-elim (parallel_unicity A B C D C' D' P H0 H1 H2 H3);intros.
-apply axiom_line_unicity with C' D';
+elim (parallel_uniqueness A B C D C' D' P H0 H1 H2 H3);intros.
+apply axiom_line_uniqueness with C' D';
 unfold Incident;simpl;Col.
 Qed.
 
 Instance Hilbert_euclidean_follows_from_Tarski_euclidean : Hilbert_euclidean_2D Hilbert_neutral_follows_from_Tarski_neutral.
 Proof.
 split.
-apply axiom_euclid_unicity.
+apply axiom_euclid_uniqueness.
 Qed.
 
 End Hilbert_Euclidean_to_Tarski_Euclidean.

@@ -34,7 +34,8 @@ Definition aristotle_s_postulate := forall P Q A B C,
   ~ Col A B C -> Acute A B C ->
   exists X, exists Y, Out B A X /\ Out B C Y /\ Per B X Y /\ Lt P Q X Y.
 
-Definition greenberg_s_postulate := forall P Q R A B C, ~ Col A B C ->
+Definition greenberg_s_postulate := forall P Q R A B C,
+  ~ Col A B C ->
   Acute A B C -> Q <> R -> Per P Q R ->
   exists S, LtA P S Q A B C /\ Out Q S R.
 
@@ -42,7 +43,7 @@ Definition tarski_s_parallel_postulate := forall A B C D T,
   Bet A D T -> Bet B D C -> A <> D ->
   exists X, exists Y, Bet A B X /\ Bet A C Y /\ Bet X T Y.
 
-(** This is unicity of parallel postulate. *)
+(** This is uniqueness of parallel postulate. *)
 
 Definition playfair_s_postulate := forall A1 A2 B1 B2 C1 C2 P,
   Par A1 A2 B1 B2 -> Col P B1 B2 ->
@@ -69,7 +70,7 @@ Definition perpendicular_transversal_postulate := forall A B C D P Q,
   Par A B C D -> Perp A B P Q ->
   Perp C D P Q.
 
-Definition posidonius_second_postulate := forall A1 A2 A3 A4 B1 B2 B3 B4,
+Definition universal_posidonius_postulate := forall A1 A2 A3 A4 B1 B2 B3 B4,
   Par A1 A2 B1 B2 ->
   Col A1 A2 A3 -> Col B1 B2 B3 -> Perp A1 A2 A3 B3 ->
   Col A1 A2 A4 -> Col B1 B2 B4 -> Perp A1 A2 A4 B4 ->
@@ -168,7 +169,7 @@ Definition consecutive_interior_angles_postulate := forall A B C D P Q R,
   SumA A B C B C D P Q R ->
   Bet P Q R.
 
-Definition postulate_of_existence_of_a_triangle_whose_angles_sum_to_2_rights :=
+Definition postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights :=
   exists A B C D E F, ~ Col A B C /\ TriSumA A B C D E F /\ Bet D E F.
 
 Definition postulate_of_right_saccheri_quadrilaterals := forall A B C D,

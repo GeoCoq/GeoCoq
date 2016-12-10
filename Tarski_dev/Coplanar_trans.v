@@ -27,7 +27,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
       {
       assert (R <> X2) by (intro; assert_cols; apply HABR; ColR).
-      split; try (intro; subst; apply HABR; Col).
       split; try (intro; assert_cols; apply HABR; ColR).
       split; Col.
       exists X1; assert_cols; Col; Between.
@@ -45,7 +44,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       Between.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -59,7 +58,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HABR; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; apply HABR; ColR).
         split; Col.
         exists X2; assert_cols; Col; Between.
@@ -77,14 +75,13 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
     {
     assert (HTS1 : TS Q R X1 X2).
       {
-      split; try  (intro; subst; apply HNC; ColR).
       assert (R <> X1) by (intro; subst; apply HNC; ColR).
       split; try (intro; assert_cols; apply HAQR; ColR).
       assert (R <> X2) by (intro; subst; apply HNC; ColR).
@@ -118,7 +115,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       split; try (intro; subst; apply HABR; Col).
       Between.
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -147,7 +144,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
       {
       assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-      split; try (intro; subst; apply HABR; Col).
       split; try (intro; assert_cols; apply HABR; ColR).
       split; Col.
       exists X1; assert_cols; Col; Between.
@@ -165,7 +161,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       Between.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -179,7 +175,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; apply HABR; ColR).
         split; Col.
         exists X2; assert_cols; Col; Between.
@@ -197,7 +192,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -261,7 +256,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -293,7 +288,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; Col.
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
         split; try (intro; assert_cols; apply HABR; ColR).
@@ -302,7 +296,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; Col.
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
         split; try (intro; assert_cols; apply HABR; ColR).
@@ -338,7 +331,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -352,7 +345,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; Col; Between.
@@ -372,7 +364,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -383,7 +375,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; Col; Between.
@@ -403,7 +394,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -432,7 +423,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
       {
       assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-      split; try (intro; subst; apply HABR; Col).
       split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
@@ -452,7 +442,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       Between.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -466,7 +456,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
         split; Col.
         exists X2; assert_cols; split; Col; Between.
@@ -486,7 +475,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -551,7 +540,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -583,7 +572,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; Col.
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
         split; try (intro; assert_cols; apply HABR; ColR).
@@ -595,7 +583,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         split; try (intro; subst; apply HABR; Col).
         split; Col.
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; assert_cols; apply HABR; ColR).
+        try (intro; assert_cols; apply HABR; ColR).
         exists R; assert_cols; Col; Between.
         }
       }
@@ -628,7 +616,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -642,7 +630,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; split; Col; Between.
@@ -662,7 +649,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -673,7 +660,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; split; Col; Between.
@@ -693,7 +679,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -722,7 +708,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
       {
       assert (R <> X1) by (intro; assert_cols; apply HNC; ColR).
-      split; try (intro; subst; apply HABR; Col).
       split; try (intro; assert_cols; apply HABR; ColR).
       split; Col.
       exists R; assert_cols; split; Col; Between.
@@ -740,7 +725,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
       Between.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -754,7 +739,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; split; Col; Between.
@@ -772,7 +756,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -783,7 +767,6 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
 
         {
         assert (R <> X2) by (intro; assert_cols; apply HNC; ColR).
-        split; try (intro; subst; apply HABR; Col).
         split; try (intro; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; assert_cols; split; Col; Between.
@@ -801,7 +784,7 @@ elim HQX1X2; clear HQX1X2; intro HQX1X2.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -943,7 +926,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (Q <> B) by (assert_diffs; auto).
-            split; try assumption.
             assert (HQX2 : Q <> X2) by (intro; treat_equalities; intuition).
             assert (~ Col B P Q) by (intro; apply HQX2; apply l6_21 with Q R P B; assert_diffs; Col).
             split; Col.
@@ -967,7 +949,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (Q <> B) by (assert_diffs; auto).
-          split; try assumption.
           assert (HQX2 : Q <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P Q) by (intro; apply HQX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -976,7 +957,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -987,7 +968,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
         {
         assert (H1 : B <> Q) by (assert_diffs; auto).
-        split; try assumption.
         assert (HQX2 : Q <> X2) by (intro; treat_equalities; intuition).
         assert (HBPQ : ~ Col B P Q) by (intro; apply HQX2; apply l6_21 with Q R P B; assert_diffs; Col).
         split; Col.
@@ -1000,7 +980,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (B <> Q) by (assert_diffs; auto).
-          split; try assumption.
           assert (HQX2 : Q <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P Q) by (intro; apply HQX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -1010,7 +989,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (B <> Q) by (assert_diffs; auto).
-          split; try assumption.
           assert (HQX2 : Q <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P Q) by (intro; apply HQX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -1019,7 +997,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -1071,7 +1049,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (R <> B) by (assert_diffs; auto).
-            split; try assumption.
             assert (HRX2 : R <> X2) by (intro; treat_equalities; intuition).
             assert (~ Col B P R) by (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
             split; Col.
@@ -1095,7 +1072,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (R <> B) by (assert_diffs; auto).
-          split; try assumption.
           assert (HRX2 : R <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P R) by (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -1104,7 +1080,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -1115,7 +1091,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
         {
         assert (H1 : B <> R) by (assert_diffs; auto).
-        split; try assumption.
         assert (HRX2 : R <> X2) by (intro; treat_equalities; intuition).
         assert (HBPR : ~ Col B P R) by (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
         split; Col.
@@ -1128,7 +1103,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (B <> R) by (assert_diffs; auto).
-          split; try assumption.
           assert (HRX2 : R <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P R) by (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -1138,7 +1112,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (B <> R) by (assert_diffs; auto).
-          split; try assumption.
           assert (HRX2 : R <> X2) by (intro; treat_equalities; intuition).
           assert (~ Col B P R) by (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; Col.
@@ -1147,7 +1120,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -1185,7 +1158,6 @@ elim H; clear H; intro HAPU.
 
       {
       assert (H1 : B <> R) by (assert_diffs; auto).
-      split; try assumption.
       assert (HRX1 : R <> X1) by (intro; treat_equalities; intuition).
       split; try (intro; apply HBQR; ColR).
       split; Col.
@@ -1203,7 +1175,7 @@ elim H; clear H; intro HAPU.
       split; assert_diffs; eBetween.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -1266,7 +1238,7 @@ elim H; clear H; intro HAPU.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -1354,7 +1326,6 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HBQR; ColR).
           split; try (intro; apply HBQR; ColR).
           exists R; split; Col; Between.
@@ -1362,7 +1333,6 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HRX2; apply l6_21 with Q R P B; assert_diffs; Col).
           split; try (intro; apply HBQR; ColR).
           exists B; split; Col; Between.
@@ -1374,7 +1344,6 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HBQR; ColR).
           split; try (intro; apply HBQR; ColR).
           exists R; split; Col; Between.
@@ -1382,7 +1351,6 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HBQR; ColR).
           split; try (intro; apply HBQR; ColR).
           exists R; split; Col; eBetween.
@@ -1390,7 +1358,7 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -1489,7 +1457,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
             {
             assert (H1 : R <> A) by (assert_diffs; auto).
-            split; try assumption.
             split; try (intro; apply HRX1; apply l6_21 with Q R P A; assert_diffs; Col).
             split; try (intro; apply HAQR; ColR).
             exists A; split; Col; Between.
@@ -1501,7 +1468,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
               {
               assert (H1 : R <> A) by (assert_diffs; auto).
-              split; try assumption.
               split; try (intro; apply HRX1; apply l6_21 with Q R P A; assert_diffs; Col).
               split; try (intro; apply HAQR; ColR).
               exists A; split; Col; Between.
@@ -1509,7 +1475,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
               {
               assert (H1 : R <> A) by (assert_diffs; auto).
-              split; try assumption.
               split; try (intro; apply HAQR; ColR).
               split; try (intro; apply HAQR; ColR).
               exists R; split; Col; Between.
@@ -1519,14 +1484,13 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
           {
           assert (H1 : R <> A) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HAQR; ColR).
           split; try (intro; apply HAQR; ColR).
           exists R; split; Col; eBetween.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -1592,7 +1556,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
             {
             assert (H1 : Q <> A) by (assert_diffs; auto).
-            split; try assumption.
             split; try (intro; apply HQX1; apply l6_21 with Q R P A; assert_diffs; Col).
             split; try (intro; apply HAQR; ColR).
             exists A; split; Col; Between.
@@ -1604,7 +1567,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
               {
               assert (H1 : Q <> A) by (assert_diffs; auto).
-              split; try assumption.
               split; try (intro; apply HQX1; apply l6_21 with Q R P A; assert_diffs; Col).
               split; try (intro; apply HAQR; ColR).
               exists A; split; Col; Between.
@@ -1612,7 +1574,6 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
               {
               assert (H1 : Q <> A) by (assert_diffs; auto).
-              split; try assumption.
               split; try (intro; apply HAQR; ColR).
               split; try (intro; apply HAQR; ColR).
               exists Q; split; Col; Between.
@@ -1622,14 +1583,13 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
 
           {
           assert (H1 : Q <> A) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HAQR; ColR).
           split; try (intro; apply HAQR; ColR).
           exists Q; split; Col; Between.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -1735,7 +1695,6 @@ assert (H : TS Q R A B).
 
     {
     assert (H1 : Q <> R) by (assert_diffs; auto).
-    split; try assumption.
     split; Col.
     split; Col.
     exists X2; split; Col; Between.
@@ -1751,7 +1710,7 @@ assert (H : TS Q R A B).
     split; Between.
     }
   }
-destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
 exists I; assert_cols; Col5.
 Qed.
 
@@ -1813,7 +1772,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
       {
       assert (H1 : Q <> A) by (assert_diffs; auto).
-      split; try assumption.
       split; Col.
       assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
@@ -1823,14 +1781,13 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       {
       assert (H := outer_pasch X2 P X1 Q A HQX1X2 HCol1); destruct H as [U [HPUX2 HQAU]].
       assert (H1 : Q <> A) by (assert_diffs; auto).
-      split; try assumption.
       split; Col.
       assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
       exists U; split; Col; eBetween.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -1842,7 +1799,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
       {
       assert (H1 : A <> R) by (assert_diffs; auto).
-      split; try assumption.
       split; Col.
       assert (R <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
@@ -1852,14 +1808,13 @@ elim HQRX1; clear HQRX1; intro HQRX1.
       {
       assert (H := outer_pasch X2 P X1 R A HRX1X2 HCol1); destruct H as [U [HPUX2 HRAU]].
       assert (H1 : A <> R) by (assert_diffs; auto).
-      split; try assumption.
       split; Col.
       assert (R <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
       exists U; split; Col; eBetween.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -1892,7 +1847,6 @@ assert (H : TS A Q R B).
     apply between_symmetry in HQX1X2.
     assert (H := outer_pasch X2 P X1 Q A HQX1X2 HCol1); destruct H as [U [HPUX2 HQAU]].
     assert (H1 : A <> Q) by (assert_diffs; auto).
-    split; try assumption.
     assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
     split; try (intro; apply HAQR; ColR).
     split; Col.
@@ -1911,7 +1865,7 @@ assert (H : TS A Q R B).
     eBetween.
     }
   }
-destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
 exists I; assert_cols; Col5.
 Qed.
 
@@ -1943,7 +1897,6 @@ assert (H : TS A Q R B).
     apply between_symmetry in HQX1X2.
     assert (H := outer_pasch X2 P X1 Q A HQX1X2 HCol1); destruct H as [U [HPUX2 HQAU]].
     assert (H1 : A <> Q) by (assert_diffs; auto).
-    split; try assumption.
     assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
     split; try (intro; apply HAQR; ColR).
     split; Col.
@@ -1962,7 +1915,7 @@ assert (H : TS A Q R B).
     eBetween.
     }
   }
-destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
 exists I; assert_cols; Col5.
 Qed.
 
@@ -2033,7 +1986,6 @@ elim HQRX2; clear HQRX2; intro HQRX2.
 
         {
         assert (H1 : Q <> A) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HAQR; ColR).
         exists Q; split; Col; eBetween.
@@ -2043,13 +1995,12 @@ elim HQRX2; clear HQRX2; intro HQRX2.
         apply between_symmetry in HQX1X2.
         assert (H := inner_pasch P Q X1 A X2 HCol1 HQX1X2); destruct H as [U [HAUQ HPUX2]].
         assert (H1 : Q <> A) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HAQR; ColR).
         exists U; split; Col; eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -2073,7 +2024,6 @@ elim HQRX2; clear HQRX2; intro HQRX2.
 
         {
         assert (H1 : A <> R) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HAQR; ColR).
         exists R; split; Col; eBetween.
@@ -2083,13 +2033,12 @@ elim HQRX2; clear HQRX2; intro HQRX2.
         apply between_symmetry in HRX1X2.
         assert (H := inner_pasch P R X1 A X2 HCol1 HRX1X2); destruct H as [U [HAUR HPUX2]].
         assert (H1 : A <> R) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HAQR; ColR).
         exists U; split; Col; eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -2197,7 +2146,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -2315,7 +2264,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
             }
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2337,7 +2286,6 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
 
           {
           assert (H1 : Q <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HBQR; ColR).
           split; Col.
           exists Q; split; Col; Between.
@@ -2355,7 +2303,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
           eBetween.
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2410,7 +2358,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -2432,7 +2380,6 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; apply HBQR; ColR).
           split; Col.
           exists R; split; Col; Between.
@@ -2450,7 +2397,7 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
           eBetween.
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2584,7 +2531,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (H1 : Q <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; assert_cols; apply HABQ; ColR).
           split; Col.
           exists Q; split; Col; Between.
@@ -2601,7 +2547,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           Between.
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2626,7 +2572,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : Q <> R) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; Col.
             exists X1; split; Col; Between.
@@ -2634,7 +2579,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : Q <> R) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; Col.
             exists X2; split; Col; Between.
@@ -2646,7 +2590,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : Q <> B) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; try (intro; assert_cols; apply HABQ; ColR).
             exists U; split; Col; Between.
@@ -2654,14 +2597,13 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : Q <> B) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; try (intro; assert_cols; apply HABQ; ColR).
             exists Q; split; Col; Between.
             }
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2692,7 +2634,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
           {
           assert (H1 : R <> B) by (assert_diffs; auto).
-          split; try assumption.
           split; try (intro; assert_cols; apply HABR; ColR).
           split; Col.
           exists R; split; Col; Between.
@@ -2709,7 +2650,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           Between.
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2734,7 +2675,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : R <> Q) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; Col.
             exists X1; split; Col; Between.
@@ -2742,7 +2682,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : R <> Q) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; Col.
             exists X2; split; Col; Between.
@@ -2754,7 +2693,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : R <> B) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; try (intro; assert_cols; apply HABR; ColR).
             exists U; split; Col; Between.
@@ -2762,14 +2700,13 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
             {
             assert (H1 : R <> B) by (assert_diffs; auto).
-            split; try assumption.
             split; Col.
             split; try (intro; assert_cols; apply HABR; ColR).
             exists R; split; Col; Between.
             }
           }
         }
-      destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+      destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
       exists I; assert_cols; Col5.
       }
     }
@@ -2805,7 +2742,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
       {
       assert (B <> Q) by (assert_diffs; auto).
-      split; try assumption.
       split; try (intro; assert_diffs; assert_cols; apply HABQ; ColR).
       split; Col.
       exists Q; split; Col; Between.
@@ -2837,7 +2773,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
     
@@ -2858,7 +2794,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
           {
           assert (H1 : Q <> R) by (assert_diffs; auto).
-          split; try assumption.
           split; Col.
           split; Col.
           exists X1; split; Col; Between.
@@ -2866,7 +2801,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
           {
           assert (H1 : Q <> R) by (assert_diffs; auto).
-          split; try assumption.
           split; Col.
           split; Col.
           exists X2; split; Col; Between.
@@ -2899,7 +2833,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -2910,7 +2844,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
         {
         assert (B <> Q) by (assert_diffs; auto).
-        split; try assumption.
         split; try (intro; assert_cols; apply HABQ; ColR).
         split; Col.
         exists U; split; Col; Between.
@@ -2927,7 +2860,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -2962,7 +2895,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
       {
       assert (B <> Q) by (assert_diffs; auto).
-      split; try assumption.
       split; try (intro; assert_diffs; assert_cols; apply HABQ; ColR).
       split; Col.
       exists Q; split; Col; Between.
@@ -2994,7 +2926,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
     
@@ -3015,7 +2947,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
           {
           assert (H1 : Q <> R) by (assert_diffs; auto).
-          split; try assumption.
           split; Col.
           split; Col.
           exists X1; split; Col; Between.
@@ -3023,7 +2954,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
           {
           assert (H1 : Q <> R) by (assert_diffs; auto).
-          split; try assumption.
           split; Col.
           split; Col.
           exists X2; split; Col; Between.
@@ -3056,7 +2986,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -3067,7 +2997,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
         {
         assert (B <> Q) by (assert_diffs; auto).
-        split; try assumption.
         split; try (intro; assert_cols; apply HABQ; ColR).
         split; Col.
         exists U; split; Col; Between.
@@ -3084,7 +3013,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3130,7 +3059,6 @@ elim HQRX2; clear HQRX2; intro HQRX2.
 
         {
         assert (A <> Q) by (assert_diffs; auto).
-        split; try assumption.
         split; try (intro; assert_cols; apply HAQR; ColR).
         split; Col.
         exists Q; split; Col; Between.
@@ -3150,7 +3078,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3172,7 +3100,6 @@ elim HQRX2; clear HQRX2; intro HQRX2.
 
         {
         assert (A <> R) by (assert_diffs; auto).
-        split; try assumption.
         split; try (intro; assert_cols; apply HAQR; ColR).
         split; Col.
         exists R; split; Col; Between.
@@ -3192,7 +3119,7 @@ elim HQRX2; clear HQRX2; intro HQRX2.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3291,7 +3218,6 @@ assert (H : TS Q R B A).
 
     {
     assert (H1 : Q <> R) by (assert_diffs; auto).
-    split; try assumption.
     split; Col.
     split; Col.
     exists X1; split; Col; Between.
@@ -3307,7 +3233,7 @@ assert (H : TS Q R B A).
     split; Between.
     }
   }
-destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
 exists I; assert_cols; Col5.
 Qed.
 
@@ -3402,7 +3328,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -3413,7 +3339,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
         {
         assert (A <> R) by (assert_diffs; auto).
-        split; try assumption.
         assert (R <> X2) by (intro; treat_equalities; apply HNC; Col).
         split; try (intro; apply HAQR; ColR).
         split; Col.
@@ -3432,7 +3357,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3503,7 +3428,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
           }
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -3514,7 +3439,6 @@ elim HQRX1; clear HQRX1; intro HQRX1.
 
         {
         assert (A <> Q) by (assert_diffs; auto).
-        split; try assumption.
         assert (Q <> X2) by (intro; treat_equalities; apply HNC; Col).
         split; try (intro; apply HAQR; ColR).
         split; Col.
@@ -3533,7 +3457,7 @@ elim HQRX1; clear HQRX1; intro HQRX1.
         eBetween.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3623,7 +3547,7 @@ elim H; clear H; intro HBPU.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -3634,7 +3558,6 @@ elim H; clear H; intro HBPU.
 
       {
       assert (A <> Q) by (assert_diffs; auto).
-      split; try assumption.
       assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
       split; Col.
@@ -3653,7 +3576,7 @@ elim H; clear H; intro HBPU.
       eBetween.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -3742,7 +3665,7 @@ elim H; clear H; intro HBPU.
         }
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 
@@ -3753,7 +3676,6 @@ elim H; clear H; intro HBPU.
 
       {
       assert (A <> Q) by (assert_diffs; auto).
-      split; try assumption.
       assert (Q <> X2) by (intro; treat_equalities; apply HX1X2; reflexivity).
       split; try (intro; apply HAQR; ColR).
       split; Col.
@@ -3772,7 +3694,7 @@ elim H; clear H; intro HBPU.
       eBetween.
       }
     }
-  destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+  destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
   exists I; assert_cols; Col5.
   }
 Qed.
@@ -3875,7 +3797,7 @@ elim H; clear H; intro HQRX1.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -3889,7 +3811,6 @@ elim H; clear H; intro HQRX1.
         apply between_symmetry in HCol3.
         assert (H := inner_pasch B X1 X2 P Q HCol3 HQX1X2); destruct H as [U [HPUX1 HBUQ]].
         assert (Q <> B) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HBQR; ColR).
         exists U; assert_cols; split; Col; eBetween.
@@ -3897,13 +3818,12 @@ elim H; clear H; intro HQRX1.
 
         {
         assert (Q <> B) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HBQR; ColR).
         exists Q; split; Col; Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -3955,7 +3875,7 @@ elim H; clear H; intro HQRX1.
         Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
 
@@ -3969,7 +3889,6 @@ elim H; clear H; intro HQRX1.
         apply between_symmetry in HCol3.
         assert (H := inner_pasch B X1 X2 P R HCol3 HRX1X2); destruct H as [U [HPUX1 HBUR]].
         assert (R <> B) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HBQR; ColR).
         exists U; assert_cols; split; Col; eBetween.
@@ -3977,13 +3896,12 @@ elim H; clear H; intro HQRX1.
 
         {
         assert (R <> B) by (assert_diffs; auto).
-        split; try assumption.
         split; Col.
         split; try (intro; apply HBQR; ColR).
         exists R; split; Col; Between.
         }
       }
-    destruct H as [HDiff [HCol5 [HCol6 [I [HCol7 HCol8]]]]].
+    destruct H as [HCol5 [HCol6 [I [HCol7 HCol8]]]].
     exists I; assert_cols; Col5.
     }
   }
@@ -4188,7 +4106,6 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     apply l9_8_2 with P.
 
       {
-      split; try (intro; apply HABR); treat_equalities; Col.
       split; Col.
       split; try exists R; Col.
       intro; apply HRX2; assert_diffs; assert_cols; apply l6_21 with R P A R; Col.
@@ -4205,7 +4122,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       right; Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRAI HQX2I]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRAI HQX2I]]]]; clear H1; clear H2.
   assert (H : Col Q B I).
     {
     assert (Q <> X2) by (intro; apply HNC; subst; Col).
@@ -4238,7 +4155,6 @@ assert (HTS : TS Q R A B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      split; try (intro; treat_equalities; apply HNC; Col).
       split; Col.
       split; try (exists Q; Col).
       intro; assert (R = X1) by (assert_diffs; assert_cols; apply l6_21 with A R Q R; Col);
@@ -4282,7 +4198,7 @@ assert (HTS : TS Q R A B).
     split; try (intro; apply HABR); treat_equalities; Col.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; assert_cols; Col.
 Qed.
 
@@ -4309,7 +4225,6 @@ assert (HTS : TS Q R A B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      split; try (intro; treat_equalities; apply HNC; Col).
       split; Col.
       split; try (exists Q; Col).
       intro; assert (R = X1) by (assert_diffs; assert_cols; apply l6_21 with A R Q R; Col);
@@ -4354,7 +4269,7 @@ assert (HTS : TS Q R A B).
     split; try (intro; apply HABR); treat_equalities; Col.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; assert_cols; Col.
 Qed.
 
@@ -4391,7 +4306,6 @@ elim HElim; clear HElim; intro HQX1I.
       apply l9_8_2 with X1.
 
         {
-        split; try (intro; treat_equalities; apply HNC; Col).
         split; try (intro; apply HABR; assert_cols; ColR).
         split; Col.
         exists I; assert_cols; split; Col; Between.
@@ -4408,7 +4322,7 @@ elim HElim; clear HElim; intro HQX1I.
         }
       }
     }
-    destruct HTS as [H1 [H2 [H3 [I' [HRBI' HAQI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HRBI' HAQI']]]]; clear H1; clear H2.
     exists I'; right; left; assert_cols; Col.
   }
 
@@ -4481,7 +4395,6 @@ assert (HTS : TS Q R A B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      split; try (intro; treat_equalities; apply HNC; Col).
       split; Col.
       split; try (exists Q; Col).
       intro; assert (R = X1) by (assert_diffs; assert_cols; apply l6_21 with A R Q R; Col);
@@ -4527,7 +4440,7 @@ assert (HTS : TS Q R A B).
     Between.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; assert_cols; Col.
 Qed.
 
@@ -4554,7 +4467,6 @@ assert (HTS : TS Q R A B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      split; try (intro; treat_equalities; apply HNC; Col).
       split; Col.
       split; try (exists Q; Col).
       intro; assert (R = X1) by (assert_diffs; assert_cols; apply l6_21 with A R Q R; Col);
@@ -4600,7 +4512,7 @@ assert (HTS : TS Q R A B).
     Between.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; assert_cols; Col.
 Qed.
 
@@ -4637,7 +4549,6 @@ elim HElim; clear HElim; intro HQX1I.
       apply l9_8_2 with X1.
 
         {
-        split; try (intro; treat_equalities; apply HNC; Col).
         split; try (intro; apply HABR; assert_cols; ColR).
         split; Col.
         exists I; assert_cols; split; Col; Between.
@@ -4655,7 +4566,7 @@ elim HElim; clear HElim; intro HQX1I.
         }
       }
     }
-    destruct HTS as [H1 [H2 [H3 [I' [HRBI' HAQI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HRBI' HAQI']]]]; clear H1; clear H2.
     exists I'; right; left; assert_cols; Col.
   }
 
@@ -4732,7 +4643,6 @@ elim (eq_dec_points R X1); intro HRX1.
     apply l9_8_2 with X1.
 
       {
-      split; try (intro; assert_diffs; Col).
       split; try (intro; apply HABR; assert_cols; ColR).
       split; Col.
       exists R; Col.
@@ -4751,7 +4661,7 @@ elim (eq_dec_points R X1); intro HRX1.
       split; try (intro; apply HBQR; treat_equalities); Col.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRBI HAQI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRBI HAQI]]]]; clear H1; clear H2.
   exists I; right; left; assert_cols; Col.
   }
 Qed.
@@ -4828,14 +4738,12 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
             exists X1; split.
 
               {
-              split; try (assert_diffs; Col).
               split; Col.
               split; try (intro; apply HAQR; assert_cols; ColR).
               exists Q; Col.
               }
 
               {
-              split; try (assert_diffs; Col).
               split; Col.
               split; try (intro; apply HAQR; assert_cols; ColR).
               exists R; split; Col; Between.
@@ -4871,7 +4779,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
           }
         }
       }
-      destruct HTS as [H1 [H2 [H3 [I' [HQBI' HRAI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HQBI' HRAI']]]]; clear H1; clear H2.
       exists I'; right; right; assert_cols; Col.
     }
 
@@ -4881,7 +4789,6 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       apply l9_8_2 with X2.
 
         {
-        split; try (assert_diffs; Col).
         split; try (intro; apply HABQ; assert_cols; ColR).
         split; Col.
         exists I; split; Col; Between.
@@ -4898,7 +4805,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
         split; Between.
         }
       }
-    destruct HTS as [H1 [H2 [H3 [I' [HQAI' HRBI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HQAI' HRBI']]]]; clear H1; clear H2.
     exists I'; right; left; assert_cols; Col.
     }
   }
@@ -4931,7 +4838,6 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     apply l9_8_2 with X2.
 
       {
-      split; try (assert_diffs; Col).
       split; try (intro; apply HBQR; assert_cols; ColR).
       split; Col.
       exists Q; Col.
@@ -4963,14 +4869,12 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
           exists X1; split.
 
             {
-            split; try (assert_diffs; Col).
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists Q; Col.
             }
 
             {
-            split; try (assert_diffs; Col).
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; split; Col; Between.
@@ -4979,7 +4883,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; assert_cols; Col.
   }
 Qed.
@@ -5196,7 +5100,6 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
       apply l9_8_2 with X2.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HBQR; assert_cols; ColR).
         split; Col.
         exists B; split; Col; Between.
@@ -5241,7 +5144,7 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
       split; assert_diffs; Col.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRBI HAQI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRBI HAQI]]]]; clear H1; clear H2.
   exists I; right; left; assert_cols; Col.
   }
 Qed.
@@ -5273,11 +5176,10 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; assert_cols; apply HABQ; ColR).
       split; Col.
-      assert (H := inner_pasch Q R X1 P A (between_symmetry X1 P Q HCol1) HCol3);
-      destruct H as [I [HPRI HQAI]]; exists I; split; Col.
+      destruct (inner_pasch Q R X1 P A (between_symmetry X1 P Q HCol1) HCol3) as [I [HPRI HQAI]].
+      exists I; split; Col.
       eBetween.
       }
 
@@ -5293,7 +5195,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRBI HAQI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRBI HAQI]]]]; clear H1; clear H2.
   exists I; right; left; assert_cols; Col.
   }
 Qed.
@@ -5325,7 +5227,6 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HBQR; assert_cols; ColR).
       split; Col.
       exists Q; split; Col; Between.
@@ -5366,12 +5267,11 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
           assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
           split; Col.
           split; assert_diffs; Col.
-          split; try (intro; treat_equalities); Between.
           }
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; assert_cols; Col.
   }
 Qed.
@@ -5449,7 +5349,6 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
       apply l9_8_2 with X2.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HBQR; assert_cols; ColR).
         split; Col.
         exists B; split; Col; Between.
@@ -5494,7 +5393,7 @@ elim (eq_dec_points B X2); intro HBX2; elim (eq_dec_points R X1); intro HRX1; tr
       split; assert_diffs; Col; Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRBI HAQI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRBI HAQI]]]]; clear H1; clear H2.
   exists I; right; left; assert_cols; Col.
   }
 Qed.
@@ -5653,7 +5552,7 @@ elim (eq_dec_points P I); intro HPI; treat_equalities.
             }
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
       exists I'; right; right; assert_cols; Col.
       }
 
@@ -5670,7 +5569,6 @@ elim (eq_dec_points P I); intro HPI; treat_equalities.
           apply l9_8_2 with X1.
 
             {
-            split; assert_diffs; Col.
             split; try (intro; apply HABR; assert_cols; ColR).
             split; Col.
             exists I; assert_cols; split; Col; eBetween.
@@ -5687,7 +5585,7 @@ elim (eq_dec_points P I); intro HPI; treat_equalities.
             split; Between.
             }
           }
-        destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+        destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
         exists I'; right; left; assert_cols; Col.
         }
       }
@@ -5722,7 +5620,6 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HBQR; assert_cols; ColR).
       split; Col.
       exists Q; split; Col; Between.
@@ -5769,7 +5666,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; assert_cols; Col.
   }
 Qed.
@@ -5835,7 +5732,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
     apply l9_8_2 with X1.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -5876,13 +5772,11 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
           assert (H := l9_19 Q R B X2 Q H1 H2 H3); rewrite H.
           split; Col.
           split; assert_diffs; Col.
-          split; Between.
-          intro; subst; apply HNC; assert_cols; Col.
           }
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; assert_cols; Col.
   }
 Qed.
@@ -5914,7 +5808,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
     apply l9_8_2 with X1.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -5961,7 +5854,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; assert_cols; Col.
   }
 Qed.
@@ -6034,21 +5927,19 @@ elim H; clear H; intro HQI1I2.
           exists P; split.
 
             {
-            split; assert_diffs; Col.
             split; Col.
             split; Col.
             exists I1; assert_cols; split; Col; Between.
             }
 
             {
-            split; assert_diffs; Col.
             split; Col.
             split; Col.
             exists I2; assert_cols; split; Col; Between.
             }
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HQAI' HRBI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HQAI' HRBI']]]]; clear H1; clear H2.
       exists I'; right; left; assert_cols; Col.
       }
 
@@ -6058,7 +5949,6 @@ elim H; clear H; intro HQI1I2.
         apply l9_8_2 with P.
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; Col.
           exists I; assert_cols; split; Col; Between.
@@ -6074,7 +5964,7 @@ elim H; clear H; intro HQI1I2.
           split; try (intro; treat_equalities); Between.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HQBI' HRAI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HQBI' HRAI']]]]; clear H1; clear H2.
       exists I'; right; right; assert_cols; Col.
       }
     }
@@ -6150,21 +6040,19 @@ elim H; clear H; intro HQI1I2.
           exists P; split.
 
             {
-            split; assert_diffs; Col.
             split; Col.
             split; Col.
             exists I2; assert_cols; split; Col; Between.
             }
 
             {
-            split; assert_diffs; Col.
             split; Col.
             split; Col.
             exists I1; assert_cols; split; Col; Between.
             }
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HQBI' HRAI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HQBI' HRAI']]]]; clear H1; clear H2.
       exists I'; right; right; assert_cols; Col.
       }
 
@@ -6174,7 +6062,7 @@ elim H; clear H; intro HQI1I2.
         apply l9_8_2 with P.
 
           {
-          split; assert_diffs; Col.
+          assert_diffs.
           elim (eq_dec_points P I); intro HPI; treat_equalities.
 
             {
@@ -6221,7 +6109,7 @@ elim H; clear H; intro HQI1I2.
             }
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HQAI' HRBI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HQAI' HRBI']]]]; clear H1; clear H2.
       exists I'; right; left; assert_cols; Col.
       }
     }
@@ -6406,7 +6294,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       apply l9_2; apply l9_8_2 with X1.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HNC; assert_cols; ColR).
         split; Col.
         exists Q; split; Col; Between.
@@ -6420,7 +6307,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
         split; Col.
         split; assert_diffs; Col.
-        split; try (intro; treat_equalities); Between.
         }
       }
 
@@ -6435,7 +6321,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; split; Col.
   }
 Qed.
@@ -6471,7 +6357,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         apply l9_8_2 with X1.
 
           {
-          split; assert_diffs; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           split; Col.
           exists Q; split; Col; Between.
@@ -6489,7 +6374,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         }
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; Col.
         exists X2; assert_cols; split; Col; Between.
@@ -6523,7 +6407,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 Qed.
@@ -6562,17 +6446,15 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
         exists P; split.
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; Col.
           exists X2; assert_cols; split; Col; Between.
           }
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; Col.
-          assert (H := inner_pasch P R X1 Q A HCol1 HCol2); destruct H as [I' [HQRI' HPAI']].
+          destruct (inner_pasch P R X1 Q A HCol1 HCol2) as [I' [HQRI' HPAI']].
           exists I'; assert_cols; split; Col.
           }
         }
@@ -6619,7 +6501,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
           }
         }
       }
-    destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
     exists I'; right; left; split; Col.
     }
 
@@ -6629,7 +6511,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
       apply l9_8_2 with P.
 
         {
-        split; assert_diffs; Col.
+        assert_diffs.
         elim (eq_dec_points P X1); intro HPX1; treat_equalities.
 
           {
@@ -6670,7 +6552,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
           }
         }
       }
-    destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
     exists I'; right; right; split; Col.
     }
   }
@@ -6707,7 +6589,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         apply l9_8_2 with X1.
 
           {
-          split; assert_diffs; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           split; Col.
           exists Q; split; Col; Between.
@@ -6725,7 +6606,6 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         }
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; Col.
         exists X2; assert_cols; split; Col; Between.
@@ -6757,14 +6637,12 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
           {
           apply between_symmetry in HCol3; apply between_symmetry in HCol4.
           assert (H := outer_pasch P R X2 B Q HCol3 HCol4); destruct H as [I [HPRI HQBI]].
-          split; assert_diffs; Col.
           split; Col.
           split; Col.
           exists I; assert_cols; split; Col; Between.
           }
 
           {
-          split; assert_diffs; Col.
           elim (eq_dec_points Q X1); intro; treat_equalities.
 
             {
@@ -6780,7 +6658,7 @@ elim (eq_dec_points R X1); intro HRX1; treat_equalities.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
   exists I; right; left; split; Col.
   }
 Qed.
@@ -6845,7 +6723,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       apply l9_2; apply l9_8_2 with X1.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HNC; assert_cols; ColR).
         split; Col.
         exists Q; split; Col; Between.
@@ -6859,7 +6736,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
         assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
         split; Col.
         split; assert_diffs; Col.
-        split; try (intro; treat_equalities); Between.
         }
       }
 
@@ -6874,7 +6750,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; split; Col.
   }
 Qed.
@@ -6939,7 +6815,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       apply l9_2; apply l9_8_2 with X1.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HNC; assert_cols; ColR).
         split; Col.
         exists Q; split; Col; Between.
@@ -6968,7 +6843,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; split; Col.
   }
 Qed.
@@ -7005,7 +6880,6 @@ assert (HTS : TS R A Q B).
       apply l9_8_2 with P.
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; Col.
         exists R; split; Col; Between.
@@ -7028,7 +6902,6 @@ assert (HTS : TS R A Q B).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -7064,7 +6937,7 @@ assert (HTS : TS R A Q B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -7118,7 +6991,6 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
               exists P; split.
 
                 {
-                split; assert_diffs; Col.
                 split; Col.
                 split; Col.
                 exists X2; assert_cols; split; Col.
@@ -7126,7 +6998,6 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
 
                 {
                 apply l9_2.
-                split; assert_diffs; Col.
                 split; Col.
                 split; try (intro; apply HNC; assert_cols; ColR).
                 exists Q; Col.
@@ -7172,7 +7043,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
               }
             }
           }
-        destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+        destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
         exists I'; right; left; split; Col.
         }
 
@@ -7182,8 +7053,8 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
           apply l9_8_2 with P.
 
             {
-            split; assert_diffs; Col.
             show_distinct P X1; try (apply HAQR; Col).
+            assert_diffs.
             split; try (intro; apply HAQR; assert_cols; ColR).
             split; Col.
             exists I; assert_cols; split; eBetween; ColR.
@@ -7200,7 +7071,7 @@ elim (eq_dec_points P X2); intro HPX2; treat_equalities.
             split; Between.
             }
           }
-        destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+        destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
         exists I'; right; right; split; Col.
         }
       }
@@ -7238,7 +7109,6 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
         apply l9_8_2 with X1.
 
           {
-          split; assert_diffs; Col.
           show_distinct Q X1; assert_cols; Col.
           split; try (intro; apply HNC; ColR).
           split; Col.
@@ -7258,7 +7128,6 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
         }
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; Col.
         exists X2; assert_cols; split; Col.
@@ -7292,7 +7161,7 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 
@@ -7302,7 +7171,6 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
     apply l9_8_2 with X1.
 
       {
-      split; assert_diffs; Col.
       show_distinct R X1; assert_cols; Col.
       split; try (intro; treat_equalities; apply HABR; ColR).
       split; Col.
@@ -7321,7 +7189,7 @@ assert (H := l5_2 P Q X1 I HPQ HCol1 HPQI); elim H; clear HPQ; clear H; intro HQ
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 Qed.
@@ -7386,7 +7254,6 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       apply l9_2; apply l9_8_2 with X1.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HNC; assert_cols; ColR).
         split; Col.
         exists Q; split; Col; Between.
@@ -7415,7 +7282,7 @@ elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
   exists I; left; split; Col.
   }
 Qed.
@@ -7494,14 +7361,12 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         exists X1; split.
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
           exists Q; Col.
           }
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
           exists R; split; Col; Between.
@@ -7536,7 +7401,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -7546,7 +7411,6 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
     apply l9_8_2 with P.
 
       {
-      split; assert_diffs; Col.
       show_distinct P X1; Col.
       split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
       split; Col.
@@ -7565,7 +7429,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 Qed.
@@ -7592,7 +7456,6 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     apply l9_8_2 with X1.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HABR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -7610,7 +7473,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -7637,14 +7500,12 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
         exists X1; split.
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
           exists Q; Col.
           }
 
           {
-          split; assert_diffs; Col.
           split; Col.
           split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
           exists R; split; Col; Between.
@@ -7679,7 +7540,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 Qed.
@@ -7720,14 +7581,12 @@ assert (HTS : TS R B Q A).
       exists X1; split.
 
         {
-        split; assert_diffs; Col.
         split; Col.
-        split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
+        split; try (intro; treat_equalities; apply HAQR; assert_diffs; assert_cols; ColR).
         exists Q; Col.
         }
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
         exists R; split; Col; Between.
@@ -7762,7 +7621,7 @@ assert (HTS : TS R B Q A).
     Between.
     }
   }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2  [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
 Qed.
 
@@ -7830,7 +7689,6 @@ assert (HTS : TS R A Q B).
       apply l9_8_2 with P.
 
         {
-        split; assert_diffs; Col.
         split; Col.
         split; Col.
         exists R; split; Col; Between.
@@ -7853,7 +7711,6 @@ assert (HTS : TS R A Q B).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -7889,7 +7746,7 @@ assert (HTS : TS R A Q B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -7912,7 +7769,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -7922,21 +7778,19 @@ assert (HTS : TS Q R A B).
     exists X1; split.
 
       {
-      split; assert_diffs; Col.
       split; Col.
       split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
       exists Q; Col.
       }
 
       {
-      split; assert_diffs; Col.
       split; Col.
       split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
       exists R; split; Col; Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -7959,7 +7813,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -7969,21 +7822,19 @@ assert (HTS : TS Q R A B).
     exists X1; split.
 
       {
-      split; assert_diffs; Col.
       split; Col.
       split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
       exists Q; Col.
       }
 
       {
-      split; assert_diffs; Col.
       split; Col.
       split; try (intro; treat_equalities; apply HAQR; assert_cols; ColR).
       exists R; split; Col; Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -8042,23 +7893,21 @@ assert (HTS : TS Q A R B).
     assert (H := l9_19 Q A R X2 Q H1 H2 H3); rewrite H.
     split; Col.
     split; assert_diffs; Col.
-    split; try (intro; treat_equalities); Between.
     }
   assert (HTS1 : TS Q A P R).
     {
     apply l9_2.
     assert (H := inner_pasch P A X1 Q R HCol1 (between_symmetry X1 R A HCol2));
     destruct H as [I [HQAI HPRI]].
-    split; assert_diffs; Col.
     split; Col.
     show_distinct A X1; Col.
-    split; try (intro; apply HNC; assert_cols; ColR).
+    split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
     exists I; assert_cols; Col.
     }
   assert (HTS2 : TS Q A P X2)
     by (apply l9_2; apply l9_8_2 with R; try apply l9_2; Col).
   apply l9_2; apply l9_8_2 with P; Col.
-  destruct HTS2 as [H1 [H2 [HQAX2 [I [HQAI HPX2I]]]]]; clear H1; clear H2.
+  destruct HTS2 as [H1 [HQAX2 [I [HQAI HPX2I]]]]; clear H1.
   assert (H1 : Q <> A) by (assert_diffs; auto).
   assert (H2 : Col Q A I) by (assert_cols; Col).
   assert (H3 : Col P B I) by (show_distinct P X2; Col; assert_cols; ColR).
@@ -8068,7 +7917,7 @@ assert (HTS : TS Q A R B).
   split; try (intro; treat_equalities; Col).
   eBetween.
   }
-destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -8096,10 +7945,9 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       apply l9_2.
       assert (H := inner_pasch P A X1 Q R HCol1 (between_symmetry X1 R A HCol2));
         destruct H as [I [HQAI HPRI]].
-      split; assert_diffs; Col.
       split; Col.
       show_distinct A X1; Col.
-      split; try (intro; apply HNC; assert_cols; ColR).
+      split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
       exists I; assert_cols; Col.
       }
 
@@ -8113,7 +7961,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       split; assert_diffs; Col.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
   exists I; right; left; split; Col.
   }
 
@@ -8135,16 +7983,15 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
       apply l9_2.
       assert (H := inner_pasch P A X1 Q R HCol1 (between_symmetry X1 R A HCol2));
         destruct H as [I [HQAI HPRI]].
-      split; assert_diffs; Col.
       split; Col.
       show_distinct A X1; Col.
-      split; try (intro; apply HNC; assert_cols; ColR).
+      split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
       exists I; assert_cols; Col.
       }
     assert (HTS2 : TS Q A P X2)
       by (apply l9_2; apply l9_8_2 with R; try apply l9_2; Col).
     apply l9_2; apply l9_8_2 with P; Col.
-    destruct HTS2 as [H1 [H2 [HQAX2 [I [HQAI HPX2I]]]]]; clear H1; clear H2.
+    destruct HTS2 as [H1 [HQAX2 [I [HQAI HPX2I]]]]; clear H1.
     assert (H1 : Q <> A) by (assert_diffs; auto).
     assert (H2 : Col Q A I) by (assert_cols; Col).
     assert (H3 : Col P B I) by (show_distinct P X2; Col; assert_cols; ColR).
@@ -8154,7 +8001,7 @@ elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
     split; try (intro; treat_equalities; Col).
     eBetween.
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
   exists I; right; left; split; Col.
   }
 Qed.
@@ -8186,7 +8033,6 @@ assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clea
     apply l9_8_2 with I1.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HABQ; assert_cols; ColR).
       split; Col.
       exists I2; assert_cols; split; Col; eBetween.
@@ -8203,7 +8049,7 @@ assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clea
       split; try (intro; assert_diffs); Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQBI HRAI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQBI HRAI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 
@@ -8213,7 +8059,6 @@ assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clea
     apply l9_8_2 with I2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HABQ; assert_cols; ColR).
       split; Col.
       exists I1; assert_cols; split; Col; eBetween.
@@ -8230,7 +8075,7 @@ assert (H := l5_3 P I1 I2 R (between_symmetry R I1 P HPRI1) HPRI2); elim H; clea
       split; try (intro; assert_diffs); Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
   exists I; right; left; split; Col.
   }
 Qed.
@@ -8352,8 +8197,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     apply l9_8_2 with P.
 
       {
-      split; assert_diffs; Col.
-      split; try (intro; apply HABR; assert_cols; ColR).
+      split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
       }
@@ -8369,7 +8213,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       split; assert_diffs; Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 
@@ -8378,7 +8222,6 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     {
     assert (HTS : TS R A X2 Q).
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -8401,13 +8244,12 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       {
       apply l9_17 with P; Between.
       exists Q; split; Col.
-      split; assert_diffs; Col.
-      split; try (intro; apply HNC; assert_cols; ColR).
+      split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 Qed.
@@ -8433,8 +8275,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
     apply l9_8_2 with P.
 
       {
-      split; assert_diffs; Col.
-      split; try (intro; apply HABR; assert_cols; ColR).
+      split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
       }
@@ -8450,7 +8291,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       split; assert_diffs; Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 
@@ -8507,7 +8348,6 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
               assert (H := l9_19 R Q A X1 R H1 H2 H3); rewrite H.
               split; Col.
               split; assert_diffs; Col.
-              split; try (intro; treat_equalities); Between.
               }
             }
           }
@@ -8537,7 +8377,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
             }
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
       exists I'; right; left; split; Col.
       }
     }
@@ -8548,7 +8388,6 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
       apply l9_8_2 with X2.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         show_distinct P X2; assert_cols; Col.
@@ -8565,7 +8404,7 @@ elim (eq_dec_points R X2); intro HRX2; treat_equalities.
         split; assert_diffs; Col.
         }
       }
-    destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+    destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
     exists I'; right; right; split; Col.
     }
   }
@@ -8592,7 +8431,7 @@ assert (HTS : TS Q A B R).
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
+      assert_diffs.
       show_distinct Q X2; try (apply HABQ; assert_cols; ColR).
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
@@ -8619,7 +8458,6 @@ assert (HTS : TS Q A B R).
       apply l9_8_2 with X1.
 
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         exists A; split; Col; Between.
@@ -8668,7 +8506,6 @@ assert (HTS : TS Q A B R).
         }
       assert (HTS : TS Q A X1 R).
         {
-        split; assert_diffs; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         exists A; split; Col; Between.
@@ -8678,14 +8515,13 @@ assert (HTS : TS Q A B R).
       apply l9_17 with X2; Col.
       apply one_side_transitivity with X1; apply one_side_symmetry; Col.
       exists R; split; Col.
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists Q; split; Col.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -8739,7 +8575,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -8767,11 +8602,10 @@ assert (HTS : TS Q R A B).
       assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
       split; Col.
       split; assert_diffs; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -8793,7 +8627,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -8821,11 +8654,10 @@ assert (HTS : TS Q R A B).
       assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
       split; Col.
       split; assert_diffs; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -8847,7 +8679,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -8875,11 +8706,10 @@ assert (HTS : TS Q R A B).
       assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
       split; Col.
       split; assert_diffs; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -8937,7 +8767,6 @@ assert (HTS : TS Q A B R).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists P; assert_cols; Col.
@@ -8974,28 +8803,24 @@ assert (HTS : TS Q A B R).
       assert (H := l9_19 Q A R X2 Q H1 H2 H3); rewrite H.
       split; Col.
       split; assert_diffs; Col.
-      split; try (intro; treat_equalities; assert_cols; Col).
-      Between.
       }
     assert (HTS : TS Q A P X2).
       {
       apply l9_2; apply l9_8_2 with R; Col.
       apply l9_2; apply l9_8_2 with X1; try apply one_side_symmetry; Col.
-      split; assert_diffs; Col.
       split; try (intro; assert_cols; apply HAQR; ColR).
       split; Col.
       exists A; split; Col; Between.
       }
-    destruct HTS as [Hclear1 [Hclear2 [Hclear3 [I [HQAI HPX2I]]]]].
-    clear Hclear1; clear Hclear2; assert_diffs; clear Hclear3.
+    destruct HTS as [Hclear1 [Hclear2 [I [HQAI HPX2I]]]].
+    clear Hclear1; clear Hclear2; assert_diffs.
     apply l9_2; apply l9_8_2 with X2; try apply one_side_symmetry; Col.
-    split; assert_diffs; Col.
     split; try (intro; apply HAQR; assert_cols; ColR).
     split; Col.
     exists I; eBetween.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQAI HBRI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQAI HBRI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -9024,7 +8849,6 @@ assert (HTS : TS Q A B R).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists P; assert_cols; Col.
@@ -9052,7 +8876,6 @@ assert (HTS : TS Q A B R).
         apply l9_8_2 with X1.
 
           {
-          split; assert_diffs; Col.
           split; try (intro; assert_cols; apply HAQR; ColR).
           split; Col.
           exists A; split; Col; Between.
@@ -9108,22 +8931,20 @@ assert (HTS : TS Q A B R).
         {
         apply l9_2; apply l9_8_2 with R; Col.
         apply l9_2; apply l9_8_2 with X1; try apply one_side_symmetry; Col.
-        split; assert_diffs; Col.
         split; try (intro; assert_cols; apply HAQR; ColR).
         split; Col.
         exists A; split; Col; Between.
         }
-      destruct HTS as [Hclear1 [Hclear2 [Hclear3 [I [HQAI HPX2I]]]]].
-      clear Hclear1; clear Hclear2; assert_diffs; clear Hclear3.
+      destruct HTS as [Hclear1 [Hclear2 [I [HQAI HPX2I]]]].
+      clear Hclear1; clear Hclear2; assert_diffs.
       apply l9_2; apply l9_8_2 with X2; try apply one_side_symmetry; Col.
-      split; assert_diffs; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists I; eBetween.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQAI HBRI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQAI HBRI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -9148,7 +8969,6 @@ assert (HTS : TS R A Q B).
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       show_distinct R X2; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
@@ -9173,9 +8993,8 @@ assert (HTS : TS R A Q B).
       apply l9_2; apply l9_8_2 with Q.
 
         {
-        split; assert_diffs; Col.
         split; Col.
-        split; try (intro; apply HAQR; assert_cols; ColR).
+        split; try (intro; apply HAQR; assert_diffs; assert_cols; ColR).
         exists X1; assert_cols; Col.
         }
 
@@ -9192,8 +9011,7 @@ assert (HTS : TS R A Q B).
     apply l9_8_2 with X2.
 
       {
-      destruct HTS as [H1 [H2 [H3 [I [HRAI HPX2I]]]]]; clear H1; clear H2; clear H3.
-      split; assert_diffs; Col.
+      destruct HTS as [H1 [H2 [I [HRAI HPX2I]]]]; clear H1; clear H2.
       show_distinct R X2; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
@@ -9212,7 +9030,7 @@ assert (HTS : TS R A Q B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -9301,8 +9119,7 @@ assert (HTS : TS R A B Q).
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
-      show_distinct R X2; try (apply HABR; assert_cols; ColR).
+      show_distinct R X2; try (apply HABR; assert_diffs; assert_cols; ColR).
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists R; assert_cols; split; Col; Between.
@@ -9325,8 +9142,7 @@ assert (HTS : TS R A B Q).
     apply l9_8_2 with P.
 
       {
-      split; assert_diffs; Col.
-      split; try (intro; assert_cols; apply HAQR; ColR).
+      split; try (intro; assert_diffs; assert_cols; apply HAQR; ColR).
       split; Col.
       exists X1; split; Col; Between.
       }
@@ -9350,14 +9166,12 @@ assert (HTS : TS R A B Q).
         exists Q; split.
 
           {
-          split; assert_diffs; Col.
-          split; try (intro; assert_cols; apply HAQR; ColR).
+          split; try (intro; assert_diffs; assert_cols; apply HAQR; ColR).
           split; Col.
           exists X1; split; Col; Between.
           }
 
           {
-          split; assert_diffs; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           split; Col.
           exists R; split; Col; Between.
@@ -9366,7 +9180,7 @@ assert (HTS : TS R A B Q).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -9388,18 +9202,16 @@ assert (HTS : TS Q B A R).
   elim (eq_dec_points Q X2); intro HQX2; treat_equalities.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X1; split; Col.
-    assert_cols; ColR.
+    assert_diffs; assert_cols; ColR.
     }
 
     {
     elim (eq_dec_points P B); intro HPB; treat_equalities.
 
       {
-      split; assert_diffs; Col.
       split; Col.
       split; Col.
       exists X1; assert_cols; Col.
@@ -9414,7 +9226,6 @@ assert (HTS : TS Q B A R).
           apply l9_2; apply l9_8_2 with X2.
 
             {
-            split; assert_diffs; Col.
             split; try (intro; apply HBQR; assert_cols; ColR).
             split; try (intro; apply HBQR; assert_cols; ColR).
             exists B; split; Col; Between.
@@ -9444,7 +9255,7 @@ assert (HTS : TS Q B A R).
           }
         }
       apply l9_8_2 with X1; Col.
-      destruct HTS as [H1 [H2 [H3 [I [HQBI HRX1I]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQBI HRX1I]]]]; clear H1; clear H2.
       assert (HRX1 : R <> X1) by (intro; treat_equalities; Col).
       apply one_side_symmetry.
       assert (H1 : Q <> B) by (assert_diffs; auto).
@@ -9459,7 +9270,7 @@ assert (HTS : TS Q B A R).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQBI HARI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQBI HARI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -9542,7 +9353,7 @@ elim H; clear H; intro HBX2I.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -9552,7 +9363,6 @@ elim H; clear H; intro HBX2I.
     apply l9_8_2 with X2.
 
       {
-      split; assert_diffs; Col.
       show_distinct R X2; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
@@ -9571,7 +9381,7 @@ elim H; clear H; intro HBX2I.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 Qed.
@@ -9626,7 +9436,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    split; assert_diffs; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -9659,7 +9468,7 @@ assert (HTS : TS Q R A B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -9686,7 +9495,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
     apply l9_8_2 with X1.
 
       {
-      assert_diffs; split; Col.
       show_distinct R X1; assert_cols; Col.
       split; try (intro; apply HABR; assert_cols; ColR).
       split; Col.
@@ -9705,7 +9513,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -9789,7 +9597,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 Qed.
@@ -9815,8 +9623,7 @@ assert (HTS : TS R A Q B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      assert_diffs; split; Col.
-      split; try (intro; apply HABR; assert_cols; ColR).
+      split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
       }
@@ -9839,14 +9646,12 @@ assert (HTS : TS R A Q B).
       elim (eq_dec_points P X1); intro HPX1; treat_equalities.
 
         {
-        assert_diffs; split; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         exists P; assert_cols; Col.
         }
 
         {
-        assert_diffs; split; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         assert (H := inner_pasch P R Q X1 X2 (between_symmetry Q X1 P HCol1) HCol4);
@@ -9867,7 +9672,7 @@ assert (HTS : TS R A Q B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -9892,8 +9697,7 @@ assert (HTS : TS R A Q B).
     apply l9_2; apply l9_8_2 with P.
 
       {
-      assert_diffs; split; Col.
-      split; try (intro; apply HABR; assert_cols; ColR).
+      split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
       split; Col.
       exists X1; assert_cols; split; Col; Between.
       }
@@ -9916,14 +9720,12 @@ assert (HTS : TS R A Q B).
       elim (eq_dec_points P X1); intro HPX1; treat_equalities.
 
         {
-        assert_diffs; split; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         exists P; assert_cols; Col.
         }
 
         {
-        assert_diffs; split; Col.
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         assert (H := outer_pasch X2 P Q R X1 HCol4 (between_symmetry Q X1 P HCol1));
@@ -9944,7 +9746,7 @@ assert (HTS : TS R A Q B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -10030,7 +9832,6 @@ assert (HTS : TS Q R B A).
   apply l9_8_2 with X1.
 
     {
-    split; assert_diffs; Col.
     show_distinct R X1; assert_cols; Col.
     split; try (intro; apply HAQR; ColR).
     split; Col.
@@ -10065,7 +9866,7 @@ assert (HTS : TS Q R B A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -10095,7 +9896,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
       exists X1; split.
 
         {
-        assert_diffs; split; Col.
         split; Col.
         show_distinct R X1; assert_cols; Col.
         split; try (intro; apply HAQR; ColR).
@@ -10106,7 +9906,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
         apply l9_2; apply l9_8_2 with P.
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; Col.
           exists X2; assert_cols; split; Col; Between.
@@ -10129,7 +9928,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
       exists X1; split.
 
         {
-        assert_diffs; split; Col.
         split; Col.
         show_distinct R X1; assert_cols; Col.
         split; try (intro; apply HABR; ColR).
@@ -10137,7 +9935,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
         }
 
         {
-        assert_diffs; split; Col.
         split; Col.
         show_distinct R X1; assert_cols; Col.
         split; try (intro; apply HABR; ColR).
@@ -10145,7 +9942,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 
@@ -10155,7 +9952,6 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
     apply l9_8_2 with X1.
 
       {
-      assert_diffs; split; Col.
       show_distinct R X1; assert_cols; Col.
       split; try (intro; apply HABR; ColR).
       split; Col.
@@ -10179,7 +9975,7 @@ assert (H := l5_3 P X1 I Q (between_symmetry Q X1 P HCol1) HPQI); elim H; clear 
       eBetween.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 Qed.
@@ -10209,7 +10005,6 @@ assert (HTS : TS R B Q A).
       apply l9_2; apply l9_8_2 with P.
 
         {
-        assert_diffs; split; Col.
         split; Col.
         split; Col.
         exists X2; assert_cols; split; Col; Between.
@@ -10228,7 +10023,6 @@ assert (HTS : TS R B Q A).
       }
 
       {
-      assert_diffs; split; Col.
       split; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       exists R; split; Col; Between.
@@ -10242,16 +10036,14 @@ assert (HTS : TS R B Q A).
       exists P; split.
 
         {
-        assert_diffs; split; Col.
         split; Col.
-        split; try (intro; apply HABR; assert_cols; ColR).
+        split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
         exists R; Col.
         }
 
         {
-        assert_diffs; split; Col.
         split; Col.
-        split; try (intro; apply HABR; assert_cols; ColR).
+        split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
         exists X1; assert_cols; Col.
         }
       }
@@ -10285,7 +10077,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -10314,7 +10106,6 @@ assert (HTS : TS R B Q A).
       apply l9_2; apply l9_8_2 with P.
 
         {
-        assert_diffs; split; Col.
         split; Col.
         split; Col.
         exists X2; assert_cols; split; Col; Between.
@@ -10333,7 +10124,6 @@ assert (HTS : TS R B Q A).
       }
 
       {
-      assert_diffs; split; Col.
       split; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       exists R; split; Col; Between.
@@ -10347,16 +10137,14 @@ assert (HTS : TS R B Q A).
       exists P; split.
 
         {
-        assert_diffs; split; Col.
         split; Col.
-        split; try (intro; apply HABR; assert_cols; ColR).
+        split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
         exists R; Col.
         }
 
         {
-        assert_diffs; split; Col.
         split; Col.
-        split; try (intro; apply HABR; assert_cols; ColR).
+        split; try (intro; apply HABR; assert_diffs; assert_cols; ColR).
         exists X1; assert_cols; Col.
         }
       }
@@ -10390,7 +10178,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -10444,7 +10232,6 @@ assert (HTS : TS Q R B A).
   apply l9_8_2 with X1.
 
     {
-    split; assert_diffs; Col.
     show_distinct R X1; assert_cols; Col.
     split; try (intro; apply HAQR; ColR).
     split; Col.
@@ -10479,7 +10266,7 @@ assert (HTS : TS Q R B A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -10605,7 +10392,6 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         assert (H := l9_19 R Q A X1 R H1 H2 H3); rewrite H.
         split; Col.
         assert_diffs; split; Col.
-        split; try (intro; treat_equalities); Between.
         }
       }
 
@@ -10639,7 +10425,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -10653,8 +10439,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       apply l9_2; apply l9_8_2 with X2.
 
         {
-        assert_diffs; split; Col.
-        show_distinct R X2; try (apply HABR; assert_cols; ColR).
+        show_distinct R X2; try (apply HABR; assert_diffs; assert_cols; ColR).
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
         exists R; split; Col; Between.
@@ -10677,9 +10462,8 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       apply l9_8_2 with P.
 
         {
-        assert_diffs; split; Col.
         show_distinct P X1; try (apply HABR; assert_cols; ColR).
-        split; try (intro; apply HAQR; assert_cols; ColR).
+        split; try (intro; apply HAQR; assert_diffs; assert_cols; ColR).
         split; Col.
         exists I; assert_cols; split; Between; ColR.
         }
@@ -10699,7 +10483,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 Qed.
@@ -10757,7 +10541,6 @@ assert (HTS : TS R B Q A).
       assert (H := l9_19 R Q A X1 R H1 H2 H3); rewrite H.
       split; Col.
       assert_diffs; split; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
 
@@ -10828,7 +10611,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -10885,7 +10668,6 @@ assert (HTS : TS R B Q A).
       assert (H := l9_19 R Q A X1 R H1 H2 H3); rewrite H.
       split; Col.
       assert_diffs; split; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
 
@@ -10929,7 +10711,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -10983,7 +10765,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    assert_diffs; split; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -11011,12 +10792,10 @@ assert (HTS : TS Q R A B).
       assert (H := l9_19 Q R A X1 R H1 H2 H3); rewrite H.
       split; Col.
       assert_diffs; split; Col.
-      split; try (intro; treat_equalities; Col).
-      Between.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -11073,7 +10852,6 @@ assert (HTS : TS R B Q A).
       assert (H := l9_19 R Q A X1 R H1 H2 H3); rewrite H.
       split; Col.
       assert_diffs; split; Col.
-      split; try (intro; treat_equalities); Between.
       }
     }
 
@@ -11112,14 +10890,12 @@ assert (HTS : TS R B Q A).
         exists X2; split.
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; try (intro; assert_cols; apply HAQR; ColR).
           exists P; assert_cols; split; Col; Between.
           }
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; try (intro; assert_cols; apply HAQR; ColR).
           exists R; Col.
@@ -11132,7 +10908,6 @@ assert (HTS : TS R B Q A).
           apply l9_8_2 with Q.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; assert_cols; apply HAQR; ColR).
             exists R; Col.
@@ -11152,19 +10927,19 @@ assert (HTS : TS R B Q A).
 
           {
           apply l9_8_2 with P; Col.
-          destruct HTS as [H1 [HAPR [HARX2 [I [HARI HPX2I]]]]].
+          destruct HTS as [HAPR [HARX2 [I [HARI HPX2I]]]].
           assert (HPX2 : P <> X2) by (intro; treat_equalities; Col).
           assert (H2 : Col R A I) by Col.
           assert (H3 : Col P B I) by (assert_cols; ColR).
-          assert (H := l9_19 R A P B I H1 H2 H3); rewrite H.
+          assert (H := l9_19 R A P B I); rewrite H; Col.
           split; Col.
           split; try (intro; treat_equalities; Col).
           split; try (intro; treat_equalities; Col).
           eBetween.
+          intro; subst A; Col.
           }
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           exists R; Col.
@@ -11173,7 +10948,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -11198,8 +10973,7 @@ assert (HTS : TS Q A B R).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      assert_diffs; split; Col.
-      show_distinct Q X2; try (apply HABQ; assert_cols; ColR).
+      show_distinct Q X2; try (apply HABQ; assert_diffs; assert_cols; ColR).
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
       exists P; assert_cols; Col.
@@ -11228,7 +11002,6 @@ assert (HTS : TS Q A B R).
         apply l9_8_2 with X1.
 
           {
-          assert_diffs; split; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           split; Col.
           exists A; split; Col; Between.
@@ -11256,7 +11029,7 @@ assert (HTS : TS Q A B R).
         split; Col.
         assert_diffs; split; Col.
         }
-      }          
+      }
 
       {
       assert (HOS : OS Q A R X2).
@@ -11271,23 +11044,20 @@ assert (HTS : TS Q A B R).
       assert (HTS : TS Q A P X2).
         {
         apply l9_2; apply l9_8_2 with R; Col.
-        assert_diffs; split; Col.
         split; Col.
-        split; try (intro; apply HNC; assert_cols; ColR).
-        assert (H := inner_pasch Q R X1 P A (between_symmetry X1 P Q HCol1) HCol2);
-        destruct H as [I [HPRI HQAI]].
+        split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
+        destruct (inner_pasch Q R X1 P A (between_symmetry X1 P Q HCol1) HCol2) as [I [HPRI HQAI]].
         exists I; assert_cols; split; Col; Between.
         }
       apply l9_2; apply l9_8_2 with X2; try (apply one_side_symmetry; Col).
-      assert_diffs; split; Col.
       split; try (intro; apply HAQR; assert_cols; ColR).
       split; Col.
-      destruct HTS as [Hc1 [Hc2 [Hc3 [I [HQAI HPX2I]]]]].
+      destruct HTS as [Hc1 [Hc2 [I [HQAI HPX2I]]]].
       exists I; eBetween.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -11316,7 +11086,6 @@ assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
     apply l9_8_2 with I1.
 
       {
-      assert_diffs; split; Col.
       show_distinct Q I1; assert_cols; Col.
       split; try (intro; apply HABQ; ColR).
       split; Col.
@@ -11335,7 +11104,7 @@ assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQBI HRAI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQBI HRAI]]]]; clear H1; clear H2.
   exists I; right; right; split; Col.
   }
 
@@ -11345,7 +11114,6 @@ assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
     apply l9_8_2 with I2.
 
       {
-      assert_diffs; split; Col.
       show_distinct Q I2; assert_cols; Col.
       split; try (intro; apply HABQ; ColR).
       split; Col.
@@ -11364,7 +11132,7 @@ assert (H := l5_3 P I1 I2 R HPRI1 HPRI2); elim H; clear H; intro PI1I2.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
   exists I; right; left; split; Col.
   }
 Qed.
@@ -11523,7 +11291,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 
@@ -11537,7 +11305,6 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       apply l9_2; apply l9_8_2 with X2.
 
         {
-        assert_diffs; split; Col.
         show_distinct R X2; try (apply HABR; assert_cols; ColR).
         split; try (intro; apply HAQR; assert_cols; ColR).
         split; Col.
@@ -11561,8 +11328,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
       apply l9_8_2 with P.
 
         {
-        assert_diffs; split; Col.
-        split; try (intro; apply HNC; assert_cols; ColR).
+        split; try (intro; apply HNC; assert_diffs; assert_cols; ColR).
         split; Col.
         exists I; assert_cols; split; Col; ColR.
         }
@@ -11579,7 +11345,7 @@ assert (H := l5_3 P B I X2 HCol3 HPX2I); elim H; clear H; intro HPBI.
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 Qed.
@@ -11709,7 +11475,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -11810,7 +11576,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -11864,7 +11630,6 @@ assert (HTS : TS Q R A B).
   apply l9_8_2 with P.
 
     {
-    assert_diffs; split; Col.
     split; Col.
     split; Col.
     exists X2; assert_cols; split; Col; Between.
@@ -11897,7 +11662,7 @@ assert (HTS : TS Q R A B).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -11995,14 +11760,12 @@ assert (HTS : TS R B Q A).
         exists X2; split.
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           exists P; assert_cols; split; Col; Between.
           }
 
           {
-          assert_diffs; split; Col.
           split; Col.
           split; try (intro; apply HAQR; assert_cols; ColR).
           exists R; Col.
@@ -12015,7 +11778,6 @@ assert (HTS : TS R B Q A).
           apply l9_8_2 with Q.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; Col.
@@ -12034,15 +11796,13 @@ assert (HTS : TS R B Q A).
         exists X2; split.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
-            destruct HTS as [Hc1 [Hc2 [Hc3 [I [HRAI HPX2I]]]]].
+            destruct HTS as [Hc1 [Hc2 [I [HRAI HPX2I]]]].
             exists I; split; Col; eBetween.
             }
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; Col.
@@ -12051,7 +11811,7 @@ assert (HTS : TS R B Q A).
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -12180,7 +11940,7 @@ assert (H := l5_2 Q P X1 I HQP (between_symmetry X1 P Q HCol1) HPQI); elim H; cl
         }
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRAI' HQBI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRAI' HQBI']]]]; clear H1; clear H2.
   exists I'; right; right; split; Col.
   }
 
@@ -12190,7 +11950,6 @@ assert (H := l5_2 Q P X1 I HQP (between_symmetry X1 P Q HCol1) HPQI); elim H; cl
     apply l9_8_2 with X1.
 
       {
-      assert_diffs; split; Col.
       show_distinct R X1; assert_cols; Col.
       split; try (intro; apply HABR; ColR).
       split; Col.
@@ -12209,7 +11968,7 @@ assert (H := l5_2 Q P X1 I HQP (between_symmetry X1 P Q HCol1) HPQI); elim H; cl
       Between.
       }
     }
-  destruct HTS as [H1 [H2 [H3 [I' [HRBI' HQAI']]]]]; clear H1; clear H2; clear H3.
+  destruct HTS as [H1 [H2 [I' [HRBI' HQAI']]]]; clear H1; clear H2.
   exists I'; right; left; split; Col.
   }
 Qed.
@@ -12233,7 +11992,6 @@ assert (HTS : TS Q B R A).
   elim (eq_dec_points P B); intro HPB; treat_equalities.
 
     {
-    assert_diffs; split; Col.
     split; Col.
     split; Col.
     exists X1; assert_cols; split; Col; Between.
@@ -12243,10 +12001,9 @@ assert (HTS : TS Q B R A).
     elim (eq_dec_points P I); intro HPI; treat_equalities.
 
       {
-      assert_diffs; split; Col.
       split; Col.
       split; Col.
-      exists X1; assert_cols; split; Between; ColR.
+      exists X1; assert_diffs; assert_cols; split; Between; ColR.
       }
 
       {
@@ -12259,7 +12016,6 @@ assert (HTS : TS Q B R A).
         apply l9_2; apply l9_8_2 with P.
 
           {
-          assert_diffs; split; Col.
           split; try (intro; assert_cols; apply HNC; ColR).
           split; Col.
           exists I; assert_cols; Col.
@@ -12275,15 +12031,14 @@ assert (HTS : TS Q B R A).
           split; try (intro; treat_equalities); Between.
           }
         }
-      assert_diffs; split; Col.
       split; Col.
       split; Col.
-      destruct HTS as [Hc1 [Hc2 [Hc3 [I' [HQBI' HRX1I']]]]].
+      destruct HTS as [Hc1 [Hc2 [I' [HQBI' HRX1I']]]].
       exists I'; assert_cols; split; Col; eBetween.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I' [HQBI' HQRI']]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I' [HQBI' HQRI']]]]; clear H1; clear H2.
 exists I'; right; right; split; Col.
 Qed.
 
@@ -12372,7 +12127,6 @@ assert (HTS : TS Q R A B).
     apply l9_8_2 with X1.
 
       {
-      assert_diffs; split; Col.
       show_distinct Q X1; Col.
       split; try (intro; apply HNC; assert_cols; ColR).
       split; Col.
@@ -12402,7 +12156,7 @@ assert (HTS : TS Q R A B).
     Between.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 
@@ -12427,8 +12181,7 @@ assert (HTS : TS R A Q B).
     apply l9_2; apply l9_8_2 with X2.
 
       {
-      assert_diffs; split; Col.
-      show_distinct R X2; assert_cols; try (apply HABR; ColR).
+      show_distinct R X2; assert_diffs; assert_cols; try (apply HABR; ColR).
       split; try (intro; apply HAQR; ColR).
       split; Col.
       exists R; split; Col; Between.
@@ -12455,8 +12208,7 @@ assert (HTS : TS R A Q B).
       apply l9_8_2 with P.
 
         {
-        assert_diffs; split; Col.
-        split; try (intro; assert_cols; apply HABR; ColR).
+        split; try (intro; assert_diffs; assert_cols; apply HABR; ColR).
         split; Col.
         exists R; split; Col; Between.
         }
@@ -12476,7 +12228,6 @@ assert (HTS : TS R A Q B).
       {
       assert (HTS1 : TS R A X2 Q).
         {
-        assert_diffs; split; Col.
         split; try (intro; assert_cols; apply HAQR; ColR).
         split; Col.
         exists R; split; Col; Between.
@@ -12494,15 +12245,14 @@ assert (HTS : TS R A Q B).
         Between.
         }
       exists P; split; apply l9_2; Col.
-      assert_diffs; split; Col.
-      split; try (intro; assert_cols; apply HAQR; ColR).
+      split; try (intro; assert_diffs; assert_cols; apply HAQR; ColR).
       split; Col.
-      destruct HTS2 as [Hc1 [Hc2 [Hc3 [I [HRAI HPX2I]]]]].
+      destruct HTS2 as [Hc1 [Hc2 [I [HRAI HPX2I]]]].
       exists I; assert_cols; split; Col; eBetween.
       }
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRAI HQBI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRAI HQBI]]]]; clear H1; clear H2.
 exists I; right; right; split; Col.
 Qed.
 
@@ -12540,17 +12290,15 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           exists X1; split.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; split; Col; Between.
             }
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
-            exists Q; split; Col; eBetween.
+            assert_diffs; exists Q; split; Col; eBetween.
             }
           }
 
@@ -12565,7 +12313,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           Between.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
       exists I; right; left; split; Col.
       }
 
@@ -12598,14 +12346,12 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           exists X1; split.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; split; Col; Between.
             }
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists Q; split; Col; eBetween.
@@ -12623,7 +12369,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           Between.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
       exists I; right; left; split; Col.
       }
 
@@ -12644,17 +12390,15 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           exists X1; split.
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
             exists R; split; Col; Between.
             }
 
             {
-            assert_diffs; split; Col.
             split; Col.
             split; try (intro; apply HAQR; assert_cols; ColR).
-            exists Q; split; Col; eBetween.
+            assert_diffs; exists Q; split; Col; eBetween.
             }
           }
 
@@ -12669,7 +12413,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           Between.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
       exists I; right; left; split; Col.
       }
 
@@ -12690,8 +12434,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           apply l9_2; apply l9_8_2 with X2.
 
             {
-            assert_diffs; split; Col.
-            show_distinct Q X2; assert_cols; try (apply HABQ; ColR).
+            show_distinct Q X2; assert_diffs; assert_cols; try (apply HABQ; ColR).
             split; try (intro; apply HABQ; ColR).
             split; try (intro; apply HABQ; ColR).
             exists I1; Col.
@@ -12720,7 +12463,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           assert_diffs; split; Col.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I [HQAI HRBI]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQAI HRBI]]]]; clear H1; clear H2.
       exists I; right; left; split; Col.
       }
 
@@ -12733,7 +12476,6 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           apply l9_2; apply l9_8_2 with X2.
 
             {
-            assert_diffs; split; Col.
             show_distinct Q X2; assert_cols; try (apply HABQ; ColR).
             split; try (intro; apply HBQR; ColR).
             split; try (intro; apply HABQ; ColR).
@@ -12763,7 +12505,7 @@ elim (eq_dec_points I1 I2); intro HI1I2; treat_equalities.
           assert_diffs; split; Between.
           }
         }
-      destruct HTS as [H1 [H2 [H3 [I [HQBI HRQI]]]]]; clear H1; clear H2; clear H3.
+      destruct HTS as [H1 [H2 [I [HQBI HRQI]]]]; clear H1; clear H2.
       exists I; right; right; split; Col.
       }
     }
@@ -12788,7 +12530,6 @@ assert (HTS : TS R B Q A).
   apply l9_8_2 with X1.
 
     {
-    assert_diffs; split; Col.
     show_distinct R X1; assert_cols; Col.
     split; try (intro; apply HABR; ColR).
     split; Col.
@@ -12809,7 +12550,7 @@ assert (HTS : TS R B Q A).
     assert_diffs; eBetween.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HRBI HQAI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HRBI HQAI]]]]; clear H1; clear H2.
 exists I; right; left; split; Col.
 Qed.
 
@@ -12866,7 +12607,6 @@ assert (HTS : TS Q R A B).
     apply l9_8_2 with X1.
 
       {
-      assert_diffs; split; Col.
       show_distinct Q X1; Col.
       split; try (intro; apply HNC; assert_cols; ColR).
       split; Col.
@@ -12896,7 +12636,7 @@ assert (HTS : TS Q R A B).
     Between.
     }
   }
-destruct HTS as [H1 [H2 [H3 [I [HQRI HABI]]]]]; clear H1; clear H2; clear H3.
+destruct HTS as [H1 [H2 [I [HQRI HABI]]]]; clear H1; clear H2.
 exists I; left; split; Col.
 Qed.
 

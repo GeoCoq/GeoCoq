@@ -13,6 +13,23 @@ repeat
       not_exist_hyp3 X1 X2 X1 X3 X2 X3;
       assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
 
+      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
+      let h := fresh in
+      not_exist_hyp2 X1 X2 X2 X3;
+      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
+      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
+
       | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
         assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
@@ -43,7 +60,7 @@ Lemma is_midpoint_dec :
 Proof.
     intros.
     unfold Midpoint.
-    elim (Bet_dec A I B);intro; elim (Cong_dec A I I B);intro; tauto.
+    elim (bet_dec A I B);intro; elim (Cong_dec A I I B);intro; tauto.
 Qed.
 
 Lemma is_midpoint_id : forall A B, Midpoint A A B -> A = B.
@@ -93,14 +110,14 @@ Proof.
     split;Cong;Between.
 Qed.
 
-Lemma symmetric_point_unicity : forall A P P1 P2, Midpoint P A P1 -> Midpoint P A P2 -> P1=P2.
+Lemma symmetric_point_uniqueness : forall A P P1 P2, Midpoint P A P1 -> Midpoint P A P2 -> P1=P2.
 Proof.
     unfold Midpoint.
     intros.
     spliter.
     elim (eq_dec_points A P); intros.
       treat_equalities;auto.
-    apply (construction_unicity A P A P);Cong.
+    apply (construction_uniqueness A P A P);Cong.
 Qed.
 
 Lemma l7_9 : forall P Q A X, Midpoint A P X -> Midpoint A Q X -> P=Q.
@@ -110,20 +127,12 @@ Proof.
     spliter.
     induction (eq_dec_points A X).
       treat_equalities;reflexivity.
-    apply (construction_unicity X A X A);Cong;Between.
+    apply (construction_uniqueness X A X A);Cong;Between.
 Qed.
 
 Lemma l7_9_bis : forall P Q A X, Midpoint A P X -> Midpoint A X Q -> P=Q.
 Proof.
 intros; apply l7_9 with A X; unfold Midpoint in *; split; spliter; Cong; Between.
-Qed.
-
-Lemma diff_bet : forall A B C, A <> B -> Bet A B C -> A <> C.
-Proof.
-    intros.
-    intro.
-    treat_equalities.
-    auto.
 Qed.
 
 Lemma l7_13 : forall A P Q P' Q',  Midpoint A P' P -> Midpoint A Q' Q -> Cong P Q P' Q'.
@@ -160,12 +169,9 @@ Proof.
         apply bet_col;auto.
       eapply (l2_11 X A X' Y' A Y);Between.
     assert (A <> X).
-      eapply diff_bet.
-        intro.
-        apply H3.
-        apply sym_equal.
-        apply H26.
-      assumption.
+      eapply bet_neq12__neq.
+        apply H14.
+      auto.
     assert (Cong X' Y' Y X) by eauto using l4_16.
     assert (Cong A X A X') by (apply cong_transitivity with A Y; Cong).
     assert (IFSC Y Q A X Y' Q' A X') by (unfold IFSC, FSC in *;spliter;repeat split;Between; Cong).
@@ -617,26 +623,6 @@ Proof.
     assumption.
 Qed.
 
-(* TODO: Should be remove if we have the right tactics *)
-Lemma bet_col2 : forall A B C D,
- A <> B -> Bet A B C -> Bet A B D ->
- Col A C D.
-Proof.
-    intros.
-    assert(Bet A D C \/ Bet A C D).
-      eapply l5_1.
-        apply H.
-        assumption.
-      assumption.
-    unfold Col.
-    induction H2.
-      right; left.
-      apply between_symmetry.
-      assumption.
-    left.
-    assumption.
-Qed.
-
 Lemma l7_25 : forall A B C,
   Cong C A C B ->
   exists X, Midpoint X A B.
@@ -803,10 +789,7 @@ Proof.
       subst R.
       clean_duplicated_hyps.
       assert (Col B A C).
-        eapply bet_col2.
-          2:apply between_symmetry.
-          2:apply H7.
-          2:assumption.
+        apply col_transitivity_1 with X; Col.
         intro.
         apply cong_symmetry in H12.
         apply cong_identity in H12.
@@ -1095,7 +1078,7 @@ Proof.
     intros A M B A' M' B' HM HM' Hle.
     destruct HM.
     destruct HM'.
-    apply (bet2_le2__le _ M _ _ M'); auto.
+    apply (bet2_le2__le1346 _ M _ _ M'); auto.
     apply (l5_6 A M A' M'); auto.
 Qed.
 

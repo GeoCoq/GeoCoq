@@ -65,7 +65,7 @@ Proof.
     exists A3; split; Col.
   }
   destruct HA3 as [A3 [HA3 Hts]].
-  assert(~ Col A3 P Q) by (destruct Hts as [_ [_ []]]; auto).
+  assert(~ Col A3 P Q) by (destruct Hts as [_ []]; auto).
   assert_diffs.
   apply (l11_17 A3 Q P).
   apply perp_per_1; auto; apply (perp_col2 A1 A2); Col.

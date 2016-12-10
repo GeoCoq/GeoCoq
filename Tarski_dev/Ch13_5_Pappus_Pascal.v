@@ -543,7 +543,7 @@ unfold OS in H10.
 ex_and H10 X.
 unfold TS in H10.
 spliter.
-apply H14.
+apply H10.
 Col.
 left.
 assumption.
@@ -563,7 +563,7 @@ unfold OS in H10.
 ex_and H10 X.
 unfold TS in H10.
 spliter.
-apply H15.
+apply H10.
 Col.
 left.
 Between.
@@ -1308,7 +1308,7 @@ Proof.
           split; auto.
         assert(EqL bl'n' bn'l').
           apply lcos2_comm in H77.
-          apply (lcos2_unicity lb _ _ l' n'); auto.
+          apply (lcos2_uniqueness lb _ _ l' n'); auto.
         apply lcos_lg_anga in H75.
         apply lcos_lg_anga in H76.
         spliter.
@@ -1769,7 +1769,7 @@ Proof.
     induction(eq_dec_points A B).
       subst B.
       assert(B' = A').
-        eapply (symmetric_point_unicity A M); auto.
+        eapply (symmetric_point_uniqueness A M); auto.
       subst B'.
       apply par_reflexivity.
       intro.

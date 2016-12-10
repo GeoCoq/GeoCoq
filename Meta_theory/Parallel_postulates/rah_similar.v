@@ -7,7 +7,7 @@ Context `{T2D:Tarski_2D}.
 Lemma rah__similar : postulate_of_right_saccheri_quadrilaterals -> postulate_of_existence_of_similar_triangles.
 Proof.
   intro rah.
-  destruct lower_dim as [A [B0 [C]]].
+  destruct lower_dim_ex as [A [B0 [C]]].
   assert(~ Col A B0 C) by (unfold Col; assumption).
   destruct (l10_15 C A C B0) as [B []]; Col.
   assert(HNCol1 : ~ Col C A B) by (apply (one_side_not_col _ _ _ B0); Side).
@@ -45,8 +45,8 @@ Proof.
     {
     split; [|repeat (split; auto)].
     apply (isi2_suma2__conga456 C A B _ _ _ _ _ _ B C A).
-    eauto with suma.
-    apply (conga2_isi__isi C' A B' A B' C'); CongA; eauto with suma.
+    SumA.
+    apply (conga2_isi__isi C' A B' A B' C'); CongA; SumA.
     apply t22_12__rah; Perp.
     apply (conga3_suma__suma C' A B' A B' C' B' C' A); CongA; apply t22_12__rah; auto.
     }

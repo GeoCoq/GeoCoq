@@ -58,7 +58,7 @@ Ltac two_points l X Y := assert(_H := two_points_on_line l); destruct _H as [X _
 Ltac lines_eq l m :=
 match goal with
    | H0:(?X1 <> ?X2), H1:(Incid ?X1 l), H2:(Incid ?X1 m),
-   H3:(Incid ?X2 l) , H4:(Incid ?X2 m) |- _ => let HH := fresh in assert(HH : EqL l m) by (apply (line_unicity X1 X2 l m);auto);
+   H3:(Incid ?X2 l) , H4:(Incid ?X2 m) |- _ => let HH := fresh in assert(HH : EqL l m) by (apply (line_uniqueness X1 X2 l m);auto);
                                                rewrite <-HH in *;
                                                clean_duplicated_hyps
 end.
@@ -114,17 +114,16 @@ Qed.
 Lemma other_point_exists : forall A: Point, exists B, A <> B.
 Proof.
 intros.
-elim (plan).
-intros.
-elim (two_points_on_line x).
+assert (T:=plan).
+elim (two_points_on_line l0).
 intros P.
 intros.
-decompose [ex] H0.
-induction(eq_dec_pointsH A x0).
-subst x0.
+destruct p.
+induction(eq_dec_pointsH A x).
+subst x.
 exists P.
 intuition.
-exists x0.
+exists x.
 intuition.
 Qed.
 
@@ -353,8 +352,8 @@ line_col A B C.
 right.
 intro.
 apply H2.
-col_line H3 l0.
-lines_eq l l0.
+col_line H3 l00.
+lines_eq l l00.
 assumption.
 Qed.
 
@@ -381,19 +380,18 @@ Ltac ColHR :=
 
 Lemma plan' : exists A, exists B, exists C, ~ ColH A B C.
 Proof.
-destruct (plan).
-destruct H.
-destruct (two_points_on_line x).
-destruct H0.
-exists x0.
-exists x1.
-exists x2.
-unfold ColH.
+exists P0.
+destruct (two_points_on_line l0) as [P1 [P2 [HP1 [HP2 HP3]]]].
+exists P1.
+exists P2.
+assert (T:=plan).
 intro.
-decompose [and ex] H1.
-assert (EqL x3 x)
- by (eapply line_unicity with x1 x2;intuition).
-rewrite H4 in H3.
+apply T.
+unfold ColH in H.
+decompose [ex and] H.
+assert (EqL l0 x).
+apply line_uniqueness with P1 P2;auto.
+rewrite H2 in *.
 intuition.
 Qed.
 
@@ -475,7 +473,7 @@ subst B; Col.
 Qed.
 
 
-Lemma inter_unicityH : forall A B A' B' X Y, A' <> B' -> ~ColH A B A' -> ColH A B X -> ColH A B Y -> ColH A' B' X -> ColH A' B' Y -> X = Y.
+Lemma inter_uniquenessH : forall A B A' B' X Y, A' <> B' -> ~ColH A B A' -> ColH A B X -> ColH A B Y -> ColH A' B' X -> ColH A' B' Y -> X = Y.
 Proof.
 intros A B A' B' X Y HD.
 intros.
@@ -488,7 +486,7 @@ apply H.
 ColHR.
 Qed.
 
-Lemma inter_incid_unicityH : forall P X Y l m,
+Lemma inter_incid_uniquenessH : forall P X Y l m,
   ~Incid P l ->
   Incid P m -> Incid X l -> Incid Y l -> Incid X m -> Incid Y m ->
   X = Y.
@@ -505,24 +503,24 @@ line_col A' B' Y.
 assert(~ColH A B P).
 intro.
 apply H.
-col_line H15 l0.
-lines_eq l l0.
+col_line H15 l00.
+lines_eq l l00.
 assumption.
 
 induction(eq_dec_pointsH A' P).
 subst P.
 
-eapply(inter_unicityH A B A' B'); auto.
+eapply(inter_uniquenessH A B A' B'); auto.
 
 induction(eq_dec_pointsH P B').
 subst P.
-eapply(inter_unicityH A B B' A'); auto.
+eapply(inter_uniquenessH A B B' A'); auto.
 apply colH_permut_213.
 assumption.
 apply colH_permut_213.
 assumption.
 
-eapply(inter_unicityH A B P B'); auto.
+eapply(inter_uniquenessH A B P B'); auto.
 unfold ColH.
 exists m.
 repeat split; auto.
@@ -698,9 +696,9 @@ split; auto.
 assert(HN:~ ColH A C Q).
 intro.
 apply H9.
-col_line H21 l0.
+col_line H21 l00.
 
-lines_eq l l0.
+lines_eq l l00.
 
 assumption.
 assert (HPB : P<>B).
@@ -754,7 +752,7 @@ destruct H28 as [Y H28].
 spliter.
 
 assert(X=Y).
-apply(inter_incid_unicityH B X Y l m); auto.
+apply(inter_incid_uniquenessH B X Y l m); auto.
 apply between_col in H29.
 spliter.
 unfold ColH in H29.
@@ -796,7 +794,7 @@ col_line H1 n0.
 lines_eq o n0.
 assumption.
 
-assert(HH:= inter_incid_unicityH C I B m o H34 H31 H28 H22 H32 H35).
+assert(HH:= inter_incid_uniquenessH C I B m o H34 H31 H28 H22 H32 H35).
 subst I.
 apply False_ind.
 apply between_only_one' in H1.
@@ -813,7 +811,7 @@ assert(A = I).
 
 line A C s H7.
 
-apply (inter_incid_unicityH Q A I s l); auto.
+apply (inter_incid_uniquenessH Q A I s l); auto.
 intro.
 
 assert( A <> Q).
@@ -993,7 +991,7 @@ unfold cut in H19.
 spliter.
 ex_and H21 E'.
 assert(E = E').
-apply (inter_unicityH A G C F E E'); Col.
+apply (inter_uniquenessH A G C F E E'); Col.
 intro.
 assert(ColH B C G).
 apply (colH_trans A C); Col.
@@ -1015,7 +1013,7 @@ ex_and H21 F'.
 assert(F = F').
 apply betH_distincts in H14.
 spliter.
-apply (inter_unicityH C E B G); Col.
+apply (inter_uniquenessH C E B G); Col.
 intro.
 apply HE.
 apply (colH_trans B C); Col.
@@ -1119,7 +1117,7 @@ spliter.
 ex_and H32 C'.
 
 assert(C'= C).
-apply(inter_unicityH A D E F); Col.
+apply(inter_uniquenessH A D E F); Col.
 intro.
 apply HE.
 assert(Col A C D).
@@ -1250,7 +1248,7 @@ unfold cut in H16.
 spliter.
 ex_and H18 X.
 assert(X=C).
-apply (inter_unicityH A B F C); Col.
+apply (inter_uniquenessH A B F C); Col.
 
 intro.
 apply HE.
@@ -1273,7 +1271,7 @@ apply betH_expand in H20.
 spliter.
 assert(ColH B X F).
 apply (colH_trans B G); Col.
-col_line H25 l0.
+col_line H25 l00.
 assert(X <> F).
 intro.
 subst X.
@@ -1281,7 +1279,7 @@ apply between_only_one in H20.
 spliter.
 apply between_comm in H9.
 contradiction.
-lines_eq l l0.
+lines_eq l l00.
 contradiction.
 assert(~cut l A G).
 apply (not_cut3 B).
@@ -1363,7 +1361,7 @@ ex_and H24 C'.
 assert(C = C').
 assert(ColH C C' F).
 line_col C C' F.
-apply (inter_unicityH  A B F C); Col.
+apply (inter_uniquenessH  A B F C); Col.
 intro.
 apply HE.
 apply (colH_trans B F); Col.
@@ -1394,7 +1392,7 @@ spliter.
 contradiction.
 Qed.
 
-Lemma addition_betH : forall A B C A' B' C' : Point,
+Lemma addition_betH : forall A B C A' B' C',
   BetH A B C -> BetH A' B' C' ->
   CongH A B A' B' -> CongH B C B' C' ->
   CongH A C A' C'.
@@ -1418,7 +1416,7 @@ intros.
 unfold same_side.
 unfold cut.
 destruct (two_points_on_line l).
-destruct H0.
+destruct s.
 spliter.
 destruct (between_out A x).
 intro;subst. intuition.
@@ -1430,7 +1428,7 @@ spliter.
 destruct H8.
 spliter.
 assert (EqL x2 l).
-apply line_unicity with x x1;try assumption.
+apply line_uniqueness with x x1;try assumption.
 apply H.
 rewrite H11 in H8;auto.
 exists x;auto.
@@ -1440,7 +1438,7 @@ spliter.
 destruct H8.
 spliter.
 assert (EqL x2 l).
-apply line_unicity with x x1;try assumption.
+apply line_uniqueness with x x1;try assumption.
 apply H.
 rewrite H11 in H8;auto.
 exists x;auto.
@@ -1480,7 +1478,7 @@ Col.
 auto.
 Qed.
 
-Lemma construction_unicity : forall A B D E,
+Lemma construction_uniqueness : forall A B D E,
   BetH A B D -> BetH A B E -> CongH B D B E -> D = E.
 Proof.
 intros A B D E HBet1 HBet2 HCong.
@@ -1501,7 +1499,7 @@ assert (Hout : outH C D E).
   {
   assert (HD2 := between_diff _ _ _ HBet1).
   assert (HC := between_col _ _ _ HBet1).
-  apply (hcong_4_unicity A C D C D A D E); try apply conga_refl;
+  apply (hcong_4_uniqueness A C D C D A D E); try apply conga_refl;
   try apply same_side_prime_refl; auto; try (intro; apply HNC; ColHR).
   destruct (between_out B A) as [F HBet3]; auto.
   split; [intro; subst; Col|intros l HI1 HI2; exists F; split].
@@ -1522,7 +1520,7 @@ assert (Hout : outH C D E).
     }
   }
 apply betH_expand in HBet1; apply betH_expand in HBet2;
-apply outH_expand in Hout; spliter; apply inter_unicityH with A B C D; Col.
+apply outH_expand in Hout; spliter; apply inter_uniquenessH with A B C D; Col.
 Qed.
 
 Lemma out_distinct : forall A B C, outH A B C -> A <> B /\ A <> C.
@@ -1638,7 +1636,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
   assert (I = A); [|subst; right; right; auto].
   apply betH_expand in HBet2; spliter.
   assert (ColH A D I) by (exists lAD; auto).
-  apply inter_unicityH with B C D A; try (intro; apply HNC1); Col; ColHR.
+  apply inter_uniquenessH with B C D A; try (intro; apply HNC1); Col; ColHR.
   }
 
   {
@@ -1647,7 +1645,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
   assert (I = A); [|subst; right; right; auto].
   apply betH_expand in HBet2; spliter.
   assert (ColH A D I) by (exists lAD; auto).
-  apply inter_unicityH with B C D A; try (intro; apply HNC1); Col; ColHR.
+  apply inter_uniquenessH with B C D A; try (intro; apply HNC1); Col; ColHR.
   }
 
   {
@@ -1656,7 +1654,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
   assert (I = C); [|subst; right; left; auto].
   apply betH_expand in HBet2; spliter.
   assert (ColH C D I) by (exists lCD; auto).
-  apply inter_unicityH with A B D C; try (intro; apply HNC1); Col; ColHR.
+  apply inter_uniquenessH with A B D C; try (intro; apply HNC1); Col; ColHR.
   }
 
   {
@@ -1693,7 +1691,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
     assert (I = D); [|subst].
       {
       apply betH_expand in HBet4; spliter.
-      apply inter_unicityH with C D A E; try intro; subst; Col;
+      apply inter_uniquenessH with C D A E; try intro; subst; Col;
       [|exists lAD]; auto.
       assert (ColH C D F) by (exists lCD; auto).
       assert (ColH C F I) by (exists lCF; auto); ColHR.
@@ -1716,7 +1714,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
       destruct HCut5 as [_ [_ [I [HI6 HBet5]]]].
       assert (I = B); [|subst; left; auto].
       apply betH_expand in HBet5; spliter.
-      apply inter_unicityH with A C D B; Col; exists lBD; auto.
+      apply inter_uniquenessH with A C D B; Col; exists lBD; auto.
       }
 
       {
@@ -1725,7 +1723,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
         {
         apply betH_expand in HBet1; apply betH_expand in HBet2;
         apply betH_expand in HBet5; spliter.
-        apply inter_unicityH with D B C E; Col; try exists lBD; auto.
+        apply inter_uniquenessH with D B C E; Col; try exists lBD; auto.
         intro; apply HNC1; ColHR.
         }
       apply between_only_one' in HBet5; spliter; intuition.
@@ -1738,7 +1736,7 @@ elim (pasch _ _ _ _ HNC3 HNI2 HCut2); intro HCut4.
       {
       apply betH_expand in HBet1; apply betH_expand in HBet2;
       apply betH_expand in HBet3; apply betH_expand in HBet4; spliter.
-      apply inter_unicityH with G E F C; Col; try exists lCF; auto.
+      apply inter_uniquenessH with G E F C; Col; try exists lCF; auto.
       intro; apply HNC4; ColHR.
       }
     apply between_only_one' in HBet4; spliter; intuition.
@@ -1900,7 +1898,7 @@ spliter.
 destruct H40 as [I H42].
 spliter.
 assert(I = AC).
-apply(inter_unicityH A C AB BC); Col.
+apply(inter_uniquenessH A C AB BC); Col.
 intro.
 apply H.
 apply (colH_trans A AB); Col.
@@ -1980,7 +1978,7 @@ spliter.
 destruct H40 as [I H42].
 spliter.
 assert(I = BC).
-apply(inter_unicityH C B AC AB); Col.
+apply(inter_uniquenessH C B AC AB); Col.
 intro.
 apply H.
 apply (colH_trans C AC); Col.
@@ -2095,7 +2093,7 @@ spliter.
 destruct H40 as [I H42].
 spliter.
 assert(I = AB).
-apply(inter_unicityH B A BC AC); Col.
+apply(inter_uniquenessH B A BC AC); Col.
 intro.
 apply H.
 apply (colH_trans B BC); Col.
@@ -2550,7 +2548,7 @@ Proof.
 intros.
 assert(HH:= two_points_on_line l).
 ex_and HH X.
-ex_and H0 Y.
+ex_and p Y.
 
 assert(A <> X).
 intro.
@@ -2642,7 +2640,7 @@ assert(ColH A B R /\ A<> B).
 split; auto.
 Col.
 spliter.
-apply(inter_incid_unicityH P R M l m H7 H17); Col.
+apply(inter_incid_uniquenessH P R M l m H7 H17); Col.
 subst R.
 induction H8;
 apply between_only_one' in H9;
@@ -2662,7 +2660,7 @@ apply betH_expand in H6.
 spliter.
 col_line H22 nn.
 lines_eq m nn.
-apply(inter_incid_unicityH P M N l m); auto.
+apply(inter_incid_uniquenessH P M N l m); auto.
 
 (****** case ~ColH P A B ******)
 
@@ -2849,7 +2847,7 @@ ex_and H5 P.
 apply between_comm in H6.
 assert(HB:BetH P A C).
 eapply (betH_trans2 _ _ B); auto.
-apply construction_unicity with P A; auto.
+apply construction_uniqueness with P A; auto.
 Qed.
 
 Lemma congH_permlr : forall A B C D, A<>B -> C<>D -> CongH A B C D -> CongH B A D C.
@@ -3049,7 +3047,7 @@ assert (BetH X' A' C1).
  apply (betH_trans2 X' A' B' C1);auto using between_comm.
 assert (C'=C1).
  {
- apply construction_unicity with X' A'; auto.
+ apply construction_uniqueness with X' A'; auto.
  apply (betH_trans2 X' A' B' C'); auto using between_comm.
  apply cong_pseudo_transitivity with A C; auto using congH_sym.
  }
@@ -3178,7 +3176,7 @@ assert (CongaH B A C B' A' D').
  apply congaH_outH_congaH with A C A' C'; auto using outH_trivial.
 
 assert (outH A' C' D').
- apply (hcong_4_unicity B A C A' C' B' C' D');try assumption.
+ apply (hcong_4_uniqueness B A C A' C' B' C' D');try assumption.
 intro;apply H0;Col.
 intro;apply H;Col.
 
@@ -3204,10 +3202,10 @@ spliter.
 destruct H23.
 spliter.
 assert (EqL x1 l).
-apply line_unicity with B' x;auto.
+apply line_uniqueness with B' x;auto.
 rewrite H26 in *.
 assert (EqL x0 l).
-apply line_unicity with B' D';auto.
+apply line_uniqueness with B' D';auto.
 rewrite H27 in *.
 apply H0.
 exists l;auto.
@@ -3235,10 +3233,10 @@ spliter.
 destruct H23.
 spliter.
 assert (EqL x1 l).
-apply line_unicity with B' x;auto.
+apply line_uniqueness with B' x;auto.
 rewrite H26 in *.
 assert (EqL x0 l).
-apply line_unicity with B' D';auto.
+apply line_uniqueness with B' D';auto.
 rewrite H27 in *.
 apply H0.
 exists l;auto.
@@ -3252,7 +3250,7 @@ assert (C'=D').
 
 line B' C' lB'C' H5.
 line A' C' lA'C' H6.
-apply inter_incid_unicityH with A' lB'C' lA'C';auto.
+apply inter_incid_uniquenessH with A' lB'C' lA'C';auto.
 intro.
 apply H0.
 exists lB'C';auto.
@@ -3260,14 +3258,14 @@ apply outH_col in HD2.
 destruct HD2.
 spliter.
 assert (EqL x lB'C').
-apply line_unicity with B' C';auto.
+apply line_uniqueness with B' C';auto.
 rewrite H21 in H20.
 auto.
 apply outH_col in H13.
 destruct H13.
 spliter.
 assert (EqL x lA'C').
-apply line_unicity with A' C';auto.
+apply line_uniqueness with A' C';auto.
 rewrite H20 in H19.
 auto.
 subst.
@@ -3488,9 +3486,9 @@ elim (eq_dec_pointsH B C).
   {
   intro; subst; left; split; auto; intro m; intros.
   destruct HC1 as [HNI1 [HNI2 [I [HI HBet]]]].
-  split; [apply (line_unicity _ Y m l) in H; try rewrite H; auto|].
-  split; [apply (line_unicity _ Y m l) in H; try rewrite H; auto|].
-  exists I; split; auto; apply (line_unicity _ Y m l) in H;
+  split; [apply (line_uniqueness _ Y m l) in H; try rewrite H; auto|].
+  split; [apply (line_uniqueness _ Y m l) in H; try rewrite H; auto|].
+  exists I; split; auto; apply (line_uniqueness _ Y m l) in H;
   auto; rewrite H; auto.
   }
 
@@ -3505,21 +3503,21 @@ elim (eq_dec_pointsH B C).
     assert (HNI : ~ Incid A l) by (intro; apply HNC1; exists l; auto).
     elim HE; clear HE; intro HE; try (elim HE; clear HE; intro HE);
     [left|right|right]; try (split; auto; intro m; intros;
-                             apply (line_unicity _ Y m l) in H;
+                             apply (line_uniqueness _ Y m l) in H;
                              try rewrite H in *; auto;
                              apply out_same_side with I; unfold outH; auto).
     split; [intro; subst; Col|intro m; intros].
     split; [intro; apply HNC1; exists m; auto|].
     split; [intro; apply HNC2; exists m; auto|].
     exists I; split; auto.
-    apply (line_unicity _ Y m l) in H; try rewrite H; auto.
+    apply (line_uniqueness _ Y m l) in H; try rewrite H; auto.
     }
 
     {
     intro HNC3; elim (pasch A C B l); auto; intro HC2;
     try (apply HNC2; exists l; auto); [left|right];
     split; auto; intro m; intros;
-    apply (line_unicity _ Y m l) in H; try rewrite H;
+    apply (line_uniqueness _ Y m l) in H; try rewrite H;
     try (exists C; split); auto; apply cut_comm; auto.
     }
   }
@@ -3583,7 +3581,7 @@ intro.
 elim H3.
 intros.
 spliter.
-assert (EqL l x) by (eauto using line_unicity).
+assert (EqL l x) by (eauto using line_uniqueness).
 rewrite H7 in *.
 intuition.
 Qed.
@@ -3693,7 +3691,7 @@ apply cut_comm; apply cut_same_side_cut with Z'.
 
         {
         destruct HC2 as [p [HI' ]]; spliter.
-        apply (line_unicity _ O o) in HI'; auto; rewrite HI'; auto.
+        apply (line_uniqueness _ O o) in HI'; auto; rewrite HI'; auto.
         }
 
         {
@@ -3821,7 +3819,7 @@ assert (th15_aux : forall H K O L H' K' O' L',
         assert (O <> K) by (intro; subst; Col).
         assert (O <> L) by (intro; subst; Col).
         apply outH_expand in Hout1; apply outH_expand in Hout2; spliter.
-        apply hcong_4_unicity with O L K H' O'; auto;
+        apply hcong_4_uniqueness with O L K H' O'; auto;
         [intro; apply HNC2; ColHR|intro; apply HNC3; Col| | |].
 
           {
@@ -3839,7 +3837,7 @@ assert (th15_aux : forall H K O L H' K' O' L',
           split; auto; destruct HOS2 as [_ HOS2]; intro m; intros.
           assert (HCol3 : ColH O' L' L'') by auto.
           destruct HCol3 as [o [HI1 [HI2 HI3]]]; assert (HEq := HI1).
-          apply (line_unicity _ L'' m _) in HEq; auto; rewrite HEq.
+          apply (line_uniqueness _ L'' m _) in HEq; auto; rewrite HEq.
           apply same_side_trans with K'; try apply HOS2; auto.
           apply out_same_side with O'; auto; intro; apply HNC4; exists o; auto.
           }
@@ -4040,7 +4038,7 @@ split.
   split;auto.
   intros.
   assert (EqL l0 l).
-   apply line_unicity with O X;auto.
+   apply line_uniqueness with O X;auto.
   rewrite H12.
   unfold same_side' in HB;spliter.
   specialize H14 with l.
@@ -4159,7 +4157,7 @@ assert (CongaH C' A' B'' C' A' B').
  }
 assert (outH A' B0 B').
  {
-  apply (hcong_4_unicity C' A' B'' A' B' C' B0 B');try solve [intuition Col].
+  apply (hcong_4_uniqueness C' A' B'' A' B' C' B0 B');try solve [intuition Col].
   apply same_side_prime_refl;intuition Col.
  }
   apply congaH_permlr; apply congaH_outH_congaH with C B C' B0;auto using outH_trivial.
@@ -4386,7 +4384,7 @@ assert(CongaH A' C' C'' B' C' C'').
 
 assert(outH C' A' B').
    {
-      apply(hcong_4_unicity A' C' C'' C' B' C'' A' B').
+      apply(hcong_4_uniqueness A' C' C'' C' B' C'' A' B').
       intro.
       apply H30.
       Col.
@@ -4608,7 +4606,7 @@ decompose [or and] H3; clear H3.
        apply cong_preserves_bet with A' B' C';auto using congH_refl.
          apply cong_pseudo_transitivity with A D;auto.
         apply addition with B B';auto using bet_disjoint.
-    apply construction_unicity with A' B';try assumption.
+    apply construction_uniqueness with A' B';try assumption.
    left.
    assert (C'<>D').
      intro;subst.
@@ -4618,7 +4616,7 @@ decompose [or and] H3; clear H3.
     assert (BetH A B D).
     apply  cong_preserves_bet with A' B' D';auto using congH_refl, congH_sym.
     apply H.
-    apply construction_unicity with A B; auto using congH_sym, congH_refl.
+    apply construction_uniqueness with A B; auto using congH_sym, congH_refl.
    repeat split;auto.
     apply axiom_five_segmentsH with A A' B B';auto.
    subst.
@@ -4853,7 +4851,7 @@ elim (plane_separation _ _ _ _ HNC1 HNC2); intro HS.
       split; [intro; apply HNC2; exists lPQ; auto|].
       exists I; split; auto; apply betH_line in HBet'.
       destruct HBet' as [l [HI2 [HI3 HI4] ]]; apply morph with l; auto.
-      apply line_unicity with P Q; auto.
+      apply line_uniqueness with P Q; auto.
       }
 
       {
@@ -4865,11 +4863,11 @@ elim (plane_separation _ _ _ _ HNC1 HNC2); intro HS.
           apply th14 with B B; Bet; apply betH_expand in HBet';
           apply betH_expand in HBet''; spliter;
           assert (HD11 : P <> I) by auto; assert (HD12 : Q <> I) by auto;
-          [intro; apply HD11; apply inter_unicityH with P Q C B; try intro; Col|
-           intro; apply HD12; apply inter_unicityH with P Q C B; try intro; Col|].
+          [intro; apply HD11; apply inter_uniquenessH with P Q C B; try intro; Col|
+           intro; apply HD12; apply inter_uniquenessH with P Q C B; try intro; Col|].
           apply th18_aux; Cong;
-          [intro; apply HD11; apply inter_unicityH with P Q C B; try intro; Col|
-           intro; apply HD12; apply inter_unicityH with P Q C B; try intro; Col].
+          [intro; apply HD11; apply inter_uniquenessH with P Q C B; try intro; Col|
+           intro; apply HD12; apply inter_uniquenessH with P Q C B; try intro; Col].
           }
         assert (HCong4 : CongH I P I Q).
           {
@@ -4902,11 +4900,11 @@ elim (plane_separation _ _ _ _ HNC1 HNC2); intro HS.
           apply th14 with C C; Bet; apply betH_expand in HBet';
           apply betH_expand in HBet''; spliter;
           assert (HD11 : P <> I) by auto; assert (HD12 : Q <> I) by auto;
-          [intro; apply HD11; apply inter_unicityH with P Q B C; try intro; Col|
-           intro; apply HD12; apply inter_unicityH with P Q B C; try intro; Col|].
+          [intro; apply HD11; apply inter_uniquenessH with P Q B C; try intro; Col|
+           intro; apply HD12; apply inter_uniquenessH with P Q B C; try intro; Col|].
           apply th18_aux; Cong;
-          [intro; apply HD11; apply inter_unicityH with P Q B C; try intro; Col|
-           intro; apply HD12; apply inter_unicityH with P Q B C; try intro; Col].
+          [intro; apply HD11; apply inter_uniquenessH with P Q B C; try intro; Col|
+           intro; apply HD12; apply inter_uniquenessH with P Q B C; try intro; Col].
           }
         assert (HCong4 : CongH I P I Q).
           {
@@ -4938,7 +4936,7 @@ elim (plane_separation _ _ _ _ HNC1 HNC2); intro HS.
     {
     assert (H : outH B P Q);
     [|apply outH_expand in H; spliter; exfalso; apply HNC1; Col].
-    apply hcong_4_unicity with C B P P C; try apply conga_refl;
+    apply hcong_4_uniqueness with C B P P C; try apply conga_refl;
     try apply same_side_prime_refl; try (intro; apply HNC3; Col); auto.
     apply th18_aux; Cong; intro; [apply HNC3|apply HNC4]; Col.
     }
@@ -5015,11 +5013,11 @@ assert (HConga : CongaH P B I Q B I).
   apply th14 with A A; Bet; apply betH_expand in HBet1;
   apply betH_expand in HBet2; spliter;
   assert (HD11 : P <> I) by auto; assert (HD12 : Q <> I) by auto;
-  [intro; apply HD11; apply inter_unicityH with P Q A B; try intro; Col|
-   intro; apply HD12; apply inter_unicityH with P Q A B; try intro; Col|].
+  [intro; apply HD11; apply inter_uniquenessH with P Q A B; try intro; Col|
+   intro; apply HD12; apply inter_uniquenessH with P Q A B; try intro; Col|].
   apply th18_aux; Cong;
-  [intro; apply HD11; apply inter_unicityH with P Q A B; try intro; Col|
-   intro; apply HD12; apply inter_unicityH with P Q A B; try intro; Col].
+  [intro; apply HD11; apply inter_uniquenessH with P Q A B; try intro; Col|
+   intro; apply HD12; apply inter_uniquenessH with P Q A B; try intro; Col].
   }
 assert (HCong4 : CongH I P I Q).
   {
@@ -5103,7 +5101,7 @@ elim (plane_separation _ _ _ _ HNC4 HNC5); intro HS3.
     split; [intro; apply HNC2; exists lPQ; auto|].
     exists I; split; auto; apply betH_line in HBet1;
     destruct HBet1 as [l [HI2 [HI3 HI4] ]]; apply morph with l; auto.
-    apply line_unicity with P Q; auto.
+    apply line_uniqueness with P Q; auto.
     }
 
     {
@@ -5116,18 +5114,67 @@ elim (plane_separation _ _ _ _ HNC4 HNC5); intro HS3.
   {
   assert (H : outH A P Q);
   [|apply outH_expand in H; spliter; exfalso; apply HNC1; Col].
-  apply hcong_4_unicity with B A P P B; try apply conga_refl;
+  apply hcong_4_uniqueness with B A P P B; try apply conga_refl;
   try apply same_side_prime_refl; try (intro; apply HNC4; Col); auto.
   apply th18_aux; Cong; intro; [apply HNC4|apply HNC5]; Col.
   }
 Qed.
+
+Definition P1 : Point.
+Proof.
+destruct (two_points_on_line l0).
+exact x.
+Defined.
+
+Definition P2 : Point.
+Proof.
+destruct (two_points_on_line l0).
+destruct s.
+exact x0.
+Defined.
+
+Lemma lower_dim_l : ~ (Bet P0 P1 P2 \/ Bet P1 P2 P0 \/ Bet P2 P0 P1).
+Proof.
+intro.
+apply plan.
+unfold P1 in *.
+unfold P2 in *.
+revert H.
+elim (two_points_on_line l0).
+intros.
+destruct p.
+spliter.
+decompose [or] H;clear H.
+apply bet_colH in H3.
+unfold ColH in *.
+decompose [ex and] H3;clear H3.
+assert (EqL x1 l0).
+apply line_uniqueness with x x0;auto.
+rewrite H3 in *.
+auto.
+apply bet_colH in H4.
+unfold ColH in *.
+decompose [ex and] H4;clear H4.
+assert (EqL x1 l0).
+apply line_uniqueness with x x0;auto.
+rewrite H4 in *.
+auto.
+apply bet_colH in H4.
+unfold ColH in *.
+decompose [ex and] H4;clear H4.
+assert (EqL x1 l0).
+apply line_uniqueness with x x0;auto.
+rewrite H4 in *.
+auto.
+Qed.
+
 
 Instance independent_Tarski_neutral_dimensionless_follows_from_Hilbert2D : independent_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact (Build_independent_Tarski_neutral_dimensionless_with_decidable_point_equality Point Bet Cong
        eq_dec_pointsH cong_permT cong_transitivity cong_identity
        segment_construction five_segment
-       bet_comm bet_trans pasch_general_case lower_dim).
+       bet_comm bet_trans pasch_general_case P0 P1 P2 lower_dim_l).
 Defined.
 
 Instance Tarski_neutral_dimensionless_follows_from_Hilbert2D : Tarski_neutral_dimensionless.

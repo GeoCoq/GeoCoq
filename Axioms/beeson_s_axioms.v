@@ -27,5 +27,8 @@ Class intuitionistic_Tarski_neutral_dimensionless := {
  Iinner_pasch : forall A B C P Q,
    IBet A P C -> IBet B Q C -> ~ ICol A B C ->
    exists x, IBet P x B /\ IBet Q x A;
- Ilower_dim : exists A, exists B, exists C, ~ IT C A B /\ ~ IT A C B /\ ~ IT A B C
+ PA : ITpoint;
+ PB : ITpoint;
+ PC : ITpoint;
+ Ilower_dim : ~ IT PC PA PB /\ ~ IT PA PC PB /\ ~ IT PA PB PC
 }.

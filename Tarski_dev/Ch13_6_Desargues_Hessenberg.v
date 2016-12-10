@@ -76,8 +76,6 @@ Proof.
         Par.
       assert(Par A C A B).
         apply(par_trans A C A' C'); Par.
-        left.
-        auto.
       induction H16.
         apply False_ind.
         apply H16.
@@ -392,8 +390,6 @@ Proof.
       Par.
     assert(Par O N A C).
       apply (par_trans _ _ A' C'); Par.
-      left.
-      Par.
     assert(Par N M B C).
       induction(Par_dec A N O C).
         assert(Par_strict A N O C).
@@ -1201,8 +1197,6 @@ Proof.
         intro.
         apply H7.
         apply(par_trans _ _ B' C'); Par.
-        left.
-        Par.
       assert(HH:=not_par_inter_exists C P B' C' H8).
       ex_and HH C''.
       induction(eq_dec_points B' C'').
@@ -1244,8 +1238,6 @@ Proof.
           Par.
         assert(Par B C A C).
           apply (par_trans _ _ A' C'); Par.
-          left.
-          Par.
         induction H16.
           apply False_ind.
           apply H16.
@@ -1637,8 +1629,6 @@ Proof.
       intro.
       assert(Par Y B E Z).
         apply (par_trans _ _ X A); Par.
-        left.
-        Par.
       induction H24.
         apply H24.
         exists E.
@@ -1705,8 +1695,6 @@ Proof.
         apply (col_transitivity_1  _ C); Col.
     assert(Par Y B E Z).
       apply (par_trans _ _ X A); Par.
-      left.
-      Par.
     assert(Par_strict Y B E Z).
       induction H30.
         Par.

@@ -78,7 +78,7 @@ spliter.
 induction H11.
 
 assert(Col P P P' /\ Col Q P P').
-apply(parallel_unicity X Y P P' P Q P); Col.
+apply(parallel_uniqueness X Y P P' P Q P); Col.
 Par.
 Par.
 spliter.
@@ -89,7 +89,7 @@ spliter.
 induction H6.
 
 assert(Col P Q Q' /\ Col Q Q Q').
-apply(parallel_unicity X Y Q Q' P Q Q); Col.
+apply(parallel_uniqueness X Y Q Q' P Q Q); Col.
 Par.
 Par.
 spliter.
@@ -118,7 +118,7 @@ apply par_distincts in H6.
 spliter.
 
 assert(Col P Q Q' /\ Col Q Q Q').
-apply(parallel_unicity X Y Q Q' P Q Q); Col.
+apply(parallel_uniqueness X Y Q Q' P Q Q); Col.
 Par.
 Par.
 spliter.
@@ -193,7 +193,7 @@ apply H.
 auto.
 Qed.
 
-Lemma project_unicity : forall P P' Q' A B X Y, Proj P P' A B X Y -> Proj P Q' A B X Y -> P' = Q'.
+Lemma project_uniqueness : forall P P' Q' A B X Y, Proj P P' A B X Y -> Proj P Q' A B X Y -> P' = Q'.
 Proof.
 intros.
 assert(HH:=H).
@@ -211,7 +211,7 @@ spliter.
 clear H5.
 
 assert(Col P P P' /\ Col Q' P P').
-apply(parallel_unicity  X Y P P' P Q' P); Col.
+apply(parallel_uniqueness  X Y P P' P Q' P); Col.
 Par.
 Par.
 spliter.
@@ -273,7 +273,7 @@ split.
 assumption.
 
 intros.
-eapply project_unicity;eauto.
+eapply project_uniqueness;eauto.
 Qed.
 
 Lemma project_col_eq : forall P Q P' Q' A B X Y,
@@ -286,7 +286,7 @@ Proof.
 intros.
 induction(eq_dec_points P Q).
 subst Q.
-eapply project_unicity.
+eapply project_uniqueness.
 apply H1.
 apply H2.
 eapply project_par.
@@ -343,7 +343,7 @@ apply (col3 A B); Col.
 induction(eq_dec_points P Q).
 assert(P' = Q').
 subst Q.
-eapply project_unicity.
+eapply project_uniqueness.
 apply H0.
 assumption.
 subst Q'.
@@ -352,7 +352,7 @@ Between.
 induction (eq_dec_points R Q).
 assert(R'=Q').
 subst Q.
-eapply project_unicity.
+eapply project_uniqueness.
 apply H2.
 assumption.
 subst Q'.
@@ -441,7 +441,7 @@ assumption.
 
 unfold TS in H27.
 spliter.
-ex_and H30 QQ.
+ex_and H29 QQ.
 
 assert(QQ=Q').
 assert(Col P' QQ R').
@@ -451,7 +451,7 @@ eapply (l6_21 Q Q' P' R'); Col.
 
 intro.
 subst R'.
-apply between_equality in H31.
+apply between_equality in H30.
 subst QQ.
 contradiction.
 Between.
@@ -487,7 +487,7 @@ exists Q.
 split; Col.
 unfold TS in H7.
 spliter.
-ex_and H25 QQ.
+ex_and H24 QQ.
 
 assert(QQ=Q').
 assert(Col P' QQ R).
@@ -497,7 +497,7 @@ eapply (l6_21 Q Q' P' R); Col.
 
 intro.
 subst R.
-apply between_equality in H26.
+apply between_equality in H25.
 subst QQ.
 contradiction.
 Between.
@@ -594,7 +594,7 @@ apply H27.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 QQ.
+ex_and H30 QQ.
 
 assert(QQ=Q).
 
@@ -605,7 +605,7 @@ eapply (l6_21 Qx Qy P' R'); Col.
 
 intro.
 subst R'.
-apply between_equality in H32.
+apply between_equality in H31.
 subst QQ.
 contradiction.
 Between.
@@ -671,7 +671,7 @@ Between.
 
 unfold TS in H23.
 spliter.
-ex_and H26 QQ.
+ex_and H25 QQ.
 
 assert(QQ=Q').
 assert(Col P QQ R').
@@ -681,7 +681,7 @@ eapply (l6_21 Q Q' P R'); Col.
 
 intro.
 subst P.
-apply between_equality in H27.
+apply between_equality in H26.
 subst QQ.
 contradiction.
 Between.
@@ -795,13 +795,13 @@ assert(Par B' C' B C'').
 apply (midpoint_par _ _ _ _ M); Midpoint.
 
 assert(Col B B C /\ Col C'' B C).
-apply(parallel_unicity B' C' B C B C'' B); Col.
+apply(parallel_uniqueness B' C' B C B C'' B); Col.
 Par.
 
 assert(Par B' A' B A'').
 apply (midpoint_par _ _ _ _ M); Midpoint.
 assert(Col B B A /\ Col A'' B A).
-apply(parallel_unicity B' A' B A B A'' B); Col.
+apply(parallel_uniqueness B' A' B A B A'' B); Col.
 apply par_symmetry.
 apply par_comm.
 assumption.
@@ -908,10 +908,10 @@ apply H26.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 T.
+ex_and H30 T.
 apply H24.
 exists T.
-apply bet_col in H32.
+apply bet_col in H31.
 split; Col.
 
 assert(TS A'' C'' A B).
@@ -966,10 +966,10 @@ apply H26.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 T.
+ex_and H30 T.
 apply H24.
 exists T.
-apply bet_col in H32.
+apply bet_col in H31.
 split; Col.
 
 induction H17.
@@ -1031,10 +1031,10 @@ apply H26.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 T.
+ex_and H30 T.
 apply H24.
 exists T.
-apply bet_col in H32.
+apply bet_col in H31.
 split; Col.
 
 induction H16.
@@ -1151,10 +1151,10 @@ apply H26.
 assumption.
 unfold TS in H28.
 spliter.
-ex_and H31 T.
+ex_and H30 T.
 apply H24.
 exists T.
-apply bet_col in H32.
+apply bet_col in H31.
 split; Col.
 
 induction H16.
@@ -1192,7 +1192,7 @@ right.
 Between.
 Qed.
 
-Definition Conga_3 := fun A B C A' B' C' => CongA A B C A' B' C' /\ CongA B C A B' C' A' /\ CongA C A B C' A' B'.
+Definition CongA_3 := fun A B C A' B' C' => CongA A B C A' B' C' /\ CongA B C A B' C' A' /\ CongA C A B C' A' B'.
 
 
 Lemma par3_conga3 :
@@ -1201,10 +1201,10 @@ Lemma par3_conga3 :
  Par A B A' B' ->
  Par B C B' C' ->
  Par A C A' C' ->
- Conga_3 A B C A' B' C'.
+ CongA_3 A B C A' B' C'.
 Proof.
 intros.
-unfold Conga_3.
+unfold CongA_3.
 split.
 apply triangle_par; auto.
 split.
@@ -1232,11 +1232,11 @@ Lemma cong_conga3_cong3 :
  forall A B C A' B' C',
  ~ Col A B C ->
  Cong A B A' B' ->
- Conga_3 A B C A' B' C' ->
+ CongA_3 A B C A' B' C' ->
  Cong_3 A B C A' B' C'.
 Proof.
 intros.
-unfold Conga_3 in H1.
+unfold CongA_3 in H1.
 spliter.
 assert(Cong A C A' C' /\ Cong B C B' C' /\ CongA C A B C' A' B').
 apply( l11_50_2 A B C A' B' C' H); auto.
@@ -1355,12 +1355,12 @@ apply null_vector in H.
 subst S.
 
 assert(Q' = P').
-eapply project_unicity.
+eapply project_uniqueness.
 apply H1.
 assumption.
 subst Q'.
 
-eapply project_unicity.
+eapply project_uniqueness.
 apply H2.
 assumption.
 
@@ -1379,7 +1379,7 @@ induction(eq_dec_points P R).
 subst R.
 apply null_vector in H6.
 subst S.
-eapply project_unicity.
+eapply project_uniqueness.
 apply H1.
 assumption.
 
@@ -1405,7 +1405,7 @@ induction H16; induction H12.
 
 assert(Col R P P' /\ Col P' P P').
 
-apply(parallel_unicity X Y P P' R P' P'); Col.
+apply(parallel_uniqueness X Y P P' R P' P'); Col.
 Par.
 Par.
 spliter.
@@ -1469,7 +1469,7 @@ apply (par_col_par_2 _ P'); Col.
 induction H7.
 
 assert(Col Q Q Q' /\ Col S Q Q').
-apply(parallel_unicity X Y Q Q' Q S Q); Col.
+apply(parallel_uniqueness X Y Q Q' Q S Q); Col.
 Par.
 eapply par_trans.
 2: apply H.
@@ -1498,7 +1498,7 @@ tauto.
 
 induction H7.
 assert(Col Q Q Q' /\ Col S Q Q').
-apply(parallel_unicity X Y Q Q' Q S Q); Col.
+apply(parallel_uniqueness X Y Q Q' Q S Q); Col.
 Par.
 eapply par_trans.
 apply par_symmetry.
@@ -1563,12 +1563,12 @@ subst Q.
 apply null_vector in H.
 subst S.
 assert(R'=S').
-eapply project_unicity.
+eapply project_uniqueness.
 apply H2.
 apply H3.
 subst S'.
 assert(P' = Q').
-eapply project_unicity.
+eapply project_uniqueness.
 apply H0.
 apply H1.
 subst Q'.
@@ -2189,7 +2189,7 @@ unfold Projp in *.
 spliter.
 induction H1; induction H2.
 spliter.
-apply (l8_18_unicity A B P); Col.
+apply (l8_18_uniqueness A B P); Col.
 apply perp_not_col2 in H4.
 induction H4.
 assumption.

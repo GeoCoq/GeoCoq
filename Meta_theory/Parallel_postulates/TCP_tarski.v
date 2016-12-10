@@ -204,8 +204,8 @@ assert (HOS : OS B C A x).
   intro; treat_equalities; intuition.
 }
 assert (HTS' : TS B C x T) by (apply l9_8_2 with A; assumption);
-clear HTS; clear HOS; destruct HTS' as [Hclear [Hclear' [Hclear'' [I [HBCI HITx]]]]];
-clear Hclear; clear Hclear'; clear Hclear''.
+clear HTS; clear HOS; destruct HTS' as [Hclear [Hclear' [I [HBCI HITx]]]];
+clear Hclear; clear Hclear'.
 assert (HTx : T <> x) by (intro; subst; apply HABC; assert_cols; ColR).
 assert (HPar' : Par_strict B C x T) by (apply par_strict_col_par_strict with y; assert_cols; Col).
 apply HPar'; exists I; assert_cols; Col.

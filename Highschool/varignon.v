@@ -4,7 +4,15 @@ Section Varignon.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** This is the usual proof using midpoints theorem but this proof needs the fact that IJK are not collinear. *)
+(** This is the usual proof presented in classroom based on
+the midpoint theorem but this proof suffers from two problems.
+It needs the fact that IJK are not collinear, 
+which is not always the case when the quadrilateral is not convex. 
+It also needs the fact that A is different from C, and B is different from D.
+The original proof by Varignon suffer from the same problem.
+The original proof can be found page 138, Corollary IV:
+http://polib.univ-lille3.fr/documents/B590092101_000000011.489_IMT.pdf
+*)
 
 Lemma varignon :
  forall A B C D I J K L,
@@ -17,28 +25,31 @@ Lemma varignon :
 Proof.
 intros.
 assert_diffs.
-assert (Par I L B D)
+assert (Par I L B D) (** Applying the midpoint theorem in the triangle BDA. *)
   by perm_apply (triangle_mid_par B D A L I).
-assert (Par J K B D)
+assert (Par J K B D) (** Applying the midpoint theorem in the triangle BDC. *)
   by perm_apply (triangle_mid_par B D C K J).
-assert (Par I L J K)
+assert (Par I L J K) (** Transitivity of parallelism *)
   by (apply par_trans with B D;finish).
-assert (Par I J A C)
-  by perm_apply (triangle_mid_par A C B J I).
-assert (Par L K A C)
+assert (Par I J A C) (** Applying the midpoint theorem in the triangle ACB. *)
+  by perm_apply (triangle_mid_par A C B J I). 
+assert (Par L K A C) (** Applying the midpoint theorem in the triangle ACD. *)
   by perm_apply (triangle_mid_par A C D K L).
-assert (Par I J K L)
+assert (Par I J K L) (** Transitivity of parallelism *)
   by (apply par_trans with A C;finish).
-apply par_2_plg;finish.
+apply par_2_plg;finish. (** If in the opposite side of quadrilatral are parallel and two opposite side are distinct
+                            then it is a parallelogram. *)
 Qed.
 
-(** We propose here a more complex proof to simplify the ndg. If we know that a quadrilateral has its pairs of opposite side congruent and parallel
+(** We propose here a more complex proof to simplify the ndg. 
+If we know that a quadrilateral has its pairs of opposite side congruent and parallel
  then it is a parallelogram. *)
 
-Lemma varignon_aux :
+
+Lemma varignon_aux_aux :
  forall A B C D I J K L,
-  (A<>C \/ B<>D) ->
-  J<>L ->
+  A<>C ->
+  J<>L -> 
   Midpoint I A B ->
   Midpoint J B C ->
   Midpoint K C D ->
@@ -46,7 +57,6 @@ Lemma varignon_aux :
   Parallelogram I J K L.
 Proof.
 intros.
-induction H.
 induction (eq_dec_points B D).
 treat_equalities.
 apply plg_trivial.
@@ -75,6 +85,22 @@ assert (Par I J K L)
 assert (Cong I J K L)
    by (eapply cong_transitivity with A X';finish).
 apply par_par_cong_cong_parallelogram;finish.
+Qed.
+
+
+Lemma varignon_aux :
+ forall A B C D I J K L,
+  (A<>C \/ B<>D) ->
+  J<>L ->
+  Midpoint I A B ->
+  Midpoint J B C ->
+  Midpoint K C D ->
+  Midpoint L A D ->
+  Parallelogram I J K L.
+Proof.
+intros.
+induction H.
+eauto using varignon_aux_aux.
 
 induction (eq_dec_points A C).
 treat_equalities.

@@ -104,7 +104,6 @@ elim (eq_dec_points I S); intro HIS; treat_equalities.
 
     {
     spliter; assert_diffs; assert_cols.
-    split; Col.
     split; try (intro; apply HNC; ColR).
     split; try (intro; apply HNC; ColR).
     exists U; Col; Between.
@@ -117,7 +116,6 @@ elim (eq_dec_points I S); intro HIS; treat_equalities.
     destruct (inner_pasch R P Q U T HQUR HPTQ) as [J [HPJU HRJT]].
     assert (HRJS : Bet R J S) by (spliter; eBetween).
     spliter; assert_diffs; assert_cols.
-    split; Col.
     split; try (intro; apply HNC; ColR).
     split; try (intro; apply HNC; ColR).
     exists J; split; Col; Between.

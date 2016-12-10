@@ -98,7 +98,7 @@ Proof.
         apply HH1.
       assumption.
     assert(Y0 = Z0).
-      eapply l8_18_unicity.
+      eapply l8_18_uniqueness.
         apply H1.
         assumption.
         apply perp_sym.
@@ -508,7 +508,7 @@ Proof.
       unfold Per in H3.
       ex_and H3 C2.
       assert (C2=C1).
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H3.
         assumption.
       subst C2.
@@ -706,7 +706,7 @@ Proof.
       unfold Per in H.
       ex_and H A3.
       assert(A2=A3).
-        eapply symmetric_point_unicity.
+        eapply symmetric_point_uniqueness.
           apply H22.
         apply H.
       subst A3.

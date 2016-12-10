@@ -47,6 +47,15 @@ apply cong_left_commutativity.
 eapply five_segment with A A' B B';auto.
 Qed.
 
+Lemma lower_dim_ex : 
+ exists A B C, ~ (Bet A B C \/ Bet B C A \/ Bet C A B).
+Proof.
+exists PA.
+exists PB. 
+exists PC.
+apply lower_dim.
+Qed.
+
 Instance Makarios_Variant_follows_from_Tarski : Tarski_neutral_dimensionless_variant.
 Proof.
 exact (Build_Tarski_neutral_dimensionless_variant
@@ -58,6 +67,7 @@ exact (Build_Tarski_neutral_dimensionless_variant
  five_segment'
  between_identity
  inner_pasch
+ PA PB PC
  lower_dim).
 Qed.
 
@@ -161,6 +171,7 @@ exact (Build_Tarski_neutral_dimensionless
  five_segment
  Mbetween_identity
  Minner_pasch
+ MPA MPB MPC
  Mlower_dim).
 Defined.
 

@@ -175,7 +175,7 @@ intuition.
 eauto with Perp_bisect.
 Qed.
 
-Lemma is_circumcenter_unicity :
+Lemma is_circumcenter_uniqueness :
    forall A B C O O',
   A<>B -> B<>C -> A<>C ->
   is_circumcenter O A B C ->
@@ -193,7 +193,7 @@ elim (Col_dec A B C); intro HABC.
     unfold Midpoint in *; spliter; Cong.
     intro; treat_equalities; assert (HFalse := l7_20 O B C); elim HFalse; clear HFalse;
     try intro HFalse; Cong; assert_cols; try ColR.
-    apply HAC; apply symmetric_point_unicity with B O; Col; split; Between; Cong.
+    apply HAC; apply symmetric_point_uniqueness with B O; Col; split; Between; Cong.
     }
   Name A' the midpoint of B and C.
   assert (HPer2 : Perp_bisect O A' B C).
@@ -202,7 +202,7 @@ elim (Col_dec A B C); intro HABC.
     unfold Midpoint in *; spliter; Cong.
     intro; treat_equalities; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse;
     try intro HFalse; Cong; assert_cols; try ColR.
-    apply HAC; apply symmetric_point_unicity with B O;
+    apply HAC; apply symmetric_point_uniqueness with B O;
     unfold Midpoint in*; spliter; split; Between; Cong.
     }
   assert (HPar : Par_strict O A' O C').
@@ -215,7 +215,7 @@ elim (Col_dec A B C); intro HABC.
       }
 
       {
-      show_distinct A' C'; try (apply HAC; apply symmetric_point_unicity with B A';
+      show_distinct A' C'; try (apply HAC; apply symmetric_point_uniqueness with B A';
       unfold Midpoint in *; spliter; split; Cong; Between).
       intro; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse; try intro HFalse;
       unfold is_circumcenter in *; spliter; Cong; assert_diffs; assert_cols; try ColR.
@@ -721,7 +721,7 @@ intros.
 Name O' the midpoint of A and C.
 assert (T:= midpoint_thales_reci_circum A C B O' H1 H4).
 assert (O=O').
-apply is_circumcenter_unicity with A B C;finish.
+apply is_circumcenter_uniqueness with A B C;finish.
 intro.
 treat_equalities.
 apply l8_8 in H1.

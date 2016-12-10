@@ -511,7 +511,7 @@ Proof.
       unfold Out in H.
       spliter.
       auto.
-    eapply (l6_11_unicity A A C C ); Cong.
+    eapply (l6_11_uniqueness A A C C ); Cong.
     apply out_trivial.
     auto.
 Qed.

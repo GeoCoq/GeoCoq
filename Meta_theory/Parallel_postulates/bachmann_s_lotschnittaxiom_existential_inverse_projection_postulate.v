@@ -7,7 +7,7 @@ Context `{T2D:Tarski_2D}.
 Lemma bachmann_s_lotschnittaxiom__existential_inverse_projection_postulate :
   bachmann_s_lotschnittaxiom -> existential_inverse_projection_postulate.
 Proof.
-intro HP; destruct lower_dim as [C [E [D H]]].
+intro HP; destruct lower_dim_ex as [C [E [D H]]].
 assert (HNC : ~ Col C E D) by auto; clear H.
 destruct (l8_18_existence D E C) as [B [HC1 HPerp]]; Col.
 assert (HF : exists F, Col D E F /\ B <> F); [|destruct HF as [F [HC2 HNE]]].
@@ -48,8 +48,7 @@ split; [intro; apply HNC; assert_diffs; assert_cols; ColR|split].
       {
       exists C; split; [apply conga_pseudo_refl|split;[|apply conga_refl]];
       try solve[intro; treat_equalities; apply HNC; assert_cols; Col].
-      apply l9_9; split;
-      [intro; treat_equalities; apply HNC; assert_cols; Col|].
+      apply l9_9.
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
       exists D; split; Col; unfold Midpoint in *; spliter; auto.
@@ -131,7 +130,7 @@ split; [intro; apply HNC; assert_diffs; assert_cols; ColR|split].
 
       {
       apply one_side_symmetry in HOS; apply one_side_not_col in HOS.
-      assert_diffs; assert_cols; split; auto.
+      assert_diffs; assert_cols.
       split; [intro; apply HNC; ColR|split; Col].
       exists B; split; Col.
       }
