@@ -1,4 +1,9 @@
-
+Release 2.2.1
+==========================
+	- Add compatibility with Coq 8.6.
+	- Add SSA for right triangles.
+	- Add the fact that in a triangle isosceles in A the altitude wrt. A, is also the bisector and median.
+	
 Release 2.2.0
 ==========================
 

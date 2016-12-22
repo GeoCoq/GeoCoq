@@ -9219,6 +9219,40 @@ Proof.
     assumption.
 Qed.
 
+
+(** This is SSA for right triangles *)
+
+Lemma per2_cong2__cong_conga2 :
+forall A B C A' B' C' : Tpoint,
+       A<>B -> B<>C -> A'<>B' ->  B'<>C' ->
+       Per A B C ->
+       Per A' B' C' ->
+       Cong A C A' C' ->
+       Cong B C B' C' ->
+       Cong B A B' A' /\ CongA B A C B' A' C' /\ CongA B C A B' C' A'.
+Proof.
+intros.
+apply (l11_52 A B C A' B' C');auto.
+apply l11_16;auto.
+apply (l11_46 A B C);auto using per_not_col.
+Qed.
+
+Lemma per2_cong2__cong_3 :
+forall A B C A' B' C' : Tpoint,
+       A<>B -> B<>C -> A'<>B' ->  B'<>C' ->
+       Per A B C ->
+       Per A' B' C' ->
+       Cong A C A' C' ->
+       Cong B C B' C' ->
+       Cong_3 A B C A' B' C'.
+Proof.
+intros.
+unfold Cong_3.
+assert (Cong B A B' A') by
+ (apply (per2_cong2__cong_conga2 A B C A' B' C');auto).
+repeat split;Cong.
+Qed.
+
 Lemma hilbert_s_version_of_pasch_aux : forall A B C I P,
   ~ Col A I P -> ~ Col B C P -> Bet B I C -> B <> I -> I <> C -> B <> C ->
   exists X, Col I P X /\

@@ -302,12 +302,12 @@ induction (Col_dec B H C).
      apply H27; apply perp_per_1; assert_diffs; Perp.
      assert (Perp_bisect O A'' B C) by (apply circumcenter_perp with A; Col).
      elim (eq_dec_points A A''); intro; treat_equalities.
-     apply perp_bisect_cong_2 in H32; apply H4; Cong.
+     eauto using perp_bisect_cong_2 with cong.
      assert (Perp_bisect A'' A B C).
      apply perp_mid_perp_bisect; Col.
      apply perp_sym; apply perp_col0 with O A''; Col;
      try (apply perp_bisect_perp; assumption); assert_cols; try ColR.
-     apply perp_bisect_cong_2 in H34; apply H4; Cong.
+     eauto using perp_bisect_cong_2 with cong.
      }
 
    assert (is_gravity_center G A A' H)

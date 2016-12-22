@@ -1363,6 +1363,8 @@ elim (eq_dec_points R X1); intro HRX1; elim (eq_dec_points R X2); intro HRX2; tr
   }
 Qed.
 
+Unset Regular Subst Tactic.
+
 Lemma coplanar_trans_1_aux_2_1_1_2_2 : forall P Q R A B X1 X2,
   ~ Col P Q R ->
   ~ Col A B P ->
@@ -1407,8 +1409,9 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
     apply between_symmetry in HCol1.
     apply between_symmetry in HCol3.
     assert (H := inner_pasch R X2 P A B HCol1 HCol3); destruct H as [U [HAUX2 HBUR]].
-    apply between_symmetry in HQRX2.
-    assert (H := inner_pasch A R X2 U Q HAUX2 HQRX2); destruct H as [V [RVU HAVQ]].
+(*    apply between_symmetry in HQRX2. *)
+    assert (T: Bet R Q X2) by Between.
+    assert (H := inner_pasch A R X2 U Q HAUX2 T); destruct H as [V [RVU HAVQ]].
     exists V; right; left.
     assert (R <> U) by (intro; treat_equalities; assert_cols; apply HAQR; ColR).
     assert_cols; split; ColR.
@@ -1506,8 +1509,9 @@ elim H; clear H; intro HQRX2; elim H'; clear H'; intro HQRX1.
     apply between_symmetry in HCol1.
     apply between_symmetry in HCol3.
     assert (H := inner_pasch X2 Q P B A HCol3 HCol1); destruct H as [U [HBUQ HAUX2]].
-    apply between_symmetry in HQRX2.
-    assert (H := inner_pasch A Q X2 U R HAUX2 HQRX2); destruct H as [V [QVU HAVR]].
+    (* apply between_symmetry in HQRX2. *)
+    assert (T:Bet Q R X2) by auto using between_symmetry.
+    assert (H := inner_pasch A Q X2 U R HAUX2 T); destruct H as [V [QVU HAVR]].
     exists V; right; right.
     assert (Q <> U) by (intro; treat_equalities; assert_cols; apply HAQR; ColR).
     assert_cols; split; ColR.
@@ -2273,8 +2277,9 @@ elim H'; clear H'; intro HQRX1; elim H; clear H; intro HQRX2.
     elim (eq_dec_points Q X1); intro HQX1; treat_equalities.
 
       {
-      apply between_symmetry in HQRX2.
-      assert (H := inner_pasch B Q X2 P R HCol3 HQRX2); destruct H as [V [HPVQ HBVR]].
+        (* apply between_symmetry in HQRX2. *)
+      assert (T: Bet Q R X2) by auto using between_symmetry.
+      assert (H := inner_pasch B Q X2 P R HCol3 T); destruct H as [V [HPVQ HBVR]].
       exists V; right; left.
       assert_diffs; assert_cols; split; ColR.
       }

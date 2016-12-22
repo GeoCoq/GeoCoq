@@ -267,7 +267,7 @@ Proof.
   - destruct (lt_per2_os__lta A B C D); auto.
   - unfold Gt in Hlt.
     apply lt_comm in Hlt.
-    destruct (lt4321_per2_os__lta A B C D); CongA. 
+    destruct (lt4321_per2_os__lta A B C D); CongA.
 Qed.
 
 (** The two following lemmas constitute Theorem 21.11 *)
@@ -330,7 +330,6 @@ Proof.
   exists C.
   split; auto.
 Qed.
-
 
 Lemma sac__par_strict1423 : forall A B C D, Saccheri A B C D -> Par_strict A D B C.
 Proof.
@@ -694,7 +693,7 @@ Proof.
   assert_diffs.
   assert(OS A Q B P) by (apply (col_one_side _ D); Col; apply (l9_17 _ _ C); auto).
   assert(HNCol3 : ~ Col A Q P) by (apply (one_side_not_col _ _ _ B); Side).
-  assert(HNCol4 : ~ Col B P Q). 
+  assert(HNCol4 : ~ Col B P Q).
   { apply (per2_os__ncol234 A); auto.
     apply (per_col _ _ D); Col.
     Perp.

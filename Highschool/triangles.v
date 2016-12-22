@@ -1,4 +1,5 @@
 Require Import GeoCoq.Tarski_dev.Ch12_parallel.
+Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
 
 Section Triangles.
 
@@ -21,7 +22,7 @@ Cong.
 Qed.
 
 Lemma isosceles_conga :
-  A<>C -> A <> B ->
+  A<>C -> A<>B ->
   isosceles A B C ->
   CongA C A B A C B.
 Proof.
@@ -32,6 +33,69 @@ auto.
 unfold Cong_3.
 unfold isosceles in H.
 repeat split;Cong.
+Qed.
+
+Lemma conga_isosceles :
+ ~ Col A B C ->
+ CongA C A B A C B ->
+ isosceles A B C. 
+Proof.
+intros.
+assert (Cong B A B C)
+ by (apply l11_44_1_b;finish;CongA).
+unfold isosceles.
+Cong.
+Qed.
+
+(** In a triangle isosceles in A the altitude wrt. A, is also the bisector and median. *)
+
+Lemma isosceles_foot__midpoint_conga :
+ forall H,
+ isosceles A B C ->
+ Col H A C -> 
+ Perp H B A C ->
+ ~ Col A B C /\ A<>H /\ C<>H /\ Midpoint H A C /\ CongA H B A H B C.
+Proof.
+intros.
+assert_diffs.
+assert (~ Col A B C).
+ {
+   intro;apply perp_not_col2 in H2.
+   destruct H2;apply H2;ColR.
+ }
+assert_diffs. 
+assert (A<>H).
+ { (* these point are distinct 
+      because otherwise the hypothenuse is not larger than the side *)
+ intro.
+ treat_equalities.
+ assert (Lt A B B C /\ Lt A C B C).
+ apply (l11_46 B A C);Col; left;apply perp_per_2;auto.
+ spliter.
+ unfold isosceles in *.
+ apply (cong__nlt A B B C);auto.
+ }
+assert (C<>H).
+ {
+ intro.
+ treat_equalities.
+ assert (Lt C B B A /\ Lt C A B A).
+ apply (l11_46 B C A);Col; left;apply perp_per_2;finish.
+ spliter.
+ unfold isosceles in *.
+ apply (cong__nlt C B B A);finish.
+ } 
+assert (Perp_at H A C B H)
+ by (apply l8_14_2_1b_bis;finish).
+assert (Per A H B) by (apply perp_in_per_1 with C H;finish).
+assert (Per C H B) by (apply perp_in_per_3 with A H;finish). 
+(* We prove that A H B and C H B are congruent triangles *)
+assert (Cong H A H C /\ CongA H A B H C B /\ CongA H B A H B C)
+ by (apply (per2_cong2__cong_conga2 A H B C H B);finish).
+spliter.
+assert (Midpoint H A C)
+ by (apply l7_20_bis;finish).
+auto.
 Qed.
 
 Definition equilateral A B C :=
