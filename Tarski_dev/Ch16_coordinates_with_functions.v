@@ -1613,7 +1613,7 @@ assert ( ((Bx - Ax) * (Cx - Ax) + (By - Ay) * (Cy - Ay)) * ((Ax - Px) * (Cy - Py
  =F= ((Ax - Px) * (By - Py) - (Ay - Py) * (Bx - Px)) * ((Cx - Ax) * (Cx - Ax) + (Cy - Ay) * (Cy - Ay))).  
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-admit. (* nsatz. *)
+nsatz.
 
 apply field_prop.
 intro.
@@ -1622,7 +1622,7 @@ rewrite <- H2. ring.
 assumption.
 rewrite H1.
 ring.
-Admitted.
+Qed.
 
 Definition square_dist A B :=
   let (Ac, _) := coordinates_of_point_F A in
@@ -2003,36 +2003,6 @@ rewrite <- H0.
 ring.
 Qed.
 
-Definition ccw P Q R :=
-  (signed_area P Q R <= 0) /\ ~ signed_area P Q R =F= 0.
-
-Lemma KnuthAx1 : forall P Q R,
- ccw P Q R -> ccw Q R P.
-intros.
-unfold ccw in *.
-rewrite signed_area_cyclic.
-rewrite signed_area_cyclic.
-assumption.
-Qed.
-
-(*
-Lemma KnuthAx2 :  forall P Q R,
- ccw P Q R -> ~ ccw P R Q.
-Proof.
-intros.
-unfold ccw.
-rewrite signed_area_perm.
-rewrite signed_area_cyclic.
-
-
-
-Lemma KnuthAx4 : forall P Q R T,
-  ccw T Q R -> ccw P T R -> ccw P Q T -> ccw P Q R.
-Proof.
-intros.
-unfold ccw in *.
-rewrite (signed_area_sum P Q R T).
-*)
 
 Definition AM_CongAL A B C D E F := Py A B C * signed_area D E F =F= Py D E F * signed_area A B C.
 

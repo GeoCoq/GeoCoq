@@ -947,8 +947,7 @@ Proof.
         eapply (col_transitivity_1 _ D').
           intro.
           treat_equalities.
-          apply H17.
-          apply col_trivial_3.
+          Col.
           Col.
         Col.
       exists C.

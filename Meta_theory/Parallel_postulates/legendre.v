@@ -129,7 +129,7 @@ Proof.
   intros A B C D E F HNCol HDef HOut.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
   apply (t22_14__rah A B C G H I); trivial.
-  apply (bet_conga_bet J K L); trivial. 
+  apply (bet_conga_bet J K L); trivial.
   apply conga_sym, out546_suma__conga with D E F; trivial.
 Qed.
 
@@ -536,8 +536,10 @@ Proof.
   apply isi_lea2_suma2__lea with S T U S T U P' Q' R' P' Q' R'; trivial.
 Qed.
 
-Lemma legendre_s_theorem : archimedes_postulate -> legendre_s_postulate ->
-  hypothesis_of_right_saccheri_quadrilaterals.
+Lemma legendre_s_theorem :
+  archimedes_postulate ->
+  legendre_s_postulate ->
+  postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intros archi legendre.
   destruct legendre as [B [A [C [HNCol [HAcute legendre]]]]].

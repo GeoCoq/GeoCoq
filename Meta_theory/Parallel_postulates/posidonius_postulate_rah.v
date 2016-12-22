@@ -1,4 +1,4 @@
-Require Export Meta_theory.Parallel_postulates.Euclid_def.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section posidonius_postulate_rah.
 
@@ -108,7 +108,8 @@ assert (HF : exists A1 A2 B1 B2,
     try (apply perp_col0 with A1 B1; assert_diffs; Col; Perp).
     intro; treat_equalities; intuition.
     assert_diffs.
-     apply H2.
+    assert (HX : M<>A1) by auto.
+    apply HX.
     apply between_equality with B1; 
     unfold Midpoint in *; spliter; Between.
     }

@@ -13,8 +13,8 @@ Definition SumA A B C D E F G H I :=
 (** The Isi predicate describes the fact that the sum of the two angles is "interior", 
 i.e doesn't exceed a flat angle. *)
 
-Definition Isi A B C D E F:=
-  A<>B /\ (Out E D F \/ ~ Bet A B C) /\
+Definition Isi A B C D E F :=
+  A <> B /\ (Out E D F \/ ~ Bet A B C) /\
   exists J, CongA C B J D E F /\ ~ OS B C A J /\ ~ TS A B C J.
 
 Lemma suma_distincts : forall A B C D E F G H I, SumA A B C D E F G H I ->
@@ -973,7 +973,7 @@ Proof.
 Qed.
 
 Lemma isi_lea123_suma2__lea : forall A B C D E F G H I A' B' C' G' H' I',
-   LeA A B C A' B' C' -> Isi A' B' C' D E F -> SumA A B C D E F G H I -> 
+   LeA A B C A' B' C' -> Isi A' B' C' D E F -> SumA A B C D E F G H I ->
    SumA A' B' C' D E F G' H' I' -> LeA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C'.
@@ -1316,7 +1316,7 @@ Proof.
     - apply (l11_22 _ _ _ C1 _ _ _ F); auto.
       split.
       left; split; apply not_one_side_two_sides; auto; try solve [apply (ncol_conga_ncol G H I); CongA]; apply (ncol_conga_ncol D E F); CongA.
-      split. 
+      split.
       CongA.
       apply (conga_trans _ _ _ G H I); CongA.
 
@@ -1391,7 +1391,7 @@ Proof.
       repeat split; auto.
       exists F'.
       split.
-      apply l11_21_b; try (apply out_trivial); auto.     
+      apply l11_21_b; try (apply out_trivial); auto.
       split.
       apply col124__nos; Col.
       apply not_two_sides_id.

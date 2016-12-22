@@ -1191,7 +1191,7 @@ Ltac collect_points_list Tpoint xs :=
 Ltac collect_points Tpoint := collect_points_list Tpoint (@nil Tpoint).
 
 Ltac number_aux Tpoint lvar cpt :=
-  match constr:lvar with
+  match constr:(lvar) with
     | nil          => constr:(@nil (prodT Tpoint positive))
     | cons ?H ?T => let scpt := eval vm_compute in (Pos.succ cpt) in
                     let lvar2 := number_aux Tpoint T scpt in
@@ -1203,11 +1203,11 @@ Ltac number Tpoint lvar := number_aux Tpoint lvar (1%positive).
 Ltac build_numbered_points_list Tpoint := let lvar := collect_points Tpoint in number Tpoint lvar.
 
 Ltac List_assoc Tpoint elt lst :=
-  match constr:lst with
+  match constr:(lst) with
     | nil => fail
     | (cons (@pairT Tpoint positive ?X1 ?X2) ?X3) =>
       match constr:(elt = X1) with
-        | (?X1 = ?X1) => constr:X2
+        | (?X1 = ?X1) => constr:(X2)
         | _ => List_assoc Tpoint elt X3
       end
   end.

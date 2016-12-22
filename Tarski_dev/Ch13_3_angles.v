@@ -53,8 +53,8 @@ Ltac ang_instance a A B C :=
   assert(tempo_ang:= ex_points_ang a);
   match goal with
     |H: Q_CongA a |-  _ => assert(tempo_H:=H); apply tempo_ang in tempo_H;
-                       elim tempo_H; intros A ; intro tempo_HP; clear tempo_H;
-                       elim tempo_HP; intro B; intro tempo_HQ ; clear tempo_HP ;
+                       elim tempo_H; intros A ; let tempo_HP := fresh "tempo_HP" in intro tempo_HP; clear tempo_H;
+                       elim tempo_HP; intro B; let tempo_HQ := fresh "tempo_HQ" in intro tempo_HQ ; clear tempo_HP ;
                        elim tempo_HQ; intro C; intro;  clear tempo_HQ
   end;
   clear tempo_ang.
@@ -348,8 +348,12 @@ Ltac anga_instance a A B C :=
   assert(tempo_anga:= ex_points_anga a);
   match goal with
     |H: Q_CongA_Acute a |-  _ => assert(tempo_H:=H); apply tempo_anga in tempo_H;
-                        elim tempo_H; intros A ; intro tempo_HP; clear tempo_H;
-                        elim tempo_HP; intro B; intro tempo_HQ ; clear tempo_HP ;
+                                 elim tempo_H; intros A ;
+                                 let tempo_HP := fresh "tempo_HP" in
+                                 intro tempo_HP; clear tempo_H;
+                                 elim tempo_HP; intro B;
+                                 let tempo_HQ := fresh "tempo_HQ" in
+                                 intro tempo_HQ ; clear tempo_HP ;
                         elim tempo_HQ; intro C; intro;  clear tempo_HQ
   end;
   clear tempo_anga.

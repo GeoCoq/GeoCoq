@@ -566,6 +566,15 @@ Proof.
     unfold Lt in *; spliter; auto with cong.
 Qed.
 
+Lemma cong__nlt : forall A B C D,
+ Cong A B C D -> ~ Lt A B C D.
+Proof.
+intros P Q R S H.
+apply (le__nlt).
+unfold Le.
+exists Q;split; Cong;Between.
+Qed.
+
 End T5.
 
 Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le le1221

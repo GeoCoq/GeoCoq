@@ -698,6 +698,8 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
   }
 Qed.
 
+Unset Regular Subst Tactic.
+
 Lemma le_pos_prod_le : forall O E E' A B C AC BC,
   LeP O E E' A B -> LeP O E E' O C ->
   Prod O E E' A C AC -> Prod O E E' B C BC ->

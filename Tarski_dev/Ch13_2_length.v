@@ -1,5 +1,4 @@
  (* Gabriel Braun April 2013 *)
-
 Require Export GeoCoq.Tarski_dev.Ch13_1.
 
 Section Length_1.
@@ -83,7 +82,7 @@ End Length_1.
 Ltac lg_instance l A B :=
   assert(tempo_sg:= ex_points_lg l);
   match goal with
-    |H: Q_Cong l |-  _ => assert(tempo_H:=H); apply tempo_sg in tempo_H; elim tempo_H; intros A ; intro tempo_HP; clear tempo_H; elim tempo_HP; intro B; intro; clear tempo_HP
+    |H: Q_Cong l |-  _ => assert(tempo_H:=H); apply tempo_sg in tempo_H; elim tempo_H; intros A ; let tempoHP := fresh "tempo_HP" in intro tempoHP; clear tempo_H; elim tempoHP; intro B; intro; clear tempoHP
   end;
   clear tempo_sg.
 
@@ -364,6 +363,7 @@ Ltac lg_instance_not_col l P A B :=
                                                             apply (tempo_sg HP) in tempo_HQ;
                                                             elim tempo_HQ;
                                                             intro A;
+                                                            let tempo_HR := fresh "tempo_HR" in
                                                             intro tempo_HR;
                                                             elim tempo_HR;
                                                             intro B;

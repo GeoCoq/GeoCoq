@@ -1381,6 +1381,9 @@ elim (Col_dec A B BX''); intro HABBX''.
   }
 Qed.
 
+
+Unset Regular Subst Tactic.
+
 Lemma characterization_of_betweenness :
   forall O E E' S U1 U2
          A AX AY B BX BY C CX CY

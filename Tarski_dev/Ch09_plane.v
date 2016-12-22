@@ -1176,57 +1176,18 @@ Proof.
       ColR.
     ex_and H7 T.
     assert (I = T).
+     {
       apply l6_21 with A B X Y; Col.
       intro; treat_equalities; Col.
+      }
     subst I.
     exists T.
     split.
       assumption.
     unfold Out in *.
     spliter.
-    induction H12; induction H10.
-      assert (Bet U T Y).
-        eapply outer_transitivity_between2.
-          apply between_symmetry.
-          apply H12.
-          assumption.
-        assumption.
-      eapply outer_transitivity_between.
-        apply H13.
-        assumption.
-      auto.
-      assert (Bet U T Y).
-        eapply outer_transitivity_between2.
-          apply between_symmetry.
-          apply H12.
-          assumption.
-        assumption.
-      eapply between_inner_transitivity.
-        apply H13.
-      assumption.
-      assert (Bet U T Y).
-        eapply between_exchange3.
-          apply between_symmetry.
-          apply H12.
-        assumption.
-      eapply outer_transitivity_between.
-        apply H13.
-        assumption.
-      intro.
-      subst Y.
-      apply H6.
-      assumption.
-    assert (Bet V T X).
-      eapply between_exchange3.
-        apply between_symmetry.
-        apply H10.
-      apply between_symmetry.
-      assumption.
-    eapply between_exchange3.
-      apply between_symmetry.
-      apply H12.
-    apply between_symmetry.
-    assumption.
+    induction H12; induction H10;
+    eauto using outer_transitivity_between2, between_symmetry, between_inner_transitivity, between_exchange3, outer_transitivity_between.
 Qed.
 
 Lemma l9_4_2_aux : forall P Q A C R S U V, Le S C R A -> TS P Q A C -> Col R P Q -> Perp P Q A R -> Col S P Q ->
