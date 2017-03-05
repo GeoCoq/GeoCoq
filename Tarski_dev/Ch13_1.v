@@ -2315,10 +2315,10 @@ apply perp_left_comm.
 apply(perp_col _ B);Perp.
 Col.
 ColR.
-apply perp_comm in H23.
-apply perp_perp_in in H23.
-apply perp_in_comm in H23.
-apply perp_in_per in H23.
+apply perp_comm in H24.
+apply perp_perp_in in H24.
+apply perp_in_comm in H24.
+apply perp_in_per in H24.
 assumption.
 
 assert(Perp P D' D' D).
@@ -2327,16 +2327,16 @@ apply perp_left_comm.
 apply(perp_col _ B);Perp.
 Col.
 ColR.
-apply perp_comm in H23.
-apply perp_perp_in in H23.
-apply perp_in_comm in H23.
-apply perp_in_per in H23.
+apply perp_comm in H24.
+apply perp_perp_in in H24.
+apply perp_in_comm in H24.
+apply perp_in_per in H24.
 assumption.
 
-assert(HH:= l5_3 A C' D' B H17 H18).
+assert(HH:= l5_3 A C' D' B H18 H19).
 induction HH.
 eBetween.
-apply between_symmetry in H23.
+apply between_symmetry in H24.
 eBetween.
 Qed.
 
@@ -2429,122 +2429,6 @@ Proof.
         apply out_trivial; auto.
       apply out_trivial; auto.
     assumption.
-Qed.
-
-Lemma inangle_one_side : forall A B C P Q , ~ Col A B C -> ~ Col A B P -> ~ Col A B Q
-    -> InAngle P A B C -> InAngle Q A B C
-    -> OS A B P Q.
-Proof.
-    intros.
-    unfold InAngle in *.
-    spliter.
-    ex_and H9 P'.
-    ex_and H6 Q'.
-    induction H10.
-      subst P'.
-      apply bet_col in H9.
-      contradiction.
-    induction H11.
-      subst Q'.
-      apply bet_col in H6.
-      contradiction.
-    assert(OS A B P' Q').
-      prolong P' A T A C.
-      unfold OS.
-      exists T.
-      unfold TS.
-      assert(A <> P').
-        intro.
-        subst P'.
-        apply out_col in H10.
-        apply H0.
-        Col.
-      repeat split; auto.
-        intro.
-        apply H0.
-        assert(P' <> B).
-          unfold Out in H10.
-          spliter.
-          assumption.
-        apply out_col in H10.
-        ColR.
-        intro.
-        induction(eq_dec_points A T).
-          subst T.
-          apply cong_symmetry in H13.
-          apply cong_identity in H13.
-          subst C.
-          apply H.
-          Col.
-        apply H.
-        apply bet_col in H9.
-        apply bet_col in H12.
-        assert(Col T A C).
-          ColR.
-        eapply (col_transitivity_1 _ T); Col.
-        exists A.
-        split; Col.
-        intro.
-        apply H1.
-        assert(Q' <> B).
-          unfold Out in H11.
-          spliter.
-          assumption.
-        apply out_col in H11.
-        ColR.
-        intro.
-        induction(eq_dec_points A T).
-          subst T.
-          apply cong_symmetry in H13.
-          apply cong_identity in H13.
-          subst C.
-          apply H.
-          Col.
-        apply H.
-        apply bet_col in H9.
-        apply bet_col in H12.
-        assert(Col T A C).
-          ColR.
-        eapply (col_transitivity_1 _ T); Col.
-      exists A.
-      split; Col.
-      assert(Bet A P' Q' \/ Bet A Q' P').
-        eapply l5_3.
-          apply H9.
-        assumption.
-      induction H15.
-        eapply (outer_transitivity_between2 _ P'); Between.
-      eapply (between_exchange3 P'); Between.
-    assert(OS A B P P').
-      eapply (out_one_side_1  _ _ _ _  B); Col.
-      apply l6_6.
-      auto.
-    assert(OS A B Q Q').
-      eapply (out_one_side_1  _ _ _ _ B); Col.
-      apply l6_6.
-      auto.
-    eapply one_side_transitivity.
-      apply H13.
-    apply one_side_symmetry.
-    eapply one_side_transitivity.
-      apply H14.
-    apply one_side_symmetry.
-    assumption.
-Qed.
-
-Lemma inangle_one_side2 : forall A B C P Q , ~ Col A B C -> ~ Col A B P -> ~ Col A B Q
-    -> ~ Col C B P -> ~ Col C B Q
-    -> InAngle P A B C -> InAngle Q A B C
-    -> OS A B P Q /\ OS C B P Q.
-Proof.
-    intros.
-    split.
-      apply (inangle_one_side _ _ C); Col.
-    apply (inangle_one_side _ _ A); Col.
-      apply l11_24.
-      auto.
-    apply l11_24.
-    auto.
 Qed.
 
 

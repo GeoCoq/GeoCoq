@@ -1,56 +1,46 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_ID.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_tarski.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.TCP_tarski.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_consecutive_interior_angles.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_playfair_bis.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_triangle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_proclus.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.aristotle_greenberg.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.bachmann_s_lotschnittaxiom_existential_inverse_projection_postulate.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.bachmann_s_lotschnittaxiom_legendre_s_parallel_postulate.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.bachmann_s_lotschnittaxiom_weak_inverse_projection_postulate.
+
 Require Export GeoCoq.Meta_theory.Parallel_postulates.bachmann_s_lotschnittaxiom_weak_triangle_circumscription_principle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.consecutive_interior_angles_alternate_interior_angles.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.euclid_5_original_euclid.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_inverse_projection_postulate_legendre_s_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_playfair_rah.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_saccheri_rah.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_triangle_rah.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.inverse_projection_postulate_proclus_bis.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.legendre.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.midpoint_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.original_euclid_original_spp.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.original_spp_inverse_projection_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_2_par_par_perp_perp.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_TCP.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_par_perp_2_par.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_trans_playfair.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_alternate_interior_angles.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_bis_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_existential_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_midpoint.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_par_trans.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_universal_posidonius_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.posidonius_postulate_rah.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_SPP.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_aristotle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_bis_proclus.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_existential_saccheri.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_rectangle_principle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_similar.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_thales_postulate.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_triangle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_posidonius_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rectangle_existence_rah.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.rectangle_principle_rectangle_existence.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.similar_rah.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_euclid.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_converse_postulate_thales_existence.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_converse_postulate_weak_triangle_circumscription_principle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_existence_rah.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.thales_postulate_thales_converse_postulate.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_playfair_bis.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.universal_posidonius_postulate_par_perp_perp.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.weak_inverse_projection_postulate_bachmann_s_lotschnittaxiom.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.weak_inverse_projection_postulate_weak_tarski_s_parallel_postulate.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.weak_tarski_s_parallel_postulate_weak_inverse_projection_postulate.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.weak_triangle_circumscription_principle_bachmann_s_lotschnittaxiom.
 
 Require Import GeoCoq.Utils.all_equiv.
@@ -67,7 +57,7 @@ unfold strong_parallel_postulate; unfold SPP.
 split; intros; try apply H with R T; auto; apply all_coplanar.
 Qed.
 
-Theorem equivalent_parallel_postulates_without_decidability_of_intersection_of_lines :
+Theorem equivalent_postulates_without_decidability_of_intersection_of_lines :
   all_equiv
     (alternate_interior_angles_postulate::
      alternative_playfair_s_postulate::
@@ -97,7 +87,7 @@ assert (X:=universal_posidonius_postulate__perpendicular_transversal_postulate).
 apply all_equiv_equiv; unfold all_equiv'; simpl; repeat (split; tauto).
 Qed.
 
-Theorem equivalent_parallel_postulates_without_any_continuity :
+Theorem equivalent_postulates_without_any_continuity :
   all_equiv
     (existential_thales_postulate::
      posidonius_postulate::
@@ -131,7 +121,7 @@ assert (W:=triangle__existential_triangle).
 apply all_equiv_equiv; unfold all_equiv'; simpl; repeat (split; tauto).
 Qed.
 
-Theorem equivalent_parallel_postulates_with_decidability_of_intersection_of_lines :
+Theorem equivalent_postulates_with_decidability_of_intersection_of_lines :
   decidability_of_intersection ->
   all_equiv
     (alternate_interior_angles_postulate::
@@ -167,7 +157,7 @@ assert (U:=strong_parallel_postulate_SPP).
 assert (V:=tarski_s_euclid_implies_euclid_5).
 assert (W:=tarski_s_euclid_implies_playfair).
 assert (X:=triangle_circumscription_implies_tarski_s_euclid).
-assert (Y:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines).
+assert (Y:=equivalent_postulates_without_decidability_of_intersection_of_lines).
 apply all_equiv_equiv; unfold all_equiv, all_equiv' in *; simpl in *.
 repeat (split; try rtauto; try (intro Z;
         assert (HP:playfair_s_postulate)
@@ -179,7 +169,7 @@ Qed.
 
 (* Is decidability_of_intersection_in_a_plane enough? *)
 (* Every postulate which states the existence of a point is equivalent *)
-Theorem equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis :
+Theorem equivalent_postulates_without_decidability_of_intersection_of_lines_bis :
   all_equiv
     (alternative_strong_parallel_postulate::
      alternative_proclus_postulate::
@@ -203,14 +193,14 @@ assert (R:=strong_parallel_postulate_implies_tarski_s_euclid).
 assert (S:=strong_parallel_postulate_SPP).
 assert (T:=tarski_s_euclid_implies_euclid_5).
 assert (U:=triangle_circumscription_implies_tarski_s_euclid).
-assert (HPP:=equivalent_parallel_postulates_with_decidability_of_intersection_of_lines).
+assert (HPP:=equivalent_postulates_with_decidability_of_intersection_of_lines).
 apply all_equiv_equiv; unfold all_equiv, all_equiv' in *; simpl in *.
-repeat (split; try (try rtauto; split; intro W;
+repeat (split; try (try rtauto; intro W;
                     assert (HID:decidability_of_intersection) by rtauto;
                     let HTW := type of W in (apply -> (HPP HID HTW); try tauto; rtauto))).
 Qed.
 
-Theorem stronger_parallel_postulates :
+Theorem stronger_postulates :
   stronger
     (alternative_strong_parallel_postulate::
      alternative_proclus_postulate::
@@ -234,10 +224,10 @@ Theorem stronger_parallel_postulates :
      postulate_of_transitivity_of_parallelism::
      nil).
 Proof.
-assert(H:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis).
+assert(H:=equivalent_postulates_without_decidability_of_intersection_of_lines_bis).
 assert(I:=strong_parallel_postulate_SPP).
 assert(J:=strong_parallel_postulate_implies_inter_dec).
-assert(K:=equivalent_parallel_postulates_with_decidability_of_intersection_of_lines); unfold all_equiv in *.
+assert(K:=equivalent_postulates_with_decidability_of_intersection_of_lines); unfold all_equiv in *.
 unfold stronger; simpl in *; intros x y Hx Hy;
 decompose [or] Hx; clear Hx; decompose [or] Hy; clear Hy;
 subst; try tauto; intro L;
@@ -246,7 +236,7 @@ let HTL := type of L in
 assert (N:decidability_of_intersection) by rtauto; apply -> (K N HTL); try tauto; rtauto).
 Qed.
 
-Theorem stronger_parallel_postulates_bis :
+Theorem stronger_postulates_bis :
   stronger
     (alternate_interior_angles_postulate::
      alternative_playfair_s_postulate::
@@ -272,8 +262,8 @@ Theorem stronger_parallel_postulates_bis :
      triangle_postulate::
      nil).
 Proof.
-assert(H:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines).
-assert(I:=equivalent_parallel_postulates_without_any_continuity).
+assert(H:=equivalent_postulates_without_decidability_of_intersection_of_lines).
+assert(I:=equivalent_postulates_without_any_continuity).
 assert(J:=alternate_interior__triangle).
 unfold all_equiv in *.
 unfold stronger; simpl in *; intros x y Hx Hy;
@@ -307,9 +297,9 @@ Theorem equivalence_of_aristotle_greenberg_and_decidability_of_intersection :
      triangle_circumscription_principle::
      nil)
 
-    (aristotle_s_postulate::
+    (aristotle_s_axiom::
      decidability_of_intersection::
-     greenberg_s_postulate::
+     greenberg_s_axiom::
      nil).
 Proof.
 intros x y z HInx HIny HInz Hx.
@@ -317,26 +307,26 @@ cut playfair_s_postulate;
 [intro HP; clear Hx|clear HIny; clear y; clear HInz; clear z].
   {
   assert(H:=aristotle__greenberg).
-  assert(I:decidability_of_intersection->aristotle_s_postulate).
+  assert(I:decidability_of_intersection->aristotle_s_axiom).
     {
     intro I; apply proclus__aristotle.
     assert(playfair_s_postulate<->proclus_postulate); [|rtauto].
-    assert(J:=equivalent_parallel_postulates_with_decidability_of_intersection_of_lines).
+    assert(J:=equivalent_postulates_with_decidability_of_intersection_of_lines).
     unfold all_equiv in J; apply J; simpl; try tauto; rtauto.
     }
-  assert(J:greenberg_s_postulate->decidability_of_intersection).
+  assert(J:greenberg_s_axiom->decidability_of_intersection).
     {
     assert(J:alternate_interior_angles_postulate).
       {
       assert(playfair_s_postulate<->alternate_interior_angles_postulate); [|rtauto].
-      assert (K:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines).
+      assert (K:=equivalent_postulates_without_decidability_of_intersection_of_lines).
       unfold all_equiv in K; apply K; simpl; tauto.
       }
     assert(K:=alternate_interior__proclus).
     assert(L:proclus_postulate->decidability_of_intersection); [|rtauto].
     assert(L:proclus_postulate<->strong_parallel_postulate).
       {
-      assert(L:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis).
+      assert(L:=equivalent_postulates_without_decidability_of_intersection_of_lines_bis).
       unfold all_equiv in L; apply L; simpl; tauto.
       }
     assert (M:=strong_parallel_postulate_implies_inter_dec).
@@ -347,16 +337,16 @@ cut playfair_s_postulate;
   }
 
   {
-  assert (H:=stronger_parallel_postulates).
-  assert(I:=equivalent_parallel_postulates_without_decidability_of_intersection_of_lines).
+  assert (H:=stronger_postulates).
+  assert(I:=equivalent_postulates_without_decidability_of_intersection_of_lines).
   unfold stronger, all_equiv in *; simpl in H; simpl in I; simpl in HInx;
   decompose [or] HInx; clear HInx; subst; try rtauto;
   let A := type of Hx in (try (apply (H A); try tauto; rtauto); try (apply -> (I A); try tauto; rtauto)).
   }
 Qed.
 
-Theorem equivalent_parallel_postulates_assuming_greenberg_s_postulate :
-  greenberg_s_postulate ->
+Theorem equivalent_postulates_assuming_greenberg_s_axiom :
+  greenberg_s_axiom ->
   all_equiv
     (alternate_interior_angles_postulate::
      alternative_playfair_s_postulate::
@@ -391,14 +381,14 @@ Theorem equivalent_parallel_postulates_assuming_greenberg_s_postulate :
      nil).
 Proof.
 assert(HADG:=equivalence_of_aristotle_greenberg_and_decidability_of_intersection).
-assert(HPP:=equivalent_parallel_postulates_with_decidability_of_intersection_of_lines).
-assert(HPPWC:=equivalent_parallel_postulates_without_any_continuity).
+assert(HPP:=equivalent_postulates_with_decidability_of_intersection_of_lines).
+assert(HPPWC:=equivalent_postulates_without_any_continuity).
 assert(H:=alternate_interior__triangle).
 intro HG; assert(I:=triangle__playfair_bis HG).
 assert(J:=existential_playfair__rah).
 assert(K:=playfair__existential_playfair).
 apply all_equiv_equiv; unfold all_equiv, all_equiv' in *; simpl in *.
-repeat (split; try (try rtauto; split; intro L; try apply K; try apply J in L;
+repeat (split; try (try rtauto; intro L; try apply K; try apply J in L;
                     let HTL := type of L in
                     (let G := type of HG in
                      (try (assert (HID:decidability_of_intersection)
@@ -419,18 +409,24 @@ repeat (split; try (try rtauto; split; intro L; try apply K; try apply J in L;
                       apply -> (HPPWC HTL); try tauto; rtauto)).
 Qed.
 
-Theorem equivalent_parallel_postulates_without_any_continuity_bis :
+Theorem equivalent_postulates_without_any_continuity_bis :
   all_equiv
     (bachmann_s_lotschnittaxiom::
+     weak_inverse_projection_postulate::
+     weak_tarski_s_parallel_postulate::
      weak_triangle_circumscription_principle::
      nil).
 Proof.
-assert(H:=bachmann_s_lotschnittaxiom__weak_triangle_circumscription_principle).
-assert(I:=weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom).
+assert(H:=bachmann_s_lotschnittaxiom__weak_inverse_projection_postulate).
+assert(I:=weak_inverse_projection_postulate__bachmann_s_lotschnittaxiom).
+assert(J:=weak_inverse_projection_postulate__weak_tarski_s_parallel_postulate).
+assert(K:=weak_tarski_s_parallel_postulate__weak_inverse_projection_postulate).
+assert(L:=bachmann_s_lotschnittaxiom__weak_triangle_circumscription_principle).
+assert(M:=weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom).
 apply all_equiv_equiv; unfold all_equiv, all_equiv' in *; simpl in *; tauto.
 Qed.
 
-Theorem stronger_parallel_postulates_ter :
+Theorem stronger_postulates_ter :
   stronger
     (existential_thales_postulate::
      posidonius_postulate::
@@ -445,22 +441,83 @@ Theorem stronger_parallel_postulates_ter :
      triangle_postulate::
      nil)
     (bachmann_s_lotschnittaxiom::
-     existential_inverse_projection_postulate::
-     legendre_s_postulate::
+     legendre_s_parallel_postulate::
+     weak_inverse_projection_postulate::
+     weak_tarski_s_parallel_postulate::
      weak_triangle_circumscription_principle::
      nil).
 Proof.
-assert(HPPWC:=equivalent_parallel_postulates_without_any_continuity).
-assert(H:=bachmann_s_lotschnittaxiom__existential_inverse_projection_postulate).
-assert(I:=existential_inverse_projection_postulate__legendre_s_postulate).
-assert(J:=thales_converse_postulate__weak_triangle_circumscription_principle).
-assert(K:=weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom).
+assert(HPPWC1:=equivalent_postulates_without_any_continuity).
+assert(HPPWC2:=equivalent_postulates_without_any_continuity_bis).
+assert(H:=thales_converse_postulate__weak_triangle_circumscription_principle).
+assert(I:=weak_inverse_projection_postulate__bachmann_s_lotschnittaxiom).
+assert(J:=bachmann_s_lotschnittaxiom__legendre_s_parallel_postulate).
 unfold all_equiv, all_equiv' in *; simpl in *.
 unfold stronger; simpl in *; intros x y Hx Hy;
 decompose [or] Hx; clear Hx; decompose [or] Hy; clear Hy;
-subst; try rtauto; intro L;
-let HTL := type of L in assert (HTCP:thales_converse_postulate)
-                          by (apply -> (HPPWC HTL); try tauto; rtauto); rtauto.
+subst; try rtauto; intro K;
+let HTL := type of K in assert (HTCP:thales_converse_postulate)
+                          by (apply -> (HPPWC1 HTL); try tauto);
+try (apply J, I); apply H in HTCP;
+let HTHTCP := type of HTCP in apply -> (HPPWC2 HTHTCP); try tauto.
+Qed.
+
+Theorem equivalent_postulates_assuming_archimedes_axiom :
+  archimedes_axiom ->
+  all_equiv
+    (alternate_interior_angles_postulate::
+     alternative_playfair_s_postulate::
+     alternative_proclus_postulate::
+     alternative_strong_parallel_postulate::
+     bachmann_s_lotschnittaxiom::
+     consecutive_interior_angles_postulate::
+     euclid_5::
+     euclid_s_parallel_postulate::
+     existential_playfair_s_postulate::
+     existential_thales_postulate::
+     inverse_projection_postulate::
+     legendre_s_parallel_postulate::
+     midpoint_converse_postulate::
+     perpendicular_transversal_postulate::
+     playfair_s_postulate::
+     posidonius_postulate::
+     universal_posidonius_postulate::
+     postulate_of_existence_of_a_right_lambert_quadrilateral::
+     postulate_of_existence_of_a_right_saccheri_quadrilateral::
+     postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights::
+     postulate_of_existence_of_similar_triangles::
+     postulate_of_parallelism_of_perpendicular_transversals::
+     postulate_of_right_lambert_quadrilaterals::
+     postulate_of_right_saccheri_quadrilaterals::
+     postulate_of_transitivity_of_parallelism::
+     proclus_postulate::
+     strong_parallel_postulate::
+     tarski_s_parallel_postulate::
+     thales_postulate::
+     thales_converse_postulate::
+     triangle_circumscription_principle::
+     triangle_postulate::
+     weak_inverse_projection_postulate::
+     weak_tarski_s_parallel_postulate::
+     weak_triangle_circumscription_principle::
+     nil).
+Proof.
+intro HA; assert (HG:=t22_24 HA); apply aristotle__greenberg in HG.
+assert(HPP:=equivalent_postulates_assuming_greenberg_s_axiom HG).
+assert(HSPP:=stronger_postulates_ter).
+assert(HPPWC:=equivalent_postulates_without_any_continuity_bis).
+assert(H:=bachmann_s_lotschnittaxiom__legendre_s_parallel_postulate).
+assert(I:=thales_converse_postulate__weak_triangle_circumscription_principle).
+assert(J:=weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom).
+assert(K:=legendre_s_fourth_theorem_aux HA).
+apply all_equiv_equiv; unfold all_equiv, all_equiv' in *; simpl in *.
+repeat (split; [intro L; let HTL := type of L in
+                         try (apply -> (HPPWC HTL); tauto);
+                         try (assert (M:postulate_of_right_saccheri_quadrilaterals)
+                               by (try (apply -> (HPP HTL); tauto); tauto);
+                              let HTM := type of M in
+                              try (apply (HSPP HTM); simpl; tauto);
+                              apply -> (HPP HTM); tauto)|]); tauto.
 Qed.
 
 End Euclid.

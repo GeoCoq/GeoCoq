@@ -1,4 +1,4 @@
-Require Export Meta_theory.Parallel_postulates.Euclid_def.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section rah_similar.
 
@@ -10,7 +10,7 @@ Proof.
   destruct lower_dim_ex as [A [B0 [C]]].
   assert(~ Col A B0 C) by (unfold Col; assumption).
   destruct (l10_15 C A C B0) as [B []]; Col.
-  assert(HNCol1 : ~ Col C A B) by (apply (one_side_not_col _ _ _ B0); Side).
+  assert(HNCol1 : ~ Col C A B) by (apply (one_side_not_col123 _ _ _ B0); Side).
   assert(Per A C B) by Perp.
   destruct (symmetric_point_construction A B) as [B'].
   assert_diffs.

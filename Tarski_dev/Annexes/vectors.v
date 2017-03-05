@@ -809,11 +809,6 @@ induction H13.
 
 assert(OS C D T A).
 apply (out_one_side_1 _ _ _ _ D).
-intro.
-subst D.
-apply H22.
-exists A.
-split; Col.
 auto.
 Col.
 unfold Out.
@@ -1292,11 +1287,6 @@ ColR.
 assert(OS A D B B').
 apply (out_one_side_1 A _ _ _ A).
 intro.
-subst D.
-apply H9.
-exists A.
-split; Col.
-intro.
 apply H9.
 exists D.
 split; Col.
@@ -1305,11 +1295,6 @@ auto.
 
 assert(OS A D C C').
 apply (out_one_side_1 _ D _ _ D).
-intro.
-subst D.
-apply H9.
-exists A.
-split; Col.
 intro.
 apply H9.
 exists A.
@@ -1389,10 +1374,6 @@ apply (one_side_transitivity _ _ _ B').
 apply one_side_symmetry.
 apply H4.
 apply (out_one_side_1 _ _ _ _ A).
-intro.
-subst D.
-apply H.
-Col.
 intro.
 apply plgs_par_strict in H1.
 spliter.
@@ -1490,13 +1471,6 @@ assumption.
 
 assert(OS B C C' D).
 apply (out_one_side_1 _ _ _ _ C).
-intro.
-subst C.
-apply plgs_par_strict in H3.
-spliter.
-apply H3.
-exists A.
-split; Col.
 intro.
 apply plgs_par_strict in H6.
 spliter.

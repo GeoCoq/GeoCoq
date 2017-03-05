@@ -13,7 +13,7 @@ elim (eq_dec_points A B); intro HAB;
 [treat_equalities; right; intro; assert_diffs; intuition|].
 elim (eq_dec_points C D); intro HCD;
 [treat_equalities; right; intro; assert_diffs; intuition|].
-destruct (parallel_existence_spec A B C HAB) as [D' [HCD' HPar]].
+destruct (parallel_existence1 A B C HAB) as [D' HPar].
 elim (Col_dec C D D'); intro HCol;
 [left; apply par_col_par with D'; Par; Col|
  right; intro; apply HCol; apply par_id_3; apply HTP with A B; Par].

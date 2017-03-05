@@ -1095,6 +1095,44 @@ Proof.
     apply le_anti_symmetry; auto.
 Qed.
 
+Lemma midpoint_preserves_out :
+ forall A B C A' B' C' M,
+  Out A B C ->
+  Midpoint M A A' ->
+  Midpoint M B B' ->
+  Midpoint M C C' ->
+ Out A' B' C'.
+Proof.
+    intros.
+    unfold Out in H.
+    spliter.
+    unfold Out.
+    repeat split.
+      intro.
+      subst B'.
+      assert (A = B).
+        eapply symmetric_point_uniqueness.
+          apply l7_2.
+          apply H0.
+        apply l7_2.
+        assumption.
+      auto.
+      intro.
+      subst C'.
+      assert (A = C).
+        eapply symmetric_point_uniqueness.
+          apply l7_2.
+          apply H0.
+        apply l7_2.
+        assumption.
+      auto.
+    induction H4.
+      left.
+      apply (l7_15 A B C A' B' C' M); assumption.
+    right.
+    eapply (l7_15 A C B A' C' B' M); assumption.
+Qed.
+
 End T7_2.
 
 Hint Resolve midpoint_bet : between.

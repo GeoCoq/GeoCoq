@@ -620,7 +620,8 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : X = X'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col.
+        apply cong_transitivity with B X; Cong.
       apply l4_3 with A B; Cong; Between.
       }
     assert (H : A = B) by (apply construction_uniqueness with I X X A; Cong; Between);
@@ -635,7 +636,8 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : X = X'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col; Cong.
+      apply cong_transitivity with B X; Cong.
       }
     assert (H : A = B) by (apply construction_uniqueness with X I I A; Cong; Between);
     treat_equalities; intuition.
@@ -649,7 +651,9 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : X = X'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong; apply l2_11 with A B; Cong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col.
+        apply cong_transitivity with B X; Cong.
+      apply l2_11 with A B; Cong.
       }
     assert (H : A = B) by (apply between_cong_2 with I X; Col).
     treat_equalities; intuition.
@@ -678,7 +682,8 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : Y = Y'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col.
+        apply cong_transitivity with B Y; Cong.
       apply l4_3 with A B; Cong; Between.
       }
     assert (H : A = B) by (apply construction_uniqueness with I Y Y A; Cong; Between);
@@ -693,7 +698,8 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : Y = Y'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col; Cong.
+      apply cong_transitivity with B Y; Cong.
       }
     assert (H : A = B) by (apply construction_uniqueness with Y I I A; Cong; Between);
     treat_equalities; intuition.
@@ -707,7 +713,9 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
       }
     assert (H : Y = Y'); treat_equalities.
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; eCong; apply l2_11 with A B; Cong.
+      apply l4_18 with A I; try (intro; treat_equalities); Col.
+        apply cong_transitivity with B Y; Cong.
+      apply l2_11 with A B; Cong.
       }
     assert (H : A = B) by (apply between_cong_2 with I Y; Col).
     treat_equalities; intuition.

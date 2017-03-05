@@ -3,13 +3,63 @@ Require Export List.
 Definition all_equiv (l: list Prop) :=
   forall x y, In x l -> In y l -> (x <-> y).
 
+Definition all_equiv'_aux (l: list Prop) : Prop.
+induction l; [exact True|].
+induction l; [exact True|].
+exact ((a -> a0) /\ IHl).
+Defined.
+
+Lemma all_equiv'_auxP : forall l n1 n2 d1 d2,
+  l <> nil -> all_equiv'_aux l ->
+  n1 < length l -> n2 < length l -> n1 <= n2 ->
+  nth n1 l d1 -> nth n2 l d2.
+Proof.
+intro l; elim l; [intros ? ? ? ? H; exfalso; apply H; auto|
+                  clear l; intros a l _; revert a].
+elim l; [intro a|clear l; intros b l IHl a]; intros n1 n2 d1 d2 _ H Hn1 Hn2 Hn.
+
+  {
+  simpl in Hn1, Hn2.
+  apply PeanoNat.Nat.lt_1_r in Hn1; rewrite Hn1.
+  apply PeanoNat.Nat.lt_1_r in Hn2; rewrite Hn2; simpl; auto.
+  }
+
+  {
+  destruct H as [HI H]. revert dependent n2. revert dependent n1; intro n1.
+  elim n1; [|clear n1; intros n1 IHn1]; intro Hn1.
+
+    {
+    intro n2; elim n2; [simpl; auto|clear n2; intros n2 IHn2 Hn2 _ Ha].
+    simpl in Ha; apply HI in Ha; apply IHl with 0 d1; auto; simpl in *;
+    [discriminate|apply PeanoNat.Nat.lt_0_succ|
+     apply Lt.lt_S_n; auto|apply le_0_n].
+    }
+
+    {
+    intro n2; elim n2;
+    [intros _ HF; apply PeanoNat.Nat.nle_succ_0 in HF; intuition|
+     clear n2; intros n2 IHn2 Hn2 HLe H'].
+    assert (Hnth : forall n (l : list Prop) a d,
+                     nth (S n) (a :: l) d = nth n l d)
+      by (intro n; induction n; simpl; auto).
+    rewrite Hnth; rewrite Hnth in H'; clear Hnth; apply IHl with n1 d1; auto;
+    [discriminate|simpl in Hn1|simpl in Hn2|apply Le.le_S_n]; auto;
+    apply Lt.lt_S_n; auto.
+    }
+  }
+Qed.
+
+Definition all_equiv' (l: list Prop) : Prop.
+induction l; [exact True|].
+exact ((last l a -> a) /\ all_equiv'_aux (a::l)).
+Defined.
+(*
 Definition all_equiv' (l: list Prop) : Prop.
 Proof.
 induction l; [exact True|].
 induction l; [exact True|].
 exact ((a <-> a0) /\ IHl).
 Defined.
-
 
 Lemma all_equiv_equiv : forall l, all_equiv l <-> all_equiv' l.
 Proof.
@@ -36,6 +86,60 @@ induction l; [simpl|clear IHl0; rewrite IH; split]; clear IH.
   try (rewrite <- Ha'; clear Ha'); [tauto| | |];
   try (cut (a0 <-> y); [try tauto|apply IHl; try assumption; left; reflexivity]);
   try (cut (a0 <-> x); [tauto|apply IHl; try assumption; left; reflexivity]).
+  }
+Qed.
+*)
+
+Lemma all_equiv_equiv : forall l, all_equiv l <-> all_equiv' l.
+Proof.
+intro l; split.
+
+  {
+  elim l; [simpl; auto|clear l; intros a l _; revert a].
+  elim l; [simpl; intros; split; auto|clear l; intros b l _ a H; split].
+
+    {
+    apply H; [apply in_eq|clear H; apply in_cons; revert b; revert a].
+    elim l; [simpl; auto|clear l; intros b l IHl d a].
+    assert (H : last (a :: b :: l) = last (b :: l))
+      by (induction l; simpl; auto); rewrite H; apply in_cons; auto.
+    }
+
+    {
+    revert H; revert b; revert a; elim l; [|clear l; intros c l IHl a b H];
+    [simpl; intros a b H; split; auto; apply H; [apply in_cons|]; apply in_eq|].
+    split; [apply H; [apply in_cons|]; apply in_eq|].
+    apply IHl; intros x y Hx Hy; apply H; apply in_cons; auto.
+    }
+  }
+
+  {
+  elim l; [unfold all_equiv; simpl; tauto|clear l; intros a l _; revert a].
+  elim l;[ unfold all_equiv; simpl; intros a _ x y Hx Hy;
+           elim Hx; [clear Hx; intro Hx|tauto];
+           elim Hy; [clear Hy; intro Hy|tauto];
+           rewrite <- Hx; rewrite Hy; tauto|clear l; intros b l _ a H].
+  intros x y Hx Hy; destruct H as [Hend Hbeg].
+  destruct (In_nth _ _ a Hx) as [n1 Hn1]; clear Hx; destruct Hn1 as [Hn1 Hx].
+  destruct (In_nth _ _ a Hy) as [n2 Hn2]; clear Hy; destruct Hn2 as [Hn2 Hy].
+  assert (Hlast : nth (S (length l)) (a :: b :: l) a = last (b :: l) a).
+    {
+    transitivity (nth (length l) (b :: l) a); [simpl; auto|].
+    revert dependent b. intros b _ _ _ _ _ _; clear n1 n2 x y.
+    revert b; revert a; elim l; [simpl; auto|clear l; intros b l IHl d a].
+    transitivity (nth (S (length l)) (a :: b :: l) d); [simpl; auto|].
+    transitivity (nth (length l) (b :: l) d); [simpl; auto|].
+    rewrite IHl; simpl; auto.
+    }
+  assert (HaE : a = nth 0 (a :: b :: l) a) by (simpl; auto).
+  rewrite <- Hlast in Hend; clear Hlast; rewrite <- Hx; rewrite <- Hy.
+  elim (PeanoNat.Nat.lt_ge_cases n1 n2); intro HLe; split;
+  try solve[apply all_equiv'_auxP; auto;
+            try apply PeanoNat.Nat.lt_le_incl; auto; discriminate];
+  intro H; cut a; try (intro Ha; rewrite HaE in Ha; revert Ha);
+  try(apply Hend; revert H); apply all_equiv'_auxP; auto; try discriminate;
+  try apply PeanoNat.Nat.le_0_l; simpl in *; try apply PeanoNat.Nat.lt_0_succ;
+  apply PeanoNat.Nat.lt_succ_r; auto.
   }
 Qed.
 

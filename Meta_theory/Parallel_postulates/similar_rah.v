@@ -1,4 +1,4 @@
-Require Export Meta_theory.Parallel_postulates.Euclid_def.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
 
 Section similar_rah.
 

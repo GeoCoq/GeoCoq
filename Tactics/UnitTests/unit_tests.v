@@ -306,4 +306,18 @@ assert_diffs.
 split; assumption.
 Qed.
 
+Goal forall A B C D, TS A B C D -> A <> B /\ A <> C /\ A <> D /\ B <> C /\ B <> D /\ C <> D.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C D, OS A B C D -> A <> B /\ A <> C /\ A <> D /\ B <> C /\ B <> D.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
 End UnitTests.

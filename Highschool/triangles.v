@@ -324,4 +324,23 @@ apply equilateral_strict_conga_1 in H.
 assumption.
 Qed.
 
+Lemma conga3_equilateral :
+ forall A B C, 
+ ~ Col A B C ->
+ CongA B A C A B C ->
+ CongA A B C B C A ->
+ equilateral A B C.
+Proof.
+intros.
+assert (isosceles B C A)
+ by (apply conga_isosceles;CongA;Col).
+assert (isosceles C A B)
+ by (apply conga_isosceles;CongA;Col).
+unfold isosceles in *.
+unfold equilateral.
+split;eCong.
+Qed.
+
+
+
 End Triangles.

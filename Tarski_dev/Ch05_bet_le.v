@@ -227,6 +227,13 @@ Proof.
   Cong.
 Qed.
 
+Lemma cong__le3412 : forall A B C D, Cong A B C D -> Le C D A B.
+Proof.
+  intros A B C D HCong.
+  apply cong__le.
+  Cong.
+Qed.
+
 Lemma le1221 : forall A B, Le A B B A.
 Proof.
   intros A B.
@@ -559,8 +566,7 @@ Qed.
 
 Lemma le__nlt : forall A B C D, Le A B C D -> ~ Lt C D A B.
 Proof.
-    intros.
-    intro.
+    intros A B C D HLe HLt.
     apply (not_and_lt A B C D); split; auto.
     split; auto.
     unfold Lt in *; spliter; auto with cong.
@@ -569,15 +575,55 @@ Qed.
 Lemma cong__nlt : forall A B C D,
  Cong A B C D -> ~ Lt A B C D.
 Proof.
-intros P Q R S H.
-apply (le__nlt).
-unfold Le.
-exists Q;split; Cong;Between.
+    intros P Q R S H.
+    apply le__nlt.
+    unfold Le.
+    exists Q; split; Cong; Between.
 Qed.
+
+Lemma nlt__le : forall A B C D, ~ Lt A B C D -> Le C D A B.
+Proof.
+    intros A B C D HNLt.
+    destruct (le_cases A B C D); trivial.
+    destruct (Cong_dec C D A B).
+      apply cong__le; assumption.
+    exfalso.
+    apply HNLt.
+    split; Cong.
+Qed.
+
+Lemma lt__nle : forall A B C D, Lt A B C D -> ~ Le C D A B.
+Proof.
+  intros A B C D HLt HLe.
+  generalize HLt.
+  apply le__nlt; assumption.
+Qed.
+
+Lemma nle__lt : forall A B C D, ~ Le A B C D -> Lt C D A B.
+Proof.
+    intros A B C D HNLe.
+    destruct (le_cases A B C D).
+      contradiction.
+    split; trivial.
+    intro.
+    apply HNLe.
+    apply cong__le; Cong.
+Qed.
+
+Lemma lt1123 : forall A B C, B<>C -> Lt A A B C.
+Proof.
+intros.
+split.
+apply le_trivial.
+intro.
+treat_equalities.
+intuition.
+Qed.
+
 
 End T5.
 
-Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le le1221
-             le_left_comm le_right_comm le_comm lt__le bet__le1213 bet__le2313 : Le.
+Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le cong__le3412
+             le1221 le_left_comm le_right_comm le_comm lt__le bet__le1213 bet__le2313 : Le.
 
 Ltac Le := auto with Le.

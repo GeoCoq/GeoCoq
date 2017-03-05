@@ -1,16 +1,87 @@
+Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_ID.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.TCP_tarski.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_proclus.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.angle_archimedes.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.aristotle_greenberg.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.euclid_5_original_euclid.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_triangle_rah.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_TCP.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_alternate_interior_angles.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_bis_playfair.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_universal_posidonius_postulate.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_SPP.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.rah_triangle.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_euclid.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_playfair_bis.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.universal_posidonius_postulate_par_perp_perp.
 
 Section Legendre.
 
 Context `{T2D:Tarski_2D}.
+
+Theorem legendre_s_first_theorem :
+  archimedes_axiom ->
+  forall A B C D E F,
+    ~ Col A B C ->
+    SumA C A B A B C D E F ->
+    Isi D E F B C A.
+Proof.
+intros HA A B C D E F HNC HSumA.
+suma.assert_diffs.
+destruct (ex_suma D E F B C A) as [P [Q [R HSumA']]]; auto.
+elim (archi__acute_or_right HA); intro HS;
+[destruct (t22_14__isi_nbet HS A B C D E F P Q R) as [H _]|
+ apply bet_suma__isi with P Q R; try apply t22_14__bet with C A B;
+ try (exists D, E, F; split)]; auto.
+Qed.
+
+Theorem legendre_s_second_theorem :
+  postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights ->
+  triangle_postulate.
+Proof.
+assert (H:=existential_triangle__rah); assert (I:=rah__triangle); tauto.
+Qed.
+
+Lemma legendre_s_third_theorem_aux :
+  aristotle_s_axiom ->
+  triangle_postulate ->
+  euclid_s_parallel_postulate.
+Proof.
+assert (I:=aristotle__greenberg).
+assert (J:playfair_s_postulate->greenberg_s_axiom->decidability_of_intersection).
+  {
+  intro HP; assert (J:=playfair__alternate_interior HP).
+  assert(K:=alternate_interior__proclus).
+  assert(L:proclus_postulate->decidability_of_intersection); [|tauto].
+  assert(M:=proclus_s_postulate_implies_strong_parallel_postulate).
+  assert(N:=strong_parallel_postulate_implies_inter_dec); tauto.
+  }
+assert (K:=triangle__playfair_bis).
+assert (L:=playfair_bis__playfair).
+assert (M:=playfair__universal_posidonius_postulate).
+assert (N:=universal_posidonius_postulate__perpendicular_transversal_postulate).
+assert (O:=inter_dec_plus_par_perp_perp_imply_triangle_circumscription).
+assert (P:=triangle_circumscription_implies_tarski_s_euclid).
+assert (Q:=tarski_s_euclid_implies_euclid_5).
+assert (R:=euclid_5__original_euclid); tauto.
+Qed.
+
+Theorem legendre_s_third_theorem :
+  archimedes_axiom ->
+  triangle_postulate ->
+  euclid_s_parallel_postulate.
+Proof.
+assert (H:=t22_24); assert (I:=legendre_s_third_theorem_aux); tauto.
+Qed.
 
 (** The difference between a flat angle and the sum of the angles of the triangle ABC.
     It is a non-oriented angle, so we can't discriminate between positive and negative difference *)
 Definition Defect A B C D E F := exists G H I J K L,
   TriSumA A B C G H I /\ Bet J K L /\ SumA G H I D E F J K L.
 
-
-Lemma defect_distincts : forall A B C D E F, Defect A B C D E F ->
+Lemma defect_distincts : forall A B C D E F,
+  Defect A B C D E F ->
   A <> B /\ B <> C /\ A <> C /\ D <> E /\ E <> F.
 Proof.
   intros A B C D E F HDef.
@@ -18,7 +89,8 @@ Proof.
   suma.assert_diffs; repeat split; auto.
 Qed.
 
-Lemma ex_defect : forall A B C, A <> B -> B <> C -> A <> C -> exists D E F, Defect A B C D E F.
+Lemma ex_defect : forall A B C,
+  A <> B -> B <> C -> A <> C -> exists D E F, Defect A B C D E F.
 Proof.
   intros A B C HAB HBC HAC.
   destruct (ex_trisuma A B C) as [G [H [I HTri]]]; auto.
@@ -31,7 +103,8 @@ Proof.
   exists H; auto.
 Qed.
 
-Lemma conga_defect__defect : forall A B C D E F D' E' F', Defect A B C D E F -> CongA D E F D' E' F' ->
+Lemma conga_defect__defect : forall A B C D E F D' E' F',
+  Defect A B C D E F -> CongA D E F D' E' F' ->
   Defect A B C D' E' F'.
 Proof.
   intros A B C D E F D' E' F' HDef HConga.
@@ -40,7 +113,8 @@ Proof.
   suma.assert_diffs; apply (conga3_suma__suma G H I D E F J K L); CongA.
 Qed.
 
-Lemma defect2__conga : forall A B C D E F D' E' F', Defect A B C D E F -> Defect A B C D' E' F' ->
+Lemma defect2__conga : forall A B C D E F D' E' F',
+  Defect A B C D E F -> Defect A B C D' E' F' ->
   CongA D E F D' E' F'.
 Proof.
   intros A B C D E F D' E' F' HDef HDef'.
@@ -54,7 +128,8 @@ Proof.
   apply isi2_suma2__conga456 with G H I J K L; trivial; apply bet_suma__isi with J K L; trivial.
 Qed.
 
-Lemma defect_perm_231 : forall A B C D E F, Defect A B C D E F -> Defect  B C A D E F.
+Lemma defect_perm_231 : forall A B C D E F,
+  Defect A B C D E F -> Defect  B C A D E F.
 Proof.
   intros A B C D E F HDef.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
@@ -62,13 +137,15 @@ Proof.
   apply trisuma_perm_231, HTri.
 Qed.
 
-Lemma defect_perm_312 : forall A B C D E F, Defect A B C D E F -> Defect C A B D E F.
+Lemma defect_perm_312 : forall A B C D E F,
+  Defect A B C D E F -> Defect C A B D E F.
 Proof.
   intros.
   do 2 apply defect_perm_231; trivial.
 Qed.
 
-Lemma defect_perm_321 : forall A B C D E F, Defect A B C D E F -> Defect C B A D E F.
+Lemma defect_perm_321 : forall A B C D E F,
+  Defect A B C D E F -> Defect C B A D E F.
 Proof.
   intros A B C D E F HDef.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
@@ -76,19 +153,22 @@ Proof.
   apply trisuma_perm_321, HTri.
 Qed.
 
-Lemma defect_perm_213 : forall A B C D E F, Defect A B C D E F -> Defect B A C D E F.
+Lemma defect_perm_213 : forall A B C D E F,
+  Defect A B C D E F -> Defect B A C D E F.
 Proof.
   intros.
   apply defect_perm_321, defect_perm_312; trivial.
 Qed.
 
-Lemma defect_perm_132 : forall A B C D E F, Defect A B C D E F -> Defect A C B D E F.
+Lemma defect_perm_132 : forall A B C D E F,
+  Defect A B C D E F -> Defect A C B D E F.
 Proof.
   intros.
   apply defect_perm_321, defect_perm_231; trivial.
 Qed.
 
-Lemma conga3_defect__defect : forall A B C D E F A' B' C', Defect A B C D E F ->
+Lemma conga3_defect__defect : forall A B C D E F A' B' C',
+  Defect A B C D E F ->
   CongA A B C A' B' C' -> CongA B C A B' C' A' -> CongA C A B C' A' B' ->
   Defect A' B' C' D E F.
 Proof.
@@ -98,7 +178,8 @@ Proof.
   apply (conga3_trisuma__trisuma A B C); trivial.
 Qed.
 
-Lemma col_defect__out : forall A B C D E F, Col A B C -> Defect A B C D E F -> Out E D F.
+Lemma col_defect__out : forall A B C D E F,
+  Col A B C -> Defect A B C D E F -> Out E D F.
 Proof.
   intros A B C D E F HCol HDef.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
@@ -110,7 +191,8 @@ Proof.
   - apply bet_suma__isi with J K L; trivial.
 Qed.
 
-Lemma rah_defect__out : hypothesis_of_right_saccheri_quadrilaterals ->
+Lemma rah_defect__out :
+  hypothesis_of_right_saccheri_quadrilaterals ->
   forall A B C D E F, Defect A B C D E F -> Out E D F.
 Proof.
   intros rah A B C D E F HDef.
@@ -123,8 +205,9 @@ Proof.
   - apply bet_suma__isi with J K L; trivial.
 Qed.
 
-Lemma defect_ncol_out__rah : forall A B C D E F, ~ Col A B C -> Defect A B C D E F ->
-  Out E D F -> hypothesis_of_right_saccheri_quadrilaterals.
+Lemma defect_ncol_out__rah : forall A B C D E F,
+  ~ Col A B C -> Defect A B C D E F -> Out E D F ->
+  hypothesis_of_right_saccheri_quadrilaterals.
 Proof.
   intros A B C D E F HNCol HDef HOut.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
@@ -133,8 +216,9 @@ Proof.
   apply conga_sym, out546_suma__conga with D E F; trivial.
 Qed.
 
-Lemma noah_suma__isi : ~ hypothesis_of_obtuse_saccheri_quadrilaterals -> forall A B C D E F,
-  SumA A B C B C A D E F -> Isi D E F C A B.
+Lemma noah_suma__isi :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C D E F, SumA A B C B C A D E F -> Isi D E F C A B.
 Proof.
   intros noah A B C D E F HSuma.
   suma.assert_diffs.
@@ -156,9 +240,12 @@ Qed.
 (** Additivity of the defect : if C1 is between A and C, the defect of ABC is
     the sum of the defects of AC1C and BC1C.
     In this proof, we have to exclude the semi-elliptical case so that the sums of angles behave. *)
-Lemma t22_16_1 : ~ hypothesis_of_obtuse_saccheri_quadrilaterals -> forall A B C C1 D E F G H I K L M,
-  Bet A C1 C -> Defect A B C1 D E F -> Defect B C1 C G H I -> SumA D E F G H I K L M ->
-  Isi D E F G H I /\ Defect A B C K L M.
+Lemma t22_16_1 :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C C1 D E F G H I K L M,
+    Bet A C1 C -> Defect A B C1 D E F -> Defect B C1 C G H I ->
+    SumA D E F G H I K L M ->
+    Isi D E F G H I /\ Defect A B C K L M.
 Proof.
   intros noah A B C C1 D E F G H I K L M HBet HDefA HDefC HSuma.
   assert (HDA := defect_distincts A B C1 D E F HDefA).
@@ -251,9 +338,12 @@ Proof.
     apply suma_assoc_2 with V W X C1 B A S T U; SumA.
 Qed.
 
-Lemma t22_16_1bis : ~ hypothesis_of_obtuse_saccheri_quadrilaterals -> forall A B C C1 D E F G H I K L M,
-  Bet A C1 C -> Defect A B C1 D E F -> Defect B C1 C G H I -> Defect A B C K L M ->
-  Isi D E F G H I /\ SumA D E F G H I K L M.
+Lemma t22_16_1bis :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C C1 D E F G H I K L M,
+    Bet A C1 C ->
+    Defect A B C1 D E F -> Defect B C1 C G H I -> Defect A B C K L M ->
+    Isi D E F G H I /\ SumA D E F G H I K L M.
 Proof.
   intros noah A B C C1 D E F G H I K L M HBet HDefA HDefB HDef.
   assert (Hd := defect_distincts A B C1 D E F HDefA).
@@ -267,11 +357,13 @@ Proof.
 Qed.
 
 
-Lemma t22_16_2aux : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+Lemma t22_16_2aux :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
   forall A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R,
-  Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 -> Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
-  Bet A O C -> Bet B O D -> Col A B C -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-  Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
+    Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
+    Bet A O C -> Bet B O D -> Col A B C -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
+    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HCol HSuma.
@@ -300,11 +392,13 @@ Proof.
   apply (conga3_suma__suma C1 C2 C3 A1 A2 A3 B1 B2 B3); CongA.
 Qed.
 
-Lemma t22_16_2aux1 : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+Lemma t22_16_2aux1 :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
   forall A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R,
-  Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 -> Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
-  Bet A O C -> Bet B O D -> Col A B D -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-  Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
+    Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
+    Bet A O C -> Bet B O D -> Col A B D -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
+    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HCol HSuma.
@@ -322,11 +416,14 @@ Qed.
 
 (** In a convex quadrilateral ABCD, the sum of the defects of ABC and ADC is equal to
     the sum of the defects of ABD and CBD. We add some hypotheses to make the proof easier *)
-Lemma t22_16_2 : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+Lemma t22_16_2 :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
   forall A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R,
-  Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 -> Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
-  Bet A O C -> Bet B O D -> Isi D1 D2 D3 B1 B2 B3 -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-  Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
+    Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
+    Bet A O C -> Bet B O D ->
+    Isi D1 D2 D3 B1 B2 B3 -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
+    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HIsi HSuma.
@@ -381,11 +478,13 @@ Proof.
   apply suma_assoc_2 with S4 T4 U4 S1 T1 U1 V W X; SumA.
 Qed.
 
-Lemma legendre_aux : ~ hypothesis_of_obtuse_saccheri_quadrilaterals -> 
-  forall A B C D B1 C1 P Q R S T U V W X, ~ Col A B C -> CongA A C B C B D ->
-  Cong A C B D -> TS B C A D -> Out A B B1 -> Out A C C1 -> Bet B1 D C1 ->
-  Defect A B C P Q R -> Defect A B1 C1 S T U -> SumA P Q R P Q R V W X ->
-  Isi P Q R P Q R /\ LeA V W X S T U.
+Lemma legendre_aux :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C D B1 C1 P Q R S T U V W X,
+    ~ Col A B C -> CongA A C B C B D ->
+    Cong A C B D -> TS B C A D -> Out A B B1 -> Out A C C1 -> Bet B1 D C1 ->
+    Defect A B C P Q R -> Defect A B1 C1 S T U -> SumA P Q R P Q R V W X ->
+    Isi P Q R P Q R /\ LeA V W X S T U.
 Proof.
   intros noah A B C D B1 C1 P Q R S T U V W X HNCol HConga HCong HTS HOutB HOutC HBet HDef HDef1 HSuma.
   assert (H := A).
@@ -442,7 +541,6 @@ Proof.
   destruct (ex_defect C B B1) as [M [N [O HDef4]]]; auto.
   destruct (ex_defect B1 C D) as [A' [B' [C' HDef5]]]; auto.
   destruct (ex_defect C D C1) as [D' [E' [F' HDef6]]]; auto.
-    intro; subst C1; apply HNCol3; Col.
   destruct (ex_defect B1 B D) as [M' [N' [O' HDef7]]]; auto.
   assert (Hd := defect_distincts A B1 C G H I HDef2).
   assert (Hd2 := defect_distincts C B B1 M N O HDef4).
@@ -483,8 +581,10 @@ Proof.
   apply isi_suma__lea123789 with D' E' F'; trivial.
 Qed.
 
-Lemma legendre_aux1 : forall A B C B' C', ~ Col A B C -> Out A B B' -> Out A C C' ->
-  exists D', InAngle D' B A C /\ CongA A C' B' C' B' D' /\ Cong A C' B' D' /\ TS B' C' A D'.
+Lemma legendre_aux1 : forall A B C B' C',
+  ~ Col A B C -> Out A B B' -> Out A C C' ->
+  exists D', InAngle D' B A C /\ CongA A C' B' C' B' D' /\
+             Cong A C' B' D' /\ TS B' C' A D'.
 Proof.
   intros A B C B' C' HNCol HOutB HOutC.
   assert_diffs.
@@ -508,11 +608,18 @@ Proof.
   exists M; split; Col.
 Qed.
 
-Lemma legendre_aux2 : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
-  forall A B C,  ~ Col A B C ->  Acute B A C ->
-  (forall T : Tpoint, InAngle T B A C -> exists X Y : Tpoint, Out A B X /\ Out A C Y /\ Bet X T Y) ->
-  forall P Q R S T U, Defect A B C P Q R -> GradAExp P Q R S T U ->
-  exists B' C' P' Q' R', (Out A B B' /\ Out A C C' /\ Defect A B' C' P' Q' R' /\ LeA S T U P' Q' R').
+Lemma legendre_aux2 :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C,
+    ~ Col A B C ->  Acute B A C ->
+    (forall T,
+       InAngle T B A C ->
+       exists X Y : Tpoint, Out A B X /\ Out A C Y /\ Bet X T Y) ->
+    forall P Q R S T U,
+      Defect A B C P Q R -> GradAExp P Q R S T U ->
+      exists B' C' P' Q' R',
+        (Out A B B' /\ Out A C C' /\
+         Defect A B' C' P' Q' R' /\ LeA S T U P' Q' R').
 Proof.
   intros noah A B C HNCol HAcute legendre P Q R S T U HDef.
   induction 1; rename A0 into P; rename B0 into Q; rename C0 into R.
@@ -536,9 +643,9 @@ Proof.
   apply isi_lea2_suma2__lea with S T U S T U P' Q' R' P' Q' R'; trivial.
 Qed.
 
-Lemma legendre_s_theorem :
-  archimedes_postulate ->
-  legendre_s_postulate ->
+Lemma legendre_s_fourth_theorem_aux :
+  archimedes_axiom ->
+  legendre_s_parallel_postulate ->
   postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intros archi legendre.
@@ -576,6 +683,16 @@ Proof.
     destruct (ex_suma P' Q' R' P' Q' R') as [V [W [X HSuma]]]; auto.
     destruct (legendre_aux archi A B' C' D' B'' C'' P' Q' R' S' T' U' V W X); trivial;
     [apply l6_7 with B|apply l6_7 with C]; trivial; apply l6_6; trivial.
+Qed.
+
+Theorem legendre_s_fourth_theorem :
+  archimedes_axiom ->
+  legendre_s_parallel_postulate ->
+  postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights.
+Proof.
+assert (H:=legendre_s_fourth_theorem_aux).
+assert (I:=rah__triangle).
+assert (J:=triangle__existential_triangle); tauto.
 Qed.
 
 End Legendre.

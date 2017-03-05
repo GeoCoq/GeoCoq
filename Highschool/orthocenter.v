@@ -71,9 +71,9 @@ Proof.
 intros A B C HNC.
 assert_diffs; rename H2 into HAB; rename H1 into HBC; rename H4 into HAC.
 
-elim (parallel_existence_spec A B C HAB);intros X1 [HX1 HX1'].
-elim (parallel_existence_spec A C B HAC);intros X2 [HX2 HX2'].
-elim (parallel_existence_spec B C A HBC);intros X3 [HX3 HX3'].
+elim (parallel_existence1 A B C HAB);intros X1 HX1.
+elim (parallel_existence1 A C B HAC);intros X2 HX2.
+elim (parallel_existence1 B C A HBC);intros X3 HX3.
 
 assert (T : exists D, Col D B X2 /\ Col D C X1) by (apply construct_intersection with A X3; finish); DecompExAnd T D.
 assert (T : exists E, Col E A X3 /\ Col E C X1) by (apply construct_intersection with B X2; finish); DecompExAnd T E.

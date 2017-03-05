@@ -139,7 +139,7 @@ Proof.
       exists K.
       split; try (apply conga_line; auto).
       split.
-      intro HOne; assert (~ Col E F K) by (apply (one_side_not_col E F K D); apply one_side_symmetry; auto); assert_cols; Col.
+      intro HOne; assert (~ Col E F K) by (apply (one_side_not_col123 E F K D); apply one_side_symmetry; auto); assert_cols; Col.
       apply (conga_trans D E K A B J); auto.
       apply conga_left_comm; apply (l11_13 F E D C B J); Between; CongA.
     }
@@ -164,7 +164,7 @@ Proof.
     exists K.
     split; CongA.
     split.
-    intro HOne; assert (~ Col E F D) by (apply (one_side_not_col E F D K); auto); Col.
+    intro HOne; assert (~ Col E F D) by (apply (one_side_not_col123 E F D K); auto); Col.
     apply (conga_trans D E K A B J); auto.
     elim (bet_dec D E F).
     { intro HEBet.
@@ -316,7 +316,7 @@ Proof.
   apply (conga3_suma__suma A B C D E F G H I); CongA.
 Qed.
 
-(** Basic case of sum *)
+(** Basic cases of sum *)
 
 Lemma inangle__suma : forall A B C P, InAngle P A B C -> SumA A B P P B C A B C.
 Proof.
@@ -330,6 +330,14 @@ Proof.
     apply col124__nos.
   intro HNCol2.
   apply l9_9, invert_two_sides, in_angle_two_sides; Col.
+Qed.
+
+Lemma bet__suma : forall A B C P, A <> B -> B <> C -> P <> B -> Bet A B C ->
+  SumA A B P P B C A B C.
+Proof.
+  intros A B C P HAB HBC HPB HBet.
+  apply inangle__suma.
+  apply in_angle_line; auto.
 Qed.
 
 (** Characterization of Isi using LeA. *)
@@ -620,8 +628,6 @@ Qed.
 End Sec.
 
 
-Ltac not_exist_hyp6 A B C D E F G H I J K L := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D | not_exist_hyp_comm E F | not_exist_hyp_comm G H | not_exist_hyp_comm I J | not_exist_hyp_comm K L].
-
 Ltac assert_diffs :=
 repeat
  match goal with
@@ -700,6 +706,15 @@ repeat
        assert (T:= out_distinct A B C H);
        decompose [and] T;clear T;clean_reap_hyps
 
+      | H:TS ?A ?B ?C ?D |- _ =>
+      let h := fresh in
+      not_exist_hyp6 A B A C A D B C B D C D;
+      assert (h := ts_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
+      | H:OS ?A ?B ?C ?D |- _ =>
+      let h := fresh in
+      not_exist_hyp5 A B A C A D B C B D;
+      assert (h := os_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
+
       | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= conga_diff1 A B C A' B' C' H);clean_reap_hyps
@@ -713,6 +728,20 @@ repeat
       let T:= fresh in (not_exist_hyp_comm B' C');
         assert (T:= conga_diff56 A B C A' B' C' H);clean_reap_hyps
 
+      | H:SumA ?A ?B ?C ?D ?E ?F ?G ?I ?J |- _ =>
+      let h := fresh in
+      not_exist_hyp6 A B B C D E E F G I I J;
+      assert (h := suma_distincts A B C D E F G I J H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:Isi ?A ?B ?C ?D ?E ?F |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B B C D E E F;
+      assert (h := isi_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:(InAngle ?P ?A ?B ?C) |- _ =>
+      let h := fresh in
+      not_exist_hyp3 A B C B P B;
+      assert (h := inangle_distincts A B C P H);decompose [and] h;clear h;clean_reap_hyps
       | H:LeA ?A ?B ?C ?D ?E ?F |- _ =>
       let h := fresh in
       not_exist_hyp4 A B B C D E E F;
@@ -723,26 +752,16 @@ repeat
       assert (h := lta_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
       | H:(Acute ?A ?B ?C) |- _ =>
       let h := fresh in
-      not_exist_hyp3 A B A C B C;
+      not_exist_hyp2 A B B C;
       assert (h := acute_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
       | H:(Obtuse ?A ?B ?C) |- _ =>
       let h := fresh in
-      not_exist_hyp3 A B A C B C;
+      not_exist_hyp2 A B B C;
       assert (h := obtuse_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:SumA ?A ?B ?C ?D ?E ?F ?G ?I ?J |- _ =>
-      let h := fresh in
-      not_exist_hyp6 A B B C D E E F G I I J;
-      assert (h := suma_distincts A B C D E F G I J H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:Isi ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B B C D E E F;
-      assert (h := isi_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
  end.
 
 Hint Resolve suma_sym suma_left_comm suma_middle_comm
-             suma_right_comm suma_comm inangle__suma
+             suma_right_comm suma_comm bet__suma inangle__suma
              isi_right_comm isi_comm isi_left_comm
              isi_sym out213__isi out546__isi inangle__isi : suma.
 
@@ -1733,6 +1752,17 @@ Proof.
   apply lta__lea; assumption.
 Qed.
 
+Lemma isi2_suma2__conga : forall A B C D E F A' B' C',
+  Isi A B C A B C -> SumA A B C A B C D E F ->
+  Isi A' B' C' A' B' C' -> SumA A' B' C' A' B' C' D E F ->
+  CongA A B C A' B' C'.
+Proof.
+  intros A B C D E F A' B' C' HIsi HSuma HIsi' HSuma'.
+  assert_diffs.
+  destruct (lea_total A B C A' B' C'); trivial; [|apply conga_sym];
+  eapply isi_lea2_suma2__conga123; eauto.
+Qed.
+
 
 Lemma isi123231 : forall A B C, A <> B -> A <> C -> B <> C -> Isi A B C B C A.
 Proof.
@@ -1965,6 +1995,38 @@ Proof.
     exists B; Col; Between.
 Qed.
 
+(** Sum of two flat angles is a null angle *)
+
+Lemma bet2_suma__out : forall A B C D E F G H I, Bet A B C -> Bet D E F ->
+  SumA A B C D E F G H I -> Out H G I.
+Proof.
+  intros A B C D E F G H I HBet1 HBet2 HSuma.
+  assert_diffs.
+  apply (eq_conga_out A B).
+  apply (suma2__conga A B C D E F); trivial.
+  exists A; split.
+    apply conga_line; Between.
+  split; CongA.
+  apply col123__nos; Col.
+Qed.
+
+(** Sum of two degenerate angles is degenerate *)
+
+Lemma col2_suma__col : forall A B C D E F G H I, Col A B C -> Col D E F ->
+  SumA A B C D E F G H I -> Col G H I.
+Proof.
+  intros A B C D E F G H I HCol1 HCol2 HSuma.
+  destruct (bet_dec A B C).
+  destruct (bet_dec D E F).
+  - apply col_permutation_4, out_col, (bet2_suma__out A B C D E F); assumption.
+  - apply (col_conga_col A B C); trivial.
+    apply out546_suma__conga with D E F; trivial.
+    apply not_bet_out; assumption.
+  - apply (col_conga_col D E F); trivial.
+    apply (out213_suma__conga A B C); trivial.
+    apply not_bet_out; assumption.
+Qed.
+
 
 (** The sum of angles of a triangle.*)
 
@@ -2146,4 +2208,4 @@ Qed.
 
 End Sec2.
 
-Hint Resolve isi123231 : suma.
+Hint Resolve acute__isi isi123231 : suma.

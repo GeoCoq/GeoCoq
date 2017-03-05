@@ -25,7 +25,7 @@ assert (HF : exists A1 A2 B1 B2,
     destruct (l8_18_existence A1' A2' B3) as [A3 [HC4 HPerp3]];
     try (intro; apply HNC; assert_diffs; assert_cols; ColR).
     assert (HCong : Cong A1 B1 A3 B3)
-      by (apply HF; Col; Perp; assert_diffs; ColR).
+      by (apply HF; Col; Perp; ColR).
     assert (HCong' : Cong B1 B2 B3 B2).
       {
       assert (HNE''' : A3 <> B2).
@@ -73,9 +73,9 @@ assert (HF : exists A1 A2 B1 B2,
 
           {
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-                  try (intro; treat_equalities; auto); assert_diffs; ColR|].
+                  try (intro; treat_equalities; auto); ColR|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-                  try (intro; treat_equalities; auto); assert_diffs; ColR|].
+                  try (intro; treat_equalities; auto); ColR|].
           exists B3; split; Col; unfold Midpoint in *; spliter; auto.
           }
 
@@ -83,13 +83,13 @@ assert (HF : exists A1 A2 B1 B2,
           apply l12_6; apply par_not_col_strict with B1; Col;
           try (apply l12_9 with A1' A2'; Perp).
           intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-          try (intro; treat_equalities; auto); assert_diffs; ColR.
+          try (intro; treat_equalities; auto); ColR.
           }
         }
 
         {
         apply l11_16; try apply perp_per_1; try solve[assert_diffs; auto];
-        apply perp_col0 with A1' A2'; Perp; assert_diffs; ColR.
+        apply perp_col0 with A1' A2'; Perp; ColR.
         }
       }
     assert (HFalse : B3 <> B1) by (assert_diffs; auto).
@@ -104,7 +104,7 @@ assert (HF : exists A1 A2 B1 B2,
     assert (HC2 : Col A1 B1 B2) by (apply perp_perp_col with A1' A2'; Perp).
     elim (l7_20 A1 B1 B2); Col; intro HMid.
     destruct (midpoint_existence A1 B1) as [M HM].
-    elim (l7_20 A1 B1 M); try apply HF; Col; Perp; try (assert_diffs; ColR);
+    elim (l7_20 A1 B1 M); try apply HF; Col; Perp; try (ColR);
     try (apply perp_col0 with A1 B1; assert_diffs; Col; Perp).
     intro; treat_equalities; intuition.
     assert_diffs.
@@ -115,19 +115,18 @@ assert (HF : exists A1 A2 B1 B2,
     }
   exists A1, A2, B1, B2.
   split; [|split; [|split; [apply HF; Col; Perp|split]]];
-  try (apply l8_2; apply perp_per_2;
-       [assert_diffs|apply perp_col0 with A1' A2']; Perp).
+  try (apply l8_2; apply perp_per_2; apply perp_col0 with A1' A2'; Perp).
 
     {
     apply not_two_sides_one_side; auto; intro HTS;
-    try (apply HNC; assert_diffs; ColR); try (apply HNC'; assert_diffs; ColR).
+    try (apply HNC; ColR); try (apply HNC'; ColR).
     destruct HTS as [HNC'' [_ [I [HC3 HBet]]]].
     destruct (midpoint_existence B1 I) as [B3 HB3].
     assert (HNE'' : B1 <> I) by (intro; treat_equalities; Col).
     destruct (l8_18_existence A1' A2' B3) as [A3 [HC4 HPerp3]];
     try (intro; apply HNC; assert_diffs; assert_cols; ColR).
     assert (HCong : Cong A1 B1 A3 B3)
-      by (apply HF; Col; Perp; assert_diffs; ColR).
+      by (apply HF; Col; Perp; ColR).
     assert (HCong' : Cong B1 I B3 I).
       {
       assert (HNE''' : A3 <> I).
@@ -173,9 +172,9 @@ assert (HF : exists A1 A2 B1 B2,
 
           {
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-                  try (intro; treat_equalities; auto); assert_diffs; ColR|].
+                  try (intro; treat_equalities; auto); ColR|].
           split; [intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-                  try (intro; treat_equalities; auto); assert_diffs; ColR|].
+                  try (intro; treat_equalities; auto); ColR|].
           exists B3; split; Col; unfold Midpoint in *; spliter; auto.
           }
 
@@ -183,13 +182,13 @@ assert (HF : exists A1 A2 B1 B2,
           apply l12_6; apply par_not_col_strict with B1; Col;
           try (apply l12_9 with A1' A2'; Perp).
           intro; apply HNE'''; apply l6_21 with A1' A2' B1 B3; Col;
-          try (intro; treat_equalities; auto); assert_diffs; ColR.
+          try (intro; treat_equalities; auto); ColR.
           }
         }
 
         {
         apply l11_16; try apply perp_per_1; try solve[assert_diffs; auto];
-        apply perp_col0 with A1' A2'; Perp; assert_diffs; ColR.
+        apply perp_col0 with A1' A2'; Perp; ColR.
         }
       }
     assert (HFalse : B3 <> B1) by (assert_diffs; auto).
@@ -200,7 +199,7 @@ assert (HF : exists A1 A2 B1 B2,
     {
     intros A3 B3 HC3 HC4 HPerp3.
     apply HF; Col; Perp.
-    assert_diffs; ColR.
+    ColR.
     apply perp_sym; apply perp_col0 with A1 A2; assert_diffs; Col; ColR.
     }
   }

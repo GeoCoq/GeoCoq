@@ -293,7 +293,7 @@ Proof.
     exists A.
     exists B.
     exists C.
-    apply acute_distinct in H.
+    apply acute_distincts in H.
     spliter.
     split.
       auto.
@@ -310,23 +310,18 @@ Proof.
           exists B.
           exists C.
           split.
-            eapply conga_diff1.
-            apply H3.
+            assumption.
           split.
-            eapply conga_diff2.
-            apply H3.
+            assumption.
           auto.
         assert(HH:= H0 x y z).
-        destruct HH.
-        apply H4.
+        apply HH.
         auto.
-      unfold Ang in H4.
+      unfold Ang in H3.
       spliter.
       auto.
     intro.
-    assert(HH:= H0 x y z).
-    destruct HH.
-    apply H5.
+    apply H0.
     auto.
 Qed.
 
@@ -534,7 +529,7 @@ Proof.
     intros.
     exists (fun X Y Z => CongA A B C X Y Z).
     unfold Q_CongA_Acute.
-    apply acute_distinct in H.
+    assert (HH := acute_distincts A B C H).
     spliter.
     split.
       exists A.
@@ -1026,7 +1021,7 @@ Proof.
     exists C0.
     split.
       unfold InAngle.
-      apply acute_distinct in H.
+      apply acute_distincts in H.
       spliter.
       repeat split; auto.
       exists C0.
@@ -1049,7 +1044,7 @@ Proof.
     induction H0.
       contradiction.
     unfold Out.
-    apply acute_distinct in H.
+    apply acute_distincts in H.
     spliter.
     repeat split; auto.
     induction H0.
@@ -1240,15 +1235,14 @@ Proof.
     ex_and HH A0.
     ex_and H2 B0.
     ex_and H3 C0.
-    apply acute_distinct in H2.
+    apply acute_distincts in H2.
     spliter.
-    assert (HH:= H3 A0 B0 C0).
-    destruct HH.
+    apply H3.
     assert (a A0 B0 C0).
-      apply H6.
+      apply H3.
       apply conga_refl; auto.
-    assert(HH:= (H1 A0 B0 C0)).
-    eapply (out_out_anga a A0 B0 C0); auto.
+    assert(HH:= (H1 A0 B0 C0 H5)).
+    apply l11_21_b; auto.
     apply out_trivial.
     auto.
 Qed.

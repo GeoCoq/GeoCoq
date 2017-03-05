@@ -17,8 +17,8 @@ Proof.
   apply suma_distincts in Hdiff.
   spliter.
   assert_diffs.
-  assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
-  assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
+  assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
+  assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col123 _ _ _ A); Side).
   assert(HNCol3 : ~ Col M C D) by (intro; apply HNCol2; ColR).
   assert(HNCol4 : ~ Col M C D') by (intro; apply HNCol3; ColR).
   assert_diffs.
@@ -74,7 +74,6 @@ Proof.
   exists Y.
   split.
   apply (l6_7 _ _ A'); try solve [apply l6_6; auto]; apply (bet_out); auto.
-    intro; treat_equalities; auto.
   apply (l6_2 _ _ D'); Between.
 Qed.
 

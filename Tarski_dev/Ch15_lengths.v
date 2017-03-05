@@ -1,5 +1,4 @@
 Require Export GeoCoq.Tarski_dev.Ch14_order.
-Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals.
 
 Section T15.
 

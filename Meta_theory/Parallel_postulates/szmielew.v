@@ -5,17 +5,20 @@ Section Szmielew.
 
 Context `{T2D:Tarski_2D}.
 
-Definition hyperbolic_plane_postulate := forall A1 A2 P, ~ Col A1 A2 P -> exists B1 B2 C1 C2,
-  Par A1 A2 B1 B2 /\ Col P B1 B2 /\
-  Par A1 A2 C1 C2 /\ Col P C1 C2 /\
-  ~ Col C1 B1 B2.
+Definition hyperbolic_plane_postulate := forall A1 A2 P,
+  ~ Col A1 A2 P -> exists B1 B2 C1 C2,
+    Par A1 A2 B1 B2 /\ Col P B1 B2 /\
+    Par A1 A2 C1 C2 /\ Col P C1 C2 /\
+    ~ Col C1 B1 B2.
 
-Lemma aah__hpp : hypothesis_of_acute_saccheri_quadrilaterals -> hyperbolic_plane_postulate.
+Lemma aah__hpp :
+  hypothesis_of_acute_saccheri_quadrilaterals ->
+  hyperbolic_plane_postulate.
 Proof.
   intros aah A1 A2 P HNCol.
   destruct (l8_18_existence A1 A2 P HNCol) as [Q [HCol1 HPerp]].
   destruct (diff_col_ex3 A1 A2 Q HCol1) as [X [HXA1 [HXA2 [HXQ HCol2]]]].
-  destruct (segment_construction X Q X Q) as [Y [HBet HCong]].
+  destruct (symmetric_point_construction X Q) as [Y [HBet HCong]].
   assert_diffs.
   assert (HCol3 : Col A1 A2 Y) by ColR.
   assert (HInt : Per P Q X /\ Per P Q Y).
@@ -57,21 +60,19 @@ Proof.
     exists Q; split; auto.
 Qed.
 
-
-Lemma szmielew_s_theorem : archimedes_postulate -> 
+Theorem szmielew_s_theorem :
+  archimedes_axiom ->
   (forall P : Prop,
-  (playfair_s_postulate -> P) -> 
-  (hyperbolic_plane_postulate -> ~ P)->
-  (P <-> playfair_s_postulate)).
+    (playfair_s_postulate -> P) ->
+    (hyperbolic_plane_postulate -> ~ P)->
+    (P <-> playfair_s_postulate)).
 Proof.
-  intros archi P H1 H2.
-  split; [|apply H1].
-  intro HP; destruct (archi__acute_or_right archi) as [aah|rah].
-  - absurd(P); auto.
-    apply H2, (aah__hpp aah).
-  - apply playfair_bis__playfair, triangle__playfair_bis.
-      apply aristotle__greenberg, (t22_24 archi).
-    apply (rah__triangle rah).
+intro H; intros.
+assert (L := aah__hpp).
+assert (HE := archi__acute_or_right H).
+elim (equivalent_postulates_assuming_archimedes_axiom
+        H playfair_s_postulate postulate_of_right_saccheri_quadrilaterals);
+unfold List.In; tauto.
 Qed.
 
 End Szmielew.

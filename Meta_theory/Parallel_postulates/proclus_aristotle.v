@@ -7,7 +7,7 @@ Section proclus_aristotle.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma proclus__aristotle : proclus_postulate -> aristotle_s_postulate.
+Lemma proclus__aristotle : proclus_postulate -> aristotle_s_axiom.
 Proof.
   intros proclus P Q A B C HNCol Hacute.
   assert(HD0 := l10_15 B A B C).

@@ -5,19 +5,25 @@ Section Angle_archimedes.
 Context `{T2D:Tarski_2D}.
 
 (** There exists n such that the angle DEF is congruent to n times the angle ABC *)
-Inductive GradA : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop :=
+Inductive GradA : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint ->
+                  Prop :=
   | grada_init : forall A B C D E F, CongA A B C D E F -> GradA A B C D E F
-  | grada_stab : forall A B C D E F G H I, GradA A B C D E F -> Isi D E F A B C -> SumA D E F A B C G H I ->
-                  GradA A B C G H I.
+  | grada_stab : forall A B C D E F G H I,
+                   GradA A B C D E F ->
+                   Isi D E F A B C -> SumA D E F A B C G H I ->
+                   GradA A B C G H I.
 
 (** There exists n such that the angle DEF is congruent to 2^n times the angle ABC *)
-Inductive GradAExp : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop :=
+Inductive GradAExp : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint ->
+                     Prop :=
   | gradaexp_init : forall A B C D E F, CongA A B C D E F -> GradAExp A B C D E F
-  | gradaexp_stab : forall A B C D E F G H I, GradAExp A B C D E F -> Isi D E F D E F ->
-                  SumA D E F D E F G H I -> GradAExp A B C G H I.
+  | gradaexp_stab : forall A B C D E F G H I,
+                      GradAExp A B C D E F ->
+                      Isi D E F D E F -> SumA D E F D E F G H I ->
+                      GradAExp A B C G H I.
 
-
-Lemma grada_distincts : forall A B C D E F, GradA A B C D E F ->
+Lemma grada_distincts : forall A B C D E F,
+  GradA A B C D E F ->
   A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.
   induction 1.
@@ -25,8 +31,10 @@ Proof.
   apply suma_distincts in H2; spliter; repeat split; auto.
 Qed.
 
-Lemma conga2_grada__grada : forall A B C D E F A' B' C' D' E' F', GradA A B C D E F ->
-  CongA A B C A' B' C' -> CongA D E F D' E' F' -> GradA A' B' C' D' E' F'.
+Lemma conga2_grada__grada : forall A B C D E F A' B' C' D' E' F',
+  GradA A B C D E F ->
+  CongA A B C A' B' C' -> CongA D E F D' E' F' ->
+  GradA A' B' C' D' E' F'.
 Proof.
   intros A B C D E F A' B' C' D' E' F' HGA.
   revert A' B' C' D' E' F'.
@@ -49,7 +57,9 @@ Proof.
   apply isi_suma__lea123789 with A B C; trivial.
 Qed.
 
-Lemma grada_out__out : forall A B C D E F, Out E D F -> GradA A B C D E F -> Out B A C.
+Lemma grada_out__out : forall A B C D E F,
+  Out E D F -> GradA A B C D E F ->
+  Out B A C.
 Proof.
   intros A B C D E F Hout HGA.
   apply out_lea__out with D E F; trivial.
@@ -57,7 +67,8 @@ Proof.
 Qed.
 
 Lemma grada2_isi_suma__grada : forall A B C D E F G H I K L M,
-  GradA A B C D E F -> GradA A B C G H I -> Isi D E F G H I -> SumA D E F G H I K L M ->
+  GradA A B C D E F -> GradA A B C G H I ->
+  Isi D E F G H I -> SumA D E F G H I K L M ->
   GradA A B C K L M.
 Proof.
   intros A B C D E F G H I K L M HGA1 HGA2 HIsi.
@@ -82,14 +93,15 @@ Proof.
   apply suma_assoc_2 with D E F D0 E0 F0 G H I; trivial.
 Qed.
 
-Lemma gradaexp__grada : forall A B C D E F, GradAExp A B C D E F -> GradA A B C D E F.
+Lemma gradaexp__grada : forall A B C D E F,
+  GradAExp A B C D E F -> GradA A B C D E F.
 Proof.
   intros A B C.
   induction 1; [apply grada_init | apply grada2_isi_suma__grada with D E F D E F]; trivial.
 Qed.
 
-
-Lemma acute_archi_aux : forall O A B C D E, Per O A B -> O <> A -> B <> A -> C <> D -> D <> E ->
+Lemma acute_archi_aux : forall O A B C D E,
+  Per O A B -> O <> A -> B <> A -> C <> D -> D <> E ->
   Bet A C D -> Bet C D E -> Bet D E B -> CongA C O D D O E ->
   Lt C D D E.
 Proof.
@@ -146,7 +158,8 @@ Proof.
   - destruct (l11_41 F O D E); Col.
 Qed.
 
-Lemma acute_archi_aux1 : forall O A0 A1 B P Q R, Per O A0 B -> B <> A0 -> Bet A0 A1 B ->
+Lemma acute_archi_aux1 : forall O A0 A1 B P Q R,
+  Per O A0 B -> B <> A0 -> Bet A0 A1 B ->
   GradA A0 O A1 P Q R -> A0 <> A1 ->
   LeA A0 O B P Q R \/ exists A, Bet A0 A1 A /\ Bet A0 A B /\ CongA P Q R A0 O A.
 Proof.
@@ -193,9 +206,10 @@ Proof.
   exfalso; apply HNCol2; assert_diffs; ColR.
 Qed.
 
-Lemma acute_archi_aux2 : forall O A0 A1 B C, Per O A0 B -> O <> A0 -> B <> A0 ->
+Lemma acute_archi_aux2 : forall O A0 A1 B C,
+  Per O A0 B -> O <> A0 -> B <> A0 ->
   Bet A0 A1 B -> A0 <> A1 -> Grad A0 A1 C ->
-  exists P, exists Q, exists R, GradA A0 O A1 P Q R /\ (LeA A0 O B P Q R \/ 
+  exists P, exists Q, exists R, GradA A0 O A1 P Q R /\ (LeA A0 O B P Q R \/
   exists A', Bet A0 A1 A' /\ Bet A0 A' B /\ CongA P Q R A0 O A' /\ Le A0 C A0 A' /\
   exists A, Bet A0 A A' /\ CongA A O A' A0 O A1 /\ Le A0 A1 A A').
 Proof.
@@ -275,8 +289,11 @@ Proof.
   apply conga_trans with A O A'; CongA.
 Qed.
 
-Lemma archi_in_acute_angles : archimedes_postulate -> forall A B C D E F, ~ Col A B C -> Acute D E F ->
-  exists P Q R, GradA A B C P Q R /\ LeA D E F P Q R.
+Lemma archi_in_acute_angles :
+  archimedes_axiom ->
+  forall A B C D E F,
+    ~ Col A B C -> Acute D E F ->
+    exists P Q R, GradA A B C P Q R /\ LeA D E F P Q R.
 Proof.
   intros archi A B C D E F HNCol HAcute.
   assert_diffs.
@@ -306,7 +323,7 @@ Proof.
     exfalso; subst D1; Col.
   apply l6_6 in HOut.
   apply (out_conga A B C D0 E D1' A C D0 D1) in HConga1; trivial; try (apply out_trivial; auto).
-  apply one_side_not_col in HOS.
+  apply one_side_not_col123 in HOS.
   assert_diffs.
   assert (D0 <> D1) by (intro; subst D1; assert_cols; Col).
   clear dependent D1'.
@@ -329,9 +346,10 @@ Proof.
   treat_equalities; auto.
 Qed.
 
-
-Lemma angles_archi_aux : forall A B C D E F G H I, GradA A B C D E F -> GradA A B C G H I -> ~ Isi D E F G H I ->
-  exists P Q R, GradA A B C P Q R /\ ~ Isi P Q R A B C.
+Lemma angles_archi_aux :
+  forall A B C D E F G H I,
+    GradA A B C D E F -> GradA A B C G H I -> ~ Isi D E F G H I ->
+    exists P Q R, GradA A B C P Q R /\ ~ Isi P Q R A B C.
 Proof.
   intros A B C D E F G H I HGA1 HGA2.
   induction HGA2.
@@ -348,8 +366,11 @@ Proof.
   intro HIsi2; apply HNIsi, isi_assoc_1 with D0 E0 F0 A B C P Q R; trivial.
 Qed.
 
-Lemma angles_archi_aux1 : archimedes_postulate -> forall A B C D E F, ~ Col A B C -> ~ Bet D E F ->
-  exists P Q R, GradA A B C P Q R /\ (LeA D E F P Q R \/ ~ Isi P Q R A B C).
+Lemma angles_archi_aux1 :
+  archimedes_axiom ->
+  forall A B C D E F,
+    ~ Col A B C -> ~ Bet D E F ->
+    exists P Q R, GradA A B C P Q R /\ (LeA D E F P Q R \/ ~ Isi P Q R A B C).
 Proof.
   intros archi A B C D E F HNCol HNBet.
   assert (Hdiff : D <> E /\ F <> E) by (split; intro; subst E; Between); spliter.
@@ -388,8 +409,11 @@ Proof.
 Qed.
 
 (** Inspired by Hartshorne's demonstration of Lemma 35.1 in Geometry Euclid and Beyond *)
-Lemma archi_in_angles : archimedes_postulate -> forall A B C D E F, ~ Col A B C -> D <> E -> F <> E ->
-  exists P Q R, GradA A B C P Q R /\ (LeA D E F P Q R \/ ~ Isi P Q R A B C).
+Lemma archi_in_angles :
+  archimedes_axiom ->
+  forall A B C D E F,
+    ~ Col A B C -> D <> E -> F <> E ->
+    exists P Q R, GradA A B C P Q R /\ (LeA D E F P Q R \/ ~ Isi P Q R A B C).
 Proof.
   intros archi A B C D E F HNCol HDE HFE.
   elim (bet_dec D E F); [|apply angles_archi_aux1; trivial].
@@ -415,8 +439,11 @@ Proof.
 Qed.
 
 (** If Archimedes' postulate holds, every nondegenerate angle can be repeated until exceeding 180° *)
-Lemma archi__grada_destruction : archimedes_postulate -> forall A B C, ~ Col A B C ->
-  exists P Q R, GradA A B C P Q R /\ ~ Isi P Q R A B C.
+Lemma archi__grada_destruction :
+  archimedes_axiom ->
+  forall A B C,
+    ~ Col A B C ->
+    exists P Q R, GradA A B C P Q R /\ ~ Isi P Q R A B C.
 Proof.
   intros archi A B C HNCol.
   destruct (segment_construction A B A B) as [A0 [HBet HCong]].
@@ -431,7 +458,8 @@ Proof.
 Qed.
 
 
-Lemma gradaexp_destruction_aux : forall A B C P Q R, GradA A B C P Q R ->
+Lemma gradaexp_destruction_aux : forall A B C P Q R,
+  GradA A B C P Q R ->
   exists S T U, GradAExp A B C S T U /\ (Obtuse S T U \/ LeA P Q R S T U).
 Proof.
   intros A B C.
@@ -453,8 +481,11 @@ Proof.
 Qed.
 
 (** If Archimedes' postulate holds, every nondegenerate angle can be doubled until exceeding 90° *)
-Lemma archi__gradaexp_destruction : archimedes_postulate -> forall A B C, ~ Col A B C ->
-  exists P Q R, GradAExp A B C P Q R /\ Obtuse P Q R.
+Lemma archi__gradaexp_destruction :
+  archimedes_axiom ->
+  forall A B C,
+    ~ Col A B C ->
+    exists P Q R, GradAExp A B C P Q R /\ Obtuse P Q R.
 Proof.
   intros archi A B C HNCol.
   destruct (archi__grada_destruction archi A B C HNCol) as [D [E [F [HGA HNIsi]]]].

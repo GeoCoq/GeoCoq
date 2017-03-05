@@ -25,7 +25,8 @@ unfold Cs; intros O E S U1 U2 HCs.
 spliter; assert_diffs; apply per_not_col; Perp.
 Qed.
 
-(** As we are in dimension 2, we skip 16.3 which is only needed to prove 16.4 in dimension n. *)
+(** As we are in dimension 2, we skip 16.3 
+    which is only needed to prove 16.4 in dimension n. *)
 
 (** Lemma 16.4 in dimension 2. *)
 Lemma exists_grid : exists O E E' S U1 U2, ~ Col O E E' /\ Cs O E S U1 U2.
@@ -34,6 +35,15 @@ destruct lower_dim_ex as [O [I [X HNC]]].
 assert (H : ~ Col O I X) by auto; clear HNC; rename H into HNC.
 assert_diffs; destruct (ex_per_cong I O O X O I) as [J HJ]; Col; spliter.
 exists O; exists I; exists X; exists O; exists I; exists J.
+repeat (split; finish).
+Qed.
+
+Lemma exists_grid_spec : exists S U1 U2, Cs PA PB S U1 U2.
+Proof.
+assert (~ Col PA PB PC) by (apply lower_dim).
+assert_diffs.
+destruct (ex_per_cong PB PA PA PC PA PB) as [J HJ]; Col; spliter.
+exists PA; exists PB; exists J.
 repeat (split; finish).
 Qed.
 

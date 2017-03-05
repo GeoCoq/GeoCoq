@@ -156,6 +156,16 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 Definition TS A B P Q :=
   ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
 
+Lemma ts_distincts : forall A B P Q, TS A B P Q ->
+  A <> B /\ A <> P /\ A <> Q /\ B <> P /\ B <> Q /\ P <> Q.
+Proof.
+  intros A B P Q HTS.
+  destruct HTS as [HNCol1 [HNCol2 [T [HCol HBet]]]].
+  assert_diffs.
+  repeat split; auto.
+  intro; treat_equalities; auto.
+Qed.
+
 Lemma l9_2 : forall A B P Q, TS A B P Q -> TS A B Q P.
 Proof.
     unfold TS.
@@ -1596,7 +1606,18 @@ Proof.
     subst T;Between.
 Qed.
 
-Definition OS A B X Y := exists Z, TS A B X Z /\ TS A B Y Z.
+Definition OS A B P Q := exists R, TS A B P R /\ TS A B Q R.
+
+Lemma os_distincts : forall A B X Y, OS A B X Y ->
+  A <> B /\ A <> X /\ A <> Y /\ B <> X /\ B <> Y.
+Proof.
+  intros A B P Q HOS.
+  destruct HOS as [Z [HTS1 HTS2]].
+  apply ts_distincts in HTS1.
+  apply ts_distincts in HTS2.
+  spliter.
+  repeat split; auto.
+Qed.
 
 Lemma invert_one_side : forall A B P Q,
  OS A B P Q -> OS B A P Q.
@@ -2288,7 +2309,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma one_side_not_col :
+Lemma one_side_not_col123 :
  forall A B X Y,
   OS A B X Y ->
   ~ Col A B X.
@@ -2302,6 +2323,16 @@ Proof.
     apply H.
     apply col_permutation_2.
     assumption.
+Qed.
+
+Lemma one_side_not_col124 :
+ forall A B X Y,
+  OS A B X Y ->
+  ~ Col A B Y.
+Proof.
+  intros A B X Y HOS.
+  apply one_side_not_col123 with X.
+  apply one_side_symmetry, HOS.
 Qed.
 
 Lemma col_two_sides : forall A B C P Q,
@@ -2377,14 +2408,14 @@ Proof.
         unfold TS.
         repeat split.
           apply one_side_symmetry in H.
-          eapply one_side_not_col in H.
+          eapply one_side_not_col123 in H.
           intro.
           apply H.
           apply col_permutation_1.
           assumption.
           intro.
           apply one_side_symmetry in H.
-          eapply one_side_not_col in H.
+          eapply one_side_not_col123 in H.
           apply H.
           assert(Col A B Y).
             eapply (col_transitivity_1 _ Y').
@@ -2410,7 +2441,7 @@ Proof.
       repeat split.
         intro.
         apply one_side_symmetry in H.
-        eapply one_side_not_col in H.
+        eapply one_side_not_col123 in H.
         apply H.
         eapply (col_transitivity_1 _ Z).
           intro.
@@ -2424,7 +2455,7 @@ Proof.
         apply col_permutation_5.
         assumption.
         apply one_side_symmetry in H.
-        eapply one_side_not_col in H.
+        eapply one_side_not_col123 in H.
         intro.
         apply H.
         eapply (col_transitivity_1 _ Y').
@@ -2574,11 +2605,6 @@ Proof.
         intro.
         subst T.
         contradiction.
-        intro.
-        subst Z'.
-        apply between_identity in H13.
-        subst T.
-        contradiction.
       assumption.
     unfold Col in H12.
     induction H12.
@@ -2605,15 +2631,6 @@ Proof.
           intro.
           subst T.
           apply H11.
-          apply bet_col.
-          assumption.
-          intro.
-          subst Z'.
-          assert(Y = T).
-            apply between_identity.
-            assumption.
-          subst T.
-          apply H3.
           apply bet_col.
           assumption.
         apply between_symmetry.
@@ -2726,7 +2743,7 @@ Lemma col123__nos : forall A B P Q, Col P Q A -> ~ OS P Q A B.
 Proof.
   intros A B P Q HCol.
   intro HOne.
-  assert (~ Col P Q A) by (apply (one_side_not_col P Q A B); auto).
+  assert (~ Col P Q A) by (apply (one_side_not_col123 P Q A B); auto).
   auto.
 Qed.
 
@@ -3001,7 +3018,7 @@ Proof.
   - apply invert_one_side.
     apply one_side_symmetry.
     apply one_side_symmetry in Hos.
-    apply one_side_not_col in Hos.
+    apply one_side_not_col123 in Hos.
     apply out_one_side; Col.
     apply bet_out; Between; intro; subst Z; Col.
 
@@ -3011,7 +3028,7 @@ Proof.
     apply one_side_symmetry in Hos.
     apply (one_side_transitivity _ _ _ Z); auto.
     apply invert_one_side.
-    apply one_side_not_col in Hos.
+    apply one_side_not_col123 in Hos.
     apply out_one_side; Col.
     apply bet_out; auto; intro; subst X; Col.
 Qed.
@@ -3026,6 +3043,54 @@ Proof.
   assert_diffs.
   apply invert_two_sides, col_two_sides with D; Col.
   intro; subst X; auto.
+Qed.
+
+Lemma out_one_side_1 :
+ forall A B C D X,
+ ~ Col A B C -> Col A B X -> Out X C D ->
+ OS A B C D.
+Proof.
+    intros.
+    induction (eq_dec_points C D).
+      subst D.
+      apply one_side_reflexivity.
+      intro.
+      apply H.
+      Col.
+    prolong C X C' C X.
+    exists C'.
+    assert(TS A B C C').
+      unfold TS.
+      repeat split.
+        intro.
+        apply H.
+        Col.
+        intro.
+        assert(C'=X).
+          eapply (l6_21 A B C D).
+            assumption.
+            assumption.
+            Col.
+            assumption.
+            apply out_col in H1.
+            eapply (col_transitivity_1 _ X).
+              intro.
+              treat_equalities.
+              Col5.
+              Col.
+            Col.
+            Col.
+        treat_equalities.
+        unfold Out in H1.
+        tauto.
+      exists X.
+      split; Col.
+    assert(TS A B D C').
+      eapply (l9_5 _ _ _ _ X).
+        apply H5.
+        Col.
+      assumption.
+    split; assumption.
 Qed.
 
 End T9.

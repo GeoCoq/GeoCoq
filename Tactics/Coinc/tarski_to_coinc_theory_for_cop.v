@@ -62,9 +62,21 @@ destruct HCop as [HCop1 [HCop2 [HCop3 HCop4]]].
 apply coplanar_pseudo_trans with (fst NOT_COL) (fst (snd NOT_COL)) (snd (snd NOT_COL)); Cop.
 Qed.
 
-Global Instance Tarski_is_a_Coinc_theory_for_cop : (Coinc_theory (Build_Arity Tpoint 1) (Build_Coinc_predicates (Build_Arity Tpoint 1) not_col cop)).
+Global Instance Tarski_is_a_Arity_for_cop : Arity.
+Proof. exact (Build_Arity Tpoint 1). Defined.
+
+Global Instance Tarski_is_a_Coinc_predicates_for_cop :
+  (Coinc_predicates Tarski_is_a_Arity_for_cop).
 Proof.
-exact (Build_Coinc_theory (Build_Arity Tpoint 1) (Build_Coinc_predicates (Build_Arity Tpoint 1) not_col cop) not_col_perm_1 not_col_perm_2 cop_perm_1 cop_perm_2 cop_bd cop_3).
-Qed.
+exact (Build_Coinc_predicates Tarski_is_a_Arity_for_cop not_col cop).
+Defined.
+
+Global Instance Tarski_is_a_Coinc_theory_for_cop :   (Coinc_theory Tarski_is_a_Arity_for_cop Tarski_is_a_Coinc_predicates_for_cop).
+Proof.
+exact (Build_Coinc_theory Tarski_is_a_Arity_for_cop
+                          Tarski_is_a_Coinc_predicates_for_cop
+                          not_col_perm_1 not_col_perm_2 cop_perm_1 cop_perm_2
+                          cop_bd cop_3).
+Defined.
 
 End Tarski_is_a_Coinc_theory_for_cop.

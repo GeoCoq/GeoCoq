@@ -4,10 +4,13 @@ Section triangle_playfair_bis.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma legendre_aux1 : greenberg_s_postulate -> triangle_postulate ->
-   forall A1 A2 B1 B2 C1 C2 P, Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
-   Par A1 A2 C1 C2 -> Col P C1 C2 -> ~ TS B1 B2 A1 C1 ->
-   Col C1 B1 B2.
+Lemma legendre_aux1 :
+  greenberg_s_axiom ->
+  triangle_postulate ->
+  forall A1 A2 B1 B2 C1 C2 P,
+    Perp2 A1 A2 B1 B2 P -> Col P B1 B2 ->
+    Par A1 A2 C1 C2 -> Col P C1 C2 -> ~ TS B1 B2 A1 C1 ->
+    Col C1 B1 B2.
 Proof.
   intros greenberg triangle.
   intros A1 A2 B1 B2 C1 C2 P HPerp2 HPB HParAC HPC HNts.
@@ -55,7 +58,7 @@ Proof.
       apply (par_strict_not_col_2 A2); Par.
   }
   assert(~ Col Q C1 P) by (apply (par_not_col A1 A2); auto; apply (par_strict_col_par_strict _ _ _ C2); Col).
-  assert(~ Col B1 B2 Q) by (apply (one_side_not_col _ _ _ C1); auto).
+  assert(~ Col B1 B2 Q) by (apply (one_side_not_col123 _ _ _ C1); auto).
 
   assert(HB3 : exists B3, Col B1 B2 B3 /\ OS P Q C1 B3).
   { elim(Col_dec P Q B1).
@@ -69,7 +72,7 @@ Proof.
   destruct HB3 as [B3 []].
   assert(HB4 := symmetric_point_construction B3 P).
   destruct HB4 as [B4].
-  assert(~ Col P Q B3) by (apply (one_side_not_col _ _ _ C1); Side).
+  assert(~ Col P Q B3) by (apply (one_side_not_col123 _ _ _ C1); Side).
   assert(HA3 : exists A3, Col A1 A2 A3 /\ OS P Q C1 A3).
   { elim(Col_dec P Q A1).
     2: intro; apply (not_par_same_side _ _ _ _ Q); Col.
@@ -80,7 +83,7 @@ Proof.
     exists A3; split; Col.
   }
   destruct HA3 as [A3 []].
-  assert(~ Col P Q A3) by (apply (one_side_not_col _ _ _ C1); Side).
+  assert(~ Col P Q A3) by (apply (one_side_not_col123 _ _ _ C1); Side).
   assert_diffs.
   assert(HInAngle : InAngle C1 Q P B3).
     apply os2__inangle; Side; apply (col2_os__os B1 B2); Col.
@@ -191,9 +194,12 @@ Proof.
   apply (triangle R Q P); auto.
 Qed.
 
-Lemma legendre_aux2 : greenberg_s_postulate -> triangle_postulate -> forall A1 A2 B1 B2 C1 C2 P,
-   Perp2 A1 A2 B1 B2 P -> Col P B1 B2 -> Par A1 A2 C1 C2 -> Col P C1 C2 ->
-   Col C1 B1 B2. (* "half" of playfair_bis *)
+Lemma legendre_aux2 :
+  greenberg_s_axiom ->
+  triangle_postulate ->
+  forall A1 A2 B1 B2 C1 C2 P,
+    Perp2 A1 A2 B1 B2 P -> Col P B1 B2 -> Par A1 A2 C1 C2 -> Col P C1 C2 ->
+    Col C1 B1 B2. (* "half" of playfair_bis *)
 Proof.
   intros greenberg triangle.
   intros A1 A2 B1 B2 C1 C2 P HPerp2 HPB HParAC HPC.
@@ -231,7 +237,10 @@ Proof.
   apply (legendre_aux1 greenberg triangle A1 A2 _ _ _ C2 P); auto.
 Qed.
 
-Lemma triangle__playfair_bis : greenberg_s_postulate -> triangle_postulate -> alternative_playfair_s_postulate.
+Lemma triangle__playfair_bis :
+  greenberg_s_axiom ->
+  triangle_postulate ->
+  alternative_playfair_s_postulate.
 Proof.
   intros greenberg triangle.
   intros A1 A2 B1 B2 C1 C2 P.

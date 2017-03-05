@@ -11,12 +11,14 @@ Inductive Grad : Tpoint -> Tpoint -> Tpoint -> Prop :=
 
 Definition Reach A B C D := exists B', Grad A B B' /\ Le C D A B'.
 
-Definition archimedes_postulate := forall A B C D, A <> B -> Reach A B C D.
+Definition archimedes_axiom := forall A B C D, A <> B -> Reach A B C D.
 
 (** There exists n such that AC = n times AB and DF = n times DE *)
-Inductive Grad2 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop :=
+Inductive Grad2 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint ->
+                  Prop :=
   | grad2_init : forall A B D E, Grad2 A B B D E E
-  | grad2_stab : forall A B C C' D E F F', Grad2 A B C D E F ->
+  | grad2_stab : forall A B C C' D E F F',
+                   Grad2 A B C D E F ->
                    Bet A C C' -> Cong A B C C' ->
                    Bet D F F' -> Cong D E F F' ->
                    Grad2 A B C' D E F'.
@@ -24,14 +26,19 @@ Inductive Grad2 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Pr
 (** Graduation based on the powers of 2 *)
 Inductive GradExp : Tpoint -> Tpoint -> Tpoint -> Prop :=
   | gradexp_init : forall A B, GradExp A B B
-  | gradexp_stab : forall A B C C', GradExp A B C -> Bet A C C' -> Cong A C C C' -> GradExp A B C'.
+  | gradexp_stab : forall A B C C',
+                     GradExp A B C ->
+                     Bet A C C' -> Cong A C C C' ->
+                     GradExp A B C'.
 
-Inductive GradExp2 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop :=
+Inductive GradExp2 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint -> Tpoint ->
+                     Prop :=
   | gradexp2_init : forall A B D E, GradExp2 A B B D E E
-  | gradexp2_stab : forall A B C C' D E F F', GradExp2 A B C D E F ->
-                   Bet A C C' -> Cong A C C C' ->
-                   Bet D F F' -> Cong D F F F' ->
-                   GradExp2 A B C' D E F'.
+  | gradexp2_stab : forall A B C C' D E F F',
+                      GradExp2 A B C D E F ->
+                      Bet A C C' -> Cong A C C C' ->
+                      Bet D F F' -> Cong D F F F' ->
+                      GradExp2 A B C' D E F'.
 
 
 Lemma grad__bet : forall A B C, Grad A B C -> Bet A B C.
@@ -97,7 +104,8 @@ Proof.
     apply (grad_stab _ _ F); auto.
 Qed.
 
-Lemma grad_sum : forall A B C D E, Grad A B C -> Grad A B D -> Bet A C E -> Cong A D C E ->
+Lemma grad_sum : forall A B C D E,
+  Grad A B C -> Grad A B D -> Bet A C E -> Cong A D C E ->
   Grad A B E.
 Proof.
   intros A B C D E HGC HGD.
@@ -134,14 +142,18 @@ Proof.
   apply grad_sum with C C; auto.
 Qed.
 
-Lemma gradexp_le__reach : forall A B C D B', GradExp A B B' -> Le C D A B' -> Reach A B C D.
+Lemma gradexp_le__reach : forall A B C D B',
+  GradExp A B B' -> Le C D A B' ->
+  Reach A B C D.
 Proof.
   intros A B C D B' HGE HLe.
   exists B'; split; trivial.
   apply gradexp__grad; trivial.
 Qed.
 
-Lemma grad__ex_gradexp_le : forall A B C, Grad A B C -> exists D, GradExp A B D /\ Le A C A D.
+Lemma grad__ex_gradexp_le : forall A B C,
+  Grad A B C ->
+  exists D, GradExp A B D /\ Le A C A D.
 Proof.
   intros A B C.
   induction 1.
@@ -165,7 +177,9 @@ Proof.
   apply le_transitivity with A B0; trivial.
 Qed.
 
-Lemma gradexp2__gradexp123 : forall A B C D E F, GradExp2 A B C D E F -> GradExp A B C.
+Lemma gradexp2__gradexp123 : forall A B C D E F,
+  GradExp2 A B C D E F ->
+  GradExp A B C.
 Proof.
   intros A B C D E F.
   induction 1.
@@ -173,7 +187,9 @@ Proof.
   apply (gradexp_stab _ _ C); auto.
 Qed.
 
-Lemma gradexp2__gradexp456 : forall A B C D E F, GradExp2 A B C D E F -> GradExp D E F.
+Lemma gradexp2__gradexp456 : forall A B C D E F,
+  GradExp2 A B C D E F ->
+  GradExp D E F.
 Proof.
   intros A B C D E F.
   induction 1.
@@ -289,8 +305,9 @@ Proof.
   apply (bet2_le2__le1346 _ B _ _ E); Le.
 Qed.
 
-Lemma t22_18 : archimedes_postulate ->
- forall A0 B0 B1 A1, Saccheri A0 B0 B1 A1 -> ~ Lt B0 B1 A1 A0.
+Lemma t22_18 :
+  archimedes_axiom ->
+  forall A0 B0 B1 A1, Saccheri A0 B0 B1 A1 -> ~ Lt B0 B1 A1 A0.
 Proof.
   intros Harchi A0 B0 B1 A1 HSac.
   intro Hlt.
@@ -332,7 +349,7 @@ Proof.
       apply (bet2_le2__le1245 _ _ A _ _ A); Between; Le.
       apply (cong_preserves_le B0 B B0 E); Cong.
     clear dependent D; clear dependent E.
-    destruct (l6_11_existence A0 A0 B0 A) as [B0' [HOut2 Hcong4]]; 
+    destruct (l6_11_existence A0 A0 B0 A) as [B0' [HOut2 Hcong4]];
       try (assert_diffs; intro; treat_equalities; auto).
     destruct (segment_construction A0 B0' B0 B) as [B' [Hbet7 Hcong7]].
     destruct (segment_construction B0' B' B A) as [A' [Hbet8 Hcong8]].
@@ -378,7 +395,7 @@ Proof.
       intro; assert (D1 = A0) by (apply (between_cong C); Between; Cong); treat_equalities; Cong.
     apply (l2_11 _ C0 _ _ B0'); eBetween; eCong.
   }
-  unfold archimedes_postulate in *.
+  unfold archimedes_axiom in *.
   specialize Harchi with A0 D1 A0 C.
   destruct Harchi as [D [HG Hle]].
     intro; treat_equalities; auto.
@@ -388,7 +405,9 @@ Proof.
   apply (le__nlt A0 C A0 D); auto.
 Qed.
 
-Lemma t22_19 : archimedes_postulate -> forall A B C D, Saccheri A B C D -> ~ Obtuse A B C.
+Lemma t22_19 :
+  archimedes_axiom ->
+  forall A B C D, Saccheri A B C D -> ~ Obtuse A B C.
 Proof.
   intros archi A B C D HSac HObt.
   assert (H := t22_18 archi _ _ _ _ (sac_perm _ _ _ _ HSac)).
@@ -396,7 +415,9 @@ Proof.
   apply lt_left_comm, obtuse_sac__lt; auto.
 Qed.
 
-Lemma archi__obtuse_case_elimination : archimedes_postulate -> ~ hypothesis_of_obtuse_saccheri_quadrilaterals.
+Lemma archi__obtuse_case_elimination :
+  archimedes_axiom ->
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals.
 Proof.
   intros archi obtuse.
   destruct ex_saccheri as [A [B [C [D HSac]]]].
@@ -405,7 +426,8 @@ Proof.
     apply obtuse with D; trivial.
 Qed.
 
-Lemma archi__acute_or_right : archimedes_postulate ->
+Lemma archi__acute_or_right :
+  archimedes_axiom ->
   hypothesis_of_acute_saccheri_quadrilaterals \/ hypothesis_of_right_saccheri_quadrilaterals.
 Proof.
   intros archi.
@@ -413,9 +435,11 @@ Proof.
   exfalso; apply archi__obtuse_case_elimination in archi; auto.
 Qed.
 
-
-Lemma t22_23_aux : forall A B C M N L, ~ Col A M N -> Per B C A -> A <> C -> Midpoint M A B ->
-  Per M N A -> Col A C N -> Midpoint M N L -> Bet A N C /\ Lambert N L B C /\ Cong B L A N.
+Lemma t22_23_aux :
+  forall A B C M N L,
+    ~ Col A M N -> Per B C A -> A <> C -> Midpoint M A B ->
+    Per M N A -> Col A C N ->
+    Midpoint M N L -> Bet A N C /\ Lambert N L B C /\ Cong B L A N.
 Proof.
   intros A B C M N L HNCol HPerC HAC HM HPerN HColN HN.
   assert_diffs.
@@ -436,10 +460,12 @@ Proof.
     apply bet_out; Between.
 Qed.
 
-Lemma t22_23 : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
-  forall A B C M N L, ~ Col A M N -> Per B C A -> A <> C -> Midpoint M A B ->
-  Per M N A -> Col A C N -> Midpoint M N L ->
-  Bet A N C /\ Le N C A N /\ Le L N B C.
+Lemma t22_23 :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B C M N L,
+    ~ Col A M N -> Per B C A -> A <> C -> Midpoint M A B ->
+    Per M N A -> Col A C N -> Midpoint M N L ->
+    Bet A N C /\ Le N C A N /\ Le L N B C.
 Proof.
   intros HNob A B C M N L HNCol HPerC HAC HM HPerN HColN HN.
   destruct (t22_23_aux A B C M N L) as [HBet [HLam HCong]]; auto.
@@ -458,10 +484,12 @@ Qed.
 
 (** for every n, 2^n times B0C0 is lower than or equal to BnCn *)
 (** B0 is introduced twice for the induction tactic to work properly *)
-Lemma t22_24_aux : ~ hypothesis_of_obtuse_saccheri_quadrilaterals -> forall A B0 B00 C0 B C E, 
-  ~ Col A B0 C0 -> Perp A C0 B0 C0 -> B0 = B00 ->
-  GradExp2 A B0 B B00 C0 E -> Perp A C0 B C -> Col A C0 C ->
-  Le B0 E B C.
+Lemma t22_24_aux :
+  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
+  forall A B0 B00 C0 B C E,
+    ~ Col A B0 C0 -> Perp A C0 B0 C0 -> B0 = B00 ->
+    GradExp2 A B0 B B00 C0 E -> Perp A C0 B C -> Col A C0 C ->
+    Le B0 E B C.
 Proof.
   intros HNob A B0 B00 C0 B C E HNCol HPerp0 Heq HGE.
   revert C.
@@ -495,8 +523,9 @@ Proof.
   - ColR.
 Qed.
 
-(** for every n, it is possible to get Bn and Cn *) 
-Lemma t22_24_aux1 : forall A B0 C0 E, ~ Col A B0 C0 -> Perp A C0 B0 C0 -> GradExp B0 C0 E ->
+(** for every n, it is possible to get Bn and Cn *)
+Lemma t22_24_aux1 : forall A B0 C0 E,
+  ~ Col A B0 C0 -> Perp A C0 B0 C0 -> GradExp B0 C0 E ->
   exists B C, GradExp2 A B0 B B0 C0 E /\ Perp A C0 B C /\ Col A C0 C.
 Proof.
   intros A B0 C0 E HNCol HPerp0 HGE.
@@ -511,7 +540,7 @@ Proof.
   exists C'; repeat (split; trivial); apply gradexp2_stab with B E; Cong.
 Qed.
 
-Lemma t22_24 : archimedes_postulate -> aristotle_s_postulate.
+Lemma t22_24 : archimedes_axiom -> aristotle_s_axiom.
 Proof.
   intros Harchi P Q D A B0 HNCol HACute0.
   destruct (l8_18_existence A D B0) as [C0 [HColD HPerpD]]; Col.

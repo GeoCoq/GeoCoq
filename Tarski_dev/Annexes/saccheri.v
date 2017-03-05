@@ -28,8 +28,8 @@ Proof.
   intros A B C D HSac.
   unfold Saccheri in HSac.
   spliter.
-  assert(~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
-  assert(~ Col A D C) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
+  assert(~ Col A D C) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   repeat split; auto.
   intro; treat_equalities.
@@ -82,8 +82,8 @@ Lemma per2_os__ncol123 : forall A B C D, Per B A D -> Per A D C -> OS A D B C ->
    ~ Col A B C.
 Proof.
   intros A B C D HPer1 HPer2 Hos.
-  assert(~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
-  assert(~ Col A D C) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
+  assert(~ Col A D C) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   apply (par_strict_not_col_1 _ _ _ D).
   apply (par_not_col_strict _ _ _ _ D); Col.
@@ -96,8 +96,8 @@ Lemma per2_os__ncol234 : forall A B C D,
   ~ Col B C D.
 Proof.
   intros A B C D HPer1 HPer2 Hos.
-  assert(~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
-  assert(~ Col A D C) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
+  assert(~ Col A D C) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   apply (par_strict_not_col_2 A).
   apply (par_not_col_strict _ _ _ _ D); Col.
@@ -118,7 +118,7 @@ Proof.
   unfold Saccheri in HSac.
   spliter.
   apply not_col_permutation_1.
-  apply (one_side_not_col _ _ _ C); Side.
+  apply (one_side_not_col123 _ _ _ C); Side.
 Qed.
 
 Lemma sac__ncol134 : forall A B C D, Saccheri A B C D -> ~ Col A C D.
@@ -127,7 +127,7 @@ Proof.
   unfold Saccheri in HSac.
   spliter.
   apply not_col_permutation_1.
-  apply (one_side_not_col _ _ _ B); Side.
+  apply (one_side_not_col123 _ _ _ B); Side.
 Qed.
 
 Lemma sac__ncol234 : forall A B C D, Saccheri A B C D -> ~ Col B C D.
@@ -150,8 +150,8 @@ Proof.
   apply lt_right_comm in Hlt.
   destruct Hlt as [[E []] HNCong].
   assert(E<>C) by (intro; subst; auto).
-  assert(~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
-  assert(~ Col A D C) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
+  assert(~ Col A D C) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   assert(HNCol1 :=  per2_os__ncol123 A B C D HPer1 HPer2 Hos).
   assert(HNCol2 :=  per2_os__ncol234 A B C D HPer1 HPer2 Hos).
@@ -344,7 +344,7 @@ Proof.
   spliter.
   assert_diffs.
   apply (par_not_col_strict _ _ _ _ C); Col.
-  2: apply (one_side_not_col _ _ _ B); Side.
+  2: apply (one_side_not_col123 _ _ _ B); Side.
   apply (l12_9 _ _ _ _ M N); auto.
 Qed.
 
@@ -626,7 +626,7 @@ Proof.
   assert(HSac' := HSac).
   destruct HSac'.
   spliter.
-  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
+  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
   assert(HNCol2 : ~ Col B C D) by (apply (per2_os__ncol234 A); auto).
   assert_diffs.
   assert(Q <> D).
@@ -688,11 +688,11 @@ Proof.
   assert(HSac' := HSac).
   destruct HSac'.
   spliter.
-  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
+  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
   assert(HNCol2 : ~ Col A B C) by (apply (per2_os__ncol123 _ _ _ D); auto).
   assert_diffs.
   assert(OS A Q B P) by (apply (col_one_side _ D); Col; apply (l9_17 _ _ C); auto).
-  assert(HNCol3 : ~ Col A Q P) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(HNCol3 : ~ Col A Q P) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert(HNCol4 : ~ Col B P Q).
   { apply (per2_os__ncol234 A); auto.
     apply (per_col _ _ D); Col.
@@ -769,10 +769,10 @@ Proof.
   assert(HSac' := HSac).
   destruct HSac'.
   spliter.
-  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col _ _ _ C); auto).
+  assert(HNCol1 : ~ Col A D B) by (apply (one_side_not_col123 _ _ _ C); auto).
   assert(HNCol2 : ~ Col A B C) by (apply (per2_os__ncol123 _ _ _ D); auto).
   assert(OS A Q B P) by (apply (col_one_side _ D); Col; apply (l9_17 _ _ C); auto).
-  assert(HNCol3 : ~ Col A Q P) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(HNCol3 : ~ Col A Q P) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   assert(Q <> D).
   { intro.
@@ -1092,7 +1092,7 @@ Proof.
     apply l12_6.
     apply (par_strict_col_par_strict _ _ _ C); Col.
   }
-  assert(HNCol1 : ~ Col A S R) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(HNCol1 : ~ Col A S R) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert(HI := l5_5_1 S R A B).
   destruct HI as [I []].
     destruct Hlt; Le.
@@ -1644,7 +1644,7 @@ Proof.
     apply (one_side_transitivity _ _ _ G0); auto.
     apply(l9_19 _ _ _ _ H); assert_cols; Col.
     split; auto.
-    apply (one_side_not_col _ _ _ C); Side.
+    apply (one_side_not_col123 _ _ _ C); Side.
   }
   assert(Perp A D H G) by (assert_cols; apply (perp_col1 _ _ _ G0); Perp; Col).
   clear dependent G0.
@@ -1657,7 +1657,7 @@ Proof.
   assert (HNCol3 : ~ Col M N G).
   { unfold Lambert in HLam1.
     spliter.
-    apply (one_side_not_col _ _ _ H).
+    apply (one_side_not_col123 _ _ _ H).
     apply l12_6.
     apply (par_not_col_strict _ _ _ _ H); Col.
     apply (l12_9 _ _ _ _ A D); auto.
@@ -1992,7 +1992,7 @@ Proof.
   intros A B D HPer HAB HBD.
   assert (HNCol : ~ Col B A D) by (apply per_not_col; auto).
   destruct (l10_15 A D D B) as [C0 []]; Col.
-  assert(~ Col A D C0) by (apply (one_side_not_col _ _ _ B); Side).
+  assert(~ Col A D C0) by (apply (one_side_not_col123 _ _ _ B); Side).
   assert_diffs.
   destruct (segment_construction_3 D C0 A B) as [C []]; auto.
   exists C.
@@ -2006,7 +2006,7 @@ Proof.
   destruct lower_dim_ex as [A [D [E]]].
   assert(HNCol : ~ Col A D E) by (unfold Col; assumption).
   destruct (l10_15 A D A E) as [B []]; Col.
-  assert(~ Col A D B) by (apply (one_side_not_col _ _ _ E); Side).
+  assert(~ Col A D B) by (apply (one_side_not_col123 _ _ _ E); Side).
   assert_diffs.
   destruct (per__ex_saccheri A B D) as [C HSac]; Perp.
   exists A; exists B; exists C; exists D; trivial.

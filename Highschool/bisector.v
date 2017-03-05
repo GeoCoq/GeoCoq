@@ -94,13 +94,11 @@ assert (CongA A B I I B C).
   apply (l6_6 B A C').
   apply (bet_out B A C').
   intuition.
-  intuition.
   assumption.
   apply (out_trivial B I);auto.
   apply (out_trivial B I);auto.
   apply (l6_6 B C A').
   apply (bet_out B C A').
-  intuition.
   intuition.
   assumption.
 }
@@ -122,7 +120,7 @@ split.
 apply (Bet_cases A x2 C).
 right;auto.
 right.
-apply (bet_out B x2 I);auto.
+apply (bet_out B x2 I).
 intro.
 elim HNCOL;ColR.
 bet.

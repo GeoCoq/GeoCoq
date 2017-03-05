@@ -5,24 +5,24 @@ Section T_42.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-Lemma midpoint_thales : forall o a b c : Tpoint,
-   ~ Col a b c ->
-   Midpoint o a b ->
-   Cong o a o c ->
-   Per a c b.
+Lemma midpoint_thales : forall O A B C : Tpoint,
+   ~ Col A B C ->
+   Midpoint O A B ->
+   Cong O A O C ->
+   Per A C B.
 Proof.
 intros.
-Name x the midpoint of c and a.
-assert (Par_strict o x b c)
- by perm_apply (triangle_mid_par_strict_cong_simp c b a o x).
-assert(Per o x a)
- by (exists c;split;finish).
+Name X the midpoint of C and A.
+assert (Par_strict O X B C)
+ by perm_apply (triangle_mid_par_strict_cong_simp C B A O X).
+assert(Per O X A)
+ by (exists C;split;finish).
 assert_diffs.
 assert_cols.
-assert(Hid2 : Perp o x c a)
- by perm_apply (col_per_perp o x a c).
-assert (Perp b c c a).
- apply (par_perp_perp o x b c c a);finish.
+assert(Hid2 : Perp O X C A)
+ by perm_apply (col_per_perp O X A C).
+assert (Perp B C C A).
+ apply (par_perp_perp O X B C C A);finish.
 apply perp_per_1;Perp.
 Qed.
 
