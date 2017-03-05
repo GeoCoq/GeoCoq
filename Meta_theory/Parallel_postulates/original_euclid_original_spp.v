@@ -34,8 +34,8 @@ Proof.
   assert(HY := oe A' B C D' P' Q' R').
   destruct HY as [Y []]; SumA.
   3: exists Y; split; ColR.
-  { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
-    assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
+  { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
+    assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col123 _ _ _ A); Side).
     exists D.
     split.
     apply l9_2; apply (l9_8_2 _ _ A); auto.
@@ -54,7 +54,7 @@ Proof.
   apply suma_sym.
   apply (conga3_suma__suma A' B C B C D' P' Q' R'); auto.
   3: apply conga_refl; auto.
-  - assert(HNCol : ~ Col B C D) by (apply (one_side_not_col _ _ _ A); Side).
+  - assert(HNCol : ~ Col B C D) by (apply (one_side_not_col123 _ _ _ A); Side).
     assert(TS C B D D').
     { repeat split; Col.
       intro; apply HNCol; ColR.
@@ -76,7 +76,7 @@ Proof.
     apply l9_9; auto.
     apply conga_line; Between.
 
-  - assert(HNCol : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
+  - assert(HNCol : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
     assert(TS B C A A').
     { repeat split; Col.
       intro; apply HNCol; ColR.

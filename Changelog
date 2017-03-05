@@ -1,3 +1,14 @@
+Release 2.3.0
+==========================
+	- Add files grouping Euclid's Elements Propositions for which we have a proof: Book I Prop 1-34 (except I 22) and 46-47, Book III Prop 2-6 11-12 18
+	- Add definition of elementary continuity properties: segment-circle, line-circle, circle-circle continuity properties.
+	- Proof of the equivalence between different variants of circle-circle continuity.
+	- Proof of the equivalence between different variants of line-circle, and segment-circle continuity.
+	- Proof that line-circle continuity can be derived from circle-circle continuity.
+	- Add 4 new versions of the parallel postulate and the equivalence proofs.
+	- Add definitions of predicate to express that a point is inside, on and outside a circle, and associated lemmas.
+	- Add some properties about tangency.
+
 Release 2.2.1
 ==========================
 	- Add compatibility with Coq 8.6.

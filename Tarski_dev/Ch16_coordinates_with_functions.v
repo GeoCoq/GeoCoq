@@ -42,8 +42,14 @@ Section T17.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-Variable O E E' : Tpoint.
-Variable ncolOEE' : ~ Col O E E'.
+Definition O := PA.
+Definition E := PB.
+Definition E' := PC.
+
+Lemma ncolOEE' : ~ Col O E E'.
+Proof.
+exact lower_dim.
+Qed.
 
 Lemma sum_col: forall A B C, Sum O E E' A B C -> Col O E C.
 Proof. intros; unfold Sum, Ar2 in *; spliter; Col. Qed.
@@ -52,16 +58,20 @@ Lemma sum_f : forall A B, Col O E A -> Col O E B -> {C | Sum O E E' A B C}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply sum_exists; auto|unfold uniqueness; apply sum_uniqueness].
+apply ncolOEE'.
 Qed.
 
 Lemma prod_col: forall A B C, Prod O E E' A B C -> Col O E C.
-Proof. intros;  unfold Prod, Ar2 in *; spliter; Col. Qed.
+Proof.
+ intros;  unfold Prod, Ar2 in *; spliter; Col.
+Qed.
 
 Lemma prod_f : forall A B, Col O E A -> Col O E B -> {C | Prod O E E' A B C}.
 Proof.
 intros.
 apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply prod_exists; auto|unfold uniqueness; apply prod_uniqueness].
+apply ncolOEE'.
 Qed.
 
 Lemma diff_col: forall A B C, Diff O E E' A B C -> Col O E C.
@@ -73,19 +83,25 @@ Lemma diff_f : forall A B, Col O E A -> Col O E B -> {C | Diff O E E' A B C}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply diff_exists; auto|unfold uniqueness; apply diff_uniqueness].
+apply ncolOEE'.
 Qed.
 
 Lemma opp_col : forall A B, Opp O E E' A B -> Col O E B.
-Proof. intros; unfold Opp, Sum, Ar2 in *; spliter; Col. Qed.
+Proof.
+intros; unfold Opp, Sum, Ar2 in *; spliter; Col.
+Qed.
 
 Lemma opp_f : forall A, Col O E A -> {B | Opp O E E' A B}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
 split; [apply opp_exists|unfold uniqueness; apply opp_uniqueness]; auto.
+apply ncolOEE'.
+apply ncolOEE'.
 Qed.
 
 
 Lemma opp_pythrel : forall O E E' A B C C' , Opp O E E' C C' -> PythRel O E E' A B C -> PythRel O E E' A B C'.
+Proof.
 intros.
 
 unfold PythRel in *.
@@ -135,6 +151,7 @@ Qed.
 
 
 Lemma pythrel_null : forall O E E' A B, PythRel O E E' A B O -> A = O /\ B = O.
+Proof.
 intros.
 unfold PythRel in H.
 spliter.
@@ -261,7 +278,7 @@ subst C'.
 apply cong_identity in H5.
 contradiction.
 intro.
-subst E.
+rewrite H6 in *.
 apply H1;Col.
 apply not_out_bet in H2.
 apply(l5_2 C O C' E H3 H4); bet. 
@@ -315,12 +332,14 @@ Lemma inv_exists_with_notation : forall A,
 Proof.
 intros; induction (eq_dec_points A O); [subst; exists O; right; auto|].
 destruct (inv_exists O E E' A) as [IA HIA]; try (exists IA; left); auto.
+apply ncolOEE'.
 Qed.
 
 Lemma inv_col : forall A B, inv O E E' A B -> Col O E B.
 Proof.
 intros A B H; elim (eq_dec_points A O); intro HNEq;
-[induction H; spliter; [subst; intuition|treat_equalities; Col]|].
+[induction H; spliter;[subst; intuition|treat_equalities; Col]|].
+try (subst;Col).
 elim H; clear H; intro H; [clear HNEq|spliter; subst; intuition].
 destruct H as [IA [HNEq HIA]]; unfold Ar2 in *; spliter; Col.
 Qed.
@@ -330,6 +349,7 @@ Lemma inv_uniqueness : forall A B1 B2,
 Proof.
 intros A B1 B2 HB1 HB2; elim (eq_dec_points A O); intro HNEq;
 [induction HB1; induction HB2; spliter; treat_equalities; intuition|].
+subst;auto.
 elim HB1; clear HB1; intro HB1; [clear HNEq|spliter; subst; intuition].
 elim HB2; clear HB2; intro HB2; [|spliter; subst; intuition].
 destruct HB1 as [HNEq HB1]; destruct HB2 as [H HB2]; clear H.
@@ -372,6 +392,7 @@ Qed.
 Lemma div_f : forall A B, Col O E A -> Col O E B -> {C | div O E E' A B C}.
 Proof.
 intros; apply constructive_definite_description; rewrite <- unique_existence.
+
 split; [apply div_exists|unfold uniqueness; apply div_uniqueness]; auto.
 Qed.
 
@@ -381,8 +402,7 @@ Section T18.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-Variable O E E' SS U1 U2 : Tpoint.
-Variable ncolOEE' : ~ Col O E E'.
+Variable SS U1 U2 : Tpoint.
 Variable orthonormal_grid : Cs O E SS U1 U2.
 
 Definition F : Type := {P : Tpoint | Col O E P}.
@@ -463,10 +483,10 @@ Proof. exists E; Col. Defined.
 
 Definition AddF (x y : F) : F.
 Proof.
-destruct (sum_f O E E' ncolOEE'
+destruct (sum_f
                 (proj1_sig x) (proj1_sig y)
                 (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
-apply (sum_col O E E' (proj1_sig x) (proj1_sig y) P HP).
+apply (sum_col (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
 Definition TwoF := AddF OneF OneF.
@@ -476,26 +496,28 @@ Proof.
 unfold Proper, respectful, EqF, AddF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
-destruct (sum_f O E E' ncolOEE' x x' Hx Hx').
-destruct (sum_f O E E' ncolOEE' y y' Hy Hy'); simpl.
+destruct (sum_f x x' Hx Hx').
+destruct (sum_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using sum_uniqueness.
 Defined.
 
 Lemma neq20 : ~ EqF (AddF OneF OneF) OF.
 Proof.
 unfold addition, add_notation, AddF, EqF; simpl.
-destruct (sum_f O E E' ncolOEE' E E (col_trivial_2 O E)
+destruct (sum_f E E (col_trivial_2 O E)
                 (col_trivial_2 O E)) as [EPE HEPE]; simpl.
-intro; treat_equalities; apply double_null_null in HEPE.
-treat_equalities; Col.
+intro; treat_equalities.
+subst;
+ apply double_null_null in HEPE.
+apply ncolOEE';rewrite HEPE;Col.
 Qed.
 
 Definition MulF (x y : F) : F.
 Proof.
-destruct (prod_f O E E' ncolOEE'
+destruct (prod_f
                  (proj1_sig x) (proj1_sig y)
                  (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
-apply (prod_col O E E' (proj1_sig x) (proj1_sig y) P HP).
+apply (prod_col (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
 Global Instance mulF_morphism : Proper (EqF ==> EqF ==> EqF) MulF.
@@ -503,17 +525,17 @@ Proof.
 unfold Proper, respectful, EqF, MulF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
-destruct (prod_f O E E' ncolOEE' x x' Hx Hx').
-destruct (prod_f O E E' ncolOEE' y y' Hy Hy'); simpl.
+destruct (prod_f x x' Hx Hx').
+destruct (prod_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using prod_uniqueness.
 Defined.
 
 Definition SubF (x y : F) : F.
 Proof.
-destruct (diff_f O E E' ncolOEE'
+destruct (diff_f 
                  (proj1_sig x) (proj1_sig y)
                  (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
-apply (diff_col O E E' (proj1_sig x) (proj1_sig y) P HP).
+apply (diff_col (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
 Global Instance subF_morphism : Proper (EqF ==> EqF ==> EqF) SubF.
@@ -521,47 +543,47 @@ Proof.
 unfold Proper, respectful, EqF, SubF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
-destruct (diff_f O E E' ncolOEE' x x' Hx Hx').
-destruct (diff_f O E E' ncolOEE' y y' Hy Hy'); simpl.
+destruct (diff_f x x' Hx Hx').
+destruct (diff_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using diff_uniqueness.
 Defined.
 
 Definition OppF (x : F) : F.
 Proof.
-destruct (opp_f O E E' ncolOEE' (proj1_sig x) (proj2_sig x)) as [P HP].
-exists P; apply (opp_col O E E' (proj1_sig x) P HP).
+destruct (opp_f (proj1_sig x) (proj2_sig x)) as [P HP].
+exists P; apply (opp_col (proj1_sig x) P HP).
 Defined.
 
 Global Instance oppF_morphism : Proper (EqF ==> EqF) OppF.
 Proof.
 unfold Proper, respectful, EqF, OppF; intros x y Hxy.
 destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
-destruct (opp_f O E E' ncolOEE' x Hx).
-destruct (opp_f O E E' ncolOEE' y Hy); simpl.
-treat_equalities; eauto using opp_uniqueness.
+destruct (opp_f x Hx).
+destruct (opp_f y Hy); simpl.
+rewrite Hxy in *.
+eauto using (opp_uniqueness O E E' ncolOEE').
 Defined.
 
 Definition InvF (x : F) : F.
 Proof.
-destruct (inv_f O E E' ncolOEE' (proj1_sig x) (proj2_sig x)) as [P HP].
-exists P; apply (inv_col O E E' ncolOEE' (proj1_sig x) P HP).
+destruct (inv_f (proj1_sig x) (proj2_sig x)) as [P HP].
+exists P; apply (inv_col (proj1_sig x) P HP).
 Defined.
 
 Global Instance invF_morphism : Proper (EqF ==> EqF) InvF.
 Proof.
 unfold Proper, respectful, EqF, InvF; intros x y Hxy.
 destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
-destruct (inv_f O E E' ncolOEE' x Hx).
-destruct (inv_f O E E' ncolOEE' y Hy); simpl.
+destruct (inv_f x Hx).
+destruct (inv_f y Hy); simpl.
 treat_equalities; eauto using inv_uniqueness.
 Defined.
 
 Definition DivF (x y : F) : F.
 Proof.
-destruct (div_f O E E' ncolOEE'
-                 (proj1_sig x) (proj1_sig y)
-                 (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
-apply (div_col O E E' (proj1_sig x) (proj1_sig y) P HP).
+destruct (div_f (proj1_sig x) (proj1_sig y)
+                (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
+apply (div_col (proj1_sig x) (proj1_sig y) P HP).
 Defined.
 
 Global Instance divF_morphism : Proper (EqF ==> EqF ==> EqF) DivF.
@@ -569,15 +591,15 @@ Proof.
 unfold Proper, respectful, EqF, DivF; intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
-destruct (div_f O E E' ncolOEE' x x' Hx Hx').
-destruct (div_f O E E' ncolOEE' y y' Hy Hy'); simpl.
+destruct (div_f x x' Hx Hx').
+destruct (div_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using div_uniqueness.
 Defined.
 
 
 Definition PythF (x y : F) : F.
 Proof.
-destruct (Pyth_f O E E' ncolOEE' (proj1_sig x) (proj1_sig y) (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
+destruct (Pyth_f (proj1_sig x) (proj1_sig y) (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
 unfold PythRel in *.
 use HP.
 unfold Ar2 in *.
@@ -601,117 +623,116 @@ intro x; try intro y; try intro z.
 
   {
   destruct x as [x Hx]; simpl.
-  elim (sum_f O E E' ncolOEE' O x (col_trivial_3 O E) Hx).
+  elim (sum_f O x (col_trivial_3 O E) Hx).
   intros; simpl; apply sum_uniqueness with O E E' O x; try assumption.
-  apply sum_O_B; assumption.
+  apply sum_O_B; auto using ncolOEE'.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; simpl.
-  elim (sum_f O E E' ncolOEE' x y Hx Hy).
-  elim (sum_f O E E' ncolOEE' y x Hy Hx).
+  elim (sum_f x y Hx Hy).
+  elim (sum_f y x Hy Hx).
   intros; simpl; apply sum_uniqueness with O E E' x y; try assumption.
-  apply sum_comm; assumption.
+  apply sum_comm; auto using ncolOEE'.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; destruct z as [z Hz]; simpl.
-  destruct (sum_f O E E' ncolOEE' y z Hy Hz) as [yPz HyPz]; simpl.
-  destruct (sum_f O E E' ncolOEE' x yPz Hx
-                  (sum_col O E E' y z yPz HyPz)) as [xPyPz HxPyPz].
-  destruct (sum_f O E E' ncolOEE' x y Hx Hy) as [xPy HxPy]; simpl.
-  destruct (sum_f O E E' ncolOEE' xPy z
-                  (sum_col O E E' x y xPy HxPy) Hz) as [xPyPz' HxPyPz']; simpl.
+  destruct (sum_f y z Hy Hz) as [yPz HyPz]; simpl.
+  destruct (sum_f x yPz Hx
+                  (sum_col y z yPz HyPz)) as [xPyPz HxPyPz].
+  destruct (sum_f x y Hx Hy) as [xPy HxPy]; simpl.
+  destruct (sum_f xPy z
+                  (sum_col x y xPy HxPy) Hz) as [xPyPz' HxPyPz']; simpl.
   apply sum_uniqueness with O E E' x yPz; try assumption.
   apply (sum_assoc O E E' x y z xPy yPz xPyPz'); assumption.
   }
 
   {
   destruct x as [x Hx]; simpl.
-  destruct (prod_f O E E' ncolOEE' E x (col_trivial_2 O E) Hx) as [x' Hx'].
+  destruct (prod_f E x (col_trivial_2 O E) Hx) as [x' Hx'].
   simpl; apply prod_uniqueness with O E E' E x; try assumption.
-  apply prod_1_l; assumption.
+  apply prod_1_l; auto using ncolOEE'.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; simpl.
-  destruct (prod_f O E E' ncolOEE' x y Hx Hy) as [xMy HxMy].
-  destruct (prod_f O E E' ncolOEE' y x Hy Hx) as [yMx HyMx]; simpl.
+  destruct (prod_f x y Hx Hy) as [xMy HxMy].
+  destruct (prod_f y x Hy Hx) as [yMx HyMx]; simpl.
   apply prod_uniqueness with O E E' x y; try assumption.
-  apply prod_comm; assumption.
+  apply prod_comm; auto using ncolOEE'.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; destruct z as [z Hz]; simpl.
-  destruct (prod_f O E E' ncolOEE' y z Hy Hz) as [yMz HyMz]; simpl.
-  destruct (prod_f O E E' ncolOEE' x yMz Hx
-                   (prod_col O E E' y z yMz HyMz)) as [xMyMz HxMyMz].
-  destruct (prod_f O E E' ncolOEE' x y Hx Hy) as [xMy HxMy]; simpl.
-  destruct (prod_f O E E' ncolOEE' xMy z
-                   (prod_col O E E' x y xMy HxMy) Hz) as [xMyMz' HxMyMz'].
+  destruct (prod_f y z Hy Hz) as [yMz HyMz]; simpl.
+  destruct (prod_f x yMz Hx
+                   (prod_col y z yMz HyMz)) as [xMyMz HxMyMz].
+  destruct (prod_f x y Hx Hy) as [xMy HxMy]; simpl.
+  destruct (prod_f xMy z
+                   (prod_col x y xMy HxMy) Hz) as [xMyMz' HxMyMz'].
   simpl; apply prod_uniqueness with O E E' x yMz; try assumption.
-  apply (prod_assoc O E E' x y z xMy yMz xMyMz'); assumption.
+
+  apply (prod_assoc O E E' x y z xMy yMz xMyMz');assumption.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; destruct z as [z Hz]; simpl.
-  destruct (sum_f O E E' ncolOEE' x y Hx Hy) as [xPy HxPy]; simpl.
-  destruct (prod_f O E E' ncolOEE' xPy z
-                   (sum_col O E E' x y xPy HxPy) Hz) as [xPyMz HxPyMz].
-  destruct (prod_f O E E' ncolOEE' x z Hx Hz) as [xMz HxMz]; simpl.
-  destruct (prod_f O E E' ncolOEE' y z Hy Hz) as [yMz HyMz]; simpl.
-  destruct (sum_f O E E' ncolOEE' xMz yMz (prod_col O E E' x z xMz HxMz)
-                  (prod_col O E E' y z yMz HyMz)) as [xPyMz' HxPyMz']; simpl.
+  destruct (sum_f x y Hx Hy) as [xPy HxPy]; simpl.
+  destruct (prod_f xPy z
+                   (sum_col x y xPy HxPy) Hz) as [xPyMz HxPyMz].
+  destruct (prod_f x z Hx Hz) as [xMz HxMz]; simpl.
+  destruct (prod_f y z Hy Hz) as [yMz HyMz]; simpl.
+  destruct (sum_f xMz yMz (prod_col x z xMz HxMz)
+                  (prod_col y z yMz HyMz)) as [xPyMz' HxPyMz']; simpl.
   apply sum_uniqueness with O E E' xMz yMz; try assumption.
   apply distr_r with x y z xPy; assumption.
   }
 
   {
   destruct x as [x Hx]; destruct y as [y Hy]; simpl.
-  destruct (diff_f O E E' ncolOEE' x y Hx Hy) as [xSy HxSy].
-  destruct (opp_f O E E' ncolOEE' y Hy) as [Oy HOy]; simpl.
-  destruct (sum_f O E E' ncolOEE' x Oy Hx
-                  (opp_col O E E' y Oy HOy)) as [xSy' HxSy']; simpl.
+  destruct (diff_f x y Hx Hy) as [xSy HxSy].
+  destruct (opp_f y Hy) as [Oy HOy]; simpl.
+  destruct (sum_f x Oy Hx
+                  (opp_col y Oy HOy)) as [xSy' HxSy']; simpl.
   destruct HxSy as [Oy' [HOy' HxSy]].
-  assert (Oy = Oy'); [apply opp_uniqueness with O E E' y|
-                      subst; apply sum_uniqueness with O E E' x Oy']; assumption.
+  assert (Oy = Oy') by
+ ((apply opp_uniqueness with O E E' y);auto using ncolOEE').
+ subst; apply sum_uniqueness with O E E' x Oy';assumption.
   }
 
   {
   destruct x as [x Hx]; simpl.
-  destruct (opp_f O E E' ncolOEE' x Hx) as [Ox HOx]; simpl.
-  destruct (sum_f O E E' ncolOEE' x Ox Hx
-                  (opp_col O E E' x Ox HOx)) as [O' HO']; simpl.
+  destruct (opp_f x Hx) as [Ox HOx]; simpl.
+  destruct (sum_f x Ox Hx
+                  (opp_col x Ox HOx)) as [O' HO']; simpl.
   unfold Opp in HOx; apply sum_uniqueness with O E E' x Ox; try assumption.
-  apply sum_comm; assumption.
+  apply sum_comm; auto using ncolOEE'.
   }
 Qed.
 
 Lemma fieldF : field_theory OF OneF AddF MulF SubF OppF DivF InvF EqF.
 Proof.
 split; unfold OF, OneF, MulF, DivF, InvF, EqF, sig_rect; simpl;
-[apply ringF|assert_diffs; auto|intros p q|intros p Hp].
+[apply ringF|assert (T:=ncolOEE');assert_diffs; auto|intros p q|intros p Hp].
 
   {
-  destruct (div_f O E E' ncolOEE' (proj1_sig p) (proj1_sig q)
+  destruct (div_f (proj1_sig p) (proj1_sig q)
                   (proj2_sig p) (proj2_sig q)) as [pDq HpDq]; simpl.
-  destruct (inv_f O E E' ncolOEE'
+  destruct (inv_f
                   (proj1_sig q)(proj2_sig q)) as [Iq HIq]; simpl.
-  destruct (prod_f O E E' ncolOEE' (proj1_sig p) Iq (proj2_sig p)
-                   (inv_col O E E' ncolOEE'
-                            (proj1_sig q) Iq HIq)) as [pDq' HpDq'].
+  destruct (prod_f (proj1_sig p) Iq (proj2_sig p)
+                   (inv_col (proj1_sig q) Iq HIq)) as [pDq' HpDq'].
   simpl; destruct HpDq as [Iq' [HIq' HpDq]].
-  assert (Iq = Iq'); [apply inv_uniqueness with O E E' (proj1_sig q)|
+  assert (Iq = Iq'); [apply inv_uniqueness with (proj1_sig q)|
                       subst; apply prod_uniqueness with O E E' (proj1_sig p) Iq'];
   assumption.
   }
 
   {
-  destruct (inv_f O E E' ncolOEE'
-                  (proj1_sig p) (proj2_sig p)) as [Ip HIp]; simpl.
-  destruct (prod_f O E E' ncolOEE' Ip (proj1_sig p)
-                   (inv_col O E E' ncolOEE'
-                            (proj1_sig p) Ip HIp) (proj2_sig p)) as [E'' HE''].
+  destruct (inv_f (proj1_sig p) (proj2_sig p)) as [Ip HIp]; simpl.
+  destruct (prod_f Ip (proj1_sig p)
+                   (inv_col (proj1_sig p) Ip HIp) (proj2_sig p)) as [E'' HE''].
   simpl; elim HIp; clear HIp; intro HIp;
   [|spliter; treat_equalities; intuition].
   destruct HIp as [H HIp]; clear H.
@@ -764,7 +785,7 @@ Proof.
 intros A B HAB; apply prod_null with E E'.
 destruct A as [x Hx]; destruct B as [y Hy]; simpl.
 red in HAB; unfold eq_notation, EqF, multiplication, mul_notation, MulF in HAB.
-destruct (prod_f O E E' ncolOEE'
+destruct (prod_f 
              (proj1_sig (exist (fun P : Tpoint => Col O E P) x Hx))
              (proj1_sig (exist (fun P : Tpoint => Col O E P) y Hy))
              (proj2_sig (exist (fun P : Tpoint => Col O E P) x Hx))
@@ -773,26 +794,26 @@ simpl in *; subst; assumption.
 Qed.
 
 Global Instance Fintegral : (Integral_domain (Rcr:=Fcri)).
-Proof. split; [exact Fmult_integral|assert_diffs; auto]. Defined.
+Proof. split; [exact Fmult_integral|assert (T:=ncolOEE');assert_diffs; auto]. Defined.
 
 Lemma PythFOk : forall A B, (PythF A B) * (PythF A B) =F= A*A + B*B.
 Proof.
 intros.
 unfold PythF, MulF, AddF, EqF;simpl.
 destruct A as [A HA];destruct B as [B HB];simpl.
-destruct (Pyth_f O E E' ncolOEE' A B HA HB) as [C [HC1 HC2]].
-destruct (prod_f O E E' ncolOEE' A A HA HA) as [A2  HA2].
-destruct (prod_f O E E' ncolOEE' B B HB HB) as [B2  HB2].
+destruct (Pyth_f A B HA HB) as [C [HC1 HC2]].
+destruct (prod_f A A HA HA) as [A2  HA2].
+destruct (prod_f B B HB HB) as [B2  HB2].
 assert (HC : Col O E C).
 destruct HC2;[apply Ps_Col;auto|subst;Col].
-destruct (sum_f O E E' ncolOEE' A2 B2) as [x Hx].
+destruct (sum_f A2 B2) as [x Hx].
 simpl.
-destruct (prod_f O E E' ncolOEE' C C HC HC) as [C2  HC2'].
+destruct (prod_f C C HC HC) as [C2  HC2'].
 simpl.
 assert (T:=PythOK O E E' A B C A2 B2 C2 HC1 HA2 HB2 HC2') .
 assert (x= C2) by (apply (sum_uniqueness O E E' A2 B2);auto).
 subst.
-destruct (prod_f O E E' ncolOEE' C C) as [C2'  HC2''].
+destruct (prod_f C C) as [C2'  HC2''].
 simpl.
 apply (prod_uniqueness O E E' C C C2' C2);auto.
 Qed.
@@ -819,6 +840,7 @@ Lemma Ps_One : Ps O E E.
 Proof.
 unfold Ps.
 unfold Out.
+assert (T:=ncolOEE').
 assert_diffs.
 repeat split;Between.
 Qed.
@@ -866,28 +888,28 @@ destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
 destruct Dc as [[Dx HDx] [Dy HDy]].
 rewrite subF__eq0; unfold AddF, MulF, SubF, EqF; simpl.
-destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
-destruct (prod_f O E E' ncolOEE' AxMBx AxMBx
-                 (diff_col O E E' Ax Bx AxMBx HAxMBx)
-                 (diff_col O E E' Ax Bx AxMBx HAxMBx)) as [ABx HABx]; simpl.
-destruct (diff_f O E E' ncolOEE' Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
-destruct (prod_f O E E' ncolOEE' AyMBy AyMBy
-                 (diff_col O E E' Ay By AyMBy HAyMBy)
-                 (diff_col O E E' Ay By AyMBy HAyMBy)) as [ABy HABy]; simpl.
-destruct (sum_f O E E' ncolOEE' ABx ABy
-                (prod_col O E E' AxMBx AxMBx ABx HABx)
-                (prod_col O E E' AyMBy AyMBy ABy HABy)) as [AB2 HAB2]; simpl.
-destruct (diff_f O E E' ncolOEE' Cx Dx HCx HDx) as [CxMDx HCxMDx]; simpl.
-destruct (prod_f O E E' ncolOEE' CxMDx CxMDx
-                 (diff_col O E E' Cx Dx CxMDx HCxMDx)
-                 (diff_col O E E' Cx Dx CxMDx HCxMDx)) as [CDx HCDx].
-destruct (diff_f O E E' ncolOEE' Cy Dy HCy HDy) as [CyMDy HCyMDy]; simpl.
-destruct (prod_f O E E' ncolOEE' CyMDy CyMDy
-                 (diff_col O E E' Cy Dy CyMDy HCyMDy)
-                 (diff_col O E E' Cy Dy CyMDy HCyMDy)) as [CDy HCDy]; simpl.
-destruct (sum_f O E E' ncolOEE' CDx CDy
-            (prod_col O E E' CxMDx CxMDx CDx HCDx)
-            (prod_col O E E' CyMDy CyMDy CDy HCDy)) as [CD2 HCD2]; simpl.
+destruct (diff_f Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
+destruct (prod_f AxMBx AxMBx
+                 (diff_col Ax Bx AxMBx HAxMBx)
+                 (diff_col Ax Bx AxMBx HAxMBx)) as [ABx HABx]; simpl.
+destruct (diff_f Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
+destruct (prod_f AyMBy AyMBy
+                 (diff_col Ay By AyMBy HAyMBy)
+                 (diff_col Ay By AyMBy HAyMBy)) as [ABy HABy]; simpl.
+destruct (sum_f  ABx ABy
+                (prod_col AxMBx AxMBx ABx HABx)
+                (prod_col AyMBy AyMBy ABy HABy)) as [AB2 HAB2]; simpl.
+destruct (diff_f Cx Dx HCx HDx) as [CxMDx HCxMDx]; simpl.
+destruct (prod_f CxMDx CxMDx
+                 (diff_col Cx Dx CxMDx HCxMDx)
+                 (diff_col Cx Dx CxMDx HCxMDx)) as [CDx HCDx].
+destruct (diff_f Cy Dy HCy HDy) as [CyMDy HCyMDy]; simpl.
+destruct (prod_f CyMDy CyMDy
+                 (diff_col Cy Dy CyMDy HCyMDy)
+                 (diff_col Cy Dy CyMDy HCyMDy)) as [CDy HCDy]; simpl.
+destruct (sum_f CDx CDy
+            (prod_col CxMDx CxMDx CDx HCDx)
+            (prod_col CyMDy CyMDy CDy HCDy)) as [CD2 HCD2]; simpl.
 apply (characterization_of_congruence O E E' SS U1 U2
                                         A Ax Ay B Bx By
                                         C Cx Cy D Dx Dy
@@ -914,10 +936,10 @@ destruct Ac as [[Ax HAx] [Ay HAy]].
 destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
 unfold MulF, SubF, EqF, LeF; simpl.
-destruct (diff_f O E E' ncolOEE' Bx Ax HBx HAx) as [BxMAx HBxMAx]; simpl.
-destruct (diff_f O E E' ncolOEE' By Ay HBy HAy) as [ByMAy HByMAy]; simpl.
-destruct (diff_f O E E' ncolOEE' Cx Ax HCx HAx) as [CxMAx HCxMAx]; simpl.
-destruct (diff_f O E E' ncolOEE' Cy Ay HCy HAy) as [CyMAy HCyMAy]; simpl.
+destruct (diff_f Bx Ax HBx HAx) as [BxMAx HBxMAx]; simpl.
+destruct (diff_f By Ay HBy HAy) as [ByMAy HByMAy]; simpl.
+destruct (diff_f Cx Ax HCx HAx) as [CxMAx HCxMAx]; simpl.
+destruct (diff_f Cy Ay HCy HAy) as [CyMAy HCyMAy]; simpl.
 split; intro HBet; [|destruct HBet as [T HBet]].
 
   {
@@ -926,24 +948,24 @@ split; intro HBet; [|destruct HBet as [T HBet]].
                                             BxMAx ByMAy CxMAx CyMAy) in HBet;
   auto; destruct HBet as [T [H [HCol [HGe0 [HLe1 [HTx HTy]]]]]]; clear H.
   exists (exist (fun P => Col O E P) T HCol); simpl; do 2 (split; auto).
-  destruct (prod_f O E E' ncolOEE' T CxMAx HCol
-                   (diff_col O E E' Cx Ax CxMAx HCxMAx)) as [Tx HTx'].
-  destruct (prod_f O E E' ncolOEE' T CyMAy HCol
-                   (diff_col O E E' Cy Ay CyMAy HCyMAy)) as [Ty HTy']; simpl.
+  destruct (prod_f T CxMAx HCol
+                   (diff_col Cx Ax CxMAx HCxMAx)) as [Tx HTx'].
+  destruct (prod_f T CyMAy HCol
+                   (diff_col Cy Ay CyMAy HCyMAy)) as [Ty HTy']; simpl.
   split; [apply prod_uniqueness with O E E' T CxMAx|
           apply prod_uniqueness with O E E' T CyMAy]; assumption.
   }
 
   {
-  destruct (prod_f O E E' ncolOEE' (proj1_sig T) CxMAx (proj2_sig T)
-                   (diff_col O E E' Cx Ax CxMAx HCxMAx)) as [Tx HTx'].
-  destruct (prod_f O E E' ncolOEE' (proj1_sig T) CyMAy (proj2_sig T)
-                   (diff_col O E E' Cy Ay CyMAy HCyMAy)) as [Ty HTy'].
+  destruct (prod_f (proj1_sig T) CxMAx (proj2_sig T)
+                   (diff_col Cx Ax CxMAx HCxMAx)) as [Tx HTx'].
+  destruct (prod_f (proj1_sig T) CyMAy (proj2_sig T)
+                   (diff_col Cy Ay CyMAy HCyMAy)) as [Ty HTy'].
   simpl in *; destruct HBet as [HGe0 [HLe1 [HTx HTy]]]; treat_equalities.
   apply <- (characterization_of_betweenness O E E' SS U1 U2
                                             A Ax Ay B Bx By C Cx Cy
                                             Tx Ty CxMAx CyMAy); auto.
-  exists (proj1_sig T); repeat (split; auto); [assert_diffs; auto|].
+  exists (proj1_sig T); repeat (split; auto); [assert (TT:=ncolOEE');assert_diffs; auto|].
   apply (proj2_sig T).
   }
 Qed.
@@ -966,16 +988,16 @@ destruct Ac as [[Ax HAx] [Ay HAy]].
 destruct Bc as [[Bx HBx] [By HBy]].
 destruct Cc as [[Cx HCx] [Cy HCy]].
 rewrite subF__eq0; unfold AddF, MulF, SubF, EqF; simpl.
-destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
-destruct (diff_f O E E' ncolOEE' By Cy HBy HCy) as [ByMCy HByMCy]; simpl.
-destruct (prod_f O E E' ncolOEE' AxMBx ByMCy
-                 (diff_col O E E' Ax Bx AxMBx HAxMBx)
-                 (diff_col O E E' By Cy ByMCy HByMCy)) as [P1 HP1]; simpl.
-destruct (diff_f O E E' ncolOEE' Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
-destruct (diff_f O E E' ncolOEE' Bx Cx HBx HCx) as [BxMCx HBxMCx]; simpl.
-destruct (prod_f O E E' ncolOEE' AyMBy BxMCx
-                 (diff_col O E E' Ay By AyMBy HAyMBy)
-                 (diff_col O E E' Bx Cx BxMCx HBxMCx)) as [P2 HP2]; simpl.
+destruct (diff_f Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
+destruct (diff_f By Cy HBy HCy) as [ByMCy HByMCy]; simpl.
+destruct (prod_f AxMBx ByMCy
+                 (diff_col Ax Bx AxMBx HAxMBx)
+                 (diff_col By Cy ByMCy HByMCy)) as [P1 HP1]; simpl.
+destruct (diff_f Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
+destruct (diff_f Bx Cx HBx HCx) as [BxMCx HBxMCx]; simpl.
+destruct (prod_f AyMBy BxMCx
+                 (diff_col Ay By AyMBy HAyMBy)
+                 (diff_col Bx Cx BxMCx HBxMCx)) as [P2 HP2]; simpl.
 apply (characterization_of_collinearity O E E' SS U1 U2
                                         A Ax Ay B Bx By C Cx Cy
                                         AxMBx AyMBy BxMCx ByMCy P1 P2); auto.
@@ -1016,17 +1038,17 @@ Lemma characterization_of_equality_F_aux : forall Ax Ay Bx By,
   (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= OF.
 Proof.
 intros [Ax HAx] [Ay HAy] [Bx HBx] [By HBy]; unfold SubF, MulF, AddF, EqF; simpl.
-destruct (diff_f O E E' ncolOEE' Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
-destruct (prod_f O E E' ncolOEE' AxMBx AxMBx
-                 (diff_col O E E' Ax Bx AxMBx HAxMBx)
-                 (diff_col O E E' Ax Bx AxMBx HAxMBx)) as [ABx HABx]; simpl.
-destruct (diff_f O E E' ncolOEE' Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
-destruct (prod_f O E E' ncolOEE' AyMBy AyMBy
-                 (diff_col O E E' Ay By AyMBy HAyMBy)
-                 (diff_col O E E' Ay By AyMBy HAyMBy)) as [ABy HABy]; simpl.
-destruct (sum_f O E E' ncolOEE' ABx ABy
-                (prod_col O E E' AxMBx AxMBx ABx HABx)
-                (prod_col O E E' AyMBy AyMBy ABy HABy)) as [s Hs]; simpl.
+destruct (diff_f Ax Bx HAx HBx) as [AxMBx HAxMBx]; simpl.
+destruct (prod_f AxMBx AxMBx
+                 (diff_col Ax Bx AxMBx HAxMBx)
+                 (diff_col Ax Bx AxMBx HAxMBx)) as [ABx HABx]; simpl.
+destruct (diff_f Ay By HAy HBy) as [AyMBy HAyMBy]; simpl.
+destruct (prod_f AyMBy AyMBy
+                 (diff_col Ay By AyMBy HAyMBy)
+                 (diff_col Ay By AyMBy HAyMBy)) as [ABy HABy]; simpl.
+destruct (sum_f ABx ABy
+                (prod_col AxMBx AxMBx ABx HABx)
+                (prod_col AyMBy AyMBy ABy HABy)) as [s Hs]; simpl.
 split; intro H; [|apply eq_sym in H]; spliter; try split; treat_equalities.
 
   {
@@ -1035,11 +1057,14 @@ split; intro H; [|apply eq_sym in H]; spliter; try split; treat_equalities.
     {
     split; [apply diff_uniqueness with O E E' Ax Ax|
             apply diff_uniqueness with O E E' Ay Ay]; try apply diff_null; Col.
+    apply ncolOEE'.
+    apply ncolOEE'.
     }
   spliter; subst; assert (ABx = O /\ ABy = O);
   [|spliter; subst; assumption].
   split; apply prod_uniqueness with O E E' O O;
-  [|apply prod_0_l| |apply prod_0_l]; Col.
+  [|apply prod_0_l| |apply prod_0_l]; Col; auto using ncolOEE'.
+  apply ncolOEE'.
   }
 
   {
@@ -1050,6 +1075,7 @@ split; intro H; [|apply eq_sym in H]; spliter; try split; treat_equalities.
     treat_equalities; apply prod_O_l_eq in HABy; subst.
     apply sum_A_O_eq in Hs; subst; try apply square_pos with E' AxMBx; Col.
     intro; treat_equalities; apply diff_null_eq in HAxMBx; intuition.
+    apply ncolOEE'.
     }
 
     {
@@ -1068,6 +1094,7 @@ split; intro H; [|apply eq_sym in H]; spliter; try split; treat_equalities.
     treat_equalities; apply prod_O_l_eq in HABx; subst.
     apply sum_O_B_eq in Hs; subst; try apply square_pos with E' AyMBy; Col.
     intro; treat_equalities; apply diff_null_eq in HAyMBy; intuition.
+    apply ncolOEE'.
     }
 
     {
@@ -1530,7 +1557,7 @@ nsatz; prove_discr_for_powers_of_2.
 Qed.
 *)
 
-(** We try to deduce the axioms of the area method. *)
+(** We deduce the axioms of the area method. *)
 
 Definition vect := (F * F)%type.
 
@@ -1562,7 +1589,22 @@ Definition signed_area A B C :=
   let (Cx, Cy) := Cc in
   let VAB := (Bx-Ax, By-Ay) in
   let VAC := (Cx-Ax, Cy-Ay) in
-  cross_product VAB VAC. (*je divise pas par 2 pour simplifier *)
+  1/2*cross_product VAB VAC. 
+
+(** We introduce this definition to simplify the automatic proofs:*)
+
+Definition twice_signed_area A B C :=
+  let (Ac, _) := coordinates_of_point_F A in
+  let (Ax, Ay) := Ac in
+  let (Bc, _) := coordinates_of_point_F B in
+  let (Bx, By) := Bc in
+  let (Cc, _) := coordinates_of_point_F C in
+  let (Cx, Cy) := Cc in
+  let VAB := (Bx-Ax, By-Ay) in
+  let VAC := (Cx-Ax, Cy-Ay) in
+  cross_product VAB VAC. 
+
+
 
 Lemma signed_area_cyclic :
   forall A B C, signed_area A B C =F= signed_area B C A.
@@ -1594,17 +1636,18 @@ unfold cross_product;simpl.
 field;prove_discr_for_powers_of_2.
 Qed.
 
+
 Lemma co_side :
  forall A B C P,
   A <> C ->
-  ~ signed_area P A C =F= 0 ->
-  signed_area A B C =F= 0 ->
-  ratio A B A C =F= signed_area P A B / signed_area P A C.
+  ~ twice_signed_area P A C =F= 0 ->
+  twice_signed_area A B C =F= 0 ->
+  ratio A B A C =F= twice_signed_area P A B / twice_signed_area P A C.
 Proof.
 intros A B C P.
 intro HAC.
 setoid_rewrite characterization_of_neq_F in HAC.
-unfold signed_area, ratio.
+unfold twice_signed_area, ratio.
 decompose_coordinates.
 unfold cross_product, scalar_product;simpl.
 intros.
@@ -1620,9 +1663,11 @@ intro.
 apply HAC.
 rewrite <- H2. ring.
 assumption.
+
 rewrite H1.
 ring.
 Qed.
+
 
 Definition square_dist A B :=
   let (Ac, _) := coordinates_of_point_F A in
@@ -1631,16 +1676,17 @@ Definition square_dist A B :=
   let (Bx, By) := Bc in
   (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By).
 
-Definition signed_area4 A B C D :=
-  signed_area A B C + signed_area A C D.
+Definition twice_signed_area4 A B C D :=
+  twice_signed_area A B C + twice_signed_area A C D.
 Definition Py A B C := square_dist A B + square_dist B C - square_dist A C.
 Definition Py4 A B C D := Py A B D - Py C B D.
 Definition AM_Cong A B C D := Py A B A =F= Py C D C.
-Definition AM_Col A B C := signed_area A B C =F= 0.
+Definition AM_Col A B C := twice_signed_area A B C =F= 0.
 Definition AM_Per A B C := Py A B C =F= 0.
 Definition AM_Perp A B C D := Py4 A C B D =F= 0.
-Definition AM_Par A B C D := signed_area4 A C B D =F= 0.
+Definition AM_Par A B C D := twice_signed_area4 A C B D =F= 0.
 Definition AM_on_foot Y P U V := AM_Perp Y P U V /\ AM_Col Y U V /\ U <> V.
+
 
 Lemma Cong_AM_Cong: forall A B C D, AM_Cong A B C D <-> Cong A B C D.
 Proof.
@@ -1658,7 +1704,7 @@ Proof.
 intros.
 unfold AM_Col.
 rewrite characterization_of_collinearity_F.
-unfold signed_area, cross_product.
+unfold twice_signed_area, cross_product.
 decompose_coordinates.
 simpl.
 split.
@@ -1703,7 +1749,7 @@ Lemma AM_Par_ratio_AM_Par :
 Proof.
 intros P Q C D H1 H2 H3.
 setoid_rewrite characterization_of_neq_F in H3.
-unfold AM_Par, signed_area4, signed_area, ratio in *.
+unfold AM_Par, twice_signed_area4, twice_signed_area, ratio in *.
 decompose_coordinates.
 unfold cross_product, scalar_product in *;simpl in *.
 assert (((Qx - Px) * (Dx - Cx) + (Qy - Py0) * (Dy - Cy)) =F= ((Dx - Cx) * (Dx - Cx) + (Dy - Cy) * (Dy - Cy))).
@@ -1728,7 +1774,7 @@ Lemma Par_AM_Par : forall A B C D,
   (A<>B /\ C<>D /\ AM_Par A B C D) <-> Par A B C D.
 Proof.
 intros.
-unfold AM_Par, signed_area4, signed_area.
+unfold AM_Par, twice_signed_area4, twice_signed_area.
 rewrite characterization_of_parallelism_F.
 rewrite characterization_of_neq_F.
 rewrite characterization_of_neq_F.
@@ -1750,15 +1796,17 @@ Lemma AM_lower_dim :
  exists A B C, ~ AM_Col A B C.
 Proof.
 exists O. exists E. exists E'.
-rewrite Col_AM_Col;assumption.
+rewrite Col_AM_Col;auto using ncolOEE'.
 Qed.
+
 
 Lemma signed_area_AAB : forall A B, signed_area A A B =F= 0.
 Proof.
 intros.
 unfold signed_area, cross_product.
 decompose_coordinates;simpl.
-ring.
+field.
+prove_discr_for_powers_of_2.
 Qed.
 
 Lemma signed_area_ABA : forall A B, signed_area A B A =F= 0.
@@ -1766,7 +1814,8 @@ Proof.
 intros.
 unfold signed_area, cross_product.
 decompose_coordinates;simpl.
-ring.
+field.
+prove_discr_for_powers_of_2.
 Qed.
 
 Lemma signed_area_ABB : forall A B, signed_area A B B =F= 0.
@@ -1774,7 +1823,52 @@ Proof.
 intros.
 unfold signed_area, cross_product.
 decompose_coordinates;simpl.
+field.
+prove_discr_for_powers_of_2.
+Qed.
+
+Lemma twice_signed_area_AAB : forall A B, twice_signed_area A A B =F= 0.
+Proof.
+intros.
+unfold twice_signed_area, cross_product.
+decompose_coordinates;simpl.
 ring.
+Qed.
+
+Lemma twice_signed_area_ABA : forall A B, twice_signed_area A B A =F= 0.
+Proof.
+intros.
+unfold twice_signed_area, cross_product.
+decompose_coordinates;simpl.
+ring.
+Qed.
+
+Lemma twice_signed_area_ABB : forall A B, twice_signed_area A B B =F= 0.
+Proof.
+intros.
+unfold twice_signed_area, cross_product.
+decompose_coordinates;simpl.
+field.
+Qed.
+
+Lemma twice_signed_area_cyclic :
+  forall A B C, twice_signed_area A B C =F= twice_signed_area B C A.
+Proof.
+intros.
+unfold twice_signed_area.
+decompose_coordinates.
+unfold cross_product;simpl.
+field;prove_discr_for_powers_of_2.
+Qed.
+
+Lemma twice_signed_area_perm :
+ forall A B C, twice_signed_area A B C =F= - twice_signed_area B A C.
+Proof.
+intros.
+unfold twice_signed_area.
+decompose_coordinates.
+unfold cross_product;simpl.
+field;prove_discr_for_powers_of_2.
 Qed.
 
 Lemma AM_Perp_AM_Perp_AM_Par : forall A B C D U V,
@@ -1785,22 +1879,23 @@ intros A B C D U V.
 intros.
 destruct (eq_dec_points A B).
 subst.
-unfold AM_Par, signed_area4.
-rewrite signed_area_AAB.
-rewrite signed_area_ABA.
+unfold AM_Par, twice_signed_area4.
+rewrite twice_signed_area_AAB.
+rewrite twice_signed_area_ABA.
 ring.
 assert (Perp A B C D) by (apply Perp_AM_Perp;auto).
 destruct (eq_dec_points U V).
 subst.
-unfold AM_Par, signed_area4.
-rewrite signed_area_perm.
-rewrite signed_area_cyclic.
+unfold AM_Par, twice_signed_area4.
+rewrite twice_signed_area_perm.
+rewrite twice_signed_area_cyclic.
 ring.
 assert (Perp U V C D) by (apply Perp_AM_Perp;auto).
 assert (Par A B U V).
 apply par_perp_2_par with C D C D;Par;Perp.
 apply Par_AM_Par;auto.
 Qed.
+
 
 Lemma Py_triv_ABB : forall A B, Py A B B  =F= 0.
 Proof.
@@ -1825,6 +1920,7 @@ unfold AM_Perp, Py4.
 ring.
 Qed.
 
+
 Lemma AM_perp_AM_Par_AM_perp : forall A B C D U V,
   A<>B ->
   AM_Perp A B C D -> AM_Par A B U V -> AM_Perp U V C D.
@@ -1845,13 +1941,13 @@ apply Perp_AM_Perp;auto.
 Qed.
 
 Lemma perp_triangle_area : forall A B C, A<>C -> AM_Per A B C ->
-  signed_area A B C * signed_area A B C =F= square_dist A B * square_dist B C.
+  twice_signed_area A B C * twice_signed_area A B C =F= square_dist A B * square_dist B C.
 Proof.
 intros A B C.
 rewrite Per_AM_Per.
 rewrite characterization_of_right_triangle_F.
 rewrite characterization_of_neq_F.
-unfold signed_area, AM_Per, Py, square_dist, cross_product.
+unfold twice_signed_area, AM_Per, Py, square_dist, cross_product.
 decompose_coordinates;simpl.
 intros.
 put_negs_in_goal.
@@ -1861,10 +1957,10 @@ Qed.
 
 Lemma triangle_area : forall A B C H,
   AM_on_foot H A B C ->
-  signed_area A B C * signed_area A B C =F= square_dist A H * square_dist B C.
+  twice_signed_area A B C * twice_signed_area A B C =F= square_dist A H * square_dist B C.
 Proof.
 intros A B C H.
-unfold AM_on_foot, AM_Col, AM_Perp, Py4, Py, square_dist, signed_area, cross_product.
+unfold AM_on_foot, AM_Col, AM_Perp, Py4, Py, square_dist, twice_signed_area, cross_product.
 rewrite characterization_of_neq_F.
 decompose_coordinates;simpl.
 intros.
@@ -1892,12 +1988,13 @@ rewrite <- H0.
 ring.
 Qed.
 
+
 Lemma ratio_zero : forall A B C D, C<>D -> AM_Par A B C D ->  (ratio A B C D =F= 0 -> A = B).
 Proof.
 intros A B C D.
 rewrite characterization_of_neq_F.
 rewrite characterization_of_equality_F.
-unfold AM_Par, ratio, signed_area4, signed_area, scalar_product, cross_product .
+unfold AM_Par, ratio, twice_signed_area4, twice_signed_area, scalar_product, cross_product .
 decompose_coordinates;simpl.
 intros.
 apply (field_prop_zero) in H1.
@@ -1949,6 +2046,7 @@ intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 Qed.
 
+
 Ltac decompose_coordinates' :=
   repeat
   match goal with
@@ -1958,6 +2056,7 @@ Ltac decompose_coordinates' :=
       let HX := fresh "H" X in
       destruct (coordinates_of_point_F X) as [[fx fy] HX]
   end.
+
 
 Lemma axiom_A2a : forall A B r, A<>B ->
   exists P, AM_Col A B P /\ ratio A P A B =F= r.
@@ -1980,7 +2079,7 @@ destruct (  let Ac:= proj1_sig (coordinates_of_point_F A) in
 exists P.
 revert HP.
 revert H.
-unfold AM_Col, signed_area, cross_product.
+unfold AM_Col, twice_signed_area, cross_product.
 elim (coordinates_of_point_F A).
 simpl.
 elim (coordinates_of_point_F B).
@@ -2004,14 +2103,14 @@ ring.
 Qed.
 
 
-Definition AM_CongAL A B C D E F := Py A B C * signed_area D E F =F= Py D E F * signed_area A B C.
+Definition AM_CongAL A B C D E F := Py A B C * twice_signed_area D E F =F= Py D E F * twice_signed_area A B C.
 
 (** This shows that we have a notion of congruence of line angles, every angle is congruent to its supplement. *)
 
 Lemma supplement_AM_CongA : forall A B M C, Midpoint M A B -> AM_CongAL  A M C B M C.
 Proof.
 intros A B M C.
-unfold AM_CongAL, signed_area, Py, square_dist.
+unfold AM_CongAL, twice_signed_area, Py, square_dist.
 rewrite characterization_of_midpoint_F.
 decompose_coordinates.
 unfold cross_product.
@@ -2019,21 +2118,6 @@ simpl.
 intros;spliter.
 nsatz.
 prove_discr_for_powers_of_2.
-Qed.
-
-Lemma exists_Cong_Per : forall A B X Y, exists C, Per A B C /\ Cong B C X Y.
-Proof.
-intros.
-destruct (eq_dec_points A B).
-subst.
-destruct (segment_construction X B X Y).
-exists x;split;spliter;finish.
-destruct (not_col_exists A B H) as [P HP].
-destruct (eq_dec_points X Y).
-exists B;split;subst;finish.
-destruct (ex_per_cong A B B P X Y);finish.
-spliter.
-exists x;split;finish.
 Qed.
 
 Lemma exists_equilateral_triangle : forall A B,
@@ -2055,5 +2139,115 @@ split;
 nsatz;
 prove_discr_for_powers_of_2.
 Qed.
+
+
+(*
+(** This is Euclid Book I, Prop 35 *)
+Lemma parallelograms_same_base : 
+ forall A B C D E F,
+ Plg A B C D ->
+ Plg E B C F ->
+ Col A E F ->
+ Col D E F ->
+ signed_area4 A B C D =F= signed_area4 E B C F.
+Proof.
+intros.
+unfold signed_area4.
+convert_to_algebra.
+decompose_coordinates; intros; spliter.
+*)
+
+
+(*
+(** This is Euclid Book I, Prop 36 *)
+Lemma parallelograms_equal_bases :
+ forall A B C D E F G H,
+ A<>B ->
+ B<>C ->
+ E<>F ->
+ F<>G ->
+ Parallelogram A B C D ->
+ Parallelogram E F G H ->
+ Cong B C F G ->
+ Col A E H ->
+ Col D E H ->
+ signed_area4 A B C D =F= signed_area4 E F G H.
+Proof.
+intros.
+
+apply plg_par in H4;[idtac|auto|auto].
+apply plg_par in H5;[idtac|auto|auto].
+spliter.
+revert H4 H10 H5 H9 H6 H7 H9.
+setoid_rewrite characterization_of_parallelism_F.
+setoid_rewrite characterization_of_collinearity_F.
+setoid_rewrite characterization_of_congruence_F.
+unfold signed_area4, signed_area, cross_product.
+decompose_coordinates;simpl.
+intros;spliter.
+put_negs_in_goal;
+express_disj_as_a_single_poly.
+right.
+right.
+right.
+right.
+nsatz.
+
+setoid_rewrite characterization_of_parallelism_F.
+*)
+ 
+
+(** This is Euclid Book I, Prop 37 *)
+
+Lemma triangles_same_base :
+ forall A B C D,
+ Par A D B C ->
+ signed_area A B C =F= signed_area D B C.
+Proof.
+intros A B C D.
+unfold signed_area.
+setoid_rewrite characterization_of_parallelism_F.
+decompose_coordinates;simpl.
+unfold cross_product;simpl.
+intros.
+spliter.
+nsatz.
+Qed.
+
+
+(*
+(** This is Euclid Book I, Prop 38 *)
+
+Lemma triangles_equal_bases :
+ forall A B C D E F,
+ Par A D B C ->
+ Col B C E ->
+ Col B C F ->
+ Cong B C E F ->
+ signed_area A B C =F= signed_area D E F.
+Proof.
+intros A B C D E F.
+
+unfold signed_area.
+setoid_rewrite characterization_of_parallelism_F.
+setoid_rewrite characterization_of_collinearity_F.
+setoid_rewrite characterization_of_congruence_F.
+decompose_coordinates;simpl.
+unfold cross_product;simpl.
+intros;spliter.
+put_negs_in_goal;
+express_disj_as_a_single_poly.
+*)
+
+(*
+(** This is Euclid Book I, Prop 39 *)
+
+Lemma triangle_equal_parallel:
+ forall A B C D,
+ signed_area A B C =F= signed_area D B C ->
+ OS B C A D ->
+ Par A D B C.
+Proof.
+*)
 
 End T18.

@@ -6,8 +6,7 @@ Context `{T2D:Tarski_2D}.
 
 (** PQ is the perpendicular bisector of segment AB *)
 
-Definition Perp_bisect P Q A B :=
-  ReflectL A B P Q /\ A <> B.
+Definition Perp_bisect P Q A B := ReflectL A B P Q /\ A <> B.
 
 Definition Perp_bisect_bis P Q A B :=
   exists I, Perp_at I P Q A B /\ Midpoint I A B.
@@ -298,6 +297,18 @@ assert (HCol := HPerp); apply perp_in_col in HCol; destruct HCol as [HCol Hc]; c
 apply l8_14_2_1a in HPerp.
 elim (eq_dec_points A C); intro; try (subst; Col).
 apply perp_perp_col with D E; Perp. apply perp_bisect_perp; apply cong_perp_bisect; Cong.
+Qed.
+
+Lemma perp_bisect_existence :
+  forall A B, A <> B -> exists P, exists Q, Perp_bisect P Q A B.
+Proof.
+intros A B HDiff.
+destruct (midpoint_existence A B) as [M HM].
+destruct (perp_exists M B A) as [Q HQ]; auto.
+exists M; exists Q; unfold Perp_bisect.
+split; Col.
+split; auto.
+exists M; split; Col; Midpoint.
 Qed.
 
 End PerpBisect_3.

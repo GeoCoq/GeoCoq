@@ -66,7 +66,7 @@ Proof.
     assert(O <> E /\ O <> E').
       repeat split; intro; subst O; apply H; Col.
     spliter.
-    assert(HH:=parallel_existence_spec O E A' H8).
+    assert(HH:=parallel_existence1 O E A' H8).
     ex_and HH P'.
     exists P'.
     assert( E <> E').
@@ -76,8 +76,8 @@ Proof.
       Col.
     repeat split; Col.
       intro.
-      induction H13.
-        apply H13.
+      induction H12.
+        apply H12.
         exists E'.
         split; Col.
       spliter.
@@ -89,11 +89,14 @@ Proof.
         assumption.
       right.
       auto.
+      apply par_distincts in H10.
+      spliter.
+      auto.
       intro.
       assert(Par O E O E').
         apply (par_trans _ _ A' P'); auto.
-      induction H14.
-        apply H14.
+      induction H13.
+        apply H13.
         exists O.
         split; Col.
       spliter.
@@ -106,9 +109,9 @@ Proof.
             apply par_symmetry.
             auto.
           auto.
-        induction H13.
+        induction H12.
           apply False_ind.
-          apply H13.
+          apply H12.
           exists A'.
           split; Col.
         spliter.
@@ -123,8 +126,8 @@ Proof.
       right.
       auto.
       intro.
-      induction H13.
-        apply H13.
+      induction H12.
+        apply H12.
         exists E.
         split; Col.
       spliter.
@@ -297,7 +300,7 @@ Proof.
       apply NC.
       Col.
     ex_and H4 A'.
-    assert(HH:=parallel_existence_spec O E A' H1).
+    assert(HH:=parallel_existence1 O E A' H1).
     ex_and HH P.
     unfold unique in H5.
     spliter.
@@ -321,7 +324,7 @@ Proof.
       spliter.
       repeat split.
         spliter.
-        induction H12.
+        induction H11.
           left.
           apply par_symmetry.
           auto.
@@ -334,15 +337,15 @@ Proof.
         repeat split; Col.
         intro.
         subst A'.
-        induction H12.
-          induction H12.
-            apply H12.
+        induction H11.
+          induction H11.
+            apply H11.
             exists E.
             split; Col.
           spliter.
           contradiction.
         contradiction.
-      induction H12.
+      induction H11.
         left.
         apply par_symmetry.
         apply par_comm.
@@ -350,35 +353,38 @@ Proof.
       contradiction.
     assert(exists! C', Proj B C' A' P O E').
       apply(project_existence B A' P O E'); auto.
+      apply par_distincts in H4.
+      spliter.
+      auto.
       intro.
       assert(Par O E O E').
         apply (par_trans _ _ A' P).
           auto.
         apply par_symmetry.
         auto.
-      induction H11.
-        apply H11.
+      induction H10.
+        apply H10.
         exists O.
         split; Col.
       spliter.
       apply NC.
       Col.
-    ex_and H10 C'.
-    unfold unique in H11.
+    ex_and H9 C'.
+    unfold unique in H10.
     spliter.
     assert(exists! C : Tpoint, Proj C' C O E A A').
       apply(project_existence C' O E A A'); auto.
       intro.
-      induction H12.
-        apply H12.
+      induction H11.
+        apply H11.
         exists A.
         split; Col.
       spliter.
-      assert(HH:=project_par_dir A A' O E' E E' H12 H5).
+      assert(HH:=project_par_dir A A' O E' E E' H11 H5).
       assert(Col E A A').
         ColR.
       induction HH.
-        apply H17.
+        apply H16.
         exists E.
         split; Col.
       spliter.
@@ -392,8 +398,8 @@ Proof.
       spliter.
       apply NC.
       Col.
-    ex_and H12 C.
-    unfold unique in H13.
+    ex_and H11 C.
+    unfold unique in H12.
     spliter.
     unfold Proj in *.
     spliter.
@@ -407,7 +413,7 @@ Proof.
     unfold Pj.
     repeat split.
       left.
-      induction H25.
+      induction H24.
         apply par_symmetry.
         auto.
       contradiction.
@@ -416,37 +422,37 @@ Proof.
       eapply (par_col_par _ _ _ P).
         intro.
         subst C'.
-        induction H17.
-          induction H17.
-            apply H17.
+        induction H16.
+          induction H16.
+            apply H16.
             exists A'.
             split; Col.
           spliter.
-          induction H21.
-            induction H21.
-              apply H21.
+          induction H20.
+            induction H20.
+              apply H20.
               exists A'.
               split; Col.
             spliter.
             apply NC.
             apply (col_transitivity_1 _ B); Col.
           subst A'.
-          apply H15.
+          apply H14.
           right.
           repeat split; try finish; ColR.
         subst A'.
-        apply H15.
+        apply H14.
         right.
         repeat split; try finish; ColR.
         assumption.
       ColR.
-      induction H21.
+      induction H20.
         left.
         apply par_symmetry.
         auto.
       right; auto.
-    induction H25.
-      induction H17.
+    induction H24.
+      induction H16.
         left.
         apply (par_trans _ _ A A').
           apply par_symmetry.
@@ -558,24 +564,27 @@ Proof.
       subst E.
       apply NC.
       Col.
-    assert(HH:= parallel_existence_spec O E A' H7).
+    assert(HH:= parallel_existence1 O E A' H7).
     ex_and HH P'.
     assert(exists! C' : Tpoint, Proj A C' A' P' O E').
       apply(project_existence A A' P' O E'); auto.
+      apply par_distincts in H8.
+      spliter.
+      auto.
       intro.
       assert(Par O E O E').
         apply (par_trans _ _ A' P').
           auto.
         apply par_symmetry; auto.
-      induction H11.
-        apply H11.
+      induction H10.
+        apply H10.
         exists O.
         split; Col.
       spliter.
       apply NC.
       Col.
-    ex_and H10 C'.
-    unfold unique in H11.
+    ex_and H9 C'.
+    unfold unique in H10.
     spliter.
     exists C'.
     exists P'.
@@ -587,14 +596,14 @@ Proof.
     unfold Proj.
     repeat split; Col.
       intro.
-      induction H16.
-        apply H16.
+      induction H15.
+        apply H15.
         exists E.
         split; Col.
       apply NC.
       tauto.
     left.
-    unfold Proj in H10.
+    unfold Proj in H9.
     spliter.
     assert(Par O E' O A').
       right.
@@ -602,9 +611,9 @@ Proof.
       intro.
       subst A'.
       clean_trivial_hyps.
-      induction H15.
-        induction H14.
-          apply H14.
+      induction H14.
+        induction H13.
+          apply H13.
           exists E.
           split; Col.
           apply col_permutation_1.
@@ -618,12 +627,12 @@ Proof.
       contradiction.
     assert(Plg A C' A' O).
       apply pars_par_plg.
-        induction H19.
+        induction H18.
           assert(Par A C' A' O).
             apply (par_trans _ _ O E').
               Par.
             Par.
-          induction H21.
+          induction H20.
             auto.
           spliter.
           apply False_ind.
@@ -632,8 +641,8 @@ Proof.
           apply (col_transitivity_1 _ A); Col.
         subst C'.
         apply False_ind.
-        induction H9.
-          apply H9.
+        induction H8.
+          apply H8.
           exists A.
           split; Col.
         spliter.
@@ -641,7 +650,7 @@ Proof.
         apply (col_transitivity_1 _ A'); Col.
           intro.
           subst A'.
-          apply par_distincts in H20.
+          apply par_distincts in H19.
           tauto.
         apply col_permutation_2.
         apply (col_transitivity_1 _ P'); Col.
@@ -649,17 +658,17 @@ Proof.
       apply (par_col_par _ _ _ P').
         intro.
         subst C'.
-        induction H19.
-          induction H19.
-            apply H19.
+        induction H18.
+          induction H18.
+            apply H18.
             exists A'.
             split; Col.
           spliter.
           apply NC.
           apply (col_transitivity_1 _ A); Col.
         subst A'.
-        induction H20.
-          apply H19.
+        induction H19.
+          apply H18.
           exists O.
           split; Col.
         spliter.
@@ -679,11 +688,11 @@ Proof.
       subst MA.
       apply between_identity in H1.
       contradiction.
-    apply plg_to_parallelogram in H21.
-    apply plg_permut in H21.
-    apply plg_comm2 in H22.
+    apply plg_to_parallelogram in H20.
+    apply plg_permut in H20.
+    apply plg_comm2 in H21.
     assert(Parallelogram C' A' MA O).
-      assert(HH:= plg_pseudo_trans C' A' O A O MA H21 H22).
+      assert(HH:= plg_pseudo_trans C' A' O A O MA H20 H21).
       induction HH.
         auto.
       spliter.
@@ -691,45 +700,45 @@ Proof.
       apply cong_symmetry in H2.
       apply cong_identity in H2.
       contradiction.
-    apply plg_par in H23.
+    apply plg_par in H22.
       spliter.
-      induction H15.
+      induction H14.
         apply (par_trans _ _ A' MA).
           auto.
         Par.
       subst MA.
-      apply par_distincts in H24.
+      apply par_distincts in H23.
       tauto.
       intro.
       subst C'.
-      unfold Parallelogram in H21.
-      induction H21.
-        unfold Parallelogram_strict in H21.
+      unfold Parallelogram in H20.
+      induction H20.
+        unfold Parallelogram_strict in H20.
         spliter.
-        apply par_distincts in H24.
+        apply par_distincts in H23.
         tauto.
-      unfold Parallelogram_flat in H21.
+      unfold Parallelogram_flat in H20.
       spliter.
-      apply cong_symmetry in H25.
-      apply cong_identity in H25.
+      apply cong_symmetry in H24.
+      apply cong_identity in H24.
       subst A.
       tauto.
     intro.
     subst MA.
-    unfold Parallelogram in H22.
-    induction H22.
-      unfold Parallelogram_strict in H22.
+    unfold Parallelogram in H21.
+    induction H21.
+      unfold Parallelogram_strict in H21.
       spliter.
-      unfold TS in H22; unfold Parallelogram.
+      unfold TS in H21; unfold Parallelogram.
       spliter; Col.
-    unfold Parallelogram_flat in H22.
+    unfold Parallelogram_flat in H21.
     spliter.
     apply NC.
     apply (col_transitivity_1 _ A); Col.
     apply (col_transitivity_1 _ A'); Col.
     intro.
     subst A'.
-    apply cong_identity in H25.
+    apply cong_identity in H24.
     subst A.
     tauto.
 Qed.
@@ -1971,24 +1980,27 @@ Proof.
     unfold unique in H11.
     ex_and H11 B'.
     clear H12.
-    assert(HH:= parallel_existence_spec O E B' H6).
+    assert(HH:= parallel_existence1 O E B' H6).
     ex_and HH P'.
     assert(exists! P : Tpoint, Proj A P B' P' O E').
       apply(project_existence A B' P' O E'); auto.
+      apply par_distincts in H12.
+      spliter.
+      auto.
       intro.
       apply H4.
       apply(par_trans _ _ B' P'); Par.
-    unfold unique in H14.
-    ex_and H14 D'.
-    clear H15.
+    unfold unique in H13.
+    ex_and H13 D'.
+    clear H14.
     assert( Ar2 O E E' A B C).
       unfold Sum in H.
       tauto.
     assert(HH:= sum_to_sump O E E' A B C H).
-    unfold Sump in H14.
+    unfold Sump in H13.
     apply sump_to_sum.
     unfold Sump.
-    unfold Ar2 in H15.
+    unfold Ar2 in H14.
     spliter.
     repeat split; Col.
     exists B'.
@@ -1998,7 +2010,7 @@ Proof.
     split; auto.
     split; auto.
     assert(Par_strict O E B' P').
-      induction H13.
+      induction H12.
         auto.
       spliter.
       apply False_ind.
@@ -2012,10 +2024,10 @@ Proof.
         subst B'.
         apply project_id in HA.
           contradiction.
-        induction H25.
-          induction H25.
+        induction H24.
+          induction H24.
             apply False_ind.
-            apply H25.
+            apply H24.
             exists E.
             split; Col.
           spliter.
@@ -2029,30 +2041,30 @@ Proof.
         subst D'.
         unfold Proj in *.
         spliter.
-        induction H23.
-          induction H23.
-            apply H23.
+        induction H22.
+          induction H22.
+            apply H22.
             exists B'.
             split; Col.
           spliter.
           apply grid_ok.
           apply (col_transitivity_1 _ A); Col.
         subst B'.
-        apply H19.
+        apply H18.
         exists A.
         split; Col.
         apply par_symmetry.
         apply (par_col_par _ _ _ E); Col; Par.
-      unfold Proj in H14.
+      unfold Proj in H13.
       spliter.
       Col.
     assert(Par_strict O A B' D').
-      induction H20.
+      induction H19.
         auto.
       spliter.
       apply False_ind.
-      apply H19.
-      unfold Proj in H14.
+      apply H18.
+      unfold Proj in H13.
       spliter.
       exists O.
       split.
@@ -2060,14 +2072,14 @@ Proof.
       apply col_permutation_2.
       apply (col_transitivity_1 _ D'); Col.
     assert(Par O B' A D').
-      unfold Proj in H14.
+      unfold Proj in H13.
       spliter.
-      induction H25.
+      induction H24.
         apply par_symmetry.
         apply(par_col_par _ _ _ E'); Par.
           intro.
           subst B'.
-          apply H21.
+          apply H20.
           exists O.
           split;Col.
         unfold Proj in H11.
@@ -2075,7 +2087,7 @@ Proof.
         auto.
       subst D'.
       apply False_ind.
-      apply H21.
+      apply H20.
       exists A.
       split; Col.
     assert(Plg O A D' B').
@@ -2083,27 +2095,27 @@ Proof.
     assert(HT:=sum_cong A B C H H2).
     assert(Parallelogram D' B' B C \/ D' = B' /\ O = A /\ C = B /\ D' = C).
       apply(plg_pseudo_trans D' B' O A C B).
-        apply plg_to_parallelogram in H23.
-        apply plg_permut in H23.
-        apply plg_permut in H23.
+        apply plg_to_parallelogram in H22.
+        apply plg_permut in H22.
+        apply plg_permut in H22.
         auto.
       right.
       auto.
-    induction H24.
+    induction H23.
       repeat split; auto.
-      apply plg_permut in H24.
-      apply plg_par in H24.
+      apply plg_permut in H23.
+      apply plg_par in H23.
         unfold Proj in *.
         spliter.
-        induction H33.
+        induction H32.
           left.
           apply (par_trans _ _ B B'); Par.
         subst B'.
-        apply par_distincts in H24.
+        apply par_distincts in H23.
         tauto.
         intro.
         subst B'.
-        apply H21.
+        apply H20.
         exists B.
         split.
           ColR.
@@ -2158,18 +2170,21 @@ Proof.
     unfold Proj in H13.
     spliter.
     clean_duplicated_hyps.
-    assert(HH:=parallel_existence_spec O E A' H7).
+    assert(HH:=parallel_existence1 O E A' H7).
     ex_and HH P'.
     assert(exists ! C' : Tpoint, Proj B C' A' P' O E').
       apply(project_existence B A' P' O E'); auto.
+      apply par_distincts in H.
+      spliter.
+      auto.
       intro.
       apply H5.
       apply(par_trans _ _ A' P'); Par.
-    ex_and H14 C'.
-    unfold unique in H15.
+    ex_and H13 C'.
+    unfold unique in H14.
     spliter.
-    clear H15.
-    unfold Proj in H14.
+    clear H14.
+    unfold Proj in H13.
     spliter.
     exists A'.
     exists C'.
@@ -2188,9 +2203,9 @@ Proof.
       unfold Par_strict.
       repeat split; auto; try apply all_coplanar.
       intro.
-      ex_and H22 X.
-      induction H13.
-        apply H13.
+      ex_and H21 X.
+      induction H.
+        apply H.
         exists X.
         split; Col.
       spliter.
@@ -2199,7 +2214,7 @@ Proof.
     assert(A <> A').
       intro.
       subst A'.
-      apply H22.
+      apply H21.
       exists A.
       split; Col.
     repeat split; Col.
@@ -2210,21 +2225,21 @@ Proof.
       apply (par_col_par _ _ _ P').
         intro.
         subst C'.
-        induction H20.
-          induction H20.
-            apply H20.
+        induction H19.
+          induction H19.
+            apply H19.
             exists A'.
             split; Col.
           spliter.
           apply grid_ok.
           ColR.
         subst A'.
-        apply H22.
+        apply H21.
         exists B.
         split; Col.
         Par.
       Col.
-      induction H20.
+      induction H19.
         left.
         Par.
       right.
@@ -2232,16 +2247,16 @@ Proof.
     assert(A' <> C').
       intro.
       subst C'.
-      induction H20.
-        induction H20.
-          apply H20.
+      induction H19.
+        induction H19.
+          apply H19.
           exists A'.
           split; Col.
         spliter.
         apply grid_ok.
         ColR.
       subst A'.
-      apply H22.
+      apply H21.
       exists B.
       split; Col.
     assert(Plg O B C' A').
@@ -2255,7 +2270,7 @@ Proof.
             Par.
           Col.
         Col.
-      induction H20.
+      induction H19.
         apply par_symmetry.
         apply(par_col_par _ _ _ E').
           auto.
@@ -2263,7 +2278,7 @@ Proof.
         Col.
       subst C'.
       apply False_ind.
-      apply H22.
+      apply H21.
       exists B.
       split; Col.
     assert(Plg O B C A).
@@ -2274,8 +2289,8 @@ Proof.
         Cong.
         Cong.
       auto.
+    apply plg_to_parallelogram in H24.
     apply plg_to_parallelogram in H25.
-    apply plg_to_parallelogram in H26.
     assert(Parallelogram A C C' A').
       assert(Parallelogram C A A' C' \/ C = A /\ O = B /\ C' = A' /\ C = C').
         apply(plg_pseudo_trans C A O B C' A').
@@ -2283,14 +2298,14 @@ Proof.
           apply plg_permut.
           assumption.
         assumption.
-      induction H27.
+      induction H26.
         apply plg_comm2.
         assumption.
       spliter.
       subst C'.
       subst A'.
       tauto.
-    apply plg_par in H27.
+    apply plg_par in H26.
       spliter.
       induction H17.
         left.
@@ -2303,10 +2318,10 @@ Proof.
       tauto.
     intro.
     subst C'.
-    apply plg_permut in H27.
-    induction H20.
-      induction H20.
-        apply H20.
+    apply plg_permut in H26.
+    induction H19.
+      induction H19.
+        apply H19.
         exists O.
         split; Col.
         ColR.
@@ -2314,7 +2329,7 @@ Proof.
       apply grid_ok.
       ColR.
     subst C.
-    apply H22.
+    apply H21.
     exists B.
     split; Col.
 Qed.
@@ -4022,11 +4037,6 @@ Proof.
       repeat split; try ColR.
         Cong.
         Cong.
-      right.
-      intro.
-      subst dBA.
-      apply between_identity in H7.
-      contradiction.
     apply sum_cong in H0; auto.
 Qed.
 

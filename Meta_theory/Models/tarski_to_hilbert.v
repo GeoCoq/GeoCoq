@@ -809,7 +809,7 @@ Lemma exists_not_incident : forall A B : Tpoint, forall  HH : A <> B , exists C,
 Proof.
 intros.
 unfold Incident.
-assert(HC:=l6_25 A B HH).
+assert(HC:=not_col_exists A B HH).
 ex_and HC C.
 exists C.
 intro.
@@ -887,7 +887,7 @@ Lemma OS_distinct : forall P Q A B,
   OS P Q A B -> P<>Q.
 Proof.
 intros.
-apply one_side_not_col in H.
+apply one_side_not_col123 in H.
 assert_diffs;assumption.
 Qed.
 

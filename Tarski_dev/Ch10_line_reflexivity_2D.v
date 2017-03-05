@@ -446,6 +446,70 @@ Proof.
     eapply image_preserves_bet;try apply is_image_is_image_spec; eauto.
 Qed.
 
+Lemma image_preserves_col : forall A B C A' B' C' X Y,
+   X <> Y ->
+  ReflectL A A' X Y -> ReflectL B B' X Y -> ReflectL C C' X Y ->
+  Col A B C ->
+  Col A' B' C'.
+Proof.
+    intros.
+    destruct H3 as [HBet|[HBet|HBet]]; [|apply col_permutation_2|apply col_permutation_1];
+    apply bet_col; eapply image_preserves_bet; eauto.
+Qed.
+
+Lemma image_gen_preserves_col : forall A B C A' B' C' X Y,
+   X <> Y ->
+  Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y ->
+  Col A B C ->
+  Col A' B' C'.
+Proof.
+    intros.
+    apply image_preserves_col with A B C X Y; try (apply is_image_is_image_spec); auto.
+Qed.
+
+Lemma image_gen_preserves_ncol : forall A B C A' B' C' X Y,
+   X <> Y ->
+  Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y ->
+  ~ Col A B C ->
+  ~ Col A' B' C'.
+Proof.
+    intros.
+    intro.
+    apply H3, image_gen_preserves_col with A' B' C' X Y; try (apply l10_4); assumption.
+Qed.
+
+Lemma image_gen_preserves_inter : forall A B C D I A' B' C' D' I' X Y,
+  X <> Y ->
+  Reflect A A' X Y -> Reflect B B' X Y -> Reflect C C' X Y -> Reflect D D' X Y ->
+  ~ Col A B C -> C <> D ->
+  Col A B I -> Col C D I -> Col A' B' I' -> Col C' D' I' ->
+  Reflect I I' X Y.
+Proof.
+    intros.
+    destruct (l10_6_existence X Y I) as [I0 HI0]; trivial.
+    assert (I' = I0); [|subst; assumption].
+    apply (l6_21 A' B' C' D'); trivial.
+      apply image_gen_preserves_ncol with A B C X Y; assumption.
+      intro; subst D'; apply H5, l10_2_uniqueness with X Y C'; assumption.
+      apply image_gen_preserves_col with A B I X Y; assumption.
+      apply image_gen_preserves_col with C D I X Y; assumption.
+Qed.
+
+Lemma intersection_with_image_gen : forall A B C A' B' X Y,
+  X <> Y ->
+  Reflect A A' X Y -> Reflect B B' X Y ->
+  ~ Col A B A' -> Col A B C -> Col A' B' C ->
+  Col C X Y.
+Proof.
+    intros.
+    apply l10_8.
+    assert (Reflect A' A X Y) by (apply l10_4; assumption).
+    assert (~ Col A' B' A) by (apply image_gen_preserves_ncol with A B A' X Y; trivial).
+    assert_diffs.
+    apply image_gen_preserves_inter with A B A' B' A' B' A B; trivial.
+    apply l10_4; assumption.
+Qed.
+
 Lemma image_preserves_midpoint :
  forall A B C A' B' C' X Y, X <> Y ->
  ReflectL A A' X Y -> ReflectL B B' X Y -> ReflectL C C' X Y ->
@@ -1099,7 +1163,7 @@ apply all_coplanar_implies_upper_dim; unfold all_coplanar_axiom;
 apply all_coplanar.
 Qed.
 
-(* Teanup the proof *)
+(* cleanup the proof *)
 
 Lemma one_side_dec : forall A B C D,
  OS A B C D \/ ~ OS A B C D.

@@ -22,7 +22,7 @@ Proof.
 apply strong_parallel_postulate_implies_inter_dec.
 apply strong_parallel_postulate_SPP.
 cut tarski_s_parallel_postulate.
-apply equivalent_parallel_postulates_without_decidability_of_intersection_of_lines_bis; simpl; tauto.
+apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis; simpl; tauto.
 unfold tarski_s_parallel_postulate; apply euclid.
 Qed.
 
@@ -164,12 +164,6 @@ Proof.
       assert(Out A X C').
         apply bet_out.
           auto.
-          intro.
-          subst C'.
-          apply between_equality in H11.
-            subst X.
-            absurde.
-          apply between_trivial.
         assumption.
       assert(~Col A B X).
         intro.
@@ -256,11 +250,6 @@ Proof.
           apply conga_sym.
           assumption.
           assumption.
-        intro.
-        subst C'.
-        apply between_identity in H8.
-        subst C.
-        absurde.
       induction H8.
         apply between_symmetry in H8.
         apply bet_out in H8.
@@ -292,7 +281,6 @@ Proof.
           subst C'.
           apply H6.
           apply col_trivial_3.
-        assumption.
       assert (TS A B C' C).
         repeat split.
           intro.
@@ -348,13 +336,6 @@ Proof.
               assumption.
             apply bet_out.
               intro.
-              subst T.
-              apply H10.
-              apply bet_col.
-              assumption.
-              intro.
-              subst C.
-              apply between_identity in H13.
               subst T.
               apply H10.
               apply bet_col.
@@ -905,7 +886,6 @@ Proof.
     assert(OS B C T D).
       eapply out_one_side_1.
         assumption.
-        assumption.
         apply col_trivial_3.
       apply bet_out in H23.
         assumption.
@@ -913,12 +893,8 @@ Proof.
         treat_equalities.
         apply H24.
         apply col_trivial_3.
-      intro.
-      treat_equalities.
-      Col.
     assert(OS B C T A).
       eapply out_one_side_1.
-        assumption.
         assumption.
         apply col_trivial_2.
       apply between_symmetry in H22.
@@ -928,9 +904,6 @@ Proof.
         treat_equalities.
         apply H24.
         apply col_trivial_2.
-      intro.
-      treat_equalities.
-      Col.
     assert(OS B C A D).
       apply (one_side_transitivity _ _ _ T).
         apply one_side_symmetry.
@@ -1256,9 +1229,6 @@ Proof.
       apply bet_out in H23.
         assumption.
         auto.
-      intro.
-      treat_equalities.
-      auto.
     apply out_trivial.
     auto.
 Qed.
@@ -1456,19 +1426,9 @@ Proof.
               treat_equalities.
               unfold Par_strict in H1.
               tauto.
-              intro.
-              treat_equalities.
-              unfold TS in H14.
-              spliter.
-              apply H12.
-              Col.
             assumption.
           induction H30.
             apply bet_out.
-              intro.
-              treat_equalities.
-              unfold CongA in H27.
-              tauto.
               intro.
               treat_equalities.
               unfold CongA in H27.
@@ -1820,10 +1780,6 @@ Proof.
     assert(OS A C B0 C').
       eapply out_one_side_1.
         intro.
-        treat_equalities.
-        apply H.
-        Col.
-        intro.
         apply H.
         eapply (col_transitivity_1 _ B0).
           intro.
@@ -1859,10 +1815,6 @@ Proof.
       assumption.
     assert(OS A C B0 B).
       eapply out_one_side_1.
-        intro.
-        treat_equalities.
-        apply H.
-        Col.
         intro.
         apply H.
         eapply (col_transitivity_1 _ B0).
@@ -2015,71 +1967,6 @@ Proof.
       split; Col.
     spliter.
     Col.
-Qed.
-
-Lemma parallel_existence1 : forall A B P, A <> B -> exists Q, Par A B P Q.
-Proof.
-    intros.
-    assert(HH:=parallel_existence A B P H).
-    ex_and HH X.
-    ex_and H0 Y.
-    apply par_distincts in H1.
-    spliter.
-    induction(eq_dec_points P X).
-      exists Y.
-      apply par_symmetry.
-      apply par_comm.
-      apply (par_col_par_2 _ X).
-        intro.
-        subst X.
-        subst Y.
-        tauto.
-        Col.
-      Par.
-    exists X.
-    apply par_symmetry.
-    apply par_comm.
-    apply (par_col_par_2 _ Y).
-      intro.
-      subst X.
-      tauto.
-      Col.
-    Par.
-Qed.
-
-Lemma par_strict_not_col : forall A B C D, Par_strict A B C D -> forall X, Col A B X -> ~Col C D X.
-Proof.
-    intros.
-    intro.
-    unfold Par_strict in H.
-    spliter.
-    apply H4.
-    exists X.
-    split; Col.
-Qed.
-
-Lemma perp_inter_exists : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P.
-Proof.
-    intros.
-    apply perp_not_par in H.
-    apply not_par_inter_exists in H.
-    ex_and H P.
-    exists P.
-    split;Col.
-Qed.
-
-
-Lemma perp_inter_perp_in : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P /\ Perp_at P A B C D.
-Proof.
-    intros.
-    assert(HH:=perp_inter_exists A B C D H).
-    ex_and HH P.
-    exists P.
-    split.
-      Col.
-    split.
-      Col.
-    apply l8_14_2_1b_bis; Col.
 Qed.
 
 End T13.

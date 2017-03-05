@@ -51,6 +51,13 @@ assert_diffs.
 repeat split; assumption.
 Qed.
 
+Goal forall A B C P, InAngle P A B C -> A <> B /\ C <> B /\ P <> B.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
 Goal forall A B C D E F, LeA A B C D E F -> A <> B /\ C <> B /\ D <> E /\ F <> E.
 Proof.
 intros.

@@ -4,7 +4,9 @@ Section alternate_interior_angles_proclus.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma alternate_interior__proclus : greenberg_s_postulate -> alternate_interior_angles_postulate ->
+Lemma alternate_interior__proclus :
+  greenberg_s_axiom ->
+  alternate_interior_angles_postulate ->
   proclus_postulate.
 Proof.
   intros greenberg aia.
@@ -29,7 +31,7 @@ Proof.
     apply (par_not_col C D); Col; Par.
   }
   destruct HQ1 as [Q1 []].
-  assert(~Col A B Q1) by (apply (one_side_not_col _ _ _ C0); Side).
+  assert(~Col A B Q1) by (apply (one_side_not_col123 _ _ _ C0); Side).
   assert(P<>Q1) by (intro; subst Q1; auto).
   assert(~ Col P C0 Q1) by (intro; apply HNCol1; ColR).
 
@@ -44,7 +46,7 @@ Proof.
     exists A1; split; Col.
   }
   destruct HA1 as [A1 []].
-  assert(~Col P C0 A1) by (apply (one_side_not_col _ _ _ Q1); Side).
+  assert(~Col P C0 A1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
   assert(HNCol3 : ~Col P C D) by (apply (par_not_col A B); Col).
   assert(HC1 : exists C1, Col C D C1 /\ OS P C0 Q1 C1).
   { elim(Col_dec P C0 C).
@@ -56,7 +58,7 @@ Proof.
     exists C1; split; Col.
   }
   destruct HC1 as [C1 []].
-  assert(HNCol4 : ~Col P C0 C1) by (apply (one_side_not_col _ _ _ Q1); Side).
+  assert(HNCol4 : ~Col P C0 C1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
   assert(HC2 := symmetric_point_construction C1 C0).
   destruct HC2 as [C2].
   assert_cols.
@@ -103,7 +105,7 @@ Proof.
    assert(OS P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
    assert(HY : InAngle Q1 C0 P S).
    { assert(OS P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
-     assert(~ Col P C0 S) by (apply (one_side_not_col _ _ _ C1); auto).
+     assert(~ Col P C0 S) by (apply (one_side_not_col123 _ _ _ C1); auto).
      apply os2__inangle.
      apply (one_side_transitivity _ _ _ C1); Side.
      exists A1.

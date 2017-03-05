@@ -85,7 +85,7 @@ Ltac assert_ss_ok Tpoint Col lvar :=
       try reflexivity
   end.
 
-Ltac assert_st_ok Tpoint Col lvar :=
+Ltac assert_st_ok Tpoint lvar :=
   repeat
   match goal with
     | HDiff : ?A <> ?B, HOK : st_ok_for_col ?ST ?Interp |- _ =>
@@ -109,7 +109,7 @@ Ltac Col_refl Tpoint Col :=
       assert_ss_ok Tpoint Col lvar;
       let HST := fresh in
       assert (HST := st_ok_empty_for_col (interp lvar Default));
-      assert_st_ok Tpoint Col lvar;
+      assert_st_ok Tpoint lvar;
       match goal with
         | HOKSS : ss_ok_for_col ?SS ?Interp, HOKST : st_ok_for_col ?ST ?Interp |- _ =>
           apply (test_coinc_ok_for_col pa pb pc SS ST
@@ -119,7 +119,7 @@ Ltac Col_refl Tpoint Col :=
 (*
 Section Test.
 
-Context `{TnEQD:Tarski_neutral_dimensionless}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 
 Goal forall Q R A B C D E F G H I J K L M N,

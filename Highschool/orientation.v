@@ -1087,7 +1087,7 @@ Qed.
 
 Lemma proj_inv_exists : forall P Q A', P <> Q -> Col P Q A'  -> exists A, A <> A' /\ proj A P Q A'.
 intros.
-assert(HH0:= l6_25 P Q H).
+assert(HH0:= not_col_exists P Q H).
 ex_and HH0 X.
 
 induction(eq_dec_points A' P).
@@ -2293,10 +2293,8 @@ induction H11.
 eapply l6_7.
 apply bet_out.
 auto.
-2: apply H11.
-auto.
+apply H11.
 apply bet_out.
-auto.
 auto.
 assumption.
 
@@ -2308,11 +2306,9 @@ assumption.
 induction H12.
 apply bet_out.
 auto.
-auto.
 assumption.
 apply l6_6.
 apply bet_out.
-auto.
 auto.
 assumption.
 eapply l6_13_1.
@@ -2770,10 +2766,6 @@ assert(OS A A' X B'').
 
 eapply (out_one_side_1 _ _ X B'').
 intro.
-subst A'.
-apply H9.
-Col.
-intro.
 apply H9.
 apply col_permutation_1.
 eapply (col_transitivity_1 _ X).
@@ -2843,10 +2835,6 @@ assumption.
 assert(OS A A' X B).
 
 eapply (out_one_side_1).
-intro.
-subst A'.
-apply H9.
-Col.
 intro.
 apply H9.
 apply col_permutation_1.
@@ -4877,10 +4865,10 @@ Lemma one_side_eqo : forall A B X Y, OS A B X Y -> eqo A B X A B Y.
 intros.
 unfold eqo.
 repeat split.
-eapply one_side_not_col.
+eapply one_side_not_col123.
 apply H.
 apply one_side_symmetry in H.
-eapply one_side_not_col.
+eapply one_side_not_col123.
 apply H.
 
 intros.

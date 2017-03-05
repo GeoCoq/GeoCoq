@@ -558,7 +558,7 @@ Proof.
         intro.
         apply H10.
         Col.
-      assert(HP:=out_one_side_1 A B C' C B H11 H15).
+      assert(HP:=out_one_side_1 A B C' C B H15).
       eapply (one_side_transitivity _ _ _ C').
         apply one_side_symmetry.
         apply HP.
@@ -1046,7 +1046,7 @@ Proof.
     apply Hout.
     apply H.
     apply HConga.
-    apply acute_distinct in Hacute.
+    apply acute_distincts in Hacute.
     spliter.
     apply conga_refl; auto.
 Qed.

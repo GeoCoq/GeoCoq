@@ -12,7 +12,7 @@ Proof.
   destruct HA' as [A'].
   apply (bet_conga_bet A B A'); Between.
   apply (suma2__conga A B C B C D); auto.
-  assert(HNCol : ~ Col B C A) by (apply (one_side_not_col _ _ _ D); auto).
+  assert(HNCol : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
   assert_diffs.
   assert(TS B C A A').
   { repeat split; Col.

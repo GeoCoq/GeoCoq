@@ -8,11 +8,12 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Out P A B := A <> P /\ B <> P /\ (Bet P A B \/ Bet P B A).
 
-Lemma bet_out : forall A B C, B <> A -> C <> A -> Bet A B C -> Out A B C.
+Lemma bet_out : forall A B C, B <> A -> Bet A B C -> Out A B C.
 Proof.
     intros.
     unfold Out.
-    tauto.
+    repeat split; auto.
+    intro; treat_equalities; auto.
 Qed.
 
 Lemma out_dec : forall P A B, Out P A B \/ ~ Out P A B.
@@ -325,7 +326,8 @@ Section T6_2.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma l6_25 : forall A B,
+(* This is l6_25 of Tarski *)
+Lemma not_col_exists : forall A B,
  A<>B -> exists C, ~ Col A B C.
 Proof.
     intros.
@@ -437,7 +439,6 @@ Proof.
     apply (l6_7 _ _ B').
     apply (l6_2 _ _ A'); Between.
     apply bet_out; auto.
-    intro; treat_equalities; auto.
   - apply (le_transitivity _ _ B' C').
       apply (l5_6 B C B' C'); Cong.
       apply le_comm.
@@ -660,7 +661,6 @@ Proof.
           unfold Out in *.
           spliter.
           assumption.
-        assumption.
       apply col_permutation_4.
       apply out_col.
       assumption.
@@ -679,7 +679,6 @@ Proof.
         assumption.
         unfold Out in *.
         spliter.
-        assumption.
       apply between_symmetry.
       assumption.
     apply col_permutation_4.
@@ -812,7 +811,6 @@ Lemma out_bet__out : forall A B P Q,
 Proof.
     intros A B P Q HBet Hout.
     destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6]; apply bet_out; eBetween; intro; treat_equalities; auto.
-      apply HAQ; apply (between_equality _ _ B); Between.
       apply HBQ; apply (between_equality _ _ A); Between.
 Qed.
 

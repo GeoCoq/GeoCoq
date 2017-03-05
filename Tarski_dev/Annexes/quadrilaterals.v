@@ -578,10 +578,8 @@ induction H11.
 eapply l6_7.
 apply bet_out.
 auto.
-2: apply H11.
-auto.
+apply H11.
 apply bet_out.
-auto.
 auto.
 assumption.
 
@@ -593,11 +591,9 @@ assumption.
 induction H12.
 apply bet_out.
 auto.
-auto.
 assumption.
 apply l6_6.
 apply bet_out.
-auto.
 auto.
 assumption.
 eapply l6_13_1.
@@ -2216,80 +2212,6 @@ tauto.
 Qed.
 
 
-Lemma ex_col3 : forall A B C, Col A B C -> exists D, Col A B D /\ A <> D /\ B <> D /\ C <> D.
-intros.
-induction(eq_dec_points A B).
-subst B.
-assert(HH:=ex_col2 A C).
-ex_and HH X.
-exists X.
-split; Col.
-induction(eq_dec_points B C).
-subst C.
-assert(HH:=ex_col2 A B).
-ex_and HH X.
-exists X.
-repeat split; Col.
-induction (eq_dec_points A C).
-subst C.
-assert(HH:=ex_col2 A B).
-ex_and HH X.
-exists X.
-repeat split; Col.
-
-induction H.
-prolong B C X B C.
-exists X.
-repeat split; try (intro; subst X).
-apply bet_col.
-eBetween.
-apply H1.
-eapply between_equality.
-apply H3.
-Between.
-apply between_identity in H3.
-contradiction.
-apply cong_symmetry in H4.
-apply cong_identity in H4.
-contradiction.
-
-
-induction H.
-prolong C A X C A.
-exists X.
-repeat split; try (intro; subst X).
-assert(Bet B A X).
-eBetween.
-apply bet_col in H5.
-Col.
-apply cong_symmetry in H4.
-apply cong_identity in H4.
-subst C.
-tauto.
-apply H2.
-eapply between_equality.
-2: apply H3.
-Between.
-apply between_identity in H3.
-subst C.
-tauto.
-
-prolong A B X A B.
-exists X.
-repeat split; try (intro; subst X).
-apply bet_col.
-assumption.
-apply between_identity in H3.
-contradiction.
-apply cong_symmetry in H4.
-apply cong_identity in H4.
-contradiction.
-apply H0.
-eapply between_equality.
-apply H3.
-Between.
-Qed.
-
 (** Rectangle *)
 
 Definition Rectangle A B C D := Plg A B C D /\ Cong A C B D.
@@ -3248,6 +3170,7 @@ spliter.
 contradiction.
 Qed.
 
+(*
 Lemma not_col_exists : forall A B, A <> B -> exists P, ~Col A B P.
 intros.
 assert(HH:= ex_col2 A B).
@@ -3260,6 +3183,7 @@ apply perp_not_col in H3.
 exists P.
 assumption.
 Qed.
+*)
 
 Lemma plgs_existence : forall A B, A <> B -> exists C, exists D, Parallelogram_strict A B C D.
 intros.

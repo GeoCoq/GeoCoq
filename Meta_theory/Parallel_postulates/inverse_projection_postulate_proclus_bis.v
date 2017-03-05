@@ -36,7 +36,7 @@ Proof.
   assert(HNCol3 : ~ Col C0 A B) by (apply (par_not_col C D); auto).
   assert(HQ0 := not_par_same_side A B Q P P C0).
   destruct HQ0 as [Q0 []]; Col.
-  assert(HNCol4 : ~ Col A B Q0) by (apply (one_side_not_col _ _ _ C0); Side).
+  assert(HNCol4 : ~ Col A B Q0) by (apply (one_side_not_col123 _ _ _ C0); Side).
   assert(P<>Q0) by (intro; subst; auto).
   assert(HNCol5 : ~ Col P C0 Q0) by (intro; apply HNCol2; ColR).
   assert_diffs.
@@ -58,7 +58,7 @@ Proof.
       apply (not_par_same_side _ _ _ _ P); Col.
   }
   destruct HA0 as [A0 []].
-  assert(HNCol6 : ~ Col P C0 A0) by (apply (one_side_not_col _ _ _ Q0); Side).
+  assert(HNCol6 : ~ Col P C0 A0) by (apply (one_side_not_col123 _ _ _ Q0); Side).
   assert_diffs.
 
   assert(HY := ip C0 P Q0 C0 C1).

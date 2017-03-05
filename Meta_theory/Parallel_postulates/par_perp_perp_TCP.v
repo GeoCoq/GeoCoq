@@ -5,32 +5,15 @@ Section par_perp_perp_TCP.
 Context `{MT:Tarski_2D}.
 
 
-Lemma par_perp_perp_implies_perp_bisect_existence :
-  perpendicular_transversal_postulate ->
-  forall A B, A <> B -> exists P, exists Q, Perp_bisect P Q A B.
-Proof.
-intros HPTP A B HDiff.
-assert (HM := midpoint_existence A B); destruct HM as [M HM].
-assert(HP' := l6_25 A B HDiff); destruct HP' as [P' HP'].
-assert(HQ' := l8_18_existence A B P' HP'); clear HP'.
-destruct HQ' as [Q' [Hc HP'Q']]; clear Hc.
-assert (HPQ := parallel_existence P' Q' M).
-destruct HPQ as [P [Q [HDiff' [HPar HCol]]]]; try (assert_diffs; assumption).
-exists P; exists Q; unfold Perp_bisect.
-split; assert_diffs; Col.
-split; try (exists M; split; Col; Midpoint); left.
-apply HPTP with P' Q'; finish.
-Qed.
-
 Lemma inter_dec_plus_par_perp_perp_imply_triangle_circumscription :
   decidability_of_intersection ->
   perpendicular_transversal_postulate ->
   triangle_circumscription_principle.
 Proof.
 intros HID HPTP A B C HNC.
-assert (HAB := par_perp_perp_implies_perp_bisect_existence HPTP A B);
+assert (HAB := perp_bisect_existence A B);
 destruct HAB as [C1 [C2 HAB]]; try (assert_diffs; assumption).
-assert (HAC := par_perp_perp_implies_perp_bisect_existence HPTP A C);
+assert (HAC := perp_bisect_existence A C);
 destruct HAC as [B1 [B2 HAC]]; try (assert_diffs; assumption).
 assert (HInter := HID B1 B2 C1 C2).
 elim HInter; clear HInter; intro HInter.

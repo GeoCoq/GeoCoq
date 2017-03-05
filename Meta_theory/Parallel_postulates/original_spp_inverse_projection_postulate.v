@@ -30,7 +30,7 @@ Proof.
   assert(HQ0 := not_par_same_side A B Q P P C).
   destruct HQ0 as [Q0 []]; Col.
     intro; apply HNCol2; ColR.
-  assert(HNCol3 : ~ Col A B Q0) by (apply (one_side_not_col _ _ _ C); Side).
+  assert(HNCol3 : ~ Col A B Q0) by (apply (one_side_not_col123 _ _ _ C); Side).
   assert(P<>Q0) by (intro; subst; Col).
   assert (HSuma := ex_suma C B P B P Q0).
   destruct HSuma as [D [E [F]]]; auto.
@@ -56,7 +56,7 @@ Proof.
   2: ColR.
   assert(HB0 := l10_15 A B B C).
   destruct HB0 as [B0 []]; Col.
-  assert(HNCol4 : ~ Col A B B0) by (apply (one_side_not_col _ _ _ C); Side).
+  assert(HNCol4 : ~ Col A B B0) by (apply (one_side_not_col123 _ _ _ C); Side).
   assert(HNCol5 : ~ Col B C P) by (intro; apply HNCol1; ColR).
   assert_diffs.
   assert(P<>Y) by (intro; subst; auto).

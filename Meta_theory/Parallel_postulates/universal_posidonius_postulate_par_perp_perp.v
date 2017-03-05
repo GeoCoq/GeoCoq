@@ -52,9 +52,8 @@ assert (HGH : exists G H,
 destruct HGH as [G [H [HC5 [HC6 [HPerp3 [HD2 HD3]]]]]].
 assert (HSacc1 : Saccheri E F H G).
   {
-  split; [apply perp_per_1; [assert_diffs|apply perp_col0 with A B]; Perp|].
-  split; [apply perp_per_1; [assert_diffs|
-                             apply perp_sym; apply perp_col0 with A B]; Perp|].
+  split; [apply perp_per_1; apply perp_col0 with A B; Perp|].
+  split; [apply perp_per_1; apply perp_sym; apply perp_col0 with A B; Perp|].
   split; [assert (Cong E F G H); Cong; apply HP with A B C D; Col|].
   apply l12_6; apply par_strict_col2_par_strict with C D; Col.
   apply par_strict_symmetry;
@@ -83,12 +82,43 @@ assert (HSacc2 : Saccheri E F M2 M1).
 assert (HRAH : postulate_of_right_saccheri_quadrilaterals)
   by (apply per_sac__rah with M1 M2 F E; try apply sac_perm;
       unfold Lambert in *; spliter; auto).
-assert (HP' : bachmann_s_lotschnittaxiom).
+assert (HP' : forall A1 A2 B1 B2 C1 C2 D1 D2,
+          Perp A1 A2 B1 B2 -> Perp A1 A2 C1 C2 -> Perp B1 B2 D1 D2 ->
+          ~ Col A1 A2 D1 -> ~ Col B1 B2 C1 ->
+          exists I, Col C1 C2 I /\ Col D1 D2 I).
   {
-  apply weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom.
-  apply thales_converse_postulate__weak_triangle_circumscription_principle.
-  apply thales_postulate__thales_converse_postulate.
-  apply rah__thales_postulate; assumption.
+  cut bachmann_s_lotschnittaxiom.
+
+    {
+    clear HP; clear dependent P; clear dependent Q; clear dependent R.
+    intros bla A1 A2 B1 B2 C1 C2 D1 D2 HPerpAB HPerpAC HPerpBD HNCol1 HNCol2.
+    assert (HParA : Par_strict A1 A2 D1 D2).
+      apply par_not_col_strict with D1; Col; apply l12_9 with B1 B2; Perp.
+    assert (HParB : Par_strict B1 B2 C1 C2).
+      apply par_not_col_strict with C1; Col; apply l12_9 with A1 A2; Perp.
+    assert (HP := HPerpAC); destruct HP as [P [_ [_ [HP1 [HP2 HP3]]]]].
+    assert (HQ := HPerpAB); destruct HQ as [Q [_ [_ [HQ1 [HQ2 HQ3]]]]].
+    assert (HR := HPerpBD); destruct HR as [R [_ [_ [HR1 [HR2 HR3]]]]].
+    assert (HNCol3 : ~ Col P B1 B2) by (apply par_not_col with C1 C2; Par).
+    assert (HNCol4 : ~ Col R A1 A2) by (apply par_not_col with D1 D2; Par).
+    assert (HPQ : P <> Q) by (intro; subst; contradiction).
+    assert (HQR : Q <> R) by (intro; subst; contradiction).
+    assert (Per P Q R) by (apply HQ3; trivial).
+    destruct (diff_col_ex3 C1 C2 P) as [P1 [HC1P1 [HC2P1 [HPP1 HCP1]]]]; Col.
+    destruct (diff_col_ex3 D1 D2 R) as [R1 [HD1R1 [HD2R1 [HRR1 HDR1]]]]; Col.
+    destruct (bla P Q R P1 R1) as [I [HI1 HI2]]; auto.
+      apply HP3; Col.
+      apply HR3; Col.
+    exists I.
+    split; assert_diffs; ColR.
+    }
+
+    {
+    apply weak_triangle_circumscription_principle__bachmann_s_lotschnittaxiom.
+    apply thales_converse_postulate__weak_triangle_circumscription_principle.
+    apply thales_postulate__thales_converse_postulate.
+    apply rah__thales_postulate; assumption.
+    }
   }
 destruct (HP' A B E F P Q C D) as [S [HC7 HC8]]; Col;
 [apply perp_col0 with F M2; try (apply perp_sym; apply per_perp);
@@ -101,9 +131,8 @@ destruct (HP' A B E F P Q C D) as [S [HC7 HC8]]; Col;
  [apply l6_21 with A B E F|apply l6_21 with A B F E]; assert_diffs; Col; ColR|].
 assert (HSacc3 : Saccheri E F S R).
   {
-  split; [apply perp_per_1; [assert_diffs|apply perp_col0 with A B]; Perp|].
-  split; [apply perp_per_1; [assert_diffs|apply perp_col0 with P Q;
-                               try apply perp_col0 with A B]; Perp;
+  split; [apply perp_per_1; apply perp_col0 with A B; Perp|].
+  split; [apply perp_per_1; apply perp_col0 with P Q; try apply perp_col0 with A B; Perp;
           intro; treat_equalities; destruct HParS as [_ [_ [_ HF]]];
           exfalso; apply HF; exists S; Col|].
   split; [assert (Cong E F R S); Cong; apply HP with A B C D; Col;

@@ -4,7 +4,7 @@ Section aristotle_greenberg.
 
 Context `{T2D:Tarski_2D}.
 
-Lemma aristotle__greenberg : aristotle_s_postulate -> greenberg_s_postulate.
+Lemma aristotle__greenberg : aristotle_s_axiom -> greenberg_s_axiom.
 Proof.
   intros aristotle P Q R A B C.
   intros HNColB HABCacute HQRdiff HQright.
@@ -25,7 +25,7 @@ Proof.
   assert (HXY : (exists X Y, Out B A X /\ Out B C Y /\ Per B X Y /\ Lt P Q X Y)) by (apply aristotle; assumption).
   destruct HXY as [X [Y [PX [PY [HXright [Hle HNcong]]]]]].
   assert_diffs.
-  assert (HXYdiff : X <> Y) by (intro; treat_equalities; apply HPQdiff; apply le_zero with X; auto).
+  assert (HXYdiff : X <> Y) by (intro; treat_equalities; auto).
   assert (HT : (exists T, Out Q T P /\ Cong Q T X Y)) by (apply l6_11_existence; auto).
   destruct HT as [T []].
   assert (HS : (exists S, Out Q S R /\ Cong Q S X B)) by (apply l6_11_existence; auto).

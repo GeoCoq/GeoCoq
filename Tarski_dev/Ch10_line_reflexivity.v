@@ -5,8 +5,7 @@ Section T10.
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition ReflectL P' P A B :=
-  (exists X, Midpoint X P P' /\ Col A B X) /\
-  (Perp A B P P' \/ P=P').
+  (exists X, Midpoint X P P' /\ Col A B X) /\ (Perp A B P P' \/ P = P').
 
 Definition Reflect P' P A B :=
  (A<>B /\ ReflectL P' P A B) \/ (A=B /\ Midpoint A P P').
@@ -336,6 +335,19 @@ Proof.
     reflexivity.
 Qed.
 
+Lemma l10_2_uniqueness_spec : forall A B P P1 P2,
+ ReflectL P1 P A B -> ReflectL P2 P A B -> P1=P2.
+Proof.
+    intros A B P P1 P2 HP1 HP2.
+    assert (HR1 := HP1).
+    assert (HR2 := HP2).
+    destruct HR1 as [HX1 [HPerp|Heq1]].
+      assert_diffs; apply (l10_2_uniqueness A B P); apply is_image_is_image_spec; assumption.
+    destruct HR2 as [HX2 [HPerp|Heq2]].
+      assert_diffs; apply (l10_2_uniqueness A B P); apply is_image_is_image_spec; assumption.
+    subst; reflexivity.
+Qed.
+
 Lemma l10_2_existence_spec : forall A B P,
  exists P', ReflectL P' P A B.
 Proof.
@@ -486,6 +498,18 @@ Proof.
     assumption.
 Qed.
 
+Lemma l10_6_uniqueness_spec : forall A B P P1 P2, ReflectL P P1 A B -> ReflectL P P2 A B -> P1 = P2.
+Proof.
+    intros A B P P1 P2 HP1 HP2.
+    assert (HR1 := HP1).
+    assert (HR2 := HP2).
+    destruct HR1 as [HX1 [HPerp|Heq1]].
+      assert_diffs; apply (l10_6_uniqueness A B P); apply is_image_is_image_spec; assumption.
+    destruct HR2 as [HX2 [HPerp|Heq2]].
+      assert_diffs; apply (l10_6_uniqueness A B P); apply is_image_is_image_spec; assumption.
+    subst; reflexivity.
+Qed.
+
 Lemma l10_6_existence_spec : forall A B P', A<>B -> exists P, ReflectL P' P A B.
 Proof.
     intros.
@@ -535,6 +559,14 @@ Proof.
       subst X.
       Col.
     spliter. subst. Col.
+Qed.
+
+Lemma col__refl : forall A B P, Col P A B -> ReflectL P P A B.
+Proof.
+    intros A B P HCol.
+    split.
+      exists P; repeat split; finish; Between.
+    right; reflexivity.
 Qed.
 
 
@@ -1607,19 +1639,6 @@ Proof.
       apply col_permutation_4.
       assumption.
     apply between_symmetry.
-    assumption.
-Qed.
-
-Lemma not_col_exists : forall A B, A <> B -> exists P, ~Col A B P.
-Proof.
-    intros.
-    assert(HH:= ex_col2 A B).
-    ex_and HH C.
-    assert(HH:=l8_21 A B C H).
-    ex_and HH P.
-    ex_and H3 T.
-    apply perp_not_col in H3.
-    exists P.
     assumption.
 Qed.
 
