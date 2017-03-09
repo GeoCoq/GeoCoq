@@ -574,15 +574,12 @@ subst X.
 treat_equalities.
 assert(OutCircleS D O P).
 apply(onc2_out__outcs O P A B D); auto.
+assert_diffs.
 unfold Out.
 split.
-intro.
-subst D.
-treat_equalities;tauto.
+auto.
 split.
-intro.
-subst D.
-treat_equalities;tauto.
+auto.
 left;finish.
 
 unfold OutCircleS in *.
@@ -590,7 +587,7 @@ unfold Lt in *.
 spliter.
 unfold OnCircle in H3.
 apply False_ind.
-apply H2; Cong.
+absurd (Cong O P O D);Cong.
 
 assert(Col A B C). 
 ColR.
