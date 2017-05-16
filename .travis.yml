@@ -1,47 +1,30 @@
 dist: trusty
 sudo: required
-language: c
-cache:
-  apt: true
-  directories:
-  - $HOME/.opam
-addons:
-  apt:
-    sources:
-    - avsm
-    packages:
-    - aspcud
-env:
-  global:
-  - NJOBS=2
-  # system is == 4.02.3
-  - COMPILER="system"
-  # Main test targets
-  matrix:
-  - TEST_TARGET="trunk"
+language: generic
+
+matrix:
+  fast_finish: true
+  include:
+    - dist: trusty
+      env: COQ_VERSION="trunk"    COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-trunk-daily" 
+    - dist: trusty
+      env: COQ_VERSION="v8.6"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.6-daily"
+    - dist: trusty
+      env: COQ_VERSION="v8.5"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.5-daily"
+    - dist: trusty
+      env: COQ_VERSION="8.6"      COQ_PACKAGE="coq-8.6" PPA="ppa:jgross-h/many-coq-versions"
 
 before_install:
-  - sudo add-apt-repository ppa:jgross-h/coq-trunk-daily -y
+  - if [ ! -z "$PPA" ]; then sudo add-apt-repository "$PPA" -y; fi
   - sudo apt-get update -q
-  - sudo apt-get install coq -y
-  
-install:
-  - true
-# We could do "opam install coq=${TEST_TARGET}" but not so sure how
-# that does work for trunk.
-#- git clone -b ${TEST_TARGET} git://scm.gforge.inria.fr/coq/coq.git coq-${TEST_TARGET}
-#- cd coq-${TEST_TARGET}
-#- ./configure -native-compiler no -local -coqide no
-#- make -j ${NJOBS}
-#- cd -
+  - sudo apt-get install $COQ_PACKAGE -y
 
 script:
 - echo 'Building GeoCoq...' && echo -en 'travis_fold:start:geocoq.build\\r'
-#- export PATH=`pwd`/coq-${TEST_TARGET}/bin:$PATH
 # We lack a few minutes to be able to build the whole library.
 #- sed -i.bak '/Ch16_coordinates_with_functions\.v/d' Make && \
 #- sed -i.bak '/Elements\/Book_1\.v/d'                Make && \
 #- sed -i.bak '/Elements\/Book_3\.v/d'                Make && \
 - ./configure.sh
-- make -j ${NJOBS} && \
+- make -j 2 && \
 - echo -en 'travis_fold:end:geocoq.build\\r'
