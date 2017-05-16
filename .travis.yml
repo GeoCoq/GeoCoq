@@ -22,7 +22,7 @@ env:
   - TEST_TARGET="trunk"
 
 before_install:
-- ./configure
+- ./configure.sh
 
 install:
 - "[ -e .opam ] || opam init -j ${NJOBS} --compiler=${COMPILER} -n -y"
