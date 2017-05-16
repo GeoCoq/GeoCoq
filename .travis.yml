@@ -3,7 +3,6 @@ sudo: required
 language: generic
 
 matrix:
-  fast_finish: true
   include:
     - dist: trusty
       env: COQ_VERSION="trunk"    COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-trunk-daily" 
@@ -26,6 +25,6 @@ script:
 #- sed -i.bak '/Elements\/Book_1\.v/d'                Make && \
 #- sed -i.bak '/Elements\/Book_3\.v/d'                Make && \
 - ./configure.sh
-- travis_wait make -j 2 && \
+- travis_wait 30min make -j 2 && \
 # travis_wait allows 20 minutes without output, usefull for long automatic proofs
 - echo -en 'travis_fold:end:geocoq.build\\r'
