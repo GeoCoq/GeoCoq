@@ -21,6 +21,8 @@ env:
   matrix:
   - TEST_TARGET="trunk"
 
+before_install:
+- ./configure
 
 install:
 - "[ -e .opam ] || opam init -j ${NJOBS} --compiler=${COMPILER} -n -y"
@@ -39,11 +41,9 @@ install:
 script:
 - echo 'Building GeoCoq...' && echo -en 'travis_fold:start:geocoq.build\\r'
 - export PATH=`pwd`/coq-${TEST_TARGET}/bin:$PATH
-- ./configure.sh
 # We lack a few minutes to be able to build the whole library.
 #- sed -i.bak '/Ch16_coordinates_with_functions\.v/d' Make && \
 #- sed -i.bak '/Elements\/Book_1\.v/d'                Make && \
 #- sed -i.bak '/Elements\/Book_3\.v/d'                Make && \
-- coq_makefile -f Make -o Makefile && \
 - make -j ${NJOBS} && \
 - echo -en 'travis_fold:end:geocoq.build\\r'
