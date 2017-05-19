@@ -1308,14 +1308,10 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
   cut ((Cx - Dx) * (Dy - Qy) - (Cy - Dy) * (Dx - Qx) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; try solve [clear HAB; clear HCD; repeat rewrite <- mulF__eq0; nsatz;
-                   simpl; repeat try apply neqO_mul_neqO; apply neq20].
+  scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0;
+  try solve [nsatz;simpl; repeat try apply neqO_mul_neqO;try apply neq20;try ( apply  (oppF_neq0 (_+_ one one)));  apply neq20].
   clear HPx; clear HPy; clear HQx; clear HQy; clear HPar.
-  destruct H as [[H1 H2] [H3 H4]];
-  elim H1; clear H1; [auto|intro H1];
-  elim H2; clear H2; [auto|intro H2];
-  elim H3; clear H3; [auto|intro H3];
-  elim H4; clear H4; [auto|intro H4; exfalso; rtauto].
+  decompose [and or] H;clear H;auto.
   }
 Qed.
 
