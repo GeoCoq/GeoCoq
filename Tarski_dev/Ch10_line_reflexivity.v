@@ -345,7 +345,7 @@ Proof.
       assert_diffs; apply (l10_2_uniqueness A B P); apply is_image_is_image_spec; assumption.
     destruct HR2 as [HX2 [HPerp|Heq2]].
       assert_diffs; apply (l10_2_uniqueness A B P); apply is_image_is_image_spec; assumption.
-    subst; reflexivity.
+   congruence.
 Qed.
 
 Lemma l10_2_existence_spec : forall A B P,
