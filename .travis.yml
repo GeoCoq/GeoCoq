@@ -27,6 +27,6 @@ script:
 - sed -i.bak '/Elements\/Book_1\.v/d'                Make
 - sed -i.bak '/Elements\/Book_3\.v/d'                Make
 - coq_makefile -f Make -o Makefile
-- travis_wait 60 make -j 2 && \
+- make -j 2 && \
 # travis_wait allows more minutes without output, usefull for long automatic proofs
 - echo -en 'travis_fold:end:geocoq.build\\r'
