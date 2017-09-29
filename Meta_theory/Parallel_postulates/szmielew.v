@@ -1,5 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.archimedes.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid.
+Require Export GeoCoq.Axioms.continuity_axioms.
+Require Export GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 
 Section Szmielew.
 
@@ -45,10 +45,10 @@ Proof.
   assert (HNCol3 : ~ Col Q P B1) by (apply sac__ncol123 with X; trivial).
   assert (HNCol4 : ~ Col Q P C1) by (apply sac__ncol123 with Y; trivial).
   assert (HTS : TS Q P X Y) by (repeat split; Col; exists Q; split; Col).
-  apply isi_lta2_suma2__lta with B1 P Q Q P C1 P Q X P Q X.
+  apply sams_lta2_suma2__lta with B1 P Q Q P C1 P Q X P Q X.
   - apply acute_per__lta; auto; apply acute_sym, (aah Q P B1 X HSac).
   - apply acute_per__lta; auto; apply (aah Q P C1 Y HSac').
-  - apply (conga2_isi__isi X Q P P Q Y); CongA.
+  - apply (conga2_sams__sams X Q P P Q Y); CongA.
     repeat split; auto.
       right; intro; apply HNCol1; Col.
     exists Y; split; CongA; split; Side.
@@ -61,7 +61,7 @@ Proof.
 Qed.
 
 Theorem szmielew_s_theorem :
-  archimedes_axiom ->
+  aristotle_s_axiom ->
   (forall P : Prop,
     (playfair_s_postulate -> P) ->
     (hyperbolic_plane_postulate -> ~ P)->
@@ -69,9 +69,10 @@ Theorem szmielew_s_theorem :
 Proof.
 intro H; intros.
 assert (L := aah__hpp).
-assert (HE := archi__acute_or_right H).
-elim (equivalent_postulates_assuming_archimedes_axiom
-        H playfair_s_postulate postulate_of_right_saccheri_quadrilaterals);
+assert (HE := aristotle__acute_or_right H).
+assert (HG := aristotle__greenberg H).
+elim (equivalent_postulates_assuming_greenberg_s_axiom
+        HG playfair_s_postulate postulate_of_right_saccheri_quadrilaterals);
 unfold List.In; tauto.
 Qed.
 

@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_s_euclid_remove_degenerated_cases.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Meta_theory.Parallel_postulates.tarski_s_euclid_remove_degenerated_cases.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section SPP_tarski.
 

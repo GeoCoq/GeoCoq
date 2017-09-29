@@ -1,4 +1,7 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_s_euclid_remove_degenerated_cases.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Meta_theory.Parallel_postulates.tarski_s_euclid_remove_degenerated_cases.
+Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section TCP_tarski.
 
@@ -358,14 +361,16 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
     elim (eq_dec_points A M1); intro HAM1; subst.
 
       {
-      apply cong_perp_bisect_col with Y Z1; eCong.
+      apply cong_perp_bisect_col with Y Z1; trivial.
+        apply cong_transitivity with X x; Cong.
       apply perp_mid_perp_bisect; try split; Cong.
       }
 
       {
       assert (Col M1 A x).
         {
-        apply cong_perp_bisect_col with Y Z1; eCong.
+        apply cong_perp_bisect_col with Y Z1; trivial.
+          apply cong_transitivity with X x; Cong.
         apply perp_mid_perp_bisect; try split; Cong.
         apply perp_left_comm; apply perp_col with B; Col.
         }
@@ -378,14 +383,16 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
     elim (eq_dec_points A M2); intro HAM1; subst.
 
       {
-      apply cong_perp_bisect_col with Y Z2; eCong.
+      apply cong_perp_bisect_col with Y Z2; trivial.
+        apply cong_transitivity with X y; Cong.
       apply perp_mid_perp_bisect; try split; Cong.
       }
 
       {
       assert (Col M2 A y).
         {
-        apply cong_perp_bisect_col with Y Z2; eCong.
+        apply cong_perp_bisect_col with Y Z2; trivial.
+          apply cong_transitivity with X y; Cong.
         apply perp_mid_perp_bisect; try split; Cong.
         apply perp_left_comm; apply perp_col with C; Col.
         }

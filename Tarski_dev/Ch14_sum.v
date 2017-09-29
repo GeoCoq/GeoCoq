@@ -4,18 +4,6 @@ Section T14_sum.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** Definition 14.1 *)
-
-Definition Ar1 O E A B C :=
- O<>E /\ Col O E A /\ Col O E B /\ Col O E C.
-
-Definition Ar2 O E E' A B C :=
- ~ Col O E E' /\ Col O E A /\ Col O E B /\ Col O E C.
-
-(** Definition 14.2 *)
-
-Definition Pj A B C D := Par A B C D \/ C = D.
-
 Lemma Pj_exists : forall A B C,
  exists D, Pj A B C D.
 Proof.
@@ -32,25 +20,6 @@ Proof.
       tauto.
     eauto using par_col2_par with col.
 Qed.
-
-
-(** Definition 14.3 *)
-
-Definition Sum O E E' A B C :=
- Ar2 O E E' A B C /\
- exists A', exists C',
- Pj E E' A  A' /\ Col O E' A' /\
- Pj O E  A' C' /\
- Pj O E' B  C' /\
- Pj E' E C' C.
-
-Definition Sump O E E' A B C :=
- Col O E A /\ Col O E B /\
- exists A', exists C', exists P',
-   Proj A A' O E' E E' /\
-   Par O E A' P' /\
-   Proj B C' A' P' O E' /\
-   Proj C' C O E E E'.
 
 Lemma sum_to_sump : forall O E E' A B C, Sum O E E' A B C -> Sump O E E' A B C.
 Proof.
@@ -512,9 +481,6 @@ Proof.
     subst C''.
     apply(project_uniqueness C' C1 C2 O E E E');auto.
 Qed.
-
-Definition Opp O E E' A B :=
- Sum O E E' B A O.
 
 Lemma opp_exists : forall A,
  Col O E A ->
@@ -1927,7 +1893,7 @@ Proof.
 intros.
 apply sum_cong in H.
 unfold Parallelogram_flat in *.
-spliter;eCong.
+spliter;split;Cong.
 assumption.
 Qed.
 
@@ -3522,11 +3488,6 @@ Proof.
     apply (sum_uniqueness O E E' O O); assumption.
 Qed.
 
-(** Definition 14.38. *)
-(** Definition of the substraction. *)
-Definition Diff O E E' A B C :=
-  exists B', Opp O E E' B B' /\ Sum O E E' A B' C.
-
 Lemma diff_ar2 : forall O E E' A B AMB, Diff O E E' A B AMB -> Ar2 O E E' A B AMB.
 Proof.
     intros.
@@ -3777,7 +3738,7 @@ Proof.
       spliter.
       apply cong_sum; auto.
         repeat split; Col.
-        eCong.
+        Cong.
       Cong.
     spliter.
     subst A.
@@ -4040,8 +4001,6 @@ Proof.
     apply sum_cong in H0; auto.
 Qed.
 
-Definition sum3 O E E' A B C S := exists AB, Sum O E E' A B AB /\ Sum O E E' AB C S.
-
 Lemma sum3_col : forall O E E' A B C S, sum3 O E E' A B C S -> ~Col O E E' /\ Col O E A /\ Col O E B /\ Col O E C /\ Col O E S.
 Proof.
     intros.
@@ -4132,11 +4091,6 @@ Proof.
     subst AB2.
     apply (sum_uniqueness O E E' AB1 C); auto.
 Qed.
-
-
-Definition Sum4 O E E' A B C D S := exists ABC, sum3 O E E' A B C ABC /\ Sum O E E' ABC D S.
-
-Definition sum22 O E E' A B C D S := exists AB, exists CD, Sum O E E' A B AB /\ Sum O E E' C D CD /\ Sum O E E' AB CD S.
 
 Lemma sum4_col : forall O E E' A B C D S, Sum4 O E E' A B C D S ->  ~Col O E E' /\ Col O E A /\ Col O E B /\ Col O E C /\ Col O E D /\ Col O E S.
 Proof.

@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section alternate_interior_angles_proclus.
 
@@ -70,7 +72,7 @@ Proof.
   { split.
     exists Q1; split; CongA; apply l11_24; auto.
     intro HConga.
-    apply l11_22_aux in HConga.
+    apply conga__or_out_ts in HConga.
     destruct HConga as [Habs|Habs].
     assert_cols; Col.
     apply l9_9 in Habs.

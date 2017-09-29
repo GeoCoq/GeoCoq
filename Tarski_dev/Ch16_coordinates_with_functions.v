@@ -99,7 +99,6 @@ apply ncolOEE'.
 apply ncolOEE'.
 Qed.
 
-
 Lemma opp_pythrel : forall O E E' A B C C' , Opp O E E' C C' -> PythRel O E E' A B C -> PythRel O E E' A B C'.
 Proof.
 intros.
@@ -133,7 +132,6 @@ auto.
 subst B.
 left.
 
-
 unfold Opp in *.
 apply(sum_uniquenessA O0 E0 E'0 H0 C A C' O0); auto.
 apply sum_comm; auto.
@@ -146,9 +144,8 @@ repeat split; auto.
 apply opp_midpoint in H.
 unfold Midpoint in H.
 spliter.
-eCong.
+apply cong_transitivity with O0 C; Cong.
 Qed.
-
 
 Lemma pythrel_null : forall O E E' A B, PythRel O E E' A B O -> A = O /\ B = O.
 Proof.
@@ -156,7 +153,7 @@ intros.
 unfold PythRel in H.
 spliter.
 induction H0.
-spliter. 
+spliter.
 induction H1.
 split; auto.
 apply opp_midpoint in H1.
@@ -230,7 +227,6 @@ apply perp_distinct in H0.
 tauto.
 Qed.
 
-
 Lemma Pyth_f : forall A B, Col O E A -> Col O E B -> {C | PythRel O E E' A B C /\ (Ps O E C \/ C = O)}.
 Proof.
 intros.
@@ -281,7 +277,7 @@ intro.
 rewrite H6 in *.
 apply H1;Col.
 apply not_out_bet in H2.
-apply(l5_2 C O C' E H3 H4); bet. 
+apply(l5_2 C O C' E H3 H4); bet.
 Col.
 unfold uniqueness.
 intros.
@@ -532,7 +528,7 @@ Defined.
 
 Definition SubF (x y : F) : F.
 Proof.
-destruct (diff_f 
+destruct (diff_f
                  (proj1_sig x) (proj1_sig y)
                  (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
 apply (diff_col (proj1_sig x) (proj1_sig y) P HP).
@@ -596,7 +592,6 @@ destruct (div_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using div_uniqueness.
 Defined.
 
-
 Definition PythF (x y : F) : F.
 Proof.
 destruct (Pyth_f (proj1_sig x) (proj1_sig y) (proj2_sig x) (proj2_sig y)) as [P HP]; exists P.
@@ -614,7 +609,6 @@ intros x y Hxy x' y' Hx'y'.
 destruct x as [x Hx]; destruct x' as [x' Hx'];
 destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 *)
-
 
 Lemma ringF : (ring_theory OF OneF AddF MulF SubF OppF EqF).
 Proof.
@@ -697,8 +691,8 @@ intro x; try intro y; try intro z.
                   (opp_col y Oy HOy)) as [xSy' HxSy']; simpl.
   destruct HxSy as [Oy' [HOy' HxSy]].
   assert (Oy = Oy') by
- ((apply opp_uniqueness with O E E' y);auto using ncolOEE').
- subst; apply sum_uniqueness with O E E' x Oy';assumption.
+    ((apply opp_uniqueness with O E E' y);auto using ncolOEE').
+     subst; apply sum_uniqueness with O E E' x Oy';assumption.
   }
 
   {
@@ -785,7 +779,7 @@ Proof.
 intros A B HAB; apply prod_null with E E'.
 destruct A as [x Hx]; destruct B as [y Hy]; simpl.
 red in HAB; unfold eq_notation, EqF, multiplication, mul_notation, MulF in HAB.
-destruct (prod_f 
+destruct (prod_f
              (proj1_sig (exist (fun P : Tpoint => Col O E P) x Hx))
              (proj1_sig (exist (fun P : Tpoint => Col O E P) y Hy))
              (proj2_sig (exist (fun P : Tpoint => Col O E P) x Hx))
@@ -845,7 +839,7 @@ assert_diffs.
 repeat split;Between.
 Qed.
 
-Lemma Cd_Cd_EqF : forall P Px1 Py1 Px2 Py2, 
+Lemma Cd_Cd_EqF : forall P Px1 Py1 Px2 Py2,
  Cd O E SS U1 U2 P (proj1_sig Px1) (proj1_sig Py1) ->
  Cd O E SS U1 U2 P (proj1_sig Px2) (proj1_sig Py2) ->
  Px1 =F= Px2 /\ Py1 =F= Py2.
@@ -1447,7 +1441,7 @@ setoid_rewrite <- characterization_of_equality_F_aux.
 setoid_rewrite <- neg_and_eqF; tauto.
 Qed.
 
-Lemma field_prop: forall a b c d: F, 
+Lemma field_prop: forall a b c d: F,
  ~ b=F=0 -> ~ d =F= 0 -> a*d =F= b*c -> a/b =F= c/d.
 Proof.
 intros.
@@ -1532,7 +1526,7 @@ Ltac prove_discr_for_powers_of_2 :=
   simpl; try rewrite <- oppF_neq0; repeat apply neqO_mul_neqO; apply neq20.
 
 (*
-Lemma nine_point_circle: forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
+Lemma nine_point_circle : forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
   ~ Col A B C ->
   Col A B C2 -> Col B C A2 -> Col A C B2 ->
   Perp A B C C2 -> Perp B C A A2 -> Perp A C B B2 ->
@@ -1585,7 +1579,7 @@ Definition signed_area A B C :=
   let (Cx, Cy) := Cc in
   let VAB := (Bx-Ax, By-Ay) in
   let VAC := (Cx-Ax, Cy-Ay) in
-  1/2*cross_product VAB VAC. 
+  1/2*cross_product VAB VAC.
 
 (** We introduce this definition to simplify the automatic proofs:*)
 
@@ -1598,9 +1592,7 @@ Definition twice_signed_area A B C :=
   let (Cx, Cy) := Cc in
   let VAB := (Bx-Ax, By-Ay) in
   let VAC := (Cx-Ax, Cy-Ay) in
-  cross_product VAB VAC. 
-
-
+  cross_product VAB VAC.
 
 Lemma signed_area_cyclic :
   forall A B C, signed_area A B C =F= signed_area B C A.
@@ -1682,7 +1674,6 @@ Definition AM_Per A B C := Py A B C =F= 0.
 Definition AM_Perp A B C D := Py4 A C B D =F= 0.
 Definition AM_Par A B C D := twice_signed_area4 A C B D =F= 0.
 Definition AM_on_foot Y P U V := AM_Perp Y P U V /\ AM_Col Y U V /\ U <> V.
-
 
 Lemma Cong_AM_Cong: forall A B C D, AM_Cong A B C D <-> Cong A B C D.
 Proof.
@@ -2042,7 +2033,6 @@ intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 Qed.
 
-
 Ltac decompose_coordinates' :=
   repeat
   match goal with
@@ -2052,7 +2042,6 @@ Ltac decompose_coordinates' :=
       let HX := fresh "H" X in
       destruct (coordinates_of_point_F X) as [[fx fy] HX]
   end.
-
 
 Lemma axiom_A2a : forall A B r, A<>B ->
   exists P, AM_Col A B P /\ ratio A P A B =F= r.
@@ -2098,7 +2087,6 @@ rewrite <- H0.
 ring.
 Qed.
 
-
 Definition AM_CongAL A B C D E F := Py A B C * twice_signed_area D E F =F= Py D E F * twice_signed_area A B C.
 
 (** This shows that we have a notion of congruence of line angles, every angle is congruent to its supplement. *)
@@ -2120,11 +2108,11 @@ Lemma exists_equilateral_triangle : forall A B,
   exists C, Cong A B A C /\ Cong A B B C.
 Proof.
 intros.
-destruct (exists_Cong_Per A B A B) as [P HP].
-destruct (exists_Cong_Per A P A B) as [Q HQ].
+destruct (exists_cong_per A B A B) as [P HP].
+destruct (exists_cong_per A P A B) as [Q HQ].
 destruct (midpoint_existence A Q) as [R HR].
 destruct (midpoint_existence A B) as [I HI].
-destruct (exists_Cong_Per A I A R) as [C HC].
+destruct (exists_cong_per A I A R) as [C HC].
 exists C.
 spliter.
 revert dependent A .
@@ -2136,10 +2124,9 @@ nsatz;
 prove_discr_for_powers_of_2.
 Qed.
 
-
 (*
 (** This is Euclid Book I, Prop 35 *)
-Lemma parallelograms_same_base : 
+Lemma parallelograms_same_base :
  forall A B C D E F,
  Plg A B C D ->
  Plg E B C F ->

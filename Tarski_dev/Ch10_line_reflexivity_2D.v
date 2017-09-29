@@ -115,6 +115,38 @@ Proof.
     Col.
 Qed.
 
+
+
+Lemma cong_on_bissect : forall A B M P X, A <> B ->
+ Midpoint M A B -> Perp_at M A B P M -> Cong X A X B ->
+ Col M P X.
+Proof.
+intros.
+assert(X = M \/ ~ Col A B X /\ Perp_at M X M A B).
+apply(cong_perp_or_mid A B M X H H0); Cong.
+induction H3.
+treat_equalities; Col.
+spliter.
+apply perp_in_perp in H1.
+apply perp_in_perp in H4.
+apply(perp_perp_col _ _ _ A B); Perp.
+Qed.
+
+Lemma cong_mid_perp__col : forall A B M P X, Cong A X B X -> Midpoint M A B -> Perp A B P M -> Col M P X.
+Proof.
+intros.
+assert_diffs.
+induction(eq_dec_points X M).
+- subst X; Col.
+- assert(HP:Per X M A) by (unfold Per;exists B;split; Cong).
+apply per_perp_in in HP; auto.
+apply perp_in_comm in HP.
+apply perp_in_perp in HP.
+apply perp_sym in HP.
+apply (perp_col A M M X B) in HP; Col.
+apply (perp_perp_col _ _ _ A B); Perp.
+Qed.
+
 (* TODO add coplanar assumption, this is false in 3D. *)
 Lemma image_in_col : forall A B P P' Q Q' M,
  ReflectL_at M P P' A B -> ReflectL_at M Q Q' A B ->
@@ -592,48 +624,22 @@ Lemma l10_12 : forall A B C A' B' C',
 Proof.
     intros.
     induction (eq_dec_points B C).
-      subst B.
-      apply cong_symmetry in H2.
-      apply cong_identity in H2.
-      subst B'.
-      assumption.
+      treat_equalities;auto.
     induction (eq_dec_points A B).
-      subst B.
-      apply cong_symmetry in H1.
-      apply cong_identity in H1.
-      subst B'.
-      assumption.
+      treat_equalities;auto.
     assert (exists X, Midpoint X B B').
       apply midpoint_existence.
     ex_and H5 X.
     double A' X A1.
     double C' X C1.
-    assert(Cong_3 A' B' C' A1 B C1).
-    {
-      repeat split.
-        eapply l7_13.
-          apply l7_2.
-          apply H5.
-        assumption.
-        eapply l7_13.
-          apply l7_2.
-          apply H5.
-        apply l7_2.
-        assumption.
-      eapply l7_13.
-        apply H6.
-      apply l7_2.
-      assumption.
-    }
-    assert (Per A1 B C1).
-      eapply l8_10.
-        apply H0.
-      apply H8.
-
+    assert(Cong_3 A' B' C' A1 B C1)
+    by (repeat split;eauto using l7_13, l7_2).
+    assert (Per A1 B C1)
+      by (eauto using l8_10).
     unfold Cong_3 in H8.
     spliter.
-    assert(Cong A B A1 B) by eCong.
-    assert(Cong B C B C1) by eCong.
+    assert(Cong A B A1 B) by (apply cong_transitivity with A' B'; trivial).
+    assert(Cong B C B C1) by (apply cong_transitivity with B' C'; trivial).
 
     assert(exists Y, Midpoint Y C C1)
       by (apply midpoint_existence).
@@ -641,7 +647,6 @@ Proof.
     apply cong_symmetry.
     eapply cong_transitivity.
       apply H10.
-
     induction (eq_dec_points B Y).
     {
       subst Y.
@@ -656,21 +661,19 @@ Proof.
           assumption.
         subst C2.
         assumption.
-      assert(C1 <> B).
-        intro.
-        subst C1.
-        apply l7_2 in H15.
-        apply is_midpoint_id in H15.
-        contradiction.
+      assert_diffs.
       assert (Per  C B A1).
+       {
         eapply (l8_3 C1 B A1 C).
           apply l8_2.
           apply H9.
-          assumption.
+          auto.
         apply midpoint_col.
         apply l7_2.
         assumption.
+       }
       assert(Col A  A1 B).
+       {
         assert_cols.
         assert_diffs.
 
@@ -679,17 +682,18 @@ Proof.
           assumption.
         apply l8_2.
         assumption.
-      assert (A= A1 \/ Midpoint B A A1).
-        eapply l7_20.
+       } 
+      assert (A=A1 \/ Midpoint B A A1).
+        {
+         eapply l7_20.
           apply col_permutation_5.
           assumption.
         apply cong_commutativity.
         assumption.
-      induction H19.
+        }
+      induction H23.
         contradiction.
-      eapply l7_13.
-        apply H19.
-      assumption.
+      eauto using l7_13.
     }
     assert(ReflectL C1 C B Y).
       unfold ReflectL.

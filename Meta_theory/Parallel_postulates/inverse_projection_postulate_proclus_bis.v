@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section inverse_projection_postulate_proclus_bis.
 
@@ -77,7 +78,7 @@ Proof.
 
       {
       intro.
-      assert(Habs := l11_22_aux C0 P Q0 A0).
+      assert(Habs := conga__or_out_ts C0 P Q0 A0).
       destruct Habs as [Habs|Habs]; auto.
       apply HNCol4; ColR.
       apply l9_9 in Habs; apply Habs; Side.

@@ -2,7 +2,6 @@
 
 Require Export GeoCoq.Tarski_dev.Ch13_3_angles.
 
-
 Ltac anga_instance_o a A B P C :=
         assert(tempo_anga:= anga_const_o a A B P);
         match goal with
@@ -15,10 +14,6 @@ Section Cosinus.
 Context `{T2D:Tarski_2D}.
 
 (************************************* cos *****************************)
-
-Definition Lcos lb lc a :=
-  Q_Cong lb /\ Q_Cong lc /\ Q_CongA_Acute a /\
-  (exists A, exists B, exists C, (Per C B A /\ lb A B /\ lc A C /\ a B A C)).
 
 Lemma l13_6 : forall a lc ld l, Lcos lc l a -> Lcos ld l a -> EqL lc ld.
 Proof.
@@ -1659,8 +1654,6 @@ Proof.
     apply HH;auto.
 Qed.
 
-Definition Eq_Lcos la a lb b := exists lp, Lcos lp la a /\ Lcos lp lb b.
-
 Lemma lcos_eq_refl : forall la a, Q_Cong la -> ~ Q_Cong_Null la -> Q_CongA_Acute a -> Eq_Lcos la a la a.
 Proof.
     intros.
@@ -1694,9 +1687,6 @@ Proof.
     exists lbc.
     split; auto.
 Qed.
-
-
-Definition lcos2 lp l a b := exists la, Lcos la l a /\ Lcos lp la b.
 
 Lemma lcos2_comm : forall lp l a b, lcos2 lp l a b -> lcos2 lp l b a.
 Proof.
@@ -1763,8 +1753,6 @@ Proof.
     exists lab.
     split; auto.
 Qed.
-
-Definition Eq_Lcos2 l1 a b l2 c d := exists lp, lcos2 lp l1 a b /\ lcos2 lp l2 c d.
 
 Lemma lcos2_eq_refl : forall l a b, Q_Cong l -> ~ Q_Cong_Null l -> Q_CongA_Acute a -> Q_CongA_Acute b -> Eq_Lcos2 l a b l a b.
 Proof.
@@ -1883,8 +1871,6 @@ Proof.
     spliter.
     split; auto.
 Qed.
-
-Definition Lcos3 lp l a b c := exists la, exists lab, Lcos la l a /\ Lcos lab la b /\ Lcos lp lab c.
 
 Lemma lcos3_lcos_1_2 : forall lp l a b c, Lcos3 lp l a b c <-> exists la, Lcos la l a /\ lcos2 lp la b c.
 Proof.
@@ -2007,9 +1993,6 @@ Proof.
 Qed.
 
 (*----------------------------------------*)
-
-
-Definition Eq_Lcos3 l1 a b c l2 d e f := exists lp, Lcos3 lp l1 a b c /\ Lcos3 lp l2 d e f.
 
 Lemma lcos3_eq_refl : forall l a b c, Q_Cong l -> ~ Q_Cong_Null l -> Q_CongA_Acute a -> Q_CongA_Acute b -> Q_CongA_Acute c -> Eq_Lcos3 l a b c l a b c.
 Proof.

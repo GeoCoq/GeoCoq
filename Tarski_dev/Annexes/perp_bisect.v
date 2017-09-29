@@ -4,13 +4,6 @@ Section PerpBisect_1.
 
 Context `{T2D:Tarski_2D}.
 
-(** PQ is the perpendicular bisector of segment AB *)
-
-Definition Perp_bisect P Q A B := ReflectL A B P Q /\ A <> B.
-
-Definition Perp_bisect_bis P Q A B :=
-  exists I, Perp_at I P Q A B /\ Midpoint I A B.
-
 Lemma perp_bisect_equiv_def :
   forall P Q A B, Perp_bisect P Q A B <-> Perp_bisect_bis P Q A B.
 Proof.
@@ -257,8 +250,6 @@ exists P.
 exists A.
 repeat split;Col.
 Qed.
-
-Definition Is_on_perp_bisect P A B := Cong A P P B.
 
 Lemma perp_bisect_is_on_perp_bisect :
  forall A B C P,

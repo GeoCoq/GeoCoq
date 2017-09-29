@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Ch08_orthogonality.
 
 Section par_perp_2_par_par_perp_perp.
 

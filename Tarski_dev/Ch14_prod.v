@@ -4,16 +4,6 @@ Section T14_prod.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** Definition 14.4 *)
-
-Definition Prod O E E' A B C :=
- Ar2 O E E' A B C /\
- exists B', Pj E E' B B' /\ Col O E' B' /\ Pj E' A B' C.
-
-Definition Prodp O E E' A B C :=
- Col O E A /\ Col O E B /\
- exists B', Proj B B' O E' E E' /\ Proj B' C O E A E'.
-
 Lemma prod_to_prodp : forall O E E' A B C, Prod O E E' A B C -> Prodp O E E' A B C.
 Proof.
     intros.
@@ -2411,10 +2401,6 @@ Proof.
     apply (prod_comm O E E').
     assumption.
 Qed.
-
-Definition Ar2_4 O E E' A B C D :=
-  ~ Col O E E' /\ Col O E A /\ Col O E B /\ Col O E C /\ Col O E D.
-
 
 (** Lemma 14.31 *)
 Lemma l14_31_1 : forall O E E' A B C D,

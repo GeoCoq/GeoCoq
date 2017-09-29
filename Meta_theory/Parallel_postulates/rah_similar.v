@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rah_similar.
 
@@ -44,9 +45,9 @@ Proof.
 
     {
     split; [|repeat (split; auto)].
-    apply (isi2_suma2__conga456 C A B _ _ _ _ _ _ B C A).
+    apply (sams2_suma2__conga456 C A B _ _ _ _ _ _ B C A).
     SumA.
-    apply (conga2_isi__isi C' A B' A B' C'); CongA; SumA.
+    apply (conga2_sams__sams C' A B' A B' C'); CongA; SumA.
     apply t22_12__rah; Perp.
     apply (conga3_suma__suma C' A B' A B' C' B' C' A); CongA; apply t22_12__rah; auto.
     }

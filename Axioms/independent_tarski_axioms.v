@@ -35,6 +35,7 @@ Class independent_Tarski_2D `(TnG : independent_Tarski_neutral_dimensionless_wit
 Class independent_Tarski_2D_euclidean `(T2DG : independent_Tarski_2D) := {
  euclidG : forall A B C D T,
    BetG A D T -> BetG B D C ->
+   B <> D -> D <> C ->
    ~ (BetG A B C \/ BetG B C A \/ BetG C A B) ->
    exists x, exists y, BetG A B x /\ BetG A C y /\ BetG x T y
 }.

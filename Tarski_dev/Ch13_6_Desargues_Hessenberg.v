@@ -1045,10 +1045,8 @@ Proof.
       apply H0.
       exists A'.
       split; Col.
-    assert(exists Y : Tpoint, Col O C Y /\ Col B' C' Y).
-      apply(par_inter B C B' C' O C C); Col.
-        left.
-        Par.
+    assert(exists X : Tpoint, Col X B' C' /\ Col X O C).
+      apply not_par_inter_exists, par_not_par with B C; Par.
       intro.
       induction H6.
         apply H6.
@@ -1073,7 +1071,7 @@ Proof.
       apply (par_col_par_2 _ B').
         intro.
         subst C''.
-        contradiction.
+        Col.
         Col.
       apply par_left_comm.
       left.
@@ -1131,10 +1129,7 @@ Proof.
       exists B.
       split; Col.
     assert(Par A C A' C'').
-      apply(l13_15 B A C B' A' C'' O); Par.
-      intro.
-      apply H.
-      Col.
+      apply(l13_15 B A C B' A' C'' O); Par; Col.
     assert(Par A' C' A' C'').
       apply (par_trans _ _ A C).
         left.
@@ -1156,7 +1151,7 @@ Proof.
       apply H19.
       Col.
     subst C''.
-    contradiction.
+    Col.
 Qed.
 
 Lemma l13_18_3 : forall A B C A' B' C', ~Col A B C

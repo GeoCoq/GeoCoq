@@ -1439,7 +1439,7 @@ Proof.
           apply(or_bet_out A O B); auto.
 (*************** case : Bet A O B  ********************)
         induction H93.
-(*************** we extend NO with N' such as ln' O N' ********************)         
+(*************** we extend NO with N' such as ln' O N' ********************)
           assert(HH:=ex_point_lg_bet ln' N O H89).
           ex_and HH N'.
           assert(O <> N').

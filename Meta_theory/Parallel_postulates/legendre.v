@@ -1,8 +1,10 @@
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Axioms.parallel_postulates.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_ID.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.TCP_tarski.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.alternate_interior_angles_proclus.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.angle_archimedes.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.aristotle_greenberg.
+Require Export GeoCoq.Meta_theory.Continuity.angle_archimedes.
+Require Export GeoCoq.Meta_theory.Continuity.aristotle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.euclid_5_original_euclid.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.existential_triangle_rah.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.par_perp_perp_TCP.
@@ -15,32 +17,36 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_euclid.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_playfair_bis.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.triangle_existential_triangle.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.universal_posidonius_postulate_par_perp_perp.
+Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section Legendre.
 
 Context `{T2D:Tarski_2D}.
 
+Theorem stronger_legendre_s_first_theorem :
+  aristotle_s_axiom ->
+  forall A B C D E F,
+    SumA C A B A B C D E F ->
+    SAMS D E F B C A.
+Proof.
+  intros ari A B C D E F.
+  apply (t22_20 (aristotle__obtuse_case_elimination ari)).
+Qed.
+
 Theorem legendre_s_first_theorem :
   archimedes_axiom ->
   forall A B C D E F,
-    ~ Col A B C ->
     SumA C A B A B C D E F ->
-    Isi D E F B C A.
+    SAMS D E F B C A.
 Proof.
-intros HA A B C D E F HNC HSumA.
-suma.assert_diffs.
-destruct (ex_suma D E F B C A) as [P [Q [R HSumA']]]; auto.
-elim (archi__acute_or_right HA); intro HS;
-[destruct (t22_14__isi_nbet HS A B C D E F P Q R) as [H _]|
- apply bet_suma__isi with P Q R; try apply t22_14__bet with C A B;
- try (exists D, E, F; split)]; auto.
+  intro; apply stronger_legendre_s_first_theorem, t22_24; auto.
 Qed.
 
 Theorem legendre_s_second_theorem :
   postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights ->
   triangle_postulate.
 Proof.
-assert (H:=existential_triangle__rah); assert (I:=rah__triangle); tauto.
+  assert (H:=existential_triangle__rah); assert (I:=rah__triangle); tauto.
 Qed.
 
 Lemma legendre_s_third_theorem_aux :
@@ -48,23 +54,22 @@ Lemma legendre_s_third_theorem_aux :
   triangle_postulate ->
   euclid_s_parallel_postulate.
 Proof.
-assert (I:=aristotle__greenberg).
-assert (J:playfair_s_postulate->greenberg_s_axiom->decidability_of_intersection).
-  {
-  intro HP; assert (J:=playfair__alternate_interior HP).
-  assert(K:=alternate_interior__proclus).
-  assert(L:proclus_postulate->decidability_of_intersection); [|tauto].
-  assert(M:=proclus_s_postulate_implies_strong_parallel_postulate).
-  assert(N:=strong_parallel_postulate_implies_inter_dec); tauto.
+  assert (I:=aristotle__greenberg).
+  assert (J:playfair_s_postulate->greenberg_s_axiom->decidability_of_intersection).
+  { intro HP; assert (J:=playfair__alternate_interior HP).
+    assert(K:=alternate_interior__proclus).
+    assert(L:proclus_postulate->decidability_of_intersection); [|tauto].
+    assert(M:=proclus_s_postulate_implies_strong_parallel_postulate).
+    assert(N:=strong_parallel_postulate_implies_inter_dec); tauto.
   }
-assert (K:=triangle__playfair_bis).
-assert (L:=playfair_bis__playfair).
-assert (M:=playfair__universal_posidonius_postulate).
-assert (N:=universal_posidonius_postulate__perpendicular_transversal_postulate).
-assert (O:=inter_dec_plus_par_perp_perp_imply_triangle_circumscription).
-assert (P:=triangle_circumscription_implies_tarski_s_euclid).
-assert (Q:=tarski_s_euclid_implies_euclid_5).
-assert (R:=euclid_5__original_euclid); tauto.
+  assert (K:=triangle__playfair_bis).
+  assert (L:=playfair_bis__playfair).
+  assert (M:=playfair__universal_posidonius_postulate).
+  assert (N:=universal_posidonius_postulate__perpendicular_transversal_postulate).
+  assert (O:=inter_dec_plus_par_perp_perp_imply_triangle_circumscription).
+  assert (P:=triangle_circumscription_implies_tarski_s_euclid).
+  assert (Q:=tarski_s_euclid_implies_euclid_5).
+  assert (R:=euclid_5__original_euclid); tauto.
 Qed.
 
 Theorem legendre_s_third_theorem :
@@ -72,13 +77,8 @@ Theorem legendre_s_third_theorem :
   triangle_postulate ->
   euclid_s_parallel_postulate.
 Proof.
-assert (H:=t22_24); assert (I:=legendre_s_third_theorem_aux); tauto.
+  assert (H:=t22_24); assert (I:=legendre_s_third_theorem_aux); tauto.
 Qed.
-
-(** The difference between a flat angle and the sum of the angles of the triangle ABC.
-    It is a non-oriented angle, so we can't discriminate between positive and negative difference *)
-Definition Defect A B C D E F := exists G H I J K L,
-  TriSumA A B C G H I /\ Bet J K L /\ SumA G H I D E F J K L.
 
 Lemma defect_distincts : forall A B C D E F,
   Defect A B C D E F ->
@@ -125,7 +125,7 @@ Proof.
   apply (trisuma2__conga A B C G H I) in HTri'; trivial.
   apply (conga3_suma__suma _ _ _ _ _ _ _ _ _ G H I D' E' F' J K L) in HSuma'; CongA.
   clear dependent G'; clear dependent H'; clear dependent J'; clear dependent K'; clear I' L'.
-  apply isi2_suma2__conga456 with G H I J K L; trivial; apply bet_suma__isi with J K L; trivial.
+  apply sams2_suma2__conga456 with G H I J K L; trivial; apply bet_suma__sams with J K L; trivial.
 Qed.
 
 Lemma defect_perm_231 : forall A B C D E F,
@@ -184,11 +184,11 @@ Proof.
   intros A B C D E F HCol HDef.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
   suma.assert_diffs.
-  apply (isi_suma__out546 G H I).
+  apply (sams_suma__out546 G H I).
   - apply (conga3_suma__suma G H I D E F J K L); CongA.
     apply conga_line; trivial.
     apply (col_trisuma__bet A B C); Col.
-  - apply bet_suma__isi with J K L; trivial.
+  - apply bet_suma__sams with J K L; trivial.
 Qed.
 
 Lemma rah_defect__out :
@@ -198,11 +198,11 @@ Proof.
   intros rah A B C D E F HDef.
   destruct HDef as [G [H [I [J [K [L [HTri [HBet HSuma]]]]]]]].
   suma.assert_diffs.
-  apply (isi_suma__out546 G H I).
+  apply (sams_suma__out546 G H I).
   - apply (conga3_suma__suma G H I D E F J K L); CongA.
     apply conga_line; trivial.
     apply (t22_14__bet rah A B C), HTri.
-  - apply bet_suma__isi with J K L; trivial.
+  - apply bet_suma__sams with J K L; trivial.
 Qed.
 
 Lemma defect_ncol_out__rah : forall A B C D E F,
@@ -216,26 +216,7 @@ Proof.
   apply conga_sym, out546_suma__conga with D E F; trivial.
 Qed.
 
-Lemma noah_suma__isi :
-  ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
-  forall A B C D E F, SumA A B C B C A D E F -> Isi D E F C A B.
-Proof.
-  intros noah A B C D E F HSuma.
-  suma.assert_diffs.
-  destruct (ex_suma D E F C A B) as [G [H [I HSuma1]]]; auto.
-  elim (Col_dec A B C).
-  { intro HCol.
-    apply bet_suma__isi with G H I; trivial.
-    apply (col_trisuma__bet A B C); trivial.
-    exists D; exists E; exists F; auto.
-  }
-  intro HNCol.
-  destruct saccheri_s_three_hypotheses as [aah|[rah|oah]]; [| |contradiction].
-    destruct (t22_14__isi_nbet aah B C A D E F G H I); Col.
-  apply bet_suma__isi with G H I; trivial.
-  apply (t22_14__bet rah A B C).
-  exists D; exists E; exists F; auto.
-Qed.
+(** The following development is inspired by The Foundations of Geometry and the Non-Euclidean Plane, by George E Martin, chapter 22 *)
 
 (** Additivity of the defect : if C1 is between A and C, the defect of ABC is
     the sum of the defects of AC1C and BC1C.
@@ -245,7 +226,7 @@ Lemma t22_16_1 :
   forall A B C C1 D E F G H I K L M,
     Bet A C1 C -> Defect A B C1 D E F -> Defect B C1 C G H I ->
     SumA D E F G H I K L M ->
-    Isi D E F G H I /\ Defect A B C K L M.
+    SAMS D E F G H I /\ Defect A B C K L M.
 Proof.
   intros noah A B C C1 D E F G H I K L M HBet HDefA HDefC HSuma.
   assert (HDA := defect_distincts A B C1 D E F HDefA).
@@ -259,24 +240,24 @@ Proof.
   }
   clear dependent S; clear T U.
   destruct HTri as [S [T [U [HSuma2 HSuma3]]]].
-  assert (HInter : SumA S T U D E F B C1 C /\ Isi S T U D E F).
+  assert (HInter : SumA S T U D E F B C1 C /\ SAMS S T U D E F).
   { suma.assert_diffs.
     destruct (ex_suma S T U D E F) as [B' [C1' [C' HSuma']]]; auto.
     assert (HSuma4 : SumA B C1 C A C1 B A C1 C) by (apply suma_sym, inangle__suma, in_angle_line; auto).
     destruct (ex_suma A C1 B D E F) as [V [W [X HSuma5]]]; auto.
-    assert (HIsi : Isi P Q R D E F) by (apply bet_suma__isi with A C1 C; trivial).
-    assert (HIsi1 : Isi S T U A C1 B) by (apply (noah_suma__isi noah), HSuma2).
-    assert (HIsi2 : Isi A C1 B D E F).
-    { apply isi_lea2__isi with P Q R D E F; Lea.
-      apply (isi_suma__lea456789 S T U); trivial.
+    assert (HIsi : SAMS P Q R D E F) by (apply bet_suma__sams with A C1 C; trivial).
+    assert (HIsi1 : SAMS S T U A C1 B) by (apply (t22_20 noah), HSuma2).
+    assert (HIsi2 : SAMS A C1 B D E F).
+    { apply sams_lea2__sams with P Q R D E F; Lea.
+      apply (sams_suma__lea456789 S T U); trivial.
     }
     assert (HSuma6 : SumA S T U V W X A C1 C) by (apply suma_assoc_1 with A C1 B D E F P Q R; trivial).
-    assert (HIsi3 : Isi S T U D E F).
-      apply isi_lea2__isi with P Q R D E F; Lea; apply isi_suma__lea123789 with A C1 B; SumA.
+    assert (HIsi3 : SAMS S T U D E F).
+      apply sams_lea2__sams with P Q R D E F; Lea; apply sams_suma__lea123789 with A C1 B; SumA.
     assert (HSuma7 : SumA B' C1' C' A C1 B A C1 C) by (apply suma_assoc_2 with S T U D E F V W X; SumA).
     split; trivial.
     apply (conga3_suma__suma S T U D E F B' C1' C'); try (apply conga_refl); auto.
-    apply isi2_suma2__conga123 with A C1 B A C1 C; trivial; apply bet_suma__isi with A C1 C; trivial.
+    apply sams2_suma2__conga123 with A C1 B A C1 C; trivial; apply bet_suma__sams with A C1 C; trivial.
   }
   clear dependent P; clear Q R.
 
@@ -289,26 +270,26 @@ Proof.
   }
   clear dependent V; clear W X.
   destruct HTri1 as [V [W [X [HSuma4 HSuma5]]]].
-  assert (HIsi1 : Isi P Q R G H I) by (apply bet_suma__isi with A C1 C; trivial).
-  assert (HIsi5 : Isi V W X B C1 C) by (apply (noah_suma__isi noah), HSuma4).
-  assert (HIsi : Isi D E F G H I).
-  { apply isi_lea2__isi with P Q R G H I; Lea.
+  assert (HIsi1 : SAMS P Q R G H I) by (apply bet_suma__sams with A C1 C; trivial).
+  assert (HIsi5 : SAMS V W X B C1 C) by (apply (t22_20 noah), HSuma4).
+  assert (HIsi : SAMS D E F G H I).
+  { apply sams_lea2__sams with P Q R G H I; Lea.
     apply lea_trans with B C1 C.
-      apply (isi_suma__lea456789 S T U); trivial.
-    apply (isi_suma__lea456789 V W X); trivial.
+      apply (sams_suma__lea456789 S T U); trivial.
+    apply (sams_suma__lea456789 V W X); trivial.
   }
   split; trivial.
 
   suma.assert_diffs.
   destruct (ex_suma V W X S T U) as [A' [B' [C' HSuma6]]]; auto.
-  assert (HIsi6 : Isi V W X S T U).
-  { apply isi_lea2__isi with V W X B C1 C; Lea.
-    apply isi_suma__lea123789 with D E F; trivial.
+  assert (HIsi6 : SAMS V W X S T U).
+  { apply sams_lea2__sams with V W X B C1 C; Lea.
+    apply sams_suma__lea123789 with D E F; trivial.
   }
   assert (HSuma7 : SumA A' B' C' D E F P Q R) by (apply suma_assoc_2 with V W X S T U B C1 C; trivial).
   assert (HSuma8 : SumA A' B' C' K L M A C1 C).
   { apply suma_assoc_1 with D E F G H I P Q R; trivial.
-    apply isi_assoc_2 with V W X S T U B C1 C; trivial.
+    apply sams_assoc_2 with V W X S T U B C1 C; trivial.
   }
   exists A'; exists B'; exists C'; exists A; exists C1; exists C.
   repeat (split; trivial).
@@ -316,9 +297,9 @@ Proof.
   clear dependent K; clear dependent L; clear dependent P; clear dependent Q; clear F I M R.
 
   destruct (ex_suma V W X C1 B A) as [D [E [F HSuma]]]; auto.
-  assert (HIsi : Isi V W X C1 B A).
-  { apply isi_lea2__isi with V W X S T U; Lea.
-    apply isi_suma__lea123789 with B A C1; SumA.
+  assert (HIsi : SAMS V W X C1 B A).
+  { apply sams_lea2__sams with V W X S T U; Lea.
+    apply sams_suma__lea123789 with B A C1; SumA.
   }
   suma.assert_diffs.
   apply trisuma_perm_132.
@@ -343,7 +324,7 @@ Lemma t22_16_1bis :
   forall A B C C1 D E F G H I K L M,
     Bet A C1 C ->
     Defect A B C1 D E F -> Defect B C1 C G H I -> Defect A B C K L M ->
-    Isi D E F G H I /\ SumA D E F G H I K L M.
+    SAMS D E F G H I /\ SumA D E F G H I K L M.
 Proof.
   intros noah A B C C1 D E F G H I K L M HBet HDefA HDefB HDef.
   assert (Hd := defect_distincts A B C1 D E F HDefA).
@@ -363,7 +344,7 @@ Lemma t22_16_2aux :
     Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
     Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
     Bet A O C -> Bet B O D -> Col A B C -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    SAMS C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HCol HSuma.
@@ -398,7 +379,7 @@ Lemma t22_16_2aux1 :
     Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
     Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
     Bet A O C -> Bet B O D -> Col A B D -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    SAMS C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HCol HSuma.
@@ -422,8 +403,8 @@ Lemma t22_16_2 :
     Defect A B C D1 D2 D3 -> Defect A B D C1 C2 C3 ->
     Defect A D C B1 B2 B3 -> Defect C B D A1 A2 A3 ->
     Bet A O C -> Bet B O D ->
-    Isi D1 D2 D3 B1 B2 B3 -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
-    Isi C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
+    SAMS D1 D2 D3 B1 B2 B3 -> SumA D1 D2 D3 B1 B2 B3 P Q R ->
+    SAMS C1 C2 C3 A1 A2 A3 /\ SumA C1 C2 C3 A1 A2 A3 P Q R.
 Proof.
   intros noah A B C D A1 A2 A3 B1 B2 B3 C1 C2 C3 D1 D2 D3 O P Q R
     HDefD HDefC HDefB HDefA HBet HBet2 HIsi HSuma.
@@ -463,18 +444,18 @@ Proof.
   suma.assert_diffs.
 
   destruct (ex_suma D1 D2 D3 S3 T3 U3) as [V [W [X HSuma1]]]; auto.
-  assert (HIsi1 : Isi D1 D2 D3 S3 T3 U3).
-    apply isi_lea2__isi with D1 D2 D3 B1 B2 B3; Lea; apply (isi_suma__lea456789 S4 T4 U4); trivial.
+  assert (HIsi1 : SAMS D1 D2 D3 S3 T3 U3).
+    apply sams_lea2__sams with D1 D2 D3 B1 B2 B3; Lea; apply (sams_suma__lea456789 S4 T4 U4); trivial.
   assert (HSuma2 : SumA V W X S4 T4 U4 P Q R).
     apply suma_assoc_2 with D1 D2 D3 S3 T3 U3 B1 B2 B3; SumA.
-  assert (HIsi2 : Isi V W X S4 T4 U4).
-    apply isi_assoc_2 with D1 D2 D3 S3 T3 U3 B1 B2 B3; SumA.
+  assert (HIsi2 : SAMS V W X S4 T4 U4).
+    apply sams_assoc_2 with D1 D2 D3 S3 T3 U3 B1 B2 B3; SumA.
   assert (HSuma3 : SumA A1 A2 A3 S1 T1 U1 V W X).
     apply suma_assoc_2 with S3 T3 U3 S2 T2 U2 D1 D2 D3; SumA.
-  assert (HIsi3 : Isi A1 A2 A3 S1 T1 U1).
-    apply isi_assoc_2 with S3 T3 U3 S2 T2 U2 D1 D2 D3; SumA.
+  assert (HIsi3 : SAMS A1 A2 A3 S1 T1 U1).
+    apply sams_assoc_2 with S3 T3 U3 S2 T2 U2 D1 D2 D3; SumA.
   split.
-    apply isi_assoc_2 with S4 T4 U4 S1 T1 U1 V W X; SumA.
+    apply sams_assoc_2 with S4 T4 U4 S1 T1 U1 V W X; SumA.
   apply suma_assoc_2 with S4 T4 U4 S1 T1 U1 V W X; SumA.
 Qed.
 
@@ -484,7 +465,7 @@ Lemma legendre_aux :
     ~ Col A B C -> CongA A C B C B D ->
     Cong A C B D -> TS B C A D -> Out A B B1 -> Out A C C1 -> Bet B1 D C1 ->
     Defect A B C P Q R -> Defect A B1 C1 S T U -> SumA P Q R P Q R V W X ->
-    Isi P Q R P Q R /\ LeA V W X S T U.
+    SAMS P Q R P Q R /\ LeA V W X S T U.
 Proof.
   intros noah A B C D B1 C1 P Q R S T U V W X HNCol HConga HCong HTS HOutB HOutC HBet HDef HDef1 HSuma.
   assert (H := A).
@@ -554,31 +535,31 @@ Proof.
   destruct (t22_16_1bis noah A C B1 B P Q R M N O G H I) as [HIsi5 HSuma5]; trivial.
     apply defect_perm_132, HDef.
     apply defect_perm_132, HDef2.
-  assert (HIsi1 : Isi G H I A' B' C').
-    apply isi_lea2__isi with G H I J K L; Lea.
-    apply isi_suma__lea123789 with D' E' F'; trivial.
-  assert (HIsi2 : Isi M N O A' B' C').
-    apply isi_lea2__isi with G H I A' B' C'; Lea.
-    apply isi_suma__lea456789 with P Q R; trivial.
+  assert (HIsi1 : SAMS G H I A' B' C').
+    apply sams_lea2__sams with G H I J K L; Lea.
+    apply sams_suma__lea123789 with D' E' F'; trivial.
+  assert (HIsi2 : SAMS M N O A' B' C').
+    apply sams_lea2__sams with G H I A' B' C'; Lea.
+    apply sams_suma__lea456789 with P Q R; trivial.
   assert (HSuma6 : SumA G' H' I' D' E' F' S T U).
     apply suma_assoc_2 with G H I A' B' C' J K L; trivial.
-  assert (HIsi6 : Isi G' H' I' D' E' F').
-    apply isi_assoc_2 with G H I A' B' C' J K L; trivial.
+  assert (HIsi6 : SAMS G' H' I' D' E' F').
+    apply sams_assoc_2 with G H I A' B' C' J K L; trivial.
   assert (HSuma7 : SumA P Q R J' K' L' G' H' I').
     apply suma_assoc_1 with M N O A' B' C' G H I; trivial.
-  assert (HIsi7 : Isi P Q R J' K' L').
-    apply isi_assoc_1 with M N O A' B' C' G H I; trivial.
+  assert (HIsi7 : SAMS P Q R J' K' L').
+    apply sams_assoc_1 with M N O A' B' C' G H I; trivial.
   destruct (t22_16_2 noah C B B1 D M' N' O' A' B' C' P Q R M N O Z J' K' L') as [HIsi8 HSuma8]; trivial.
     apply defect_perm_231, (conga3_defect__defect A B C); CongA.
     apply defect_perm_231, HDef5.
-  assert (HLea : LeA P Q R J' K' L') by (apply isi_suma__lea123789 with M' N' O'; trivial).
+  assert (HLea : LeA P Q R J' K' L') by (apply sams_suma__lea123789 with M' N' O'; trivial).
 
   split.
     suma.assert_diffs.
-    apply isi_lea2__isi with P Q R J' K' L'; Lea.
+    apply sams_lea2__sams with P Q R J' K' L'; Lea.
   apply lea_trans with G' H' I'.
-    apply isi_lea456_suma2__lea with P Q R P Q R J' K' L'; trivial.
-  apply isi_suma__lea123789 with D' E' F'; trivial.
+    apply sams_lea456_suma2__lea with P Q R P Q R J' K' L'; trivial.
+  apply sams_suma__lea123789 with D' E' F'; trivial.
 Qed.
 
 Lemma legendre_aux1 : forall A B C B' C',
@@ -640,7 +621,7 @@ Proof.
     apply l6_7 with B; trivial; apply l6_6; trivial.
     apply l6_7 with C; trivial; apply l6_6; trivial.
   apply lea_trans with V W X; trivial.
-  apply isi_lea2_suma2__lea with S T U S T U P' Q' R' P' Q' R'; trivial.
+  apply sams_lea2_suma2__lea with S T U S T U P' Q' R' P' Q' R'; trivial.
 Qed.
 
 Lemma legendre_s_fourth_theorem_aux :
@@ -661,17 +642,17 @@ Proof.
     apply defect_perm_213 in HDef.
     destruct HDef as [D [E [F [G [H [I [[J [K [L [HSuma1 HSuma2]]]] [HBet1 HSuma3]]]]]]]].
     apply out_col, l6_6, out_lea__out with D E F.
-      apply bet_suma__isi, isi_sym in HSuma3; trivial.
+      apply bet_suma__sams, sams_sym in HSuma3; trivial.
       destruct HSuma3 as [_ [[HOut|HNBet]]]; trivial.
       absurd (Bet P Q R); trivial.
-    apply isi_suma__lea456789 with J K L; trivial.
+    apply sams_suma__lea456789 with J K L; trivial.
     apply (t22_20 archi); trivial.
   - destruct (archi__gradaexp_destruction archi P Q R HNCol1) as [S [T [U [HGAE HObtuse]]]].
     apply archi__obtuse_case_elimination in archi.
     apply not_col_permutation_4 in HNCol.
     destruct (legendre_aux2 archi A B C HNCol HAcute legendre P Q R S T U HDef HGAE) as [B' [C' HInter]].
     destruct HInter as [P' [Q' [R' [HOutB [HOutC [HDef' HLea]]]]]].
-    apply (obtuse_gea_obtuse P' Q' R'), obtuse__nisi in HObtuse; auto.
+    apply (obtuse_gea_obtuse P' Q' R'), obtuse__nsams in HObtuse; auto.
     exfalso.
     apply HObtuse.
     destruct (legendre_aux1 A B C B' C') as [D' [HInangle [HConga [HCong HTS]]]]; trivial.
@@ -690,9 +671,9 @@ Theorem legendre_s_fourth_theorem :
   legendre_s_parallel_postulate ->
   postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights.
 Proof.
-assert (H:=legendre_s_fourth_theorem_aux).
-assert (I:=rah__triangle).
-assert (J:=triangle__existential_triangle); tauto.
+  assert (H:=legendre_s_fourth_theorem_aux).
+  assert (I:=rah__triangle).
+  assert (J:=triangle__existential_triangle); tauto.
 Qed.
 
 End Legendre.

@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section similar_rah.
 
@@ -51,8 +53,8 @@ Proof.
       apply out_one_side; Col; apply bet_out; Between.
   }
   assert(Bet A H C) by (apply out2__bet; apply l6_6; auto).
-  assert(Isi B G H H C B).
-  { apply (isi_chara _ _ _ _ _ _ A); Between.
+  assert(SAMS B G H H C B).
+  { apply (sams_chara _ _ _ _ _ _ A); Between.
     apply (l11_30 B C A A B C); auto; apply conga_right_comm; auto.
     apply (out_conga B C H B C H); try (apply out_trivial); CongA.
   }
@@ -67,8 +69,8 @@ Proof.
     apply (col_one_side _ A); Col.
     apply invert_one_side; apply out_one_side; try (apply l6_6); Col.
   }
-  assert(Isi B G H C B G).
-  { apply (conga2_isi__isi B G H H G A); CongA.
+  assert(SAMS B G H C B G).
+  { apply (conga2_sams__sams B G H H G A); CongA.
     repeat split; auto.
     right; intro; Col.
     exists A; split; CongA.
@@ -76,8 +78,8 @@ Proof.
     intro Hts.
     destruct Hts as [_ []]; Col.
   }
-  assert(Isi C H G B C H).
-  { apply (conga2_isi__isi C H G G H A); CongA.
+  assert(SAMS C H G B C H).
+  { apply (conga2_sams__sams C H G G H A); CongA.
     repeat split; auto.
     right; intro; apply HNCol3; Col.
     exists A; split; CongA.
@@ -92,15 +94,15 @@ Proof.
   destruct(ex_suma L M N G H C) as [R [S [T]]]; auto.
   destruct(ex_suma I J K L M N) as [U [V [W]]]; auto.
   suma.assert_diffs.
-  assert(HInter : Isi I J K L M N /\ SumA H G B B C H U V W).
-  { assert(Isi H G B B C G).
-    { apply (isi_lea2__isi _ _ _ _ _ _ H G B B C H); try (apply lea_refl); SumA.
+  assert(HInter : SAMS I J K L M N /\ SumA H G B B C H U V W).
+  { assert(SAMS H G B B C G).
+    { apply (sams_lea2__sams _ _ _ _ _ _ H G B B C H); try (apply lea_refl); SumA.
       exists G; split; CongA.
       apply os_ts__inangle; SumA; eauto with side.
     }
     destruct(ex_suma B C G H G B) as [X [Y [Z]]]; auto.
     assert(SumA B G C C G H H G B) by (exists H; repeat (split; CongA); Side).
-    assert(Isi B G C C G H).
+    assert(SAMS B G C C G H).
     { repeat split; auto.
         right; intro; apply HNCol4; Col.
       exists H; split; CongA.
@@ -109,14 +111,14 @@ Proof.
       apply (col_one_side _ A); Col.
       apply invert_one_side, out_one_side; Col.
     }
-    assert(Isi I J K C G H) by (apply (isi_assoc B C G C G B _ _ _ _ _ _ H G B); SumA).
+    assert(SAMS I J K C G H) by (apply (sams_assoc B C G C G B _ _ _ _ _ _ H G B); SumA).
     assert(SumA I J K C G H X Y Z) by (apply (suma_assoc B C G C G B _ _ _ _ _ _ _ _ _ H G B); SumA).
-    assert(Isi B C G H C G).
+    assert(SAMS B C G H C G).
       repeat split; auto; [right; intro; Col|exists H; split; CongA; split; eauto with side].
     assert(SumA B C G H C G H C B) by (exists H; repeat (split; CongA); Side).
     split.
-    - assert(Isi X Y Z H C G) by (apply (isi_assoc H G B B C G _ _ _ _ _ _ H C B); SumA).
-      apply (isi_assoc _ _ _ C G H H C G X Y Z); SumA.
+    - assert(SAMS X Y Z H C G) by (apply (sams_assoc H G B B C G _ _ _ _ _ _ H C B); SumA).
+      apply (sams_assoc _ _ _ C G H H C G X Y Z); SumA.
     - assert(SumA X Y Z H C G U V W) by (apply (suma_assoc I J K C G H _ _ _ _ _ _ _ _ _ L M N); SumA).
       apply (suma_assoc _ _ _ B C G H C G _ _ _ X Y Z); SumA.
   }
@@ -126,14 +128,14 @@ Proof.
   - intro aah.
     exfalso.
     apply(nlta U V W).
-    apply (isi_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); SumA.
-    { destruct (t22_14__isi_nbet aah C G B I J K O P Q) as [HIsi HNBet]; Col.
-      apply (isi_lea_lta789_suma2__lta123 _ _ _ G B C O P Q _ _ _ G B C A G B); Lea.
+    apply (sams_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); SumA.
+    { destruct (t22_14__sams_nbet aah C G B I J K O P Q) as [HIsi HNBet]; Col.
+      apply (sams_lea_lta789_suma2__lta123 _ _ _ G B C O P Q _ _ _ G B C A G B); Lea.
         split; eauto with lea; intro; apply HNBet; apply (bet_conga_bet A G B); CongA.
         apply (conga3_suma__suma B G H H G A A G B); CongA; exists A; repeat (split; CongA); Side.
     }
-    destruct (t22_14__isi_nbet aah C G H L M N R S T) as [HIsi HNBet]; Col.
-    apply (isi_lea_lta789_suma2__lta123 _ _ _ G H C R S T _ _ _ G H C A H C); Lea.
+    destruct (t22_14__sams_nbet aah C G H L M N R S T) as [HIsi HNBet]; Col.
+    apply (sams_lea_lta789_suma2__lta123 _ _ _ G H C R S T _ _ _ G H C A H C); Lea.
       split; eauto with lea; intro; apply HNBet; apply (bet_conga_bet A H C); CongA.
       apply (conga3_suma__suma A H G G H C A H C); CongA; exists C; repeat (split; CongA); Side.
 
@@ -141,12 +143,12 @@ Proof.
     destruct HUn as [|oah]; auto.
     exfalso.
     apply(nlta U V W).
-    apply (isi_lta2_suma2__lta H G B B C H _ _ _ I J K L M N); SumA; apply nlea__lta; auto; intro.
-    { apply (t22_14__nisi oah C G B I J K); Col.
-      apply (isi_lea2__isi _ _ _ _ _ _ H G B G B C); Lea; SumA.
+    apply (sams_lta2_suma2__lta H G B B C H _ _ _ I J K L M N); SumA; apply nlea__lta; auto; intro.
+    { apply (t22_14__nsams oah C G B I J K); Col.
+      apply (sams_lea2__sams _ _ _ _ _ _ H G B G B C); Lea; SumA.
     }
-    apply (t22_14__nisi oah C G H L M N); Col.
-    apply (isi_lea2__isi _ _ _ _ _ _ B C H G H C); Lea; SumA.
+    apply (t22_14__nsams oah C G H L M N); Col.
+    apply (sams_lea2__sams _ _ _ _ _ _ B C H G H C); Lea; SumA.
 Qed.
 
 Lemma similar__rah : postulate_of_existence_of_similar_triangles -> postulate_of_right_saccheri_quadrilaterals.

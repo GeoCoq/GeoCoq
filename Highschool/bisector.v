@@ -45,7 +45,7 @@ CongA.
 (*case 3: ~ Col A B C. *)
 destruct (segment_construction B A B C ) as [C'[ HC'1 HC'2]].
 destruct (segment_construction B C B A ) as [A' [HA'1 HA'2]].
-destruct (midpoint_existence A' C') as [I HI].  
+destruct (midpoint_existence A' C') as [I HI].
 assert (Cong B C' A' B) by (apply l2_11 with A C;Cong;Between).
 assert_diffs.
 assert (CongA A' C' B C' A' B).
@@ -324,7 +324,7 @@ assert (TS I B A C).
    intro.
    assert (Col H2 B H1) by (col_with_conga).
    elim HNCOL;ColR. }
-destruct (l11_22_aux I B H1 H2) as [HOUTH1H2 | HTSH1H2].
+destruct (conga__or_out_ts I B H1 H2) as [HOUTH1H2 | HTSH1H2].
 CongA.
 elim HNCOL;ColR.
 assert (TS I B A H2) by (apply (l9_5 I B H1 H2 B A);auto;Col).

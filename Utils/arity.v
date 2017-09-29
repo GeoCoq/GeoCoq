@@ -894,40 +894,21 @@ Qed.
 
 Definition app {T:Type} {n:nat} (pred : arity T n) (cp : cartesianPower T n) : Prop.
 Proof.
-induction n.
-apply pred.
-clear IHn.
-induction n.
-apply pred.
-exact cp.
-simpl in *.
-apply IHn.
-apply pred.
-exact (headCP cp).
-exact (tailCP cp).
+induction n; [apply pred|clear IHn].
+induction n; [exact (pred cp)|exact (IHn (pred (headCP cp)) (tailCP cp))].
 Defined.
 
 Definition app_n_1 {T:Type} {n:nat} (pred : arity T (S n)) (cp : cartesianPower T n) (x : T) : Prop.
 Proof.
-induction n.
-apply pred.
-exact x.
-clear IHn.
-induction n.
-apply pred.
-exact cp.
-exact x.
-simpl in *.
-apply IHn.
-apply pred.
-exact (headCP cp).
-exact (tailCP cp).
+induction n; [exact (pred x)|clear IHn].
+induction n; [exact (pred cp x)|exact (IHn (pred (headCP cp)) (tailCP cp))].
 Defined.
 
 Lemma app_n_1_app {T:Type} {n:nat} :
-  forall (pred : arity T (S (S n))) (x : T) (cpp : cartesianPower T (S n)) (cpt : cartesianPower T (S (S n))),
-  app_n_1 pred cpp x -> allButLastCP cpt = cpp -> lastCP cpt = x ->
-  app pred cpt.
+  forall (pred : arity T (S (S n))) (x : T)
+         (cpp : cartesianPower T (S n)) (cpt : cartesianPower T (S (S n))),
+    app_n_1 pred cpp x -> allButLastCP cpt = cpp -> lastCP cpt = x ->
+    app pred cpt.
 Proof.
 intros.
 induction n.
@@ -1019,21 +1000,9 @@ Qed.
 
 Definition app_1_n {T:Type} {n:nat} (pred : arity T (S n)) (x : T) (cp : cartesianPower T n) : Prop.
 Proof.
-induction n.
-apply pred.
-exact x.
-induction n.
-simpl in *.
-apply pred.
-exact x.
-exact cp.
-clear IHn0.
-simpl in *.
-assert (newPred : arity T (S n)).
-simpl.
-apply pred.
-exact x.
-exact (headCP cp).
+induction n; [exact (pred x)|clear IHn].
+induction n; [exact (pred x cp)|clear IHn].
+assert (newPred : arity T (S n)) by (exact (pred x (headCP cp))).
 exact (app newPred (tailCP cp)).
 Defined.
 
@@ -1089,14 +1058,7 @@ split.
 Qed.
 
 Definition app_2_n {T:Type} {n:nat} (pred : arity T (S (S n))) (x1 x2 : T) (cp : cartesianPower T n) : Prop.
-Proof.
-simpl in *.
-assert (newPred : arity T n).
-apply pred.
-exact x1.
-exact x2.
-exact (app newPred cp).
-Defined.
+Proof. exact (app (pred x1 x2) cp). Defined.
 
 Lemma app_2_n_app {T:Type} {n:nat} :
   forall (pred : arity T (S (S (S n)))) (x1 x2 : T)

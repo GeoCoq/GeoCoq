@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section bachmann_s_lotschnittaxiom_weak_inverse_projection_postulate.
 
@@ -53,20 +55,20 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
   assert (HPerp2 : Perp A B P Q) by (apply perp_left_comm, perp_col with P; Col; apply per_perp; auto).
   assert (HPerp3 : Perp B P' P' Q').
     apply per_perp; auto; apply image_preserves_per with B P Q B C; trivial; apply col__refl; Col.
-  assert (HNCol5 : ~ Col P Q P').
-    apply par_strict_not_col with B P'; Col.
+  assert (HNCol5 : ~ Col P' P Q).
+    apply (par_not_col B P'); Col.
     apply par_not_col_strict with P; Col.
     apply l12_9 with A B; Perp.
   destruct (lotschnitt A B B P' P Q P' Q') as [Y [HY1 HY2]]; trivial.
   exists Y; split; trivial.
   apply col_one_side_out with A.
-    apply col_permutation_1, intersection_with_image_gen with P Q P' Q'; trivial.
+    apply col_permutation_1, intersection_with_image_gen with P Q P' Q'; Col.
   apply invert_one_side, one_side_transitivity with P'.
     apply not_two_sides_one_side; Col.
-    apply (conga_isi_nos__nts A B C A B C P'); SumA.
+    apply (conga_sams_nos__nts A B C A B C P'); SumA.
     apply l9_9, l9_5 with P B; Col.
-  apply l12_6, par_strict_col_par_strict with Q'; trivial.
-    intro; subst; apply HNCol5, HY1.
+  apply l12_6, par_strict_col_par_strict with Q'; Col.
+    intro; subst; apply HNCol5; Col.
   apply par_not_col_strict with P'; Col.
   apply l12_9 with B P'; Perp.
   }

@@ -6,11 +6,6 @@ Section Projections.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** Projections *)
-
-Definition Proj P Q A B X Y :=
-  A <> B /\ X <> Y /\ ~Par A B X Y  /\ Col A B Q /\ (Par P Q X Y \/ P = Q).
-
 Lemma project_id : forall A B X Y P P', Proj P P' A B X Y -> Col A B P -> P = P'.
 Proof.
 intros.
@@ -1192,9 +1187,6 @@ right.
 Between.
 Qed.
 
-Definition CongA_3 := fun A B C A' B' C' => CongA A B C A' B' C' /\ CongA B C A B' C' A' /\ CongA C A B C' A' B'.
-
-
 Lemma par3_conga3 :
  forall A B C A' B' C',
  ~ Col A B C ->
@@ -1912,8 +1904,6 @@ eapply eqv_sum.
 apply H13.
 assumption.
 Qed.
-
-Definition Projp P Q A B := A <> B /\ ((Col A B Q /\ Perp A B P Q) \/ (Col A B P /\ P = Q)).
 
 Lemma perp_projp : forall P P' A B, Perp_at P' A B P P' -> Projp P P' A B.
 intros.

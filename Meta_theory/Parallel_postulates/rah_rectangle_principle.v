@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rah_rectangle_principle.
 

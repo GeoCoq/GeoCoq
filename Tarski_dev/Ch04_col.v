@@ -184,10 +184,6 @@ Proof.
     unfold Cong_3;intuition.
 Qed.
 
-
-Definition FSC A B C D A' B' C' D' :=
-  Col A B C /\ Cong_3 A B C A' B' C' /\ Cong A D A' D' /\ Cong B D B' D'.
-
 Lemma l4_16 : forall A B C D A' B' C' D',
    FSC A B C D A' B' C' D' -> A<>B -> Cong C D C' D'.
 Proof.
@@ -265,8 +261,10 @@ Lemma col_cong_3_cong_3_eq : forall A B C A' B' C1 C2,
 Proof.
 intros A B C A' B' C1 C2 HAB HCol HCong1 HCong2.
 apply l4_18 with A' B'; try apply l4_13 with A B C; Col;
-unfold Cong_3 in *; spliter; eCong.
-intro; treat_equalities; intuition.
+unfold Cong_3 in *; spliter.
+  intro; treat_equalities; intuition.
+  apply cong_transitivity with A C; Cong.
+  apply cong_transitivity with B C; Cong.
 Qed.
 
 End T4_4.

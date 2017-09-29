@@ -156,7 +156,7 @@ assert_diffs.
 repeat split; assumption.
 Qed.
 
-Goal forall A B C D E F, Isi A B C D E F -> A <> B /\ B <> C /\ D <> E /\ E <> F.
+Goal forall A B C D E F, SAMS A B C D E F -> A <> B /\ B <> C /\ D <> E /\ E <> F.
 Proof.
 intros.
 assert_diffs.

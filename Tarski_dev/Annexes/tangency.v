@@ -1,21 +1,9 @@
-Require Export GeoCoq.Axioms.elementary_continuity.
-Require Export GeoCoq.Tarski_dev.Ch12_parallel.
-Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
 Require Export GeoCoq.Tarski_dev.Annexes.circles.
+Require Export GeoCoq.Axioms.continuity_axioms.
 
 Section Tangency.
 
 Context `{TE:Tarski_2D}.
-
-(** The line AB is tangent to the circle OP *)
-
-Definition Tangent A B O P :=
-  exists !X, Col A B X /\ OnCircle X O P.
-
-Definition TangentCC A B C D :=
- exists !X, OnCircle X A B /\ OnCircle X C D.
-
-Definition TangentAt A B O P T := Tangent A B O P /\ Col A B T /\ OnCircle T O P.
 
 (** Euclid Book III, Prop 11 and Prop 12
  We do not need to distinguish between internal or external tangency. *)
@@ -54,10 +42,10 @@ split; auto.
 subst x.
 assert(OnCircle Y A B).
 unfold OnCircle in *.
-eCong.
+apply cong_transitivity with A X; Cong.
 assert(OnCircle Y C D).
 unfold OnCircle in *.
-eCong.
+apply cong_transitivity with C X; Cong.
 assert(X = Y).
 apply H.
 split; auto.
@@ -105,53 +93,23 @@ Qed.
 (** A line going through the center is not tangent to the circle. *)
 
 Lemma diam_not_tangent : forall O P A B, 
-  P <> O -> A <> B -> Col O A B -> ~ Tangent A B O P.
+  P <> O -> Col O A B -> ~ Tangent A B O P.
 Proof.
-intros.
-intro.
-unfold Tangent in *.
-unfold unique in *.
-ex_and H2 Q.
-induction(eq_dec_points A O).
-subst A.
-assert(exists Q1 Q2 : Tpoint,
-       Q1 <> Q2 /\
-       Col O B Q1 /\ Col O B Q2 /\ OnCircle Q1 O P /\ OnCircle Q2 O P).
-apply (diam_points O P B);
-auto.
-ex_and H5 Q1.
-ex_and H6 Q2.
-
-assert(Q = Q1).
-apply H3; auto.
-subst Q.
-assert(Q1 = Q2).
-apply H3; auto.
-contradiction.
-
-assert(exists Q1 Q2 : Tpoint,
-       Q1 <> Q2 /\
-       Col O A Q1 /\ Col O A Q2 /\ OnCircle Q1 O P /\ OnCircle Q2 O P).
-apply (diam_points O P A);
-auto.
-ex_and H6 Q1.
-ex_and H7 Q2.
-
-assert(Q = Q1).
-apply H3.
-split.
-ColR.
-auto;
-subst Q.
-subst Q.
-assert(Q1 = Q2).
-apply H3.
-split.
-ColR.
-auto.
-contradiction.
+intros O P A B HOP HCol HTan.
+destruct HTan as [Q [[HQCol HQOn] HQUnique]].
+destruct(eq_dec_points A B).
+  subst B.
+  destruct (segment_construction Q O O P) as [Q' [HQ'1 HQ'2]].
+  assert (HQQ' : Q <> Q') by (intro; treat_equalities; auto).
+  apply HQQ', HQUnique; split; Col.
+destruct (diff_col_ex3 A B O) as [C [HOC [HAC [HBC HColC]]]]; Col.
+destruct (diam_points O P C) as [Q1 [Q2 [HBet [HQ1Q2C [HQ1On HQ2On]]]]].
+assert (HQ1Q2 : Q1 <> Q2).
+  intro; treat_equalities; auto.
+assert(Q = Q1) by (apply HQUnique; split; ColR).
+assert(Q = Q2) by (apply HQUnique; split; ColR).
+treat_equalities; auto.
 Qed.
-
 
 (** Every point on the tangent different from the point of tangency is strictly outside the circle. *)
 
@@ -172,9 +130,9 @@ apply le_trivial.
 intro.
 unfold OnCircle in *.
 assert(T = O).
-eCong.
+apply cong_identity with O; Cong.
 assert(X = O).
-eCong.
+apply cong_identity with O; Cong.
 subst O.
 contradiction.
 
@@ -207,7 +165,7 @@ assert(~InCircle X O P).
 intro.
 apply H5 in H6.
 contradiction.
-apply ninc__outcS.
+apply ninc__outcs.
 assumption.
 Qed.
 
@@ -266,7 +224,7 @@ apply l7_3; auto.
 
 assert(OnCircle T' O P).
 unfold OnCircle in *.
-eCong.
+apply cong_transitivity with O T; Cong.
 
 assert(OutCircleS T' O P).
 apply (tangent_out R B O P T T'); ColR.
@@ -312,7 +270,7 @@ apply l7_3; auto.
 
 assert(OnCircle T' O P).
 unfold OnCircle in *.
-eCong.
+apply cong_transitivity with O T; Cong.
 
 assert(OutCircleS T' O P).
 unfold Midpoint in *.
@@ -381,7 +339,7 @@ unfold OnCircle in *.
 unfold Lt in H11.
 spliter.
 apply H12.
-eCong.
+apply cong_transitivity with O P; Cong.
 
 intros.
 assert(HT:=H0).
@@ -423,7 +381,7 @@ unfold OutCircleS in *.
 unfold Lt in *.
 spliter.
 apply False_ind.
-apply H5; eCong.
+apply H5; Cong.
 
 intros.
 assert(TangentAt A B O P Q).
@@ -467,7 +425,7 @@ intro.
 assert(HH:=midpoint_existence X Q).
 ex_and HH M.
 assert(InCircleS M O P). 
-apply(bet_onc2__incS O P Q X M); auto.
+apply(bet_onc2__incs O P Q X M); auto.
 intro.
 subst M.
 
@@ -513,97 +471,6 @@ unfold Lt in H6.
 tauto.
 Qed.
 
-
-(** Euclid Book III Prop 3.
- If a straight line passing through the center of a circle 
- bisects a straight line not passing through the center,
- then it also cuts it at right angles; and if it cuts it at right angles, then it also bisects it.
-*)
-
-Lemma onc2_mid__perp1 : forall O P A B X, 
- O<>X -> A<>B ->
- OnCircle A O P ->
- OnCircle B O P ->
- Midpoint X A B ->
- Perp O X A B.
-Proof.
-intros.
-assert (Perp_bisect O X A B).
- apply cong_perp_bisect.
-assumption.
-assumption.
-unfold OnCircle in *.
-eCong.
-apply midpoint_cong in H3.
-Cong.
-apply perp_bisect_perp.
-assumption.
-Qed.
-
-(** Euclid Book III Prop 4. 
- If in a circle two straight lines which do not pass through the center cut one another, then they do not bisect one another.
- *)
-
-Lemma onc4_mid2_eq : forall O P A B C D X, B <> C-> A <> B -> 
- OnCircle A O P ->
- OnCircle B O P ->
- OnCircle C O P ->
- OnCircle D O P ->
- Midpoint X A C ->
- Midpoint X B D ->
- X=O.
-Proof.
-intros O P A B C D X Hbc.
-intros.
-assert(HH:=onc2_mid__per O P A C X H0 H2 H4).
-assert(HP:=onc2_mid__per O P B D X H1 H3 H5).
-
-induction(eq_dec_points X O).
-auto.
-assert(Col A B X).
-apply(per_per_col A B O X); Perp.
-unfold Midpoint in *.
-spliter.
-assert(Col B X D).
-apply bet_col; auto.
-assert(Col A X C).
-ColR.
-
-induction(eq_dec_points A X).
-subst X.
-treat_equalities.
-assert(OutCircleS D O P).
-apply(onc2_out__outcs O P A B D); auto.
-assert_diffs.
-unfold Out.
-split.
-auto.
-split.
-auto.
-left;finish.
-
-unfold OutCircleS in *.
-unfold Lt in *.
-spliter.
-unfold OnCircle in H3.
-apply False_ind.
-absurd (Cong O P O D);Cong.
-
-assert(Col A B C). 
-ColR.
-
-assert(C = A \/ C = B).
-apply(line_circle_two_points O P A B C); Col.
-destruct H14.
-treat_equalities.
-intuition.
-treat_equalities.
-assert(A = D) by
-(apply (symmetric_point_uniqueness C X);unfold Midpoint;split; finish).
-treat_equalities.
-tauto.
-Qed.
-
 (** Euclid Book III Prop 5 
  If two circles cut one another, then they do not have the same center. *)
 
@@ -621,16 +488,14 @@ intro.
 subst C.
 apply H.
 unfold EqC.
-intros.
+unfold OnCircle in *.
+assert(Cong A B A D) by (apply cong_transitivity with A P; Cong).
+intro.
 split.
 intro.
-unfold OnCircle in *.
-assert(Cong A B A D);
-eCong.
+apply cong_transitivity with A B; Cong.
 intro.
-unfold OnCircle in *.
-assert(Cong A B A D);
-eCong.
+apply cong_transitivity with A D; Cong.
 Qed.
 
 (** Euclid Book III Prop 6 
@@ -649,7 +514,7 @@ ex_and H0 T.
 intro.
 subst C.
 unfold OnCircle in *.
-assert(Cong A B A D); eCong.
+assert(Cong A B A D) by (apply cong_transitivity with A T; Cong).
 assert(T = B).
 apply(H1 B); Cong.
 subst T.
@@ -658,9 +523,360 @@ ex_and HH B'.
 unfold Midpoint in *.
 spliter.
 assert(B = B').
-apply(H1 B'); eCong.
+  apply(H1 B'); split; Cong.
+  apply cong_transitivity with A B; Cong.
 subst B'.
 treat_equalities; tauto.
+Qed.
+
+Lemma interccat__neq : forall A B C D P Q, InterCCAt A B C D P Q -> A <> C.
+Proof.
+intros.
+apply intercc__neq  with B D.
+unfold InterCC.
+exists P; exists Q;auto.
+Qed.
+
+(** Euclid Book III Prop 10
+ A circle does not cut a circle at more than two points.
+ *)
+Lemma onc2__oreq : forall A B C D P Q,
+ InterCCAt A B C D P Q ->
+ forall Z, OnCircle Z A B -> OnCircle Z C D  -> Z=P \/ Z=Q.
+Proof.
+intros.
+assert(HIC := H).
+unfold InterCCAt in H.
+spliter.
+induction (eq_dec_points Z Q).
+- right; auto.
+- left.
+assert(HH:=midpoint_existence Q P).
+ex_and HH M.
+assert(Per A M Q).
+apply(mid_onc2__per A B Q P M); auto.
+assert(Per C M Q).
+apply(mid_onc2__per C D Q P M); auto.
+
+assert(HH:=midpoint_existence Z Q).
+ex_and HH N.
+
+assert(Per A N Q).
+eapply(mid_onc2__per A Z Q Z).
+apply cong_transitivity with A B; Cong.
+Circle.
+Midpoint.
+
+
+assert(Per C N Q).
+eapply(mid_onc2__per C Z Q Z).
+apply cong_transitivity with C D; Cong.
+Circle.
+Midpoint.
+
+assert(Col A C M).
+eapply(per_per_col _ _ Q); auto.
+assert_diffs;auto.
+
+assert(A <> C).
+apply(interccat__neq A B C D P Q); auto.
+
+assert(Col A C N).
+eapply(per_per_col _ _ Q); auto.
+assert_diffs;auto.
+
+assert(Perp A C Q P).
+induction(eq_dec_points A M).
+subst M.
+apply per_perp_in in H10; auto.
+apply perp_in_comm in H10.
+
+apply perp_in_perp in H10.
+apply perp_sym.
+apply (perp_col Q A A C P); Perp.
+ColR.
+assert_diffs;auto.
+
+apply per_perp_in in H9; auto.
+apply perp_in_comm in H9.
+apply perp_in_perp in H9.
+apply perp_comm in H9.
+apply (perp_col A M M Q C) in H9; Col.
+apply perp_sym in H9.
+apply perp_comm in H9.
+apply (perp_col Q M C A P) in H9; Col.
+Perp.
+assert_diffs;auto.
+
+assert(Col Q N Z).
+ColR.
+
+assert(Perp A C Q Z).
+induction(eq_dec_points A N).
+subst N.
+apply per_perp_in in H13; auto.
+apply perp_in_comm in H13.
+apply perp_in_perp in H13.
+apply perp_sym.
+apply (perp_col Q A A C Z); Perp.
+assert_diffs;auto.
+
+apply per_perp_in in H12; auto.
+apply perp_in_comm in H12.
+apply perp_in_perp in H12.
+apply perp_comm in H12.
+apply (perp_col A N N Q C) in H12; Col.
+apply perp_sym in H12.
+apply perp_comm in H12.
+apply (perp_col Q N C A Z) in H12; Col.
+Perp.
+assert_diffs;auto.
+
+apply perp_sym in H19.
+apply perp_sym in H17.
+assert(HH:= l12_9 Q P Q Z A C H17 H19).
+unfold Par in HH.
+induction HH.
+unfold Par_strict in H20.
+spliter.
+apply False_ind.
+apply H23.
+exists Q.
+split; ColR.
+spliter.
+assert(Z = P \/ Z = Q).
+apply(line_circle_two_points A B P Q Z H2); auto.
+induction H24; tauto.
+Qed.
+
+
+(** Prop 17  tangent to a circle construction *)
+
+Lemma tangent_construction : forall O P X, segment_circle -> OutCircle X O P 
+                                                  -> exists Y, Tangent X Y O P.
+Proof.
+intros.
+induction(eq_dec_points O P).
+subst P.
+exists O.
+unfold Tangent.
+unfold unique.
+unfold OnCircle in *.
+exists O.
+repeat split; Col; Cong.
+intros.
+spliter.
+treat_equalities; auto.
+
+assert(O <> X).
+{
+  intro.
+  treat_equalities.
+  contradiction.
+}
+
+assert(HH:=circle_cases O P X).
+induction HH.
+
+assert(HH:= perp_exists X O X H2).
+ex_and HH Y.
+unfold OnCircle in *.
+exists Y.
+apply tangency_chara; auto.
+exists X.
+apply perp_perp_in in H4.
+split; Circle.
+
+induction H3.
+unfold OutCircle in *.
+unfold InCircleS in *.
+apply lt__nle in H3; contradiction.
+
+
+assert(exists Q : Tpoint, OnCircle Q O P /\ Out O X Q).
+{
+  apply(onc_exists); auto.
+}
+
+ex_and H4 U.
+
+assert(Bet O U X).
+{
+  unfold Out in H5.
+  spliter.
+  induction H7.
+  unfold OutCircleS in *.
+  unfold OnCircle in *.
+  assert(Le O X O U).
+  {
+    unfold Le.
+    exists X.
+    split; Cong.
+  }
+  assert(Lt O U O X).
+  {
+    apply(cong2_lt__lt O P O X); Cong.
+  }
+  apply le__nlt in H8.
+  contradiction.
+  assumption.
+}
+
+assert(exists X : Tpoint, Perp U X O U).
+{
+  apply(perp_exists U O U).
+  intro.
+  unfold OnCircle in H4.
+  treat_equalities; tauto.
+}
+ex_and H7 R.
+assert(HP:=symmetric_point_construction X O).
+ex_and HP W.
+unfold Midpoint in *.
+spliter.
+assert(exists X0 : Tpoint, (Bet U R X0 \/ Bet U X0 R) /\ Cong U X0 W X).
+{
+  apply(segment_construction_2 R U W X).
+  apply perp_distinct in H8.
+  spliter.
+  auto.
+}
+
+ex_and H10 T.
+
+assert(InCircleS U O X).
+{
+  unfold InCircleS.
+  unfold OutCircleS in H3.
+  unfold OnCircle in H4.
+  apply(cong2_lt__lt O P O X); Cong.
+}
+
+assert(OutCircleS T O X).
+{
+  apply(diam_cong_incs__outcs O X X W U T); auto.
+  unfold Diam.
+  unfold OnCircle.
+  repeat split; Cong.
+  Cong.
+}
+unfold segment_circle in H.
+assert(exists Z : Tpoint, Bet U Z T /\ OnCircle Z O X).
+{
+  apply(H O X U T).
+  apply incs__inc; auto.
+  apply outcs__outc; auto.
+}
+
+ex_and H14 Y.
+assert(exists Q : Tpoint, OnCircle Q O P /\ Out O Y Q).
+{
+  apply(onc_exists O P Y); auto.
+  intro.
+  unfold OnCircle in H15.
+  treat_equalities; tauto.
+}
+ex_and H16 V.
+
+exists V.
+
+assert(Bet O V Y).
+{
+  unfold Out in H17.
+  spliter.
+  induction H19.
+  unfold OutCircleS in H3.
+  assert(Lt O V O Y).
+  {
+    apply (cong2_lt__lt O P O X); Cong.
+  }
+  unfold OnCircle in *.
+  assert(Le O Y O V).
+  {
+    unfold Le.
+    exists Y.
+    split; Cong.
+  }
+  apply le__nlt in H21.
+  contradiction.
+  assumption.
+}
+
+assert(Cong O X O Y) by Cong.
+assert(Cong O U O V) by (apply cong_transitivity with O P; Cong).
+
+
+assert(CongA X O V Y O U).
+{
+  unfold OnCircle in *.
+  apply(out_conga U O Y Y O U X V Y U).
+  apply conga_left_comm.
+  apply conga_refl; intro;treat_equalities; tauto.
+  unfold Out.
+  repeat split; try(intro;treat_equalities; tauto).
+  left; auto.
+  unfold Out.
+  repeat split; try(intro;treat_equalities; tauto).
+  right; auto.
+  apply out_trivial;  intro;treat_equalities; tauto.
+  apply out_trivial;  intro;treat_equalities; tauto.
+}
+
+assert(Cong V X U Y).
+{
+
+  apply(cong2_conga_cong V O X U O Y); Cong.
+  CongA.
+}
+
+assert(CongA O U Y O V X).
+{
+  unfold OnCircle in *.
+  apply(cong3_conga O U Y O V X).
+  repeat split.
+  intro;treat_equalities; tauto.
+  intro;treat_equalities.
+  unfold OutCircleS in H3.
+  unfold Lt in H3.
+  spliter.
+  apply H6; Cong.
+  repeat split; Cong.
+}
+
+assert(Per O V X).
+{
+  apply(l11_17 O U Y O V X).
+  apply(perp_col _ _ _ _ Y) in H8.
+
+  apply perp_perp_in in H8.
+  apply perp_in_comm in H8.
+  apply perp_in_per.
+  apply perp_in_sym.
+  apply perp_in_comm.
+  assumption.
+  intro.
+  treat_equalities.
+  unfold CongA in H23.
+  tauto.
+  induction H10;
+  ColR.
+  assumption.
+}
+
+apply tangency_chara; auto.
+exists V.
+split; auto.
+apply per_perp_in in H24; Cong.
+apply perp_in_left_comm.
+apply perp_in_sym.
+assumption.
+unfold OnCircle in *.
+intro.
+treat_equalities; tauto.
+intro.
+treat_equalities.
+unfold CongA in H23.
+tauto.
 Qed.
 
 End Tangency.

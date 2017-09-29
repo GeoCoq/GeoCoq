@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section par_perp_perp_TCP.
 

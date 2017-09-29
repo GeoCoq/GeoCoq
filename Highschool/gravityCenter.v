@@ -39,7 +39,7 @@ forall A B C I J,
  exists G, Col G A I /\ Col G B J.
 Proof with finish.
 intros.
-assert_bet.
+assert_bets.
 elim (inner_pasch A B C J I)...
 intro G;intros.
 exists G.
@@ -236,8 +236,7 @@ treat_equalities.
 assert_diffs.
 Name G'' the midpoint of C and G.
 assert (HPar : Parallelogram  C' A' G'' G').
-apply (varignon' A B C G C' A' G'' G');finish.
-intuition.
+apply (varignon' A B C G C' A' G'' G'); finish.
 apply parallelogram_to_plg in HPar.
 destruct HPar as [HDiff [I [HCol1 HCol2]]].
 assert (G = I); try (treat_equalities; unfold Midpoint in *; spliter; eCong).
@@ -537,6 +536,7 @@ Ltac permutation_intro_in_goal :=
 
 Ltac Gravitycenter := auto with gravitycenter.
 
+(*
 Ltac finish := repeat match goal with
  | |- Bet ?A ?B ?C => Between
  | |- Col ?A ?B ?C => Col
@@ -552,6 +552,7 @@ Ltac finish := repeat match goal with
  | |- ?A<>?B => apply swap_diff;assumption
  | |- _ => try assumption
 end.
+*)
 
 Ltac sfinish := repeat match goal with
  | |- Bet ?A ?B ?C => Between; eBetween

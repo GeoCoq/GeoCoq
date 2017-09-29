@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section consecutive_interior_angles_alternate_interior_angles.
 
@@ -26,7 +28,7 @@ Proof.
     exists D; split; auto.
     apply (par_col_par B A C D); Par; Col.
   }
-  apply (isi2_suma2__conga123 _ _ _ _ _ _ A C D' D C D').
+  apply (sams2_suma2__conga123 _ _ _ _ _ _ A C D' D C D').
   - split; auto.
     split.
     right; intro; apply HNCol1; Col.
@@ -37,7 +39,7 @@ Proof.
     intro HNts.
     destruct HNts as [_ []]; assert_cols; Col.
 
-  - apply (isi_chara _ _ _ _ _ _ D'); Between; Lea.
+  - apply (sams_chara _ _ _ _ _ _ D'); Between; Lea.
 
   - apply (conga3_suma__suma B A C A C D' B A B'); try (apply conga_refl); auto.
     apply conga_line; Between.

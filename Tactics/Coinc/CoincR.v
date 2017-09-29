@@ -42,12 +42,12 @@ induction m; intros s cp; [unfold InCP|]; simpl; split.
 
   {
   intro Hmem; apply andb_true_iff in Hmem; destruct Hmem as [Hmem1 Hmem2].
-  intros p H; apply InCPOK in H; elim H; clear H; intro; subst; simpl; auto.
-  destruct (IHm s (tailCP cp)) as [H1 H2]; apply H1; auto.
+  intros p H; apply InCPOK in H; elim H; clear H; intro HIn; subst; simpl; auto.
+  destruct (IHm s (tailCP cp)) as [H _]; apply H; auto.
   }
 
   {
-  destruct (IHm s (tailCP cp)) as [H1 H2]; clear IHm; clear H1; rename H2 into IHm.
+  destruct (IHm s (tailCP cp)) as [_ H]; clear IHm; rename H into IHm.
   intro H; apply andb_true_iff; split;
   [apply (H (fst cp))|apply IHm; intros p HIn; apply H]; apply InCPOK; auto.
   }
@@ -71,7 +71,7 @@ induction m; intros s cp; [unfold InCP|]; simpl; split.
 
   {
   intro H; apply andb_false_iff in H.
-  destruct (IHm s (tailCP cp)) as [H1 H2]; clear IHm; clear H2; rename H1 into IHm.
+  destruct (IHm s (tailCP cp)) as [H' _]; clear IHm; rename H' into IHm.
   elim H; clear H; intro Hmem.
 
     {
@@ -85,7 +85,7 @@ induction m; intros s cp; [unfold InCP|]; simpl; split.
   }
 
   {
-  destruct (IHm s (tailCP cp)) as [H1 H2]; clear IHm; clear H1; rename H2 into IHm.
+  destruct (IHm s (tailCP cp)) as [_ H]; clear IHm; rename H into IHm.
   intro H; destruct H as [p [HIn Hmem]]; apply InCPOK in HIn; apply andb_false_iff.
   elim HIn; clear HIn; intro HIn; subst; auto.
   right; apply IHm; exists p; auto.
@@ -538,16 +538,11 @@ Qed.
 Definition memCP (cp : cartesianPower positive (S (S (S n)))) (s : SS.elt) := memCPAux (S n) cp s.
 
 Lemma memCPProper : Proper (eq ==> S.Equal==> eq) memCP.
-Proof.
-apply memCPAuxProperOK.
-Qed.
+Proof. apply memCPAuxProperOK. Qed.
 
 Lemma memMemCPOK : forall cp s,
   (forall e, InCP e cp -> S.mem e s = true) -> memCP cp s = true.
-Proof.
-unfold memCP.
-apply memMemCPAuxOK.
-Qed.
+Proof. apply memMemCPAuxOK. Qed.
 
 Lemma memCPConsHd : forall p s x,
   S.mem p s = true ->
@@ -895,9 +890,7 @@ Defined.
 
 Lemma CPToSSHdTl {m:nat} : forall (cp : cartesianPower positive (S (S m))),
   CPToSS cp = S.add (headCP cp) (CPToSS (tailCP cp)).
-Proof.
-unfold CPToSS; simpl; reflexivity.
-Qed.
+Proof. simpl; reflexivity. Qed.
 
 Lemma memCPToSSOK {m : nat} : forall e (cp : cartesianPower positive (S m)),
   S.mem e (CPToSS cp) = true ->
@@ -1134,20 +1127,16 @@ intros cp st interp HWd HST.
 unfold st_ok.
 intros cp' Hmem.
 apply STadd_iff in Hmem.
-elim Hmem; clear Hmem; intro Hmem.
-
-  assert (Hcp := sets.PosSort.Permuted_sort (CPToList cp)).
-  assert (Hcp' := sets.PosSort.Permuted_sort (CPToList cp')).
-  apply eqListOK in Hmem.
-  rewrite Hmem in Hcp.
-  apply PermWdOK with (interp_CP cp interp); try assumption.
-  do 2 (rewrite interp_CPOK).
-  apply Permutation.Permutation_map.
-  transitivity (PosSort.sort (CPToList cp')); try assumption.
-  apply Permutation.Permutation_sym; assumption.
-
-  unfold st_ok in HST.
-  apply HST; apply Hmem.
+elim Hmem; clear Hmem; intro Hmem; [|apply HST; apply Hmem].
+assert (Hcp := sets.PosSort.Permuted_sort (CPToList cp)).
+assert (Hcp' := sets.PosSort.Permuted_sort (CPToList cp')).
+apply eqListOK in Hmem.
+rewrite Hmem in Hcp.
+apply PermWdOK with (interp_CP cp interp); try assumption.
+do 2 (rewrite interp_CPOK).
+apply Permutation.Permutation_map.
+transitivity (PosSort.sort (CPToList cp')); try assumption.
+apply Permutation.Permutation_sym; assumption.
 Qed.
 
 Definition list_assoc_inv :=

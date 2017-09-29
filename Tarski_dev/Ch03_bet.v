@@ -4,8 +4,6 @@ Section T2_1.
 
 Context `{Tn:Tarski_neutral_dimensionless}.
 
-Definition Col A B C := Bet A B C \/ Bet B C A \/ Bet C A B.
-
 Lemma bet_col : forall A B C, Bet A B C -> Col A B C.
 Proof.
     intros;unfold Col;auto.
@@ -62,6 +60,12 @@ Proof.
     apply between_identity in H1.
     apply between_identity in H2.
     congruence.
+Qed.
+
+Lemma between_equality_2 : forall A B C : Tpoint, Bet A B C -> Bet A C B -> B = C.
+Proof.
+    intros.
+    apply between_equality with A; auto using between_symmetry.
 Qed.
 
 Lemma between_exchange3 : forall A B C D, Bet A B C -> Bet A C D -> Bet B C D.
@@ -246,9 +250,6 @@ Section T2_5.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition Bet_4 A1 A2 A3 A4 :=
-   Bet A1 A2 A3 /\ Bet A2 A3 A4 /\ Bet A1 A3 A4 /\ Bet A1 A2 A4.
-
 Lemma l_3_9_4 : forall A1 A2 A3 A4, Bet_4 A1 A2 A3 A4 -> Bet_4 A4 A3 A2 A1.
 Proof.
     unfold Bet_4.
@@ -367,6 +368,12 @@ Proof.
     subst.
     apply HNBet.
     apply between_trivial.
+Qed.
+
+Lemma BetSEq : forall A B C, BetS A B C <-> Bet A B C /\ A <> B /\ A <> C /\ B <> C.
+Proof.
+intros; unfold BetS; split; intro; spliter;
+repeat split; auto; intro; treat_equalities; auto.
 Qed.
 
 End Beeson_2.

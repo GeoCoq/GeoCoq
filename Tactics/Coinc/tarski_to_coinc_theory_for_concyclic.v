@@ -1,7 +1,8 @@
+Require Import GeoCoq.Axioms.parallel_postulates.
 Require Import GeoCoq.Tactics.Coinc.tactics_axioms.
 Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 Require Export GeoCoq.Highschool.concyclic.
-Require Import GeoCoq.Meta_theory.Parallel_postulates.Euclid.
+
 
 Section Tarski_is_a_Coinc_theory_for_cocyclic.
 

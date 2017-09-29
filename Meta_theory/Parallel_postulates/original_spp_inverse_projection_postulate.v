@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section original_spp_inverse_projection_postulate.
 

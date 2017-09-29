@@ -133,7 +133,7 @@ apply eq_incident.
 assumption.
 Qed.
 
-Lemma axiom_Incid_morphism : 
+Lemma axiom_Incid_morphism :
  forall P l m, Incident P l -> Eq l m -> Incident P m.
 Proof.
 intros.
@@ -246,7 +246,6 @@ simpl.
 Col.
 Qed.
 
-
 Lemma axiom_plan' :
  exists A , exists B, exists C, ~ Col_H A B C.
 Proof.
@@ -287,7 +286,7 @@ unfold Incident.
 intuition.
 Qed.
 
-Lemma axiom_between_diff : 
+Lemma axiom_between_diff :
  forall A B C, Between_H A B C -> A<>C.
 Proof.
 intros.
@@ -458,91 +457,39 @@ Qed.
 
 Definition Hcong:=Cong.
 
-Lemma axiom_hcong_1_existence :
- forall A B l M,
- A <> B -> Incident M l ->
- exists A', exists B',
-    Incident A' l /\ Incident B' l /\
-    Between_H A' M B' /\ Hcong M A' A B /\ Hcong M B' A B.
-Proof.
+Definition outH := fun P A B => Between_H P A B \/ Between_H P B A \/ (P <> A /\ A = B).
+
+Lemma out_outH : forall P A B, Out P A B -> outH P A B.
+unfold Out.
+unfold outH.
 intros.
-unfold Hcong.
-unfold Incident.
+spliter.
+induction H1.
 
-induction(eq_dec_points M (P1 l)).
-subst M.
+induction (eq_dec_points A B).
+right; right.
+split; auto.
+left.
+unfold Between_H.
+repeat split; auto.
 
-prolong (P2 l) (P1 l) A' A B.
-prolong A' (P1 l) B' A B.
 
-exists A'.
-exists B'.
+induction (eq_dec_points A B).
+right; right.
+split; auto.
+right; left.
+unfold Between_H.
+repeat split; auto.
+Qed.
 
-repeat split.
-apply bet_col in H1.
-apply bet_col in H3.
-Col.
-apply bet_col in H1.
-apply bet_col in H3.
-apply col_permutation_2.
-eapply (col_transitivity_1 _ A').
-intro.
-treat_equalities.
-tauto.
-Col.
-Col.
-assumption.
-intro.
-subst A'.
-apply cong_symmetry in H2.
-apply cong_identity in H2.
-contradiction.
-intro.
-treat_equalities.
-tauto.
-intro.
-treat_equalities.
-apply between_identity in H3.
-subst A'.
-apply cong_symmetry in H2.
-apply cong_identity in H2.
-contradiction.
-assumption.
-assumption.
-
-prolong (P1 l) M A' A B.
-prolong A' M B' A B.
-exists A'.
-exists B'.
-repeat split.
-apply bet_col in H2.
-apply bet_col in H4.
-eCol.
-apply bet_col in H2.
-apply bet_col in H4.
-
-assert(Col (P1 l) M B').
-
-apply col_permutation_2.
-eapply (col_transitivity_1 _ A').
-intro.
-treat_equalities.
-tauto.
-Col.
-Col.
-eCol.
-assumption.
-intro.
-treat_equalities.
-tauto.
-intro.
-treat_equalities.
-tauto.
-intro.
-treat_equalities.
-tauto.
-assumption.
-assumption.
+Lemma axiom_hcong_1_existence : forall A B A' P l,
+  A <> B -> A' <> P ->
+  Incident A' l -> Incident P l ->
+  exists B', Incident B' l /\ outH A' P B' /\ Hcong A' B' A B.
+Proof.
+intros; destruct (l6_11_existence A' A B P) as [B' [HOut HCong]]; auto.
+exists B'; repeat split; try apply out_outH, l6_6; auto; unfold Incident in *.
+assert_cols; destruct l; simpl in *; ColR.
 Qed.
 
 Lemma axiom_hcong_1_uniqueness :
@@ -727,13 +674,16 @@ apply H3.
 assumption.
 intro.
 treat_equalities.
-
+(*
 apply between_symmetry in H.
 apply between_equality in H.
 treat_equalities.
+*)
 tauto.
+(*
 apply between_symmetry.
 assumption.
+*)
 intro.
 treat_equalities.
 tauto.
@@ -925,8 +875,6 @@ simpl in *.
 apply col2_os__os with P1 P2;Col.
 Qed.
 
-Definition outH := fun P A B => Between_H P A B \/ Between_H P B A \/ (P <> A /\ A = B).
-
 (** This is equivalent to the out predicate of Tarski. *)
 
 Lemma outH_out : forall P A B, outH P A B -> Out P A B.
@@ -950,29 +898,6 @@ auto.
 subst B.
 left.
 apply between_trivial.
-Qed.
-
-Lemma out_outH : forall P A B, Out P A B -> outH P A B.
-unfold Out.
-unfold outH.
-intros.
-spliter.
-induction H1.
-
-induction (eq_dec_points A B).
-right; right.
-split; auto.
-left.
-unfold Between_H.
-repeat split; auto.
-
-
-induction (eq_dec_points A B).
-right; right.
-split; auto.
-right; left.
-unfold Between_H.
-repeat split; auto.
 Qed.
 
 (** The 2D version of the fourth congruence axiom **)
@@ -1082,7 +1007,7 @@ apply conga_sym.
 apply H1.
 assumption.
 
-apply l11_22_aux in T.
+apply conga__or_out_ts in T.
 induction T.
 apply out_outH.
 assumption.

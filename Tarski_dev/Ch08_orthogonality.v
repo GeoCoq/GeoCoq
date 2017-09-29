@@ -7,18 +7,9 @@ Require Export GeoCoq.Tactics.Coinc.CoincR_for_col.
 *)
 Require Export GeoCoq.Tactics.Coinc.ColR.
 
-Ltac not_exist_hyp_perm_col A B C := not_exist_hyp (~ Col A B C); not_exist_hyp (~ Col A C B);
+Ltac not_exist_hyp_perm_ncol A B C := not_exist_hyp (~ Col A B C); not_exist_hyp (~ Col A C B);
                                  not_exist_hyp (~ Col B A C); not_exist_hyp (~ Col B C A);
                                  not_exist_hyp (~ Col C A B); not_exist_hyp (~ Col C B A).
-
-Ltac finish := match goal with
- | |- Col ?A ?B ?C => Col
- | |- ~ Col ?A ?B ?C => Col
- | |- Cong ?A ?B ?C ?D => Cong
- | |- Midpoint ?A ?B ?C => Midpoint
- | |- ?A<>?B => apply swap_diff;assumption
- | |- _ => try assumption
-end.
 
 Ltac assert_diffs_by_cases :=
  repeat match goal with
@@ -38,7 +29,7 @@ repeat
      not_exist_hyp (Col X1 X2 X3);let N := fresh in assert (N := out_col X1 X2 X3 H)
  end.
 
-Ltac assert_bet :=
+Ltac assert_bets :=
 repeat
  match goal with
       | H:Midpoint ?B ?A ?C |- _ => let T := fresh in not_exist_hyp (Bet A B C); assert (T := midpoint_bet A B C H)
@@ -108,6 +99,13 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
+
       | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
       let T:= fresh in (not_exist_hyp2 I B I A);
        assert (T:= midpoint_distinct_1 I A B H2 H);
@@ -168,7 +166,16 @@ repeat
       apply  between_identity in H;smart_subst X2;clean_reap_hyps
    | H:(Midpoint ?X ?Y ?Y) |- _ => apply l7_3 in H; smart_subst Y;clean_reap_hyps
    | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
-     let T := fresh in not_exist_hyp (A=B); assert (T := between_equality A B C H H2);
+     let T := fresh in not_exist_hyp (A=B); assert (T : A=B) by (apply (between_equality A B C); finish);
+                       smart_subst A;clean_reap_hyps
+   | H : Bet ?A ?B ?C, H2 : Bet ?A ?C ?B |- _ =>
+     let T := fresh in not_exist_hyp (B=C); assert (T : B=C) by (apply (between_equality_2 A B C); finish);
+                       smart_subst B;clean_reap_hyps
+   | H : Bet ?A ?B ?C, H2 : Bet ?C ?A ?B |- _ =>
+     let T := fresh in not_exist_hyp (A=B); assert (T : A=B) by (apply (between_equality A B C); finish);
+                       smart_subst A;clean_reap_hyps
+   | H : Bet ?A ?B ?C, H2 : Bet ?B ?C ?A |- _ =>
+     let T := fresh in not_exist_hyp (B=C); assert (T : B=C) by (apply (between_equality_2 A B C); finish);
                        smart_subst A;clean_reap_hyps
    | H:(Le ?X1 ?X2 ?X3 ?X3) |- _ =>
       apply le_zero in H;smart_subst X2;clean_reap_hyps
@@ -305,7 +312,7 @@ end.
 
 Ltac assert_all_not_cols_by_contradiction_aux :=
 repeat match goal with
- | A: Tpoint, B: Tpoint, C: Tpoint |- _ => untag_hyps; not_exist_hyp_perm_col A B C; tag_hyps; show_not_col A B C
+ | A: Tpoint, B: Tpoint, C: Tpoint |- _ => untag_hyps; not_exist_hyp_perm_ncol A B C; tag_hyps; show_not_col A B C
 end.
 
 Ltac assert_all_diffs_by_contradiction' :=
@@ -320,8 +327,6 @@ Ltac assert_ndc_by_contradiction :=
 Section T8_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Definition Per A B C := exists C', Midpoint B C C' /\ Cong A C A C'.
 
 Lemma Per_dec : forall A B C, Per A B C \/ ~ Per A B C.
 Proof.
@@ -570,10 +575,6 @@ Proof.
     Cong.
 Qed.
 
-Definition Perp_at X A B C D :=
-  A <> B /\ C <> D /\ Col X A B /\ Col X C D /\
-  (forall U V, Col U A B -> Col V C D -> Per U X V).
-
 Lemma col_col_per_per : forall A X C U V,
  A<>X -> C<>X ->
  Col U A X ->
@@ -607,8 +608,6 @@ Proof.
       left;repeat split;Col;intros; apply col_col_per_per with B D;Col;ColR.
     right;intro;spliter;apply H5;apply H10;Col.
 Qed.
-
-Definition Perp A B C D := exists X, Perp_at X A B C D.
 
 Lemma perp_distinct : forall A B C D, Perp A B C D -> A <> B /\ C <> D.
 Proof.
@@ -718,18 +717,6 @@ Proof.
     Col.
 Qed.
 
-Definition DistLn := fun A B C D =>
-(exists X, Col X A B /\ ~Col X C D) \/ (exists X, ~ Col X A B /\ Col X C D).
-
-Lemma perBAB : forall A B, Per B A B -> A = B.
-Proof.
-    intros.
-    eapply l8_7.
-      apply H.
-    eapply l8_2.
-    apply l8_5.
-Qed.
-
 Lemma l8_14_1 : forall A B, ~ Perp A B A B.
 Proof.
     intros.
@@ -778,9 +765,8 @@ Proof.
     intros.
     unfold Perp_at in H.
     spliter.
-    eapply (H5 Y Y) in H1.
-      2:assumption.
-    apply perBAB.
+    apply (H5 Y Y) in H1.
+      apply eq_sym, l8_8; assumption.
     assumption.
 Qed.
 
@@ -1105,7 +1091,7 @@ Proof.
     apply l8_7 with C;apply l8_2;[apply H14 |apply H10];Col.
 Qed.
 
-Lemma distinct : forall A B X C C', ~ Col A B C -> Col A B X -> Midpoint X C C' -> C <> C'.
+Lemma midpoint_distinct : forall A B X C C', ~ Col A B C -> Col A B X -> Midpoint X C C' -> C <> C'.
 Proof.
     intros.
     intro.
@@ -1342,7 +1328,7 @@ Proof.
     assert (hy:Bet Z Y X).
       apply (l7_22 Q C Q' C' Y Z X);Cong.
       assert (T:=outer_transitivity_between2 C P Y Q).
-      assert_bet.
+      assert_bets.
       apply between_symmetry.
       apply T;Between.
     show_distinct Q Y.
@@ -1445,7 +1431,7 @@ Proof.
       assert (Col Y P Q') by ColR.
       assert (Col Y Q Q') by ColR.
       assert (Col Q Y Z) by (assert_cols;ColR).
-      assert (Col Y Z C) by (assert_bet;assert_cols;ColR).
+      assert (Col Y Z C) by (assert_bets;assert_cols;ColR).
       apply H.
       ColR.
     assert (Perp_at X Y Z C X).
@@ -1864,7 +1850,7 @@ Proof.
     assert (X <> R).
       intro.
       treat_equalities.
-      apply perBAB in H12.
+      apply l8_8 in H12.
       treat_equalities.
       unfold Midpoint in *.
       spliter.
@@ -2190,8 +2176,6 @@ Proof.
         intro.
         subst X.
         Col.
-        apply perp_sym.
-        apply H0.
 Qed.
 
 
@@ -2639,6 +2623,56 @@ Proof.
     subst C''.
     assumption.
 Qed.
+
+Lemma cong_perp_or_mid : forall A B M X, A <> B -> Midpoint M A B -> Cong A X B X ->
+ X = M \/ ~Col A B X /\ Perp_at M X M A B.
+Proof.
+intros.
+induction(Col_dec A B X).
+left.
+assert(A = B \/ Midpoint X A B).
+apply l7_20; Col.
+Cong.
+induction H3.
+contradiction.
+apply (l7_17 A B); auto.
+right.
+split; auto.
+assert(Col M A B).
+unfold Midpoint in *.
+spliter; Col.
+
+assert_diffs.
+assert(Per X M A)
+ by (unfold Per;exists B;split; Cong).
+apply per_perp_in in H4.
+apply perp_in_right_comm in H4.
+apply(perp_in_col_perp_in X M A M B M); Col.
+
+intro;treat_equalities.
+apply H2; Col.
+auto.
+Qed.
+
+Lemma col_per2_cases : forall A B C D B', 
+ B <> C -> B' <> C -> C <> D -> Col B C D -> Per A B C -> Per A B' C -> 
+ B = B' \/ ~Col B' C D.
+Proof.
+intros.
+induction(eq_dec_points B B').
+left; auto.
+right.
+intro.
+assert(Col C B B').
+ColR.
+assert(Per A B' B).
+apply(per_col A B' C B H0 H4); Col.
+assert(Per A B B').
+apply(per_col A B C B' H H3); Col.
+apply H5.
+apply (l8_7 A); auto.
+Qed.
+
 
 End T8_5.
 

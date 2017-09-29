@@ -6,8 +6,6 @@ Section T6_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition Out P A B := A <> P /\ B <> P /\ (Bet P A B \/ Bet P B A).
-
 Lemma bet_out : forall A B C, B <> A -> Bet A B C -> Out A B C.
 Proof.
     intros.
@@ -64,6 +62,14 @@ Proof.
       intros.
       repeat split; try assumption; eapply l5_2;eBetween.
     intro; spliter; induction H5; eBetween.
+Qed.
+
+Lemma bet_out__bet : forall A B C P, Bet A P C -> Out P A B -> Bet B P C.
+Proof.
+    intros A B C P HBet HOut.
+    destruct (eq_dec_points C P).
+      subst; Between.
+    apply (l6_2 A); trivial; destruct HOut as [HPA [HPB]]; auto.
 Qed.
 
 Lemma l6_3_1 : forall A B P, Out P A B -> (A<>P /\ B<>P /\ exists C, C<>P /\ Bet A P C /\ Bet B P C).
@@ -232,6 +238,14 @@ Proof.
     unfold Out;repeat split; try intro;treat_equalities;intuition.
 Qed.
 
+Lemma segment_construction_3 : forall A B X Y, A <> B -> X <> Y -> exists C, Out A B C /\ Cong A C X Y.
+Proof.
+    intros.
+    destruct (l6_11_existence A X Y B) as [C [HC1 HC2]]; auto.
+    apply l6_6 in HC1.
+    exists C; auto.
+Qed.
+
 Lemma l6_13_1 : forall P A B, Out P A B -> Le
  P A P B -> Bet P A B.
 Proof.
@@ -254,10 +268,9 @@ Lemma l6_13_2 : forall P A B, Out P A B -> Bet P A B -> Le
  P A P B.
 Proof.
     intros.
-    unfold Le
-.
+    unfold Le.
     exists A.
-    split; eCong.
+    split; Cong.
 Qed.
 
 Lemma l6_16_1 : forall P Q S X, P<>Q -> S<>P -> Col S P Q -> Col X P Q -> Col X P S.
@@ -351,6 +364,7 @@ Proof.
     exists x; assumption.
 Qed.
 
+(*
 Lemma t2_8 : forall A B C D E : Tpoint,
  Bet A B C -> Bet D B E -> Cong A B D B -> Cong B C B E -> Cong A E C D.
 Proof.
@@ -362,6 +376,7 @@ Proof.
     apply cong_right_commutativity.
     apply H4; Cong; Between.
 Qed.
+*)
 
 Lemma col3 : forall X Y A B C,
  X <> Y ->
@@ -464,10 +479,10 @@ Proof.
   assert (Bet A B0 C0).
   { apply l6_13_1.
       apply (l6_7 _ _ B); [|apply (l6_7 _ _ C)]; [apply l6_6| |apply l6_6]; apply bet_out; auto.
-    apply (cong_preserves_le A' B' A' C'); Cong.
+    apply (l5_6 A' B' A' C'); Cong.
     destruct (l5_12_a A' B' C'); auto.
   }
-  apply (cong_preserves_le B0 C0 B C); Cong; [apply (le_transitivity _ _ B C0)|].
+  apply (l5_6 B0 C0 B C); Cong; [apply (le_transitivity _ _ B C0)|].
     destruct (l5_12_a B B0 C0); eBetween.
     destruct (l5_12_a B C0 C); eBetween.
     apply cong_commutativity; apply (l4_3 _ _ A _ _ A'); Between; Cong.
@@ -572,6 +587,21 @@ Proof.
     exfalso.
     apply H0.
     intuition.
+Qed.
+
+Lemma or_bet_out : forall A B C, Bet A B C \/ Out B A C \/ ~Col A B C.
+Proof.
+    intros.
+    destruct (Col_dec A B C); auto.
+    destruct (out_dec B A C); auto.
+    left; apply not_out_bet; trivial.
+Qed.
+
+Lemma not_bet_out : forall A B C,
+ Col A B C -> ~Bet A B C -> Out B A C.
+Proof.
+    intros.
+    destruct (or_bet_out A B C) as [HBet|[HOut|HNCol]]; trivial; contradiction.
 Qed.
 
 Lemma not_bet_and_out :
@@ -810,8 +840,11 @@ Lemma out_bet__out : forall A B P Q,
  Bet P Q A -> Out Q A B -> Out P A B.
 Proof.
     intros A B P Q HBet Hout.
-    destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6]; apply bet_out; eBetween; intro; treat_equalities; auto.
-      apply HBQ; apply (between_equality _ _ A); Between.
+    destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6];
+      apply bet_out; eBetween; intro; treat_equalities; auto.
+    apply HBQ; apply (between_equality _ _ A); Between.
 Qed.
 
 End T6_2.
+
+Hint Resolve bet_out out_trivial l6_6 : out.

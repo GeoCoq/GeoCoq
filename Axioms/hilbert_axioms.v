@@ -1,7 +1,5 @@
 Require Export Setoid.
-Require Export GeoCoq.Utils.aux.
-
-
+Require Export GeoCoq.Utils.triples.
 
 Class Hilbert_neutral_2D :=
 {
@@ -54,12 +52,15 @@ Class Hilbert_neutral_2D :=
  cong_pseudo_transitivity :
    forall A B C D E F,
      CongH A B C D -> CongH A B E F -> CongH C D E F;
+
+ outH :=
+   fun P A B => BetH P A B \/ BetH P B A \/ (P <> A /\ A = B);
+
  cong_existence :
-   forall A B l M,
-     A <> B -> Incid M l ->
-     exists A', exists B', Incid A' l /\ Incid B' l /\
-                           BetH A' M B' /\
-                           CongH M A' A B /\ CongH M B' A B;
+   forall A B A' P l,
+     A <> B -> A' <> P ->
+     Incid A' l -> Incid P l ->
+     exists B', Incid B' l /\ outH A' P B' /\ CongH A' B' A B;
  disjoint := fun A B C D => ~ exists P, BetH A P B /\ BetH C P D;
  addition :
    forall A B C A' B' C',
@@ -87,8 +88,6 @@ Class Hilbert_neutral_2D :=
      X <> Y /\
      forall l, Incid X l -> Incid Y l -> same_side A B l;
 
- outH :=
-   fun P A B => BetH P A B \/ BetH P B A \/ (P <> A /\ A = B);
  congaH_outH_congaH :
    forall A B C D E F A' C' D' F',
     CongaH A B C D E F ->

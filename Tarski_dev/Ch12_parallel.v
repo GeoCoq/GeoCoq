@@ -4,12 +4,6 @@ Section T12_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition Par_strict A B C D :=
-  A <> B /\ C <> D /\ Coplanar A B C D /\ ~ exists X, Col X A B /\ Col X C D.
-
-Definition Par A B C D :=
-  Par_strict A B C D \/ (A <> B /\ C <> D /\ Col A C D /\ Col B C D).
-
 Lemma par_reflexivity : forall A B, A<>B -> Par A B A B.
 Proof.
     intros.
@@ -319,6 +313,13 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
+
       | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
       let T:= fresh in (not_exist_hyp2 I B I A);
        assert (T:= midpoint_distinct_1 I A B H2 H);
@@ -420,6 +421,9 @@ Hint Resolve
  par_reflexivity par_strict_irreflexivity
  par_strict_symmetry par_strict_comm par_strict_right_comm par_strict_left_comm
  par_symmetry par_comm par_right_comm par_left_comm : par.
+
+Hint Resolve par_strict_not_col_1 par_strict_not_col_2
+             par_strict_not_col_3 par_strict_not_col_4 : Col.
 
 (*
 Warning: the hint: eapply @par_strict_comm will only be used by eauto
@@ -1155,9 +1159,23 @@ Proof.
     apply par_strict_symmetry; auto.
 Qed.
 
-Definition Inter A1 A2 B1 B2 X :=
- (exists P, Col P B1 B2 /\ ~Col P A1 A2) /\
- Col A1 A2 X /\ Col B1 B2 X.
+Lemma par_strict_one_side : forall A B C D P,
+ Par_strict A B C D -> Col C D P -> OS A B C P.
+Proof.
+  intros A B C D P HPar HCol.
+  destruct (eq_dec_points C P).
+    subst P; apply par_strict_not_col_1 in HPar; apply one_side_reflexivity; Col.
+  apply l12_6, par_strict_col_par_strict with D; trivial.
+Qed.
+
+Lemma par_strict_all_one_side : forall A B C D,
+ Par_strict A B C D -> (forall P, Col C D P -> OS A B C P).
+Proof.
+    intros.
+    eapply par_strict_one_side.
+      apply H.
+    assumption.
+Qed.
 
 Lemma inter_trivial : forall A B X, ~Col A B X -> Inter A X B X X.
 Proof.
@@ -1247,20 +1265,6 @@ Proof.
     intros.
     apply inter_left_comm.
     apply inter_right_comm.
-    assumption.
-Qed.
-
-Lemma other_point_exists : forall A , exists B : Tpoint, A <> B.
-Proof.
-    intros.
-    assert(HH:=two_distinct_points).
-    ex_and HH X.
-    ex_and H Y.
-    induction (eq_dec_points A X).
-      subst A.
-      exists Y.
-      assumption.
-    exists X.
     assumption.
 Qed.
 
@@ -1823,6 +1827,67 @@ Proof.
     Col.
 Qed.
 
+Lemma par_one_or_two_sides :
+ forall A B C D,
+  Par_strict A B C D ->
+ TS A C B D /\ TS B D A C \/ OS A C B D /\ OS B D A C.
+Proof.
+    intros.
+    induction(two_sides_dec A C B D).
+      left.
+      split.
+        assumption.
+      apply par_two_sides_two_sides.
+        apply par_comm.
+        unfold Par.
+        left.
+        assumption.
+      assumption.
+    right.
+    assert(HH:=H).
+    unfold Par_strict in H.
+    spliter.
+    assert(A <> C).
+      intro.
+      subst C.
+      apply H3.
+      exists A.
+      split; Col.
+    assert(B <> D).
+      intro.
+      subst D.
+      apply H3.
+      exists B.
+      split; Col.
+    split.
+      apply not_two_sides_one_side.
+        assumption.
+        intro.
+        apply H3.
+        exists C.
+        split; Col.
+        intro.
+        apply H3.
+        exists A.
+        split; Col.
+      assumption.
+    apply not_two_sides_one_side.
+      assumption.
+      intro.
+      apply H3.
+      exists D.
+      split; Col.
+      intro.
+      apply H3.
+      exists B.
+      split; Col.
+    intro.
+    apply H0.
+    apply par_two_sides_two_sides.
+      left.
+      assumption.
+    assumption.
+Qed.
 
 Lemma l12_21_b : forall A B C D,
  TS A C B D ->
@@ -2019,7 +2084,7 @@ Proof.
         auto.
         Col.
       apply conga_comm in H1.
-      apply l11_22_aux in H1.
+      apply conga__or_out_ts in H1.
       induction H1.
         apply out_col in H1.
         Col.
@@ -2187,6 +2252,7 @@ Hint Resolve col_par par_strict_par : par.
 
 Hint Resolve l12_6 pars__os3412 : side.
 
+(*
 Ltac finish := repeat match goal with
  | |- Bet ?A ?B ?C => Between
  | |- Col ?A ?B ?C => Col
@@ -2201,6 +2267,7 @@ Ltac finish := repeat match goal with
  | |- ?A<>?B => apply swap_diff;assumption
  | |- _ => try assumption
 end.
+*)
 
 Section T12_3.
 
@@ -2330,24 +2397,12 @@ Proof.
     Col.
 Qed.
 
-Lemma par_strict_not_col : forall A B C D, Par_strict A B C D -> forall X, Col A B X -> ~Col C D X.
-Proof.
-    intros.
-    intro.
-    unfold Par_strict in H.
-    spliter.
-    apply H4.
-    exists X.
-    split; Col.
-Qed.
-
 Lemma perp_inter_exists : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P.
 Proof.
     intros A B C D HPerp.
     destruct HPerp as [P [_ [_ [HCol1 [HCol2]]]]].
     exists P; split; Col.
 Qed.
-
 
 Lemma perp_inter_perp_in : forall A B C D, Perp A B C D -> exists P, Col A B P /\ Col C D P /\ Perp_at P A B C D.
 Proof.
