@@ -28,8 +28,7 @@ assert (neq q r) by (forward_using lemma_NCdistinct).
 assert (neq q s) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
 assert (Tf:exists G, (Out q p G /\ Cong q G Q P)) by (conclude lemma_layoff);destruct Tf as [G];spliter.
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (Out q s H /\ Cong q H Q S)) by (conclude lemma_layoff);destruct Tf as [H];spliter.
 let Tf:=fresh in
 assert (Tf:exists K, (Out q r K /\ Cong q K Q R)) by (conclude lemma_layoff);destruct Tf as [K];spliter.

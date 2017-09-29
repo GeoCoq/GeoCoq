@@ -76,8 +76,7 @@ by cases on (Col A B P \/ nCol A B P).
   assert (Cong B Q B Q) by (conclude cn_congruencereflexive).
   assert (neq B Q) by (forward_using lemma_betweennotequal).
   assert (neq B C) by (forward_using lemma_betweennotequal).
-  let Tf:=fresh in
-rename_H;
+  rename_H H;let Tf:=fresh in
   assert (Tf:exists H, (BetS B H Q /\ Cong B H B C)) by (conclude proposition_03);destruct Tf as [H];spliter.
   assert (Out B Q H) by (conclude lemma_ray4).
   assert (BetS P A B) by (conclude axiom_betweennesssymmetry).
@@ -156,8 +155,7 @@ rename_H;
   assert (Cong B C B C) by (conclude cn_congruencereflexive).
   assert (neq B C) by (forward_using lemma_betweennotequal).
   assert (neq B Q) by (forward_using lemma_betweennotequal).
-  let Tf:=fresh in
-rename_H;
+  rename_H H;let Tf:=fresh in
   assert (Tf:exists H, (BetS B H C /\ Cong B H B Q)) by (conclude proposition_03);destruct Tf as [H];spliter.
   assert (BetS P B C) by (conclude lemma_3_6a).
   assert (Out B C Q) by (conclude_def Out ).

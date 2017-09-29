@@ -45,8 +45,7 @@ by cases on (CR A E B C \/ CR A C E B).
  assert (nCol A C D) by (forward_using lemma_parallelNC).
  assert (nCol A B C) by (forward_using lemma_parallelNC).
  assert (nCol B C A) by (forward_using lemma_NCorder).
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists H, (BetS B H m /\ BetS A H M)) by (conclude postulate_Pasch_inner);destruct Tf as [H];spliter.
  assert (nCol A E C) by (forward_using lemma_parallelNC).
  assert (Col E C e) by (conclude_def Col ).

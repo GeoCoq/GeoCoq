@@ -180,8 +180,8 @@ assert (~ Col D B F).
  assert (Col A B C) by (forward_using lemma_collinearorder).
  contradict.
  }
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (BetS D H E /\ BetS F H C)) by (conclude postulate_Pasch_inner);destruct Tf as [H];spliter.
 assert (BetS C H F) by (conclude axiom_betweennesssymmetry).
 assert (Out C F H) by (conclude lemma_ray4).

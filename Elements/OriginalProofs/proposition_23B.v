@@ -38,8 +38,7 @@ assert (~ Col A B F).
  assert (Col F A G) by (conclude lemma_collinear4).
  contradict.
  }
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, Perp_at F H A B H) by (conclude proposition_12);destruct Tf as [H];spliter.
 let Tf:=fresh in
 assert (Tf:exists J, (Col F H H /\ Col A B H /\ Col A B J /\ Per J H F)) by (conclude_def Perp_at );destruct Tf as [J];spliter.

@@ -42,8 +42,8 @@ assert (CongA D E F U Q W) by (conclude lemma_equalangleshelper).
 assert (CongA U Q W D E F) by (conclude lemma_equalanglessymmetric).
 assert (CongA D E F U Q W) by (conclude lemma_equalangleshelper).
 assert (LtA A B C U Q W) by (conclude lemma_angleorderrespectscongruence).
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H S T, (BetS S H T /\ Out Q U S /\ Out Q W T /\ CongA A B C U Q H)) by (conclude_def LtA );destruct Tf as [H[S[T]]];spliter.
 assert (Out Q U P) by (conclude lemma_ray5).
 assert (neq Q H) by (forward_using lemma_angledistinct).

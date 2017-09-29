@@ -37,8 +37,7 @@ assert (Tf:exists G, (Out F E G /\ Cong F G B b)) by (conclude lemma_layoff);des
 assert (Cong B b F G) by (conclude lemma_congruencesymmetric).
 assert (neq F G) by (conclude lemma_nullsegment3).
 assert (neq G F) by (conclude lemma_inequalitysymmetric).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS F G H /\ Cong G H C c)) by (conclude postulate_extension);destruct Tf as [H];spliter.
 let Tf:=fresh in
 assert (Tf:exists D, (BetS G F D /\ Cong F D A a)) by (conclude postulate_extension);destruct Tf as [D];spliter.

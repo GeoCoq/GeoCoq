@@ -15,8 +15,7 @@ intros.
 let Tf:=fresh in
 assert (Tf:exists D, (BetS A B D /\ Cong A B D B /\ Cong A C D C /\ neq B C)) by (conclude_def Per );destruct Tf as [D];spliter.
 assert (neq B E) by (conclude_def Per ).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (Out B E H /\ Cong B H B C)) by (conclude lemma_layoff);destruct Tf as [H];spliter.
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Col A B B) by (conclude_def Col ).

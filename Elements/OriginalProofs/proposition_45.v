@@ -25,8 +25,7 @@ assert (Tf:exists P, (BetS R K P /\ Cong K P B m)) by (conclude postulate_extens
 assert (Triangle A B D) by (conclude_def Triangle ).
 assert (neq K P) by (forward_using lemma_betweennotequal).
 assert (neq P K) by (conclude lemma_inequalitysymmetric).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS P K H /\ Cong K H P K)) by (conclude postulate_extension);destruct Tf as [H];spliter.
 assert (Cong P K K H) by (conclude lemma_congruencesymmetric).
 assert (Midpoint P K H) by (conclude_def Midpoint ).

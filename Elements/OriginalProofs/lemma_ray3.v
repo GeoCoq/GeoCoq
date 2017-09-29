@@ -13,8 +13,7 @@ Proof.
 intros.
 let Tf:=fresh in
 assert (Tf:exists E, (BetS E B D /\ BetS E B C)) by (conclude_def Out );destruct Tf as [E];spliter.
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS H B V /\ BetS H B C)) by (conclude_def Out );destruct Tf as [H];spliter.
 assert (~ ~ BetS E B V).
  {

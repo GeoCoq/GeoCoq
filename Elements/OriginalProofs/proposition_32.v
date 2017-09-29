@@ -26,8 +26,7 @@ assert (neq B F) by (forward_using lemma_betweennotequal).
 assert (neq F B) by (conclude lemma_inequalitysymmetric).
 assert (nCol F B C) by (conclude lemma_NChelper).
 assert (BetS F A B) by (conclude axiom_betweennesssymmetry).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists E H S, (BetS E C H /\ CongA E C A C A B /\ Par E H F B /\ BetS E S B /\ BetS C S A)) by (conclude proposition_31short);destruct Tf as [E[H[S]]];spliter.
 assert (neq B C) by (forward_using lemma_betweennotequal).
 assert (neq C B) by (conclude lemma_inequalitysymmetric).
