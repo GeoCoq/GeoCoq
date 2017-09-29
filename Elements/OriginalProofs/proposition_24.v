@@ -62,8 +62,7 @@ assert (~ eq A C).
  assert (Col A B C) by (conclude_def Col ).
  contradict.
  }
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (Out A T H /\ Cong A H A C)) by (conclude lemma_layoff);destruct Tf as [H];spliter.
 assert (Cong A H D F) by (conclude lemma_congruencetransitive).
 assert (nCol B A T) by (conclude lemma_equalanglesNC).

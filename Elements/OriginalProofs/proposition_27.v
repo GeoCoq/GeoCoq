@@ -15,8 +15,7 @@ Proof.
 intros.
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (neq C D) by (forward_using lemma_betweennotequal).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS A H D /\ Col E F H /\ nCol E F A)) by (conclude_def TS );destruct Tf as [H];spliter.
 assert (Col A E B) by (conclude_def Col ).
 assert (neq A E) by (forward_using lemma_betweennotequal).

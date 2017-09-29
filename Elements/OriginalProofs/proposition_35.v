@@ -60,8 +60,7 @@ assert (~ ~ EF A B C D E B C F).
  assert (~ BetS A D E).
   {
   intro.
-  let Tf:=fresh in
-rename_H;
+  rename_H H;let Tf:=fresh in
   assert (Tf:exists H, (BetS B H E /\ BetS C H D)) by (conclude lemma_parallelPasch);destruct Tf as [H];spliter.
   assert (BetS D H C) by (conclude axiom_betweennesssymmetry).
   assert (Col B H E) by (conclude_def Col ).
@@ -140,8 +139,7 @@ rename_H;
  assert (~ BetS D A F).
   {
   intro.
-  let Tf:=fresh in
-rename_H;
+  rename_H H;let Tf:=fresh in
   assert (Tf:exists H, (BetS C H F /\ BetS B H A)) by (conclude lemma_parallelPasch);destruct Tf as [H];spliter.
   assert (BetS A H B) by (conclude axiom_betweennesssymmetry).
   assert (Col C H F) by (conclude_def Col ).

@@ -107,8 +107,7 @@ assert (~ Col E A C).
  assert (Meet E A S B) by (conclude_def Meet ).
  contradict.
  }
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS C H A /\ BetS E F H)) by (conclude postulate_Pasch_outer);destruct Tf as [H];spliter.
 assert (Col E F H) by (conclude_def Col ).
 assert (Col E F B) by (conclude_def Col ).

@@ -23,8 +23,7 @@ assert (neq E F) by (forward_using lemma_angledistinct).
 assert (~ Lt E F B C).
  {
  intro.
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists H, (BetS B H C /\ Cong B H E F)) by (conclude_def Lt );destruct Tf as [H];spliter.
  assert (eq C C) by (conclude cn_equalityreflexive).
  assert (CongA A B C A B C) by (conclude lemma_equalanglesreflexive).

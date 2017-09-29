@@ -16,8 +16,7 @@ assert (~ LtA D E F A B C).
  {
  intro.
  assert (LtA A B C A B C) by (conclude lemma_angleordertransitive).
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists G H J, (BetS G H J /\ Out B A G /\ Out B C J /\ CongA A B C A B H)) by (conclude_def LtA );destruct Tf as [G[H[J]]];spliter.
  let Tf:=fresh in
  assert (Tf:exists U V u v, (Out B A U /\ Out B C V /\ Out B A u /\ Out B H v /\ Cong B U B u /\ Cong B V B v /\ Cong U V u v /\ nCol A B C)) by (conclude_def CongA );destruct Tf as [U[V[u[v]]]];spliter.

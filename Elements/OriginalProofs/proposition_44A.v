@@ -40,8 +40,7 @@ assert (eq G G) by (conclude cn_equalityreflexive).
 assert (Col G B G) by (conclude_def Col ).
 assert (nCol q G A) by (conclude lemma_NChelper).
 assert (nCol G q A) by (forward_using lemma_NCorder).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H h T, (BetS H A h /\ CongA h A B A B G /\ CongA h A B G B A /\ CongA B A h G B A /\ CongA H A B A B q /\ CongA H A B q B A /\ CongA B A H q B A /\ Par H h G q /\ Cong H A B q /\ Cong A h G B /\ Cong A T T B /\ Cong H T T q /\ Cong G T T h /\ BetS H T q /\ BetS G T h /\ BetS A T B)) by (conclude proposition_31);destruct Tf as [H[h[T]]];spliter.
 assert (Par H h q G) by (forward_using lemma_parallelflip).
 assert (Col G B q) by (conclude_def Col ).

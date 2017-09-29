@@ -12,8 +12,8 @@ Lemma lemma_angleorderrespectscongruence :
    LtA A B C P Q R.
 Proof.
 intros.
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists G H J, (BetS G H J /\ Out E D G /\ Out E F J /\ CongA A B C D E H)) by (conclude_def LtA );destruct Tf as [G[H[J]]];spliter.
 assert (nCol D E F) by (conclude lemma_equalanglesNC).
 assert ((neq P Q /\ neq Q R /\ neq P R /\ neq D E /\ neq E F /\ neq D F)) by (forward_using lemma_angledistinct).

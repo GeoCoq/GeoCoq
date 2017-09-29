@@ -157,8 +157,8 @@ assert (~ ~ TS G A C Q).
 (* cases *)
  contradict.
  }
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (BetS G H Q /\ Col A C H /\ nCol A C G)) by (conclude_def TS );destruct Tf as [H];spliter.
 assert (OS E G A C) by (conclude_def OS ).
 close.
