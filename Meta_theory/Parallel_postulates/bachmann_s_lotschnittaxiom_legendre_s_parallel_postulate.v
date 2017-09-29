@@ -1,4 +1,7 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
+Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section bachmann_s_lotschnittaxiom_legendre_s_parallel_postulate.
 

@@ -1,7 +1,10 @@
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Axioms.parallel_postulates.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.proclus_SPP.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.SPP_tarski.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.tarski_playfair.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.playfair_alternate_interior_angles.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section proclus_aristotle.
 
@@ -124,7 +127,7 @@ rename proclus into aia.
    }
 
   repeat (split; auto).
-  - apply (cong_preserves_le P Q B D); Cong.
+  - apply (l5_6 P Q B D); Cong.
     apply le_right_comm.
     exists D0.
     split; Between; Cong.

@@ -1,4 +1,7 @@
 Require Export GeoCoq.Tarski_dev.Ch06_out_lines.
+Require Export GeoCoq.Tactics.Coinc.ColR.
+
+
 
 Ltac not_exist_hyp_comm A B := not_exist_hyp (A<>B);not_exist_hyp (B<>A).
 
@@ -43,17 +46,30 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
+
       | H:Out ?A ?B ?C |- _ =>
       let T:= fresh in (not_exist_hyp2 A B A C);
        assert (T:= out_distinct A B C H);
        decompose [and] T;clear T;clean_reap_hyps
  end.
 
+
+Ltac ColR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+   treat_equalities; assert_cols; assert_diffs; try (solve [Col]); Col_refl tpoint col.
+
+
+
 Section T7_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Definition Midpoint M A B := Bet A M B /\ Cong A M M B.
 
 Lemma is_midpoint_dec :
  forall I A B, Midpoint I A B \/ ~ Midpoint I A B.
@@ -101,11 +117,11 @@ Qed.
 
 (** This corresponds to l7_8 in Tarski's book. *)
 
-Lemma symmetric_point_construction : forall A P, exists P', Midpoint P A P'.
+Lemma symmetric_point_construction : forall P A, exists P', Midpoint A P P'.
 Proof.
     unfold Midpoint.
     intros.
-    prolong A P E A P.
+    prolong P A E P A.
     exists E.
     split;Cong;Between.
 Qed.
@@ -247,7 +263,7 @@ Qed.
 End T7_1.
 
 Hint Resolve l7_13 : cong.
-Hint Resolve l7_2 l7_3 l7_3_2 symmetric_point_construction symmetry_preserves_midpoint : midpoint.
+Hint Resolve l7_2 l7_3_2 symmetry_preserves_midpoint : midpoint.
 
 Ltac Midpoint := auto with midpoint.
 
@@ -1059,7 +1075,7 @@ Proof.
     Cong.
 Qed.
 
-Lemma cong_mid2__cong13 : forall A M B A' M' B',
+Lemma cong_mid2__cong : forall A M B A' M' B',
  Midpoint M A B -> Midpoint M' A' B' ->
  Cong A M A' M' -> Cong A B A' B'.
 Proof.
@@ -1069,6 +1085,19 @@ Proof.
     apply (l2_11 _ M _ _ M'); auto.
     apply (cong_transitivity _ _ A' M'); auto.
     apply (cong_transitivity _ _ A M); Cong.
+Qed.
+
+Lemma mid__lt : forall A M B,
+ A <> B -> Midpoint M A B ->
+ Lt A M A B.
+Proof.
+    intros A M B HAB HM.
+    destruct (midpoint_distinct_1 M A B HAB HM) as [HMA HMB].
+    destruct HM.
+    split.
+      exists M; Cong.
+    intro.
+    apply HMB, between_cong with A; auto.
 Qed.
 
 Lemma le_mid2__le13 : forall A M B A' M' B',
@@ -1093,6 +1122,28 @@ Proof.
     apply cong__le.
     apply (cong_cong_half_1 _ _ B _ _ B'); auto.
     apply le_anti_symmetry; auto.
+Qed.
+
+Lemma lt_mid2__lt13 : forall A M B A' M' B',
+ Midpoint M A B -> Midpoint M' A' B' ->
+ Lt A M A' M' -> Lt A B A' B'.
+Proof.
+    intros A M B A' M' B' HM HM' [HLe HNcong].
+    split.
+      apply le_mid2__le13 with M M'; trivial.
+    intro.
+    apply HNcong, cong_cong_half_1 with B B'; trivial.
+Qed.
+
+Lemma lt_mid2__lt12 : forall A M B A' M' B',
+ Midpoint M A B -> Midpoint M' A' B' ->
+ Lt A B A' B' -> Lt A M A' M'.
+Proof.
+    intros A M B A' M' B' HM HM' [HLe HNcong].
+    split.
+      apply le_mid2__le12 with B B'; trivial.
+    intro.
+    apply HNcong, cong_mid2__cong with M M'; trivial.
 Qed.
 
 Lemma midpoint_preserves_out :
@@ -1131,6 +1182,337 @@ Proof.
       apply (l7_15 A B C A' B' C' M); assumption.
     right.
     eapply (l7_15 A C B A' C' B' M); assumption.
+Qed.
+
+Lemma col_cong_bet : forall A B C D, Col A B D -> Cong A B C D -> Bet A C B -> Bet  C A D \/ Bet C B D.
+intros.
+
+prolong B A D1 B C.
+prolong A B D2 A C.
+
+assert(Cong A B C D1).
+eapply (l2_11 A C B C A D1).
+assumption.
+eapply between_exchange3.
+apply between_symmetry.
+apply H1.
+assumption.
+apply cong_pseudo_reflexivity.
+Cong.
+assert(D = D1 \/ Midpoint C D D1).
+eapply l7_20.
+apply bet_col in H1.
+apply bet_col in H2.
+
+induction (eq_dec_points A B).
+subst B.
+apply cong_symmetry in H0.
+apply cong_identity in H0.
+subst D.
+Col.
+eapply (col3 A B); Col.
+
+eCong.
+
+induction H7.
+subst D1.
+left.
+eapply between_exchange3.
+apply between_symmetry.
+apply H1.
+assumption.
+
+assert(Cong B A C D2).
+eapply (l2_11 B C A C B D2).
+Between.
+eapply between_exchange3.
+apply H1.
+assumption.
+apply cong_pseudo_reflexivity.
+Cong.
+
+assert(Midpoint C D2 D1).
+unfold Midpoint.
+split.
+
+induction(eq_dec_points A B).
+subst B.
+apply cong_symmetry in H0.
+apply cong_identity in H0.
+subst D.
+apply is_midpoint_id in H7.
+subst D1.
+Between.
+apply between_symmetry.
+
+induction(eq_dec_points B C).
+subst C.
+apply between_symmetry.
+apply cong_identity in H3.
+subst D1.
+Between.
+
+assert(Bet D1 C B).
+eBetween.
+assert(Bet C B D2).
+eBetween.
+eapply (outer_transitivity_between).
+apply H11.
+assumption.
+auto.
+unfold Midpoint in H7.
+spliter.
+eapply cong_transitivity.
+apply cong_symmetry.
+apply cong_commutativity.
+apply H8.
+eapply cong_transitivity.
+apply H0.
+Cong.
+assert(D = D2).
+eapply symmetric_point_uniqueness.
+apply l7_2.
+apply H7.
+apply l7_2.
+assumption.
+subst D2.
+right.
+eapply between_exchange3.
+apply H1.
+assumption.
+Qed.
+
+Lemma col_cong2_bet1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A C B D -> Bet C B D.
+intros.
+induction(eq_dec_points A C).
+subst C.
+apply cong_symmetry in H2.
+apply cong_identity in H2.
+subst D.
+Between.
+
+assert(HH:=col_cong_bet A B C D H H1 H0).
+induction HH.
+assert(A = D /\ B = C).
+eapply bet_cong_eq.
+Between.
+eBetween.
+Cong.
+spliter.
+subst D.
+subst C.
+Between.
+assumption.
+Qed.
+
+Lemma col_cong2_bet2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A D B C -> Bet C A D.
+intros.
+
+induction(eq_dec_points B C).
+subst C.
+apply cong_identity in H2.
+subst D.
+Between.
+
+assert(HH:=col_cong_bet A B C D H H1 H0).
+induction HH.
+assumption.
+
+assert(C = A /\ D = B).
+eapply bet_cong_eq.
+Between.
+eBetween.
+Cong.
+spliter.
+subst D.
+subst C.
+Between.
+Qed.
+
+Lemma col_cong2_bet3 : forall A B C D, Col A B D -> Bet A B C -> Cong A B C D -> Cong A C B D -> Bet B C D.
+intros.
+
+induction(eq_dec_points A B).
+subst B.
+apply cong_symmetry in H1.
+apply cong_identity in H1.
+subst D.
+Between.
+
+
+eapply (col_cong2_bet2 _ A).
+apply bet_col in H0.
+ColR.
+Between.
+Cong.
+Cong.
+Qed.
+
+Lemma col_cong2_bet4 : forall A B C D, Col A B C -> Bet A B D -> Cong A B C D -> Cong A D B C -> Bet B D C.
+intros.
+induction(eq_dec_points A B).
+subst B.
+apply cong_symmetry in H1.
+apply cong_identity in H1.
+subst D.
+Between.
+apply (col_cong2_bet1 A D B C).
+apply bet_col in H0.
+ColR.
+assumption.
+Cong.
+Cong.
+Qed.
+
+Lemma col_bet2_cong1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C B D -> Cong A C D B.
+intros.
+apply (l4_3 A C B D B C); Between; Cong.
+Qed.
+
+Lemma col_bet2_cong2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C A D -> Cong D A B C.
+intros.
+apply (l4_3 D A C B C A); Between; Cong.
+Qed.
+
+
+Lemma bet2_lt2__lt : forall O o A B a b : Tpoint,
+       Bet a o b -> Bet A O B -> Lt o a O A -> Lt o b O B -> Lt a b A B.
+Proof.
+intros.
+unfold Lt.
+split.
+unfold Lt in *.
+spliter.
+apply(bet2_le2__le O o A B a b); auto.
+intro.
+
+induction(eq_dec_points O A).
+treat_equalities.
+unfold Lt in H1.
+spliter.
+apply le_zero in H0.
+treat_equalities.
+apply H1.
+apply cong_trivial_identity.
+
+induction(eq_dec_points O B).
+treat_equalities.
+unfold Lt in H2.
+spliter.
+apply le_zero in H0.
+treat_equalities.
+apply H2.
+apply cong_trivial_identity.
+
+unfold Lt in *.
+spliter.
+
+unfold Le in H1.
+ex_and H1 a'.
+unfold Le in H2.
+ex_and H2 b'.
+
+assert(Bet a' O b').
+eBetween.
+assert(Cong a b a' b').
+{
+  apply (l2_11 a o b a' O b'); Cong.
+}
+assert(Cong a' b' A B) by (apply cong_transitivity with a b; Cong).
+assert(Bet A b' B) by eBetween.
+
+induction(eq_dec_points A a').
+treat_equalities.
+assert(b'=B \/ Midpoint A b' B).
+{
+  apply l7_20.
+  Col.
+  Cong.
+}
+induction H1.
+treat_equalities.
+contradiction.
+unfold Midpoint in *.
+spliter.
+assert(b' = B).
+{
+  apply (between_cong A).
+  Between.
+  Cong.
+}
+treat_equalities; tauto.
+
+assert(Bet B a' A) by eBetween.
+induction(eq_dec_points B b').
+treat_equalities.
+assert(a'=A \/ Midpoint B a' A).
+{
+  apply l7_20.
+  Col.
+  Cong.
+}
+induction H2.
+treat_equalities.
+contradiction.
+unfold Midpoint in *.
+spliter.
+assert(a' = A).
+{
+  apply (between_cong B).
+  Between.
+  Cong.
+}
+treat_equalities; tauto.
+
+assert(Bet a' A b' \/ Bet a' B b').
+{
+  apply(col_cong_bet A B a' b').
+  Col.
+  Cong.
+  eBetween.
+}
+induction H17.
+assert(A = a').
+{
+  apply(between_equality _ _ b').
+  eBetween.
+  Between.
+}
+treat_equalities; tauto.
+assert(b' = B).
+{
+  apply(between_equality _ _ a').
+  Between.
+  eBetween.
+}
+treat_equalities; tauto.
+Qed.
+
+Lemma bet2_lt_le__lt : forall O o A B a b : Tpoint,
+       Bet a o b -> Bet A O B -> Cong o a O A -> Lt o b O B -> Lt a b A B.
+Proof.
+intros.
+unfold Lt.
+split.
+unfold Lt in *.
+spliter.
+assert(Le o a O A).
+{
+  unfold Le.
+  exists A.
+  split; Between.
+}
+apply(bet2_le2__le O o A B a b); auto.
+intro.
+
+assert(HH:=segment_construction A O o b).
+ex_and HH b'.
+
+unfold Lt in H2.
+spliter.
+apply H6.
+
+apply(l4_3_1 a o b A O B H H0 ); Cong.
 Qed.
 
 End T7_2.

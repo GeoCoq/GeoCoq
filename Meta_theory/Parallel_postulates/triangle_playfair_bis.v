@@ -1,4 +1,7 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section triangle_playfair_bis.
 
@@ -91,7 +94,7 @@ Proof.
   { split.
     exists C1; split; try (apply l11_24); CongA.
     intro HConga.
-    apply l11_22_aux in HConga.
+    apply conga__or_out_ts in HConga.
     destruct HConga as [Habs|Habs].
     assert_cols; Col.
     apply l9_9 in Habs.
@@ -156,7 +159,7 @@ Proof.
     split; Col; Between.
   }
   assert(Hsuma3 : SumA B4 P R R P B3 B4 P B3) by (exists B3; repeat (split; CongA)).
-  assert(Hisi3 : Isi B4 P R R P B3).
+  assert(Hsams3 : SAMS B4 P R R P B3).
   { repeat split; auto.
     right; intro; assert_cols; Col.
     exists B3; repeat (split; CongA).
@@ -181,10 +184,10 @@ Proof.
 
   assert(Habs : LtA A B C B4 P B3).
   { apply (lea456789_lta__lta _ _ _ D E F).
-    2: apply (isi_lea2_suma2__lea B4 P R C1 P B3 _ _ _ B4 P R R P B3); Lea.
-    apply (isi_lea_lta456_suma2__lta B4 P R P R Q _ _ _ B4 P R C1 P B3); Lea.
+    2: apply (sams_lea2_suma2__lea B4 P R C1 P B3 _ _ _ B4 P R R P B3); Lea.
+    apply (sams_lea_lta456_suma2__lta B4 P R P R Q _ _ _ B4 P R C1 P B3); Lea.
     apply lta_right_comm; auto.
-    apply (isi_lea2__isi _ _ _ _ _ _ B4 P R R P B3); Lea.
+    apply (sams_lea2__sams _ _ _ _ _ _ B4 P R R P B3); Lea.
   }
   destruct Habs as [_ Habs].
   apply Habs.

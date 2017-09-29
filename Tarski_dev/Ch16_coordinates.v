@@ -4,11 +4,6 @@ Section T16.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** We skip the case of dimension 1. *)
-
-Definition Cs O E S U1 U2 :=
-   O<>E /\ Cong O E S U1 /\ Cong O E S U2 /\ Per U1 S U2.
-
 Lemma grid_exchange_axes : forall O E S U1 U2,
   Cs O E S U1 U2 -> Cs O E S U2 U1.
 Proof.
@@ -25,7 +20,7 @@ unfold Cs; intros O E S U1 U2 HCs.
 spliter; assert_diffs; apply per_not_col; Perp.
 Qed.
 
-(** As we are in dimension 2, we skip 16.3 
+(** As we are in dimension 2, we skip 16.3
     which is only needed to prove 16.4 in dimension n. *)
 
 (** Lemma 16.4 in dimension 2. *)
@@ -46,12 +41,6 @@ destruct (ex_per_cong PB PA PA PC PA PB) as [J HJ]; Col; spliter.
 exists PA; exists PB; exists J.
 repeat (split; finish).
 Qed.
-
-(** P is of coordinates (X,Y) in the grip SU1U2 using unit length OE. *)
-Definition Cd O E S U1 U2 P X Y :=
-  Cs O E S U1 U2 /\ Coplanar P S U1 U2 /\
-  (exists PX, Projp P PX S U1 /\ Cong_3 O E X S U1 PX) /\
-  (exists PY, Projp P PY S U2 /\ Cong_3 O E Y S U2 PY).
 
 Lemma coord_exchange_axes : forall O E S U1 U2 P X Y,
   Cd O E S U1 U2 P X Y -> Cd O E S U2 U1 P Y X.
@@ -219,7 +208,7 @@ split; intro; spliter; treat_equalities.
   clear H'; destruct HPY2 as [H HCong4]; clear H.
   split; apply l4_18 with O E; Col;
   try (intro; treat_equalities; unfold Cs in HCs; spliter; intuition);
-  unfold Cong_3 in *; spliter; eCong.
+  unfold Cong_3 in *; spliter; eapply cong_transitivity; eCong.
   }
 
   {
@@ -228,14 +217,18 @@ split; intro; spliter; treat_equalities.
   assert (PX = PX2); treat_equalities.
     {
     destruct HPX1 as [[H HElim] H0]; unfold Cs in HCs; unfold Cong_3 in *;
-    spliter; assert_diffs; apply l4_18 with S U1; eCong.
+    spliter; assert_diffs; apply l4_18 with S U1; auto.
     induction HElim; spliter; treat_equalities; Col.
+    apply cong_transitivity with O X1; Cong.
+    apply cong_transitivity with E X1; Cong.
     }
   assert (PY = PY2); treat_equalities.
     {
     destruct HPY1 as [[H HElim] H0]; unfold Cs in HCs; unfold Cong_3 in *;
-    spliter; assert_diffs; apply l4_18 with S U2; eCong.
+    spliter; assert_diffs; apply l4_18 with S U2; auto.
     induction HElim; spliter; treat_equalities; Col.
+    apply cong_transitivity with O Y1; Cong.
+    apply cong_transitivity with E Y1; Cong.
     }
   destruct HPX1 as [HProjp1 H]; clear H; destruct HPX2 as [HProjp2 H]; clear H;
   destruct HPY1 as [HProjp3 H]; clear H; destruct HPY2 as [HProjp4 H]; clear H.
@@ -311,7 +304,7 @@ assert (HCol3 : Col O E XMY).
 assert (HCong1 := HXMY); apply diff_sum in HCong1; apply l15_3 in HCong1.
 elim HXY; clear HXY; intro HXY; [|spliter; intuition].
 destruct HXY as [H [HCol4 [HLe2 HCong2]]].
-elim (l7_20 O XY XMY); [auto|intro HMid; clear H|ColR|eCong].
+elim (l7_20 O XY XMY); [auto|intro HMid; clear H|ColR|apply cong_transitivity with X Y; Cong].
 elim HLe1; clear HLe1; intro HLt1; [clear HCong1|treat_equalities; auto].
 elim HLe2; clear HLe2; intro HLt2; [clear HCong2|treat_equalities; auto].
 exfalso; apply not_pos_and_neg with O E XMY;
@@ -352,10 +345,6 @@ apply prod_assoc1 with XMY ME XMY; auto; [|apply prod_comm];
 apply opp_prod;auto; apply opp_comm; Col.
 Qed.
 
-Definition Cong_4 P1 P2 P3 P4 Q1 Q2 Q3 Q4 :=
-  Cong P1 P2 Q1 Q2 /\ Cong P1 P3 Q1 Q3 /\ Cong P1 P4 Q1 Q4 /\
-  Cong P2 P3 Q2 Q3 /\ Cong P2 P4 Q2 Q4 /\ Cong P3 P4 Q3 Q4.
-
 (** Lemma 16.10 for k  = 2. *)
 Lemma cong_3_2_cong_4 : forall O E I J S U X Y,
   O <> E -> Col O E I -> Col O E J ->
@@ -369,12 +358,6 @@ repeat (split; Cong).
 apply l4_16 with O E S U; Col.
 repeat (split; Cong).
 Qed.
-
-Definition Cong_5 P1 P2 P3 P4 P5 Q1 Q2 Q3 Q4 Q5 :=
-  Cong P1 P2 Q1 Q2 /\ Cong P1 P3 Q1 Q3 /\
-  Cong P1 P4 Q1 Q4 /\ Cong P1 P5 Q1 Q5 /\
-  Cong P2 P3 Q2 Q3 /\ Cong P2 P4 Q2 Q4 /\ Cong P2 P5 Q2 Q5 /\
-  Cong P3 P4 Q3 Q4 /\ Cong P3 P5 Q3 Q5 /\ Cong P4 P5 Q4 Q5.
 
 (** Lemma 16.10 for k  = 3. *)
 Lemma cong_3_3_cong_5: forall O E I J K S U X Y Z,
@@ -448,7 +431,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
-    unfold Cong_3 in HCong3; spliter; eCong.
+    unfold Cong_3 in HCong3; spliter; apply cong_transitivity with S QX'; Cong.
     }
 
     {
@@ -470,7 +453,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
-    unfold Cong_3 in HCong1; spliter; eCong.
+    unfold Cong_3 in HCong1; spliter; apply cong_transitivity with S PX'; Cong.
     }
 
     {
@@ -558,7 +541,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       apply Rectangle_Parallelogram in HRect3; apply plg_cong_2 in HRect3.
       assert_diffs;
       apply cong_3_2_cong_4 with O E PX QX S U1 PX' QX' in HCong1; Col.
-      unfold Cong_4 in HCong1; spliter; eCong.
+      unfold Cong_4 in HCong1; spliter; apply cong_transitivity with PX' QX'; Cong.
       }
     }
   }
@@ -764,7 +747,8 @@ split; [intro HCong|intro; treat_equalities].
     unfold Is_length, Length in *;
     induction HLengthAB; [|spliter; treat_equalities; exfalso; apply HNC; Col];
     induction HLengthCD; [|spliter; treat_equalities; exfalso; apply HNC; Col].
-    spliter; eCong.
+    spliter; apply cong_transitivity with A B; trivial.
+    apply cong_transitivity with C D; Cong.
     }
   clear HLengthAB; clear HLengthCD; clear HCong; rename H into HCong.
   assert (H : Col O AB CD) by (assert_diffs; ColR).
@@ -797,7 +781,9 @@ split; [intro HCong|intro; treat_equalities].
   elim (eq_squares_eq_or_opp O E E' AB CD AB2); auto; intro HOpp; treat_equalities;
   [apply length_eq_cong_1 with O E E' AB; auto|].
   unfold Length, LeP, LtP in *; spliter; apply opp_midpoint in HOpp.
-  unfold Midpoint in *; spliter; eCong.
+  unfold Midpoint in *; spliter.
+  apply cong_transitivity with O CD; trivial.
+  apply cong_transitivity with O AB; Cong.
   }
 Qed.
 
@@ -993,7 +979,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           apply col_2_par_projp2_cong with S U1 A1 A2; auto;
           [apply projp_col with A|apply projp_col with B]; auto.
           }
-        eCong.
+        apply cong_transitivity with AX' BX'; Cong.
         }
       assert (LAB = BXMAX)
         by (apply l16_9_1 with O E E' BX AX; Col; left; auto).
@@ -1019,7 +1005,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           apply col_2_par_projp2_cong with S U1 A1 A2; auto;
           [apply projp_col with A|apply projp_col with C]; auto.
           }
-        eCong.
+        apply cong_transitivity with AX' CX'; Cong.
         }
       assert (LAC = CXMAX)
         by (apply l16_9_1 with O E E' CX AX; Col; left; auto).
@@ -1051,7 +1037,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           apply col_2_par_projp2_cong with S U1 A1 A2; auto;
           [apply projp_col with A|apply projp_col with B]; auto.
           }
-        eCong.
+        apply cong_transitivity with AX' BX'; Cong.
         }
       destruct (diff_exists O E E' AX BX) as [AXMBX HAXMBX]; Col.
       assert (LAB = AXMBX)
@@ -1078,7 +1064,7 @@ elim (Col_dec A B BX''); intro HABBX''.
           apply col_2_par_projp2_cong with S U1 A1 A2; auto;
           [apply projp_col with A|apply projp_col with C]; auto.
           }
-        eCong.
+        apply cong_transitivity with AX' CX'; Cong.
         }
       destruct (diff_exists O E E' AX CX) as [AXMCX HAXMCX]; Col.
       assert (LAC = AXMCX)
@@ -1303,7 +1289,7 @@ elim (Col_dec A B BX''); intro HABBX''.
         apply col_2_par_projp2_cong with S U1 A1 A2; auto;
         [apply projp_col with A|apply projp_col with B]; auto.
         }
-      eCong.
+      apply cong_transitivity with AX' BX'; Cong.
       }
     assert (ABX'' = BXMAX)
       by (apply l16_9_1 with O E E' BX AX; Col; left; auto).
@@ -1328,7 +1314,7 @@ elim (Col_dec A B BX''); intro HABBX''.
         apply col_2_par_projp2_cong with S U1 A1 A2; auto;
         [apply projp_col with A|apply projp_col with C]; auto.
         }
-      eCong.
+      apply cong_transitivity with AX' CX'; Cong.
       }
     assert (ACX'' = CXMAX)
       by (apply l16_9_1 with O E E' CX AX; Col; left; auto).
@@ -1349,7 +1335,7 @@ elim (Col_dec A B BX''); intro HABBX''.
         apply col_2_par_projp2_cong with S U1 A1 A2; auto;
         [apply projp_col with A|apply projp_col with B]; auto.
         }
-      eCong.
+      apply cong_transitivity with AX' BX'; Cong.
       }
     destruct (diff_exists O E E' AX BX) as [AXMBX HAXMBX]; Col.
     assert (ABX'' = AXMBX)
@@ -1375,7 +1361,7 @@ elim (Col_dec A B BX''); intro HABBX''.
         apply col_2_par_projp2_cong with S U1 A1 A2; auto;
         [apply projp_col with A|apply projp_col with C]; auto.
         }
-      eCong.
+      apply cong_transitivity with AX' CX'; Cong.
       }
     destruct (diff_exists O E E' AX CX) as [AXMCX HAXMCX]; Col.
     assert (ACX'' = AXMCX)

@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section playfair_universal_posidonius_postulate.
 
@@ -17,7 +19,8 @@ assert (HCong : forall A3 B3,
                   Col A1 A2 A3 -> Col B1 B2 B3 -> Perp A1 A2 A3 B3 ->
                   Cong A3 B3 A1' B1);
 [|assert (HCong1 := HCong A3 B3 HC1 HC2 HPerp1);
-  assert (HCong2 := HCong A4 B4 HC3 HC4 HPerp2); eCong].
+  assert (HCong2 := HCong A4 B4 HC3 HC4 HPerp2);
+  apply cong_transitivity with A1' B1; Cong].
 clear HC1; clear HC2; clear HC3; clear HC4; clear HPerp1; clear HPerp2;
 clear A3; clear A4; clear B3; clear B4; intros A3 B3 HC1 HC2 HPerp1;
 rename HC5 into HC3; rename HPerp3 into HPerp2.

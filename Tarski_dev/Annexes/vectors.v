@@ -6,10 +6,6 @@ Section Vectors.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** Vertor *)
-
-Definition EqV A B C D := Parallelogram A B D C \/ A = B /\ C = D.
-
 Lemma eqv_refl : forall A B, EqV A B A B.
 Proof.
 intros.
@@ -330,9 +326,6 @@ subst B'.
 assumption.
 Qed.
 
-Definition SumV A B C D E F := forall D', EqV C D B D' -> EqV A D' E F.
-
-
 Lemma null_sum :
  forall A B C,
   SumV A B B A C C.
@@ -560,8 +553,6 @@ apply vector_uniqueness in H0.
 auto.
 Qed.
 
-Definition SumV_exists A B C D E F := exists D', EqV B D' C D /\ EqV A D' E F.
-
 Lemma is_to_ise :
   forall A B C D E F,
   SumV A B C D E F ->
@@ -631,9 +622,6 @@ apply eqv_sym.
 auto.
 auto.
 Qed.
-
-
-Definition Same_dir A B C D := A = B /\ C = D \/ exists D', Out C D D' /\ EqV A B C D'.
 
 Lemma same_dir_refl : forall A B, Same_dir A B A B.
 intros.
@@ -2485,8 +2473,6 @@ unfold Midpoint in H8.
 spliter.
 apply (l5_2 A); auto.
 Qed.
-
-Definition Opp_dir A B C D := Same_dir A B D C.
 
 Lemma plg_opp_dir : forall A B C D, Parallelogram A B C D -> Same_dir A B D C.
 intros.

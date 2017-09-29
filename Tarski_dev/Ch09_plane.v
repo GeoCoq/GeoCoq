@@ -82,6 +82,13 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
+
       | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
       let T:= fresh in (not_exist_hyp2 I B I A);
        assert (T:= midpoint_distinct_1 I A B H2 H);
@@ -139,22 +146,23 @@ Ltac clean_trivial_hyps :=
    | H:(Midpoint ?X1 ?X1 ?X1) |- _ => clear H
 end.
 
+(*
 Ltac finish := match goal with
+ | |- Bet ?A ?B ?C => Between
  | |- Col ?A ?B ?C => Col
  | |- ~ Col ?A ?B ?C => Col
  | |- Perp ?A ?B ?C ?D => Perp
  | |- Cong ?A ?B ?C ?D => Cong
+ | |- Le ?A ?B ?C ?D => Le
  | |- Midpoint ?A ?B ?C => Midpoint
  | |- ?A<>?B => apply swap_diff;assumption
  | |- _ => try assumption
 end.
+*)
 
 Section T9.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Definition TS A B P Q :=
-  ~ Col P A B /\ ~ Col Q A B /\ exists T, Col T A B /\ Bet P T Q.
 
 Lemma ts_distincts : forall A B P Q, TS A B P Q ->
   A <> B /\ A <> P /\ A <> Q /\ B <> P /\ B <> Q /\ P <> Q.
@@ -214,7 +222,7 @@ Proof with finish.
     show_distinct A C.
       intuition.
     assert (T = M).
-      assert_bet.
+      assert_bets.
       assert_cols.
       eapply l6_21 with P Q A C...
     subst T.
@@ -289,7 +297,7 @@ Proof with finish.
         Between.
       assert (exists X, Bet M X R' /\ Bet C X B).
         eapply inner_pasch.
-          (* assert_bet.
+          (* assert_bets.
           Between.
           *)
           apply midpoint_bet.
@@ -353,8 +361,6 @@ Proof with finish.
       assumption.
     assumption.
 Qed.
-
-Definition ReflectP A A' C := Midpoint C A A'.
 
 Lemma sym_sym : forall A C A', ReflectP A A' C  -> ReflectP A' A C.
 Proof.
@@ -935,7 +941,7 @@ Proof.
     intros.
     unfold Per in H.
     ex_and H C'.
-    assert_bet.
+    assert_bets.
     assert_cols.
     assert (Col A C C') by ColR.
     assert (C = C' \/ Midpoint A C C') by (eapply l7_20;Col).
@@ -998,86 +1004,15 @@ Proof.
 Qed.
 
 Lemma mid_two_sides : forall A B M X Y,
- A <> B -> Midpoint M A B -> ~ Col A B X -> Midpoint M X Y ->
+ Midpoint M A B -> ~ Col A B X -> Midpoint M X Y ->
  TS A B X Y.
 Proof.
-    intros.
-    unfold TS.
-    repeat split.
-      intro.
-      apply col_permutation_1 in H3.
-      contradiction.
-      intro.
-      apply H1.
-      unfold Midpoint in *.
-      spliter.
-      assert (Col A M Y).
-        eapply col_transitivity_1.
-          apply H.
-          unfold Col.
-          right; left.
-          apply between_symmetry.
-          assumption.
-        apply col_permutation_1.
-        assumption.
-      assert (Col B M Y).
-        eapply col_transitivity_1.
-          intro.
-          apply H.
-          apply sym_equal.
-          apply H7.
-          unfold Col.
-          right; left.
-          assumption.
-        apply col_permutation_3.
-        assumption.
-      assert (Y <> M).
-        intro.
-        subst M.
-        apply cong_identity in H4.
-        subst Y.
-        apply H1.
-        apply col_permutation_1.
-        assumption.
-      assert (Col Y A X).
-        eapply col_transitivity_1.
-          apply H8.
-          apply col_permutation_3.
-          assumption.
-        unfold Col.
-        left.
-        apply between_symmetry.
-        assumption.
-      assert (Col Y B X).
-        eapply col_transitivity_1.
-          apply H8.
-          apply col_permutation_3.
-          assumption.
-        unfold Col.
-        left.
-        apply between_symmetry.
-        assumption.
-      assert (X <> Y).
-        intro.
-        subst Y.
-        apply between_identity in H2.
-        contradiction.
-      apply col_permutation_1.
-      eapply col_transitivity_1.
-        apply H11.
-        apply col_permutation_2.
-        assumption.
-      apply col_permutation_2.
-      assumption.
-    exists M.
-    unfold Midpoint in *.
-    spliter.
-    split.
-      unfold Col.
-      right; right.
-      apply between_symmetry.
-      assumption.
-    assumption.
+    intros A B M X Y HM1 HNCol HM2.
+    repeat split; Col.
+      assert_diffs.
+      assert (X<>Y) by (intro; treat_equalities; assert_cols; Col).
+      intro Col; apply HNCol; ColR.
+    exists M; split; Col; Between.
 Qed.
 
 Lemma col_preserves_two_sides : forall A B C D X Y,
@@ -1315,7 +1250,6 @@ Proof.
       absurde.
     assert (TS R S U U').
       eapply mid_two_sides.
-        assumption.
         apply l7_2.
         apply H18.
         intro.
@@ -1605,8 +1539,6 @@ Proof.
       Col.
     subst T;Between.
 Qed.
-
-Definition OS A B P Q := exists R, TS A B P R /\ TS A B Q R.
 
 Lemma os_distincts : forall A B X Y, OS A B X Y ->
   A <> B /\ A <> X /\ A <> Y /\ B <> X /\ B <> Y.
@@ -2516,6 +2448,14 @@ Proof.
     assumption.
 Qed.
 
+Lemma bet_ts__ts : forall A B X Y Z, TS A B X Y -> Bet X Y Z -> TS A B X Z.
+Proof.
+  intros A B X Y Z [HNCol1 [HNCol2 [T [HT1 HT2]]]] HBet.
+  repeat split; trivial.
+    intro; assert (Z = T); [apply (l6_21 A B X Y); Col; intro|]; treat_equalities; auto.
+  exists T; split; eBetween.
+Qed.
+
 Lemma l9_31 :
  forall A X Y Z,
   OS A X Y Z ->
@@ -3045,6 +2985,19 @@ Proof.
   intro; subst X; auto.
 Qed.
 
+Lemma ts2__inangle : forall A B C P, TS A C B P -> TS B P A C ->
+  InAngle P A B C.
+Proof.
+  intros A B C P HTS1 HTS2.
+  destruct (ts2__ex_bet2 A B C P) as [X [HBet1 HBet2]]; trivial.
+  apply ts_distincts in HTS2; spliter.
+  repeat split; auto.
+  exists X; split; trivial.
+  right; apply bet_out; auto.
+  intro; subst X.
+  apply (two_sides_not_col A C B P HTS1); Col.
+Qed.
+
 Lemma out_one_side_1 :
  forall A B C D X,
  ~ Col A B C -> Col A B X -> Out X C D ->
@@ -3093,8 +3046,47 @@ Proof.
     split; assumption.
 Qed.
 
+
+Lemma TS__ncol : forall A B X Y, TS A B X Y -> ~Col A X Y \/ ~Col B X Y.
+intros.
+unfold TS in H.
+spliter.
+ex_and H1 T.
+
+assert(X <> Y).
+intro.
+treat_equalities.
+contradiction.
+induction(eq_dec_points A T).
+treat_equalities.
+right.
+intro.
+apply H.
+ColR.
+left.
+intro.
+apply H.
+ColR.
+Qed.
+
 End T9.
 
 Hint Resolve l9_2 invert_two_sides invert_one_side one_side_symmetry l9_9 l9_9_bis : side.
 
 Ltac Side := eauto with side.
+
+Ltac assert_ncols :=
+repeat
+  match goal with
+      | H:OS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(one_side_not_col123 A B X Y);finish)
+     
+      | H:OS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(one_side_not_col124 A B X Y);finish)
+      
+      | H:TS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(two_sides_not_col A B X Y);finish)
+     
+      | H:TS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(two_sides_not_col A B Y X);finish)
+  end.

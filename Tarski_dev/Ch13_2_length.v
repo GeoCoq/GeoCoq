@@ -9,8 +9,6 @@ Context `{T2D:Tarski_2D}.
 
 (******************** length *********************)
 
-Definition Q_Cong A := exists a, exists b, forall x y, Cong a b x y <-> A x y.
-
 Lemma lg_exists : forall A B, exists l, Q_Cong l /\ l A B.
 Proof.
     intros.
@@ -37,7 +35,7 @@ Proof.
     destruct HH.
     apply H3 in H0.
     apply H5 in H1.
-    eCong.
+    apply cong_transitivity with X Y; Cong.
 Qed.
 
 Lemma lg_cong_lg : forall l A B C D, Q_Cong l -> l A B -> Cong A B C D -> l C D.
@@ -90,8 +88,6 @@ Section Length_2.
 
 Context `{T2D:Tarski_2D}.
 
-Definition Len A B l := Q_Cong l /\ l A B.
-
 Lemma is_len_cong : forall A B C D l, Len A B l -> Len C D l -> Cong A B C D.
 Proof.
     intros.
@@ -116,7 +112,7 @@ Proof.
     destruct HH1.
     apply H3 in H1.
     apply H4.
-    eCong.
+    apply cong_transitivity with A B; trivial.
 Qed.
 
 Lemma not_cong_is_len : forall A B C D l , ~(Cong A B C D) -> Len A B l -> ~(l C D).
@@ -138,8 +134,6 @@ Proof.
     apply H.
     apply (lg_cong l); auto.
 Qed.
-
-Definition Q_Cong_Null l := Q_Cong l /\ exists A, l A A.
 
 Lemma lg_null_instance : forall l A, Q_Cong_Null l -> l A A.
 Proof.
@@ -211,7 +205,7 @@ Proof.
       unfold Q_Cong in HH.
       ex_and HH X.
       ex_and H1 Y.
-      assert(HH:= other_point_exists A).
+      assert(HH:= another_point A).
       ex_and HH P.
       assert(HP:= H2 X Y).
       destruct HP.
@@ -328,7 +322,7 @@ Context `{T2D:Tarski_2D}.
 Lemma ex_points_lg_not_col : forall l P, Q_Cong l -> ~ Q_Cong_Null l -> exists A, exists B, l A B /\ ~Col A B P.
 Proof.
     intros.
-    assert(HH:=other_point_exists P).
+    assert(HH:=another_point P).
     ex_elim HH A.
     assert(HH:= not_col_exists P A H1).
     ex_elim HH Q.
@@ -381,8 +375,6 @@ Tactic Notation "soit" ident(B) "sur" "la" "demie" "droite" ident(A) ident(P) "/
 Section Length_4.
 
 Context `{T2D:Tarski_2D}.
-
-Definition EqL (l1 l2 : Tpoint -> Tpoint -> Prop) := forall A B, l1 A B <-> l2 A B.
 
 Notation "l1 =l= l2" := (EqL l1 l2) (at level 80, right associativity).
 
@@ -521,7 +513,8 @@ apply H9 in H1.
 apply H11 in H2.
 destruct HH.
 apply H13 in H3.
-eCong.
+apply cong_transitivity with A B; trivial.
+apply cong_transitivity with A1 B1; Cong.
 
 intro.
 assert(HH:= H4 A0 B0).
@@ -536,7 +529,8 @@ apply H9 in H1.
 apply H11 in H2.
 destruct HP.
 apply H13 in H3.
-eCong.
+apply cong_transitivity with A2 B2; trivial.
+apply cong_transitivity with A B; Cong.
 Qed.
 
 

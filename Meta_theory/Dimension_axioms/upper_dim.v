@@ -11,66 +11,6 @@ Definition upper_dim_axiom := forall A B C P Q : Tpoint,
 
 Definition all_coplanar_axiom := forall A B C D, Coplanar A B C D.
 
-Lemma not_bet_out : forall A B C,
- Col A B C -> ~Bet A B C -> Out B A C.
-Proof.
-    intros.
-    assert(A <> B) by (intro; subst; Between).
-    assert(C <> B) by (intro; subst; Between).
-    unfold Out.
-    repeat split.
-      assumption.
-      assumption.
-    unfold Col in H.
-    induction H.
-      contradiction.
-    induction H.
-      right.
-      assumption.
-    left.
-    apply between_symmetry.
-    assumption.
-Qed.
-
-Lemma or_bet_out : forall A B C, Bet A B C \/ Out B A C \/ ~Col A B C.
-Proof.
-    intros.
-    elim(eq_dec_points A B).
-      intro; left; Between.
-    intro.
-    elim(eq_dec_points C B).
-      intro; left; Between.
-    intro.
-    induction(Col_dec A B C).
-      unfold Col in *.
-      decompose [or] H1.
-        left.
-        assumption.
-        right;left.
-        apply not_bet_out.
-          unfold Col.
-          assumption.
-        intro.
-        assert (Bet C B A) by Between.
-        apply H0.
-        symmetry.
-        apply (between_equality B C A).
-          assumption.
-        assumption.
-      right;left.
-      apply not_bet_out.
-        unfold Col.
-        assumption.
-      intro.
-      assert (Bet B A C) by Between.
-      apply H.
-      apply (between_equality A B C).
-        assumption.
-      assumption.
-    right;right.
-    assumption.
-Qed.
-
 Lemma upper_dim_implies_per_per_col :
   upper_dim_axiom ->
   (forall A B C X, Per A X C -> X <> C -> Per B X C -> Col A B X).

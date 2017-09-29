@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section weak_inverse_projection_postulate_bachmann_s_lotschnittaxiom.
 
@@ -48,14 +50,14 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
   assert (HSuma : SumA P Q M P Q M P Q R).
     assert_diffs; apply conga3_suma__suma with P Q M M Q R P Q R; CongA; SumA.
   assert (HAcute : Acute P Q M).
-  { apply nbet_isi_suma__acute with P Q R; auto.
+  { apply nbet_sams_suma__acute with P Q R; auto.
       intro HBet; apply HNCol7; Col.
-    destruct (isi_dec P Q M P Q M); trivial.
+    destruct (sams_dec P Q M P Q M); trivial.
     assert_diffs.
     exfalso; apply (lea__nlta P Q M P Q R).
       exists M; split; CongA.
     apply obtuse_per__lta; trivial.
-    apply nisi__obtuse; auto.
+    apply nsams__obtuse; auto.
   }
 
   assert (HC3 : exists C3, Col C1 C2 C3 /\ OS P Q R C3).

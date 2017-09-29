@@ -1,4 +1,3 @@
-Require Export GeoCoq.Axioms.hilbert_axioms.
 Require Export GeoCoq.Utils.general_tactics.
 Require Export Setoid.
 Require Export Coq.Classes.Morphisms.
@@ -6,9 +5,9 @@ Require Export Coq.Classes.Morphisms_Prop.
 Require Export GeoCoq.Axioms.independent_tarski_axioms.
 Require Export GeoCoq.Axioms.tarski_axioms.
 Require Import GeoCoq.Meta_theory.Models.independent_tarski_to_tarski.
-Require Import GeoCoq.Meta_theory.Dimension_axioms.upper_dim.
 Require Import GeoCoq.Tactics.Coinc.tactics_axioms.
 Require Export GeoCoq.Tactics.Coinc.ColR.
+Require Export GeoCoq.Axioms.hilbert_axioms.
 
 Section HilbertContext.
 Context `{Hi:Hilbert_neutral_2D}.
@@ -19,75 +18,6 @@ Definition Bet A B C := BetH A B C \/ A = B \/ B = C.
 
 (** Hilbert's congruence is 'defined' only for non degenerated segments,
     while Tarski's segment congruence allows the null segment. *)
-
-Global Instance Incid_morphism : Proper(eq ==> EqL ==> iff) Incid.
-Proof.
-intro.
-intro.
-intro.
-subst y.
-intro.
-intro.
-intro.
-split.
-intro.
-eapply (Incid_morphism _ x0).
-assumption.
-assumption.
-intro.
-eapply (Incid_morphism _ y).
-assumption.
-assert(HH:= EqL_Equiv).
-destruct HH.
-apply Equivalence_Symmetric.
-assumption.
-Qed.
-
-Definition Cong A B C D := (CongH A B C D /\ A <> B /\ C <> D) \/ (A = B /\ C = D).
-
-Ltac line A B l Hdiff := let H:=fresh in (assert(H:= line_existence A B Hdiff); destruct H as [l]; spliter).
-Lemma between_only_one' : forall A B C, BetH A B C -> ~ BetH B C A /\ ~ BetH B A C.
-Proof.
-intros A B C HBet1; assert (HBet2 := between_comm _ _ _ HBet1).
-split; apply between_only_one; auto.
-Qed.
-
-Ltac two_points l X Y := assert(_H := two_points_on_line l); destruct _H as [X _H]; destruct _H as [Y _H]; spliter.
-
-
-Ltac lines_eq l m :=
-match goal with
-   | H0:(?X1 <> ?X2), H1:(Incid ?X1 l), H2:(Incid ?X1 m),
-   H3:(Incid ?X2 l) , H4:(Incid ?X2 m) |- _ => let HH := fresh in assert(HH : EqL l m) by (apply (line_uniqueness X1 X2 l m);auto);
-                                               rewrite <-HH in *;
-                                               clean_duplicated_hyps
-end.
-
-Ltac col_line H l := assert(HH:=H); unfold ColH in HH; destruct HH as [l HH]; spliter.
-
-Ltac line_col A B C := match goal with
-                          |H1:(Incid A ?l), H2:(Incid B ?l), H3:(Incid C ?l) |- _ 
-                          => let HH := fresh in assert(ColH A B C) by (unfold ColH; exists l; repeat split; auto); auto
-                       end.
-
-Lemma congH_perm : forall A B, A<>B -> CongH A B B A.
-Proof.
-intros.
-line A B l H.
-elim (cong_existence A B l A);auto.
-intros.
-ex_and H2 B'.
-apply cong_pseudo_transitivity with A B'.
-assumption.
-apply cong_permr.
-assumption.
-Qed.
-
-Lemma congH_refl : forall A B, A<>B -> CongH A B A B.
-Proof.
-intros.
-apply cong_pseudo_transitivity with B A; auto using congH_perm.
-Qed.
 
 Lemma betH_distincts : forall A B C, BetH A B C -> A <> B /\ B <> C /\ A <> C.
 Proof.
@@ -111,20 +41,24 @@ apply between_diff in  HH.
 tauto.
 Qed.
 
-Lemma other_point_exists : forall A: Point, exists B, A <> B.
+Ltac line A B l Hdiff := let H:=fresh in (assert(H:= line_existence A B Hdiff); destruct H as [l]; spliter).
+
+Lemma congH_perm : forall A B, A<>B -> CongH A B B A.
 Proof.
 intros.
-assert (T:=plan).
-elim (two_points_on_line l0).
-intros P.
+line A B l H.
+elim (cong_existence A B A B l); auto; intros B' H2.
+spliter.
+apply cong_pseudo_transitivity with A B'.
+assumption.
+apply cong_permr.
+assumption.
+Qed.
+
+Lemma congH_refl : forall A B, A<>B -> CongH A B A B.
+Proof.
 intros.
-destruct p.
-induction(eq_dec_pointsH A x).
-subst x.
-exists P.
-intuition.
-exists x.
-intuition.
+apply cong_pseudo_transitivity with B A; auto using congH_perm.
 Qed.
 
 Lemma congH_sym : forall A B C D, A<>B -> CongH A B C D -> CongH C D A B.
@@ -136,25 +70,44 @@ apply congH_refl.
 assumption.
 Qed.
 
-Lemma betH_to_bet : forall A B C , BetH A B C -> Bet A B C /\ A <> B /\ B <> C /\ A <> C.
+Global Instance Incid_morphism' : Proper(eq ==> EqL ==> iff) Incid.
 Proof.
-intros.
-assert(HH:= betH_distincts A B C H).
-induction HH.
+intro.
+intro.
+intro.
+subst y.
+intro.
+intro.
+intro.
 split.
-unfold Bet.
-left.
+intro.
+eapply (Incid_morphism _ x0).
 assumption.
-spliter.
-repeat split; assumption.
+assumption.
+intro.
+eapply (Incid_morphism _ y).
+assumption.
+assert(HH:= EqL_Equiv).
+destruct HH.
+apply Equivalence_Symmetric.
+assumption.
 Qed.
 
-Lemma betH_line : forall A B C, BetH A B C ->
-  exists l, Incid A l /\ Incid B l /\ Incid C l.
+Lemma plan' : exists A, exists B, exists C, ~ ColH A B C.
 Proof.
-intros.
-apply between_col in H.
-assumption.
+exists P0.
+destruct (two_points_on_line l0) as [P1 [P2 [HP1 [HP2 HP3]]]].
+exists P1.
+exists P2.
+assert (T:=plan).
+intro.
+apply T.
+unfold ColH in H.
+decompose [ex and] H.
+assert (EqL l0 x).
+apply line_uniqueness with P1 P2;auto.
+rewrite H2 in *.
+intuition.
 Qed.
 
 Lemma colH_permut_231 : forall A B C, ColH A B C -> ColH B C A.
@@ -201,6 +154,22 @@ apply colH_permut_132 in H.
 assumption.
 Qed.
 
+Lemma other_point_exists : forall A: Point, exists B, A <> B.
+Proof.
+intros.
+assert (T:=plan).
+elim (two_points_on_line l0).
+intros P.
+intros.
+destruct p.
+induction(eq_dec_pointsH A x).
+subst x.
+exists P.
+intuition.
+exists x.
+intuition.
+Qed.
+
 Lemma colH_trivial111 : forall A, ColH A A A.
 Proof.
 intros.
@@ -210,7 +179,6 @@ decompose [ex and] H1.
 exists x0.
 intuition.
 Qed.
-
 
 Lemma colH_trivial112 : forall A B, ColH A A B.
 Proof.
@@ -224,7 +192,7 @@ exists x.
 intuition.
 Qed.
 
-Lemma colH_trivial122 : forall A B,ColH A B B.
+Lemma colH_trivial122 : forall A B, ColH A B B.
 Proof.
 intros.
 destruct (eq_dec_pointsH A B).
@@ -253,90 +221,20 @@ Hint Resolve colH_trivial121 colH_trivial122 colH_trivial112 colH_trivial111 col
 
 Ltac Col := auto 3 with col.
 
-Lemma ncolH_distincts : forall A B C, ~ColH A B C -> A <> B /\ B <> C /\ A <> C.
-Proof.
-intros.
-repeat split;
-intro;
-apply H;
-try subst B; Col.
-subst C;Col.
-Qed.
+Ltac line_col A B C := match goal with
+                          |H1:(Incid A ?l), H2:(Incid B ?l), H3:(Incid C ?l) |- _ 
+                          => let HH := fresh in assert(ColH A B C) by (unfold ColH; exists l; repeat split; auto); auto
+                       end.
 
+Ltac col_line H l := assert(HH:=H); unfold ColH in HH; destruct HH as [l HH]; spliter.
 
-(****************** between_identity ************************)
-
-Lemma bet_identity : forall A B, Bet A B A -> A = B.
-Proof.
-intros.
-unfold Bet in H.
-induction H.
-apply False_ind.
-apply betH_distincts in H.
-spliter.
-tauto.
-induction H.
-tauto.
-apply sym_equal.
-tauto.
-Qed.
-
-(************************************************************)
-
-Lemma morph : forall l m, EqL l m -> (forall A, Incid A l <-> Incid A m).
-Proof.
-intros.
-split.
-intro.
-rewrite <-H.
-assumption.
-intro.
-rewrite H.
-assumption.
-Qed.
-
-
-Lemma betH_colH : forall A B C, BetH A B C -> ColH A B C /\ A <> B /\ B <> C /\ A <> C.
-Proof.
-intros.
-split.
-apply between_col in H.
-tauto.
-apply betH_distincts in H.
-tauto.
-Qed.
-
-Lemma point3_online_exists : forall A B l, Incid A l -> Incid B l -> exists C, Incid C l  /\ C <> A /\ C <> B.
-Proof.
-intros.
-induction(eq_dec_pointsH A B).
-subst B.
-two_points l A0 B0.
-induction(eq_dec_pointsH A A0).
-subst A0.
-exists B0.
-split; auto.
-exists A0.
-split; auto.
-assert(HH:= between_out A B H1).
-destruct HH as [C HH].
-apply betH_colH in HH.
-spliter.
-exists C.
-unfold ColH in H3.
-destruct H2 as [m H2].
-spliter.
-lines_eq l m.
-split; auto.
-Qed.
-
-Lemma not_betH121 : forall A B, ~BetH A B A.
-Proof.
-intros.
-intro.
-apply betH_colH in H.
-tauto.
-Qed.
+Ltac lines_eq l m :=
+match goal with
+   | H0:(?X1 <> ?X2), H1:(Incid ?X1 l), H2:(Incid ?X1 m),
+   H3:(Incid ?X2 l) , H4:(Incid ?X2 m) |- _ => let HH := fresh in assert(HH : EqL l m) by (apply (line_uniqueness X1 X2 l m);auto);
+                                               rewrite <-HH in *;
+                                               clean_duplicated_hyps
+end.
 
 Lemma colH_dec : forall A B C, ColH A B C \/ ~ColH A B C.
 Proof.
@@ -378,23 +276,6 @@ Ltac ColHR :=
  let col := constr:(ColH) in
    Col_refl tpoint col.
 
-Lemma plan' : exists A, exists B, exists C, ~ ColH A B C.
-Proof.
-exists P0.
-destruct (two_points_on_line l0) as [P1 [P2 [HP1 [HP2 HP3]]]].
-exists P1.
-exists P2.
-assert (T:=plan).
-intro.
-apply T.
-unfold ColH in H.
-decompose [ex and] H.
-assert (EqL l0 x).
-apply line_uniqueness with P1 P2;auto.
-rewrite H2 in *.
-intuition.
-Qed.
-
 Lemma ncolH_exists : forall A B, A <> B -> exists C, ~ColH A B C.
 Proof.
 intros.
@@ -416,62 +297,30 @@ exists x.
 assumption.
 Qed.
 
-Ltac out_exists A B X := try match goal with |H : A <> B |- _
-                                 => assert(HH:=between_out A B H);auto; destruct HH as [X]
-                              end.
-
-Ltac not_on_line A B X :=  try match goal with |H : A <> B |- _
-                                 => assert(HH:=ncolH_exists A B H);auto; destruct HH as [X]
-                              end.
-
-(***************************** cong_identity ***********************)
-
-Lemma cong_identity : forall A B C , Cong A B C C -> A = B.
+Lemma ncolH_distincts : forall A B C, ~ColH A B C -> A <> B /\ B <> C /\ A <> C.
 Proof.
 intros.
-unfold Cong in H.
-induction H.
-spliter;
-tauto.
-tauto.
-Qed.
-
-(************************ cong_inner_transitivity ****************************)
-
-Lemma cong_inner_transitivity : forall A B C D E F, Cong A B C D -> Cong A B E F -> Cong C D E F.
-Proof.
-intros.
-unfold Cong in *.
-induction H.
-induction H0.
-spliter.
-left.
-repeat split; auto.
-apply (cong_pseudo_transitivity A B); auto.
-spliter.
-contradiction.
-induction H0.
-spliter.
-contradiction.
-right.
-tauto.
+repeat split;
+intro;
+apply H;
+try subst B; Col.
+subst C;Col.
 Qed.
 
 Definition Col := ColH.
 
-Lemma bet_colH : forall A B C, Bet A B C -> ColH A B C.
+Lemma betH_expand : forall A B C, BetH A B C -> BetH A B C /\ A <> B /\ B <> C /\ A <> C /\ ColH A B C.
 Proof.
 intros.
-unfold Bet in H.
-induction H.
-apply between_col in H.
+assert (HH0:= H).
+apply betH_distincts in HH0.
 spliter.
-unfold Col in H.
-assumption.
-induction H;
-subst B; Col.
+repeat split; auto.
+apply between_col in H.
+tauto.
 Qed.
 
+Ltac two_points l X Y := assert(_H := two_points_on_line l); destruct _H as [X _H]; destruct _H as [Y _H]; spliter.
 
 Lemma inter_uniquenessH : forall A B A' B' X Y, A' <> B' -> ~ColH A B A' -> ColH A B X -> ColH A B Y -> ColH A' B' X -> ColH A' B' Y -> X = Y.
 Proof.
@@ -530,15 +379,23 @@ exists m.
 repeat split; auto.
 Qed.
 
-Lemma betH_expand : forall A B C, BetH A B C -> BetH A B C /\ A <> B /\ B <> C /\ A <> C /\ ColH A B C.
+Lemma between_only_one' : forall A B C, BetH A B C -> ~ BetH B C A /\ ~ BetH B A C.
+Proof.
+intros A B C HBet1; assert (HBet2 := between_comm _ _ _ HBet1).
+split; apply between_only_one; auto.
+Qed.
+
+Lemma cut_comm : forall A B l, cut l A B -> cut l B A.
 Proof.
 intros.
-assert (HH0:= H).
-apply betH_distincts in HH0.
+unfold cut in *.
 spliter.
 repeat split; auto.
-apply between_col in H.
-tauto.
+destruct H1 as [I H1].
+exists I.
+spliter.
+apply between_comm in H2.
+split; auto.
 Qed.
 
 Lemma inner_pasch_aux : forall A B C P Q,
@@ -884,34 +741,6 @@ apply False_ind.
 apply H.
 unfold Col.
 Col.
-Qed.
-
-Lemma cut_comm : forall A B l, cut l A B -> cut l B A.
-Proof.
-intros.
-unfold cut in *.
-spliter.
-repeat split; auto.
-destruct H1 as [I H1].
-exists I.
-spliter.
-apply between_comm in H2.
-split; auto.
-Qed.
-
-Lemma other_point_on_line : forall A l, Incid A l -> exists B, A <> B /\ Incid B l.
-Proof.
-intros.
-assert(HH:= two_points_on_line l).
-destruct HH as [X HH].
-destruct HH as [Y HH].
-spliter.
-induction(eq_dec_pointsH A X).
-exists Y.
-subst X.
-split; auto.
-exists X.
-split; auto.
 Qed.
 
 Lemma betH_trans1 : forall A B C D, BetH A B C ->  BetH B C D -> BetH A C D.
@@ -1378,6 +1207,238 @@ assert(HH:=betH_trans A B C D H H26).
 tauto.
 apply cut_comm in H22.
 contradiction.
+Qed.
+
+Lemma betH_outH2__betH: forall A B C A' C',
+ BetH A B C ->
+ outH B C C' ->
+ outH B A A' ->
+ BetH A' B C'.
+Proof.
+intros.
+destruct H0.
+ - destruct H1.
+   assert (BetH A B C')
+     by (apply (betH_trans A B C C');auto).
+   apply between_comm.
+   apply (betH_trans C' B A A'); auto using between_comm.
+   destruct H1.
+
+   assert (BetH C B A') by
+      (apply between_comm;
+      apply (betH_trans0 A A' B C);auto using between_comm).
+   apply (betH_trans A' B C C');auto using between_comm.
+   spliter;subst.
+    apply between_comm;
+   apply (betH_trans C' C B A');auto using between_comm.
+ - destruct H0.
+   destruct H1.
+   assert (BetH A B C').
+    apply between_comm;
+    apply (betH_trans0 C C' B A);auto using between_comm.
+   apply between_comm; apply (betH_trans C' B A A');auto using between_comm.
+   destruct H1.
+   assert (BetH A B C').
+     apply between_comm; apply (betH_trans0 C C' B A);auto using between_comm.
+   apply (betH_trans0 A A' B C');auto using between_comm.
+   spliter;subst.
+   apply between_comm;apply (betH_trans0 C C' B A');auto using between_comm.
+   spliter;subst.
+   destruct H1.
+   apply (betH_trans A' A B C');auto using between_comm.
+   destruct H1.
+   apply (betH_trans0 A A' B C');auto using between_comm.
+   spliter;subst.
+   assumption.
+Qed.
+
+Lemma cong_existence' : forall A B l M,
+  A <> B ->
+  Incid M l ->
+  exists A' B', Incid A' l /\ Incid B' l /\ BetH A' M B' /\ CongH M A' A B /\ CongH M B' A B.
+Proof.
+intros A B l M HAB HInM.
+assert (H : exists P, Incid P l /\ M <> P).
+  {
+  destruct (two_points_on_line l) as [P1 [P2 [HP2 [HP1 HP1P2]]]].
+  elim (eq_dec_pointsH M P1); intro HMP1; try subst P1; [exists P2; auto|].
+  elim (eq_dec_pointsH M P2); intro HMP2; try subst P2; exists P1; auto.
+  }
+destruct H as [P [HInP HMP]].
+destruct (between_out P M) as [P' HP']; auto.
+destruct (cong_existence A B M P l) as [A' [HInA' [HoutA' HCongA']]]; auto.
+destruct (cong_existence A B M P' l) as [B' [HInB' [HoutB' HCongB']]]; auto;
+[apply betH_distincts in HP'; tauto|apply between_col in HP'|
+ exists A', B'; repeat split; auto; apply betH_outH2__betH with P P'; auto].
+destruct HP' as [l' [HIn1 [HIn2 HIn3]]]; apply Incid_morphism with l'; auto.
+apply line_uniqueness with M P; auto.
+Qed.
+
+Definition Cong A B C D := (CongH A B C D /\ A <> B /\ C <> D) \/ (A = B /\ C = D).
+
+Lemma betH_to_bet : forall A B C , BetH A B C -> Bet A B C /\ A <> B /\ B <> C /\ A <> C.
+Proof.
+intros.
+assert(HH:= betH_distincts A B C H).
+induction HH.
+split.
+unfold Bet.
+left.
+assumption.
+spliter.
+repeat split; assumption.
+Qed.
+
+Lemma betH_line : forall A B C, BetH A B C ->
+  exists l, Incid A l /\ Incid B l /\ Incid C l.
+Proof.
+intros.
+apply between_col in H.
+assumption.
+Qed.
+
+
+(****************** between_identity ************************)
+
+Lemma bet_identity : forall A B, Bet A B A -> A = B.
+Proof.
+intros.
+unfold Bet in H.
+induction H.
+apply False_ind.
+apply betH_distincts in H.
+spliter.
+tauto.
+induction H.
+tauto.
+apply sym_equal.
+tauto.
+Qed.
+
+(************************************************************)
+
+Lemma morph : forall l m, EqL l m -> (forall A, Incid A l <-> Incid A m).
+Proof.
+intros.
+split.
+intro.
+rewrite <-H.
+assumption.
+intro.
+rewrite H.
+assumption.
+Qed.
+
+
+Lemma betH_colH : forall A B C, BetH A B C -> ColH A B C /\ A <> B /\ B <> C /\ A <> C.
+Proof.
+intros.
+split.
+apply between_col in H.
+tauto.
+apply betH_distincts in H.
+tauto.
+Qed.
+
+Lemma point3_online_exists : forall A B l, Incid A l -> Incid B l -> exists C, Incid C l  /\ C <> A /\ C <> B.
+Proof.
+intros.
+induction(eq_dec_pointsH A B).
+subst B.
+two_points l A0 B0.
+induction(eq_dec_pointsH A A0).
+subst A0.
+exists B0.
+split; auto.
+exists A0.
+split; auto.
+assert(HH:= between_out A B H1).
+destruct HH as [C HH].
+apply betH_colH in HH.
+spliter.
+exists C.
+unfold ColH in H3.
+destruct H2 as [m H2].
+spliter.
+lines_eq l m.
+split; auto.
+Qed.
+
+Lemma not_betH121 : forall A B, ~BetH A B A.
+Proof.
+intros.
+intro.
+apply betH_colH in H.
+tauto.
+Qed.
+
+Ltac out_exists A B X := try match goal with |H : A <> B |- _
+                                 => assert(HH:=between_out A B H);auto; destruct HH as [X]
+                              end.
+
+Ltac not_on_line A B X :=  try match goal with |H : A <> B |- _
+                                 => assert(HH:=ncolH_exists A B H);auto; destruct HH as [X]
+                              end.
+
+(***************************** cong_identity ***********************)
+
+Lemma cong_identity : forall A B C , Cong A B C C -> A = B.
+Proof.
+intros.
+unfold Cong in H.
+induction H.
+spliter;
+tauto.
+tauto.
+Qed.
+
+(************************ cong_inner_transitivity ****************************)
+
+Lemma cong_inner_transitivity : forall A B C D E F, Cong A B C D -> Cong A B E F -> Cong C D E F.
+Proof.
+intros.
+unfold Cong in *.
+induction H.
+induction H0.
+spliter.
+left.
+repeat split; auto.
+apply (cong_pseudo_transitivity A B); auto.
+spliter.
+contradiction.
+induction H0.
+spliter.
+contradiction.
+right.
+tauto.
+Qed.
+
+Lemma bet_colH : forall A B C, Bet A B C -> ColH A B C.
+Proof.
+intros.
+unfold Bet in H.
+induction H.
+apply between_col in H.
+spliter.
+unfold Col in H.
+assumption.
+induction H;
+subst B; Col.
+Qed.
+
+Lemma other_point_on_line : forall A l, Incid A l -> exists B, A <> B /\ Incid B l.
+Proof.
+intros.
+assert(HH:= two_points_on_line l).
+destruct HH as [X HH].
+destruct HH as [Y HH].
+spliter.
+induction(eq_dec_pointsH A X).
+exists Y.
+subst X.
+split; auto.
+exists X.
+split; auto.
 Qed.
 
 Lemma bet_disjoint : forall A B C, BetH A B C -> disjoint A B B C.
@@ -2234,7 +2295,7 @@ destruct (eq_dec_pointsH A B) as [HAB|HAB].
 - subst.
   elim (other_point_exists B);intros A HBA.
   line B A l HBA.
-   assert(HH:= cong_existence C D l B H H0).
+   assert(HH:= cong_existence' C D l B H H0).
    ex_and HH F.
    ex_and H2 F'.
    apply betH_expand in H4.
@@ -2247,7 +2308,7 @@ destruct (eq_dec_pointsH A B) as [HAB|HAB].
    repeat split;auto.
 -
 line A B l HAB.
-assert(HH:= cong_existence C D l B H H1).
+assert(HH:= cong_existence' C D l B H H1).
 ex_and HH F.
 ex_and H2 F'.
 apply betH_expand in H4.
@@ -2449,7 +2510,7 @@ Lemma out_construction : forall A B X Y, X <> Y -> A <> B -> exists C, CongH A C
 Proof.
 intros.
 line A B l H0.
-assert(HH:=cong_existence X Y l A H H1).
+assert(HH:=cong_existence' X Y l A H H1).
 ex_and HH P.
 ex_and H3 P'.
 induction(outH_dec A B P).
@@ -2971,8 +3032,8 @@ apply betH_distincts in H3; spliter.
 apply (cong_pseudo_transitivity C' B'); eauto with cong.
 Qed.
 
-Lemma betH_congH3_outH_betH : forall A B C A' B' C', 
- BetH A B C -> outH A' B' C' -> CongH A C A' C' -> CongH A B A' B' -> BetH A' B' C'.
+Lemma betH_congH3_outH_betH : forall A B C A' B' C',
+  BetH A B C -> outH A' B' C' -> CongH A C A' C' -> CongH A B A' B' -> BetH A' B' C'.
 Proof.
 intros.
 apply betH_expand in H.
@@ -3011,8 +3072,8 @@ apply HH.
 apply (cong_pseudo_transitivity A' B'); Cong.
 Qed.
 
-Lemma outH_sym : forall A B C,  
- A<>C -> outH A B C -> outH A C B.
+Lemma outH_sym : forall A B C,
+  A <> C -> outH A B C -> outH A C B.
 Proof.
 intros.
 unfold outH in *.
@@ -3086,49 +3147,6 @@ apply (betH_trans0 C D B A);auto using between_comm.
 spliter. subst.
 apply outH_trivial.
 apply betH_expand in H;spliter;auto.
-Qed.
-
-Lemma betH_outH2__betH: forall A B C A' C',
- BetH A B C ->
- outH B C C' ->
- outH B A A' ->
- BetH A' B C'.
-Proof.
-intros.
-destruct H0.
- - destruct H1.
-   assert (BetH A B C')
-     by (apply (betH_trans A B C C');auto).
-   apply between_comm.
-   apply (betH_trans C' B A A'); auto using between_comm.
-   destruct H1.
-
-   assert (BetH C B A') by
-      (apply between_comm;
-      apply (betH_trans0 A A' B C);auto using between_comm).
-   apply (betH_trans A' B C C');auto using between_comm.
-   spliter;subst.
-    apply between_comm;
-   apply (betH_trans C' C B A');auto using between_comm.
- - destruct H0.
-   destruct H1.
-   assert (BetH A B C').
-    apply between_comm;
-    apply (betH_trans0 C C' B A);auto using between_comm.
-   apply between_comm; apply (betH_trans C' B A A');auto using between_comm.
-   destruct H1.
-   assert (BetH A B C').
-     apply between_comm; apply (betH_trans0 C C' B A);auto using between_comm.
-   apply (betH_trans0 A A' B C');auto using between_comm.
-   spliter;subst.
-   apply between_comm;apply (betH_trans0 C C' B A');auto using between_comm.
-   spliter;subst.
-   destruct H1.
-   apply (betH_trans A' A B C');auto using between_comm.
-   destruct H1.
-   apply (betH_trans0 A A' B C');auto using between_comm.
-   spliter;subst.
-   assumption.
 Qed.
 
 (** First case of congruence of triangles *)
@@ -5168,7 +5186,6 @@ rewrite H4 in *.
 auto.
 Qed.
 
-
 Instance independent_Tarski_neutral_dimensionless_follows_from_Hilbert2D : independent_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact (Build_independent_Tarski_neutral_dimensionless_with_decidable_point_equality Point Bet Cong
@@ -5207,11 +5224,11 @@ Instance Tarski_2D_follows_from_Hilbert2D : (Tarski_2D (Tarski_neutral_dimension
 Proof.
 split.
 intros.
-elim (eq_dec_points A B); intro;
+elim (point_equality_decidability A B); intro;
 [unfold tarski_axioms.Bet; simpl; subst; unfold Bet; auto|].
-elim (eq_dec_points A C); intro;
+elim (point_equality_decidability A C); intro;
 [unfold tarski_axioms.Bet; simpl; subst; unfold Bet; auto|].
-elim (eq_dec_points B C); intro;
+elim (point_equality_decidability B C); intro;
 [unfold tarski_axioms.Bet; simpl; subst; unfold Bet; auto|].
 apply upper_dim with P Q; auto.
 Qed.

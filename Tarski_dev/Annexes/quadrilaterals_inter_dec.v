@@ -800,7 +800,8 @@ spliter.
 assert(HH:= plg_to_parallelogram A B C D H).
 assert(HH1:= plg_cong A B C D HH).
 spliter.
-repeat split; eCong.
+repeat split; trivial.
+apply cong_transitivity with B C; Cong.
 Qed.
 
 Lemma rmb_per:
@@ -1929,12 +1930,12 @@ spliter.
 assert(A' = A'' \/ Midpoint B' A' A'').
 eapply l7_20.
 Col.
-eCong.
+apply cong_transitivity with B A; Cong.
 
 assert(C' = C'' \/ Midpoint B' C' C'').
 eapply l7_20.
 Col.
-eCong.
+apply cong_transitivity with B C; Cong.
 
 induction H25.
 
@@ -2366,6 +2367,13 @@ repeat
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
 
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
+
       | H:(Parallelogram_strict ?X1 ?X2 ?X3 ?X4) |- _ =>
       let HN := fresh in
       not_exist_hyp (~Col X1 X2 X3);
@@ -2508,12 +2516,16 @@ repeat
       not_exist_hyp6 A B B C D E E F G I I J;
       assert (h := suma_distincts A B C D E F G I J H);decompose [and] h;clear h;clean_reap_hyps
 
-      | H:Isi ?A ?B ?C ?D ?E ?F |- _ =>
+      | H:TriSumA ?A ?B ?C ?D ?E ?F |- _ =>
+      let h := fresh in
+      not_exist_hyp5 A B B C A C D E E F;
+      assert (h := trisuma_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:SAMS ?A ?B ?C ?D ?E ?F |- _ =>
       let h := fresh in
       not_exist_hyp4 A B B C D E E F;
-      assert (h := isi_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      assert (h := sams_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
  end.
-
 
 Hint Resolve parallelogram_strict_not_col
              parallelogram_strict_not_col_2
@@ -2555,7 +2567,7 @@ assert (MDB:D<>B).
  assert (H12 := l7_2 I' B D H3).
  assert (H13 : Col A C I').
   Col.
- apply (Ch08_orthogonality.distinct A C I' D B H11 H13 H12).
+ apply (midpoint_distinct A C I' D B H11 H13 H12).
 assert (H11 : Col D B I').
  assert (H14 := midpoint_bet B I' D H3).
  assert (H15 := bet_col B I' D H14).
@@ -3062,83 +3074,14 @@ assumption.
 Perp.
 Qed.
 
-Lemma conga_to_par_os : forall A B C D P , Bet A D P -> D <> P -> OS A D B C -> CongA B A P C D P
+Lemma conga_to_par_os : forall A B C D P , Bet A D P -> OS A D B C -> CongA B A P C D P
                                            -> Par A B C D.
-
-intros.
-assert(HH:= H1).
-unfold OS in HH.
-ex_and HH T.
-unfold TS in *.
-spliter.
-
-assert(HH:=H2).
-unfold CongA in HH.
-spliter.
-clear H13.
-
-prolong C D C' C D.
-
-assert(CongA C D P C' D A).
-eapply l11_14; auto.
-intro.
-subst C'.
-apply cong_symmetry in H14.
-apply cong_identity in H14.
-contradiction.
-Between.
-intro; subst D; Col.
-assert(CongA B A D B A P).
-assert(A<>D).
-intro; subst D; Col.
-eapply (out_conga B A D B A D); try (apply out_trivial; auto).
-apply conga_refl; auto.
-unfold Out.
-repeat split; auto.
-
-assert(CongA B A D C' D A).
-eapply conga_trans.
-apply H16.
-eapply conga_trans.
-apply H2.
-assumption.
-apply par_left_comm.
-
-assert(Par A B D C').
-
-eapply l12_21_b.
-
-assert(TS A D C C').
-unfold TS.
-repeat split; auto.
-intro.
-apply H4.
-apply col_permutation_1.
-eapply (col_transitivity_1 _ C').
-intro.
-subst C'.
-apply cong_symmetry in H14.
-apply cong_identity in H14.
-contradiction.
-apply bet_col in H13.
-Col.
-Col.
-exists D.
-split; Col.
-eapply l9_8_2.
-apply H18.
-apply one_side_symmetry.
-assumption.
-assumption.
-apply par_symmetry.
-apply par_comm.
-eapply par_col_par_2.
-auto.
-apply bet_col in H13.
-apply col_permutation_1.
-apply H13.
-apply par_symmetry.
-assumption.
+Proof.
+intros A B C D P HBet HOS HCongA.
+assert_diffs.
+apply par_right_comm, l12_22_b with P; trivial.
+  apply l6_6, bet_out; Between.
+apply invert_one_side, col_one_side with D; Col.
 Qed.
 
 Lemma plg_par : forall A B C D, A <> B -> B <> C -> Parallelogram A B C D -> Par A B C D /\ Par A D B C.
@@ -3841,9 +3784,10 @@ spliter.
 
 right.
 unfold Parallelogram_flat.
-repeat split; eCong.
+repeat split; Cong.
 ColR.
 ColR.
+apply cong_transitivity with C D; Cong.
 
 induction(eq_dec_points A F).
 right.
@@ -4053,7 +3997,7 @@ Col.
 apply par_right_comm.
 left.
 assumption.
-eCong.
+apply cong_transitivity with A D; Cong.
 
 induction(eq_dec_points B D).
 subst D.
@@ -4100,7 +4044,7 @@ Col.
 apply par_left_comm.
 left.
 assumption.
-eCong.
+apply cong_transitivity with C B; Cong.
 
 assert(HH:=plgf_bet A B D C H0).
 
@@ -4248,13 +4192,8 @@ induction HH.
 
 prolong A B A' A B.
 
-eapply (conga_to_par_os _ _ _ _ A');
+apply (conga_to_par_os _ _ _ _ A');
 auto.
-intro.
-subst A'.
-apply cong_symmetry in H37.
-apply cong_identity in H37.
-contradiction.
 apply conga_comm.
 eapply l11_13.
 apply conga_comm.
@@ -4275,14 +4214,8 @@ induction H35.
 spliter.
 
 prolong A B A' A B.
-eapply (conga_to_par_os _ _ _ _ );
+apply (conga_to_par_os _ _ _ _ A');
 auto.
-apply H37.
-intro.
-subst A'.
-apply cong_symmetry in H38.
-apply cong_identity in H38.
-contradiction.
 apply conga_comm.
 eapply l11_13.
 apply conga_comm.
@@ -4304,13 +4237,8 @@ induction H35.
 spliter.
 prolong A B A' A B.
 
-eapply (conga_to_par_os _ _ _ _ A');
+apply (conga_to_par_os _ _ _ _ A');
 auto.
-intro.
-subst A'.
-apply cong_symmetry in H38.
-apply cong_identity in H38.
-contradiction.
 apply conga_comm.
 
 eapply out_conga.
@@ -4350,13 +4278,8 @@ ColR.
 spliter.
 prolong A B A' A C.
 
-eapply (conga_to_par_os _ _ _ _ A');
+apply (conga_to_par_os _ _ _ _ A');
 auto.
-intro.
-subst A'.
-apply cong_symmetry in H38.
-apply cong_identity in H38.
-contradiction.
 apply conga_comm.
 
 eapply out_conga.
@@ -4825,19 +4748,12 @@ Qed.
 Lemma exists_square : forall A B, A<>B -> exists C D,  Square A B C D.
 Proof.
 intros.
-destruct (exists_Cong_Per A B A B) as [C [HC1 HC2]].
+destruct (exists_cong_per A B A B) as [C [HC1 HC2]].
 assert_diffs.
-assert (HnCol : ~ Col A B C) by (apply (per_not_col A B C);auto).
-assert_diffs.
-assert (exists P : Tpoint, Per P C B /\ Cong P C A B /\ OS B C P A)
- by (apply (ex_per_cong B C C A A B H0 H);Col).
-destruct H1 as [D [HD1 [HD2 HD3]]].
+destruct (per__ex_saccheri B C A) as [D HSac]; Perp.
 exists C.
 exists D.
-
-assert (Saccheri C D A B)
- by (unfold Saccheri;repeat split;finish; apply invert_one_side;auto).
-assert (Rectangle C D A B) by (apply sac_rectangle;auto).
+assert (Rectangle B C D A) by (apply sac_rectangle;auto).
 unfold Square;split.
 auto using rect_permut.
 Cong.

@@ -1,4 +1,5 @@
-Require Export GeoCoq.Axioms.tarski_axioms.
+Require Export GeoCoq.Tarski_dev.Definitions.
+Require Export GeoCoq.Tactics.finish.
 
 Ltac prolong A B x C D :=
  assert (sg:= segment_construction A B C D);
@@ -104,11 +105,11 @@ Qed.
 
 End T1_1.
 
-Hint Resolve cong_commutativity cong_3421 cong_4312 cong_4321 cong_reverse_identity cong_trivial_identity
+Hint Resolve cong_commutativity cong_3421 cong_4312 cong_4321 cong_trivial_identity
              cong_left_commutativity cong_right_commutativity
-             cong_transitivity cong_symmetry cong_reflexivity cong_identity : cong.
+             cong_transitivity cong_symmetry cong_reflexivity : cong.
 
-Ltac Cong := auto 2 with cong.
+Ltac Cong := auto 4 with cong.
 Ltac eCong := eauto with cong.
 
 Section T1_2.
@@ -154,19 +155,13 @@ Qed.
 
 End T1_2.
 
-Hint Resolve not_cong_2134 not_cong_1243 not_cong_2143 
+Hint Resolve not_cong_2134 not_cong_1243 not_cong_2143
              not_cong_3412 not_cong_4312 not_cong_3421 not_cong_4321 : cong.
 
 Section T1_3.
 
 
 Context `{Tn:Tarski_neutral_dimensionless}.
-
-
-Definition OFSC A B C D A' B' C' D' :=
-  Bet A B C /\ Bet A' B' C' /\
-  Cong A B A' B' /\ Cong B C B' C' /\
-  Cong A D A' D' /\ Cong B D B' D'.
 
 Lemma five_segment_with_def : forall A B C D A' B' C' D',
  OFSC A B C D A' B' C' D' -> A<>B -> Cong C D C' D'.
@@ -215,8 +210,6 @@ Proof.
     eauto using cong_identity, cong_symmetry.
 Qed.
 
-Definition Cong_3 A B C A' B' C' := Cong A B A' B' /\ Cong A C A' C' /\ Cong B C B' C'.
-
 Lemma cong_3_sym : forall A B C A' B' C',
  Cong_3 A B C A' B' C' -> Cong_3 A' B' C' A B C.
 Proof.
@@ -244,7 +237,7 @@ Proof.
     unfold Cong_3.
     intros.
     spliter.
-    repeat split; eCong.
+    repeat split; eapply cong_transitivity; eCong.
 Qed.
 
 End T1_3.
@@ -290,7 +283,7 @@ Lemma construction_uniqueness : forall Q A B C X Y,
  Q <> A -> Bet Q A X -> Cong A X B C -> Bet Q A Y -> Cong A Y B C -> X=Y.
 Proof.
     intros.
-    assert (Cong A X A Y) by eCong.
+    assert (Cong A X A Y) by (apply cong_transitivity with B C; Cong).
     assert (Cong Q X Q Y) by (apply (l2_11 Q A X Q A Y);Cong).
     assert(OFSC Q A X Y Q A X X) by (unfold OFSC;repeat split;Cong).
     apply five_segment_with_def in H6; try assumption.

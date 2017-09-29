@@ -33,10 +33,6 @@ Proof.
     apply (l5_2 P);auto.
 Qed.
 
-Definition Le A B C D := exists E, Bet C E D /\ Cong A B C E.
-
-Definition Ge A B C D := Le C D A B.
-
 Lemma le_bet : forall A B C D, Le C D A B -> exists X, Bet A X B /\ Cong A X C D.
 Proof.
     intros.
@@ -87,8 +83,6 @@ Proof.
     apply cong_transitivity with C y; assumption.
 Qed.
 
-Definition cong_preserves_le := l5_6.
-
 Lemma le_reflexivity : forall A B, Le A B A B.
 Proof.
     unfold Le.
@@ -97,7 +91,7 @@ Proof.
     split; Between; Cong.
 Qed.
 
-Lemma le_transitivity : forall A B C D E F, Le A B C D -> Le C D E F -> Le A B E F .
+Lemma le_transitivity : forall A B C D E F, Le A B C D -> Le C D E F -> Le A B E F.
 Proof.
     unfold Le.
     intros.
@@ -108,7 +102,7 @@ Proof.
     exists P.
     split.
       eBetween.
-    unfold Cong_3 in H4; spliter; eCong.
+    unfold Cong_3 in H4; spliter; apply cong_transitivity with C y; Cong.
 Qed.
 
 Lemma between_cong : forall A B C, Bet A C B -> Cong A C A B -> C=B.
@@ -200,6 +194,21 @@ Proof.
     treat_equalities;auto.
 Qed.
 
+Lemma le_diff : forall A B C D, A <> B -> Le A B C D -> C <> D.
+Proof.
+  intros A B C D HAB HLe Heq.
+  subst D; apply HAB, le_zero with C; assumption.
+Qed.
+
+Lemma lt_diff : forall A B C D, Lt A B C D -> C <> D.
+Proof.
+  intros A B C D HLt Heq.
+  subst D.
+  destruct HLt as [HLe HNCong].
+  assert (A = B) by (apply le_zero with C; assumption).
+  subst B; Cong.
+Qed.
+
 Lemma bet_cong_eq :
  forall A B C D,
   Bet A B C ->
@@ -285,10 +294,6 @@ Proof.
     apply ge_right_comm.
     assumption.
 Qed.
-
-
-Definition Lt A B C D := Le A B C D /\ ~ Cong A B C D.
-Definition Gt A B C D := Lt C D A B.
 
 Lemma lt_right_comm : forall A B C D, Lt A B C D -> Lt A B D C.
 Proof.
@@ -424,6 +429,20 @@ Proof.
     destruct (l5_12_a A B C HBet); trivial.
 Qed.
 
+Lemma bet__lt1213 : forall A B C, B <> C -> Bet A B C -> Lt A B A C.
+Proof.
+    intros A B C HBC HBet.
+    split.
+      apply bet__le1213; trivial.
+    intro.
+    apply HBC, between_cong with A; trivial.
+Qed.
+
+Lemma bet__lt2313 : forall A B C, A <> B -> Bet A B C -> Lt B C A C.
+Proof.
+    intros; apply lt_comm, bet__lt1213; Between.
+Qed.
+
 Lemma l5_12_b : forall A B C, Col A B C -> Le A B A C -> Le B C A C -> Bet A B C.
 Proof.
     intros.
@@ -533,7 +552,7 @@ Proof.
     intro.
     apply HNCong.
     apply le_anti_symmetry; auto.
-    apply (cong_preserves_le A B C D); Cong.
+    apply (l5_6 A B C D); Cong.
 Qed.
 
 Lemma le3456_lt__lt : forall A B C D E F, Lt A B C D -> Le C D E F -> Lt A B E F.
@@ -545,7 +564,13 @@ Proof.
     intro.
     apply HNCong.
     apply le_anti_symmetry; auto.
-    apply (cong_preserves_le C D E F); Cong.
+    apply (l5_6 C D E F); Cong.
+Qed.
+
+Lemma lt_transitivity : forall A B C D E F, Lt A B C D -> Lt C D E F -> Lt A B E F.
+Proof.
+    intros A B C D E F HLt1 HLt2.
+    apply le1234_lt__lt with C D; try (apply lt__le); assumption.
 Qed.
 
 Lemma not_and_lt : forall A B C D, ~ (Lt A B C D /\ Lt C D A B).
@@ -620,6 +645,72 @@ treat_equalities.
 intuition.
 Qed.
 
+Lemma bet2_le2__le : forall O o A B a b, Bet a o b -> Bet A O B -> Le o a O A -> Le o b O B -> Le a b A B.
+Proof.
+intros.
+induction(eq_dec_points A O).
+treat_equalities; auto.
+assert (o=a). 
+apply le_zero with A;auto.
+subst;auto.
+induction(eq_dec_points B O).
+treat_equalities;auto.
+assert (o=b). 
+apply le_zero with B;auto.
+subst;auto using le_left_comm, le_right_comm.
+
+
+assert(HH:= segment_construction A O b o).
+ex_and HH b'.
+assert(HH:= segment_construction B O a o).
+ex_and HH a'.
+
+unfold Le in H1.
+ex_and H1 a''.
+
+assert(a' = a'').
+{
+  apply(construction_uniqueness B O a o a' a'' H4);
+  eBetween.
+  Cong.
+}
+treat_equalities.
+
+assert(Le B a' B A).
+{
+  unfold Le.
+  exists a'.
+  split; eBetween; Cong.
+}
+
+unfold Le in H2.
+ex_and H2 b''.
+
+assert(b' = b'').
+{
+  apply(construction_uniqueness A O b o b' b'' H3);
+  eBetween.
+  Cong.
+}
+
+treat_equalities.
+
+assert(Le a' b' a' B).
+{
+  unfold Le.
+  exists b'.
+  split; eBetween; Cong.
+}
+
+assert(Le a' b' A B).
+{
+  apply(le_transitivity a' b' a' B A B); auto using le_left_comm, le_right_comm.
+}
+
+apply(l5_6 a' b' A B a b A B); Cong.
+apply (l2_11 a' O b' a o b);
+eBetween; Cong.
+Qed.
 
 End T5.
 

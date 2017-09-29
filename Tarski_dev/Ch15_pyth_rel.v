@@ -4,10 +4,6 @@ Section PythagoreanFun.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-Definition PythRel O E E' A B C := Ar2 O E E' A B C /\ (
- (O=B /\ (A=C \/ Opp O E E' A C)) \/ 
- exists B', Perp O B' O B /\ Cong O B' O B /\ Cong O C A B').
-
 Lemma Ps_Col : forall O E A, Ps O E A -> Col O E A.
 Proof.
 intros.
@@ -28,7 +24,7 @@ destruct (eq_dec_points O B).
  split.
  unfold Ar2;auto.
  left;auto.
-- 
+-
 destruct (perp_exists O E O) as [X HX].
 auto.
 destruct (segment_construction_2 X O O B) as [B' [HB1 HB2]].
@@ -163,7 +159,7 @@ ColR.
 induction(eq_dec_points A O).
 subst A.
 assert(Cong O B O C).
-eCong.
+apply cong_transitivity with O B'; Cong.
 assert(B = C \/ Midpoint O B C).
 apply l7_20; auto.
 ColR.
@@ -287,7 +283,7 @@ Col.
 apply opp_midpoint in H16.
 unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O C; Cong.
 
 unfold Length.
 repeat split; Cong.
@@ -376,9 +372,9 @@ split; auto.
 apply diff_A_O; auto.
 Col.
 apply opp_midpoint in H16.
-unfold Midpoint in H15.
+unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O B; Cong.
 apply(opp_same_square O E E' B OB B2 H16 H1).
 
 (****** A>0 ********* B<0 ********** C<0 ********)
@@ -447,7 +443,7 @@ Col.
 apply opp_midpoint in H16.
 unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O C; Cong.
 
 unfold Length.
 repeat split; Cong.
@@ -474,7 +470,7 @@ Col.
 apply opp_midpoint in H19.
 unfold Midpoint in H19.
 spliter.
-eCong.
+apply cong_transitivity with O B; Cong.
 apply(opp_same_square O E E' B OB B2 H19 H1).
 apply(opp_same_square O E E' C OC C2 H16 H2).
 
@@ -620,7 +616,7 @@ Col.
 apply opp_midpoint in H16.
 unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O C; Cong.
 
 unfold Length.
 repeat split; auto.
@@ -650,7 +646,7 @@ Col.
 apply opp_midpoint in H19.
 unfold Midpoint in H19.
 spliter.
-eCong.
+Cong.
 
 unfold Length.
 repeat split; Cong.
@@ -748,7 +744,7 @@ Col.
 apply opp_midpoint in H19.
 unfold Midpoint in H19.
 spliter.
-eCong.
+Cong.
 
 unfold Length.
 repeat split; Cong;
@@ -763,7 +759,7 @@ Col.
 apply opp_midpoint in H16.
 unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O B; Cong.
 apply(opp_same_square O E E' A OA A2 H19 H0).
 apply(opp_same_square O E E' B OB B2 H16 H1).
 
@@ -852,7 +848,7 @@ Col.
 apply opp_midpoint in H16.
 unfold Midpoint in H16.
 spliter.
-eCong.
+apply cong_transitivity with O C; Cong.
 
 unfold Length.
 repeat split; auto.
@@ -882,7 +878,7 @@ Col.
 apply opp_midpoint in H19.
 unfold Midpoint in H19.
 spliter.
-eCong.
+Cong.
 
 unfold Length.
 repeat split; Cong;
@@ -897,7 +893,7 @@ Col.
 apply opp_midpoint in H22.
 unfold Midpoint in H22.
 spliter.
-eCong.
+apply cong_transitivity with O B; Cong.
 apply(opp_same_square O E E' A OA A2 H19 H0).
 apply(opp_same_square O E E' B OB B2 H22 H1).
 apply(opp_same_square O E E' C OC C2 H16 H2).
@@ -971,7 +967,7 @@ tauto.
 ex_and H0 B1.
 ex_and H2 B2.
 assert(Cong O B1 O B2).
-eCong.
+apply cong_transitivity with O B; Cong.
 
 assert (O <> E).
 intro.
@@ -989,7 +985,7 @@ clean_duplicated_hyps.
 clean_trivial_hyps.
 
 assert(Cong O C2 O C1).
-eCong.
+apply cong_transitivity with A B1; Cong.
 
 assert(C1 = C2 \/ Midpoint O C1 C2).
 apply l7_20.
@@ -1022,7 +1018,8 @@ induction(eq_dec_points A O).
 subst A.
 
 assert(Cong O C1 O C2).
-eCong.
+apply cong_transitivity with O B2; trivial.
+apply cong_transitivity with O B1; Cong.
 assert(C1 = C2 \/ Midpoint O C1 C2).
 apply l7_20; eCol.
 
@@ -1065,7 +1062,8 @@ apply (symmetric_point_uniqueness B1 O); auto.
 subst B2'.
 
 assert(Cong O C1 O C2).
-eCong.
+apply cong_transitivity with A B2; trivial.
+apply cong_transitivity with A B1; Cong.
 
 assert(C1 = C2 \/ Midpoint O C1 C2).
 apply l7_20.

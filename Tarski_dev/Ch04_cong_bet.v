@@ -4,11 +4,6 @@ Section T3.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition IFSC A B C D A' B' C' D' :=
-   Bet A B C /\ Bet A' B' C' /\
-   Cong A C A' C' /\ Cong B C B' C' /\
-   Cong A D A' D' /\ Cong C D C' D'.
-
 Lemma l4_2 : forall A B C D A' B' C' D', IFSC A B C D A' B' C' D' -> Cong B D B' D'.
 Proof.
 unfold IFSC.
@@ -94,8 +89,10 @@ assert (exists B'', Bet A' B'' C' /\ Cong_3 A B C A' B'' C')
 ex_and H1 x.
 unfold Cong_3 in *;spliter.
 
-assert (Cong_3 A' x C' A' B' C')
- by (unfold Cong_3;repeat split;eCong).
+assert (Cong_3 A' x C' A' B' C').
+  unfold Cong_3;repeat split; Cong.
+  apply cong_transitivity with A B; Cong.
+  apply cong_transitivity with B C; Cong.
 unfold Cong_3 in H7;spliter.
 
 assert (IFSC A' x C' x  A' x C' B')

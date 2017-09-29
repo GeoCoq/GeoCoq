@@ -334,7 +334,12 @@ Global Instance TG2D_euclidean_to_T2D_euclidean :
 Proof.
 assert (H := TG_to_TID).
 split; intros A B C D T HBet1 HBet2 HDiff1.
+elim (eq_dec_points B D); intro HDiff2;
+[treat_equalities; exists T, C; Between|].
+elim (eq_dec_points D C); intro HDiff3;
+[treat_equalities; exists B, T; Between|].
 elim (Col_dec A B C); intro HCol; [|apply euclidG with D; auto].
+clear HDiff2; clear HDiff3.
 do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
 
   {

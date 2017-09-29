@@ -1860,12 +1860,12 @@ assert( Col B B'' B').
 apply(per_per_col B B'' A' B'); finish.
 
 assert(Cong B B' A A').
-eCong.
+apply cong_transitivity with C C'; Cong.
 
 assert(B = B'' \/ Midpoint B' B B'').
 apply( l7_20); Col.
 
-eCong.
+apply cong_transitivity with A A'; Cong.
 induction H27.
 subst B''.
 
@@ -2712,7 +2712,7 @@ Proof.
       intro.
       subst E''.
       assert(Out A B D \/ TS C A B D).
-        apply(l11_22_aux C A B D).
+        apply(conga__or_out_ts C A B D).
         apply conga_comm.
         assumption.
       induction H31.
@@ -3084,7 +3084,7 @@ Proof.
     assert(Perp  C' D' A E'').
       eapply cong_conga_perp.
         apply conga_right_comm in H43.
-        apply l11_22_aux in H43.
+        apply conga__or_out_ts in H43.
         induction H43.
           assert(OS A B C' D').
             eapply (out_one_side_1 _ _ _ _ A); Col.
@@ -3107,7 +3107,7 @@ Proof.
         assumption.
         unfold Cong_3 in *.
         spliter.
-        eCong.
+        apply cong_transitivity with B A; Cong.
       apply conga_left_comm.
       assumption.
 
@@ -3133,7 +3133,7 @@ subst D''.
 Cong.
 
 assert(Cong A C' A D').
-eCong.
+apply cong_transitivity with A B; Cong.
 
 assert(HM:=midpoint_existence C' D').
 ex_and HM R.
@@ -3256,9 +3256,6 @@ Perp.
       auto.
     Between.
 Qed.
-
-Definition Perp2 A B C D P :=
-  exists X, exists Y, Col P X Y /\ Perp X Y A B /\ Perp X Y C D.
 
 Lemma perp2_refl : forall A B P, A <> B -> Perp2 A B A B P.
 Proof.

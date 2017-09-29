@@ -1398,19 +1398,6 @@ repeat split;
 assumption.
 Qed.
 
-(** Parallelogram *)
-
-
-
-Definition Parallelogram_strict A B A' B' := TS A A' B B' /\ Par A B A' B' /\ Cong A B A' B'.
-
-Definition Parallelogram_flat A B A' B' :=
-  Col A B A' /\ Col A B B' /\
-  Cong A B A' B' /\ Cong A B' A' B /\
-  (A <> A' \/ B <> B').
-
-Definition Parallelogram A B A' B' := Parallelogram_strict A B A' B' \/ Parallelogram_flat A B A' B'.
-
 Lemma Parallelogram_strict_Parallelogram :
  forall A B C D,
   Parallelogram_strict A B C D -> Parallelogram A B C D.
@@ -2154,8 +2141,6 @@ spliter.
 split; Cong.
 Qed.
 
-Definition Plg A B C D := (A <> C \/ B <> D) /\ exists M, Midpoint M A C /\ Midpoint M B D.
-
 Lemma plg_to_parallelogram : forall A B C D, Plg A B C D -> Parallelogram A B C D.
 intros.
 unfold Plg in H.
@@ -2201,20 +2186,11 @@ apply two_sides_not_col in H.
 Col.
 Qed.
 
-(** Rhombus *)
-
-Definition Rhombus A B C D := Plg A B C D /\ Cong A B B C.
-
 Lemma Rhombus_Plg : forall A B C D, Rhombus A B C D -> Plg A B C D.
 Proof.
 unfold Rhombus.
 tauto.
 Qed.
-
-
-(** Rectangle *)
-
-Definition Rectangle A B C D := Plg A B C D /\ Cong A C B D.
 
 Lemma Rectangle_Plg : forall A B C D,
   Rectangle A B C D ->
@@ -2281,194 +2257,9 @@ contradiction.
 assumption.
 Qed.
 
-Lemma col_cong_bet : forall A B C D, Col A B D -> Cong A B C D -> Bet A C B -> Bet  C A D \/ Bet C B D.
-intros.
 
-prolong B A D1 B C.
-prolong A B D2 A C.
 
-assert(Cong A B C D1).
-eapply (l2_11 A C B C A D1).
-assumption.
-eapply between_exchange3.
-apply between_symmetry.
-apply H1.
-assumption.
-apply cong_pseudo_reflexivity.
-Cong.
-assert(D = D1 \/ Midpoint C D D1).
-eapply l7_20.
-apply bet_col in H1.
-apply bet_col in H2.
 
-induction (eq_dec_points A B).
-subst B.
-apply cong_symmetry in H0.
-apply cong_identity in H0.
-subst D.
-Col.
-eapply (col3 A B); Col.
-
-eCong.
-
-induction H7.
-subst D1.
-left.
-eapply between_exchange3.
-apply between_symmetry.
-apply H1.
-assumption.
-
-assert(Cong B A C D2).
-eapply (l2_11 B C A C B D2).
-Between.
-eapply between_exchange3.
-apply H1.
-assumption.
-apply cong_pseudo_reflexivity.
-Cong.
-
-assert(Midpoint C D2 D1).
-unfold Midpoint.
-split.
-
-induction(eq_dec_points A B).
-subst B.
-apply cong_symmetry in H0.
-apply cong_identity in H0.
-subst D.
-apply is_midpoint_id in H7.
-subst D1.
-Between.
-apply between_symmetry.
-
-induction(eq_dec_points B C).
-subst C.
-apply between_symmetry.
-apply cong_identity in H3.
-subst D1.
-Between.
-
-assert(Bet D1 C B).
-eBetween.
-assert(Bet C B D2).
-eBetween.
-eapply (outer_transitivity_between).
-apply H11.
-assumption.
-auto.
-unfold Midpoint in H7.
-spliter.
-eapply cong_transitivity.
-apply cong_symmetry.
-apply cong_commutativity.
-apply H8.
-eapply cong_transitivity.
-apply H0.
-Cong.
-assert(D = D2).
-eapply symmetric_point_uniqueness.
-apply l7_2.
-apply H7.
-apply l7_2.
-assumption.
-subst D2.
-right.
-eapply between_exchange3.
-apply H1.
-assumption.
-Qed.
-
-Lemma col_cong2_bet1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A C B D -> Bet C B D.
-intros.
-induction(eq_dec_points A C).
-subst C.
-apply cong_symmetry in H2.
-apply cong_identity in H2.
-subst D.
-Between.
-
-assert(HH:=col_cong_bet A B C D H H1 H0).
-induction HH.
-assert(A = D /\ B = C).
-eapply bet_cong_eq.
-Between.
-eBetween.
-Cong.
-spliter.
-subst D.
-subst C.
-Between.
-assumption.
-Qed.
-
-Lemma col_cong2_bet2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A D B C -> Bet C A D.
-intros.
-
-induction(eq_dec_points B C).
-subst C.
-apply cong_identity in H2.
-subst D.
-Between.
-
-assert(HH:=col_cong_bet A B C D H H1 H0).
-induction HH.
-assumption.
-
-assert(C = A /\ D = B).
-eapply bet_cong_eq.
-Between.
-eBetween.
-Cong.
-spliter.
-subst D.
-subst C.
-Between.
-Qed.
-
-Lemma col_cong2_bet3 : forall A B C D, Col A B D -> Bet A B C -> Cong A B C D -> Cong A C B D -> Bet B C D.
-intros.
-
-induction(eq_dec_points A B).
-subst B.
-apply cong_symmetry in H1.
-apply cong_identity in H1.
-subst D.
-Between.
-
-eapply (col_cong2_bet2 _ A).
-apply bet_col in H0.
-ColR.
-Between.
-Cong.
-Cong.
-Qed.
-
-Lemma col_cong2_bet4 : forall A B C D, Col A B C -> Bet A B D -> Cong A B C D -> Cong A D B C -> Bet B D C.
-intros.
-induction(eq_dec_points A B).
-subst B.
-apply cong_symmetry in H1.
-apply cong_identity in H1.
-subst D.
-Between.
-apply (col_cong2_bet1 A D B C).
-apply bet_col in H0.
-ColR.
-assumption.
-Cong.
-Cong.
-Qed.
-
-Lemma col_bet2_cong1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C B D -> Cong A C D B.
-intros.
-apply (l4_3 A C B D B C); Between; Cong.
-Qed.
-
-Lemma col_bet2_cong2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C A D -> Cong D A B C.
-intros.
-apply (l4_3 D A C B C A); Between; Cong.
-Qed.
 
 Lemma plg_bet1 : forall A B C D, Parallelogram A B C D -> Bet A C B -> Bet D A C.
 intros.
@@ -3237,10 +3028,6 @@ unfold Plg in H.
 intuition.
 Qed.
 
-(** Square *)
-
-Definition Square A B C D := Rectangle A B C D /\ Cong A B B C.
-
 Lemma Square_not_triv : forall A,
  ~ Square A A A A.
 Proof.
@@ -3311,11 +3098,6 @@ assumption.
 apply Rhombus_Plg in H.
 apply plg_cong_rectangle;auto.
 Qed.
-
-(** Kite *)
-
-Definition Kite A B C D :=
- Cong B C C D /\ Cong D A A B.
 
 Lemma Kite_comm : forall A B C D,
  Kite A B C D -> Kite C D A B.

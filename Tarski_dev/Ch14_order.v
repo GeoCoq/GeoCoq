@@ -4,8 +4,6 @@ Section Order.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-Definition Ps O E A := Out O A E.
-
 Lemma l14_36_a : forall O E E' A B C,
  Sum O E E' A B C -> Out O A B -> Bet O A C.
 Proof.
@@ -254,8 +252,6 @@ Proof.
     apply (between_exchange4 O E A AB); auto.
 Qed.
 
-Definition Ng O E A := A <> O /\ E <> O /\ Bet A O E .
-
 Lemma pos_not_neg : forall O E A, Ps O E A -> ~Ng O E A.
 Proof.
     intros.
@@ -323,9 +319,6 @@ Proof.
     apply (l5_2 A O E MA); auto.
 Qed.
 
-
-Definition LtP O E E' A B := exists D, Diff O E E' B A D /\ Ps O E D.
-
 Lemma ltP_ar2 : forall O E E' A B, LtP O E E' A B -> Ar2 O E E' A B A.
 Proof.
     intros.
@@ -356,8 +349,6 @@ Proof.
     unfold Out in H4.
     tauto.
 Qed.
-
-Definition LeP O E E' A B := LtP O E E' A B \/ A=B.
 
 Lemma leP_refl : forall O E E' A, LeP O E E' A A.
 Proof.

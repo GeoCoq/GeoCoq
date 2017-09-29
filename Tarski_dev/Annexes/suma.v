@@ -1,21 +1,8 @@
 Require Export GeoCoq.Tarski_dev.Ch11_angles.
 
-Section Sec.
+Section Suma_1.
 
 Context `{T2D:Tarski_2D}.
-
-(** Definition of the sum of angles.
-    SumA A B C D E F G H I means that ABC+DEF = GHI. *)
-
-Definition SumA A B C D E F G H I :=
-  exists J, CongA C B J D E F /\ ~ OS B C A J /\ CongA A B J G H I.
-
-(** The Isi predicate describes the fact that the sum of the two angles is "interior", 
-i.e doesn't exceed a flat angle. *)
-
-Definition Isi A B C D E F :=
-  A <> B /\ (Out E D F \/ ~ Bet A B C) /\
-  exists J, CongA C B J D E F /\ ~ OS B C A J /\ ~ TS A B C J.
 
 Lemma suma_distincts : forall A B C D E F G H I, SumA A B C D E F G H I ->
    A<>B /\ B<>C /\ D<>E /\ E<>F /\ G<>H /\ H<>I.
@@ -340,10 +327,11 @@ Proof.
   apply in_angle_line; auto.
 Qed.
 
-(** Characterization of Isi using LeA. *)
 
-Lemma isi_chara : forall A B C D E F A', A<>B -> A'<>B -> Bet A B A' ->
-   (Isi A B C D E F <-> LeA D E F C B A').
+(** Characterization of SAMS using LeA. *)
+
+Lemma sams_chara : forall A B C D E F A', A<>B -> A'<>B -> Bet A B A' ->
+   (SAMS A B C D E F <-> LeA D E F C B A').
 Proof.
   intros A B C D E F A' HAB HA'B HABA'.
   split.
@@ -490,7 +478,7 @@ Proof.
     apply (col_preserves_two_sides A B); Col.
 Qed.
 
-Lemma isi_distincts : forall A B C D E F, Isi A B C D E F ->
+Lemma sams_distincts : forall A B C D E F, SAMS A B C D E F ->
    A<>B /\ B<>C /\ D<>E /\ E<>F.
 Proof.
   intros A B C D E F Hisi.
@@ -500,26 +488,26 @@ Proof.
   repeat split; auto.
 Qed.
 
-Lemma isi_sym : forall A B C D E F, Isi A B C D E F ->
-   Isi D E F A B C.
+Lemma sams_sym : forall A B C D E F, SAMS A B C D E F ->
+   SAMS D E F A B C.
 Proof.
   intros A B C D E F Hisi.
-  assert(A<>B/\B<>C/\D<>E/\E<>F) by (apply isi_distincts; auto).
+  assert(A<>B/\B<>C/\D<>E/\E<>F) by (apply sams_distincts; auto).
   spliter.
   assert(HD' : exists D', Midpoint E D D') by apply symmetric_point_construction.
   destruct HD' as [D'].
   assert(HA' : exists A', Midpoint B A A') by apply symmetric_point_construction.
   destruct HA' as [A'].
   assert_diffs.
-  apply (isi_chara D E F A B C D'); Between.
+  apply (sams_chara D E F A B C D'); Between.
   apply lea_right_comm.
   apply (l11_36 D _ _ A'); Between.
   apply lea_right_comm.
-  apply (isi_chara A); Between.
+  apply (sams_chara A); Between.
 Qed.
 
-Lemma isi_right_comm : forall A B C D E F, Isi A B C D E F ->
-   Isi A B C F E D.
+Lemma sams_right_comm : forall A B C D E F, SAMS A B C D E F ->
+   SAMS A B C F E D.
 Proof.
   intros A B C D E F Hisi.
   destruct Hisi as [HAB [HUn [J [HJ1 [HJ2 HJ3]]]]].
@@ -535,28 +523,28 @@ Proof.
   split; auto.
 Qed.
 
-Lemma isi_left_comm : forall A B C D E F, Isi A B C D E F ->
-   Isi C B A D E F.
+Lemma sams_left_comm : forall A B C D E F, SAMS A B C D E F ->
+   SAMS C B A D E F.
 Proof.
   intros.
-  apply isi_sym.
-  apply isi_right_comm.
-  apply isi_sym.
+  apply sams_sym.
+  apply sams_right_comm.
+  apply sams_sym.
   assumption.
 Qed.
 
-Lemma isi_comm : forall A B C D E F, Isi A B C D E F ->
-   Isi C B A F E D.
+Lemma sams_comm : forall A B C D E F, SAMS A B C D E F ->
+   SAMS C B A F E D.
 Proof.
   intros.
-  apply isi_left_comm.
-  apply isi_right_comm.
+  apply sams_left_comm.
+  apply sams_right_comm.
   assumption.
 Qed.
 
-Lemma conga2_isi__isi : forall A B C D E F A' B' C' D' E' F',
+Lemma conga2_sams__sams : forall A B C D E F A' B' C' D' E' F',
    CongA A B C A' B' C' -> CongA D E F D' E' F' ->
-   Isi A B C D E F -> Isi A' B' C' D' E' F'.
+   SAMS A B C D E F -> SAMS A' B' C' D' E' F'.
 Proof.
   intros A B C D E F A' B' C' D' E' F' HCongaB HCongaE Hisi.
   assert(HA0 : exists A0, Midpoint B A A0) by apply symmetric_point_construction.
@@ -564,28 +552,28 @@ Proof.
   assert(HA'0 : exists A'0, Midpoint B' A' A'0) by apply symmetric_point_construction.
   destruct HA'0 as [A'0].
   assert_diffs.
-  apply (isi_chara _ _ _ _ _ _ A'0); Between.
-  apply (l11_30 D E F C B A0); try (apply (isi_chara A)); Between.
+  apply (sams_chara _ _ _ _ _ _ A'0); Between.
+  apply (l11_30 D E F C B A0); try (apply (sams_chara A)); Between.
   apply conga_comm.
   apply (l11_13 A B C A'); Between.
 Qed.
 
-Lemma out546__isi : forall A B C D E F, A <> B -> B <> C -> Out E D F -> Isi A B C D E F.
+Lemma out546__sams : forall A B C D E F, A <> B -> B <> C -> Out E D F -> SAMS A B C D E F.
 Proof.
   intros A B C D E F HAB HBC HOut.
   destruct (segment_construction A B A B) as [A' [HBet HCong]].
   assert_diffs.
-  apply isi_chara with A'; auto.
+  apply sams_chara with A'; auto.
   apply l11_31_1; auto.
 Qed.
 
-Lemma out213__isi : forall A B C D E F, D <> E -> E <> F -> Out B A C -> Isi A B C D E F.
+Lemma out213__sams : forall A B C D E F, D <> E -> E <> F -> Out B A C -> SAMS A B C D E F.
 Proof.
-  intros; apply isi_sym, out546__isi; trivial.
+  intros; apply sams_sym, out546__sams; trivial.
 Qed.
 
-Lemma bet_suma__isi : forall A B C D E F G H I, SumA A B C D E F G H I -> Bet G H I ->
-  Isi A B C D E F.
+Lemma bet_suma__sams : forall A B C D E F G H I, SumA A B C D E F G H I -> Bet G H I ->
+  SAMS A B C D E F.
 Proof.
   intros A B C D E F G H I HSuma HBet.
   destruct HSuma as [A' [HConga1 [HNOS HConga2]]].
@@ -602,7 +590,7 @@ Proof.
     intro HTS; destruct HTS as [_ []]; assert_cols; Col.
 Qed.
 
-Lemma inangle__isi : forall A B C P, InAngle P A B C -> Isi A B P P B C.
+Lemma inangle__sams : forall A B C P, InAngle P A B C -> SAMS A B P P B C.
 Proof.
   intros A B C P HInangle.
   assert (Hcopy := HInangle); destruct Hcopy as [HAB [HCB [HPB HX]]].
@@ -625,7 +613,7 @@ Proof.
     apply l9_9_bis, in_angle_one_side; Col.
 Qed.
 
-End Sec.
+End Suma_1.
 
 
 Ltac assert_diffs :=
@@ -665,6 +653,13 @@ repeat
       | H:Cong ?A ?B ?C ?D, H2 : ?D <> ?C |-_ =>
       let T:= fresh in (not_exist_hyp_comm A B);
         assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
+
+      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Lt ?A ?B ?C ?D |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= lt_diff A B C D H);clean_reap_hyps
 
       | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
       let T:= fresh in (not_exist_hyp2 I B I A);
@@ -733,10 +728,10 @@ repeat
       not_exist_hyp6 A B B C D E E F G I I J;
       assert (h := suma_distincts A B C D E F G I J H);decompose [and] h;clear h;clean_reap_hyps
 
-      | H:Isi ?A ?B ?C ?D ?E ?F |- _ =>
+      | H:SAMS ?A ?B ?C ?D ?E ?F |- _ =>
       let h := fresh in
       not_exist_hyp4 A B B C D E E F;
-      assert (h := isi_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+      assert (h := sams_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
 
       | H:(InAngle ?P ?A ?B ?C) |- _ =>
       let h := fresh in
@@ -762,19 +757,19 @@ repeat
 
 Hint Resolve suma_sym suma_left_comm suma_middle_comm
              suma_right_comm suma_comm bet__suma inangle__suma
-             isi_right_comm isi_comm isi_left_comm
-             isi_sym out213__isi out546__isi inangle__isi : suma.
+             sams_right_comm sams_comm sams_left_comm
+             sams_sym out213__sams out546__sams inangle__sams : suma.
 
 Ltac SumA := eauto with suma.
 
-Section Sec2.
+Section Suma_2.
 
 Context `{T2D:Tarski_2D}.
 
 (** ABC <= ABC + DEF. *)
 
-Lemma isi_suma__lea123789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
-   Isi A B C D E F -> LeA A B C G H I.
+Lemma sams_suma__lea123789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
+   SAMS A B C D E F -> LeA A B C G H I.
 Proof.
   intros A B C D E F G H I Hsuma Hisi.
   assert_diffs.
@@ -796,7 +791,7 @@ Proof.
   { intro HColE.
     elim(bet_dec D E F).
     { intro HEBet.
-      apply isi_sym in Hisi.
+      apply sams_sym in Hisi.
       destruct Hisi as [_[[HBout|]]]; try solve[exfalso; auto].
       apply l11_31_1; auto.
     }
@@ -868,18 +863,18 @@ Qed.
 
 (** DEF <= ABC + DEF. *)
 
-Lemma isi_suma__lea456789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
-   Isi A B C D E F -> LeA D E F G H I.
+Lemma sams_suma__lea456789 : forall A B C D E F G H I, SumA A B C D E F G H I ->
+   SAMS A B C D E F -> LeA D E F G H I.
 Proof.
   intros A B C D E F G H I Hsuma Hisi.
-  apply (isi_suma__lea123789 D E F A B C G H I); SumA.
+  apply (sams_suma__lea123789 D E F A B C G H I); SumA.
 Qed.
 
-(** LeA preserves Isi. *)
+(** LeA preserves SAMS. *)
 
-Lemma isi_lea2__isi : forall A B C D E F A' B' C' D' E' F',
-   Isi A' B' C' D' E' F' -> LeA A B C A' B' C' -> LeA D E F D' E' F' ->
-   Isi A B C D E F.
+Lemma sams_lea2__sams : forall A B C D E F A' B' C' D' E' F',
+   SAMS A' B' C' D' E' F' -> LeA A B C A' B' C' -> LeA D E F D' E' F' ->
+   SAMS A B C D E F.
 Proof.
   intros A B C D E F A' B' C' D' E' F' Hisi HleaB HleaE.
   assert(HA0 : exists A0, Midpoint B A A0) by apply symmetric_point_construction.
@@ -887,16 +882,16 @@ Proof.
   assert(HA'0 : exists A'0, Midpoint B' A' A'0) by apply symmetric_point_construction.
   destruct HA'0 as [A'0].
   assert_diffs.
-  apply (isi_chara _ _ _ _ _ _ A0); Between.
+  apply (sams_chara _ _ _ _ _ _ A0); Between.
   apply (lea_trans D E F D' E' F'); auto.
   apply (lea_trans D' E' F' C' B' A'0).
-  - apply (isi_chara A'); Between.
+  - apply (sams_chara A'); Between.
   - apply lea_comm.
     apply (l11_36 A B C A'); Between.
 Qed.
 
-Lemma isi_lea456_suma2__lea : forall A B C D E F G H I D' E' F' G' H' I',
-   LeA D E F D' E' F' -> Isi A B C D' E' F' -> SumA A B C D E F G H I ->
+Lemma sams_lea456_suma2__lea : forall A B C D E F G H I D' E' F' G' H' I',
+   LeA D E F D' E' F' -> SAMS A B C D' E' F' -> SumA A B C D E F G H I ->
    SumA A B C D' E' F' G' H' I' -> LeA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I D' E' F' G' H' I' Hlea Hisi' Hsuma Hsuma'.
@@ -919,7 +914,7 @@ Proof.
   intro HNColB.
   elim(Col_dec D' E' F').
   { intro HColE'.
-    apply isi_sym in Hisi'.
+    apply sams_sym in Hisi'.
     destruct Hisi' as [_ [[HBout|HE'NBet]_]]; exfalso.
     apply HNColB; assert_cols; Col.
     apply not_bet_out in HColE'; auto.
@@ -930,7 +925,7 @@ Proof.
   { intro HColE.
     assert(~ Bet D E F) by (intro; apply HNColE'; apply bet_col; apply (bet_lea__bet D E F); auto).
     apply (l11_30 A B C G' H' I'); try (apply conga_refl); auto.
-    apply (isi_suma__lea123789 _ _ _ D' E' F'); auto.
+    apply (sams_suma__lea123789 _ _ _ D' E' F'); auto.
     apply (out546_suma__conga _ _ _ D E F); auto.
     apply not_bet_out; auto.
   }
@@ -946,7 +941,7 @@ Proof.
     apply col_permutation_4.
     apply out_col.
     apply (out_lea__out _ _ _ G' H' I'); auto.
-    apply (isi_suma__lea123789 _ _ _ D' E' F'); auto.
+    apply (sams_suma__lea123789 _ _ _ D' E' F'); auto.
   }
   intro HNColH'.
   destruct Hisi' as [_[_[F'1]]].
@@ -991,19 +986,19 @@ Proof.
     apply not_col_permutation_4; apply (ncol_conga_ncol D E F); auto.
 Qed.
 
-Lemma isi_lea123_suma2__lea : forall A B C D E F G H I A' B' C' G' H' I',
-   LeA A B C A' B' C' -> Isi A' B' C' D E F -> SumA A B C D E F G H I ->
+Lemma sams_lea123_suma2__lea : forall A B C D E F G H I A' B' C' G' H' I',
+   LeA A B C A' B' C' -> SAMS A' B' C' D E F -> SumA A B C D E F G H I ->
    SumA A' B' C' D E F G' H' I' -> LeA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C'.
   intros.
-  apply (isi_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); SumA.
+  apply (sams_lea456_suma2__lea D E F A B C _ _ _ A' B' C'); SumA.
 Qed.
 
 (** SumA preserves LeA. *)
 
-Lemma isi_lea2_suma2__lea : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA A B C A' B' C' -> LeA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+Lemma sams_lea2_suma2__lea : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA A B C A' B' C' -> LeA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LeA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I' HleaB HleaD Hisi' Hsuma Hsuma'.
@@ -1011,15 +1006,15 @@ Proof.
   assert(Haux := ex_suma A B C D' E' F').
   destruct Haux as [G'' [H'' [I'']]]; auto.
   apply (lea_trans _ _ _ G'' H'' I'').
-  - apply (isi_lea456_suma2__lea A B C D E F _ _ _ D' E' F'); auto.
-    apply (isi_lea2__isi _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
-  - apply (isi_lea123_suma2__lea A B C D' E' F' _ _ _ A' B' C'); auto.
+  - apply (sams_lea456_suma2__lea A B C D E F _ _ _ D' E' F'); auto.
+    apply (sams_lea2__sams _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
+  - apply (sams_lea123_suma2__lea A B C D' E' F' _ _ _ A' B' C'); auto.
 Qed.
 
 (** Unicity of the difference of angles. *)
 
-Lemma isi2_suma2__conga456 : forall A B C D E F D' E' F' G H I,
-   Isi A B C D E F -> Isi A B C D' E' F' ->
+Lemma sams2_suma2__conga456 : forall A B C D E F D' E' F' G H I,
+   SAMS A B C D E F -> SAMS A B C D' E' F' ->
    SumA A B C D E F G H I -> SumA A B C D' E' F' G H I ->
    CongA D E F D' E' F'.
 Proof.
@@ -1051,7 +1046,7 @@ Proof.
     apply (suma2__conga A B C D E F); auto; exists J; CongA.
     apply (suma2__conga A B C D' E' F'); auto; exists J'; CongA.
   }
-  assert(HJJ' : Out B J J' \/ TS A B J J') by (apply l11_22_aux; auto).
+  assert(HJJ' : Out B J J' \/ TS A B J J') by (apply conga__or_out_ts; auto).
   destruct HJJ' as [Hout|Hts].
   - apply (out_conga C B J C B J); try (apply out_trivial); CongA.
   - exfalso.
@@ -1064,17 +1059,17 @@ Qed.
 
 (** Unicity of the difference on the left. *)
 
-Lemma isi2_suma2__conga123 : forall A B C A' B' C' D E F G H I,
-   Isi A B C D E F -> Isi A' B' C' D E F ->
+Lemma sams2_suma2__conga123 : forall A B C A' B' C' D E F G H I,
+   SAMS A B C D E F -> SAMS A' B' C' D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D E F G H I ->
    CongA A B C A' B' C'.
 Proof.
   intros A B C A' B' C' D E F G H I Hisi Hisi' Hsuma Hsuma'.
-  apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ G H I); SumA.
+  apply (sams2_suma2__conga456 D E F _ _ _ _ _ _ G H I); SumA.
 Qed.
 
 Lemma suma_assoc_1 : forall A B C D E F G H I K L M A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
    SumA A' B' C' G H I K L M -> SumA A B C D' E' F' K L M.
 Proof.
@@ -1126,7 +1121,7 @@ Proof.
   { intro HColH.
     elim(bet_dec G H I).
     { intro HHBet.
-      apply isi_sym in HisiEH.
+      apply sams_sym in HisiEH.
       destruct HisiEH as [_ [[HEout | HHNBet] HJ]]; try solve [exfalso; Between].
       exfalso.
       apply HNColE.
@@ -1144,7 +1139,7 @@ Proof.
     exists B.
     split; Col; Between.
   }
-  assert(HisiA0: Isi A B C A0 B C).
+  assert(HisiA0: SAMS A B C A0 B C).
   { split; auto.
     split.
     right; intro; assert_cols; Col.
@@ -1159,7 +1154,7 @@ Proof.
     exists E.
     split; Col; Between.
   }
-  assert(HisiD0: Isi D E F D0 E F).
+  assert(HisiD0: SAMS D E F D0 E F).
   { split; auto.
     split.
     right; intro; assert_cols; Col.
@@ -1180,14 +1175,14 @@ Proof.
           apply (conga3_suma__suma A' B' C' G H I K L M); try (apply conga_refl); auto; try solve [apply conga_line; auto].
           apply conga_sym.
           apply (conga_trans _ _ _ D0 E F).
-          - apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); SumA.
+          - apply (sams2_suma2__conga123 _ _ _ _ _ _ D E F A' B' C'); SumA.
             apply suma_sym.
             exists D0.
             split.
             apply conga_pseudo_refl; auto.
             split; auto.
             apply conga_line; Between.
-          - apply (isi2_suma2__conga456 D E F _ _ _ _ _ _ D' E' F'); auto.
+          - apply (sams2_suma2__conga456 D E F _ _ _ _ _ _ D' E' F'); auto.
             exists D0.
             split.
             apply conga_pseudo_refl; auto.
@@ -1201,17 +1196,17 @@ Proof.
         apply col_permutation_4.
         apply out_col.
         apply (out_lea__out _ _ _ D' E' F'); auto.
-        apply (isi_suma__lea123789 _ _ _ G H I); auto.
+        apply (sams_suma__lea123789 _ _ _ G H I); auto.
       }
       intro HNColE'.
       assert(CongA D E F C B A0).
-      { apply (isi2_suma2__conga456 A B C _ _ _ _ _ _ A' B' C'); auto.
-        apply (isi_chara _ _ _ _ _ _ A0); try (apply lea_refl); Between.
+      { apply (sams2_suma2__conga456 A B C _ _ _ _ _ _ A' B' C'); auto.
+        apply (sams_chara _ _ _ _ _ _ A0); try (apply lea_refl); Between.
         apply (conga3_suma__suma A B C C B A0 A B A0); try (apply conga_refl); try (apply conga_line); Between.
         exists A0.
         repeat (split; CongA).
       }
-      assert(HJ : Isi C B A0 G H I) by (apply (conga2_isi__isi D E F G H I); try (apply conga_refl); auto).
+      assert(HJ : SAMS C B A0 G H I) by (apply (conga2_sams__sams D E F G H I); try (apply conga_refl); auto).
       destruct HJ as [_ [_ [J]]].
       destruct HisiEH as [_ [_ [F1]]].
       spliter.
@@ -1222,8 +1217,8 @@ Proof.
           split.
           left; split; apply not_one_side_two_sides; auto; apply (ncol_conga_ncol G H I); CongA.
           split.
-          { apply (isi2_suma2__conga456 A B C _ _ _ _ _ _ A' B' C'); auto.
-            apply (isi_chara _ _ _ _ _ _ A0); try (apply lea_refl); Between.
+          { apply (sams2_suma2__conga456 A B C _ _ _ _ _ _ A' B' C'); auto.
+            apply (sams_chara _ _ _ _ _ _ A0); try (apply lea_refl); Between.
             apply (conga3_suma__suma A B C C B A0 A B A0); try (apply conga_refl); try (apply conga_line); Between.
             exists A0.
             repeat (split; CongA).
@@ -1264,7 +1259,7 @@ Proof.
     apply col_permutation_4.
     apply out_col.
     apply (out_lea__out _ _ _ A' B' C'); auto.
-    apply (isi_suma__lea123789 _ _ _ D E F); auto.
+    apply (sams_suma__lea123789 _ _ _ D E F); auto.
   }
   intro HNColB'.
   clear dependent A0.
@@ -1307,9 +1302,9 @@ Proof.
       apply (suma2__conga A' B' C' G H I); auto.
       apply (conga3_suma__suma A B C1 C1 B C0 A B C0); try (apply conga_refl); try solve [apply conga_sym; auto]; auto.
       exists C0; repeat (split; CongA); apply l9_9; apply (l9_8_2 _ _ C); auto.
-      apply (isi2_suma2__conga456 C B C1 _ _ _ _ _ _ C B C0); auto.
-        apply (isi_chara _ _ _ _ _ _ C0); try (apply lea_refl); Between.
-        apply (conga2_isi__isi D E F G H I); CongA.
+      apply (sams2_suma2__conga456 C B C1 _ _ _ _ _ _ C B C0); auto.
+        apply (sams_chara _ _ _ _ _ _ C0); try (apply lea_refl); Between.
+        apply (conga2_sams__sams D E F G H I); CongA.
         exists C0; repeat (split; CongA); apply l9_9; auto.
       apply (conga3_suma__suma D E F G H I D' E' F'); try (apply conga_refl); try (apply conga_sym); auto.
       apply conga_line; Between.
@@ -1321,11 +1316,11 @@ Proof.
     apply col_permutation_4.
     apply out_col.
     apply (out_lea__out _ _ _ D' E' F'); auto.
-    apply (isi_suma__lea123789 _ _ _ G H I); auto.
+    apply (sams_suma__lea123789 _ _ _ G H I); auto.
   }
   intro HNColE'.
   clear dependent D0.
-  assert(HJ : Isi C B C1 G H I) by (apply (conga2_isi__isi D E F G H I); CongA).
+  assert(HJ : SAMS C B C1 G H I) by (apply (conga2_sams__sams D E F G H I); CongA).
   destruct HJ as [_ [_ [J]]].
   destruct HisiEH as [_ [_ [F1 HF1]]].
   spliter.
@@ -1367,7 +1362,7 @@ Proof.
 Qed.
 
 Lemma suma_assoc_2 : forall A B C D E F G H I K L M A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
    SumA A B C D' E' F' K L M -> SumA A' B' C' G H I K L M.
 Proof.
@@ -1380,7 +1375,7 @@ Qed.
 (** Associativity of the sum of angles. *)
 
 Lemma suma_assoc : forall A B C D E F G H I K L M A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
    (SumA A' B' C' G H I K L M <-> SumA A B C D' E' F' K L M).
 Proof.
@@ -1391,22 +1386,22 @@ Proof.
     apply (suma_assoc_2 _ _ _ D E F); auto.
 Qed.
 
-Lemma isi_assoc_1 : forall A B C D E F G H I A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+Lemma sams_assoc_1 : forall A B C D E F G H I A' B' C' D' E' F',
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
-   Isi A' B' C' G H I -> Isi A B C D' E' F'.
+   SAMS A' B' C' G H I -> SAMS A B C D' E' F'.
 Proof.
-  intros A B C D E F G H I A' B' C' D' E' F' Hisi1 Hisi2 Hs1 Hs2 Hisi1'.
+  intros A B C D E F G H I A' B' C' D' E' F' Hsams1 Hsams2 Hs1 Hs2 Hsams1'.
   assert_diffs.
   elim(Col_dec A B C).
   { intro HColB.
-    destruct Hisi1 as [_ [[HEout|HBout]_]].
-    - apply (conga2_isi__isi A' B' C' G H I); auto.
+    destruct Hsams1 as [_ [[HEout|HBout]_]].
+    - apply (conga2_sams__sams A' B' C' G H I); auto.
       apply conga_sym; apply (out546_suma__conga _ _ _ D E F); auto.
       apply (out213_suma__conga D E F); auto.
 
     - apply not_bet_out in HBout; auto.
-      apply isi_sym.
+      apply sams_sym.
       repeat split; auto.
       exists F'.
       split.
@@ -1418,23 +1413,23 @@ Proof.
   intro HNColB.
   elim(Col_dec D E F).
   { intro HColE.
-    destruct Hisi2 as [_ [[HHout|HEout]_]].
-    - apply (conga2_isi__isi A B C D E F); try (apply conga_refl); auto.
+    destruct Hsams2 as [_ [[HHout|HEout]_]].
+    - apply (conga2_sams__sams A B C D E F); try (apply conga_refl); auto.
       apply (out546_suma__conga _ _ _ G H I); auto.
 
     - apply not_bet_out in HEout; auto.
-      apply (conga2_isi__isi A' B' C' G H I); auto.
+      apply (conga2_sams__sams A' B' C' G H I); auto.
       apply conga_sym; apply (out546_suma__conga _ _ _ D E F); auto.
       apply (out213_suma__conga D E F); auto.
   }
   intro HNColE.
   elim(Col_dec G H I).
   { intro HColH.
-    apply isi_sym in Hisi2.
-    destruct Hisi2 as [_ [[HEout|HHout]_]].
+    apply sams_sym in Hsams2.
+    destruct Hsams2 as [_ [[HEout|HHout]_]].
     exfalso; assert_cols; Col.
     apply not_bet_out in HHout; auto.
-    apply (conga2_isi__isi A B C D E F); try (apply conga_refl); auto.
+    apply (conga2_sams__sams A B C D E F); try (apply conga_refl); auto.
     apply (out546_suma__conga _ _ _ G H I); auto.
   }
   intro HNColH.
@@ -1444,31 +1439,31 @@ Proof.
   assert(~ Col A' B' C').
   { intro.
     exfalso.
-    destruct Hisi1' as [_ [[|HB'out]_]].
+    destruct Hsams1' as [_ [[|HB'out]_]].
     assert_cols; Col.
     apply not_bet_out in HB'out; auto.
     apply HNColB.
     apply col_permutation_4.
     apply out_col.
     apply (out_lea__out _ _ _ A' B' C'); auto.
-    apply (isi_suma__lea123789 _ _ _ D E F); auto.
+    apply (sams_suma__lea123789 _ _ _ D E F); auto.
   }
-  assert(HC1 : exists C1, CongA C B C1 D E F /\ ~ OS B C A C1 /\ ~ TS A B C C1) by (destruct Hisi1 as [_ []]; auto).
+  assert(HC1 : exists C1, CongA C B C1 D E F /\ ~ OS B C A C1 /\ ~ TS A B C C1) by (destruct Hsams1 as [_ []]; auto).
   destruct HC1 as [C1].
   spliter.
   assert_diffs.
   assert(CongA A B C1 A' B' C') by (apply (suma2__conga A B C D E F); auto; exists C1; repeat (split; CongA)).
   assert(HJ :exists J, CongA C1 B J G H I /\ ~ OS B C1 C J /\ ~ TS C B C1 J).
-  { apply (conga2_isi__isi _ _ _ _ _ _ C B C1 G H I) in Hisi2; CongA.
-    destruct Hisi2 as [_ [_ HJ]]; auto.
+  { apply (conga2_sams__sams _ _ _ _ _ _ C B C1 G H I) in Hsams2; CongA.
+    destruct Hsams2 as [_ [_ HJ]]; auto.
   }
   destruct HJ as [J [HJ1 [HJ2 HJ3]]].
   spliter.
-  apply (conga2_isi__isi _ _ _ _ _ _ A B C1 C1 B J) in Hisi1'; CongA.
-  destruct Hisi1' as [_ [_ [J']]].
+  apply (conga2_sams__sams _ _ _ _ _ _ A B C1 C1 B J) in Hsams1'; CongA.
+  destruct Hsams1' as [_ [_ [J']]].
   spliter.
   assert_diffs.
-  assert (HUn : Out B J' J \/ TS C1 B J' J) by (apply l11_22_aux; auto).
+  assert (HUn : Out B J' J \/ TS C1 B J' J) by (apply conga__or_out_ts; auto).
   destruct HUn as [HJJ'|Hts].
   { exists J.
     split.
@@ -1518,144 +1513,146 @@ Proof.
     apply not_one_side_two_sides; Col; apply (ncol_conga_ncol D E F); CongA.
 Qed.
 
-Lemma isi_assoc_2 : forall A B C D E F G H I A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+Lemma sams_assoc_2 : forall A B C D E F G H I A' B' C' D' E' F',
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
-   Isi A B C D' E' F' -> Isi A' B' C' G H I.
+   SAMS A B C D' E' F' -> SAMS A' B' C' G H I.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
-  apply isi_sym.
-  apply (isi_assoc_1 G H I D E F A B C D' E' F'); SumA.
+  apply sams_sym.
+  apply (sams_assoc_1 G H I D E F A B C D' E' F'); SumA.
 Qed.
 
-Lemma isi_assoc : forall A B C D E F G H I A' B' C' D' E' F',
-   Isi A B C D E F -> Isi D E F G H I ->
+Lemma sams_assoc : forall A B C D E F G H I A' B' C' D' E' F',
+   SAMS A B C D E F -> SAMS D E F G H I ->
    SumA A B C D E F A' B' C' -> SumA D E F G H I D' E' F' ->
-   (Isi A' B' C' G H I <-> Isi A B C D' E' F').
+   (SAMS A' B' C' G H I <-> SAMS A B C D' E' F').
 Proof.
   intros A B C D E F.
   split.
-  apply (isi_assoc_1 _ _ _ D E F); auto.
-  apply (isi_assoc_2 _ _ _ D E F); auto.
+  apply (sams_assoc_1 _ _ _ D E F); auto.
+  apply (sams_assoc_2 _ _ _ D E F); auto.
 Qed.
 
-Lemma conga_isi_nos__nts : forall A B C D E F J, Isi A B C D E F -> CongA C B J D E F -> ~ OS B C A J ->
+Lemma sams_nos__nts : forall A B C J, SAMS A B C C B J -> ~ OS B C A J ->
   ~ TS A B C J.
 Proof.
-  intros A B C D E F J HIsi HConga HNOS.
-  elim (Col_dec D E F).
-  { intro HCol.
-    apply isi_sym in HIsi.
-    assert_diffs.
-    destruct HIsi as [_ [HUn HJ']].
-    destruct HUn as [HOut|HNBet].
-      intro HTS; destruct HTS; assert_cols; Col.
-    elim (Col_dec A B C).
-      intros HCol1 HTS; destruct HTS; assert_cols; Col.
-    intro HNCol.
-    apply l9_9_bis, invert_one_side, out_one_side; Col.
-    apply (l11_21_a D E F); CongA.
-    apply not_bet_out; trivial.
-  }
-  intro HNCol.
-  destruct HIsi as [_ [HUn [J' [HConga' [HNOS' HNTS]]]]].
-  destruct (l11_22_aux C B J J') as [HOut|HTS].
-  - apply conga_trans with D E F; CongA.
-  - intro HTS; apply HNTS.
+  intros A B C J HIsi HNOS HTS.
+  destruct HIsi as [_ [HUn [J' [HConga [HNOS' HNTS]]]]].
+  destruct (conga__or_out_ts C B J J') as [HOut|HTS1]; CongA.
+  - apply HNTS.
     apply l9_2, l9_8_2 with J; Side.
     apply invert_one_side, out_one_side; trivial.
     destruct HTS as [_ []]; Col.
-  - intro HTS1.
-    destruct HTS1 as [HNCol1 [HNCol2 HT]].
+  - destruct HTS as [HNCol1 [HNCol2 _]].
     assert_diffs.
     absurd (OS B C J J'); Side.
-    exists A; split; apply not_one_side_two_sides; Col; Side;
-    apply not_col_permutation_3, ncol_conga_ncol with D E F; CongA.
+    destruct HTS1 as [HNCol _].
+    exists A; split; apply not_one_side_two_sides; Col; Side.
+    apply not_col_permutation_3, ncol_conga_ncol with C B J; Col; CongA.
 Qed.
 
-Lemma isi_lea2_suma2__conga123 : forall A B C D E F G H I A' B' C' D' E' F',
-   LeA A B C A' B' C' -> LeA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+Lemma conga_sams_nos__nts : forall A B C D E F J, SAMS A B C D E F -> CongA C B J D E F -> ~ OS B C A J ->
+  ~ TS A B C J.
+Proof.
+  intros A B C D E F J HIsi HConga.
+  apply sams_nos__nts.
+  assert_diffs.
+  apply (conga2_sams__sams A B C D E F); CongA.
+Qed.
+
+
+(** If B <= B', E <= E' and B + E = B' + E', then B = B' and E = E' *)
+
+Lemma sams_lea2_suma2__conga123 : forall A B C D E F G H I A' B' C' D' E' F',
+   LeA A B C A' B' C' -> LeA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G H I -> CongA A B C A' B' C'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' HleaB HleaE Hisi' Hsuma Hsuma'.
   assert_diffs.
-  apply (isi2_suma2__conga123 _ _ _ _ _ _ D E F G H I); auto.
-    apply (isi_lea2__isi _ _ _ _ _ _ A' B' C' D' E' F'); auto.
-    apply (isi_lea2__isi _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
+  apply (sams2_suma2__conga123 _ _ _ _ _ _ D E F G H I); auto.
+    apply (sams_lea2__sams _ _ _ _ _ _ A' B' C' D' E' F'); auto.
+    apply (sams_lea2__sams _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
   assert (Haux := ex_suma A' B' C' D E F).
   destruct Haux as [G' [H' [I']]]; auto.
   apply (conga3_suma__suma A' B' C' D E F G' H' I'); try (apply conga_refl); auto.
   apply lea_asym.
-  apply (isi_lea456_suma2__lea A' B' C' D E F _ _ _ D' E' F'); auto.
-  apply (isi_lea123_suma2__lea A B C D E F _ _ _ A' B' C'); auto.
-  apply (isi_lea2__isi _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
+  apply (sams_lea456_suma2__lea A' B' C' D E F _ _ _ D' E' F'); auto.
+  apply (sams_lea123_suma2__lea A B C D E F _ _ _ A' B' C'); auto.
+  apply (sams_lea2__sams _ _ _ _ _ _ A' B' C' D' E' F'); Lea.
 Qed.
 
-Lemma isi_lea2_suma2__conga456 : forall A B C D E F G H I A' B' C' D' E' F',
-   LeA A B C A' B' C' -> LeA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+Lemma sams_lea2_suma2__conga456 : forall A B C D E F G H I A' B' C' D' E' F',
+   LeA A B C A' B' C' -> LeA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G H I -> CongA D E F D' E' F'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F'.
   intros.
-  apply (isi_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); SumA.
+  apply (sams_lea2_suma2__conga123 _ _ _ A B C G H I _ _ _ A' B' C'); SumA.
 Qed.
 
-Lemma isi_suma__out213 : forall A B C D E F, SumA A B C D E F D E F -> Isi A B C D E F -> Out B A C.
+(** If B + E = E, then B = 0 *)
+
+Lemma sams_suma__out213 : forall A B C D E F, SumA A B C D E F D E F -> SAMS A B C D E F -> Out B A C.
 Proof.
   intros A B C D E F HSuma HIsi.
   assert_diffs.
   apply (l11_21_a D E D).
     apply out_trivial; auto.
-  apply isi_lea2_suma2__conga123 with D E F D E F D E F; Lea.
+  apply sams_lea2_suma2__conga123 with D E F D E F D E F; Lea.
   exists F; repeat (split; CongA).
   apply col123__nos; Col.
 Qed.
 
-Lemma isi_suma__out546 : forall A B C D E F, SumA A B C D E F A B C -> Isi A B C D E F -> Out E D F.
+Lemma sams_suma__out546 : forall A B C D E F, SumA A B C D E F A B C -> SAMS A B C D E F -> Out E D F.
 Proof.
   intros A B C D E F HSuma HIsi.
-  apply isi_suma__out213 with A B C.
+  apply sams_suma__out213 with A B C.
     apply suma_sym; trivial.
-  apply isi_sym; trivial.
+  apply sams_sym; trivial.
 Qed.
 
-Lemma isi_lea_lta123_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA A B C A' B' C' -> LeA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+(** If B < B' and E <= E', then B + E < B' + E' *)
+
+Lemma sams_lea_lta123_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA A B C A' B' C' -> LeA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I' HltaB HleaE Hisi' Hsuma Hsuma'.
   assert_diffs.
   split.
-  apply (isi_lea2_suma2__lea A B C D E F _ _ _ A' B' C' D' E' F'); Lea.
+  apply (sams_lea2_suma2__lea A B C D E F _ _ _ A' B' C' D' E' F'); Lea.
   intro.
   destruct HltaB as [HleaB HNConga].
   apply HNConga.
-  apply (isi_lea2_suma2__conga123 _ _ _ D E F G H I _ _ _ D' E' F'); auto.
+  apply (sams_lea2_suma2__conga123 _ _ _ D E F G H I _ _ _ D' E' F'); auto.
   apply (conga3_suma__suma A' B' C' D' E' F' G' H' I'); CongA.
 Qed.
 
-Lemma isi_lea_lta456_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA A B C A' B' C' -> LtA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+Lemma sams_lea_lta456_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA A B C A' B' C' -> LtA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); SumA.
+  apply (sams_lea_lta123_suma2__lta D E F A B C _ _ _ D' E' F' A' B' C'); SumA.
 Qed.
 
-Lemma isi_lta2_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA A B C A' B' C' -> LtA D E F D' E' F' -> Isi A' B' C' D' E' F' ->
+Lemma sams_lta2_suma2__lta : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA A B C A' B' C' -> LtA D E F D' E' F' -> SAMS A' B' C' D' E' F' ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA G H I G' H' I'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta123_suma2__lta A B C D E F _ _ _ A' B' C' D' E' F'); auto.
+  apply (sams_lea_lta123_suma2__lta A B C D E F _ _ _ A' B' C' D' E' F'); auto.
   apply lta__lea; auto.
 Qed.
 
-Lemma isi_lea2_suma2__lea123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA D' E' F' D E F -> LeA G H I G' H' I' -> Isi A B C D E F ->
+(** If E >= E' and B + E <= B' + E', then B <= B' *)
+
+Lemma sams_lea2_suma2__lea123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA D' E' F' D E F -> LeA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LeA A B C A' B' C'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
@@ -1667,21 +1664,23 @@ Proof.
   exfalso.
   assert(~ LeA G H I G' H' I'); auto.
   apply lta__nlea.
-  apply(isi_lea_lta123_suma2__lta A' B' C' D' E' F' _ _ _ A B C D E F); auto.
+  apply(sams_lea_lta123_suma2__lta A' B' C' D' E' F' _ _ _ A B C D E F); auto.
 Qed.
 
-Lemma isi_lea2_suma2__lea456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA A' B' C' A B C -> LeA G H I G' H' I' -> Isi A B C D E F ->
+Lemma sams_lea2_suma2__lea456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA A' B' C' A B C -> LeA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LeA D E F D' E' F'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea2_suma2__lea123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
-  apply isi_sym; assumption.
+  apply (sams_lea2_suma2__lea123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
+  apply sams_sym; assumption.
 Qed.
 
-Lemma isi_lea_lta456_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA D' E' F' D E F -> LeA G H I G' H' I' -> Isi A B C D E F ->
+(** If E > E' and B + E <= B' + E', then B < B' *)
+
+Lemma sams_lea_lta456_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA D' E' F' D E F -> LeA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA A B C A' B' C'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
@@ -1693,21 +1692,23 @@ Proof.
   exfalso.
   assert(~ LeA G H I G' H' I'); auto.
   apply lta__nlea.
-  apply(isi_lea_lta456_suma2__lta A' B' C' D' E' F' _ _ _ A B C D E F); auto.
+  apply(sams_lea_lta456_suma2__lta A' B' C' D' E' F' _ _ _ A B C D E F); auto.
 Qed.
 
-Lemma isi_lea_lta123_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA A' B' C' A B C -> LeA G H I G' H' I' -> Isi A B C D E F ->
+Lemma sams_lea_lta123_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA A' B' C' A B C -> LeA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA D E F D' E' F'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta456_suma2__lta123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
-  apply isi_sym; assumption.
+  apply (sams_lea_lta456_suma2__lta123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
+  apply sams_sym; assumption.
 Qed.
 
-Lemma isi_lea_lta789_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA D' E' F' D E F -> LtA G H I G' H' I' -> Isi A B C D E F ->
+(** If E >= E' and B + E < B' + E', then B < B' *)
+
+Lemma sams_lea_lta789_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA D' E' F' D E F -> LtA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA A B C A' B' C'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
@@ -1719,59 +1720,59 @@ Proof.
   exfalso.
   assert(~ LtA G H I G' H' I'); auto.
   apply lea__nlta.
-  apply(isi_lea2_suma2__lea A' B' C' D' E' F' _ _ _ A B C D E F); auto.
+  apply(sams_lea2_suma2__lea A' B' C' D' E' F' _ _ _ A B C D E F); auto.
 Qed.
 
-Lemma isi_lea_lta789_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LeA A' B' C' A B C -> LtA G H I G' H' I' -> Isi A B C D E F ->
+Lemma sams_lea_lta789_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LeA A' B' C' A B C -> LtA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA D E F D' E' F'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta789_suma2__lta123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
-  apply isi_sym; assumption.
+  apply (sams_lea_lta789_suma2__lta123 _ _ _ A B C G H I _ _ _ A' B' C' G' H' I'); try (apply suma_sym); auto.
+  apply sams_sym; assumption.
 Qed.
 
-Lemma isi_lta2_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA D' E' F' D E F -> LtA G H I G' H' I' -> Isi A B C D E F ->
+Lemma sams_lta2_suma2__lta123 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA D' E' F' D E F -> LtA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA A B C A' B' C'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta789_suma2__lta123 _ _ _ D E F G H I _ _ _ D' E' F' G' H' I'); auto.
+  apply (sams_lea_lta789_suma2__lta123 _ _ _ D E F G H I _ _ _ D' E' F' G' H' I'); auto.
   apply lta__lea; assumption.
 Qed.
 
-Lemma isi_lta2_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
-   LtA A' B' C' A B C -> LtA G H I G' H' I' -> Isi A B C D E F ->
+Lemma sams_lta2_suma2__lta456 : forall A B C D E F G H I A' B' C' D' E' F' G' H' I',
+   LtA A' B' C' A B C -> LtA G H I G' H' I' -> SAMS A B C D E F ->
    SumA A B C D E F G H I -> SumA A' B' C' D' E' F' G' H' I' -> LtA D E F D' E' F'.
 Proof.
   intros A B C D E F G H I A' B' C' D' E' F' G' H' I'.
   intros.
-  apply (isi_lea_lta789_suma2__lta456 A B C _ _ _ G H I A' B' C' _ _ _ G' H' I'); auto.
+  apply (sams_lea_lta789_suma2__lta456 A B C _ _ _ G H I A' B' C' _ _ _ G' H' I'); auto.
   apply lta__lea; assumption.
 Qed.
 
-Lemma isi2_suma2__conga : forall A B C D E F A' B' C',
-  Isi A B C A B C -> SumA A B C A B C D E F ->
-  Isi A' B' C' A' B' C' -> SumA A' B' C' A' B' C' D E F ->
+Lemma sams2_suma2__conga : forall A B C D E F A' B' C',
+  SAMS A B C A B C -> SumA A B C A B C D E F ->
+  SAMS A' B' C' A' B' C' -> SumA A' B' C' A' B' C' D E F ->
   CongA A B C A' B' C'.
 Proof.
   intros A B C D E F A' B' C' HIsi HSuma HIsi' HSuma'.
   assert_diffs.
   destruct (lea_total A B C A' B' C'); trivial; [|apply conga_sym];
-  eapply isi_lea2_suma2__conga123; eauto.
+  eapply sams_lea2_suma2__conga123; eauto.
 Qed.
 
 
-Lemma isi123231 : forall A B C, A <> B -> A <> C -> B <> C -> Isi A B C B C A.
+Lemma sams123231 : forall A B C, A <> B -> A <> C -> B <> C -> SAMS A B C B C A.
 Proof.
   intros A B C.
   intros.
   assert(HA' := symmetric_point_construction A B).
   destruct HA' as [A'].
   assert_diffs.
-  apply (isi_chara _ _ _ _ _ _ A'); Between.
+  apply (sams_chara _ _ _ _ _ _ A'); Between.
   elim(Col_dec A B C).
   { intro HCol.
     elim(bet_dec A C B).
@@ -1805,7 +1806,7 @@ Proof.
       intro; apply HNCol; ColR.
       exists B; Col; Between.
     }
-    apply (isi_lea_lta456_suma2__lta A B C B C A _ _ _ A B C C B P); Lea.
+    apply (sams_lea_lta456_suma2__lta A B C B C A _ _ _ A B C C B P); Lea.
       apply l11_41_aux; Col; Between.
     2: exists P; repeat (split; CongA); Side.
     split; auto; split.
@@ -1824,12 +1825,12 @@ Proof.
     apply out_col.
     apply (out_lea__out _ _ _ D E F).
       apply not_bet_out; Col.
-    apply (isi_suma__lea456789 A B C); auto.
-    apply isi123231; auto.
+    apply (sams_suma__lea456789 A B C); auto.
+    apply sams123231; auto.
 Qed.
 
 
-(** Sum of two right angles is a flat angle:
+(** Sum of two right angles is a straight angle:
   90+90=180.
  *)
 
@@ -1857,8 +1858,8 @@ Proof.
   assert_diffs.
   assert(~ Col A B C) by (apply per_not_col; auto).
   apply (l11_17 A B C); auto.
-  apply (isi2_suma2__conga456 A B C _ _ _ _ _ _ G H I); auto.
-  - apply (isi_chara _ _ _ _ _ _ A1); Between.
+  apply (sams2_suma2__conga456 A B C _ _ _ _ _ _ G H I); auto.
+  - apply (sams_chara _ _ _ _ _ _ A1); Between.
     apply conga__lea.
     apply conga_left_comm.
     apply l11_18_1; Between; Perp.
@@ -1907,13 +1908,13 @@ Qed.
 
 (** If x<90 then x+x<180 (two lemmas). *)
 
-Lemma acute__isi : forall A B C, Acute A B C -> Isi A B C A B C.
+Lemma acute__sams : forall A B C, Acute A B C -> SAMS A B C A B C.
 Proof.
   intros A B C Hacute.
   assert(HA' := symmetric_point_construction A B).
   destruct HA' as [A'].
   assert_diffs.
-  apply (isi_chara _ _ _ _ _ _ A'); Between.
+  apply (sams_chara _ _ _ _ _ _ A'); Between.
   apply lea_acute_obtuse; auto.
   apply obtuse_sym.
   apply (bet_acute__obtuse A); Between.
@@ -1931,7 +1932,7 @@ Qed.
 
 (** If x>90 then x+x>180. *)
 
-Lemma obtuse__nisi : forall A B C, Obtuse A B C -> ~ Isi A B C A B C.
+Lemma obtuse__nsams : forall A B C, Obtuse A B C -> ~ SAMS A B C A B C.
 Proof.
   intros A B C Hobtuse.
   assert(HA' := symmetric_point_construction A B).
@@ -1941,14 +1942,14 @@ Proof.
   apply (nlta A B C).
   apply (lea123456_lta__lta _ _ _ A' B C).
   - apply lea_right_comm.
-    apply (isi_chara A); Between.
+    apply (sams_chara A); Between.
   - apply acute_obtuse__lta; auto.
     apply (bet_obtuse__acute A); Between.
 Qed.
 
 (** If x+x<180 then x<90. *)
 
-Lemma nbet_isi_suma__acute : forall A B C D E F, ~ Bet D E F -> Isi A B C A B C ->
+Lemma nbet_sams_suma__acute : forall A B C D E F, ~ Bet D E F -> SAMS A B C A B C ->
    SumA A B C A B C D E F -> Acute A B C.
 Proof.
   intros A B C D E F HNBet HIsi HSuma.
@@ -1959,20 +1960,20 @@ Proof.
   destruct HUn.
   - apply HNBet.
     apply (per2_suma__bet A B C A B C); auto.
-  - assert(~ Isi A B C A B C); auto.
-    apply obtuse__nisi; auto.
+  - assert(~ SAMS A B C A B C); auto.
+    apply obtuse__nsams; auto.
 Qed.
 
 (** If x+x>180 then x>90. *)
 
-Lemma nisi__obtuse : forall A B C, A <> B -> B <> C -> ~ Isi A B C A B C -> Obtuse A B C.
+Lemma nsams__obtuse : forall A B C, A <> B -> B <> C -> ~ SAMS A B C A B C -> Obtuse A B C.
 Proof.
   intros A B C HAB HBC HNIsi.
   elim(angle_partition A B C); auto.
   - intro.
     exfalso.
     apply HNIsi.
-    apply acute__isi; auto.
+    apply acute__sams; auto.
 
   - intro HUn.
     destruct HUn; auto.
@@ -1995,7 +1996,7 @@ Proof.
     exists B; Col; Between.
 Qed.
 
-(** Sum of two flat angles is a null angle *)
+(** Sum of two straight angles is a null angle *)
 
 Lemma bet2_suma__out : forall A B C D E F G H I, Bet A B C -> Bet D E F ->
   SumA A B C D E F G H I -> Out H G I.
@@ -2028,11 +2029,6 @@ Proof.
 Qed.
 
 
-(** The sum of angles of a triangle.*)
-
-Definition TriSumA A B C D E F :=
-  exists G H I, SumA A B C B C A G H I /\ SumA G H I C A B D E F.
-
 Lemma trisuma_distincts : forall A B C D E F, TriSumA A B C D E F ->
   A <> B /\ B <> C /\ A <> C /\ D <> E /\ E <> F.
 Proof.
@@ -2052,6 +2048,8 @@ Proof.
   split; assumption.
 Qed.
 
+(** Some permutation properties *)
+
 Lemma trisuma_perm_231 : forall A B C D E F, TriSumA A B C D E F -> TriSumA B C A D E F.
 Proof.
   intros A B C D E F HT.
@@ -2064,7 +2062,7 @@ Proof.
   exists A2.
   split; auto.
   apply suma_sym.
-  apply (suma_assoc A B C B C A C A B D E F A1 B1 C1 B2 C2 A2); try (apply isi123231); auto.
+  apply (suma_assoc A B C B C A C A B D E F A1 B1 C1 B2 C2 A2); try (apply sams123231); auto.
 Qed.
 
 Lemma trisuma_perm_312 : forall A B C D E F, TriSumA A B C D E F -> TriSumA C A B D E F.
@@ -2088,7 +2086,7 @@ Proof.
   split.
   SumA.
   apply suma_middle_comm.
-  apply (suma_assoc C A B A B C B C A D E F C2 A2 B2 A1 B1 C1); try (apply isi123231); auto.
+  apply (suma_assoc C A B A B C B C A D E F C2 A2 B2 A1 B1 C1); try (apply sams123231); auto.
 Qed.
 
 Lemma trisuma_perm_213 : forall A B C D E F, TriSumA A B C D E F -> TriSumA B A C D E F.
@@ -2138,6 +2136,8 @@ Proof.
   [apply (conga3_suma__suma A B C B C A G H I)|apply (conga3_suma__suma G H I C A B D E F)]; CongA.
 Qed.
 
+(** The sum of the angles of a degenerate triangle is a straight angle *)
+
 Lemma col_trisuma__bet : forall A B C P Q R, Col A B C -> TriSumA A B C P Q R -> Bet P Q R.
 Proof.
   intros A B C P Q R HCol HTri.
@@ -2161,51 +2161,37 @@ Qed.
 Lemma suma_dec : forall A B C D E F G H I, SumA A B C D E F G H I \/ ~ SumA A B C D E F G H I.
 Proof.
   intros A B C D E F G H I.
-  elim(eq_dec_points A B).
-    intro; subst; right; intro; assert_diffs; auto.
+  destruct(eq_dec_points A B).
+    subst; right; intro; assert_diffs; auto.
+  destruct(eq_dec_points C B).
+    subst; right; intro; assert_diffs; auto.
+  destruct(eq_dec_points D E).
+    subst; right; intro; assert_diffs; auto.
+  destruct(eq_dec_points F E).
+    subst; right; intro; assert_diffs; auto.
+  destruct (ex_suma A B C D E F) as [G' [H' [I']]]; auto.
+  destruct(conga_dec G H I G' H' I') as [|HNCongA].
+    left; apply (conga3_suma__suma A B C D E F G' H' I'); CongA.
+  right.
   intro.
-  elim(eq_dec_points C B).
-    intro; subst; right; intro; assert_diffs; auto.
-  intro.
-  elim(eq_dec_points D E).
-    intro; subst; right; intro; assert_diffs; auto.
-  intro.
-  elim(eq_dec_points F E).
-    intro; subst; right; intro; assert_diffs; auto.
-  intro.
-  assert(HSuma := ex_suma A B C D E F).
-  destruct HSuma as [G' [H' [I']]]; auto.
-  elim(conga_dec G H I G' H' I').
-  - intro.
-    left.
-    apply (conga3_suma__suma A B C D E F G' H' I'); CongA.
-  - intro HNConga.
-    right.
-    intro.
-    apply HNConga.
-    apply (suma2__conga A B C D E F); auto.
+  apply HNCongA, (suma2__conga A B C D E F); auto.
 Qed.
 
-Lemma isi_dec : forall A B C D E F, Isi A B C D E F \/ ~ Isi A B C D E F.
+Lemma sams_dec : forall A B C D E F, SAMS A B C D E F \/ ~ SAMS A B C D E F.
 Proof.
   intros A B C D E F.
-  elim(eq_dec_points A B).
-    intro; subst; right; intro; assert_diffs; auto.
-  intro.
+  destruct(eq_dec_points A B).
+    subst; right; intro; assert_diffs; auto.
   assert(HA' := symmetric_point_construction A B).
   destruct HA' as [A'].
   assert_diffs.
-  elim(lea_dec D E F C B A').
-  - intro.
-    left.
-    apply (isi_chara _ _ _ _ _ _ A'); Between.
-  - intro HNlea.
-    right.
-    intro.
-    apply HNlea.
-    apply (isi_chara A); Between.
+  destruct(lea_dec D E F C B A') as [|HNlea].
+    left; apply (sams_chara _ _ _ _ _ _ A'); Between.
+  right.
+  intro.
+  apply HNlea, (sams_chara A); Between.
 Qed.
 
-End Sec2.
+End Suma_2.
 
-Hint Resolve acute__isi isi123231 : suma.
+Hint Resolve acute__sams sams123231 : suma.

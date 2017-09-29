@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.
 
 Section par_perp_perp_playfair.
 

@@ -4,15 +4,6 @@ Section T15.
 
 Context `{TE:Tarski_2D_euclidean}.
 
-(** Definition 15.1. *)
-(** Length of a segment.*)
-
-Definition Length O E E' A B L :=
- O<>E /\ Col O E L /\ LeP O E E' O L /\ Cong O L A B.
-
-Definition Is_length O E E' A B L :=
- Length O E E' A B L \/ (O=E /\ O=L).
-
 (** Lemma 15.2 *)
 (** Cong corresponds to length equality.*)
 (** Le corresponds to length inequality.*)
@@ -478,7 +469,7 @@ eapply (length_Ar2 O E E' A B AB'); assumption.
 unfold Length in *.
 spliter.
 assert(Cong O AB O AB').
-eCong.
+apply cong_transitivity with A B; Cong.
 assert(AB = AB' \/ Midpoint O AB AB').
 apply(l7_20 O AB AB').
 ColR.
@@ -648,9 +639,6 @@ apply H3.
 Col.
 Qed.
 
-Definition Sumg O E E' A B C :=
-  Sum O E E' A B C \/ (~ (Ar2 O E E' A B B) /\ C = O).
-
 Lemma triangular_equality : forall O E E' A B C AB BC AC,
   O<>E -> Bet A B C ->
   Is_length O E E' A B AB -> Is_length O E E' B C BC ->
@@ -723,7 +711,7 @@ assert(HH:= l15_3 O E E' AB BC AC' H17).
 
 assert(Cong O AC' A C).
 apply(l2_11 O AB AC' A B C); Cong.
-eCong.
+apply cong_transitivity with O BC; Cong.
 
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
@@ -788,7 +776,7 @@ apply cong_symmetry in H9.
 apply cong_identity in H9.
 subst C.
 assert(Cong O AB O AC).
-eCong.
+apply cong_transitivity with A B; Cong.
 unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
@@ -1095,7 +1083,7 @@ assert(HH:= l15_3 O E E' AB BC AC' H17).
 
 assert(Cong O AC' A C).
 apply(l2_11 O AB AC' A B C); Cong.
-eCong.
+apply cong_transitivity with O BC; Cong.
 
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
@@ -1161,7 +1149,7 @@ apply cong_symmetry in H9.
 apply cong_identity in H9.
 subst C.
 assert(Cong O AB O AC).
-eCong.
+apply cong_transitivity with A B; Cong.
 unfold LtP in H11.
 ex_and H11 X.
 apply diff_sum in H9.
@@ -1641,9 +1629,6 @@ apply(l11_13 C B A' F E D' C' F'); auto.
 apply conga_comm.
 assumption.
 Qed.
-
-Definition Prodg O E E' A B C :=
-  Prod O E E' A B C \/ (~Ar2 O E E' A B B /\ C = O).
 
 Lemma thales : forall O E E' P A B C D A1 B1 C1 D1 AD,
   O<>E -> Col P A B -> Col P C D -> ~ Col P A C -> Pj A C B D ->
@@ -2569,8 +2554,6 @@ tauto.
 apply out_trivial.
 unfold Out in H47.
 tauto.
-apply out_trivial.
-auto.
 }
 
 assert(C1 <> C1').

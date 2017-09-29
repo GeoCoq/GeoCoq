@@ -4,12 +4,6 @@ Section Coplanar_perm.
 
 Context `{Tn:Tarski_neutral_dimensionless}.
 
-
-Definition Coplanar A B C D :=
-  exists X, (Col A B X /\ Col C D X) \/
-            (Col A C X /\ Col B D X) \/
-            (Col A D X /\ Col B C X).
-
 Lemma coplanar_perm_1 : forall A B C D,
   Coplanar A B C D -> Coplanar A B D C.
 Proof.

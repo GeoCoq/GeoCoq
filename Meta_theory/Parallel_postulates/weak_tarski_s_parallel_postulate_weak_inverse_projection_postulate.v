@@ -1,4 +1,6 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section weak_tarski_s_parallel_postulate_weak_inverse_projection_postulate.
 
@@ -99,7 +101,7 @@ cut (forall A B C P T,
       apply (ncol_conga_ncol D E F); CongA; assert_diffs; apply per_not_col; auto.
     apply invert_one_side, one_side_symmetry, not_two_sides_one_side; Col.
       assert_diffs; auto.
-    apply conga_isi_nos__nts with A B C; SumA.
+    apply conga_sams_nos__nts with A B C; SumA.
   }
   destruct (rabp C B J P Q') as [Y [_ [HY1 [HY2 _]]]]; trivial.
     apply (l11_17 D E F); CongA.

@@ -4,12 +4,6 @@ Section T10.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Definition ReflectL P' P A B :=
-  (exists X, Midpoint X P P' /\ Col A B X) /\ (Perp A B P P' \/ P = P').
-
-Definition Reflect P' P A B :=
- (A<>B /\ ReflectL P' P A B) \/ (A=B /\ Midpoint A P P').
-
 Lemma ex_sym : forall A B X, exists Y, (Perp A B X Y \/ X = Y) /\
    (exists M, Col A B M /\ Midpoint M X Y).
 Proof.
@@ -1096,13 +1090,6 @@ Proof.
     reflexivity.
 Qed.
 
-
-Definition ReflectL_at M P' P A B :=
-  (Midpoint M P P' /\ Col A B M) /\ (Perp A B P P' \/ P=P').
-
-Definition Reflect_at M P' P A B :=
- (A <> B /\ ReflectL_at M P' P A B) \/ (A=B /\ A=M /\ Midpoint M P P').
-
 Lemma image_in_is_image_spec :
  forall M A B P P',
   ReflectL_at M P P' A B -> ReflectL P P' A B.
@@ -1666,6 +1653,46 @@ Proof.
     exists P.
     apply perp_sym.
     auto.
+Qed.
+
+Lemma perp_vector : forall A B, A <> B -> (exists X, exists Y, Perp A B X Y).
+Proof.
+intros.
+exists A.
+destruct (perp_exists A A B) as [Y]; auto.
+exists Y; Perp.
+Qed.
+
+Lemma ex_per_cong : forall A B C D X Y,
+ A <> B -> X <> Y -> Col A B C -> ~Col A B D ->
+ exists P, Per P C A /\ Cong P C X Y /\ OS A B P D.
+Proof.
+    intros A B C D X Y HAB HXY HCol HNCol.
+    destruct (l10_15 A B C D) as [Q [HQ1 HQ2]]; trivial.
+    assert_diffs.
+    destruct (segment_construction_3 C Q X Y) as [P [HP1 HP2]]; auto.
+    exists P; repeat split; Cong.
+    - destruct (eq_dec_points A C).
+        subst; Perp.
+      apply perp_per_1.
+      apply perp_col1 with B; auto.
+      assert_diffs; apply perp_sym, perp_col1 with Q; Col; Perp.
+    - apply os_out_os with Q C; Side.
+Qed.
+
+Lemma exists_cong_per : forall A B X Y, exists C, Per A B C /\ Cong B C X Y.
+Proof.
+intros.
+destruct (eq_dec_points A B).
+subst.
+destruct (segment_construction X B X Y).
+exists x;split;spliter;finish.
+destruct (not_col_exists A B H) as [P HP].
+destruct (eq_dec_points X Y).
+exists B;split;subst;finish.
+destruct (ex_per_cong A B B P X Y);finish.
+spliter.
+exists x;split;finish.
 Qed.
 
 End T10.

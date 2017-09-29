@@ -150,7 +150,7 @@ Col.
 Qed.
 
 Goal forall A B C D, ~ Col A B C -> ~ Col A B D ->
-  A<> D.
+  A<>D.
 Proof.
 intros.
 assert_diffs.
@@ -318,6 +318,48 @@ Proof.
 intros.
 assert_diffs.
 repeat split; assumption.
+Qed.
+
+Goal forall A B C D, A <> B -> Le A B C D -> C <> D.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C D, Lt A B C D -> C <> D.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, Bet A B C -> Bet B A C -> A = B.
+Proof.
+intros.
+treat_equalities.
+trivial.
+Qed.
+
+Goal forall A B C, Bet A B C -> Bet A C B -> B = C.
+Proof.
+intros.
+treat_equalities.
+trivial.
+Qed.
+
+Goal forall A B C, Bet A B C -> Bet C A B -> A = B.
+Proof.
+intros.
+treat_equalities.
+trivial.
+Qed.
+
+Goal forall A B C, Bet A B C -> Bet B C A -> B = C.
+Proof.
+intros.
+treat_equalities.
+trivial.
 Qed.
 
 End UnitTests.

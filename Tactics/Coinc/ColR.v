@@ -1702,7 +1702,6 @@ Section Test.
 
 Context `{TnEQD:Tarski_neutral_dimensionless}.
 
-
 Goal forall Q R A B C D E F G H I J K L M N,
   False -> L = M -> D <> E -> J <> K -> Q <> R -> G <> H ->
   Col Q R A -> Col Q R B -> Col Q R C ->

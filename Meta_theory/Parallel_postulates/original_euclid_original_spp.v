@@ -1,4 +1,5 @@
-Require Export GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.
+Require Import GeoCoq.Axioms.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Annexes.suma.
 
 Section original_euclid_original_spp.
 
@@ -19,13 +20,13 @@ Proof.
   { intro.
     assert(HY := oe A B C D P Q R).
     destruct HY as [Y []]; auto.
-      apply (isi_chara _ _ _ _ _ _ A'); Between.
+      apply (sams_chara _ _ _ _ _ _ A'); Between.
     assert_cols.
     exists Y; auto.
   }
 
   intro.
-  assert(Isi D' C B C B A') by (apply (isi_chara _ _ _ _ _ _ D); Between).
+  assert(SAMS D' C B C B A') by (apply (sams_chara _ _ _ _ _ _ D); Between).
   assert(HSuma' := ex_suma A' B C B C D').
   destruct HSuma' as [P' [Q' [R' HSuma']]]; auto.
   assert(Hdiff := HSuma').
@@ -60,9 +61,9 @@ Proof.
       intro; apply HNCol; ColR.
       exists C; Col; Between.
     }
-    apply (isi2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
+    apply (sams2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
       SumA.
-    { apply isi_left_comm.
+    { apply sams_left_comm.
       repeat split; Col.
         right; intro; assert_cols; Col.
       exists D'.
@@ -82,10 +83,10 @@ Proof.
       intro; apply HNCol; ColR.
       exists B; Col; Between.
     }
-    apply (isi2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
+    apply (sams2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
       SumA.
-    { apply isi_left_comm.
-      apply isi_sym.
+    { apply sams_left_comm.
+      apply sams_sym.
       repeat split; Col.
         right; intro; assert_cols; Col.
       exists A'.
