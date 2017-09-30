@@ -79,6 +79,7 @@
 	  <ul>
 	    <li>Hilbert's axioms: points, lines, planes + geometric axioms </li>
 	    <li>Tarski's axioms: points + geometric axioms </li>
+	    <li>Euclid's axioms</li>
 	  </ul></li>
 	  <li>an analytic approach (starting from a given field
 	&#x1D53D;  (usually &#x211D;)
@@ -97,12 +98,13 @@
 	Tarski we prove that we can
 	define coordinates.</br>
 	Our main axiom system is the one of
-	Tarski, but we define also Hilbert's axiom system.
+	Tarski, but we define also Hilbert's axiom system and a version of Euclid's axioms sufficient to prove the propositions in Book 1 of the Elements.
 	We prove that Tarski's axioms (except continuity) are equivalent to Hilbert's axioms (except continuity).
 	
 	<ul>
 	  <li><a href="html/GeoCoq.Axioms.tarski_axioms.html">Tarski axioms in Coq</a></li>
 	  <li><a href="html/GeoCoq.Axioms.hilbert_axioms.html">Hilbert axioms in Coq</a> </li>
+	  <li><a href="html/GeoCoq.Axioms.euclid_axioms.html">Euclid axioms in Coq</a> </li>
 	</ul>
 	
 	<h2>The formalization based on Tarski's axioms</h2>
@@ -194,7 +196,20 @@
 	    </li>
 
 	</ul>
-	
+	  <h2>Formalization of Euclid's Elements </h2>
+
+      <div style="padding:10px; float:right;">
+              <a href="https://en.wikipedia.org/wiki/Euclid%27s_Elements"><img style="box-shadow: -1px 2px 5px 1px\
+ rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/P._Oxy._I_29.jpg/220px-P._Oxy._I_29.jpg" alt="Euclid's Elements" /></a>
+            </div>
+	  
+Regarding the formalization of Euclid's Elements, GeoCoq contains two different approaches:
+	  <ul>
+	    <li>The first approach consists in formalizing Euclid's statement without trying to formalize the original proofs. We try to minimize the assumptions.</li>
+	    <li>The second approach consists in trying to formalize the original proofs. This is not completly possible because Euclid's proofs contain some gaps, but it can be done to some extend by introducing the missing axioms and reordering some proofs. The formalization of first book of the Elements has been completed by Michael Beeson and then exported to Coq. The details are given in this <a href="todo">paper</a>.
+	    </li>
+	  </ul>
+
 	  <h2>Connection with Hilbert's axioms</h2>
 
  <div style="padding:10px; float:right;">
@@ -205,8 +220,6 @@
 	<a title="Grundlagen der Geometrie" href="https://en.wikipedia.org/wiki/Hilbert%27s_axioms#Editions_and_translations_of_Grundlagen_der_Geometrie">
 	  <img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" height="137" src="images/grundlagen.jpg" alt="Grundlagen der Geometrie"/></a>
       </div>
-
-
 
 	  Most of the axioms of Hilbert are implicitely proved in the
 	  book, but we explicit all the proofs here. We define lines
@@ -229,12 +242,10 @@
             proposed by Beeson is classicaly equivalent to Tarski's
 	    axiom system.</li>
 	  </ul>
-	  <h2>Euclid's postulate </h2>
+	  <h2>Parallel postulates</h2>
 
-	  The version of Euclid's postulate as given in the book is
-	  not intuitive.
-          We prove the equivalence between several versions
-	  of Euclid's postulate including the well known Playfair's
+	  We prove the equivalence between several versions
+	  of the parallel postulate including the well known Playfair's
 	  postulate, and Euclid's 5th postulate. The details are in 
           <a href="https://hal.inria.fr/hal-01178236">this paper</a>.
 	  
@@ -283,6 +294,7 @@
 	  <h1>Contributors</h1>
 	  
 	  <ul>
+	    <li><a href="http://www.michaelbeeson.com/">Michael Beeson</a></li>
 	    <li><a href="http://igg.unistra.fr/People/boutry/">Pierre Boutry</a></li>
 	    <li><a href="http://gabrielbraun.free.fr/">Gabriel Braun</a></li>
 	    <li>Charly Gries</li>
@@ -305,7 +317,7 @@
 
 	  <h2>Manual installation</h2>
 	  
-	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.</br> We tested the development using Coq version 8.4pl6, 8.5pl3 and 8.6. The <=8.3 versions are not supported.
+	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.</br> We tested the development using Coq version 8.6.1 and 8.7beta. The previous versions are not supported.
           Then download and unpack the files, it will create a GeoCoq
           directory. In this directory, type <code>./configure</code> and <code>make</code> to compile the
 	  files, it will create some <code>.vo</code> files.
@@ -316,7 +328,8 @@
 	  See the instructions <a
 	  href="http://coq-blog.clarus.me/use-opam-for-coq.html">here</a>.
 	  <br>
-	  <pre>opam install -j4 -v coq-geocoq</pre>
+	  <pre>opam repo add coq-released https://coq.inria.fr/opam/released
+opam install -j4 -v coq-geocoq</pre>
 	  <br>
 
 	  <h1>Related papers</h1>
