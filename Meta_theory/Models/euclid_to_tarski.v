@@ -82,7 +82,7 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet Cong) with (PA:=PA) (PB:=PB
   exfalso.
   apply (axiom_betweennessidentity A B);auto.
   intuition.
-- intros.
+- intros A B C P Q H H0.
   destruct H.
   destruct H0.
   elim (classic (Col A B C));intro.
@@ -138,8 +138,8 @@ unfold nCol,Bet,neq in *.
 intro;spliter.
 decompose [or] H;try
  solve [auto using  axiom_betweennesssymmetry].
-rewrite H7 in *;intuition.
-rewrite H7 in *;intuition.
+subst;intuition.
+subst;intuition.
 Qed.
 
 End Euclid_to_Tarski.
