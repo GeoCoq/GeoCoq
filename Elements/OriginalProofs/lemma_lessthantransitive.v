@@ -14,8 +14,8 @@ Proof.
 intros.
 let Tf:=fresh in
 assert (Tf:exists G, (BetS C G D /\ Cong C G A B)) by (conclude_def Lt );destruct Tf as [G];spliter.
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (BetS E H F /\ Cong E H C D)) by (conclude_def Lt );destruct Tf as [H];spliter.
 assert (neq E H) by (forward_using lemma_betweennotequal).
 assert (neq C G) by (forward_using lemma_betweennotequal).

@@ -103,8 +103,7 @@ assert (~ BetS A F E).
  assert (BetS Q r E) by (conclude axiom_betweennesssymmetry).
  assert (nCol E B F) by (forward_using lemma_parallelNC).
  assert (nCol F B E) by (forward_using lemma_NCorder).
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists H, (BetS E H B /\ BetS F r H)) by (conclude postulate_Pasch_outer);destruct Tf as [H];spliter.
  assert (Col E H B) by (conclude_def Col ).
  assert (Col F r H) by (conclude_def Col ).

@@ -65,8 +65,7 @@ assert (~ eq M G).
  assert (Col A B M) by (forward_using lemma_collinearorder).
  contradict.
  }
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS M G H /\ Cong G H M G)) by (conclude postulate_extension);destruct Tf as [H];spliter.
 assert (Cong M G G H) by (conclude lemma_congruencesymmetric).
 assert (Midpoint M G H) by (conclude_def Midpoint ).

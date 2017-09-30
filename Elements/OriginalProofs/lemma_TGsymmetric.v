@@ -11,8 +11,8 @@ Lemma lemma_TGsymmetric :
    TG B b A a C c.
 Proof.
 intros.
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (BetS A a H /\ Cong a H B b /\ Lt C c A H)) by (conclude_def TG );destruct Tf as [H];spliter.
 assert (neq a H) by (forward_using lemma_betweennotequal).
 assert (neq B b) by (conclude lemma_nullsegment3).

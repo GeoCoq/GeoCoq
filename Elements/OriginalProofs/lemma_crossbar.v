@@ -135,8 +135,8 @@ assert (~ Col U Q B).
  assert (Col Q P B) by (forward_using lemma_collinearorder).
  contradict.
  }
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (BetS U H V /\ BetS B H M)) by (conclude postulate_Pasch_inner);destruct Tf as [H];spliter.
 assert (~ eq E B).
  {

@@ -91,8 +91,7 @@ assert (BetS P R C) by (conclude axiom_betweennesssymmetry).
 assert (LtA A B C D E F).
 by cases on (TS G B C A \/ ~ TS G B C A).
 {
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists H, (BetS G H A /\ Col B C H /\ nCol B C G)) by (conclude_def TS );destruct Tf as [H];spliter.
  assert (BetS A H G) by (conclude axiom_betweennesssymmetry).
  assert (Out B A A) by (conclude lemma_ray4).

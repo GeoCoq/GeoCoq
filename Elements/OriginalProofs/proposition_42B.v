@@ -22,8 +22,7 @@ assert (Col E C B) by (forward_using lemma_collinearorder).
 assert (eq C C) by (conclude cn_equalityreflexive).
 assert (Col E C C) by (conclude_def Col ).
 assert (nCol B C R) by (conclude lemma_NChelper).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists P H, (Out B C H /\ CongA P B H a b c /\ OS P R B C)) by (conclude proposition_23C);destruct Tf as [P[H]];spliter.
 assert (neq B C) by (forward_using lemma_betweennotequal).
 assert (neq b c) by (forward_using lemma_NCdistinct).

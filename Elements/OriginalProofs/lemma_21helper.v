@@ -11,8 +11,7 @@ Lemma lemma_21helper :
    TT B A A C B E E C.
 Proof.
 intros.
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS B A H /\ Cong A H A E /\ Lt B E B H)) by (conclude_def TG );destruct Tf as [H];spliter.
 assert (neq B A) by (forward_using lemma_betweennotequal).
 assert (~ eq B E).

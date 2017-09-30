@@ -22,8 +22,7 @@ assert (neq B C) by (forward_using lemma_NCdistinct).
 assert (neq E F) by (conclude lemma_nullsegment3).
 assert (Par P Q E F) by (conclude lemma_collinearparallel2).
 assert (Par E F P Q) by (conclude lemma_parallelsymmetric).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (PG D H F E /\ Col P Q H)) by (conclude lemma_triangletoparallelogram);destruct Tf as [H];spliter.
 assert (PG H F E D) by (conclude lemma_PGrotate).
 assert (Cong B C F E) by (forward_using lemma_congruenceflip).

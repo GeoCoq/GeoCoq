@@ -152,8 +152,7 @@ by cases on (BetS A D E \/ BetS A E D \/ eq D E).
  assert (neq A E) by (forward_using lemma_betweennotequal).
  assert (nCol A E B) by (conclude lemma_NChelper).
  assert (BetS B M D) by (conclude axiom_betweennesssymmetry).
- let Tf:=fresh in
-rename_H;
+ rename_H H;let Tf:=fresh in
  assert (Tf:exists H, (BetS B H E /\ BetS A M H)) by (conclude postulate_Pasch_outer);destruct Tf as [H];spliter.
  assert (Col A M H) by (conclude_def Col ).
  assert (Col A M C) by (conclude_def Col ).

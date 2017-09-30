@@ -12,8 +12,7 @@ Lemma lemma_TGflip :
    TG a A B b C c /\ TG A a B b c C.
 Proof.
 intros.
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS A a H /\ Cong a H B b /\ Lt C c A H)) by (conclude_def TG );destruct Tf as [H];spliter.
 assert (neq A a) by (forward_using lemma_betweennotequal).
 assert (neq a A) by (conclude lemma_inequalitysymmetric).

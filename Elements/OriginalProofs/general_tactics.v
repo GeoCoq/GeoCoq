@@ -41,5 +41,4 @@ Ltac one_of_disjunct :=
  solve [repeat (assumption || (left;assumption) || right)].
 
 
-
-Ltac rename_H := let T := fresh in try rename H into T.
+Ltac rename_H H := let T := fresh in try rename H into T.

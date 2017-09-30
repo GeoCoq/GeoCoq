@@ -13,8 +13,7 @@ Lemma lemma_linereflectionisometry :
    Cong C D E F.
 Proof.
 intros.
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS B A H /\ Cong B A H A /\ Cong B C H C /\ neq A C)) by (conclude_def Per );destruct Tf as [H];spliter.
 let Tf:=fresh in
 assert (Tf:exists G, (BetS A B G /\ Cong A B G B /\ Cong A D G D /\ neq B D)) by (conclude_def Per );destruct Tf as [G];spliter.

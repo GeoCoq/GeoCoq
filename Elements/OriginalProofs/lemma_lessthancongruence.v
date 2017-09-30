@@ -29,8 +29,7 @@ assert (BetS P E F) by (conclude axiom_betweennesssymmetry).
 assert (neq P E) by (forward_using lemma_betweennotequal).
 assert (neq C G) by (forward_using lemma_betweennotequal).
 assert (neq A B) by (conclude lemma_nullsegment3).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS P E H /\ Cong E H A B)) by (conclude postulate_extension);destruct Tf as [H];spliter.
 assert (~ eq D C).
  {

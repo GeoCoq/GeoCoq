@@ -14,8 +14,8 @@ Lemma lemma_planeseparation :
    TS C A B E.
 Proof.
 intros.
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists G H Q, (Col A B G /\ Col A B H /\ BetS C G Q /\ BetS D H Q /\ nCol A B C /\ nCol A B D)) by (conclude_def OS );destruct Tf as [G[H[Q]]];spliter.
 assert (~ eq A B).
  {

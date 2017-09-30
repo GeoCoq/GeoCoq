@@ -30,8 +30,7 @@ assert (nCol A C D) by (forward_using lemma_parallelNC).
 assert (nCol C D A) by (forward_using lemma_NCorder).
 assert (TS A C D E) by (conclude_def TS ).
 assert (TS B C D E) by (conclude lemma_planeseparation).
-let Tf:=fresh in
-rename_H;
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS B H E /\ Col C D H /\ nCol C D B)) by (conclude_def TS );destruct Tf as [H];spliter.
 assert (BetS E H B) by (conclude axiom_betweennesssymmetry).
 assert (Col D C H) by (forward_using lemma_collinearorder).

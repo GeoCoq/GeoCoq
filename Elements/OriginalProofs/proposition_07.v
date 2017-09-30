@@ -17,8 +17,8 @@ intros.
 assert (nCol A B C) by (conclude_def OS ).
 let Tf:=fresh in
 assert (Tf:exists F, Perp_at C F A B F) by (conclude proposition_12);destruct Tf as [F];spliter.
+rename_H H;
 let Tf:=fresh in
-rename_H;
 assert (Tf:exists H, (Col C F F /\ Col A B F /\ Col A B H /\ Per H F C)) by (conclude_def Perp_at );destruct Tf as [H];spliter.
 assert (~ eq C F).
  {
