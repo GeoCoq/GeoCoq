@@ -89,28 +89,28 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet Cong) with (PA:=PA) (PB:=PB
   unfold Col in *.
   decompose [or] H1;clear H1;
   unfold eq in *;subst.
-  exists B;split;unfold Bet;auto.
-  exfalso;apply lemma_betweennotequal in H.
-  unfold neq in *;intuition.
-  exfalso;apply lemma_betweennotequal in H0.
-  unfold neq in *;intuition.
-  exists A.
+  * exists B;split;unfold Bet;auto.
+  * exfalso;apply lemma_betweennotequal in H.
+    unfold neq in *;intuition.
+  * exfalso;apply lemma_betweennotequal in H0.
+    unfold neq in *;intuition.
+  * exists A.
   split.
   unfold Bet;left. 
   eauto using lemma_3_6a, axiom_betweennesssymmetry.
   unfold Bet;auto.
-  exists B.
+  * exists B.
   split.
   unfold Bet;auto.
   unfold Bet;left.
   eauto using lemma_3_6a, axiom_betweennesssymmetry.
-  exists C.
+  * exists C.
   split.
   unfold Bet;left.
   eauto using lemma_3_6a, axiom_betweennesssymmetry.
   unfold Bet;left.
   eauto using lemma_3_6a, axiom_betweennesssymmetry.
-  assert (T:exists X : Point, BetS A X Q /\ BetS B X P).
+  * assert (T:exists X : Point, BetS A X Q /\ BetS B X P).
    apply  (postulate_Pasch_inner A B C P Q H H0).
    unfold nCol,neq.
    unfold Col in *.
@@ -121,13 +121,13 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet Cong) with (PA:=PA) (PB:=PB
   destruct T as [X [HXA HXB]].
   exists X.
   split;unfold Bet;left;auto using axiom_betweennesssymmetry.
-  destruct H0.
+  * destruct H0.
   subst.
   exists Q;unfold Bet;auto.
   subst.
   exists P.
   unfold Bet;auto using axiom_betweennesssymmetry.
-  destruct H.
+  * destruct H.
   subst;exists P; unfold Bet;auto.
   subst;exists Q;split.
   auto using Bet_sym.
