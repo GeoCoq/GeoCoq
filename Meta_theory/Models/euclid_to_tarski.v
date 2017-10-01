@@ -90,10 +90,11 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet Cong) with (PA:=PA) (PB:=PB
   decompose [or] H1;clear H1;
   unfold eq in *;subst.
   * exists B;split;unfold Bet;auto.
-  * exfalso;apply lemma_betweennotequal in H.
-    unfold neq in *;intuition.
+  * exfalso; apply lemma_betweennotequal in H.
+    unfold neq,eq in *;spliter.
+    intuition.
   * exfalso;apply lemma_betweennotequal in H0.
-    unfold neq in *;intuition.
+    unfold neq,eq in *;intuition.
   * exists A.
   split.
   unfold Bet;left. 
