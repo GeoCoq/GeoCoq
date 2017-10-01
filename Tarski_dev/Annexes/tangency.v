@@ -834,14 +834,17 @@ assert(CongA O U Y O V X).
 {
   unfold OnCircle in *.
   apply(cong3_conga O U Y O V X).
-  repeat split.
   intro;treat_equalities; tauto.
   intro;treat_equalities.
-  unfold OutCircleS in H3.
-  unfold Lt in H3.
+  unfold OutCircleS in *.
+  unfold Lt in *.
   spliter.
-  apply H6; Cong.
-  repeat split; Cong.
+  assert (Cong O P O V) by finish.
+  intuition.
+  unfold Cong_3.
+  split.
+  finish.
+  split;finish.
 }
 
 assert(Per O V X).
