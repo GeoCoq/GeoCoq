@@ -135,7 +135,7 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet Cong) with (PA:=PA) (PB:=PB
   unfold Bet;auto.
 - 
 assert (T:=axiom_lower_dim).
-unfold nCol,Bet,neq in *.
+unfold nCol,Bet,neq,eq in *.
 intro;spliter.
 decompose [or] H;try
  solve [auto using  axiom_betweennesssymmetry].
