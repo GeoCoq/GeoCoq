@@ -205,8 +205,16 @@
 	  
 Regarding the formalization of Euclid's Elements, GeoCoq contains two different approaches:
 	  <ul>
-	    <li>The first approach consists in formalizing Euclid's statement without trying to formalize the original proofs. We try to minimize the assumptions.</li>
-	    <li>The second approach consists in trying to formalize the original proofs. This is not completly possible because Euclid's proofs contain some gaps, but it can be done to some extend by introducing the missing axioms and reordering some proofs. The formalization of first book of the Elements has been completed by Michael Beeson and then exported to Coq. The details are given in this <a href="todo">paper</a>.
+	    <li>The first approach consists in formalizing Euclid's statement without trying to formalize the original proofs. Then we can try to minimize the assumptions. For example, we have formalized Gupta's proof that midpoint can be constructed without circle/circle continuity axioms, whereas the original proof by Euclid needs this assumption. We gather Euclid's statements formalized using this approach <a href="https://github.com/GeoCoq/GeoCoq/tree/master/Elements/Statements">here</a>.</li>
+	    <li>The second approach consists in trying to formalize the <b>original proofs</b>. This is not completly possible because Euclid's proofs contain some gaps, but it can be done to some extend by introducing the missing axioms and reordering some proofs. The formalization of first book of the Elements has been completed by Michael Beeson and then exported to Coq. The details are given in this <a href="todo">paper</a>. These proofs have also been exported to Hol-Light, see the <a href="http://www.michaelbeeson.com/research/FoundationsOfGeometry/index.php?include=FoundationsOfGeometry">webpage of this project</a>. 
+	      The Coq formalization consists of:
+	      <ul>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Axioms/euclidean_axioms.v">Our formalization of Euclidean axioms</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Elements/OriginalProofs/euclidean_tactics.v">Some adhoc tactics</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/tree/master/Elements/OriginalProofs">Book 1</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Meta_theory/Models/tarski_to_euclid.v">Going from Tarski's axiom to Euclid's axioms</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Meta_theory/Models/euclid_to_tarski.v">Going from Euclid's axioms to Tarski's axioms</a></li>
+	      </ul>
 	    </li>
 	  </ul>
 
