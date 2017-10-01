@@ -139,8 +139,6 @@ unfold nCol,Bet,neq,eq in *.
 intro;spliter.
 decompose [or] H;try
  solve [auto using  axiom_betweennesssymmetry].
-subst;intuition.
-subst;intuition.
 Qed.
 
 End Euclid_to_Tarski.
