@@ -671,8 +671,9 @@ treat_equalities; auto.
 assert(O <> X).
 {
   intro.
+  rewrite H2 in *;clear H2.
   treat_equalities.
-  contradiction.
+  intuition.
 }
 
 assert(HH:=circle_cases O P X).
