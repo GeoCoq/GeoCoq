@@ -23,7 +23,6 @@
     window.onload = function() {
         applet1.inject('applet_container1', 'preferHTML5');
         applet2.inject('applet_container2', 'preferHTML5');
-        applet3.inject('applet_container3', 'preferHTML5');
     }
 </script>
   <head>
@@ -80,6 +79,7 @@
 	  <ul>
 	    <li>Hilbert's axioms: points, lines, planes + geometric axioms </li>
 	    <li>Tarski's axioms: points + geometric axioms </li>
+	    <li>Euclid's axioms</li>
 	  </ul></li>
 	  <li>an analytic approach (starting from a given field
 	&#x1D53D;  (usually &#x211D;)
@@ -98,12 +98,13 @@
 	Tarski we prove that we can
 	define coordinates.</br>
 	Our main axiom system is the one of
-	Tarski, but we define also Hilbert's axiom system.
+	Tarski, but we define also Hilbert's axiom system and a version of Euclid's axioms sufficient to prove the propositions in Book 1 of the Elements.
 	We prove that Tarski's axioms (except continuity) are equivalent to Hilbert's axioms (except continuity).
 	
 	<ul>
 	  <li><a href="html/GeoCoq.Axioms.tarski_axioms.html">Tarski axioms in Coq</a></li>
 	  <li><a href="html/GeoCoq.Axioms.hilbert_axioms.html">Hilbert axioms in Coq</a> </li>
+	  <li><a href="html/GeoCoq.Axioms.euclid_axioms.html">Euclid axioms in Coq</a> </li>
 	</ul>
 	
 	<h2>The formalization based on Tarski's axioms</h2>
@@ -195,7 +196,28 @@
 	    </li>
 
 	</ul>
-	
+	  <h2>Formalization of Euclid's Elements </h2>
+
+      <div style="padding:10px; float:right;">
+              <a href="https://en.wikipedia.org/wiki/Euclid%27s_Elements"><img style="box-shadow: -1px 2px 5px 1px\
+ rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/P._Oxy._I_29.jpg/220px-P._Oxy._I_29.jpg" alt="Euclid's Elements" /></a>
+            </div>
+	  
+Regarding the formalization of Euclid's Elements, GeoCoq contains two different approaches:
+	  <ul>
+	    <li>The first approach consists in formalizing Euclid's statement without trying to formalize the original proofs. Then we can try to minimize the assumptions. For example, we have formalized Gupta's proof that midpoint can be constructed without circle/circle continuity axioms, whereas the original proof by Euclid needs this assumption. We gather Euclid's statements formalized using this approach <a href="https://github.com/GeoCoq/GeoCoq/tree/master/Elements/Statements">here</a>.</li>
+	    <li>The second approach consists in trying to formalize the <b>original proofs</b>. This is not completly possible because Euclid's proofs contain some gaps, but it can be done to some extend by introducing the missing axioms and reordering some proofs. The formalization of first book of the Elements has been completed by Michael Beeson and then exported to Coq. The details are given in this <a href="todo">paper</a>. These proofs have also been exported to Hol-Light, see the <a href="http://www.michaelbeeson.com/research/FoundationsOfGeometry/index.php?include=FoundationsOfGeometry">webpage of this project</a>. 
+	      The Coq formalization consists of:
+	      <ul>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Axioms/euclidean_axioms.v">Our formalization of Euclidean axioms</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Elements/OriginalProofs/euclidean_tactics.v">Some adhoc tactics</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/tree/master/Elements/OriginalProofs">Book 1</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Meta_theory/Models/tarski_to_euclid.v">Going from Tarski's axiom to Euclid's axioms</a></li>
+		<li><a href="https://github.com/GeoCoq/GeoCoq/blob/master/Meta_theory/Models/euclid_to_tarski.v">Going from Euclid's axioms to Tarski's axioms</a></li>
+	      </ul>
+	    </li>
+	  </ul>
+
 	  <h2>Connection with Hilbert's axioms</h2>
 
  <div style="padding:10px; float:right;">
@@ -206,8 +228,6 @@
 	<a title="Grundlagen der Geometrie" href="https://en.wikipedia.org/wiki/Hilbert%27s_axioms#Editions_and_translations_of_Grundlagen_der_Geometrie">
 	  <img style="box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" height="137" src="images/grundlagen.jpg" alt="Grundlagen der Geometrie"/></a>
       </div>
-
-
 
 	  Most of the axioms of Hilbert are implicitely proved in the
 	  book, but we explicit all the proofs here. We define lines
@@ -230,12 +250,10 @@
             proposed by Beeson is classicaly equivalent to Tarski's
 	    axiom system.</li>
 	  </ul>
-	  <h2>Euclid's postulate </h2>
+	  <h2>Parallel postulates</h2>
 
-	  The version of Euclid's postulate as given in the book is
-	  not intuitive.
-          We prove the equivalence between several versions
-	  of Euclid's postulate including the well known Playfair's
+	  We prove the equivalence between several versions
+	  of the parallel postulate including the well known Playfair's
 	  postulate, and Euclid's 5th postulate. The details are in 
           <a href="https://hal.inria.fr/hal-01178236">this paper</a>.
 	  
@@ -266,14 +284,17 @@
 	    <li><a href="html/GeoCoq.Highschool.orthocenter.html">Orthocenter theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.circumcenter.html">Circumcenter theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.gravityCenter.html">Gravity center theorem</a></li>
+	    <li><a href="html/GeoCoq.Highschool.incenter.html">Incenter theorem</a></li>
 	    <li><a href="html/GeoCoq.Highschool.Euler_line.html">Euler line</a></li>
 	  </ul>
 	  <div>
-	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" id="applet_container1" >
+	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" >
 	      <a href="html/GeoCoq.Highschool.circumcenter.html">Circumcenter theorem</a>
+	      <div  id="applet_container1" ></div>
 	    </div>
-	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" id="applet_container2" > 
-	      <a href="html/GeoCoq.Highschool.Euler_line.html">Euler line</a> 
+	    <div style="padding:10px; float:right; box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); -1px 2px 20px rgba(255, 255, 255, 0.6) inset;" > 
+	      <a href="html/GeoCoq.Highschool.Euler_line.html">Euler line</a>
+	      <div  id="applet_container2" ></div>
 	    </div>
 	  </div>
 	  
@@ -281,13 +302,18 @@
 	  <h1>Contributors</h1>
 	  
 	  <ul>
+	    <li><a href="http://www.michaelbeeson.com/">Michael Beeson</a></li>
 	    <li><a href="http://igg.unistra.fr/People/boutry/">Pierre Boutry</a></li>
 	    <li><a href="http://gabrielbraun.free.fr/">Gabriel Braun</a></li>
 	    <li>Charly Gries</li>
 	    <li><a href="http://dpt-info.u-strasbg.fr/~narboux/">Julien Narboux</a></li>
+	    <li>Dan Song</li>
 	  </ul>
 
-
+	  <h1>Forum</h1>
+	  
+	  If you seek help about GeoCoq please using the following forum:<br>
+          <a href="https://groups.google.com/forum/#!forum/geocoq">GeoCoq Group</a>
 
 	  <h1>Licence</h1>
 	  
@@ -299,7 +325,7 @@
 
 	  <h2>Manual installation</h2>
 	  
-	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.</br> We tested the development using Coq version 8.4pl6. The <=8.3 versions are not supported.
+	  To use this library, first you need to install <a href="http://coq.inria.fr">Coq</a>.</br> We tested the development using Coq version 8.6.1 and 8.7beta. The previous versions are not supported.
           Then download and unpack the files, it will create a GeoCoq
           directory. In this directory, type <code>./configure</code> and <code>make</code> to compile the
 	  files, it will create some <code>.vo</code> files.
@@ -310,7 +336,8 @@
 	  See the instructions <a
 	  href="http://coq-blog.clarus.me/use-opam-for-coq.html">here</a>.
 	  <br>
-	  <pre>opam install -j4 -v coq-geocoq</pre>
+	  <pre>opam repo add coq-released https://coq.inria.fr/opam/released
+opam install -j4 -v coq-geocoq</pre>
 	  <br>
 
 	  <h1>Related papers</h1>
@@ -334,18 +361,16 @@
 	  <a href="https://github.com/GeoCoq/GeoCoq/releases/latest" class="button"> 
             All releases
 	  </a>
-          <a href="https://github.com/GeoCoq/GeoCoq/archive/v2.1.0.zip" class="button">
+          <a href="https://github.com/GeoCoq/GeoCoq/archive/v2.2.1.zip" class="button">
             <small>Download</small>
              .zip file
           </a>
-          <a href="https://github.com/GeoCoq/GeoCoq/archive/v2.1.0.tar.gz" class="button">
+          <a href="https://github.com/GeoCoq/GeoCoq/archive/v2.2.1.tar.gz" class="button">
             <small>Download</small>
              tar.gz file
           </a>
         </aside>
       </div>
     </div>
-
-  
   </body>
 </html>
