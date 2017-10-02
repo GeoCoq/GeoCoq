@@ -1523,10 +1523,10 @@ assert(HD:A' <> O).
 {
   intro.
   treat_equalities.
-  unfold HalfA in HH1.
+  unfold HalfA in *.
   spliter.
-  apply conga_diff2 in H3.
-  tauto.
+  assert_diffs.
+  intuition.
 }
 
 induction(Col_dec A O C).

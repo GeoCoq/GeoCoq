@@ -855,7 +855,7 @@ assert(LtA A O C' A O B).
     treat_equalities.
     unfold TS in H27.
     spliter.
-    apply H4; Col.
+    intuition Col.
     apply(ts2__inangle A O B C'); auto.
   }
   apply l9_9 in H45.
@@ -923,7 +923,7 @@ assert(LtA B O C' B O A).
     treat_equalities.
     unfold TS in H27.
     spliter.
-    apply H8; Col.
+    intuition Col.
     apply(ts2__inangle B O A C').
     apply invert_two_sides; auto.
     apply l9_2.
@@ -1322,7 +1322,8 @@ assert(HN2:~Col O A C').
   }
   assert(HH:= diam_end_uniqueness O P C' A C H30 H31).
   treat_equalities.
-  assert(hh:= not_two_sides_id A A' B).
+  assert(hh:= not_two_sides_id A A' B) || 
+  assert(hh:= not_two_sides_id A O B). 
   contradiction.
 }
 
@@ -1516,7 +1517,7 @@ assert(OS C' O A U).
   eapply (col_one_side _ C); Col.
   intro.
   treat_equalities.
-  apply H5; Col.
+  intuition Col.
   unfold Midpoint in H14.
   tauto.
 }
@@ -1528,7 +1529,7 @@ assert(OS C' O A' B').
   apply invert_one_side.
   eapply (col_one_side _ C); Col.
   intro; treat_equalities.
-  apply H5; Col.
+  intuition Col.
   apply one_side_symmetry.
   auto.
 }
@@ -1548,7 +1549,7 @@ assert(OS C' O B' T).
   apply invert_one_side.
   eapply (col_one_side _ C); Col.
   intro; treat_equalities.
-  apply H5; Col.
+  intuition Col.
   apply one_side_symmetry.
   auto.
   apply (one_side_transitivity _ _ _ A'); auto.
@@ -1561,7 +1562,7 @@ assert(Out O B' T).
   assert(HH:= l9_19 C' O B' T O).
   destruct HH; Col.
   intro; treat_equalities.
-  apply H5; Col.
+  intuition Col.
   apply H52 in H51.
   tauto.
 }
