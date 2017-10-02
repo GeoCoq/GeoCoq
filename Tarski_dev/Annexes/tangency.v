@@ -839,8 +839,8 @@ assert(CongA O U Y O V X).
   unfold OutCircleS in *.
   unfold Lt in *.
   spliter.
-  assert (Cong O P O V) by finish.
-  intuition.
+  (assert (Cong O P O V) by finish;intuition) ||
+  (assert (Cong O P O Y) by finish;intuition ).
   unfold Cong_3.
   split.
   finish.

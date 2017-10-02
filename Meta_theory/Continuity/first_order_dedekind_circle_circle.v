@@ -151,7 +151,8 @@ Proof.
     Bet X R Y).
   { apply dedekind; [repeat constructor..|].
     exists P.
-    intros X Y [HX [X0]] [HY [Y0]].
+    intros X Y [HX [X0 HX0]] [HY [Y0 HY0]].
+ (*   intros X Y [HX [X0]] [HY [Y0]]. *)
     destruct (l5_3 P X Y Q); trivial.
     destruct (eq_dec_points X Y).
       subst; Between.
