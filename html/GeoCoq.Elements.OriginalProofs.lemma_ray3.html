@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Elements.OriginalProofs.lemma_ray3</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Elements.OriginalProofs.lemma_ray3</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_outerconnectivity.html#"><span class="id" title="library">GeoCoq.Elements.OriginalProofs.lemma_outerconnectivity</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a name="Euclid"><span class="id" title="section">Euclid</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">Ax</span>:<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#euclidean_neutral"><span class="id" title="class">euclidean_neutral</span></a>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="lemma_ray3"><span class="id" title="lemma">lemma_ray3</span></a> : <br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">V</span>, <br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="GeoCoq.Elements.OriginalProofs.euclidean_defs.html#Out"><span class="id" title="definition">Out</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.euclidean_defs.html#Out"><span class="id" title="definition">Out</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#V"><span class="id" title="variable">V</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="GeoCoq.Elements.OriginalProofs.euclidean_defs.html#Out"><span class="id" title="definition">Out</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#V"><span class="id" title="variable">V</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">intros</span>.<br/>
+<span class="id" title="keyword">let</span> <span class="id" title="var">Tf</span>:=<span class="id" title="tactic">fresh</span> <span class="id" title="keyword">in</span><br/>
+<span class="id" title="tactic">assert</span> (<span class="id" title="var">Tf</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">∃</span></a> <span class="id" title="var">E</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">(</span></a><a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#E"><span class="id" title="variable">E</span></a> <span class="id" title="var">B</span> <span class="id" title="var">D</span> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#E"><span class="id" title="variable">E</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">)</span></a>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude_def</span> <span class="id" title="var">Out</span> );<span class="id" title="tactic">destruct</span> <span class="id" title="var">Tf</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">E</span>];<span class="id" title="var">spliter</span>.<br/>
+<span class="id" title="var">rename_H</span> <span class="id" title="var">H</span>;<span class="id" title="keyword">let</span> <span class="id" title="var">Tf</span>:=<span class="id" title="tactic">fresh</span> <span class="id" title="keyword">in</span><br/>
+<span class="id" title="tactic">assert</span> (<span class="id" title="var">Tf</span>:<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">∃</span></a> <span class="id" title="var">H</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">(</span></a><a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#H"><span class="id" title="variable">H</span></a> <span class="id" title="var">B</span> <span class="id" title="var">V</span> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#H"><span class="id" title="variable">H</span></a> <span class="id" title="var">B</span> <span class="id" title="var">C</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">)</span></a>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude_def</span> <span class="id" title="var">Out</span> );<span class="id" title="tactic">destruct</span> <span class="id" title="var">Tf</span> <span class="id" title="keyword">as</span> [<span class="id" title="var">H</span>];<span class="id" title="var">spliter</span>.<br/>
+<span class="id" title="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#611abc97cba304de784fa909dbdea1fa"><span class="id" title="notation">¬</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#611abc97cba304de784fa909dbdea1fa"><span class="id" title="notation">¬</span></a> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">E</span> <span class="id" title="var">B</span> <span class="id" title="var">V</span>).<br/>
+&nbsp;{<br/>
+&nbsp;<span class="id" title="tactic">intro</span>.<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#611abc97cba304de784fa909dbdea1fa"><span class="id" title="notation">¬</span></a> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">B</span> <span class="id" title="var">E</span> <span class="id" title="var">H</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">H</span> <span class="id" title="var">E</span> <span class="id" title="var">B</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#axiom_betweennesssymmetry"><span class="id" title="method">axiom_betweennesssymmetry</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">E</span> <span class="id" title="var">B</span> <span class="id" title="var">V</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_3_6a.html#lemma_3_6a"><span class="id" title="lemma">lemma_3_6a</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">contradict</span>.<br/>
+&nbsp;&nbsp;}<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#611abc97cba304de784fa909dbdea1fa"><span class="id" title="notation">¬</span></a> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">B</span> <span class="id" title="var">H</span> <span class="id" title="var">E</span>).<br/>
+&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intro</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">E</span> <span class="id" title="var">H</span> <span class="id" title="var">B</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#axiom_betweennesssymmetry"><span class="id" title="method">axiom_betweennesssymmetry</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">E</span> <span class="id" title="var">B</span> <span class="id" title="var">V</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_3_7a.html#lemma_3_7a"><span class="id" title="lemma">lemma_3_7a</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="var">contradict</span>.<br/>
+&nbsp;&nbsp;}<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">C</span> <span class="id" title="var">B</span> <span class="id" title="var">E</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#axiom_betweennesssymmetry"><span class="id" title="method">axiom_betweennesssymmetry</span></a>).<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">C</span> <span class="id" title="var">B</span> <span class="id" title="var">H</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#axiom_betweennesssymmetry"><span class="id" title="method">axiom_betweennesssymmetry</span></a>).<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#eq"><span class="id" title="method">eq</span></a> <span class="id" title="var">H</span> <span class="id" title="var">E</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_outerconnectivity.html#lemma_outerconnectivity"><span class="id" title="lemma">lemma_outerconnectivity</span></a>).<br/>
+&nbsp;<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#BetS"><span class="id" title="method">BetS</span></a> <span class="id" title="var">E</span> <span class="id" title="var">B</span> <span class="id" title="var">V</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude</span> <a class="idref" href="GeoCoq.Axioms.euclidean_axioms.html#cn_equalitysub"><span class="id" title="method">cn_equalitysub</span></a>).<br/>
+&nbsp;<span class="id" title="var">contradict</span>.<br/>
+&nbsp;}<br/>
+<span class="id" title="tactic">assert</span> (<a class="idref" href="GeoCoq.Elements.OriginalProofs.euclidean_defs.html#Out"><span class="id" title="definition">Out</span></a> <span class="id" title="var">B</span> <span class="id" title="var">D</span> <span class="id" title="var">V</span>) <span class="id" title="tactic">by</span> (<span class="id" title="var">conclude_def</span> <span class="id" title="var">Out</span> ).<br/>
+<span class="id" title="var">close</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="GeoCoq.Elements.OriginalProofs.lemma_ray3.html#Euclid"><span class="id" title="section">Euclid</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

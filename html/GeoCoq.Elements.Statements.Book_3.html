@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Elements.Statements.Book_3</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Elements.Statements.Book_3</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab5"></a><h1 class="section">Euclid's Elements</h1>
+
+
+<div class="paragraph"> </div>
+
+  Book III
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#"><span class="id" title="library">GeoCoq.Tarski_dev.Annexes.circles</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.tangency.html#"><span class="id" title="library">GeoCoq.Tarski_dev.Annexes.tangency</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a name="Book_3"><span class="id" title="section">Book_3</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> `{<span class="id" title="var">TE</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab6"></a><h1 class="section">Proposition 1</h1>
+
+To find the centre of a given circle.
+        
+<div class="paragraph"> </div>
+
+ We do not formalize this proposition,
+    because in our formalization circles are given by
+    its center and point on the circle. 
+<div class="paragraph"> </div>
+
+<a name="lab7"></a><h1 class="section">Proposition 2</h1>
+
+If on the circumference of a circle two points are taken at random, the straight line joining the points will fall within the circle.
+        
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_2"><span class="id" title="lemma">prop_2</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">U</span> <span class="id" title="var">V</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#U"><span class="id" title="variable">U</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#V"><span class="id" title="variable">V</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Bet"><span class="id" title="method">Bet</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#U"><span class="id" title="variable">U</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#V"><span class="id" title="variable">V</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#U"><span class="id" title="variable">U</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#V"><span class="id" title="variable">V</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#InCircleS"><span class="id" title="definition">InCircleS</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#bet_onc2__incs"><span class="id" title="lemma">bet_onc2__incs</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab8"></a><h1 class="section">Proposition 3</h1>
+
+If in a circle a straight line passing through the center bisects a straight line not passing through the center, it also cuts it at right angles; and if it cut it at right angles, it also bisects it.
+        
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_3_1"><span class="id" title="lemma">prop_3_1</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Perp"><span class="id" title="definition">Perp</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#mid_onc2__perp"><span class="id" title="lemma">mid_onc2__perp</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_3_2"><span class="id" title="lemma">prop_3_2</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Col"><span class="id" title="definition">Col</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Perp"><span class="id" title="definition">Perp</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#col_onc2_perp__mid"><span class="id" title="lemma">col_onc2_perp__mid</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h1 class="section">Proposition 4</h1>
+
+If in a circle two straight lines cut one another which are not through the center, they do not bisect one another.
+        
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_4"><span class="id" title="lemma">prop_4</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">X</span>, <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Midpoint"><span class="id" title="definition">Midpoint</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#mid2_onc4__eq"><span class="id" title="lemma">mid2_onc4__eq</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab10"></a><h1 class="section">Proposition 5</h1>
+
+If two circles cut one another, they will not have the same center.
+        
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_5"><span class="id" title="lemma">prop_5</span></a> :  <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#InterCC"><span class="id" title="definition">InterCC</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.tangency.html#intercc__neq"><span class="id" title="lemma">intercc__neq</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab11"></a><h1 class="section">Proposition 6</h1>
+
+If two circles touch one another, they will not have the same center.
+        
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_6"><span class="id" title="lemma">prop_6</span></a>: <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#TangentCC"><span class="id" title="definition">TangentCC</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a><a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.tangency.html#tangentcc__neq"><span class="id" title="lemma">tangentcc__neq</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab12"></a><h1 class="section">Proposition 9</h1>
+
+If a point is taken within a circle, and more than two equal straight lines fall from the point on the circle, the point taken is the center of the circle.
+       
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_9"><span class="id" title="lemma">prop_9</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">X</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span>, <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Cong"><span class="id" title="method">Cong</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.circles.html#cong2_onc3__eq"><span class="id" title="lemma">cong2_onc3__eq</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab13"></a><h1 class="section">Proposition 11</h1>
+
+If two circles touch one another internally, and their centers are taken, the straight line joining their centres, being produced, will fall on the point of contact of the circles.
+       
+<div class="paragraph"> </div>
+
+<a name="lab14"></a><h1 class="section">Proposition 12</h1>
+
+If two circles touch one another externally, the straight line joining their centers will pass through the point of contact.
+       
+<div class="paragraph"> </div>
+
+ In our formalization we do not need to distinguish between
+    the two kinds of tangency. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_11_12"><span class="id" title="lemma">prop_11_12</span></a> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#TangentCC"><span class="id" title="definition">TangentCC</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#OnCircle"><span class="id" title="definition">OnCircle</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#D"><span class="id" title="variable">D</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Col"><span class="id" title="definition">Col</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#X"><span class="id" title="variable">X</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#C"><span class="id" title="variable">C</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.tangency.html#TangentCC_Col"><span class="id" title="lemma">TangentCC_Col</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab15"></a><h1 class="section">Proposition 18</h1>
+
+If a straight line touches a circle, and a straight line is joined from the centre to the point of contact, the straight line so joined will be perpendicular to the tangent.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a name="prop_18"><span class="id" title="lemma">prop_18</span></a> : <br/>
+<span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">O</span> <span class="id" title="var">P</span> <span class="id" title="var">T</span>,<br/>
+&nbsp;<a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#32263a1c8b01baecdff9deb038955bc9"><span class="id" title="notation">≠</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#TangentAt"><span class="id" title="definition">TangentAt</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#P"><span class="id" title="variable">P</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#T"><span class="id" title="variable">T</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a><br/>
+&nbsp;<a class="idref" href="GeoCoq.Tarski_dev.Definitions.html#Perp"><span class="id" title="definition">Perp</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#A"><span class="id" title="variable">A</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#B"><span class="id" title="variable">B</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#O"><span class="id" title="variable">O</span></a> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#T"><span class="id" title="variable">T</span></a>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="tactic">exact</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.tangency.html#tangentat_perp"><span class="id" title="lemma">tangentat_perp</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="GeoCoq.Elements.Statements.Book_3.html#Book_3"><span class="id" title="section">Book_3</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -19,7 +19,8 @@
 <h1 class="libtitle">Library GeoCoq.Meta_theory.Parallel_postulates.rah_triangle</h1>
 
 <div class="code">
-<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#"><span class="id" title="library">GeoCoq.Meta_theory.Parallel_postulates.Euclid_def</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Axioms.parallel_postulates.html#"><span class="id" title="library">GeoCoq.Axioms.parallel_postulates</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="GeoCoq.Tarski_dev.Annexes.saccheri.html#"><span class="id" title="library">GeoCoq.Tarski_dev.Annexes.saccheri</span></a>.<br/>
 
 <br/>
 <span class="id" title="keyword">Section</span> <a name="rah_triangle"><span class="id" title="section">rah_triangle</span></a>.<br/>
@@ -28,7 +29,7 @@
 <span class="id" title="keyword">Context</span> `{<span class="id" title="var">T2D</span>:<a class="idref" href="GeoCoq.Axioms.tarski_axioms.html#Tarski_2D"><span class="id" title="class">Tarski_2D</span></a>}.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <a name="rah__triangle"><span class="id" title="lemma">rah__triangle</span></a> : <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#postulate_of_right_saccheri_quadrilaterals"><span class="id" title="definition">postulate_of_right_saccheri_quadrilaterals</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.5pl3/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Meta_theory.Parallel_postulates.Euclid_def.html#triangle_postulate"><span class="id" title="definition">triangle_postulate</span></a>.<br/>
+<span class="id" title="keyword">Lemma</span> <a name="rah__triangle"><span class="id" title="lemma">rah__triangle</span></a> : <a class="idref" href="GeoCoq.Axioms.parallel_postulates.html#postulate_of_right_saccheri_quadrilaterals"><span class="id" title="definition">postulate_of_right_saccheri_quadrilaterals</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d43e996736952df71ebeeae74d10a287"><span class="id" title="notation">→</span></a> <a class="idref" href="GeoCoq.Axioms.parallel_postulates.html#triangle_postulate"><span class="id" title="definition">triangle_postulate</span></a>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">rah</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">C</span> <span class="id" title="var">D</span> <span class="id" title="var">E</span> <span class="id" title="var">F</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<a class="idref" href="GeoCoq.Tarski_dev.Annexes.saccheri.html#t22_14__bet"><span class="id" title="lemma">t22_14__bet</span></a> <span class="id" title="var">rah</span>).<br/>

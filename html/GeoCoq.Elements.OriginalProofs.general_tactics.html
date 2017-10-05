@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>GeoCoq.Elements.OriginalProofs.general_tactics</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library GeoCoq.Elements.OriginalProofs.general_tactics</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Some useful tactics 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">hyp_of_type</span> <span class="id" title="var">t</span> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+| <span class="id" title="var">H1</span>:<span class="id" title="var">t</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="var">H1</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">mysubst</span> :=<br/>
+&nbsp;<span class="id" title="tactic">repeat</span><br/>
+( <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;| <span class="id" title="var">H1</span>:?<span class="id" title="var">a</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#1c39bf18749e5cc609e83c0a0ba5a372"><span class="id" title="notation">=</span></a>?<span class="id" title="var">b</span> |- <span class="id" title="var">_</span> ⇒ (<span class="id" title="tactic">subst</span> <span class="id" title="var">a</span>;<span class="id" title="tactic">try</span> <span class="id" title="var">revert</span> <span class="id" title="var">H1</span>)<br/>
+&nbsp;<span class="id" title="keyword">end</span>);<span class="id" title="tactic">intros</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">spliter</span> := <span class="id" title="tactic">repeat</span><br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span>:(?<span class="id" title="var">X1</span> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> ?<span class="id" title="var">X2</span>) |- <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">induction</span> <span class="id" title="var">H</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">splits</span> :=<br/>
+&nbsp;<span class="id" title="tactic">repeat</span><br/>
+&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| |- ?<span class="id" title="var">x</span> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#d82a7d96d3659d805ffe732283716822"><span class="id" title="notation">∧</span></a> ?<span class="id" title="var">y</span> ⇒ <span class="id" title="tactic">split</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">remove_exists</span> :=<br/>
+<span class="id" title="tactic">repeat</span><br/>
+&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| |- <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">∃</span></a> <span class="id" title="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#84eb6d2849dbf3581b1c0c05add5f2d8"><span class="id" title="notation">,</span></a> <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">eexists</span><br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">destruct_all</span> := <br/>
+<span class="id" title="tactic">repeat</span><br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| <span class="id" title="var">H</span>:<span class="id" title="var">_</span> |- <span class="id" title="var">_</span> ⇒ <span class="id" title="tactic">progress</span> (<span class="id" title="var">decompose</span> [<a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#ex"><span class="id" title="inductive">ex</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.6.1/stdlib/Coq.Init.Logic.html#and"><span class="id" title="inductive">and</span></a>] <span class="id" title="var">H</span>);<span class="id" title="tactic">clear</span> <span class="id" title="var">H</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">one_of_disjunct</span> :=<br/>
+&nbsp;<span class="id" title="tactic">solve</span> [<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">assumption</span> || (<span class="id" title="tactic">left</span>;<span class="id" title="tactic">assumption</span>) || <span class="id" title="tactic">right</span>)].<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">rename_H</span> <span class="id" title="var">H</span> := <span class="id" title="keyword">let</span> <span class="id" title="var">T</span> := <span class="id" title="tactic">fresh</span> <span class="id" title="keyword">in</span> <span class="id" title="tactic">try</span> <span class="id" title="tactic">rename</span> <span class="id" title="var">H</span> <span class="id" title="var">into</span> <span class="id" title="var">T</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
