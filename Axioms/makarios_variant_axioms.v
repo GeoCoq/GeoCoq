@@ -1,3 +1,13 @@
+(*  Roland Coghetto, 17 March 2018
+     GNU Lesser General Public License v3.0 
+     See LICENSE GeoCoq 2.3.0 
+
+    MODIFY makarios_variant_axioms,v, Version GeoCoq 2.3.0
+    SPLIT Tarski_neutral_dimensionless_variant
+     a) Tarski_neutral_dimensionless_variant 
+     b) Tarski_neutral_dimensionless_variant_with_decidable_point_equality
+*)
+
 (** We describe here a variant of the axiom system proposed by T.J.M. Makarios in June 2013. *)
 (** This variant has a slightly different five_segment  axioms and allows to remove the 
     cong_pseudo_reflexivity axiom.
@@ -7,7 +17,6 @@ Class Tarski_neutral_dimensionless_variant := {
  MTpoint : Type;
  BetM : MTpoint -> MTpoint -> MTpoint -> Prop;
  CongM : MTpoint -> MTpoint -> MTpoint -> MTpoint -> Prop;
- Mpoint_equality_decidability : forall A B : MTpoint, A = B \/ ~ A = B;
  Mcong_identity : forall A B C, CongM A B C C -> A = B;
  Mcong_inner_transitivity : forall A B C D E F,
    CongM A B C D -> CongM A B E F -> CongM C D E F;
@@ -29,3 +38,9 @@ Class Tarski_neutral_dimensionless_variant := {
  MPC : MTpoint;
  Mlower_dim : ~ (BetM MPA MPB MPC \/ BetM MPB MPC MPA \/ BetM MPC MPA MPB)
  }.
+
+Class Tarski_neutral_dimensionless_variant_with_decidable_point_equality
+ `(Tn : Tarski_neutral_dimensionless_variant) :=
+{
+ Mpoint_equality_decidability : forall A B : MTpoint, A = B \/ ~ A = B
+}.
