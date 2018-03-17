@@ -37,7 +37,6 @@
 *)
 
 Require Export GeoCoq.Axioms.tarski_axioms.
-(*Require Export GeoCoq.Axioms.makarios_variant_axioms.*)
 Require Export GeoCoq.Axioms.makarios_variant_axioms.
 
 (** In this file we formalize the result given in T. J. M. Makarios:
@@ -72,7 +71,7 @@ exists PC.
 apply lower_dim.
 Qed.
 
-Instance Makarios_Variant2_follows_from_Tarski : Tarski_neutral_dimensionless_variant.
+Instance Makarios_Variant_follows_from_Tarski : Tarski_neutral_dimensionless_variant.
 Proof.
 exact (Build_Tarski_neutral_dimensionless_variant
  Tpoint Bet Cong
