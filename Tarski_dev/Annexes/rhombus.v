@@ -1,6 +1,17 @@
 (*   Roland Coghetto, 29 March 2018
      GNU Lesser General Public License v3.0 
      See LICENSE GeoCoq 2.3.0
+     
+     MOTIVATION: 
+     
+      - Existence of a rhombus (absolute geometry).
+      - Unicity of rhomus with 3 points determinated (absolute geometry).
+      
+     TODO:
+     
+      - In Euclidean geometry, construction of a rhombus from 3 determined points.
+      - What about rhombus in non-euclidean geometry case ?
+
 *)
 
 Require Export GeoCoq.Tarski_dev.Annexes.perp_bisect.
