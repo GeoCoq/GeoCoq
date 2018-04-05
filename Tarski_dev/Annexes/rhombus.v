@@ -1,6 +1,7 @@
-(*   Roland Coghetto, 29 March 2018
-     GNU Lesser General Public License v3.0 
-     See LICENSE GeoCoq 2.3.0
+(* Roland Coghetto, 29 March 2018, 
+                    04 April 2018.
+   GNU Lesser General Public License v3.0 
+   See LICENSE GeoCoq 2.3.0
      
      MOTIVATION: 
      
@@ -9,8 +10,29 @@
       
      TODO:
      
-      - In Euclidean geometry, construction of a rhombus from 3 determined points.
-      - What about rhombus in non-euclidean geometry case ?
+      29 march 2018 - In Euclidean geometry, construction of a rhombus from 3 determined points. DONE
+                    - What about rhombus in non-euclidean geometry case ?
+      04 april 2018 - MOVE all "Plg"'s lemma in quadrialterals.v 
+                       (after modify context Tarski_2D by 
+                          Tarski_neutral_dimensionless_with_decidable_point_equality 
+                          in quadrilaterals.v) ?
+                    - MOVE all "rhombus"'s lemma in quadrilaterals.v
+                       (after modify context Tarski_2D by 
+                          Tarski_neutral_dimensionless_with_decidable_point_equality 
+                          in quadrilaterals.v) ?
+                    - DELETE rhombus.v
+                    - EXPERIMENTAL: (in quadrilaterals_inter_dec.v)
+                        Lemma rmb_cong :
+                          forall A B C D,
+                          Rhombus A B C D ->
+                          Cong A B B C /\ Cong A B C D /\ Cong A B D A.
+                        TRY MODIFY CONTEXT ? Tarski_2D_euclidean -> Tarski_2D or Tarski_neutral_dimensionless_with_decidable_point_equality
+
+   CHANGES: 04 april 2018, RC
+   1) See JNarboux, comments about pull requests Rhombus.
+   2) ADD End Rhombus_Existence_Unicity.
+   2) MODIFY CONTEXT: Tarski_2D by Tarski_neutral_dimensionless_with_decidable_point_equality.
+   3) ADD Existence Plg, Rhombus.
 
 *)
 
@@ -18,7 +40,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.perp_bisect.
 
 Section Rhombus_Existence_Unicity.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma PlgLeft: forall A B C D, Plg A B C D -> (A <> C \/ B <> D).
 Proof.
@@ -133,5 +155,115 @@ Proof.
   subst.
   apply symmetric_point_uniqueness with B N;assumption.
 Qed.
+
+Lemma ColCongMid: forall A B C, A <> C -> Col A B C -> Cong A B B C -> Midpoint B A C.
+Proof.
+  intros.
+  assert(Col A B C). Col.
+  assert(Cong B A B C). Cong.
+  assert(A = C \/ Midpoint B A C).
+  apply l7_20; tauto. 
+  tauto.
+Qed.
+
+Lemma PlgExABC1: forall A B C, A <> C -> Col A B C -> Cong A B B C -> exists D, Plg A B C D.
+Proof.
+  intros.
+  unfold Col in H0.
+  assert(Midpoint B A C).
+  apply ColCongMid;
+  trivial.
+  exists B.
+  unfold Plg in *.
+  split.
+  tauto.
+  exists B.
+  split.
+  trivial.
+  Midpoint.
+Qed.
+
+Lemma PlgExABC2: forall A B C, ~Col A B C -> Cong A B B C -> exists D, Plg A B C D.
+Proof.
+  intros A B C HC H.
+  unfold Plg in *.
+  assert(Is_on_perp_bisect B A C). exact H.
+  destruct (midpoint_existence A B) as [X H1].
+  destruct (l10_2_existence A C B) as [D H3].
+  unfold Reflect in H3.
+  unfold ReflectL in H3.
+  induction (eq_dec_points A C).
+  case H3.
+    - intros. tauto.
+    - intros.
+      unfold Midpoint in H4.
+      destruct (midpoint_existence A C) as [Y H5].
+      destruct (symmetric_point_construction B Y) as [E H6].
+      exists E.
+      assert(B <> E).
+      induction (eq_dec_points B E).
+      subst E.
+      assert(Y = B).
+      apply l7_3. exact H6.
+      subst Y.
+      assert(Col A B C). Col. tauto. tauto. 
+      split. tauto.
+      exists Y.
+      tauto.
+    - intros.
+      destruct H3.
+      destruct H3;destruct H4;destruct H4.
+      destruct H4.
+      unfold Midpoint in H4.
+      destruct (midpoint_existence A C) as [Y H7].
+      destruct (symmetric_point_construction B Y) as [E H8].
+      exists E.
+      assert(B <> E).
+      induction (eq_dec_points B E).
+      subst E.
+      assert(Y = B).
+      apply l7_3. exact H8.
+      subst Y.
+      assert(Col A B C). Col. tauto. tauto. 
+      split. tauto.
+      exists Y.
+      tauto.
+      exists D.
+      split.
+      tauto.
+      exists A.
+      tauto.
+Qed.
+
+Lemma RhombusExABC1: forall A B C, A <> C -> Col A B C -> Cong A B B C -> exists D, Rhombus A B C D.
+Proof.
+  intros.
+  assert(Midpoint B A C).
+  apply ColCongMid; tauto.
+  exists B.
+  unfold Rhombus in *.
+  split.
+  unfold Plg in *.
+  split.
+  tauto.
+  exists B.
+  split. 
+  assumption. 
+  Midpoint. 
+  assumption.
+Qed.
+
+Lemma RhombusExABC2: forall A B C, ~Col A B C -> Cong A B B C -> exists D, Rhombus A B C D.
+Proof.
+  intros.
+  assert(exists D, Plg A B C D).
+  apply PlgExABC2;trivial.
+  destruct H1 as [D H2].
+  exists D.
+  unfold Rhombus in *.
+  tauto.
+Qed.
+
+End Rhombus_Existence_Unicity.
 
 
