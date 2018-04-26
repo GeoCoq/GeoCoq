@@ -7,6 +7,8 @@ matrix:
     - dist: trusty
       env: COQ_VERSION="trunk"    COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-trunk-daily" 
     - dist: trusty
+      env: COQ_VERSION="v8.8"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.8-daily"
+    - dist: trusty
       env: COQ_VERSION="v8.7"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.7-daily"
     - dist: trusty
       env: COQ_VERSION="v8.6"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.6-daily"
@@ -14,6 +16,8 @@ matrix:
       env: COQ_VERSION="v8.5"     COQ_PACKAGE="coq" PPA="ppa:jgross-h/coq-8.5-daily"
     - dist: trusty
       env: COQ_VERSION="8.6.1"    COQ_PACKAGE="coq-8.6.1" PPA="ppa:jgross-h/many-coq-versions"
+    - dist: trusty
+      env: COQ_VERSION="8.7.2"    COQ_PACKAGE="coq-8.7.2" PPA="ppa:jgross-h/many-coq-versions"
     - dist: trusty
       env: COQ_VERSION="8.5pl3"   COQ_PACKAGE="coq-8.5pl3" PPA="ppa:jgross-h/many-coq-versions"
      
