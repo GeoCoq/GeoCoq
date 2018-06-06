@@ -273,16 +273,18 @@ Proof.
     split; Cong.
 Qed.
 
-Lemma l6_16_1 : forall P Q S X, P<>Q -> S<>P -> Col S P Q -> Col X P Q -> Col X P S.
+Lemma l6_16_1 : forall P Q S X, P<>Q -> Col S P Q -> Col X P Q -> Col X P S.
 Proof.
     intros.
+    destruct (eq_dec_points S P).
+      subst; Col.
     assert((Bet P S X \/ Bet P X S) -> (Bet P S X \/ Bet S X P)) by (intro; induction H3; Between).
     unfold Col.
-    induction H1;induction H2.
+    induction H0;induction H1.
       right; apply H3; eapply (l5_2 Q P); Between.
-      induction H2; left; eBetween.
       induction H1; left; eBetween.
-    induction H1; induction H2.
+      induction H0; left; eBetween.
+    induction H0; induction H1.
       right; apply H3; eapply l5_1; eauto.
       right; right; eBetween.
       right; left; eBetween.
@@ -348,9 +350,9 @@ Proof.
     induction T.
     induction H0.
     induction H0.
-    induction (Col_dec A B x).
-      induction(Col_dec A B x0).
-        induction(Col_dec A B x1).
+    induction (col_dec A B x).
+      induction(col_dec A B x0).
+        induction(col_dec A B x1).
           induction (eq_dec_points A x).
             assert (~(Col x x0 x1)) by (unfold Col; auto).
             treat_equalities; eCol.
@@ -393,6 +395,16 @@ Proof.
       apply col_transitivity_1 with Y; assumption.
     apply col_permutation_2.
     apply col_transitivity_1 with Y; assumption.
+Qed.
+
+Lemma colx : forall A B C X Y, A <> B -> Col X Y A -> Col X Y B -> Col A B C -> Col X Y C.
+Proof.
+    intros.
+    destruct (eq_dec_points X Y).
+      subst; Col.
+    apply (col3 A B); auto; apply col_permutation_1.
+      apply col_transitivity_1 with Y; Col.
+      apply (col_transitivity_2 X); Col.
 Qed.
 
 Lemma out2__bet : forall A B C, Out A B C -> Out C A B -> Bet A B C.
@@ -592,7 +604,7 @@ Qed.
 Lemma or_bet_out : forall A B C, Bet A B C \/ Out B A C \/ ~Col A B C.
 Proof.
     intros.
-    destruct (Col_dec A B C); auto.
+    destruct (col_dec A B C); auto.
     destruct (out_dec B A C); auto.
     left; apply not_out_bet; trivial.
 Qed.
@@ -759,6 +771,13 @@ Proof.
     assumption.
 Qed.
 
+Lemma bet2__out : forall A B C B', A <> B -> A <> B' -> Bet A B C -> Bet A B' C -> Out A B B'.
+Proof.
+    intros.
+    apply bet2_out_out with C C; auto.
+    apply bet_neq12__neq in H1; auto.
+    apply out_trivial; auto.
+Qed.
 
 Lemma out2_out_1 : forall B C D X,
  Out B X C -> Out B X D -> Out B C D.
@@ -843,6 +862,182 @@ Proof.
     destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6];
       apply bet_out; eBetween; intro; treat_equalities; auto.
     apply HBQ; apply (between_equality _ _ A); Between.
+Qed.
+
+Lemma segment_reverse : forall A B C, Bet A B C -> exists B', Bet A B' C /\ Cong C B' A B.
+Proof.
+  intros.
+  destruct (eq_dec_points A B).
+    subst B; exists C; finish.
+  destruct (segment_construction_3 C A A B) as [B' []]; auto.
+    intro; treat_equalities; auto.
+  exists B'; split; trivial.
+  apply between_symmetry, (cong_preserves_bet A B C); Cong.
+  apply l6_6; assumption.
+Qed.
+
+Lemma diff_col_ex : forall A B, exists C, A <> C /\ B <> C /\ Col A B C.
+Proof.
+    intros.
+    assert (exists C, Bet A B C /\ B <> C).
+      apply point_construction_different.
+    ex_and H C.
+    exists C.
+    split.
+      intro.
+      induction (eq_dec_points A B).
+        subst B.
+        subst C.
+        intuition.
+      subst C.
+      Between.
+    assert_cols.
+    auto.
+Qed.
+
+Lemma diff_bet_ex3 : forall A B C,
+ Bet A B C ->
+ exists D, A <> D /\ B <> D /\ C <> D /\ Col A B D.
+Proof.
+    intros.
+    induction (eq_dec_points A B).
+      induction (eq_dec_points B C).
+        assert (exists D, Bet B C D /\ C <> D).
+          apply point_construction_different.
+        ex_and H2 D.
+        exists D.
+        repeat split.
+          subst C.
+          subst A.
+          assumption.
+          subst A.
+          subst C.
+          assumption.
+          assumption.
+        unfold Col.
+        left.
+        subst A.
+        subst C.
+        assumption.
+      assert (exists D, Bet B C D /\ C <> D).
+        apply point_construction_different.
+      ex_and H2 D.
+      exists D.
+      repeat split.
+        intro.
+        subst D.
+        apply between_symmetry in H.
+        apply H1.
+        eapply between_equality.
+          apply H2.
+        apply H.
+        intro.
+        subst D.
+        subst A.
+        apply between_identity in H2.
+        apply H3.
+        subst B.
+        reflexivity.
+        assumption.
+      unfold Col.
+      left.
+      eapply outer_transitivity_between.
+        apply H.
+        apply H2.
+      assumption.
+    induction (eq_dec_points B C).
+      subst C.
+      cut(exists D : Tpoint, A <> D /\ B <> D /\ Col A B D).
+        intro.
+        ex_and H1 D.
+        exists D.
+        repeat split.
+          assumption.
+          assumption.
+          assumption.
+        assumption.
+      apply diff_col_ex.
+    assert (exists D, Bet B C D /\ C <> D).
+      apply point_construction_different.
+    ex_and H2 D.
+    exists D.
+    repeat split.
+      intro.
+      subst D.
+      assert (B = C).
+        eapply between_equality.
+          apply H2.
+        apply between_symmetry.
+        assumption.
+      apply H1.
+      assumption.
+      intro.
+      subst D.
+      apply between_identity in H2.
+      subst C.
+      apply H1.
+      reflexivity.
+      assumption.
+    unfold Col.
+    left.
+    eapply outer_transitivity_between.
+      apply H.
+      assumption.
+    assumption.
+Qed.
+
+Lemma diff_col_ex3 : forall A B C,
+ Col A B C -> exists D, A <> D /\ B <> D /\ C <> D /\ Col A B D.
+Proof.
+    intros.
+    assert(cas1 := diff_bet_ex3 A B C).
+    assert(cas2 := diff_bet_ex3 B C A).
+    assert(cas3 := diff_bet_ex3 C A B).
+    unfold Col in H.
+    induction H.
+      apply (diff_bet_ex3 A B C).
+      assumption.
+    induction H.
+      assert (HH:=H).
+      induction (eq_dec_points B C).
+        subst C.
+        assert (exists C, A <> C /\ B <> C /\ Col A B C).
+          apply (diff_col_ex).
+        ex_and H0 D.
+        exists D.
+        repeat split; assumption.
+      apply cas2 in HH.
+      ex_and HH D.
+      exists D.
+      repeat split; try assumption.
+      apply col_permutation_2.
+      eapply col_transitivity_1.
+        apply H0.
+        assumption.
+      unfold Col.
+      left.
+      assumption.
+    induction (eq_dec_points A C).
+      subst C.
+      assert (exists C, A <> C /\ B <> C /\ Col A B C).
+        apply (diff_col_ex).
+      ex_and H0 D.
+      exists D.
+      repeat split; assumption.
+    assert (HH:=H).
+    apply cas3 in HH.
+    ex_and HH D.
+    exists D.
+    repeat split; try assumption.
+    apply col_permutation_5.
+    eapply col_transitivity_1.
+      apply H0.
+      apply col_permutation_4.
+      assumption.
+    unfold Col.
+    right;right.
+    apply between_symmetry.
+    assumption.
 Qed.
 
 End T6_2.

@@ -33,26 +33,6 @@ assert (~ Lt A C A B).
  assert (CongA A B C D B C) by (conclude lemma_equalangleshelper).
  assert (CongA D B C A B C) by (conclude lemma_equalanglessymmetric).
  assert (CongA D B C A C B) by (conclude lemma_equalanglestransitive).
- assert (~ Col A C B).
-  {
-  intro.
-  assert (Col A B C) by (forward_using lemma_collinearorder).
-  assert (nCol A B C) by (conclude_def Triangle ).
-  contradict.
-  }
- assert (Triangle A C B) by (conclude_def Triangle ).
- assert (~ Col D B C).
-  {
-  intro.
-  assert (Col B D A) by (conclude_def Col ).
-  assert (Col D B A) by (forward_using lemma_collinearorder).
-  assert (neq B D) by (forward_using lemma_betweennotequal).
-  assert (neq D B) by (conclude lemma_inequalitysymmetric).
-  assert (Col B A C) by (conclude lemma_collinear4).
-  assert (Col A B C) by (forward_using lemma_collinearorder).
-  contradict.
-  }
- assert (Triangle D B C) by (conclude_def Triangle ).
  assert (Cong B D C A) by (forward_using lemma_congruenceflip).
  assert (Cong B C C B) by (conclude cn_equalityreverse).
  assert ((Cong D C A B /\ CongA B D C C A B /\ CongA B C D C B A)) by (conclude proposition_04).

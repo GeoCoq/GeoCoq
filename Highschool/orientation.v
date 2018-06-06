@@ -1,14 +1,15 @@
-Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
+Require Export GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
 Section Orientation.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Definition proj := fun  T A B P => A <> B /\ (~Col A B T /\ Perp A B T P /\ Col A B P \/ Col A B T /\ P = T).
 
 Lemma proj_exists : forall A B T, A <> B -> exists P, proj T A B P.
 intros.
-induction(Col_dec A B T).
+induction(col_dec A B T).
 exists T.
 unfold proj.
 split.
@@ -121,7 +122,7 @@ Lemma per_proj : forall A B T P, A <> B -> Per T P A -> Per T P B -> Col A B P -
 intros.
 unfold proj.
 split; auto.
-induction (Col_dec A B T).
+induction (col_dec A B T).
 right.
 split; auto.
 
@@ -352,7 +353,7 @@ apply proj_per in H8.
 spliter.
 apply H.
 apply col_permutation_2.
-eapply per_per_col.
+eapply per2__col.
 apply l8_2.
 apply H3.
 assumption.
@@ -366,7 +367,7 @@ apply proj_per in H9.
 spliter.
 apply H0.
 apply col_permutation_2.
-eapply per_per_col.
+eapply per2__col.
 apply l8_2.
 apply H3.
 assumption.
@@ -497,7 +498,7 @@ induction H25.
 spliter.
 
 assert(Par A B X PX).
-apply l12_9 with T A.
+apply l12_9_2D with T A.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -517,7 +518,7 @@ induction H30.
 spliter.
 
 assert(Par A B Y PY).
-apply l12_9 with T A.
+apply l12_9_2D with T A.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -563,7 +564,7 @@ induction H26.
 spliter.
 
 assert(Par A B Y PY).
-apply l12_9 with T A.
+apply l12_9_2D with T A.
 apply perp_sym.
 apply H7.
 apply perp_right_comm.
@@ -613,7 +614,7 @@ eapply proj_col_proj.
 apply H3.
 apply perp_not_eq_2 in H0.
 auto.
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_comm.
 apply perp_sym.
 apply H2.
@@ -666,7 +667,7 @@ Qed.
 Lemma proj_one_side : forall A B A' B' P Q, A <> A' -> proj A P Q A' -> proj B P Q B' -> Col B A A' \/ OS A A' B B'.
 intros.
 
-induction (Col_dec B A A').
+induction (col_dec B A A').
 left.
 assumption.
 induction(eq_dec_points B B').
@@ -679,7 +680,7 @@ assert(Par A A' B B').
 unfold proj in *.
 spliter.
 induction H5; induction H4;spliter.
-eapply l12_9.
+eapply l12_9_2D.
 apply perp_sym.
 apply H8.
 Perp.
@@ -708,7 +709,7 @@ unfold proj in *.
 spliter.
 induction H2; induction H1; spliter.
 apply col_permutation_1.
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply perp_comm.
 apply H5.
@@ -724,7 +725,7 @@ Qed.
 
 Lemma proj_par : forall A B A' B' P Q, A <> A' -> B <> B' -> proj A P Q A' -> proj B P Q B' -> Par A A' B B'.
 intros.
-eapply l12_9.
+eapply l12_9_2D.
 unfold proj in *.
 spliter.
 induction H4; induction H3; spliter.
@@ -894,7 +895,7 @@ unfold proj in *.
 spliter.
 induction H4; induction H5; spliter.
 apply col_permutation_2.
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply H6.
 apply perp_left_comm.
@@ -918,7 +919,7 @@ unfold proj in *.
 spliter.
 induction H2;
 spliter; split;auto.
-induction(Col_dec P Q B).
+induction(col_dec P Q B).
 right.
 split.
 assumption.
@@ -1655,7 +1656,7 @@ unfold Midpoint in HH.
 spliter.
 
 assert(Col A C0 C1).
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply perp_comm.
 apply H4.
@@ -1789,7 +1790,7 @@ apply out_col in H0.
 Col.
 
 assert(Col A C C1).
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply perp_comm.
 apply H3.
@@ -1923,7 +1924,7 @@ subst B'.
 apply cong_identity in H3.
 assumption.
 
-induction(Col_dec A B B').
+induction(col_dec A B B').
 assert(A' <> B' /\ Col A A' B' /\ Col B A' B').
 eapply (midpoint_col _ _ _ _ M); auto.
 
@@ -3559,7 +3560,7 @@ ColR.
 assumption.
 auto.
 
-induction(Col_dec C B B').
+induction(col_dec C B B').
 assert(C=B).
 
 eapply (l6_21 B B').
@@ -3615,7 +3616,7 @@ apply perp_not_eq_1 in H16.
 tauto.
 
 assert(Par B B' C C').
-eapply l12_9.
+eapply l12_9_2D.
 apply H15.
 apply perp_sym.
 apply perp_left_comm.
@@ -3878,7 +3879,7 @@ apply perp_not_eq_1 in H19.
 tauto.
 
 assert(Par T B C C').
-eapply l12_9.
+eapply l12_9_2D.
 apply H18.
 apply perp_sym.
 apply perp_left_comm.
@@ -3902,7 +3903,7 @@ apply perp_not_eq_1 in H21.
 tauto.
 
 assert(Par T B A A').
-eapply l12_9.
+eapply l12_9_2D.
 apply H18.
 apply perp_sym.
 apply perp_left_comm.
@@ -4056,7 +4057,7 @@ intros.
 intro.
 subst B'.
 apply H0.
-eapply per_per_col.
+eapply per2__col.
 apply H1.
 assumption.
 assumption.
@@ -4140,7 +4141,7 @@ apply perp_not_eq_1 in H18.
 tauto.
 
 assert(Par B B' C C').
-eapply l12_9.
+eapply l12_9_2D.
 apply H16.
 apply perp_sym.
 apply perp_left_comm.
@@ -4153,7 +4154,7 @@ eapply (col_transitivity_1 _ Q);
 auto.
 
 assert(Par B B' A A').
-eapply l12_9.
+eapply l12_9_2D.
 apply H16.
 apply perp_sym.
 apply perp_left_comm.
@@ -4190,7 +4191,7 @@ induction(eq_dec_points A' C').
 subst C'.
 
 assert(Col A C A').
-eapply per_per_col.
+eapply per2__col.
 apply H1.
 auto.
 assumption.
@@ -4243,7 +4244,7 @@ intro.
 subst B'.
 apply H22.
 assert(Col A B A').
-eapply per_per_col.
+eapply per2__col.
 apply H1.
 auto.
 assumption.
@@ -4274,7 +4275,7 @@ intro.
 subst B'.
 apply H22.
 assert(Col B C C').
-eapply per_per_col.
+eapply per2__col.
 apply H3.
 auto.
 assumption.
@@ -4556,7 +4557,7 @@ apply perp_not_eq_2 in H3.
 auto.
 
 assert(Col A C C1).
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply perp_right_comm.
 apply H1.
@@ -4688,7 +4689,7 @@ assumption.
 
 assert(Col A C C1).
 
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_sym.
 apply perp_comm.
 apply H3.
@@ -4737,7 +4738,7 @@ assert(C <> C1).
 intro.
 subst C1.
 assert(Col P P' C).
-eapply per_per_col.
+eapply per2__col.
 apply H4.
 auto.
 assumption.
@@ -4844,7 +4845,7 @@ apply perp_right_comm.
 apply H9.
 Col.
 assert(Par C C' A B).
-eapply l12_9.
+eapply l12_9_2D.
 apply H10.
 assumption.
 
@@ -4893,7 +4894,7 @@ assert(A <> C /\ A <> C1 /\ C <> C1).
 repeat split; auto.
 
 assert(Col A C C1).
-eapply perp_perp_col.
+eapply perp2__col.
 apply perp_comm.
 apply perp_sym.
 apply H0.

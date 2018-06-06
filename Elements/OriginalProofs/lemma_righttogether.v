@@ -15,7 +15,7 @@ assert (Per B A G) by (conclude lemma_8_2).
 assert (neq A G) by (conclude_def Per ).
 assert (neq G A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists D, (BetS G A D /\ Cong A D G A)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, (BetS G A D /\ Cong A D G A)) by (conclude lemma_extension);destruct Tf as [D];spliter.
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (neq A B) by (conclude_def Per ).
 assert (Out A B B) by (conclude lemma_ray4).

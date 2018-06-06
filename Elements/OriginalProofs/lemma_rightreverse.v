@@ -13,7 +13,6 @@ Proof.
 intros.
 let Tf:=fresh in
 assert (Tf:exists E, (BetS A B E /\ Cong A B E B /\ Cong A C E C /\ neq B C)) by (conclude_def Per );destruct Tf as [E];spliter.
-assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (Cong B D A B) by (conclude lemma_congruencesymmetric).
 assert (Cong B D E B) by (conclude lemma_congruencetransitive).
 assert (Cong B D B E) by (forward_using lemma_congruenceflip).

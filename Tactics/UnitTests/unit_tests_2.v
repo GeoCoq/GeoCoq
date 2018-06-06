@@ -2,7 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.suma.
 
 Section UnitTests.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Goal forall A B C D E F G H:Tpoint, A<>B -> B<>A -> C<>D -> D<>C ->
  E<>F -> F<>E -> G<>H -> H<>G -> True.
@@ -86,6 +86,13 @@ assert_diffs.
 repeat split; assumption.
 Qed.
 
+Goal forall A B C D E F, SuppA A B C D E F -> A <> B /\ B <> C /\ D <> E /\ E <> F.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
 
 Goal forall A B C D E F G H I J K L:Tpoint, A<>B -> B<>A -> C<>D -> D<>C ->
  E<>F -> F<>E -> G<>H -> H<>G -> I<>J -> J<>I -> K<>L -> L<>K -> True.
@@ -156,7 +163,37 @@ assert_diffs.
 repeat split; assumption.
 Qed.
 
+Goal forall A B C D E F, TriSumA A B C D E F ->
+ A <> B /\ B <> C /\ A <> C /\ D <> E /\ E <> F.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
 Goal forall A B C D E F, SAMS A B C D E F -> A <> B /\ B <> C /\ D <> E /\ E <> F.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C D, ~ Coplanar A B C D ->
+  A <> B /\ A <> C /\ A <> D /\ B <> C /\ B <> D /\ C <> D. 
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C U V X, Orth_at X A B C U V -> A <> B /\ B <> C /\ A <> C /\ U <> V.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C U V, Orth A B C U V -> A <> B /\ B <> C /\ A <> C /\ U <> V.
 Proof.
 intros.
 assert_diffs.

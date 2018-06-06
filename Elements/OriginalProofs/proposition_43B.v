@@ -12,7 +12,7 @@ Context `{Ax:area}.
 
 Lemma proposition_43B : 
    forall A B C D E F G H K, 
-   PG A B C D -> BetS A H D -> BetS A E B -> BetS D F C -> BetS B G C -> BetS A K C -> PG E A H K -> PG G K F C ->
+   PG A B C D -> BetS A H D -> BetS A E B -> BetS D F C -> BetS B G C -> PG E A H K -> PG G K F C ->
    PG E K G B.
 Proof.
 intros.
@@ -26,45 +26,24 @@ assert (Par C F G K) by (forward_using lemma_parallelflip).
 assert (Par G C K F) by (conclude_def PG ).
 assert (Par B C A D) by (conclude lemma_parallelsymmetric).
 assert (Par C D A B) by (conclude lemma_parallelsymmetric).
-assert (Par H K E A) by (conclude lemma_parallelsymmetric).
 assert (Par A H E K) by (conclude lemma_parallelsymmetric).
-assert (Par F C G K) by (conclude lemma_parallelsymmetric).
-assert (Par K F G C) by (conclude lemma_parallelsymmetric).
-assert (TP A D B C) by (conclude lemma_paralleldef2B).
 assert (TP A B C D) by (conclude lemma_paralleldef2B).
 assert (TP E A H K) by (conclude lemma_paralleldef2B).
-assert (TP E K A H) by (conclude lemma_paralleldef2B).
-assert (TP G K F C) by (conclude lemma_paralleldef2B).
 assert (TP G C K F) by (conclude lemma_paralleldef2B).
 assert (TP B C A D) by (conclude lemma_paralleldef2B).
-assert (TP C D A B) by (conclude lemma_paralleldef2B).
-assert (TP H K E A) by (conclude lemma_paralleldef2B).
-assert (TP A H E K) by (conclude lemma_paralleldef2B).
-assert (TP F C G K) by (conclude lemma_paralleldef2B).
-assert (TP K F G C) by (conclude lemma_paralleldef2B).
 assert (OS A D B C) by (conclude_def TP ).
 assert (OS A D C B) by (conclude lemma_samesideflip).
 assert (OS D A C B) by (forward_using lemma_samesidesymmetric).
-assert (OS A B C D) by (conclude_def TP ).
-assert (OS E A H K) by (conclude_def TP ).
-assert (OS E K A H) by (conclude_def TP ).
-assert (OS G K F C) by (conclude_def TP ).
-assert (OS G C K F) by (conclude_def TP ).
-assert (OS B C A D) by (conclude_def TP ).
 assert (OS C D A B) by (conclude_def TP ).
 assert (OS H K E A) by (conclude_def TP ).
-assert (OS A H E K) by (conclude_def TP ).
-assert (OS F C G K) by (conclude_def TP ).
 assert (OS K F G C) by (conclude_def TP ).
 assert (neq A E) by (forward_using lemma_betweennotequal).
-assert (neq E A) by (conclude lemma_inequalitysymmetric).
-assert (neq D F) by (forward_using lemma_betweennotequal).
 assert (neq A H) by (forward_using lemma_betweennotequal).
 assert (neq B G) by (forward_using lemma_betweennotequal).
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (neq B A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists e, (BetS B A e /\ Cong A e B A)) by (conclude postulate_extension);destruct Tf as [e];spliter.
+assert (Tf:exists e, (BetS B A e /\ Cong A e B A)) by (conclude lemma_extension);destruct Tf as [e];spliter.
 assert (BetS e A B) by (conclude axiom_betweennesssymmetry).
 assert (OS D C A B) by (forward_using lemma_samesidesymmetric).
 assert (RT D A B A B C) by (conclude proposition_29C).
@@ -80,10 +59,7 @@ assert (nCol E A H) by (forward_using lemma_NCorder).
 assert (CongA E A H E A H) by (conclude lemma_equalanglesreflexive).
 assert (CongA E A H B A D) by (conclude lemma_equalangleshelper).
 assert (CongA H A E D A B) by (conclude lemma_equalanglesflip).
-assert (CongA A E K A B C)
- by (apply (lemma_supplements2 H A E A B C D A B A E K);eauto).
-assert (Col D F C) by (conclude_def Col ).
-assert (Col D C F) by (forward_using lemma_collinearorder).
+assert (CongA A E K A B C)  by (apply (lemma_supplements2 H A E A B C D A B A E K);eauto).
 assert (OS C D B A) by (conclude lemma_samesideflip).
 assert (Col A E B) by (conclude_def Col ).
 assert (Col B A E) by (forward_using lemma_collinearorder).
@@ -104,7 +80,6 @@ assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Col B B E) by (conclude_def Col ).
 assert (OS K G B E) by (conclude lemma_sameside2).
 assert (OS K G E B) by (conclude lemma_samesideflip).
-assert (eq A A) by (conclude cn_equalityreflexive).
 assert (Out B E A) by (conclude lemma_ray4).
 assert (Out B A E) by (conclude lemma_ray5).
 assert (CongA A E K E B G) by (conclude lemma_equalangleshelper).
@@ -112,7 +87,7 @@ assert (Par E K B G) by (conclude proposition_28D).
 assert (Par E K G B) by (forward_using lemma_parallelflip).
 assert (neq B C) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists c, (BetS B C c /\ Cong C c B C)) by (conclude postulate_extension);destruct Tf as [c];spliter.
+assert (Tf:exists c, (BetS B C c /\ Cong C c B C)) by (conclude lemma_extension);destruct Tf as [c];spliter.
 assert (BetS c C B) by (conclude axiom_betweennesssymmetry).
 assert (Par C D B A) by (forward_using lemma_parallelflip).
 assert (RT D C B C B A) by (conclude proposition_29C).
@@ -143,19 +118,6 @@ assert (Out B C G) by (conclude lemma_ray5).
 assert (CongA C G K G B A) by (conclude lemma_equalangleshelper).
 assert (Col B G C) by (conclude_def Col ).
 assert (Col C B G) by (forward_using lemma_collinearorder).
-assert (neq B G) by (forward_using lemma_betweennotequal).
-assert (neq G B) by (conclude lemma_inequalitysymmetric).
-assert (Par A D C B) by (forward_using lemma_parallelflip).
-assert (Par A D G B) by (conclude lemma_collinearparallel).
-assert (Par A D B G) by (forward_using lemma_parallelflip).
-assert (Par B G A D) by (conclude lemma_parallelsymmetric).
-assert (Par G B D A) by (forward_using lemma_parallelflip).
-assert (Col A H D) by (conclude_def Col ).
-assert (Col D A H) by (forward_using lemma_collinearorder).
-assert (neq H A) by (conclude lemma_inequalitysymmetric).
-assert (Par G B H A) by (conclude lemma_collinearparallel).
-assert (TP G B H A) by (conclude lemma_paralleldef2B).
-assert (OS H A G B) by (conclude_def TP ).
 assert (BetS C F D) by (conclude axiom_betweennesssymmetry).
 assert (neq C F) by (forward_using lemma_betweennotequal).
 assert (Out C F D) by (conclude lemma_ray4).
@@ -165,7 +127,6 @@ assert (Col B C C) by (conclude_def Col ).
 assert (OS A F B C) by (conclude lemma_sameside2).
 assert (TP G C K F) by (conclude lemma_paralleldef2B).
 assert (OS K F G C) by (conclude_def TP ).
-assert (Col B G C) by (conclude_def Col ).
 assert (Col C G B) by (forward_using lemma_collinearorder).
 assert (neq C B) by (conclude lemma_inequalitysymmetric).
 assert (OS K F C G) by (conclude lemma_samesideflip).
@@ -179,7 +140,6 @@ assert (OS K A B G) by (conclude lemma_samesidecollinear).
 assert (OS K A G B) by (conclude lemma_samesideflip).
 assert (Par G K B A) by (conclude proposition_28D).
 assert (Par G K A B) by (forward_using lemma_parallelflip).
-assert (Col A E B) by (conclude_def Col ).
 assert (Col A B E) by (forward_using lemma_collinearorder).
 assert (Par G K E B) by (conclude lemma_collinearparallel).
 assert (Par E B G K) by (conclude lemma_parallelsymmetric).

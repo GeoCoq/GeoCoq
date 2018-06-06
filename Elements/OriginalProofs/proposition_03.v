@@ -6,7 +6,7 @@ Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma proposition_03 : 
    forall A B C D E F, 
-   neq A B -> neq C D -> Lt C D A B -> Cong E F A B ->
+   Lt C D A B -> Cong E F A B ->
    exists X, BetS E X F /\ Cong E X C D.
 Proof.
 intros.

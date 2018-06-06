@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_equalanglestransitive.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_RTcongruence : 
    forall A B C D E F P Q R, 

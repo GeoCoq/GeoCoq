@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section tarski_euclid.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma tarski_s_euclid_implies_euclid_5 :
   tarski_s_parallel_postulate ->

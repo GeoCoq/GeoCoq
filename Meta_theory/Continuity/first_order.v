@@ -1,44 +1,36 @@
-Require Export GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Tarski_dev.Definitions.
+
+Require Import Logic.ChoiceFacts.
 
 Section first_order.
 
 Context `{Tn:Tarski_neutral_dimensionless}.
 
+(** Dedekind's axiom of continuity implies the Tarski's axiom schema of continuity *)
+
 Lemma dedekind__fod : dedekind_s_axiom -> first_order_dedekind.
 Proof.
-  intros dedekind Xi Upsilon HXi HUpsilon HA.
+  intros dedekind Alpha Beta HAlpha HBeta HA.
   apply dedekind, HA.
 Qed.
 
-(** This is the FOF predicate with type Type *)
-
-Inductive FOF0 : Prop -> Type :=
-  eq_fof : forall A B:Tpoint, FOF0 (A = B)
-| bet_fof : forall A B C, FOF0 (Bet A B C)
-| cong_fof : forall A B C D, FOF0 (Cong A B C D)
-| not_fof : forall P, FOF0 P -> FOF0 (~ P)
-| and_fof : forall P Q, FOF0 P -> FOF0 Q -> FOF0 (P /\ Q)
-| or_fof : forall P Q, FOF0 P -> FOF0 Q -> FOF0 (P \/ Q)
-| implies_fof : forall P Q, FOF0 P -> FOF0 Q -> FOF0 (P -> Q)
-| forall_fof : forall P, (forall (A:Tpoint), FOF0 (P A)) -> FOF0 (forall A, P A)
-| exists_fof : forall P, (forall (A:Tpoint), FOF0 (P A)) -> FOF0 (exists A, P A).
-
 (** This is a type whose members describe first-order formulas *)
 
-Inductive FOF1 :=
-  eq_fof1 : Tpoint -> Tpoint -> FOF1
-| bet_fof1 : Tpoint -> Tpoint -> Tpoint -> FOF1
-| cong_fof1 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> FOF1
-| not_fof1 : FOF1 -> FOF1
-| and_fof1 : FOF1 -> FOF1 -> FOF1
-| or_fof1 : FOF1 -> FOF1 -> FOF1
-| implies_fof1 : FOF1 -> FOF1 -> FOF1
-| forall_fof1 : (Tpoint -> FOF1) -> FOF1
-| exists_fof1 : (Tpoint -> FOF1) -> FOF1.
+Inductive tFOF :=
+  eq_fof1 : Tpoint -> Tpoint -> tFOF
+| bet_fof1 : Tpoint -> Tpoint -> Tpoint -> tFOF
+| cong_fof1 : Tpoint -> Tpoint -> Tpoint -> Tpoint -> tFOF
+| not_fof1 : tFOF -> tFOF
+| and_fof1 : tFOF -> tFOF -> tFOF
+| or_fof1 : tFOF -> tFOF -> tFOF
+| implies_fof1 : tFOF -> tFOF -> tFOF
+| forall_fof1 : (Tpoint -> tFOF) -> tFOF
+| exists_fof1 : (Tpoint -> tFOF) -> tFOF.
 
-(** This function injects FOF1 into Prop *)
+(** This function interperts tFOF elements as Prop *)
 
-Fixpoint fof1_prop (F:FOF1) := match F with
+Fixpoint fof1_prop (F:tFOF) := match F with
   eq_fof1 A B => A = B
 | bet_fof1 A B C => Bet A B C
 | cong_fof1 A B C D => Cong A B C D
@@ -51,48 +43,29 @@ Fixpoint fof1_prop (F:FOF1) := match F with
 
 (** Every first-order formula is equivalent to a Prop built with fof1_prop *)
 
-Lemma fof0__fof1 : forall F, FOF0 F -> { F1 | F <-> fof1_prop F1 }.
+Lemma fof__fof1 : FunctionalChoice_on Tpoint tFOF ->
+  forall F, FOF F -> exists F1,  F <-> fof1_prop F1 .
 Proof.
-  intros F HFOF.
+  intros choice F HFOF.
   induction HFOF.
   - exists (eq_fof1 A B); intuition.
   - exists (bet_fof1 A B C); intuition.
   - exists (cong_fof1 A B C D); intuition.
-  - destruct IHHFOF as [F1]; exists (not_fof1 F1); simpl; intuition.
+  - destruct IHHFOF as [F1]. exists (not_fof1 F1). simpl; intuition.
   - destruct IHHFOF1 as [F1]; destruct IHHFOF2 as [F2]; exists (and_fof1 F1 F2); simpl; intuition.
   - destruct IHHFOF1 as [F1]; destruct IHHFOF2 as [F2]; exists (or_fof1 F1 F2); simpl; intuition.
   - destruct IHHFOF1 as [F1]; destruct IHHFOF2 as [F2]; exists (implies_fof1 F1 F2); simpl; intuition.
-  - exists (forall_fof1 (fun A => proj1_sig (X A))).
-    simpl; split.
-    + intros HP A.
-      destruct (X A); simpl.
-      apply i, (HP A).
-    + intros HF A.
-      specialize f with A; specialize HF with A.
-      revert HF.
-      destruct (X A).
-      simpl.
-      intuition.
-  - exists (exists_fof1 (fun A => proj1_sig (X A))).
-    simpl; split.
-    + intro HP.
-      destruct HP as [A HP].
-      exists A.
-      destruct (X A); simpl.
-      apply i, HP.
-    + intro HF.
-      destruct HF as [A HF].
-      exists A.
-      specialize f with A.
-      revert HF.
-      destruct (X A).
-      simpl.
-      intuition.
+  - destruct (choice (fun A => (fun F1 => P A <-> fof1_prop F1)) H0) as [f].
+    exists (forall_fof1 f); simpl.
+    split; intros HH A; apply H1, HH.
+  - destruct (choice (fun A => (fun F1 => P A <-> fof1_prop F1)) H0) as [f].
+    exists (exists_fof1 f); simpl.
+    split; intros [A HA]; exists A; apply H1, HA.
 Qed.
 
 (** Every Prop built with fof1_prop is a first-order formula *)
 
-Lemma fof1__fof0 : forall F1, FOF0 (fof1_prop F1).
+Lemma fof1__fof : forall F1, FOF (fof1_prop F1).
 Proof.
   induction F1; constructor; assumption.
 Qed.

@@ -1,5 +1,4 @@
 Require Export GeoCoq.Elements.OriginalProofs.lemma_betweennotequal.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_nullsegment3.
 
 Section Euclid.
 
@@ -14,7 +13,7 @@ intros.
 let Tf:=fresh in
 assert (Tf:exists E, (BetS C E D /\ Cong C E A B)) by (conclude_def Lt );destruct Tf as [E];spliter.
 assert (neq C E) by (forward_using lemma_betweennotequal).
-assert (neq A B) by (conclude lemma_nullsegment3).
+assert (neq A B) by (conclude axiom_nocollapse).
 assert (neq C D) by (forward_using lemma_betweennotequal).
 close.
 Qed.

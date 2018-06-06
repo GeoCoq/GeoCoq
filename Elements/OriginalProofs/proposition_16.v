@@ -15,7 +15,6 @@ Lemma proposition_16 :
 Proof.
 intros.
 assert (nCol A B C) by (conclude_def Triangle ).
-assert (nCol A B C) by (conclude_def Triangle ).
 assert (~ eq A C).
  {
  intro.
@@ -31,7 +30,6 @@ assert (~ eq B C).
 assert (neq C B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
 assert (Tf:exists E, (BetS A E C /\ Cong E A E C)) by (conclude proposition_10);destruct Tf as [E];spliter.
-assert (Col A E C) by (conclude_def Col ).
 assert (~ eq B E).
  {
  intro.
@@ -41,7 +39,7 @@ assert (~ eq B E).
  }
 assert (neq E B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists F, (BetS B E F /\ Cong E F E B)) by (conclude postulate_extension);destruct Tf as [F];spliter.
+assert (Tf:exists F, (BetS B E F /\ Cong E F E B)) by (conclude lemma_extension);destruct Tf as [F];spliter.
 assert (~ eq A C).
  {
  intro.
@@ -51,7 +49,7 @@ assert (~ eq A C).
 assert (neq C A) by (conclude lemma_inequalitysymmetric).
 assert (neq E C) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists G, (BetS A C G /\ Cong C G E C)) by (conclude postulate_extension);destruct Tf as [G];spliter.
+assert (Tf:exists G, (BetS A C G /\ Cong C G E C)) by (conclude lemma_extension);destruct Tf as [G];spliter.
 assert (~ Col B E A).
  {
  intro.
@@ -80,25 +78,6 @@ assert (~ Col E A B).
  assert (Col B E A) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (Triangle E A B) by (conclude_def Triangle ).
-assert (~ Col C E F).
- {
- intro.
- assert (Col B E F) by (conclude_def Col ).
- assert (Col F E C) by (forward_using lemma_collinearorder).
- assert (Col F E B) by (forward_using lemma_collinearorder).
- assert (neq E F) by (forward_using lemma_betweennotequal).
- assert (neq F E) by (conclude lemma_inequalitysymmetric).
- assert (Col E C B) by (conclude lemma_collinear4).
- assert (Col A E C) by (conclude_def Col ).
- assert (Col E C A) by (forward_using lemma_collinearorder).
- assert (neq E C) by (forward_using lemma_betweennotequal).
- assert (Col C B A) by (conclude lemma_collinear4).
- assert (Col A B C) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (Triangle C E F) by (conclude_def Triangle ).
-assert (Triangle A E B) by (conclude_def Triangle ).
 assert ((Cong A B C F /\ CongA E A B E C F /\ CongA E B A E F C)) by (conclude proposition_04).
 assert (~ Col B A E).
  {
@@ -106,8 +85,6 @@ assert (~ Col B A E).
  assert (Col E A B) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (CongA B A E E A B) by (conclude lemma_ABCequalsCBA).
-assert (Cong A B A B) by (conclude cn_congruencereflexive).
 assert (Out A C E) by (conclude lemma_ray4).
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (neq A B) by (forward_using lemma_angledistinct).
@@ -210,16 +187,13 @@ assert (~ eq A e).
  }
 assert (neq e A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists f, (BetS A e f /\ Cong e f e A)) by (conclude postulate_extension);destruct Tf as [f];spliter.
+assert (Tf:exists f, (BetS A e f /\ Cong e f e A)) by (conclude lemma_extension);destruct Tf as [f];spliter.
 assert (~ eq B C).
  {
  intro.
  assert (Col B A C) by (conclude_def Col ).
  contradict.
  }
-assert (neq e C) by (forward_using lemma_betweennotequal).
-let Tf:=fresh in
-assert (Tf:exists g, (BetS B C g /\ Cong C g e C)) by (conclude postulate_extension);destruct Tf as [g];spliter.
 assert (~ Col A e B).
  {
  intro.
@@ -248,25 +222,6 @@ assert (~ Col e B A).
  assert (Col A e B) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (Triangle e B A) by (conclude_def Triangle ).
-assert (~ Col C e f).
- {
- intro.
- assert (Col A e f) by (conclude_def Col ).
- assert (Col f e C) by (forward_using lemma_collinearorder).
- assert (Col f e A) by (forward_using lemma_collinearorder).
- assert (neq e f) by (forward_using lemma_betweennotequal).
- assert (neq f e) by (conclude lemma_inequalitysymmetric).
- assert (Col e C A) by (conclude lemma_collinear4).
- assert (Col B e C) by (conclude_def Col ).
- assert (Col e C B) by (forward_using lemma_collinearorder).
- assert (neq e C) by (forward_using lemma_betweennotequal).
- assert (Col C A B) by (conclude lemma_collinear4).
- assert (Col B A C) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (Triangle C e f) by (conclude_def Triangle ).
-assert (Triangle B e A) by (conclude_def Triangle ).
 assert ((Cong B A C f /\ CongA e B A e C f /\ CongA e A B e f C)) by (conclude proposition_04).
 assert (~ Col A B e).
  {
@@ -274,8 +229,6 @@ assert (~ Col A B e).
  assert (Col e B A) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (CongA A B e e B A) by (conclude lemma_ABCequalsCBA).
-assert (Cong B A B A) by (conclude cn_congruencereflexive).
 assert (Out B C e) by (conclude lemma_ray4).
 assert (Out B A A) by (conclude lemma_ray4).
 assert (~ Col A B C).
@@ -310,7 +263,6 @@ assert (~ Col e C f).
  assert (neq e f) by (forward_using lemma_betweennotequal).
  assert (neq f e) by (conclude lemma_inequalitysymmetric).
  assert (Col e A C) by (conclude lemma_collinear4).
- assert (Col e B C) by (conclude_def Col ).
  assert (Col e C A) by (forward_using lemma_collinearorder).
  assert (Col e C B) by (forward_using lemma_collinearorder).
  assert (neq e C) by (forward_using lemma_betweennotequal).
@@ -390,15 +342,8 @@ assert (~ Col A C D).
  assert (Col A B C) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (~ Col B C G).
- {
- intro.
- assert (Col G C B) by (forward_using lemma_collinearorder).
- contradict.
- }
 assert (CongA G C B B C G) by (conclude lemma_ABCequalsCBA).
 assert (LtA A B C G C B) by (conclude lemma_angleorderrespectscongruence).
-assert (CongA A C D D C A) by (conclude lemma_ABCequalsCBA).
 assert (~ Col D C A).
  {
  intro.

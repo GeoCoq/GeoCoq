@@ -23,7 +23,6 @@ assert (Cong A D E F) by (conclude lemma_congruencetransitive).
 assert (neq A D) by (conclude_def Par ).
 assert (neq E F) by (conclude_def Par ).
 assert (neq D A) by (conclude lemma_inequalitysymmetric).
-assert (neq A B) by (conclude_def Par ).
 assert (~ ~ EF A B C D E B C F).
  {
  intro.
@@ -38,29 +37,11 @@ assert (~ ~ EF A B C D E B C F).
   assert (EF A B C D E B C F) by (conclude proposition_35A).
   contradict.
   }
- assert (~ BetS A E F).
-  {
-  intro.
-  assert (BetS F E A) by (conclude axiom_betweennesssymmetry).
-  assert (Par C F E B) by (conclude lemma_parallelsymmetric).
-  assert (Par F E C B) by (forward_using lemma_parallelflip).
-  assert (Par F C B E) by (forward_using lemma_parallelflip).
-  assert (PG F C B E) by (conclude_def PG ).
-  assert (Par C D A B) by (conclude lemma_parallelsymmetric).
-  assert (Par D C B A) by (forward_using lemma_parallelflip).
-  assert (Par D A C B) by (forward_using lemma_parallelflip).
-  assert (PG D C B A) by (conclude_def PG ).
-  assert (Col F D A) by (forward_using lemma_collinearorder).
-  assert (EF F C B E D C B A) by (conclude proposition_35A).
-  assert (EF F C B E A B C D) by (forward_using axiom_EFpermutation).
-  assert (EF A B C D F C B E) by (conclude axiom_EFsymmetric).
-  assert (EF A B C D E B C F) by (forward_using axiom_EFpermutation).
-  contradict.
-  }
  assert (~ BetS A D E).
   {
   intro.
-  rename_H H;let Tf:=fresh in
+  rename_H H;
+  let Tf:=fresh in
   assert (Tf:exists H, (BetS B H E /\ BetS C H D)) by (conclude lemma_parallelPasch);destruct Tf as [H];spliter.
   assert (BetS D H C) by (conclude axiom_betweennesssymmetry).
   assert (Col B H E) by (conclude_def Col ).
@@ -117,7 +98,6 @@ assert (~ ~ EF A B C D E B C F).
   assert (Col D A E) by (conclude_def Col ).
   assert (Col A D E) by (forward_using lemma_collinearorder).
   assert (neq A D) by (forward_using lemma_betweennotequal).
-  assert (neq D A) by (conclude lemma_inequalitysymmetric).
   assert (Col D E F) by (conclude lemma_collinear4).
   assert (Col D F E) by (forward_using lemma_collinearorder).
   assert (EF D C B A F C B E) by (conclude proposition_35A).
@@ -127,19 +107,11 @@ assert (~ ~ EF A B C D E B C F).
   assert (EF A B C D E B C F) by (conclude axiom_EFsymmetric).
   contradict.
   }
- assert (~ BetS D F E).
-  {
-  intro.
-  assert (BetS E F D) by (conclude axiom_betweennesssymmetry).
-  assert (Col E A D) by (forward_using lemma_collinearorder).
-  assert (EF E B C F A B C D) by (conclude proposition_35A).
-  assert (EF A B C D E B C F) by (conclude axiom_EFsymmetric).
-  contradict.
-  }
  assert (~ BetS D A F).
   {
   intro.
-  rename_H H;let Tf:=fresh in
+  rename_H H;
+  let Tf:=fresh in
   assert (Tf:exists H, (BetS C H F /\ BetS B H A)) by (conclude lemma_parallelPasch);destruct Tf as [H];spliter.
   assert (BetS A H B) by (conclude axiom_betweennesssymmetry).
   assert (Col C H F) by (conclude_def Col ).
@@ -161,7 +133,6 @@ assert (~ ~ EF A B C D E B C F).
   let Tf:=fresh in
   assert (Tf:exists e, (BetS E e A /\ Col C F e /\ nCol C F E)) by (conclude_def TS );destruct Tf as [e];spliter.
   assert (neq E A) by (forward_using lemma_betweennotequal).
-  assert (Col A e A) by (conclude_def Col ).
   assert (~ neq e F).
    {
    intro.
@@ -182,12 +153,6 @@ assert (~ ~ EF A B C D E B C F).
   assert (BetS A F E) by (conclude axiom_betweennesssymmetry).
   assert (BetS D A E) by (conclude lemma_3_7b).
   assert (BetS E A D) by (conclude axiom_betweennesssymmetry).
-  contradict.
-  }
- assert (~ BetS F A D).
-  {
-  intro.
-  assert (BetS D A F) by (conclude axiom_betweennesssymmetry).
   contradict.
   }
  assert ((eq A D \/ eq A F \/ eq D F \/ BetS D A F \/ BetS A D F \/ BetS A F D)) by (conclude_def Col ).
@@ -272,7 +237,7 @@ assert (~ ~ EF A B C D E B C F).
     }
    close.
    }
-(* cases *)
+(** cases *)
   contradict.
   }
  assert (~ eq D F).
@@ -293,7 +258,20 @@ assert (~ ~ EF A B C D E B C F).
    assert (~ eq D F).
     {
     intro.
-    assert (EF A B C D A B C D) by (conclude axiom_EFreflexive).
+    let Tf:=fresh in
+    assert (Tf:exists M, (BetS A M C /\ BetS B M D)) by (conclude lemma_diagonalsmeet);destruct Tf as [M];spliter.
+    assert (~ Col A B C).
+     {
+     intro.
+     assert (eq C C) by (conclude cn_equalityreflexive).
+     assert (Col C D C) by (conclude_def Col ).
+     assert (neq A B) by (conclude_def Par ).
+     assert (neq C D) by (conclude_def Par ).
+     assert (Meet A B C D) by (conclude_def Meet ).
+     assert (~ Meet A B C D) by (conclude_def Par ).
+     contradict.
+     }
+    assert (EF A B C D A B C D) by (conclude lemma_EFreflexive).
     assert (EF A B C D E B C D) by (conclude cn_equalitysub).
     assert (EF A B C D E B C F) by (conclude cn_equalitysub).
     contradict.
@@ -346,7 +324,7 @@ assert (~ ~ EF A B C D E B C F).
     }
    close.
    }
-(* cases *)
+(** cases *)
   contradict.
   }
  assert (BetS A F D).
@@ -394,7 +372,7 @@ assert (~ ~ EF A B C D E B C F).
  {
   close.
   }
-(* cases *)
+(** cases *)
  assert (BetS A E D).
  by cases on (eq A D \/ eq A E \/ eq D E \/ BetS D A E \/ BetS A D E \/ BetS A E D).
  {
@@ -453,7 +431,7 @@ assert (~ ~ EF A B C D E B C F).
  {
   close.
   }
-(* cases *)
+(** cases *)
  assert (~ BetS A E F).
   {
   intro.

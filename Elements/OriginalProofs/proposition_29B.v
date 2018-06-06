@@ -24,15 +24,12 @@ assert (~ eq H G).
  assert (Meet A G H D) by (conclude_def Meet ).
  contradict.
  }
-assert (neq G H) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists F, (BetS G H F /\ Cong H F G H)) by (conclude postulate_extension);destruct Tf as [F];spliter.
+assert (Tf:exists B, (BetS A G B /\ Cong G B A G)) by (conclude lemma_extension);destruct Tf as [B];spliter.
 let Tf:=fresh in
-assert (Tf:exists B, (BetS A G B /\ Cong G B A G)) by (conclude postulate_extension);destruct Tf as [B];spliter.
+assert (Tf:exists C, (BetS D H C /\ Cong H C D H)) by (conclude lemma_extension);destruct Tf as [C];spliter.
 let Tf:=fresh in
-assert (Tf:exists C, (BetS D H C /\ Cong H C D H)) by (conclude postulate_extension);destruct Tf as [C];spliter.
-let Tf:=fresh in
-assert (Tf:exists E, (BetS H G E /\ Cong G E H G)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS H G E /\ Cong G E H G)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (neq B A) by (conclude lemma_inequalitysymmetric).
 assert (neq D C) by (forward_using lemma_betweennotequal).

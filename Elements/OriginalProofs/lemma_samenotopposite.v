@@ -11,8 +11,6 @@ Lemma lemma_samenotopposite :
    ~ TS A C D B.
 Proof.
 intros.
-let Tf:=fresh in
-assert (Tf:exists p q r, (Col C D p /\ Col C D q /\ BetS A p r /\ BetS B q r /\ nCol C D A /\ nCol C D B)) by (conclude_def OS );destruct Tf as [p[q[r]]];spliter.
 assert (OS B A C D) by (forward_using lemma_samesidesymmetric).
 assert (~ TS A C D B).
  {

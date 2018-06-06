@@ -1,170 +1,16 @@
 Require Import GeoCoq.Axioms.continuity_axioms.
 Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 Require Import GeoCoq.Tarski_dev.Ch13_1.
+Require Import GeoCoq.Meta_theory.Continuity.grad.
 
 (** This development is inspired by The Foundations of Geometry and the Non-Euclidean Plane, by George E Martin, chapter 22 *)
 
 Section Archimedes.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma grad__bet : forall A B C, Grad A B C -> Bet A B C.
-Proof.
-  intros A B C HG.
-  elim HG; clear HG A B C; [Between|eBetween].
-Qed.
 
-Lemma grad_neq__neq13 : forall A B C, Grad A B C -> A <> B -> A <> C.
-Proof.
-  intros A B C HG HAB Heq.
-  subst C.
-  apply HAB.
-  apply between_identity, grad__bet; trivial.
-Qed.
-
-Lemma grad_neq__neq12 : forall A B C, Grad A B C -> A <> C -> A <> B.
-Proof.
-  intros A B C HG.
-  elim HG; clear HG A B C; intros; intro; treat_equalities.
-    auto.
-  apply H0; auto.
-Qed.
-
-Lemma grad112__eq : forall A B, Grad A A B -> A = B.
-Proof.
-  intros A B HG.
-  assert (HA' : exists A', A' = A /\ Grad A A' B) by (exists A; auto).
-  destruct HA' as [A' [Heq HG']].
-  clear HG.
-  revert Heq.
-  elim HG'; auto.
-  clear HG' A B A'.
-  intros; treat_equalities; auto.
-Qed.
-
-Lemma grad121__eq : forall A B, Grad A B A -> A = B.
-Proof.
-  intros A B HG.
-  apply between_identity, grad__bet; trivial.
-Qed.
-
-Lemma grad__le : forall A B C, Grad A B C -> Le A B A C.
-Proof.
-  intros.
-  apply grad__bet in H.
-  apply l5_12_a in H; spliter; auto.
-Qed.
-
-Lemma grad2__grad123 : forall A B C D E F, Grad2 A B C D E F -> Grad A B C.
-Proof.
-  intros A B C D E F.
-  induction 1.
-    apply grad_init.
-    apply (grad_stab _ _ C); auto.
-Qed.
-
-Lemma grad2__grad456 : forall A B C D E F, Grad2 A B C D E F -> Grad D E F.
-Proof.
-  intros A B C D E F.
-  induction 1.
-    apply grad_init.
-    apply (grad_stab _ _ F); auto.
-Qed.
-
-Lemma grad_sum : forall A B C D E,
-  Grad A B C -> Grad A B D -> Bet A C E -> Cong A D C E ->
-  Grad A B E.
-Proof.
-  intros A B C D E HGC HGD.
-  elim (eq_dec_points A B).
-  { intros; subst B.
-    assert(A = C) by (apply grad112__eq; trivial).
-    assert(A = D) by (apply grad112__eq; trivial).
-    treat_equalities; trivial.
-  }
-  intro HAB.
-  revert E.
-  induction HGD.
-    intro E; apply grad_stab; trivial.
-  rename C0 into D; rename C' into D'.
-  intros E' HBet' HCong'.
-  destruct(segment_construction A C A D) as [E [HBet HCong]].
-  assert (HBet1 : Bet A B C) by (apply grad__bet; trivial).
-  assert (HBet2 : Bet A B D) by (apply grad__bet; trivial).
-  assert(HBet3 : Bet C E E').
-  { apply l6_13_1.
-      assert_diffs; apply l6_2 with A; Between.
-    apply (l5_6 A D A D'); Cong.
-    apply bet__le1213; trivial.
-  }
-  apply grad_stab with E; auto with cong; eBetween.
-  apply cong_transitivity with D D'; auto.
-  apply l4_3_1 with A C; Cong.
-Qed.
-
-Lemma gradexp__grad : forall A B C, GradExp A B C -> Grad A B C.
-Proof.
-  induction 1.
-    apply grad_init.
-  apply grad_sum with C C; auto.
-Qed.
-
-Lemma gradexp_le__reach : forall A B C D B',
-  GradExp A B B' -> Le C D A B' ->
-  Reach A B C D.
-Proof.
-  intros A B C D B' HGE HLe.
-  exists B'; split; trivial.
-  apply gradexp__grad; trivial.
-Qed.
-
-Lemma grad__ex_gradexp_le : forall A B C,
-  Grad A B C ->
-  exists D, GradExp A B D /\ Le A C A D.
-Proof.
-  intros A B C.
-  induction 1.
-    exists B; split; Le; apply gradexp_init.
-  destruct IHGrad as [D [HGE HLe]].
-  destruct (segment_construction A D A D) as [D' [HBet HCong]].
-  exists D'; split.
-    apply gradexp_stab with D; Cong.
-  apply bet2_le2__le1346 with C D; Le.
-  apply gradexp__grad, grad__bet in HGE.
-  apply l5_6 with A B A D; Cong; Le.
-Qed.
-
-Lemma reach__ex_gradexp_le : forall A B C D, Reach A B C D ->
-  exists B', GradExp A B B' /\ Le C D A B'.
-Proof.
-  intros A B C D HR.
-  destruct HR as [B0 [HG HLe]].
-  destruct (grad__ex_gradexp_le A B B0 HG) as [B' [HG2 HLe2]].
-  exists B'; split; trivial.
-  apply le_transitivity with A B0; trivial.
-Qed.
-
-Lemma gradexp2__gradexp123 : forall A B C D E F,
-  GradExp2 A B C D E F ->
-  GradExp A B C.
-Proof.
-  intros A B C D E F.
-  induction 1.
-    apply gradexp_init.
-  apply (gradexp_stab _ _ C); auto.
-Qed.
-
-Lemma gradexp2__gradexp456 : forall A B C D E F,
-  GradExp2 A B C D E F ->
-  GradExp D E F.
-Proof.
-  intros A B C D E F.
-  induction 1.
-    apply gradexp_init.
-  apply (gradexp_stab _ _ F); auto.
-Qed.
-
-(** for every m, there exists n such that A0Dm = A0An - E0En = n(A0A1 - E0E1) (m=n) *)
+(** For every m, there exists n such that A0Dm = A0An - E0En = n(A0A1 - E0E1) (m=n) *)
 Lemma t22_18_aux1 : forall A0 A1 E0 E1 D1 D,
   Bet A0 D1 A1 -> Cong E0 E1 A1 D1 ->
   Grad A0 D1 D ->
@@ -214,7 +60,7 @@ Proof.
   apply cong_transitivity with E0 E1; Cong.
 Qed.
 
-(** for every n, B0Bn is lower than or equal to n times B0B1 *)
+(** For every n, B0Bn is lower than or equal to n times B0B1 *)
 Lemma t22_18_aux2 : forall A0 A1 B0 B1 A B E,
   Saccheri A0 B0 B1 A1 ->
   Grad2 A0 A1 A B0 B1 E -> Saccheri A0 B0 B A -> Le B0 B B0 E.
@@ -227,7 +73,9 @@ Proof.
     assert(Hdiff := sac_distincts A0 B0 B1 A1 HSac1); unfold Saccheri in *; spliter.
     apply (l6_11_uniqueness A1 A0 B0 B1); Cong; [|apply out_trivial; auto].
     apply (col_one_side_out _ A0).
-      apply col_permutation_2; apply (per_per_col _ _ A0); Perp.
+      apply col_permutation_2, cop_per2__col with A0; Perp.
+      apply coplanar_perm_3, coplanar_trans_1 with B0; Cop.
+      apply not_col_permutation_2, one_side_not_col123 with B1; assumption.
     apply (one_side_transitivity _ _ _ B0); Side.
   }
   rename C into A; rename F into E; rename C' into A'; rename F' into E'.
@@ -266,7 +114,7 @@ Proof.
   destruct (segment_construction B0 B E E') as [C [HBet HCong]].
   assert (Cong B0 B1 B B').
     apply (cong2_sac2__cong A0 B0 B1 A1 A _ _ A'); auto; [|unfold Saccheri in *; spliter; Cong].
-    apply sac2__sac with A0 B0; auto.
+    apply cop_sac2__sac with A0 B0; Cop.
     intro; treat_equalities; apply sac_distincts in HSac1; spliter; auto.
   apply (le_transitivity _ _ B0 C).
     apply (triangle_inequality B0 B B' C); trivial.
@@ -408,17 +256,19 @@ Proof.
   destruct (l11_49 A M N B M L) as [HCong1 [HCongA1 HCongA2]]; auto with cong.
     apply l11_14; Between.
   assert(B <> L) by (intro; treat_equalities; auto).
-  repeat split; auto with cong.
+  repeat split; Cong.
   - intro; treat_equalities; apply HNCol; ColR.
   - intro; treat_equalities; apply H6.
     apply (l6_21 A M N M); Col.
-    apply col_permutation_3, per_per_col with A; Col.
+    apply col_permutation_3, cop_per2__col with A; Col; Cop.
   - apply per_col with A; Col.
     apply l8_2, per_col with M; Col; Perp.
   - apply l8_2, per_col with A; Col.
   - apply l11_17 with M N A; auto.
     apply (out_conga M N A M L B); auto; try (apply out_trivial; auto).
     apply bet_out; Between.
+  - apply coplanar_perm_16, col_cop__cop with M; Col.
+    apply coplanar_perm_12, col_cop__cop with A; Col; Cop.
 Qed.
 
 Lemma t22_23 :
@@ -437,13 +287,13 @@ Proof.
   unfold Lambert in HLam; spliter.
   destruct (angle_partition L B C) as [HAcute | [HPer | HObtuse]]; trivial; [ | | exfalso; auto].
   - split; apply lt__le; [apply (cong2_lt__lt N C B L); Cong | ].
-      apply lta_per2_os__lt; Perp; Side; apply lta_left_comm, acute_per__lta; auto.
-    apply lt_left_comm, lta_per2_os__lt; Side; apply acute_per__lta; auto.
+      apply lta_os_per2__lt; Perp; Side; apply lta_left_comm, acute_per__lta; auto.
+    apply lt_left_comm, lta_os_per2__lt; Side; apply acute_per__lta; auto.
   - split; apply cong__le; [apply cong_transitivity with B L; trivial | apply cong_left_commutativity];
     apply conga_per2_os__cong; Perp; Side; apply l11_16; Perp.
 Qed.
 
-(** for every n, 2^n times B0C0 is lower than or equal to BnCn *)
+(** For every n, 2^n times B0C0 is lower than or equal to BnCn *)
 (** B0 is introduced twice for the induction tactic to work properly *)
 Lemma t22_24_aux :
   ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
@@ -484,7 +334,7 @@ Proof.
   - ColR.
 Qed.
 
-(** for every n, it is possible to get Bn and Cn *)
+(** For every n, it is possible to get Bn and Cn *)
 Lemma t22_24_aux1 : forall A B0 C0 E,
   ~ Col A B0 C0 -> Perp A C0 B0 C0 -> GradExp B0 C0 E ->
   exists B C, GradExp2 A B0 B B0 C0 E /\ Perp A C0 B C /\ Col A C0 C.

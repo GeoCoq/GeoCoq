@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_layoffunique.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_lessthantransitive : 
    forall A B C D E F, 
@@ -50,10 +50,10 @@ by cases on (BetS E K H \/ eq H K \/ BetS E H K).
  assert (neq C D) by (forward_using lemma_betweennotequal).
  assert (neq H K) by (forward_using lemma_betweennotequal).
  let Tf:=fresh in
- assert (Tf:exists J, (BetS C D J /\ Cong D J H K)) by (conclude postulate_extension);destruct Tf as [J];spliter.
+ assert (Tf:exists J, (BetS C D J /\ Cong D J H K)) by (conclude lemma_extension);destruct Tf as [J];spliter.
  assert (Out C D J) by (conclude lemma_ray4).
  assert (Out C D G) by (conclude lemma_ray4).
- assert (Cong C J E K) by (conclude lemma_sumofparts).
+ assert (Cong C J E K) by (conclude cn_sumofparts).
  assert (Cong C J C G) by (conclude lemma_congruencetransitive).
  assert (eq J G) by (conclude lemma_layoffunique).
  assert (BetS G D J) by (conclude lemma_3_6a).
@@ -66,7 +66,7 @@ by cases on (BetS E K H \/ eq H K \/ BetS E H K).
   }
  close.
  }
-(* cases *)
+(** cases *)
 assert (BetS E K F) by (conclude lemma_3_6b).
 assert (Lt A B E F) by (conclude_def Lt ).
 close.

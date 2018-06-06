@@ -40,7 +40,7 @@ by cases on (CR A D B C \/ CR A C B D).
  assert (Col C D E) by (conclude lemma_Playfairhelper2).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_ray3.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_supplements : 
    forall A B C D F a b c d f, 
@@ -26,10 +26,10 @@ assert (neq U B) by (conclude lemma_inequalitysymmetric).
 assert (neq b u) by (conclude lemma_raystrict).
 assert (neq u b) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists W, (BetS U B W /\ Cong B W U B)) by (conclude postulate_extension);destruct Tf as [W];spliter.
+assert (Tf:exists W, (BetS U B W /\ Cong B W U B)) by (conclude lemma_extension);destruct Tf as [W];spliter.
 assert (neq a b) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists w, (BetS u b w /\ Cong b w U B)) by (conclude postulate_extension);destruct Tf as [w];spliter.
+assert (Tf:exists w, (BetS u b w /\ Cong b w U B)) by (conclude lemma_extension);destruct Tf as [w];spliter.
 assert (Cong U B b w) by (conclude lemma_congruencesymmetric).
 assert (Cong B W b w) by (conclude lemma_congruencetransitive).
 assert (Cong U B u b) by (forward_using lemma_congruenceflip).
@@ -51,7 +51,7 @@ by cases on (BetS B U A \/ eq A U \/ BetS B A U).
  assert (BetS A B W) by (conclude lemma_3_6a).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Out B F W) by (conclude_def Out ).
 assert ((BetS B W F \/ eq F W \/ BetS B F W)) by (conclude lemma_ray1).
 assert (BetS U B F).
@@ -68,7 +68,7 @@ by cases on (BetS B W F \/ eq F W \/ BetS B F W).
  assert (BetS U B F) by (conclude axiom_innertransitivity).
  close.
  }
-(* cases *)
+(** cases *)
 assert (neq B F) by (forward_using lemma_betweennotequal).
 assert (Out B F W) by (conclude_def Out ).
 assert ((BetS b u a \/ eq a u \/ BetS b a u)) by (conclude lemma_ray1).
@@ -88,7 +88,7 @@ by cases on (BetS b u a \/ eq a u \/ BetS b a u).
  assert (BetS a b w) by (conclude lemma_3_6a).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Out b f w) by (conclude_def Out ).
 assert ((BetS b w f \/ eq f w \/ BetS b f w)) by (conclude lemma_ray1).
 assert (BetS u b f).
@@ -105,7 +105,7 @@ by cases on (BetS b w f \/ eq f w \/ BetS b f w).
  assert (BetS u b f) by (conclude axiom_innertransitivity).
  close.
  }
-(* cases *)
+(** cases *)
 assert (neq b f) by (forward_using lemma_betweennotequal).
 assert (Out b f w) by (conclude_def Out ).
 assert (neq b f) by (forward_using lemma_betweennotequal).

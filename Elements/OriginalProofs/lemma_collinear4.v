@@ -1,10 +1,9 @@
 Require Export GeoCoq.Elements.OriginalProofs.lemma_collinearorder.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_outerconnectivity.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_3_7b.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_collinear4 : 
    forall A B C D, 
@@ -95,7 +94,7 @@ by cases on (eq B C \/ eq B D \/ eq C D \/ eq A C \/ eq A D \/ (neq B C /\ neq B
    assert (Col B C D) by (forward_using lemma_collinearorder).
    close.
    }
-(* cases *)
+(** cases *)
   close.
   }
  {
@@ -138,7 +137,7 @@ by cases on (eq B C \/ eq B D \/ eq C D \/ eq A C \/ eq A D \/ (neq B C /\ neq B
    assert (Col B C D) by (forward_using lemma_collinearorder).
    close.
    }
-(* cases *)
+(** cases *)
   close.
   }
  {
@@ -181,13 +180,13 @@ by cases on (eq B C \/ eq B D \/ eq C D \/ eq A C \/ eq A D \/ (neq B C /\ neq B
     }
    close.
    }
-(* cases *)
+(** cases *)
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

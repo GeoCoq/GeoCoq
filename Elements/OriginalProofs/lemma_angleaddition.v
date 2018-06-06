@@ -40,26 +40,7 @@ assert (CongA S Q R D E F) by (conclude lemma_equalanglessymmetric).
 assert (CongA S Q R d e f) by (conclude lemma_equalanglestransitive).
 assert (CongA S Q R s q r) by (conclude lemma_equalanglestransitive).
 assert (CongA S Q R H q K) by (conclude lemma_equalangleshelper).
-assert (Triangle S Q R) by (conclude_def Triangle ).
-assert (Triangle P Q S) by (conclude_def Triangle ).
-assert (Col q p G) by (conclude lemma_rayimpliescollinear).
-assert (Col q s H) by (conclude lemma_rayimpliescollinear).
-assert (Col q r K) by (conclude lemma_rayimpliescollinear).
-assert (neq q G) by (conclude lemma_raystrict).
-assert (neq q H) by (conclude lemma_raystrict).
-assert (neq q K) by (conclude lemma_raystrict).
-assert (nCol p s q) by (forward_using lemma_NCorder).
-assert (nCol s r q) by (forward_using lemma_NCorder).
 assert (nCol G q H) by (conclude lemma_equalanglesNC).
-assert (nCol H q K) by (conclude lemma_equalanglesNC).
-assert (neq G H) by (forward_using lemma_NCdistinct).
-assert (neq H K) by (forward_using lemma_NCdistinct).
-assert (nCol G H q) by (forward_using lemma_NCorder).
-assert (nCol H K q) by (forward_using lemma_NCorder).
-assert (nCol H q K) by (forward_using lemma_NCorder).
-assert (nCol G q H) by (forward_using lemma_NCorder).
-assert (Triangle H q K) by (conclude_def Triangle ).
-assert (Triangle G q H) by (conclude_def Triangle ).
 assert (CongA G q H P Q S) by (conclude lemma_equalanglessymmetric).
 assert ((Cong G H P S /\ CongA q G H Q P S /\ CongA q H G Q S P)) by (conclude proposition_04).
 assert (CongA H q K S Q R) by (conclude lemma_equalanglessymmetric).
@@ -93,7 +74,7 @@ assert (neq q H) by (conclude lemma_raystrict).
 assert (neq H q) by (conclude lemma_inequalitysymmetric).
 assert (Out H q q) by (conclude lemma_ray4).
 assert (BetS G H K) by (conclude proposition_14).
-assert (Cong G K P R) by (conclude lemma_sumofparts).
+assert (Cong G K P R) by (conclude cn_sumofparts).
 assert (eq P P) by (conclude cn_equalityreflexive).
 assert (eq R R) by (conclude cn_equalityreflexive).
 assert (Out Q P P) by (conclude lemma_ray4).

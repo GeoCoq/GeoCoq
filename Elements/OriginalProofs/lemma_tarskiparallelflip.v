@@ -51,7 +51,7 @@ assert (~ Meet B A D C).
  }
 assert (TP B A D C) by (conclude_def TP ).
 let Tf:=fresh in
-assert (Tf:exists P Q R, (Col A B P /\ Col A B R /\ BetS C P Q /\ BetS D R Q /\ nCol A B C /\ nCol A B D)) by (conclude_def OS );destruct Tf as [P[Q[R]]];spliter.
+assert (Tf:exists Q P R, (Col A B P /\ Col A B R /\ BetS C P Q /\ BetS D R Q /\ nCol A B C /\ nCol A B D)) by (conclude_def OS );destruct Tf as [P[Q[R]]];spliter.
 close.
 Qed.
 

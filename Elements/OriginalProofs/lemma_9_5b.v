@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_collinear4.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_9_5b : 
    forall A B C P Q R, 
@@ -53,7 +53,7 @@ by cases on (eq S B \/ neq S B).
  assert (Col A B F) by (forward_using lemma_collinearorder).
  close.
  }
-(* cases *)
+(** cases *)
 assert (~ Col A B Q).
  {
  intro.
@@ -83,7 +83,7 @@ assert (~ Col A B Q).
   assert (Col R Q F) by (conclude lemma_collinear4).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Col F Q R) by (forward_using lemma_collinearorder).
  assert (Col C F Q) by (conclude_def Col ).
  assert (Col F Q C) by (forward_using lemma_collinearorder).

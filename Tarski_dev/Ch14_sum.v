@@ -2,7 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch13_6_Desargues_Hessenberg.
 
 Section T14_sum.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma Pj_exists : forall A B C,
  exists D, Pj A B C D.
@@ -1620,13 +1621,8 @@ Proof.
             subst E.
             apply grid_ok; Col.
           spliter.
-          assert(Col E B C).
-            apply (col3 O E); Col.
-            intro.
-            subst E.
-            apply grid_ok; Col.
           apply grid_ok.
-          apply(col3 B C); Col.
+          apply(colx B C); Col.
         subst C''.
         apply False_ind.
         induction H12.
@@ -1639,13 +1635,8 @@ Proof.
           subst E.
           apply grid_ok; Col.
         spliter.
-        assert(Col E B C).
-          apply (col3 O E); Col.
-          intro.
-          subst E.
-          apply grid_ok; Col.
         apply grid_ok.
-        apply(col3 B C); Col.
+        apply(colx B C); Col.
       apply False_ind.
       subst C'.
       induction H19.
@@ -3273,7 +3264,7 @@ Proof.
         Col.
       subst C'.
       apply sum_O_B;Col.
-      assert_diffs. Col.
+      assert_ncols; Col.
 Qed.
 
 Lemma change_grid_sum :

@@ -5,7 +5,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_NChelper.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_parallelbetween : 
    forall B H K L M, 
@@ -107,7 +107,7 @@ by cases on (eq L M \/ eq L K \/ eq M K \/ BetS M L K \/ BetS L M K \/ BetS L K 
   }
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

@@ -1,8 +1,8 @@
-Require Import GeoCoq.Highschool.circumcenter.
+Require Export GeoCoq.Highschool.circumcenter.
 
 Section Orthocenter.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 (**
 Orthocenter
@@ -46,7 +46,8 @@ Lemma construct_intersection : forall A B C X1 X2 X3,
  exists E, Col E A X3 /\ Col E B X1.
 Proof with finish.
 intros A B C X1 X2 X3 HNC HPar1 HPar2 HPar3.
-apply not_par_inter_exists.
+apply cop_npar__inter_exists.
+  apply coplanar_perm_2, coplanar_trans_1 with C; Col; Cop.
 intro HNPar; apply HNC.
 assert (HFalsePar : Par B C A C)
   by (apply (par_trans B C B X1 A C); finish; apply (par_trans B C A X3 B); finish).
@@ -140,7 +141,7 @@ Proof with finish.
 intros.
 apply perp_mid_perp_bisect...
 apply perp_sym.
-apply par_perp_perp with B C.
+apply cop_par_perp__perp with B C...
 apply par_col_par with A...
 apply perp_col1 with A1...
 Qed.
@@ -165,12 +166,12 @@ assert (Midpoint C D E) by (apply diff_not_col_col_par4_mid with A B; finish).
 assert_diffs.
 elim (eq_dec_points A O); intro.
 
-  treat_equalities; apply col_permutation_4; apply perp_perp_col with A B...
+  treat_equalities; apply col_permutation_4; apply cop_perp2__col with A B...
   apply perp_right_comm; apply perp_col1 with B1...
 
 elim (eq_dec_points B O); intro.
 
-  treat_equalities; apply col_permutation_4; apply perp_perp_col with A B...
+  treat_equalities; apply col_permutation_4; apply cop_perp2__col with A B...
   apply perp_col1 with A1...
 
 elim (eq_dec_points C O); intro.
@@ -188,10 +189,18 @@ assert (Perp O C D E).
 
 assert (Perp C1 C D E).
 
-  apply perp_sym; apply par_perp_perp with A B...
+  apply perp_sym; apply cop_par_perp__perp with A B...
   apply par_symmetry; apply par_col_par_2 with C...
 
-apply col_permutation_2; apply perp_perp_col with D E...
+apply col_permutation_2; apply cop_perp2__col with D E; Perp.
+apply coplanar_pseudo_trans with A B C.
+
+  assumption.
+  Cop.
+  apply col_cop__cop with D; Col; Cop.
+  Cop.
+  apply coplanar_perm_2, col_cop__cop with B1; Col; Cop.
+
 Qed.
 
 Lemma is_orthocenter_cases :
@@ -268,7 +277,7 @@ unfold is_orthocenter in *;spliter.
 assert_diffs.
 assert (Perp A B B C) by (apply per_perp;finish).
 assert (Par A H A B)
- by (apply l12_9 with B C;auto).
+ by (apply l12_9 with B C;Cop).
 assert (Col A B H)
  by (perm_apply (par_id A B H)).
 
@@ -306,3 +315,10 @@ auto.
 Qed.
 
 End Orthocenter.
+
+Hint Resolve
+     is_orthocenter_perm_1
+     is_orthocenter_perm_2
+     is_orthocenter_perm_3
+     is_orthocenter_perm_4
+     is_orthocenter_perm_5 : Orthocenter.

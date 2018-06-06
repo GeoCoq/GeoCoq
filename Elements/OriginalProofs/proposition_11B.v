@@ -4,9 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_planeseparation.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_oppositesidesymmetric.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_11B : 
    forall A B C P, 
    BetS A C B -> nCol A B P ->
@@ -27,7 +25,6 @@ assert (~ eq M Q).
  contradict.
  }
 assert (neq Q M) by (conclude lemma_inequalitysymmetric).
-assert (Per M Q E) by (conclude lemma_8_2).
 assert (Col A B C) by (conclude_def Col ).
 assert (Col B A E) by (forward_using lemma_collinearorder).
 assert (Col B A C) by (forward_using lemma_collinearorder).
@@ -66,7 +63,7 @@ assert (~ eq M G).
  contradict.
  }
 rename_H H;let Tf:=fresh in
-assert (Tf:exists H, (BetS M G H /\ Cong G H M G)) by (conclude postulate_extension);destruct Tf as [H];spliter.
+assert (Tf:exists H, (BetS M G H /\ Cong G H M G)) by (conclude lemma_extension);destruct Tf as [H];spliter.
 assert (Cong M G G H) by (conclude lemma_congruencesymmetric).
 assert (Midpoint M G H) by (conclude_def Midpoint ).
 assert (Cong Q G G C) by (forward_using lemma_congruenceflip).
@@ -77,7 +74,7 @@ assert (neq Q G) by (forward_using lemma_betweennotequal).
 assert (neq G Q) by (conclude lemma_inequalitysymmetric).
 assert (Per G Q M) by (conclude lemma_collinearright).
 let Tf:=fresh in
-assert (Tf:exists J, (BetS M Q J /\ Cong Q J M Q)) by (conclude postulate_extension);destruct Tf as [J];spliter.
+assert (Tf:exists J, (BetS M Q J /\ Cong Q J M Q)) by (conclude lemma_extension);destruct Tf as [J];spliter.
 assert (Cong M Q Q J) by (conclude lemma_congruencesymmetric).
 assert (Per M Q G) by (conclude lemma_8_2).
 assert (Cong M G J G) by (conclude lemma_rightreverse).
@@ -93,12 +90,13 @@ assert (~ eq J G).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists K, (BetS J G K /\ Cong G K J G)) by (conclude postulate_extension);destruct Tf as [K];spliter.
+assert (Tf:exists K, (BetS J G K /\ Cong G K J G)) by (conclude lemma_extension);destruct Tf as [K];spliter.
 assert (Cong J G G K) by (conclude lemma_congruencesymmetric).
 assert (Midpoint J G K) by (conclude_def Midpoint ).
-assert (Cong J Q K C) by (conclude lemma_pointreflectionisometry).
 assert (Cong M Q H C) by (conclude lemma_pointreflectionisometry).
-assert (Cong Q M C H) by (conclude lemma_pointreflectionisometry).
+assert (neq J Q) by (forward_using lemma_betweennotequal).
+assert (neq Q J) by (conclude lemma_inequalitysymmetric).
+assert (neq M J) by (forward_using lemma_betweennotequal).
 assert (Cong Q J C K) by (conclude lemma_pointreflectionisometry).
 assert (Cong M J H K) by (conclude lemma_pointreflectionisometry).
 assert (BetS H C K) by (conclude lemma_betweennesspreserved).
@@ -118,7 +116,6 @@ assert (neq G C) by (forward_using lemma_betweennotequal).
 assert (neq C G) by (conclude lemma_inequalitysymmetric).
 assert (Per H C G) by (conclude_def Per ).
 assert (Per G C H) by (conclude lemma_8_2).
-assert (Col Q G C) by (conclude_def Col ).
 assert (eq A A) by (conclude cn_equalityreflexive).
 assert (Col A B A) by (conclude_def Col ).
 assert (Col Q C A) by (conclude lemma_collinear5).
@@ -127,43 +124,10 @@ assert (Col C A G) by (conclude lemma_collinear4).
 assert (Col G C A) by (forward_using lemma_collinearorder).
 assert (neq A C) by (forward_using lemma_betweennotequal).
 assert (Per A C H) by (conclude lemma_collinearright).
-assert (BetS H G M) by (conclude axiom_betweennesssymmetry).
 assert (Col C A B) by (forward_using lemma_collinearorder).
 assert (neq C A) by (conclude lemma_inequalitysymmetric).
 assert (Col A G B) by (conclude lemma_collinear4).
 assert (Col A B G) by (forward_using lemma_collinearorder).
-assert (~ Col A B H).
- {
- intro.
- assert (Col B G H) by (conclude lemma_collinear4).
- assert (Col M G H) by (conclude_def Col ).
- assert (Col G H M) by (forward_using lemma_collinearorder).
- assert (Col G H B) by (forward_using lemma_collinearorder).
- assert (neq G H) by (forward_using lemma_betweennotequal).
- assert (Col H M B) by (conclude lemma_collinear4).
- assert (Col H B A) by (forward_using lemma_collinearorder).
- assert (Col H B M) by (forward_using lemma_collinearorder).
- assert (Col A B M).
- by cases on (eq H B \/ neq H B).
- {
-  assert (BetS M G B) by (conclude cn_equalitysub).
-  assert (Col M G B) by (conclude_def Col ).
-  assert (Col G B M) by (forward_using lemma_collinearorder).
-  assert (Col G B A) by (forward_using lemma_collinearorder).
-  assert (neq G B) by (conclude cn_equalitysub).
-  assert (Col B M A) by (conclude lemma_collinear4).
-  assert (Col A B M) by (forward_using lemma_collinearorder).
-  close.
-  }
- {
-  assert (Col B A M) by (conclude lemma_collinear4).
-  assert (Col A B M) by (forward_using lemma_collinearorder).
-  close.
-  }
-(* cases *)
- contradict.
- }
-assert (TS H A B M) by (conclude_def TS ).
 assert (OS P M A B) by (forward_using lemma_samesidesymmetric).
 assert (TS M A B H) by (conclude_def TS ).
 assert (TS P A B H) by (conclude lemma_planeseparation).
@@ -172,5 +136,3 @@ close.
 Qed.
 
 End Euclid.
-
-

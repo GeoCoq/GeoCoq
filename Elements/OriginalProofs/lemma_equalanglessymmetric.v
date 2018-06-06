@@ -5,7 +5,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_raystrict.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_equalanglessymmetric : 
    forall A B C a b c, 

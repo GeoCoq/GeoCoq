@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section thales_converse_postulate_thales_existence.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma thales_converse_postulate__thales_existence : thales_converse_postulate -> existential_thales_postulate.
 Proof.

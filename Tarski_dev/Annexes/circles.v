@@ -2,31 +2,7 @@ Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Circle.
 
-Context `{TE:Tarski_2D}.
-
-(*
-Lemma EqC_chara: forall A B C D, EqC A B C D <-> A=C /\ Cong A B C D.
-Proof.
-intros.
-split.
-intros.
-unfold EqC in *.
-assert (Cong C B C D).
- { specialize H with B.
-   unfold OnCircle in *.
-   apply H;Cong. }
-assert (Cong A D A B).
- { specialize H with D.
-   unfold OnCircle in *.
-    apply H;Cong. }
-.
-
-Lemma nEqC_chara : forall A B C D,
-  ~ EqC A B C D <->
-  (exists X, OnCircle X A B /\ ~ OnCircle X C D).
-Proof.
-.
-*)
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma inc112 : forall A B,
  InCircle A A B.
@@ -34,24 +10,6 @@ Proof.
   unfold InCircle.
   Le.
 Qed.
-
-(*
-Lemma outc212 : forall A B,
- OutCircle B A B.
-Proof.
-intros.
-unfold OutCircle.
-Le.
-Qed.
-
-Lemma inc212 : forall A B,
- InCircle B A B.
-Proof.
-intros.
-unfold InCircle.
-Le.
-Qed.
-*)
 
 Lemma onc212 : forall A B,
  OnCircle B A B.
@@ -150,6 +108,12 @@ intros A B HOut.
 apply le_zero with A; assumption.
 Qed.
 
+Lemma onc2__cong : forall O P A B, OnCircle A O P -> OnCircle B O P -> Cong O A O B.
+Proof.
+unfold OnCircle.
+intros O P A B H1 H2.
+apply cong_transitivity with O P; Cong.
+Qed.
 
 End Circle.
 
@@ -223,7 +187,34 @@ end.
 Section Circle_2.
 
 
-Context `{TE:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+(** If a point is strictly inside a segment of a disk, it is strictly inside the circle. *)
+
+Lemma bet_inc2__incs : forall O P U V X,
+ X <> U -> X <> V -> Bet U X V ->
+ InCircle U O P -> InCircle V O P ->
+ InCircleS X O P.
+Proof.
+intros O P U V X HUX HVX HBet HUIn HVIn.
+destruct (le_cases O U O V).
+- apply le3456_lt__lt with O V; trivial.
+  apply lt_comm, (bet_le__lt U); Le.
+- apply le3456_lt__lt with O U; trivial.
+  apply lt_comm, (bet_le__lt V); Between; Le.
+Qed.
+
+Lemma bet_incs2__incs : forall O P U V X,
+ Bet U X V -> InCircleS U O P -> InCircleS V O P ->
+ InCircleS X O P.
+Proof.
+intros O P U V X HBet HUIn HVIn.
+destruct (eq_dec_points X U).
+  subst; assumption.
+destruct (eq_dec_points X V).
+  subst; assumption.
+apply bet_inc2__incs with U V; Circle.
+Qed.
 
 (** If A and B are two points inside the circle, then all points on the segment AB are also
     in the circle, i.e. a circle is a convex figure.
@@ -233,18 +224,15 @@ Lemma bet_inc2__inc : forall A B U V P, InCircle U A B -> InCircle V A B -> Bet 
   InCircle P A B.
 Proof.
   intros A B U V P HU HV HBet.
-  destruct (eq_dec_points U P).
+  destruct (eq_dec_points P U).
     subst P; assumption.
   destruct (eq_dec_points P V).
     subst P; assumption.
-  destruct (le_cases A U A V).
-  - apply le_transitivity with A V; trivial.
-    apply le_comm, lt__le, (bet_le__lt U); Le.
-  - apply le_transitivity with A U; trivial.
-    apply le_comm, lt__le, (bet_le__lt V); Between; Le.
+  apply incs__inc, bet_inc2__incs with U V; assumption.
 Qed.
 
-(** Given two points U and V on a circle, the points of the line UV which are inside the circle are between U and V. *) 
+(** Given two points U and V on a circle, the points of the line UV which are inside the circle are
+    between U and V. *) 
 
 Lemma col_inc_onc2__bet : forall A B U V P, U <> V -> OnCircle U A B -> OnCircle V A B ->
   Col U V P -> InCircle P A B -> Bet U P V.
@@ -268,7 +256,8 @@ Proof.
     apply HNCong; Cong.
 Qed.
 
-(** Given two points U and V on a circle, all points of line UV which are outside the segment UV are outside the circle. *)
+(** Given two points U and V on a circle, all points of line UV which are outside the segment UV are
+    outside the circle. *)
 
 Lemma onc2_out__outcs : forall A B U V P, U <> V -> OnCircle U A B -> OnCircle V A B -> Out P U V ->
   OutCircleS P A B.
@@ -281,7 +270,8 @@ Proof.
   apply (col_inc_onc2__bet A B); Col.
 Qed.
 
-(** Given two points U and V inside a circle, all points of line UV which are outside the circle are outside the segment UV. *)
+(** Given two points U and V inside a circle, all points of line UV which are outside the circle are
+    outside the segment UV. *)
 
 Lemma col_inc2_outcs__out : forall A B U V P, InCircle U A B -> InCircle V A B ->
   Col U V P -> OutCircleS P A B -> Out P U V.
@@ -293,8 +283,19 @@ Proof.
   apply HOut, bet_inc2__inc with U V; trivial.
 Qed.
 
-(** Given a point U on a circle and a point V inside the circle, there is a point V such as UV is a chord of the circle
-    going through P. *)
+(** If the center of a circle belongs to a chord, then it is the midpoint of the chord. *)
+
+Lemma col_onc2__mid : forall A B U V, U <> V -> OnCircle U A B -> OnCircle V A B ->
+  Col U V A -> Midpoint A U V.
+Proof.
+  intros A B U V HUV HU HV HCol.
+  split.
+    apply (col_inc_onc2__bet A B); Circle.
+    apply cong_transitivity with A B; Cong.
+Qed.
+
+(** Given a point U on a circle and a point P inside the circle, there is a point V such as
+    UV is a chord of the circle going through P. *)
 
 Lemma chord_completion : forall A B U P, OnCircle U A B -> InCircle P A B ->
   exists V, OnCircle V A B /\ Bet U P V.
@@ -304,12 +305,13 @@ Proof.
     unfold OnCircle, InCircle in *|-.
     treat_equalities; exists U; split; Circle; Between.
   assert (HA' : exists A', U <> A' /\ Col U P A' /\ Per A A' U).
-  { destruct (Col_dec U P A) as [HCol|HNCol].
+  { destruct (col_dec U P A) as [HCol|HNCol].
       exists A; split; Col; Perp.
     destruct (l8_18_existence U P A) as [A' [HCol HPerp]]; trivial.
     assert (U <> A').
     { intro; treat_equalities.
-      destruct (l11_46 P U A) as [_ HLt]; Col.
+      assert_diffs.
+      destruct (l11_46 P U A) as [_ HLt]; auto.
         left; Perp.
       apply lt__nle in HLt.
       apply HLt.
@@ -355,7 +357,8 @@ assert (P=Q) by eauto using between_cong.
 treat_equalities;intuition.
 Qed.
 
-(** Given a circle of center O and a ray OX, there is a point on the ray which is also strictly outside the circle. *)
+(** Given a circle of center O and a ray OX, there is a point on the ray
+    which is also strictly outside the circle. *)
 
 Lemma outcs_exists1 : forall O P X, X <> O -> exists Q, Out O X Q /\ OutCircleS Q O P.
 Proof.
@@ -382,7 +385,8 @@ exists O.
 apply lt1123;auto.
 Qed.
 
-(** Given a circle of center O and a ray OX, there is a point on the ray which is also on strictly inside circle. *)
+(** Given a circle of center O and a ray OX, there is a point on the ray
+    which is also strictly inside the circle. *)
 
 Lemma incs_exists1 : forall O P X, X <> O -> P <> O -> exists Q, Out O X Q /\ InCircleS Q O P.
 Proof.
@@ -412,6 +416,9 @@ intro.
 subst Q.
 treat_equalities; tauto.
 Qed.
+
+(** Given a circle of center O and a line OX, O is between two points of the line
+    which are also on the circle. *)
 
 Lemma diam_points : forall O P X, exists Q1 Q2,
   Bet Q1 O Q2 /\ Col Q1 Q2 X /\ OnCircle Q1 O P /\ OnCircle Q2 O P.
@@ -444,7 +451,8 @@ apply cong_transitivity with O X; Cong.
 Qed.
 
 
-(** The middle of a chord together with the center of the circle and one end of the chord form a right angle *)
+(** The middle of a chord together with the center of the circle and one end of the chord
+    form a right angle *)
 
 Lemma mid_onc2__per : forall O P U V X,
  OnCircle U O P -> OnCircle V O P -> Midpoint X U V -> Per O X U.
@@ -485,7 +493,8 @@ subst X.
 treat_equalities; tauto.
 Qed.
 
-(** If a line passing through the center of a circle is perpendicular to a chord, then they intersect at the middle of the chord *)
+(** If a line passing through the center of a circle is perpendicular to a chord,
+    then they intersect at the middle of the chord *)
 
 Lemma col_onc2_perp__mid : forall O P A B X,
  O<>X -> A<>B -> Col A B X -> OnCircle A O P -> OnCircle B O P -> Perp O X A B -> Midpoint X A B.
@@ -500,16 +509,52 @@ Proof.
   intro; subst; apply HNCol; Col.
 Qed.
 
-(** The center of a circle belongs to the perpendicular bisector of each chord *)
+(** If two circles intersect at a point which is not on the line joining the center,
+    then they intersect on any half-plane delimited by that line. *)
 
-Lemma mid_onc2_perp__col : forall O P A B X Y,
- A <> B -> OnCircle A O P -> OnCircle B O P -> Midpoint X A B -> Perp X Y A B -> Col X Y O.
+Lemma circle_circle_os : forall A B C D I P,
+  OnCircle I A B -> OnCircle I C D -> ~ Col A C I -> ~ Col A C P ->
+  exists Z, OnCircle Z A B /\ OnCircle Z C D /\ OS A C P Z.
 Proof.
-  intros O P A B X Y HAB HAOn HBOn HX HPerp.
-  destruct (eq_dec_points O X).
-    subst; Col.
-  apply perp_perp_col with A B; trivial.
-  apply perp_left_comm, mid_onc2__perp with P; auto.
+  intros A B C D I P HI1 HI2 HNCol1 HNCol2.
+  destruct (l8_18_existence A C I) as [X []]; trivial.
+  destruct (l10_15 A C X P) as [Z0 []]; trivial.
+  assert_diffs.
+  destruct (l6_11_existence X X I Z0) as [Z []]; auto.
+  exists Z.
+  assert (Perp A C X Z).
+    assert_diffs; apply perp_sym, perp_col with Z0; Perp; Col.
+  assert (OS A C P Z).
+    apply one_side_transitivity with Z0; trivial.
+    apply out_one_side_1 with X; [apply one_side_not_col124 with P| |apply l6_6]; trivial.
+  clear dependent Z0.
+  repeat split; auto.
+  - apply cong_transitivity with A I; trivial.
+    destruct (eq_dec_points A X).
+      subst; assumption.
+    apply l10_12 with X X; Cong; [apply perp_per_2|apply perp_per_1];
+      apply perp_left_comm, perp_col with C; auto.
+  - apply cong_transitivity with C I; trivial.
+    destruct (eq_dec_points C X).
+      subst; assumption.
+    apply l10_12 with X X; Cong; [apply perp_per_2|apply perp_per_1];
+      apply perp_left_comm, perp_col with A; Perp; Col.
+Qed.
+
+(** If two circles intersect, then they intersect on any plane containing the centers *)
+
+Lemma circle_circle_cop : forall A B C D I P, OnCircle I A B -> OnCircle I C D ->
+  exists Z, OnCircle Z A B /\ OnCircle Z C D /\ Coplanar A C P Z.
+Proof.
+  intros A B C D I P HI1 HI2.
+  destruct (col_dec A C P).
+    exists I; repeat split; trivial.
+    exists P; left; split; Col.
+  destruct (col_dec A C I).
+    exists I; repeat split; trivial.
+    exists I; left; split; Col.
+  destruct (circle_circle_os A B C D I P) as [Z [HZ1 [HZ2 HOS]]]; trivial.
+  exists Z; repeat split; Cop.
 Qed.
 
 (** A circle does not cut a line at more than two points. *)
@@ -524,21 +569,6 @@ right.
 apply between_equality with U; apply col_inc_onc2__bet with O P; Col; Circle.
 Qed.
 
-(** If a point is strictly inside a chord, it is strictly inside the circle. *)
-
-Lemma bet_onc2__incs : forall O P U V X,
- X <> U -> X <> V -> Bet U X V ->
- OnCircle U O P -> OnCircle V O P ->
- InCircleS X O P.
-Proof.
-intros O P U V X HUX HVX HBet HUOn HVOn.
-assert (HIn : InCircle X O P) by (apply bet_inc2__inc with U V; Circle).
-split; auto.
-intro.
-assert_diffs.
-destruct (line_circle_two_points O P U V X); Col.
-Qed.
-
 (** The midpoint of a chord is strictly inside the circle. *)
 
 Lemma onc2_mid__incs : forall O P U V M, 
@@ -547,7 +577,7 @@ Lemma onc2_mid__incs : forall O P U V M,
 Proof.
 intros O P U V M HUV HUOn HVOn HM.
 assert_diffs.
-apply bet_onc2__incs with U V; Between.
+apply bet_inc2__incs with U V; Between; Circle.
 Qed.
 
 (** A point is either strictly inside, on or strictly outside a circle. *)
@@ -556,7 +586,7 @@ Lemma circle_cases : forall O P X,
   OnCircle X O P \/ InCircleS X O P \/ OutCircleS X O P.
 Proof.
 intros O P X.
-destruct (Cong_dec O X O P); auto.
+destruct (cong_dec O X O P); auto.
 right.
 destruct (le_cases O P O X); [right|left]; split; Cong.
 Qed.
@@ -578,120 +608,6 @@ Proof.
   apply (l5_6 O X O P); Cong.
 Qed.
 
-(** Euclid Book III Prop 4. 
- If in a circle two straight lines which do not pass through the center cut one another,
- then they do not bisect one another.
- *)
-
-Lemma mid2_onc4__eq : forall O P A B C D X, B <> C-> A <> B -> 
- OnCircle A O P ->
- OnCircle B O P ->
- OnCircle C O P ->
- OnCircle D O P ->
- Midpoint X A C ->
- Midpoint X B D ->
- X=O.
-Proof.
-intros O P A B C D X Hbc.
-intros.
-assert(HH:=mid_onc2__per O P A C X H0 H2 H4).
-assert(HP:=mid_onc2__per O P B D X H1 H3 H5).
-
-induction(eq_dec_points X O).
-auto.
-assert(Col A B X).
-apply(per_per_col A B O X); Perp.
-unfold Midpoint in *.
-spliter.
-assert(Col B X D).
-apply bet_col; auto.
-assert(Col A X C).
-ColR.
-
-induction(eq_dec_points A X).
-subst X.
-treat_equalities.
-assert(OutCircleS D O P).
-apply(onc2_out__outcs O P A B D); auto.
-assert_diffs.
-unfold Out.
-split.
-auto.
-split.
-auto.
-left; Between.
-
-unfold OutCircleS in *.
-unfold Lt in *.
-spliter.
-unfold OnCircle in H3.
-apply False_ind.
-absurd (Cong O P O D);Cong.
-
-assert(Col A B C). 
-ColR.
-
-assert(C = A \/ C = B).
-apply(line_circle_two_points O P A B C); Col.
-destruct H14.
-treat_equalities.
-intuition.
-treat_equalities.
-assert(A = D) by
-(apply (symmetric_point_uniqueness C X); split; Between; Cong).
-treat_equalities.
-tauto.
-Qed.
-
-(** Euclid Book III Prop 9.
- If a point is taken within a circle,
- and more than two equal straight lines fall from the point on the circle,
- then the point taken is the center of the circle.
-*)
-
-Lemma cong2_onc3__eq : forall O P X A B C, A <> B -> A <> C -> B <> C ->
-  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
-  Cong X A X B -> Cong X A X C ->
-  X = O.
-Proof.
-  intros O P X A B C HAB HAC HBC HAOn HBOn HCOn HCong1 HCong2.
-  destruct (midpoint_existence A B) as [M1 HM1].
-  destruct (midpoint_existence A C) as [M2 HM2].
-  destruct (perp_exists M1 A B) as [P1 HPerp1]; auto.
-  destruct (perp_exists M2 A C) as [P2 HPerp2]; auto.
-  assert (HColX1 : Col M1 P1 X) by (apply (mid_onc2_perp__col X A A B); Circle).
-  assert (HColO1 : Col M1 P1 O) by (apply (mid_onc2_perp__col O P A B); auto).
-  assert (HColX2 : Col M2 P2 X) by (apply (mid_onc2_perp__col X A A C); Circle).
-  assert (HColO2 : Col M2 P2 O) by (apply (mid_onc2_perp__col O P A C); auto).
-  assert_diffs.
-  destruct (Col_dec M1 P1 M2); [apply (l6_21 M2 P2 M1 P1)|apply (l6_21 M1 P1 M2 P2)]; Col.
-  intro.
-  apply HBC.
-  destruct (eq_dec_points M1 M2).
-    apply (symmetric_point_uniqueness A M1); subst; trivial.
-  apply l10_2_uniqueness_spec with M1 P1 A.
-    split; auto; exists M1; Col.
-  split.
-    exists M2; auto.
-  left.
-  apply (perp_col2 M2 P2); ColR.
-Qed.
-
-Lemma onc2_mid_cong_col : forall O P U V M X, U <> V -> OnCircle U O P -> OnCircle V O P -> Midpoint M U V -> Cong U X V X -> Col O X M.
-Proof.
-intros.
-assert(HH:=mid_onc2__per O P U V M H0 H1 H2).
-assert(Per X M U).
-unfold Per.
-exists V.
-unfold OnCircle in *.
-split; Cong.
-apply(per_per_col _ _ U); auto.
-assert_diffs.
-auto.
-Qed.
-
-
 Lemma onc_not_center : forall O P A, O <> P -> OnCircle A O P -> A <> O.
 Proof.
 intros.
@@ -699,7 +615,6 @@ intro.
 unfold OnCircle in *.
 treat_equalities; tauto.
 Qed.
-
 
 Lemma onc2_per__mid : forall O P U V M, U <> V -> M <> U ->
  OnCircle U O P -> OnCircle V O P -> Col M U V -> Per O M U -> Midpoint M U V .
@@ -787,8 +702,6 @@ assert(Cong X O Y O).
 apply cong_transitivity with O X; Cong.
 Qed.
 
-
-Definition Diam A B O P := Bet A O B /\ OnCircle A O P /\ OnCircle B O P.
 
 Lemma mid_onc__diam : forall O P A B, OnCircle A O P -> Midpoint O A B -> Diam A B O P.
 Proof.
@@ -929,7 +842,7 @@ intros.
 assert(HH:= bet_onc_le_a O P A B T X H H3 H4).
 assert(Lt T A T X \/ Cong T A T X).
 {
-  induction(Cong_dec T A T X).
+  induction(cong_dec T A T X).
   right; auto.
   left.
   unfold Lt.
@@ -988,7 +901,7 @@ intros.
 assert(HH:= bet_onc_le_b O P A B T X H H2 H3 ).
 assert(Lt T X  T A \/ Cong T A T X).
 {
-  induction(Cong_dec T A T X).
+  induction(cong_dec T A T X).
   right; auto.
   left.
   unfold Lt.
@@ -1003,7 +916,10 @@ assert(Bet T O A) by eBetween.
 assert(Bet T O X).
 {
   apply(l4_6 T O A T O X); auto.
-  repeat split; eCong.
+  repeat split.
+    apply cong_reflexivity.
+    assumption.
+    apply cong_transitivity with O P; Cong.
 }
 apply H1.
 apply(between_cong_3 T O); trivial.
@@ -1031,7 +947,8 @@ apply H0; Cong.
 
 assert(Lt A O A B /\ Lt B O A B).
 {
-  assert (Midpoint O A B) by (split;eCong).
+  assert (Midpoint O A B).
+    split; [assumption|apply cong_transitivity with O P; Cong].
   split.
   apply(mid__lt );  assert_diffs;auto.
   assert (Lt B O B A) by (apply mid__lt;assert_diffs;finish).
@@ -1066,9 +983,6 @@ assert(Lt U V' A B).
 apply(le1234_lt__lt U V U V' A B); auto.
 Qed.
 
-
-
-
 Lemma incs_onc_diam__lt : forall O P A B U V, Diam A B O P -> InCircleS U O P -> OnCircle V O P -> Lt U V A B.
 Proof.
 intros.
@@ -1092,7 +1006,6 @@ assert(Le V U V U').
 apply lt_left_comm.
 apply(le1234_lt__lt V U V U'); auto.
 Qed.
-
 
 Lemma diam_cong_incs__outcs : forall O P A B U V, Diam A B O P -> Cong A B U V -> InCircleS U O P -> OutCircleS V O P.
 Proof.
@@ -1125,7 +1038,6 @@ apply H5; Cong.
 assumption.
 Qed.
 
-
 Lemma diam_uniqueness : forall O P A B X, Diam A B O P -> Cong A X A B -> OnCircle X O P -> X = B.
 Proof.
 intros.
@@ -1143,6 +1055,469 @@ assert(Bet A O X).
 assert_diffs.
 apply(between_cong_3 A O); auto.
 apply cong_transitivity with O P; Cong.
+Qed.
+
+Lemma onc3__ncol : forall O P A B C,
+ A <> B -> A <> C -> B <> C ->
+ OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+ ~ Col A B C.
+Proof.
+intros.
+unfold OnCircle in *.
+intro.
+induction H5.
+assert(InCircleS B O P).
+{
+  apply(bet_inc2__incs O P A C B); Circle.
+}
+unfold InCircleS in *.
+unfold Lt in *.
+tauto.
+induction H5.
+assert(InCircleS C O P).
+{
+  apply(bet_inc2__incs O P B A C); Circle.
+}
+unfold InCircleS in *.
+unfold Lt in *.
+tauto.
+assert(InCircleS A O P).
+{
+  apply(bet_inc2__incs O P C B A); Circle.
+}
+unfold InCircleS in *.
+unfold Lt in *.
+tauto.
+Qed.
+
+Lemma diam_exists : forall O P T, exists A, exists B, Diam A B O P /\ Col A B T.
+Proof.
+intros.
+destruct (diam_points O P T) as [A [B [HBet [HCol [HA HB]]]]].
+exists A, B.
+repeat split; auto.
+Qed.
+
+Lemma chord_intersection : forall O P A B X Y,
+  OnCircle A O P -> OnCircle B O P -> OnCircle X O P -> OnCircle Y O P -> TS A B X Y ->
+  TS X Y A B.
+Proof.
+intros.
+unfold TS in H3.
+spliter.
+ex_and H5 T.
+repeat split.
+apply (onc3__ncol O P); Circle; try(intro; treat_equalities; Col).
+apply (onc3__ncol O P); Circle; try(intro; treat_equalities; Col).
+exists T.
+split.
+Col.
+assert_diffs.
+apply (col_inc_onc2__bet O P); Col.
+apply(bet_inc2__incs O P X Y T); Circle; intro; treat_equalities; Col.
+Qed.
+
+Lemma ray_cut_chord : forall O P A B X Y,
+  Diam A B O P -> OnCircle X O P -> OnCircle Y O P -> TS A B X Y -> OS X Y O A ->
+  TS X Y O B.
+Proof.
+intros.
+unfold Diam in *.
+spliter.
+apply(l9_8_2 X Y A O B); [|Side].
+apply (chord_intersection O P); assumption.
+Qed.
+
+Lemma center_col__diam : forall O P A B,
+ A <> B -> Col O A B -> OnCircle A O P -> OnCircle B O P ->
+ Diam A B O P.
+Proof.
+Proof.
+intros.
+unfold Diam.
+split; Circle.
+assert(Cong O A O B) by (apply cong_transitivity with O P; Cong).
+assert(A = B \/ Midpoint O A B) by (apply(l7_20 O A B); Col).
+induction H4.
+contradiction.
+Between.
+Qed.
+
+Lemma diam__midpoint: forall O P A B, Diam A B O P -> Midpoint O A B.
+Proof.
+intros.
+unfold Diam in *.
+spliter.
+unfold Midpoint.
+unfold OnCircle in *.
+split.
+  assumption.
+apply cong_transitivity with O P; Cong.
+Qed.
+
+Lemma diam_sym : forall O P A B, Diam A B O P -> Diam B A O P.
+Proof.
+intros.
+unfold Diam in *.
+spliter.
+repeat split; Between.
+Qed.
+
+Lemma diam_end_uniqueness : forall O P A B C, Diam A B O P -> Diam A C O P -> B = C.
+Proof.
+intros.
+apply diam__midpoint in H.
+apply diam__midpoint in H0.
+apply (symmetric_point_uniqueness A O); Midpoint.
+Qed.
+
+
+Lemma center_onc2_mid__ncol : forall O P A B M ,
+ O <> P -> ~ Col O A B ->
+ OnCircle A O P -> OnCircle B O P ->
+ Midpoint M A B  -> ~ Col A O M.
+Proof.
+intros.
+intro.
+assert_diffs.
+unfold Midpoint in H3.
+spliter.
+apply H0.
+ColR.
+Qed.
+
+Lemma bet_chord__diam_or_ncol : forall O P A B T,
+  A <> B -> T <> A -> T <> B -> OnCircle A O P -> OnCircle B O P -> Bet A T B ->
+  Diam A B O P \/ ~Col O A T /\ ~Col O B T.
+Proof.
+intros.
+induction(col_dec O A B).
+left.
+apply(center_col__diam); Col.
+right.
+split.
+intro.
+apply H5; ColR.
+intro.
+apply H5; ColR.
+Qed.
+
+Lemma mid_chord__diam_or_ncol : forall O P A B T,
+ A <> B -> OnCircle A O P -> OnCircle B O P ->
+ Midpoint T A B ->
+ Diam A B O P \/ ~Col O A T /\ ~Col O B T.
+Proof.
+intros.
+unfold Midpoint in H2.
+spliter.
+apply(bet_chord__diam_or_ncol);auto.
+intro.
+treat_equalities; tauto.
+intro.
+treat_equalities; tauto.
+Qed.
+
+Lemma cop_mid_onc2_perp__col : forall O P A B X Y, A <> B -> OnCircle A O P -> OnCircle B O P ->
+  Midpoint X A B -> Perp X Y A B -> Coplanar O A B Y -> Col X Y O.
+Proof.
+  intros O P A B X Y HAB HAOn HBOn HX HPerp HCop.
+  destruct (eq_dec_points O X).
+    subst; Col.
+  apply cop_perp2__col with A B; Cop.
+  apply perp_left_comm, mid_onc2__perp with P; auto.
+Qed.
+
+Lemma cong2_cop2_onc3__eq : forall O P X A B C, A <> B -> A <> C -> B <> C ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O ->
+  Cong X A X B -> Cong X A X C -> Coplanar A B C X ->
+  X = O.
+Proof.
+  intros O P X A B C HAB HAC HBC HAOn HBOn HCOn HCop HCong1 HCong2 HCop1.
+  destruct (midpoint_existence A B) as [M1 HM1].
+  destruct (midpoint_existence A C) as [M2 HM2].
+  assert (HNCol : ~ Col C A B) by (apply (onc3__ncol O P); auto).
+  destruct (l10_15 A B M1 C) as [P1 [HPerp1 HOS1]]; Col.
+  destruct (l10_15 A C M2 B) as [P2 [HPerp2 HOS2]]; Col.
+  assert (HColX1 : Col M1 P1 X).
+    apply (cop_mid_onc2_perp__col X A A B); Circle; Perp.
+    apply coplanar_perm_12, coplanar_trans_1 with C; Cop.
+  assert (HColO1 : Col M1 P1 O).
+    apply (cop_mid_onc2_perp__col O P A B); Perp.
+    apply coplanar_perm_12, coplanar_trans_1 with C; Cop.
+  apply not_col_permutation_3 in HNCol.
+  assert (HColX2 : Col M2 P2 X).
+    apply (cop_mid_onc2_perp__col X A A C); Circle; Perp.
+    apply coplanar_perm_12, coplanar_trans_1 with B; Cop.
+  assert (HColO2 : Col M2 P2 O).
+    apply (cop_mid_onc2_perp__col O P A C); Perp.
+    apply coplanar_perm_12, coplanar_trans_1 with B; Cop.
+  assert_diffs.
+  destruct (col_dec M1 P1 M2); [apply (l6_21 M2 P2 M1 P1)|apply (l6_21 M1 P1 M2 P2)]; Col.
+  intro.
+  apply HBC.
+  destruct (eq_dec_points M1 M2).
+    apply (symmetric_point_uniqueness A M1); subst; trivial.
+  apply l10_2_uniqueness_spec with M1 P1 A.
+    split; Perp; exists M1; Col.
+  split.
+    exists M2; auto.
+  left.
+  apply perp_sym, perp_col2_bis with P2 M2; ColR.
+Qed.
+
+Lemma tree_points_onc_cop : forall O P, O <> P -> exists A B C,
+  A <> B /\ A <> C /\ B <> C /\ OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ Coplanar A B C O.
+Proof.
+  intros O P HOP.
+  destruct (not_col_exists O P) as [X HNCol]; auto.
+  destruct (diam_points O P X) as [B [C [HBet [HCol []]]]].
+  exists P, B, C.
+  repeat split; Circle.
+    intro; subst; apply HNCol; ColR.
+    intro; subst; apply HNCol; ColR.
+    intro; treat_equalities; auto.
+    exists B; left; split; Col.
+Qed.
+
+Lemma tree_points_onc_cop2 : forall O P Q, O <> P -> exists A B C,
+  A <> B /\ A <> C /\ B <> C /\ OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\
+  Coplanar A B C O /\ Coplanar A B C Q.
+Proof.
+  intros O P Q HOP.
+  destruct (eq_dec_points O Q).
+    subst Q.
+    destruct (tree_points_onc_cop O P HOP) as [A [B [C]]]; spliter.
+    exists A, B, C; repeat split; auto.
+  destruct (not_col_exists O Q) as [X HNCol]; auto.
+  destruct (diam_points O P X) as [B [C [HBet [HCol []]]]].
+  destruct (l6_11_existence O O P Q) as [A []]; auto.
+  exists A, B, C.
+  assert (~ Col O A B) by (intro; unfold OnCircle in *; assert_diffs; apply HNCol; ColR).
+  assert_diffs.
+  repeat split; Circle.
+    intro; subst; apply HNCol; ColR.
+    exists B; left; split; Col.
+    exists O; right; right; split; Col.
+Qed.
+
+Lemma tree_points_onc : forall O P, O <> P -> exists A B C,
+  A <> B /\ A <> C /\ B <> C /\ OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P.
+Proof.
+  intros O P HOP.
+  destruct (tree_points_onc_cop O P HOP) as [A [B [C]]]; spliter.
+  exists A, B, C; repeat split; assumption.
+Qed.
+
+Lemma bet_cop_onc2__ex_onc_os_out : forall O P A B C I,
+  A <> I -> B <> I -> ~ Col A B C -> ~ Col A B O ->
+  OnCircle A O P -> OnCircle B O P -> Bet A I B -> Coplanar A B C O ->
+  exists C1, Out C1 O I /\ OnCircle C1 O P /\ OS A B C C1.
+Proof.
+  intros O P A B C I HAI HBI HNCol HNCol1 HA HB HBet HCop.
+  destruct (diam_points O P I) as [C1 [C2 [HBet1 [HCol [HC1 HC2]]]]].
+  assert (HTS : TS A B C1 C2).
+  { apply (chord_intersection O P); trivial.
+    unfold OnCircle in *; assert_diffs.
+    repeat split; [intro; apply HNCol1; ColR..|exists I; split; Col].
+  }
+  assert (HBet2 : Bet C1 I C2).
+  { assert_diffs; apply (col_inc_onc2__bet O P); auto.
+    apply bet_inc2__inc with A B; Circle.
+  }
+  assert (HNCol2 : ~ Col C1 A B) by (destruct HTS; assumption).
+  destruct (cop__one_or_two_sides A B C C1); Col.
+    apply coplanar_trans_1 with O; Col; [Cop|exists I; right; right; assert_diffs; split; ColR].
+  - exists C2.
+    split; [|split; trivial; exists C1; Side].
+    apply bet2__out with C1; Between.
+      intro; treat_equalities; auto.
+      destruct HTS as [_ [HNCol3 _]]; spliter; intro; subst; apply HNCol3; Col.
+  - exists C1.
+    split; [|split; trivial].
+    apply bet2__out with C2; trivial.
+      intro; treat_equalities; auto.
+      intro; subst; apply HNCol2; Col.
+Qed.
+
+(** Two circles are equal if and only if they have the same center and the same radius *)
+
+Lemma EqC_chara: forall A B C D, EqC A B C D <-> A = C /\ Cong A B C D.
+Proof.
+  intros A B C D.
+  split.
+  - intro Heq.
+    unfold EqC in Heq.
+    assert (C = A).
+    { destruct (eq_dec_points A B) as [|Hd].
+      - subst B.
+        unfold OnCircle in Heq.
+        assert (Cong A D A A) by (rewrite Heq; Cong).
+        treat_equalities.
+        destruct (segment_construction A C A C) as [A' []].
+        assert (Cong A A' A A) by (rewrite Heq; Cong).
+        treat_equalities; auto.
+      - destruct (tree_points_onc_cop2 A B C Hd) as [B0 [B1 [B2]]].
+        spliter; unfold OnCircle in *.
+        assert (Cong C B0 C D) by (rewrite <- Heq; Cong).
+        apply cong2_cop2_onc3__eq with B B0 B1 B2; auto;
+          apply cong_transitivity with C D; trivial;
+          unfold OnCircle in *; apply cong_symmetry; rewrite <- Heq; assumption.
+    }
+    subst C.
+    split; trivial.
+    unfold OnCircle in Heq.
+    rewrite <- (Heq B); Cong.
+  - intros [].
+    subst C.
+    intro X.
+    split; intro; [apply cong_transitivity with A B|apply cong_transitivity with A D]; Cong.
+Qed.
+
+(** Two circles are distinct if and only if there is a point
+    belonging to the first and not to the second *)
+
+Lemma nEqC_chara : forall A B C D, A <> B ->
+  ~ EqC A B C D <->
+  (exists X, OnCircle X A B /\ ~ OnCircle X C D).
+Proof.
+  intros A B C D HAB.
+  split.
+  { intro Hneq.
+    destruct (eq_dec_points C A) as [|HCA].
+    { destruct (cong_dec A B C D) as [|HNCong].
+        exfalso; apply Hneq, EqC_chara; split; auto.
+        subst C; exists B; split; Circle.
+    }
+    destruct (tree_points_onc_cop2 A B C HAB) as [B0 [B1 [B2]]]; spliter.
+    destruct (cong_dec C B0 C D); [destruct (cong_dec C B1 C D);[destruct (cong_dec C B2 C D)|]|].
+    - exfalso.
+      apply HCA.
+      apply cong2_cop2_onc3__eq with B B0 B1 B2; auto; apply cong_transitivity with C D; Cong.
+    - exists B2; auto.
+    - exists B1; auto.
+    - exists B0; auto.
+  }
+  intros [X [HX Habs]] Heq.
+  apply Habs, Heq, HX.
+Qed.
+
+Lemma EqC_sym : forall A B C D, EqC A B C D -> EqC C D A B.
+Proof.
+  intros A B C D Heq X.
+  split; intro; [rewrite (Heq X)|rewrite <- (Heq X)]; assumption.
+Qed.
+
+End Circle_2.
+
+Section Circle_2D.
+
+Context `{T2D:Tarski_2D}.
+
+(** The center of a circle belongs to the perpendicular bisector of each chord *)
+
+Lemma mid_onc2_perp__col : forall O P A B X Y,
+ A <> B -> OnCircle A O P -> OnCircle B O P -> Midpoint X A B -> Perp X Y A B -> Col X Y O.
+Proof.
+  intros O P A B X Y HAB HAOn HBOn HX HPerp.
+  assert (HCop := all_coplanar O A B Y).
+  apply cop_mid_onc2_perp__col with P A B; assumption.
+Qed.
+
+(** Euclid Book III Prop 4.
+ If in a circle two straight lines which do not pass through the center cut one another,
+ then they do not bisect one another.
+ *)
+
+Lemma mid2_onc4__eq : forall O P A B C D X, B <> C-> A <> B -> 
+ OnCircle A O P ->
+ OnCircle B O P ->
+ OnCircle C O P ->
+ OnCircle D O P ->
+ Midpoint X A C ->
+ Midpoint X B D ->
+ X=O.
+Proof.
+intros O P A B C D X Hbc.
+intros.
+assert(HH:=mid_onc2__per O P A C X H0 H2 H4).
+assert(HP:=mid_onc2__per O P B D X H1 H3 H5).
+
+induction(eq_dec_points X O).
+auto.
+assert(Col A B X).
+apply(per2__col A B O X); Perp.
+unfold Midpoint in *.
+spliter.
+assert(Col B X D).
+apply bet_col; auto.
+assert(Col A X C).
+ColR.
+
+induction(eq_dec_points A X).
+subst X.
+treat_equalities.
+assert(OutCircleS D O P).
+apply(onc2_out__outcs O P A B D); auto.
+assert_diffs.
+unfold Out.
+split.
+auto.
+split.
+auto.
+left; Between.
+
+unfold OutCircleS in *.
+unfold Lt in *.
+spliter.
+unfold OnCircle in H3.
+apply False_ind.
+absurd (Cong O P O D);Cong.
+
+assert(Col A B C). 
+ColR.
+
+assert(C = A \/ C = B).
+apply(line_circle_two_points O P A B C); Col.
+destruct H14.
+treat_equalities.
+intuition.
+treat_equalities.
+assert(A = D) by
+(apply (symmetric_point_uniqueness C X); split; Between; Cong).
+treat_equalities.
+tauto.
+Qed.
+
+(** Euclid Book III Prop 9.
+ If a point is taken within a circle,
+ and more than two equal straight lines fall from the point on the circle,
+ then the point taken is the center of the circle.
+*)
+
+Lemma cong2_onc3__eq : forall O P X A B C, A <> B -> A <> C -> B <> C ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+  Cong X A X B -> Cong X A X C ->
+  X = O.
+Proof.
+  intros O P X A B C HAB HAC HBC HAOn HBOn HCOn HCong1 HCong2.
+  assert (HCop := all_coplanar A B C O).
+  assert (HCop1 := all_coplanar A B C X).
+  apply cong2_cop2_onc3__eq with P A B C; assumption.
+Qed.
+
+Lemma onc2_mid_cong_col : forall O P U V M X,
+ U <> V ->OnCircle U O P -> OnCircle V O P -> Midpoint M U V -> Cong U X V X -> Col O X M.
+Proof.
+intros.
+assert(HH:=mid_onc2__per O P U V M H0 H1 H2).
+assert(Per X M U).
+unfold Per.
+exists V.
+unfold OnCircle in *.
+split; Cong.
+apply(per2__col _ _ U); auto.
+assert_diffs.
+auto.
 Qed.
 
 
@@ -1170,7 +1545,7 @@ assert(Per A M X).
 }
 assert(Col A O M).
 {
-  apply (per_per_col _ _ X); auto.
+  apply (per2__col _ _ X); auto.
   intro.
   treat_equalities; tauto.
 }
@@ -1256,39 +1631,6 @@ assert(Cong A X A Y).
 apply (cong_onc3_cases O P); auto.
 Qed.
 
-Lemma onc3__ncol : forall O P A B C,
- A <> B -> A <> C -> B <> C ->
- OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
- ~ Col A B C.
-Proof.
-intros.
-unfold OnCircle in *.
-intro.
-induction H5.
-assert(InCircleS B O P).
-{
-  apply(bet_onc2__incs O P A C B); Circle.
-}
-unfold InCircleS in *.
-unfold Lt in *.
-tauto.
-induction H5.
-assert(InCircleS C O P).
-{
-  apply(bet_onc2__incs O P B A C); Circle.
-}
-unfold InCircleS in *.
-unfold Lt in *.
-tauto.
-assert(InCircleS A O P).
-{
-  apply(bet_onc2__incs O P C B A); Circle.
-}
-unfold InCircleS in *.
-unfold Lt in *.
-tauto.
-Qed.
-
 Lemma prop_7_8 : forall O P A B T X Y , Diam A B O P -> Bet A O T 
                                -> OnCircle X O P -> OnCircle Y O P
                                -> LeA A O X A O Y -> Le T Y T X.
@@ -1307,7 +1649,7 @@ induction(eq_dec_points O T).
 treat_equalities.
 apply cong__le, cong_transitivity with O P; Cong.
 
-induction(Cong_dec A X A Y).
+induction(cong_dec A X A Y).
 assert(X = Y \/ ReflectL X Y O A).
 {
   apply(cong_onc3_cases O P A X Y); Circle.
@@ -1360,10 +1702,10 @@ Qed.
 
 
 
-Lemma Prop_7_8_uniqueness : forall O P A X Y Z T, T <> O -> X <> Y -> Bet A O T -> Cong T X T Y -> Cong T X T Z
-                                                -> OnCircle A O P  
-                                                -> OnCircle X O P -> OnCircle Y O P -> OnCircle Z O P
-                                               -> Z = X \/ Z = Y.
+Lemma Prop_7_8_uniqueness : forall O P A X Y Z T, T <> O -> X <> Y ->
+  Bet A O T -> Cong T X T Y -> Cong T X T Z ->
+  OnCircle A O P -> OnCircle X O P -> OnCircle Y O P -> OnCircle Z O P ->
+  Z = X \/ Z = Y.
 Proof.
 intros.
 induction(eq_dec_points O P).
@@ -1391,143 +1733,6 @@ induction H11.
 auto.
 assert(HH:=l10_2_uniqueness_spec O A Z X Y H10 H11).
 contradiction.
-Qed.
-
-Lemma diam_exists : forall O P T, exists A, exists B, Diam A B O P /\ Col A B T.
-Proof.
-intros.
-induction(eq_dec_points O P).
-subst P.
-exists O.
-exists O.
-split; Col.
-repeat split; Circle;
-unfold Diam.
-apply between_trivial.
-
-induction(eq_dec_points T O).
-subst T.
-assert(HH:= another_point O).
-ex_and HH T.
-assert(exists Q : Tpoint, OnCircle Q O P /\ Out O T Q).
-apply(onc_exists O P T); auto.
-ex_and H1 A.
-exists A.
-assert(HH:=symmetric_point_construction A O).
-ex_and HH B.
-exists B.
-unfold Midpoint in *.
-spliter.
-split; Col.
-unfold Diam.
-unfold OnCircle in *.
-repeat split; trivial.
-apply cong_transitivity with O A; Cong.
-assert(exists Q : Tpoint, OnCircle Q O P /\ Out O T Q).
-apply(onc_exists O P T); auto.
-ex_and H1 A.
-exists A.
-assert(HH:=symmetric_point_construction A O).
-ex_and HH B.
-exists B.
-unfold Midpoint in *.
-spliter.
-split; Col.
-unfold Diam.
-unfold OnCircle in *.
-repeat split; trivial.
-apply cong_transitivity with O A; Cong.
-assert_diffs.
-apply out_col in H2.
-ColR.
-Qed.
-
-Lemma ray_cut_chord : forall O P A B X Y,
-  O <> P ->  Diam A B O P -> OnCircle X O P -> OnCircle Y O P -> TS A B X Y -> OS X Y A O ->
- TS X Y O B.
-Proof.
-intros.
-unfold Diam in *.
-spliter.
-unfold TS in H3.
-spliter.
-ex_and H8 T.
-assert(InCircleS T O P).
-{
-  apply(bet_onc2__incs O P X Y T); try(auto; intro; treat_equalities; contradiction).
-}
-unfold InCircleS in *.
-apply(cong2_lt__lt O T O P O T O B) in H10; eCong.
-assert(Hlt:= H10).
-assert(~Col O X Y).
-{
-  unfold OS in *.
-  ex_and H4 R.
-  unfold TS in H11.
-  spliter.
-  assumption.
-}
-
-assert(TS X Y A B).
-{
-  unfold TS.
-  repeat split.
-  apply (onc3__ncol O P); Circle; try(intro; treat_equalities).
-  apply H3; Col.
-  apply H7; Col.
-  apply H11; Col.
-  apply (onc3__ncol O P); Circle; try(intro; treat_equalities).
-  apply H3; Col.
-  apply H7; Col.
-  apply H11; Col.
-  exists T.
-  split.
-  Col.
-  induction H8.
-  assert(Bet O A T) by eBetween.
-  apply(bet__le1213) in H12.
-  apply (cong2_lt__lt O T O B O T O A) in Hlt; eCong.
-  apply le__nlt in H12.
-  contradiction.
-  induction H8.
-  assert(Bet O B T) by eBetween.
-  apply(bet__le1213) in H12.
-  apply le__nlt in H12.
-  contradiction.
-  Between.
-}
-apply(l9_8_2 X Y A O B); auto.
-Qed.
-
-Lemma center_col__diam : forall O P A B,
- A <> B -> Col O A B -> OnCircle A O P -> OnCircle B O P ->
- Diam A B O P.
-Proof.
-intros.
-unfold Diam.
-split; Circle.
-assert(Cong O A O B).
-{
-  unfold OnCircle in *.
-  eCong.
-}
-assert(A = B \/ Midpoint O A B).
-{
-  apply(l7_20 O A B); Col.
-}
-induction H4.
-contradiction.
-Between.
-Qed.
-
-Lemma diam__midpoint: forall O P A B, Diam A B O P -> Midpoint O A B.
-Proof.
-intros.
-unfold Diam in *.
-spliter.
-unfold Midpoint.
-unfold OnCircle in *.
-split; eCong.
 Qed.
 
 Lemma chords_midpoints_col_par : forall O P A M B C N D, 
@@ -1567,7 +1772,7 @@ assert(Perp O M C D).
   treat_equalities.
   apply H7; Col.
 }
-apply (l12_9 A B C D O M); Perp.
+apply (l12_9_2D A B C D O M); Perp.
 Qed.
 
 Lemma onc3_mid2__ncol : forall O P A B C A' B',
@@ -1577,7 +1782,7 @@ Lemma onc3_mid2__ncol : forall O P A B C A' B',
  ~ Col O A' B' \/ A' = O \/ B' = O.
 Proof.
 intros.
-induction(Col_dec O A C).
+induction(col_dec O A C).
 assert(A = C \/ Midpoint O A C).
 {
   unfold OnCircle in *.
@@ -1591,7 +1796,7 @@ apply H5; Col.
 right; left.
 apply (l7_17 A C); auto.
 
-induction(Col_dec O B C).
+induction(col_dec O B C).
 assert(B = C \/ Midpoint O B C).
 {
   unfold OnCircle in *.
@@ -1612,69 +1817,6 @@ apply H9.
 exists C.
 split; Col.
 spliter; contradiction.
-Qed.
-
-Lemma diam_sym : forall O P A B, Diam A B O P -> Diam B A O P.
-Proof.
-intros.
-unfold Diam in *.
-spliter.
-repeat split; Between.
-Qed.
-
-Lemma diam_end_uniqueness : forall O P A B C, Diam A B O P -> Diam A C O P -> B = C.
-Proof.
-intros.
-apply diam__midpoint in H.
-apply diam__midpoint in H0.
-apply (symmetric_point_uniqueness A O); Midpoint.
-Qed.
-
-
-Lemma center_onc2_mid__ncol : forall O P A B M ,
- O <> P -> ~ Col O A B ->
- OnCircle A O P -> OnCircle B O P ->
- Midpoint M A B  -> ~ Col A O M.
-Proof.
-intros.
-intro.
-assert_diffs.
-unfold Midpoint in H3.
-spliter.
-apply H0.
-ColR.
-Qed.
-
-
-Lemma bet_chord__diam_or_ncol : forall O P A B T,
-  A <> B -> T <> A -> T <> B -> OnCircle A O P -> OnCircle B O P -> Bet A T B ->
-  Diam A B O P \/ ~Col O A T /\ ~Col O B T.
-Proof.
-intros.
-induction(Col_dec O A B).
-left.
-apply(center_col__diam); Col.
-right.
-split.
-intro.
-apply H5; ColR.
-intro.
-apply H5; ColR.
-Qed.
-
-Lemma mid_chord__diam_or_ncol : forall O P A B T,
- A <> B -> OnCircle A O P -> OnCircle B O P ->
- Midpoint T A B ->
- Diam A B O P \/ ~Col O A T /\ ~Col O B T.
-Proof.
-intros.
-unfold Midpoint in H2.
-spliter.
-apply(bet_chord__diam_or_ncol);auto.
-intro.
-treat_equalities; tauto.
-intro.
-treat_equalities; tauto.
 Qed.
 
 (** Euclid Book III Prop 9.
@@ -1726,7 +1868,7 @@ subst X.
 induction HH2.
 subst N.
 
-induction(Col_dec O A B).
+induction(col_dec O A B).
 assert(A = B \/ Midpoint O A B).
 unfold OnCircle in *.
 apply l7_20; Col.
@@ -1737,7 +1879,7 @@ assert(M = O).
 apply (l7_17 A B); auto.
 subst M; tauto.
 
-induction(Col_dec O C D).
+induction(col_dec O C D).
 assert(C = D \/ Midpoint O C D).
 unfold OnCircle in *.
 apply l7_20; Col.
@@ -1749,11 +1891,11 @@ assert(HM1:=mid_onc2__perp O P A B M H12 H H2 H3 H8).
 assert(HM2:=mid_onc2__perp O P C D M H12 H0 H4 H5 H9).
 apply False_ind.
 apply H1.
-apply (l12_9 _ _ _ _ O M); Perp.
+apply (l12_9_2D _ _ _ _ O M); Perp.
 
 spliter.
 apply perp_in_perp in H15.
-induction(Col_dec O A B).
+induction(col_dec O A B).
 assert(A = B \/ Midpoint O A B).
 unfold OnCircle in *.
 apply l7_20; Col.
@@ -1767,12 +1909,12 @@ assert(HM1:=mid_onc2__perp O P A B M H12 H H2 H3 H8).
 apply(perp_col M N C D O ) in H15; Col.
 apply False_ind.
 apply H1.
-apply (l12_9 _ _ _ _ O M); Perp.
+apply (l12_9_2D _ _ _ _ O M); Perp.
 induction HH2.
 subst X.
 spliter.
 
-induction(Col_dec O C D).
+induction(col_dec O C D).
 assert(C = D \/ Midpoint O C D).
 unfold OnCircle in *.
 apply l7_20; Col.
@@ -1787,7 +1929,7 @@ apply False_ind.
 apply H1.
 apply(perp_col N M A B O) in H15; Col.
 
-apply (l12_9 _ _ _ _ O N); Perp.
+apply (l12_9_2D _ _ _ _ O N); Perp.
 spliter.
 apply perp_in_perp in H17.
 apply perp_in_perp in H16.
@@ -1796,8 +1938,8 @@ apply(perp_col X M A B O) in H17; Col.
 apply(perp_col X N C D O) in H16; Col.
 apply False_ind.
 apply H1.
-apply (l12_9 _ _ _ _ O X); Perp.
+apply (l12_9_2D _ _ _ _ O X); Perp.
 Qed.
 
 
-End Circle_2.
+End Circle_2D.

@@ -31,7 +31,7 @@ assert (~ eq A D).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists E, (BetS A D E /\ Cong D E A D)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS A D E /\ Cong D E A D)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (~ Col D C A).
  {
  intro.
@@ -61,7 +61,7 @@ assert (~ eq B C).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists S, (BetS B C S /\ Cong C S B C)) by (conclude postulate_extension);destruct Tf as [S];spliter.
+assert (Tf:exists S, (BetS B C S /\ Cong C S B C)) by (conclude lemma_extension);destruct Tf as [S];spliter.
 assert (BetS S C B) by (conclude axiom_betweennesssymmetry).
 assert (Col S C B) by (conclude_def Col ).
 assert (neq S B) by (forward_using lemma_betweennotequal).
@@ -84,7 +84,7 @@ assert (~ Meet E A S B).
   assert (Col B C R) by (forward_using lemma_collinearorder).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Col A D E) by (conclude_def Col ).
  assert (Col E A D) by (forward_using lemma_collinearorder).
  assert (neq A D) by (forward_using lemma_betweennotequal).
@@ -118,13 +118,13 @@ assert (Col F E B) by (forward_using lemma_collinearorder).
 assert (Col E H B) by (conclude lemma_collinear4).
 assert (BetS A H C) by (conclude axiom_betweennesssymmetry).
 let Tf:=fresh in
-assert (Tf:exists R, (BetS A E R /\ Cong E R A E)) by (conclude postulate_extension);destruct Tf as [R];spliter.
+assert (Tf:exists R, (BetS A E R /\ Cong E R A E)) by (conclude lemma_extension);destruct Tf as [R];spliter.
 assert (Col A E R) by (conclude_def Col ).
 assert (neq A E) by (forward_using lemma_betweennotequal).
 assert (neq A R) by (forward_using lemma_betweennotequal).
 assert (neq C B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists T, (BetS C B T /\ Cong B T C B)) by (conclude postulate_extension);destruct Tf as [T];spliter.
+assert (Tf:exists T, (BetS C B T /\ Cong B T C B)) by (conclude lemma_extension);destruct Tf as [T];spliter.
 assert (~ Meet A R T C).
  {
  intro.

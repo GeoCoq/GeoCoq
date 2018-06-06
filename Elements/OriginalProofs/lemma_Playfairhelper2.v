@@ -35,7 +35,7 @@ by cases on (CR A E B C \/ CR A C E B).
  assert (neq C E) by (conclude_def Par ).
  assert (neq E C) by (conclude lemma_inequalitysymmetric).
  let Tf:=fresh in
- assert (Tf:exists e, (BetS E C e /\ Cong C e E C)) by (conclude postulate_extension);destruct Tf as [e];spliter.
+ assert (Tf:exists e, (BetS E C e /\ Cong C e E C)) by (conclude lemma_extension);destruct Tf as [e];spliter.
  assert (Col E C e) by (conclude_def Col ).
  assert (neq C e) by (forward_using lemma_betweennotequal).
  assert (neq e C) by (conclude lemma_inequalitysymmetric).
@@ -104,7 +104,7 @@ by cases on (CR A E B C \/ CR A C E B).
  assert (Col C D E) by (conclude lemma_collinear4).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

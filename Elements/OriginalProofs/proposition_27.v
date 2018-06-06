@@ -19,9 +19,7 @@ rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS A H D /\ Col E F H /\ nCol E F A)) by (conclude_def TS );destruct Tf as [H];spliter.
 assert (Col A E B) by (conclude_def Col ).
 assert (neq A E) by (forward_using lemma_betweennotequal).
-assert (neq E B) by (forward_using lemma_betweennotequal).
 assert (Col C F D) by (conclude_def Col ).
-assert (neq C F) by (forward_using lemma_betweennotequal).
 assert (neq F D) by (forward_using lemma_betweennotequal).
 assert (CongA E F D A E F) by (conclude lemma_equalanglessymmetric).
 assert (nCol E F D) by (conclude_def CongA ).
@@ -37,17 +35,9 @@ assert (~ Meet A B C D).
  assert (neq B A) by (conclude lemma_inequalitysymmetric).
  assert (Col A G E) by (conclude lemma_collinear4).
  assert (Col A E G) by (forward_using lemma_collinearorder).
- assert (nCol A E F) by (conclude_def CongA ).
- assert (~ eq A E).
-  {
-  intro.
-  assert (Col A E F) by (conclude_def Col ).
-  contradict.
-  }
  assert (eq F F) by (conclude cn_equalityreflexive).
  assert (Out E F F) by (conclude lemma_ray4).
  assert (Supp A E F F B) by (conclude_def Supp ).
- assert (CongA E F D A E F) by (conclude lemma_equalanglessymmetric).
  assert (eq E E) by (conclude cn_equalityreflexive).
  assert (Out F E E) by (conclude lemma_ray4).
  assert (BetS D F C) by (conclude axiom_betweennesssymmetry).
@@ -84,7 +74,7 @@ assert (~ Meet A B C D).
    contradict.
    }
   assert (BetS D H A) by (conclude axiom_betweennesssymmetry).
-  assert (OS D G E F) by (conclude_def OS ).
+  assert (OS D G E F) by (unfold OS;exists A;exists H;exists E;splits;auto).
   assert (OS G D E F) by (forward_using lemma_samesidesymmetric).
   assert (eq F F) by (conclude cn_equalityreflexive).
   assert (Col E F F) by (conclude_def Col ).
@@ -96,22 +86,14 @@ assert (~ Meet A B C D).
   assert (~ neq F R).
    {
    intro.
-   assert (eq F F) by (conclude cn_equalityreflexive).
-   assert (Col E F F) by (conclude_def Col ).
    assert (Col G R C) by (conclude_def Col ).
    assert (Col C G D) by (forward_using lemma_collinearorder).
    assert (Col C G R) by (forward_using lemma_collinearorder).
    assert (neq G C) by (forward_using lemma_betweennotequal).
    assert (neq C G) by (conclude lemma_inequalitysymmetric).
-   assert (Col G D R) by (conclude lemma_collinear4).
    assert (Col G C R) by (forward_using lemma_collinearorder).
    assert (Col G C D) by (forward_using lemma_collinearorder).
    assert (neq G C) by (conclude lemma_inequalitysymmetric).
-   assert (Col C R D) by (conclude lemma_collinear4).
-   assert (Col C D R) by (forward_using lemma_collinearorder).
-   assert (Col C D F) by (conclude_def Col ).
-   assert (eq E E) by (conclude cn_equalityreflexive).
-   assert (Col E F E) by (conclude_def Col ).
    assert (neq R F) by (conclude lemma_inequalitysymmetric).
    assert (Col C G R) by (forward_using lemma_collinearorder).
    assert (Col C D F) by (forward_using lemma_collinearorder).
@@ -165,7 +147,6 @@ assert (~ Meet A B C D).
   assert (Out E G A) by (conclude lemma_ray5).
   assert (CongA E F D A E F) by (conclude lemma_equalanglessymmetric).
   assert (CongA E F D G E F) by (conclude lemma_equalangleshelper).
-  assert (CongA G E F E F D) by (conclude lemma_equalanglessymmetric).
   assert (BetS B E A) by (conclude axiom_betweennesssymmetry).
   assert ((BetS E A G \/ eq G A \/ BetS E G A)) by (conclude lemma_ray1).
   assert (BetS B E G).
@@ -182,7 +163,7 @@ assert (~ Meet A B C D).
    assert (BetS B E G) by (conclude axiom_innertransitivity).
    close.
    }
-(* cases *)
+(** cases *)
   assert (BetS G E B) by (conclude axiom_betweennesssymmetry).
   assert (eq E E) by (conclude cn_equalityreflexive).
   assert (Col E F E) by (conclude_def Col ).
@@ -263,17 +244,9 @@ assert (~ Meet A B C D).
   close.
   }
  {
-  assert (~ Col A F E).
-   {
-   intro.
-   assert (Col E F A) by (forward_using lemma_collinearorder).
-   contradict.
-   }
-  assert (Triangle A F E) by (conclude_def Triangle ).
   assert (~ neq H F).
    {
    intro.
-   assert (Col C D A) by (conclude cn_equalitysub).
    assert (Col C D F) by (forward_using lemma_collinearorder).
    assert (Col D G F) by (conclude lemma_collinear4).
    assert (Col D A F) by (conclude cn_equalitysub).
@@ -353,8 +326,6 @@ assert (~ Meet A B C D).
     assert (Col E F A) by (forward_using lemma_collinearorder).
     contradict.
     }
-   assert (Col C D E) by (conclude cn_equalitysub).
-   assert (eq C H) by (conclude cn_equalitytransitive).
    assert (Col A H D) by (conclude_def Col ).
    assert (Col A C D) by (conclude cn_equalitysub).
    assert (Col C D A) by (forward_using lemma_collinearorder).
@@ -405,7 +376,7 @@ assert (~ Meet A B C D).
    }
   close.
   }
-(* cases *)
+(** cases *)
  contradict.
  }
 assert (eq A A) by (conclude cn_equalityreflexive).
@@ -420,8 +391,6 @@ assert (BetS E H F) by (conclude lemma_collinearbetween).
 assert (BetS F H E) by (conclude axiom_betweennesssymmetry).
 assert (Par A B C D) by (conclude_def Par ).
 close.
-Unshelve.
-apply B.
 Qed.
 
 End Euclid.

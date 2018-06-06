@@ -104,6 +104,17 @@ Proof.
     split;Col.
 Qed.
 
+Lemma par_strict_not_cols : forall A B C D,
+ Par_strict A B C D -> ~ Col A B C /\ ~ Col B C D /\ ~ Col C D A /\ ~ Col A B D.
+Proof.
+    intros.
+    repeat split.
+    apply par_strict_not_col_1 with D, H.
+    apply (par_strict_not_col_2 A), H.
+    apply par_strict_not_col_3 with B, H.
+    apply par_strict_not_col_4 with C, H.
+Qed.
+
 Lemma par_id_1 : forall A B C,
  Par A B A C -> Col B A C.
 Proof.
@@ -316,6 +327,9 @@ repeat
       | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
         assert (T:= le_diff A B C D H2 H);clean_reap_hyps
+      | H:Le ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
+      let T:= fresh in (not_exist_hyp_comm C D);
+        assert (T:= le_diff A B C D (swap_diff B A H2) H);clean_reap_hyps
       | H:Lt ?A ?B ?C ?D |-_ =>
       let T:= fresh in (not_exist_hyp_comm C D);
         assert (T:= lt_diff A B C D H);clean_reap_hyps
@@ -347,6 +361,19 @@ repeat
        assert (T:= midpoint_distinct_3 I A B (swap_diff B I H2) H);
        decompose [and] T;clear T;clean_reap_hyps
 
+      | H:Per ?A ?B ?C, H2 : ?A<>?B |- _ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= per_distinct A B C H H2); clean_reap_hyps
+      | H:Per ?A ?B ?C, H2 : ?B<>?A |- _ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= per_distinct A B C H (swap_diff B A H2)); clean_reap_hyps
+      | H:Per ?A ?B ?C, H2 : ?B<>?C |- _ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= per_distinct_1 A B C H H2); clean_reap_hyps
+      | H:Per ?A ?B ?C, H2 : ?C<>?B |- _ =>
+      let T:= fresh in (not_exist_hyp_comm A C);
+        assert (T:= per_distinct_1 A B C H (swap_diff C B H2)); clean_reap_hyps
+
       | H:Perp ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp2 A B C D);
        assert (T:= perp_distinct A B C D H);
@@ -368,6 +395,10 @@ repeat
       let h := fresh in
       not_exist_hyp5 A B A C A D B C B D;
       assert (h := os_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
+      | H:~ Coplanar ?A ?B ?C ?D |- _ =>
+      let h := fresh in
+      not_exist_hyp6 A B A C A D B C B D C D;
+      assert (h := ncop_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
 
       | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
       let T:= fresh in (not_exist_hyp_comm A B);
@@ -402,6 +433,19 @@ repeat
       let h := fresh in
       not_exist_hyp2 A B B C;
       assert (h := obtuse_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
+      | H:SuppA ?A ?B ?C ?D ?E ?F |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B B C D E E F;
+      assert (h := suppa_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:(Orth_at ?X ?A ?B ?C ?U ?V) |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B A C B C U V;
+      assert (h := orth_at_distincts A B C U V X H);decompose [and] h;clear h;clean_reap_hyps
+      | H:(Orth ?A ?B ?C ?U ?V) |- _ =>
+      let h := fresh in
+      not_exist_hyp4 A B A C B C U V;
+      assert (h := orth_distincts A B C U V H);decompose [and] h;clear h;clean_reap_hyps
 
       | H:Par ?A ?B ?C ?D |- _ =>
       let T:= fresh in (not_exist_hyp_comm A B);
@@ -417,20 +461,40 @@ repeat
         assert (T:= par_strict_neq2 A B C D H);clean_reap_hyps
  end.
 
+Ltac assert_ncols :=
+repeat
+  match goal with
+      | H:OS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(one_side_not_col123 A B X Y);finish)
+
+      | H:OS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(one_side_not_col124 A B X Y);finish)
+
+      | H:TS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(two_sides_not_col A B X Y);finish)
+
+      | H:TS ?A ?B ?X ?Y |- _ =>
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(two_sides_not_col A B Y X);finish)
+
+      | H:~ Coplanar ?A ?B ?C ?D |- _ =>
+      let h := fresh in
+      not_exist_hyp_perm4 A B C D;
+      assert (h := ncop__ncols A B C D H);decompose [and] h;clear h;clean_reap_hyps
+
+      | H:Par_strict ?A ?B ?C ?D |- _ =>
+      let h := fresh in
+      not_exist_hyp_perm4 A B C D;
+      assert (h := par_strict_not_cols A B C D H);decompose [and] h;clear h;clean_reap_hyps
+  end.
+
+
 Hint Resolve
  par_reflexivity par_strict_irreflexivity
  par_strict_symmetry par_strict_comm par_strict_right_comm par_strict_left_comm
  par_symmetry par_comm par_right_comm par_left_comm : par.
 
 Hint Resolve par_strict_not_col_1 par_strict_not_col_2
-             par_strict_not_col_3 par_strict_not_col_4 : Col.
-
-(*
-Warning: the hint: eapply @par_strict_comm will only be used by eauto
-Warning: the hint: eapply @par_strict_right_comm will only be used by eauto
-Warning: the hint: eapply @par_strict_left_comm will only be used by eauto
-There must be a bug because there is no reason why par_strict_comm would require to be used by eauto but not par_symmetry
-*)
+             par_strict_not_col_3 par_strict_not_col_4 : col.
 
 Ltac Par := eauto with par.
 
@@ -482,7 +546,7 @@ End T12_2.
 
 Section T12_2'.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l12_6 : forall A B C D,
  Par_strict A B C D -> OS A B C D.
@@ -490,8 +554,9 @@ Proof.
     intros.
     unfold Par_strict in H.
     spliter.
-    assert(HH:= not_two_sides_one_side A B C D H).
+    assert(HH:= cop__not_two_sides_one_side A B C D).
     apply HH.
+      assumption.
       intro.
       apply H2.
       exists C;Col.
@@ -516,11 +581,11 @@ Proof.
     assumption.
 Qed.
 
-Lemma Perp_dec : forall A B C D, Perp A B C D \/ ~ Perp A B C D.
+Lemma perp_dec : forall A B C D, Perp A B C D \/ ~ Perp A B C D.
 Proof.
     intros.
-    induction (Col_dec A B C).
-      induction (Perp_in_dec C A B C D).
+    induction (col_dec A B C).
+      induction (perp_in_dec C A B C D).
         left.
         apply l8_14_2_1a with C;auto.
       right.
@@ -530,7 +595,6 @@ Proof.
       apply (l8_15_1 A B D C).
         apply perp_distinct in H1.
         intuition.
-        assumption.
       apply perp_right_comm;assumption.
     elim (l8_18_existence A B C H); intros P HP.
     spliter.
@@ -540,7 +604,7 @@ Proof.
       intro.
       assert (A <> B /\ D <> D) by (apply perp_distinct;assumption).
       intuition.
-    induction (Col_dec P C D).
+    induction (col_dec P C D).
       left.
       assert (A <> B /\ C <> P) by (apply perp_distinct;assumption).
       spliter.
@@ -548,19 +612,14 @@ Proof.
     right.
     intro.
     apply H3.
-    apply col_permutation_2;apply perp_perp_col with A B;apply perp_sym;assumption.
+    apply col_permutation_2, cop_perp2__col with A B; [Cop|apply perp_sym;assumption..].
 Qed.
 
-Lemma perp_perp_col_col : forall X1 X2 Y1 Y2 A B,
- Perp X1 X2 A B -> Perp Y1 Y2 A B -> Col X1 Y1 Y2 -> Col X2 Y1 Y2.
+Lemma col_cop2_perp2__col : forall X1 X2 Y1 Y2 A B,
+ Perp X1 X2 A B -> Perp Y1 Y2 A B -> Col X1 Y1 Y2 ->
+ Coplanar A B X2 Y1 -> Coplanar A B X2 Y2 -> Col X2 Y1 Y2.
 Proof.
     intros.
-    assert(HH0:= H).
-    assert(HH1:= H0).
-    unfold Perp in HH0.
-    unfold Perp in HH1.
-    ex_and HH0 X0.
-    ex_and HH1 Y0.
     induction(eq_dec_points X1 Y2).
       subst Y2.
       assert(Perp Y1 X1 A B).
@@ -572,7 +631,8 @@ Proof.
           apply H0.
         Col.
       apply col_permutation_1.
-      eapply perp_perp_col.
+      apply cop_perp2__col with A B.
+        assumption.
         apply H.
       apply perp_left_comm.
       assumption.
@@ -588,53 +648,66 @@ Proof.
     induction(eq_dec_points X1 Y1).
       subst Y1.
       apply col_permutation_2.
-      eapply perp_perp_col.
-        apply H6.
-      assumption.
+      apply cop_perp2__col with A B; Cop.
     assert(Perp X1 Y1 A B).
       eauto using perp_left_comm, perp_col with col.
-    induction (eq_dec_points X2 Y1).
-      subst Y1.
-      apply col_trivial_1.
-    assert(Perp X2 Y1 A B).
-      eauto using perp_col, perp_left_comm, perp_perp_col with col.
-    (***************)
-    induction (eq_dec_points X2 Y2).
-      treat_equalities.
-      Col.
-    assert (Perp Y2 X2 A B) by (eauto using perp_col, perp_perp_col with col).
-    eauto using perp_left_comm, perp_perp_col.
+    assert (Col X1 X2 Y1).
+      apply cop_perp2__col with A B; Perp; Cop.
+    ColR.
+Qed.
+
+Lemma col_perp2_ncol__col : forall X1 X2 Y1 Y2 A B,
+ Perp X1 X2 A B -> Perp Y1 Y2 A B ->
+ Col X1 Y1 Y2 -> ~ Col X1 A B ->
+ Col X2 Y1 Y2.
+Proof.
+    intros.
+    assert (Coplanar A B X2 Y1).
+      induction (eq_dec_points X1 Y1).
+        subst; Cop.
+      apply coplanar_trans_1 with X1; [Cop..|].
+      assert (Perp Y1 X1 A B) by (apply perp_col with Y2; Col); Cop.
+    assert (Coplanar A B X2 Y2).
+      induction (eq_dec_points X1 Y2).
+        subst; Cop.
+      apply coplanar_trans_1 with X1; [Cop..|].
+      assert (Perp Y2 X1 A B) by (apply perp_col with Y1; Perp; Col); Cop.
+    apply col_cop2_perp2__col with X1 A B; assumption.
 Qed.
 
 Lemma l12_9 : forall A1 A2 B1 B2 C1 C2,
+ Coplanar C1 C2 A1 B1 -> Coplanar C1 C2 A1 B2 ->
+ Coplanar C1 C2 A2 B1 -> Coplanar C1 C2 A2 B2 ->
  Perp A1 A2 C1 C2 -> Perp B1 B2 C1 C2 ->
  Par A1 A2 B1 B2.
 Proof.
     intros A1 A2 B1 B2 C1 C2.
-    assert(H := all_coplanar A1 A2 B1 B2).
     intros.
     unfold Par.
     unfold Par_strict.
     assert(A1 <> A2 /\ C1 <> C2) by (apply perp_distinct;assumption).
     assert(B1 <> B2 /\ C1 <> C2) by (apply perp_distinct;assumption).
     spliter.
-    induction(Col_dec A1 B1 B2).
+    induction(col_dec A1 B1 B2).
       right.
-      eauto using perp_perp_col_col.
+      repeat split; auto.
+      apply col_cop2_perp2__col with A1 C1 C2; auto.
     (***********************************)
     left.
     repeat split.
       assumption.
       assumption.
-      apply all_coplanar.
+      induction (perp_not_col2 C1 C2 A1 A2); Perp.
+        apply coplanar_pseudo_trans with C1 C2 A1; Cop.
+        apply coplanar_pseudo_trans with C1 C2 A2; Cop.
     intro.
-    ex_and H7 AB.
-    apply H6.
+    ex_and H10 AB.
+    apply H9.
     induction(eq_dec_points AB A1).
       subst AB.
       assumption.
     assert(Perp A1 AB C1 C2) by (eauto using perp_col with col).
-    eauto using perp_perp_col_col, perp_left_comm.
+    apply col_cop2_perp2__col with AB C1 C2; Perp.
 Qed.
 
 (** We show here that from the axioms of neutral geometry we can deduce the existence of a parallel line. 
@@ -642,10 +715,11 @@ This is important because it shows that axioms of neutral geometry are inconsist
 elliptic geometry assumes that no parallel lines exist. *)
 (** This corresponds to l12_10 in Tarski's book. *)
 
-Lemma parallel_existence : forall A B P, A <> B -> exists C, exists D, C<>D /\ Par A B C D /\ Col P C D.
+Lemma parallel_existence : forall A B P, A <> B ->
+ exists C, exists D, C<>D /\ Par A B C D /\ Col P C D.
 Proof.
     intros.
-    induction(Col_dec A B P).
+    induction(col_dec A B P).
       exists A.
       exists B.
       repeat split.
@@ -679,8 +753,7 @@ Proof.
         intuition.
       repeat split.
         assumption.
-        apply l12_9 with P A.
-          apply H2.
+        apply l12_9 with P A; Cop.
         apply per_perp_in in H4.
           apply perp_in_perp_bis in H4.
           induction H4.
@@ -713,6 +786,10 @@ Proof.
     repeat split.
       assumption.
       apply l12_9 with P P'.
+        exists P; left; split; Col.
+        Cop.
+        exists P; left; split; Col.
+        apply coplanar_perm_3, col_cop__cop with A; Col; Cop.
         apply H2.
       apply per_perp_in in H5.
         apply perp_in_perp_bis in H5.
@@ -739,7 +816,7 @@ Proof.
       repeat split.
         assumption.
         assumption.
-        apply all_coplanar.
+        apply col_cop__cop with D; auto.
       intro.
       apply H4.
       ex_and H5 P.
@@ -952,7 +1029,8 @@ Proof.
       assumption.
     spliter.
     unfold Par_strict.
-    repeat split; try assumption; try apply all_coplanar.
+    repeat split; auto.
+      exists C; left; split; Col.
     intro.
     ex_and H5 X.
     apply H1.
@@ -989,7 +1067,7 @@ Proof.
         subst B.
         Col.
       assumption.
-      apply all_coplanar.
+      apply os__coplanar, H0; Col.
     intro.
     ex_and H1 X.
     assert(HH:= H0 X (col_permutation_1 _ _ _ H2) ).
@@ -1009,7 +1087,8 @@ Proof.
       left.
       unfold Par_strict in *.
       spliter.
-      repeat split; auto; try apply all_coplanar.
+      repeat split; auto.
+      apply coplanar_perm_16, col_cop__cop with B; Cop.
       intro.
       ex_and H5 X.
       apply H4.
@@ -1098,7 +1177,7 @@ Proof.
     repeat split.
       assumption.
       assumption.
-      apply all_coplanar.
+      apply col2_cop__cop with C D; assumption.
     intro.
     apply H5.
     ex_and H6 X.
@@ -1125,7 +1204,7 @@ Qed.
 Lemma line_dec : forall B1 B2 C1 C2, (Col C1 B1 B2 /\ Col C2 B1 B2) \/ ~ (Col C1 B1 B2 /\ Col C2 B1 B2).
 Proof.
     intros.
-    induction (Col_dec C1 B1 B2); induction (Col_dec C2 B1 B2);tauto.
+    induction (col_dec C1 B1 B2); induction (col_dec C2 B1 B2);tauto.
 Qed.
 
 Lemma par_distinct : forall A B C D, Par A B C D -> A <> B /\ C <> D.
@@ -1177,21 +1256,29 @@ Proof.
     assumption.
 Qed.
 
-Lemma inter_trivial : forall A B X, ~Col A B X -> Inter A X B X X.
+Lemma inter_distincts : forall A B C D X, Inter A B C D X -> A <> B /\ C <> D.
 Proof.
     intros.
+    destruct H as [HAB [[P []] _]].
+    assert_diffs.
+    split; auto.
+Qed.
+
+Lemma inter_trivial : forall A B X, ~ Col A B X -> Inter A X B X X.
+Proof.
+    intros.
+    assert_diffs.
     unfold Inter.
-    split.
+    repeat split; Col.
       exists B.
       split.
         Col.
       intro.
       apply H.
       Col.
-    split; Col.
 Qed.
 
-Lemma inter_sym : forall A B C D X, C <> D -> Inter A B C D X -> Inter C D A B X.
+Lemma inter_sym : forall A B C D X, Inter A B C D X -> Inter C D A B X.
 Proof.
     intros.
     unfold Inter in *.
@@ -1202,6 +1289,8 @@ Proof.
       subst B.
       apply H3.
       Col.
+    split.
+      assumption.
     split.
       induction(eq_dec_points A X).
         treat_equalities.
@@ -1227,7 +1316,7 @@ Proof.
           Col.
         Col.
       ColR.
-    Col.
+    split; Col.
 Qed.
 
 Lemma inter_left_comm : forall A B C D X, Inter A B C D X -> Inter B A C D X.
@@ -1235,13 +1324,15 @@ Proof.
     intros.
     unfold Inter in *.
     spliter.
-    ex_and H P.
+    ex_and H0 P.
+    split.
+      assumption.
     split.
       exists P.
       split.
         assumption.
       intro.
-      apply H2.
+      apply H3.
       Col.
     split; Col.
 Qed.
@@ -1251,7 +1342,9 @@ Proof.
     intros.
     unfold Inter in *.
     spliter.
-    ex_and H P.
+    ex_and H0 P.
+    split.
+      auto.
     split.
       exists P.
       split.
@@ -1268,13 +1361,13 @@ Proof.
     assumption.
 Qed.
 
-(* In the proof given by Tarski on page 125 the distinction of cases is explicit.
-This will be a good example for the paper on decidability. *)
+(** In the proof given by Tarski on page 125 the distinction of cases is explicit.
+This is a good example on the significance of decidability. *)
 Lemma l12_17 : forall A B C D P,
  A <> B -> Midpoint P A C -> Midpoint P B D -> Par A B C D.
 Proof.
     intros.
-    induction(Col_dec A B P).
+    induction(col_dec A B P).
       unfold Par.
       right.
       induction(eq_dec_points A P).
@@ -1418,8 +1511,7 @@ Proof.
         induction H14.
           apply perp_distinct in H14.
           intuition.
-        eapply l12_9 with P A.
-          apply H4.
+        eapply l12_9 with P A; Cop.
         apply perp_sym.
         eapply perp_col.
           auto.
@@ -1507,6 +1599,10 @@ Proof.
       apply perp_in_perp_bis in H17.
       induction H17.
         apply l12_9 with P E.
+          exists P; left; split; Col.
+          exists B; right; right; split; Col.
+          exists A; right; right; split; Col.
+          exists P; left; split; Col.
           apply H4.
         eapply perp_col.
           intro.
@@ -1860,8 +1956,7 @@ Proof.
       exists B.
       split; Col.
     split.
-      apply not_two_sides_one_side.
-        assumption.
+      apply cop__not_two_sides_one_side; Cop.
         intro.
         apply H3.
         exists C.
@@ -1870,9 +1965,7 @@ Proof.
         apply H3.
         exists A.
         split; Col.
-      assumption.
-    apply not_two_sides_one_side.
-      assumption.
+    apply cop__not_two_sides_one_side; Cop.
       intro.
       apply H3.
       exists D.
@@ -2084,7 +2177,7 @@ Proof.
         auto.
         Col.
       apply conga_comm in H1.
-      apply conga__or_out_ts in H1.
+      apply conga_cop__or_out_ts in H1; Cop.
       induction H1.
         apply out_col in H1.
         Col.
@@ -2124,12 +2217,13 @@ Qed.
 
 
 Lemma par_strict_distinct : forall A B C D,
- Par_strict A B C D -> A<>B /\ C<>D.
+ Par_strict A B C D ->
+  A<>B /\ A<>C /\ A<>D /\ B<>C /\ B<>D /\ C<>D.
 Proof.
-    intros.
-    apply par_strict_par in H.
-    apply par_distincts.
-    assumption.
+    unfold Par_strict.
+    intros; spliter.
+    repeat split; auto;
+    intro; apply H2; [exists A..|exists B|exists B]; subst; split; Col.
 Qed.
 
 Lemma col_par : forall A B C,
@@ -2159,7 +2253,7 @@ Proof.
     apply (l8_3 B'); Col; Perp.
   }
   assert(HPars : Par_strict B B' A A').
-    apply (par_not_col_strict _ _ _ _ A); Col; apply (l12_9 _ _ _ _ B C); Perp.
+    apply (par_not_col_strict _ _ _ _ A); Col; apply (l12_9 _ _ _ _ B C); Perp; Cop.
   assert(HNCol4 := par_strict_not_col_4 B B' A A' HPars).
   apply (col_one_side_out _ B'); Col.
   apply (one_side_transitivity _ _ _ A).
@@ -2194,11 +2288,11 @@ Proof.
   apply perp_col with A; Col; Perp.
 Qed.
 
-Lemma conga_inangle_per2__inangle : forall A B C P T,
-  Per A B C -> InAngle T A B C -> CongA P B A P B C -> Per B P T ->
+Lemma conga_cop_inangle_per2__inangle : forall A B C P T,
+  Per A B C -> InAngle T A B C -> CongA P B A P B C -> Per B P T -> Coplanar A B C P ->
   InAngle P A B C.
 Proof.
-  intros A B C P T HPer HInangle HConga HPerP.
+  intros A B C P T HPer HInangle HConga HPerP HCop.
   destruct (eq_dec_points P T).
     subst; apply HInangle.
   assert_diffs.
@@ -2209,14 +2303,18 @@ Proof.
   apply l11_25 with P' A C; try (apply out_trivial); auto.
   assert (HNCol1 : ~ Col A B C) by (apply per_not_col; auto).
   assert (HCol : Col B P P').
-    apply conga2__col with A C; trivial; intro; apply HNCol1; Col.
+    apply conga2_cop2__col with A C; trivial.
+    intro; apply HNCol1; Col.
+    apply coplanar_trans_1 with C; Cop; Col.
+    apply coplanar_trans_1 with A; Cop.
   apply (acute_col_perp__out T); Col.
   { apply acute_lea_acute with P' B A; trivial.
     assert (HNCol2 : ~ Col P' B A).
       intro.
       assert (Col P' B C) by (apply (col_conga_col P' B A); assumption).
       apply HNCol1; ColR.
-    destruct (Col_dec T B P'); [|assert_diffs; destruct (one_or_two_sides B P' A T); Col].
+    assert (Coplanar A B T P') by (apply coplanar_trans_1 with C; Cop; Col).
+    destruct (col_dec T B P'); [|assert_diffs; destruct (cop__one_or_two_sides B P' A T); Col; Cop].
     - apply l11_31_1; auto.
       apply col_one_side_out with A; Col.
       apply invert_one_side, inangle_one_side with C; Col.
@@ -2225,7 +2323,7 @@ Proof.
     - apply (l11_30 P' B T P' B C); CongA.
       exists T; split; CongA.
       apply l11_24 in HInangle; apply l11_24 in HInangle'.
-      destruct (Col_dec B C T).
+      destruct (col_dec B C T).
         apply out341__inangle; auto.
         apply col_in_angle_out with A; Col.
         intro; apply HNCol1; Col.
@@ -2235,7 +2333,7 @@ Proof.
         apply invert_two_sides, in_angle_two_sides; Col.
       apply invert_one_side, inangle_one_side with A; Col.
     - exists T; split; CongA.
-      destruct (Col_dec B A T).
+      destruct (col_dec B A T).
         apply out341__inangle; auto.
         apply col_in_angle_out with C; Col.
         intro; apply HNCol1; Col.
@@ -2418,3 +2516,32 @@ Proof.
 Qed.
 
 End T12_3.
+
+Section T12_2D.
+
+Context `{T2D:Tarski_2D}.
+
+Lemma col_perp2__col : forall X1 X2 Y1 Y2 A B,
+  Perp X1 X2 A B -> Perp Y1 Y2 A B -> Col X1 Y1 Y2 -> Col X2 Y1 Y2.
+Proof.
+  intros.
+  apply col_cop2_perp2__col with X1 A B; trivial; apply all_coplanar.
+Qed.
+
+Lemma l12_9_2D : forall A1 A2 B1 B2 C1 C2,
+  Perp A1 A2 C1 C2 -> Perp B1 B2 C1 C2 -> Par A1 A2 B1 B2.
+Proof.
+  intros A1 A2 B1 B2 C1 C2.
+  apply l12_9; apply all_coplanar.
+Qed.
+
+Lemma conga_inangle_per2__inangle : forall A B C P T,
+  Per A B C -> InAngle T A B C -> CongA P B A P B C -> Per B P T ->
+  InAngle P A B C.
+Proof.
+  intros.
+  assert (HCop := all_coplanar A B C P).
+  apply conga_cop_inangle_per2__inangle with T; assumption.
+Qed.
+
+End T12_2D.

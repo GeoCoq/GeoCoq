@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch05_bet_le.
 
 Section tarski_s_euclid_remove_degenerated_cases.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma tarski_s_euclid_remove_degenerated_cases :
   (forall A B C D T,
@@ -45,7 +45,7 @@ elim (eq_dec_points C T); intro HCT.
 subst; exists B; exists T; Between.
 elim (eq_dec_points D T); intro HDT.
 subst; exists B; exists C; Between.
-elim (Col_dec A B C); intro HABC.
+elim (col_dec A B C); intro HABC.
 
   {
   elim HABC; clear HABC; intro HABC.

@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_ray4.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_ray5 : 
    forall A B C, 

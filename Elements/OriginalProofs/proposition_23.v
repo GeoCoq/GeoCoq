@@ -13,12 +13,6 @@ Lemma proposition_23 :
    exists X Y, Out A B Y /\ CongA X A Y D C E.
 Proof.
 intros.
-assert (~ Col D E C).
- {
- intro.
- assert (Col D C E) by (forward_using lemma_collinearorder).
- contradict.
- }
 assert (~ Col E C D).
  {
  intro.

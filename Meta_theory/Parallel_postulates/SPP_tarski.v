@@ -4,7 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section SPP_tarski.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma impossible_case_5 : forall P Q R S T U I,
   BetS P T Q ->
@@ -33,7 +33,7 @@ apply one_side_transitivity with R.
   assert (HQS : Q <> S) by (assert_diffs; assumption).
   assert (HQSQ : Col Q S Q) by Col.
   assert (HRUQ : Col R U Q) by (spliter; assert_cols; Col).
-  rewrite (l9_19 Q S R U Q HQS HQSQ HRUQ).
+  rewrite (l9_19 Q S R U Q HQSQ HRUQ).
   split; spliter; try (intro; apply HNC; assert_cols; ColR); repeat split; Between.
   }
 Qed.
@@ -172,7 +172,7 @@ elim HPUI; clear HPUI; intro HPUI.
 Qed.
 
 Lemma strong_parallel_postulate_implies_tarski_s_euclid_aux :
-  SPP ->
+  strong_parallel_postulate ->
   (forall A B C D T,
    A <> B ->
    A <> C ->
@@ -233,7 +233,7 @@ assert (H4 : ~ Col B T B'') by (intro; apply HABC; assert_cols; ColR).
 assert (H5 : Cong B MB T MB) by Cong.
 assert (H6 : Cong B' MB B'' MB) by Cong.
 destruct (HSPP B T B' B'' MB B''') as [X [HBetS HX]];
-Col; try apply all_coplanar; try (intro; apply H4; assert_diffs; assert_cols; ColR).
+Col; Cop; try (intro; apply H4; assert_diffs; assert_cols; ColR).
 assert (HNC : ~ Col B B' B''') by (intro; assert_diffs; assert_cols; apply H4; ColR).
 assert (HPar1 : Par B B' T B'') by (unfold BetS in *; spliter; apply l12_17 with MB; try split; Col).
 assert (HPar2 : Par B B'' T B')
@@ -310,7 +310,7 @@ elim HBetS; clear HBetS; intro HBetS.
 Qed.
 
 Lemma strong_parallel_postulate_implies_tarski_s_euclid :
-  SPP ->
+  strong_parallel_postulate ->
   tarski_s_parallel_postulate.
 Proof.
 unfold tarski_s_parallel_postulate.
@@ -324,7 +324,7 @@ Between; Col.
 clear HBet3; clear HBet4; clear HCong3; clear HCong4;
 clear MC; clear HC''TY; clear HC''T; clear HPar'.
 exists X; exists Y; repeat split; try assumption.
-elim (Col_dec X T Y); intro HXTY.
+elim (col_dec X T Y); intro HXTY.
 
   {
   apply between_symmetry in HACY.
@@ -342,7 +342,6 @@ elim (Col_dec X T Y); intro HXTY.
   assert (HNC : ~ Col T B'' Y) by (intro; apply HXTY; unfold BetS in *; spliter; assert_cols; ColR).
   assert (HCop : Coplanar T B B'' Y).
     {
-    (* DO NOT REMOVE THIS!!!
     apply coplanar_pseudo_trans with A B C; assert_cols; Cop.
 
       {
@@ -350,32 +349,27 @@ elim (Col_dec X T Y); intro HXTY.
       }
 
       {
-      assert (HABD : ~ Col A B D) by (intro; assert_cols; apply HABC; ColR).
-      apply coplanar_pseudo_trans with A B D; assert_cols; Cop.
-      assert (HTS : TS A D B B'').
+      assert (HABD : ~ Col D A B) by (intro; assert_cols; apply HABC; ColR).
+      apply coplanar_trans_1 with D; [Cop..|].
+      apply ts__coplanar.
+      apply l9_8_2 with X.
+
         {
-        apply l9_8_2 with X.
-
-          {
-          split; try assumption.
-          assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
-          split; try (intro; assert_cols; apply HABC; ColR).
-          split; try (intro; assert_cols; apply HABC; ColR).
-          exists T; split; Col; Between.
-          }
-
-          {
-          assert (HADA : Col A D A) by Col.
-          assert (HXBA : Col X B A) by (assert_cols; Col).
-          rewrite (l9_19 A D X B A HAD HADA HXBA).
-          assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
-          split; try (intro; assert_cols; apply HABC; ColR); split; auto.
-          }
+        assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
+        split; try (intro; assert_cols; apply HABC; ColR).
+        split; try (intro; assert_cols; apply HABC; ColR).
+        exists T; split; Col; Between.
         }
-      destruct HTS as [HDiff [HCol1 [HCol2 [I [HCol3 HBet]]]]];assert_cols; exists I; Col5.
+
+        {
+        apply invert_one_side.
+        assert (HADA : Col A D A) by Col.
+        assert (HXBA : Col X B A) by (assert_cols; Col).
+        rewrite (l9_19 A D X B A HADA HXBA).
+        assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
+        split; try (intro; assert_cols; apply HABC; ColR); split; auto.
+        }
       }
-    *)
-    apply all_coplanar.
     }
   destruct (HSPP T B B'' B' MB Y) as [I [HCol1 HCol2]]; Cong;
   try (unfold BetS in *; spliter; repeat (split; try Between)).

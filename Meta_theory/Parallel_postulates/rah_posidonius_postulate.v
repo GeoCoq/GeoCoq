@@ -4,7 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section rah_posidonius.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma rah__posidonius_aux : postulate_of_right_saccheri_quadrilaterals ->
   forall A1 A2 A3 B1 B2 B3,
@@ -20,17 +20,16 @@ Proof.
   elim(eq_dec_points A1 A3).
   { intro.
     subst A3.
-    assert(B1 = B3).
-    2: subst; Cong.
+    assert(B1 = B3); [|subst; Cong].
     apply (l6_21 B1 B2 A1 B1); Col.
       apply not_col_permutation_1; apply (sac__ncol123 _ _ _ A2); assumption.
-      unfold Saccheri in HSac; spliter; apply (perp_perp_col _ _ _ A1 A2); Perp.
+      unfold Saccheri in HSac; spliter; apply (cop_perp2__col _ _ _ A1 A2); Perp.
+      apply col_cop__cop with B2; Cop.
   }
   intro.
   destruct(segment_construction_3 A3 B3 A1 B1) as [B'3 []]; auto.
   assert_diffs.
-  assert(B3 = B'3).
-  2: subst; assumption.
+  assert(B3 = B'3); [|subst; assumption].
   assert(Par_strict B1 B2 A1 A3).
   { apply (par_strict_col_par_strict _ _ _ A2); auto.
     apply par_strict_symmetry.
@@ -39,7 +38,13 @@ Proof.
   apply (l6_21 B1 B2 A3 B3); Col.
     apply (par_strict_not_col_4 _ _ A1); auto.
   apply col_permutation_2.
-  apply (per_per_col _ _ A1); auto; apply l8_2.
+  assert (Coplanar A1 B2 B'3 B1).
+  { apply coplanar_perm_15, coplanar_trans_1 with A3.
+      apply not_col_permutation_2, par_strict_not_col_4 with A1; assumption.
+      apply coplanar_perm_18, pars__coplanar; assumption.
+    exists B3; right; right; split; Col.
+  }
+  apply cop_per2__col with A1; auto; apply l8_2.
     apply (rah _ _ _ A2); auto.
   apply (rah _ _ _ A3).
   unfold Saccheri in *.
@@ -71,7 +76,7 @@ destruct ex_saccheri as [A1 [B1 [B2 [A2 [HPer1 [HPer2 [HCong HOS]]]]]]].
 exists A1; exists A2; exists B1; exists B2.
 assert (HNE : A1 <> A2) by (destruct HOS as [X [[H ?] ?]]; intro; subst A2; Col).
 split; [destruct HOS; unfold TS in *; spliter; Col|].
-split; [intro; treat_equalities; apply l8_7 in HPer1; intuition|].
+split; [intro; treat_equalities; apply l8_7 in HPer1; intuition|split; [Cop|]].
 intros A3 A4 B3 B4 HC1 HC2 HPerp1 HC3 HC4 HPerp2.
 assert (HCong1 := rah__posidonius_aux HP A1 A2 A3 B1 B2 B3).
 assert (HCong2 := rah__posidonius_aux HP A1 A2 A4 B1 B2 B4).

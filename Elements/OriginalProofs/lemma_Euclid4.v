@@ -96,7 +96,7 @@ assert (Cong A F D F) by (forward_using lemma_congruenceflip).
 assert (neq b q) by (conclude_def Per ).
 assert (Cong q b b q) by (conclude cn_equalityreverse).
 assert (Cong q b B F) by (conclude lemma_congruencetransitive).
-assert (neq B F) by (conclude lemma_nullsegment3).
+assert (neq B F) by (conclude axiom_nocollapse).
 assert (Per A B F) by (conclude_def Per ).
 assert (Cong b q B F) by (conclude lemma_congruencesymmetric).
 assert (Cong B C b q) by (conclude lemma_congruencesymmetric).

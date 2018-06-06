@@ -46,7 +46,6 @@ assert (~ Col B C D).
 assert (CongA B C D D C B) by (conclude lemma_ABCequalsCBA).
 assert (CongA A B C D C B) by (conclude lemma_equalanglestransitive).
 assert (Col C B M) by (forward_using lemma_collinearorder).
-
 assert (nCol C B A).
  {
  assert (nCol B C A) by auto.
@@ -69,7 +68,6 @@ assert (Cong C B B C) by (conclude cn_equalityreverse).
 assert (Cong_3 C A B B D C) by (conclude_def Cong_3 ).
 assert (CongA C A B B D C) by (conclude lemma_equalanglesflip).
 assert (Cong A D D A) by (conclude cn_equalityreverse).
-assert (Cong D A A D) by (conclude cn_equalityreverse).
 assert (eq A A) by (conclude cn_equalityreflexive).
 assert (eq D D) by (conclude cn_equalityreflexive).
 assert (neq A C) by (forward_using lemma_angledistinct).

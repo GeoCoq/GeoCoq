@@ -4,7 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section playfair_universal_posidonius_postulate.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma playfair__universal_posidonius_postulate : playfair_s_postulate -> universal_posidonius_postulate.
 Proof.
@@ -27,7 +27,10 @@ rename HC5 into HC3; rename HPerp3 into HPerp2.
 destruct (segment_construction_2 B3 A3 A1' B1) as [B3' [HC4 HCong]];
 [assert_diffs; auto|]; elim (eq_dec_points A1' A3); intro HD; treat_equalities.
   {
-  assert (HC1 : Col A1' B1 B3) by (apply perp_perp_col with A1 A2; Perp).
+  assert (HC1 : Col A1' B1 B3).
+    apply cop_perp2__col with A1 A2; Perp.
+    assert_diffs; apply col_cop__cop with B2; Col.
+    apply par__coplanar, HPar.
   assert (B1 = B3); treat_equalities; Cong.
   apply l6_21 with B1 B2 A1' B1; assert_diffs; Col.
   elim (eq_dec_points A1' A1); intro HD1; treat_equalities;

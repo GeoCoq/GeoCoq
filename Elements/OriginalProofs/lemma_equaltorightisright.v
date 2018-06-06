@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_8_2.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_equaltorightisright : 
    forall A B C a b c, 
@@ -11,8 +11,6 @@ Lemma lemma_equaltorightisright :
    Per a b c.
 Proof.
 intros.
-assert (neq B C) by (forward_using lemma_angledistinct).
-assert (neq A B) by (forward_using lemma_angledistinct).
 assert (CongA A B C a b c) by (conclude lemma_equalanglessymmetric).
 let Tf:=fresh in
 assert (Tf:exists E F e f, (Out B A E /\ Out B C F /\ Out b a e /\ Out b c f /\ Cong B E b e /\ Cong B F b f /\ Cong E F e f /\ nCol A B C)) by (conclude_def CongA );destruct Tf as [E[F[e[f]]]];spliter.
@@ -24,21 +22,18 @@ assert (neq B E) by (conclude lemma_raystrict).
 assert (neq E B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
 assert (Tf:exists W, (BetS E B W /\ Cong E B W B /\ Cong E F W F /\ neq B F)) by (conclude_def Per );destruct Tf as [W];spliter.
-assert (neq b e) by (conclude lemma_nullsegment3).
+assert (neq b e) by (conclude axiom_nocollapse).
 assert (neq e b) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists w, (BetS e b w /\ Cong b w e b)) by (conclude postulate_extension);destruct Tf as [w];spliter.
+assert (Tf:exists w, (BetS e b w /\ Cong b w e b)) by (conclude lemma_extension);destruct Tf as [w];spliter.
 assert (Cong e b E B) by (forward_using lemma_doublereverse).
 assert (Cong b w E B) by (conclude lemma_congruencetransitive).
 assert (Cong E B B W) by (forward_using lemma_congruenceflip).
 assert (Cong b w B W) by (conclude lemma_congruencetransitive).
 assert (Cong b f B F) by (conclude lemma_congruencesymmetric).
 assert (Cong e f E F) by (conclude lemma_congruencesymmetric).
-assert (Cong e w E W) by (conclude lemma_sumofparts).
-assert (neq E B) by (conclude lemma_nullsegment3).
-assert (Cong E B e b) by (forward_using lemma_congruenceflip).
-assert (neq e b) by (conclude lemma_nullsegment3).
-assert (Cong f w F W) by (conclude axiom_5_line).
+assert (Cong e w E W) by (conclude cn_sumofparts).
+assert (Cong f w F W) by (conclude (axiom_5_line e b w f E B W F)).
 assert (Cong e b B W) by (conclude lemma_congruencetransitive).
 assert (Cong B W b w) by (conclude lemma_congruencesymmetric).
 assert (Cong e b b w) by (conclude lemma_congruencetransitive).

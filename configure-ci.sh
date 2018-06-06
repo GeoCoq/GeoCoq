@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 cp -f Make.in Make
-find . -name "*.v" | grep -v Sandbox >> Make
+find . -name "*.v" | grep -v Sandbox | grep -v POF >> Make
 
 # We lack a few minutes to be able to build the whole library.
 sed -i.bak '/Ch16_coordinates_with_functions\.v/d'             Make

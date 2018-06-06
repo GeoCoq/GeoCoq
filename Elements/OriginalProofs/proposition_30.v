@@ -6,6 +6,13 @@ Section Euclid.
 
 Context `{Ax:euclidean_euclidean}.
 
+Lemma parnotmeet: forall A B C D,
+ Par A B C D -> ~ Meet A B C D.
+Proof.
+intros.
+conclude_def Par.
+Qed.
+
 Lemma proposition_30 : 
    forall A B C D E F G H K, 
    Par A B E F -> Par C D E F -> BetS G H K -> Col A B G -> Col E F H -> Col C D K -> neq A G -> neq E H -> neq C K ->
@@ -13,11 +20,11 @@ Lemma proposition_30 :
 Proof.
 intros.
 let Tf:=fresh in
-assert (Tf:exists b, (BetS A G b /\ Cong G b A G)) by (conclude postulate_extension);destruct Tf as [b];spliter.
+assert (Tf:exists b, (BetS A G b /\ Cong G b A G)) by (conclude lemma_extension);destruct Tf as [b];spliter.
 let Tf:=fresh in
-assert (Tf:exists f, (BetS E H f /\ Cong H f E H)) by (conclude postulate_extension);destruct Tf as [f];spliter.
+assert (Tf:exists f, (BetS E H f /\ Cong H f E H)) by (conclude lemma_extension);destruct Tf as [f];spliter.
 let Tf:=fresh in
-assert (Tf:exists d, (BetS C K d /\ Cong K d C K)) by (conclude postulate_extension);destruct Tf as [d];spliter.
+assert (Tf:exists d, (BetS C K d /\ Cong K d C K)) by (conclude lemma_extension);destruct Tf as [d];spliter.
 assert (nCol C D E) by (forward_using lemma_parallelNC).
 assert (neq C D) by (forward_using lemma_NCdistinct).
 assert (Col A G b) by (conclude_def Col ).
@@ -157,7 +164,8 @@ by cases on (CR A f G H \/ CR A E G H).
  by cases on (CR C f K H \/ CR C E K H).
  {
   assert (TS f H K C) by (forward_using lemma_crossimpliesopposite).
-  assert (Par A b C d) by (conclude proposition_30A).
+  assert (Par A b C d)
+   by (apply (proposition_30A _ _ _ _ E f G H K);assumption).
   close.
   }
  {
@@ -174,7 +182,7 @@ by cases on (CR A f G H \/ CR A E G H).
   let Tf:=fresh in
   assert (Tf:exists m, (BetS f m d /\ Col K H m /\ nCol K H f)) by (conclude_def TS );destruct Tf as [m];spliter.
   assert (Par f E C d) by (conclude lemma_parallelsymmetric).
-  assert (~ Meet f E C d) by (conclude_def Par ).
+  assert (~ Meet f E C d) by (auto using parnotmeet).
   assert (Col f H E) by (forward_using lemma_collinearorder).
   assert (neq f E) by (forward_using lemma_betweennotequal).
   assert (neq f H) by (conclude lemma_inequalitysymmetric).
@@ -193,11 +201,21 @@ by cases on (CR A f G H \/ CR A E G H).
   assert (Par d C E f) by (forward_using lemma_parallelflip).
   assert (BetS d K C) by (conclude axiom_betweennesssymmetry).
   assert (TS f H K d) by (conclude lemma_oppositesidesymmetric).
-  assert (Par A b d C) by (conclude proposition_30A).
+  assert (Par A b d C).
+  { simple eapply proposition_30A.
+    exact H40.
+    exact H171.
+    exact H2.
+    exact H9.
+    exact H11.
+    exact H172.
+    exact H138.
+    exact H173.
+ }
   assert (Par A b C d) by (forward_using lemma_parallelflip).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
 {
@@ -218,7 +236,7 @@ by cases on (CR A f G H \/ CR A E G H).
   let Tf:=fresh in
   assert (Tf:exists m, (BetS E m d /\ Col K H m /\ nCol K H E)) by (conclude_def TS );destruct Tf as [m];spliter.
   assert (Par E f C d) by (conclude lemma_parallelsymmetric).
-  assert (~ Meet E f C d) by (conclude_def Par ).
+  assert (~ Meet E f C d) by (auto using parnotmeet).
   assert (Col E H f) by (forward_using lemma_collinearorder).
   assert (neq E f) by (forward_using lemma_betweennotequal).
   assert (neq E H) by (conclude lemma_inequalitysymmetric).
@@ -248,13 +266,24 @@ by cases on (CR A f G H \/ CR A E G H).
   assert (TS E H K C) by (conclude lemma_oppositesidesymmetric).
   assert (TS A G H E) by (forward_using lemma_crossimpliesopposite).
   assert (BetS f H E) by (conclude axiom_betweennesssymmetry).
-  assert (Par A b C d) by (conclude proposition_30A).
+  assert (Par A b C d).
+   { 
+  simple eapply proposition_30A.
+   exact H62.
+   exact H70.
+   exact H2.
+   exact H9.
+   exact H143.
+   exact H13.
+   exact H142.
+   exact H141.
+  }
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 assert (Par A b d C) by (forward_using lemma_parallelflip).
 assert (Col d C D) by (forward_using lemma_collinearorder).
 assert (neq D C) by (conclude lemma_inequalitysymmetric).

@@ -282,7 +282,7 @@ by cases on (Col C Q D \/ nCol C Q D).
     }
    close.
    }
-(* cases *)
+(** cases *)
   contradict.
   }
  close.
@@ -326,7 +326,7 @@ by cases on (Col C Q D \/ nCol C Q D).
      assert (Col B G A) by (conclude lemma_collinear4).
      close.
      }
-(* cases *)
+(** cases *)
     assert (Col G A B) by (forward_using lemma_collinearorder).
     assert (Col E D G) by (forward_using lemma_collinearorder).
     assert (Col E D W) by (forward_using lemma_collinearorder).
@@ -416,7 +416,7 @@ by cases on (Col C Q D \/ nCol C Q D).
     assert (Col A B M) by (forward_using lemma_collinearorder).
     close.
     }
-(* cases *)
+(** cases *)
    assert (BetS C M E) by (conclude axiom_betweennesssymmetry).
    assert (TS C A B E) by (conclude_def TS ).
    contradict.
@@ -549,7 +549,7 @@ by cases on (Col C Q D \/ nCol C Q D).
   }
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

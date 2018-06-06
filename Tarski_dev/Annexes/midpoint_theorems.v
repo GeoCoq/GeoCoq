@@ -4,7 +4,7 @@ Ltac assert_all := treat_equalities; assert_cols_perm; assert_diffs; assert_cong
 
 Section TriangleMidpointsTheorems.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma col_permut132 : forall A B C, Col A B C -> Col A C B.
 Proof. exact col_permutation_5. Qed.
@@ -88,13 +88,13 @@ assert (HElim : Parallelogram A x B P \/ Parallelogram A x P B) by (apply par_co
 
 induction HElim.
 
- Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H28.
+ Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H23.
  treat_equalities.
  search_contradiction.
 
 assert_paras_perm.
 assert_pars_perm.
-assert (Par P Q A B) by (apply par_col_par_2 with x; finish).
+assert (Par P Q A B) by (assert_diffs; apply par_col_par_2 with x; finish).
 split.
 
 apply par_not_col_strict with x...
@@ -309,7 +309,7 @@ Lemma triangle_mid_par : forall A B C P Q,
 Proof.
 intros.
 
-elim (Col_dec A B C); intro.
+elim (col_dec A B C); intro.
   apply triangle_mid_par_flat with C; finish.
 
   apply par_strict_par; apply triangle_mid_par_strict with C; assumption.
@@ -327,7 +327,7 @@ Lemma triangle_mid_par_cong : forall A B C P Q R,
 Proof.
 intros.
 
-elim (Col_dec A B C); intro.
+elim (col_dec A B C); intro.
   apply triangle_mid_par_flat_cong; assumption.
 
   assert (HTMT := triangle_mid_par_strict_cong A B C P Q R H5 H2 H3 H4); spliter.
@@ -345,7 +345,7 @@ Proof.
 intros.
 split.
 perm_apply (triangle_mid_par B C A Q R);finish.
-induction (Col_dec A B C).
+induction (col_dec A B C).
  assert (Par C B Q R /\ Cong B P R Q).
   apply (triangle_mid_par_flat_cong_2 C B A R Q P);finish.
   spliter.

@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.suma.
 
 Section original_euclid_original_spp.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma original_euclid__original_spp : euclid_s_parallel_postulate -> alternative_strong_parallel_postulate.
 Proof.
@@ -50,7 +50,7 @@ Proof.
   }
   intro.
   apply HNBet.
-  apply (bet_conga_bet P' Q' R'); auto.
+  apply (bet_conga__bet P' Q' R'); auto.
   apply (suma2__conga A B C B C D); auto.
   apply suma_sym.
   apply (conga3_suma__suma A' B C B C D' P' Q' R'); auto.
@@ -68,13 +68,15 @@ Proof.
         right; intro; assert_cols; Col.
       exists D'.
       split; CongA; split.
-      apply l9_9; auto.
-      intro HNts; destruct HNts as [_ []]; assert_cols; Col.
+        apply l9_9; auto.
+      split; Cop.
+      intro Hts; destruct Hts as [_ []]; assert_cols; Col.
     }
     apply suma_left_comm.
     exists D'.
     split; CongA; split.
-    apply l9_9; auto.
+      apply l9_9; auto.
+    split; Cop.
     apply conga_line; Between.
 
   - assert(HNCol : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
@@ -91,13 +93,15 @@ Proof.
         right; intro; assert_cols; Col.
       exists A'.
       split; CongA; split.
-      apply l9_9; auto.
-      intro HNts; destruct HNts as [_ []]; assert_cols; Col.
+        apply l9_9; auto.
+      split; Cop.
+      intro Hts; destruct Hts as [_ []]; assert_cols; Col.
     }
     apply suma_sym.
     exists A'.
     split; CongA; split.
-    apply l9_9; auto.
+      apply l9_9; auto.
+    split; Cop.
     apply conga_line; Between.
 Qed.
 

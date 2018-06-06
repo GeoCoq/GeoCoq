@@ -13,7 +13,7 @@ Section basic_lemmas.
 Context `{Ax:euclidean_neutral}.
 
 
-Lemma Col_or_nCol : forall A B C, 
+Lemma Col_or_nCol : forall A B C,
   Col A B C \/ nCol A B C.
 Proof.
 unfold nCol, Col.
@@ -21,7 +21,7 @@ intros.
 tauto.
 Qed.
 
-Lemma nCol_or_Col : forall A B C, 
+Lemma nCol_or_Col : forall A B C,
   nCol A B C \/ Col A B C.
 Proof.
 unfold nCol, Col.
@@ -131,7 +131,7 @@ Ltac conclude_def_aux t := (remove_double_neg;
         unfold t in *;destruct_all;assumption |
         unfold t in *;remove_double_neg;destruct_all;remove_exists;eauto 11  ].
 
-(* Trick to have unfold working also with definitions within typeclasses,
+(** Trick to have unfold working also with definitions within typeclasses,
  thank you Pierre Courtieu *)
 
 Tactic Notation "conclude_def" reference(x) := (conclude_def_aux x).

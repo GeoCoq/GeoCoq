@@ -16,7 +16,7 @@ assert (nCol D C E) by (forward_using lemma_parallelNC).
 assert (neq D C) by (forward_using lemma_NCdistinct).
 assert (neq C D) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists B, (BetS C D B /\ Cong D B C D)) by (conclude postulate_extension);destruct Tf as [B];spliter.
+assert (Tf:exists B, (BetS C D B /\ Cong D B C D)) by (conclude lemma_extension);destruct Tf as [B];spliter.
 assert (BetS B D C) by (conclude axiom_betweennesssymmetry).
 assert (nCol C E F) by (forward_using lemma_parallelNC).
 assert (neq E F) by (forward_using lemma_NCdistinct).
@@ -28,7 +28,6 @@ assert (~ Col B C A).
  assert (neq B C) by (forward_using lemma_betweennotequal).
  assert (Col C A D) by (conclude lemma_collinear4).
  assert (Col D C A) by (forward_using lemma_collinearorder).
- assert (neq C D) by (forward_using lemma_betweennotequal).
  assert (Meet D C E F) by (conclude_def Meet ).
  assert (~ Meet D C E F) by (conclude_def Par ).
  contradict.
@@ -49,14 +48,10 @@ assert (Tf:exists Q, (BetS b Q R /\ BetS C Q A)) by (conclude postulate_Pasch_in
 assert (BetS b Q D) by (conclude lemma_3_6b).
 assert (Col C D B) by (conclude_def Col ).
 assert (Col B C D) by (forward_using lemma_collinearorder).
-assert (eq C C) by (conclude cn_equalityreflexive).
-assert (Col B C C) by (conclude_def Col ).
 assert (Par c b D C) by (conclude lemma_collinearparallel).
 assert (Par D C c b) by (conclude lemma_parallelsymmetric).
 assert (Col c A b) by (conclude_def Col ).
 assert (Col c b A) by (forward_using lemma_collinearorder).
-assert (eq b b) by (conclude cn_equalityreflexive).
-assert (Col C b b) by (conclude_def Col ).
 assert (neq A b) by (forward_using lemma_betweennotequal).
 assert (Par D C A b) by (conclude lemma_collinearparallel).
 assert (Par A b D C) by (conclude lemma_parallelsymmetric).
@@ -70,10 +65,8 @@ assert ((Par b C A D /\ Cong b C A D)) by (conclude proposition_33).
 assert (Par A b C D) by (forward_using lemma_parallelflip).
 assert (Par A D b C) by (conclude lemma_parallelsymmetric).
 assert (PG A b C D) by (conclude_def PG ).
-assert (eq F F) by (conclude cn_equalityreflexive).
 assert (eq E E) by (conclude cn_equalityreflexive).
 assert (Col E F E) by (conclude_def Col ).
-assert (Col E F F) by (conclude_def Col ).
 assert (Col E F b).
 by cases on (eq A F \/ neq A F).
 {
@@ -94,7 +87,7 @@ by cases on (eq A F \/ neq A F).
  assert (Col E F b) by (forward_using lemma_collinearorder).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

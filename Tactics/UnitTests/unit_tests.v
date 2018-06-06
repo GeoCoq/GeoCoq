@@ -2,7 +2,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.
 
 Section UnitTests.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Goal forall A B I, A <> B -> Midpoint I A B -> I <> A /\ I <> B.
 Proof.
@@ -62,6 +62,33 @@ not_exist_hyp_comm A B.
 auto.
 Qed.
 
+Goal forall A B C, Col A B C -> Col A C B -> Col B A C -> Col B C A -> Col C A B -> Col C B A -> True.
+Proof.
+intros.
+first [not_exist_hyp_perm_col A B C | clear H].
+first [not_exist_hyp_perm_col A B C | clear H0].
+first [not_exist_hyp_perm_col A B C | clear H1].
+first [not_exist_hyp_perm_col A B C | clear H2].
+first [not_exist_hyp_perm_col A B C | clear H3].
+first [not_exist_hyp_perm_col A B C | clear H4].
+not_exist_hyp_perm_col A B C.
+auto.
+Qed.
+
+Goal forall A B C, ~ Col A B C -> ~ Col A C B ->
+  ~ Col B A C -> ~ Col B C A -> ~ Col C A B -> ~ Col C B A -> True.
+Proof.
+intros.
+first [not_exist_hyp_perm_ncol A B C | clear H].
+first [not_exist_hyp_perm_ncol A B C | clear H0].
+first [not_exist_hyp_perm_ncol A B C | clear H1].
+first [not_exist_hyp_perm_ncol A B C | clear H2].
+first [not_exist_hyp_perm_ncol A B C | clear H3].
+first [not_exist_hyp_perm_ncol A B C | clear H4].
+not_exist_hyp_perm_ncol A B C.
+auto.
+Qed.
+
 Goal forall A B C Q,
  B <> A -> Col A B C -> Midpoint Q A C ->
  A <> C -> B <> C -> Midpoint A B C ->
@@ -70,6 +97,34 @@ Proof.
 intros.
 assert_diffs.
 assumption.
+Qed.
+
+Goal forall A B C, A<>B -> Per A B C -> A<>C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, B<>A -> Per A B C -> A<>C.
+Proof.
+intros.
+assert_diffs.
+assumption.
+Qed.
+
+Goal forall A B C, B<>C -> Per A B C -> A<>C.
+Proof.
+intros.
+assert_diffs.
+auto.
+Qed.
+
+Goal forall A B C, C<>B -> Per A B C -> A<>C.
+Proof.
+intros.
+assert_diffs.
+auto.
 Qed.
 
 Goal forall A B C D, Perp A B C D -> A<>B /\ C<>D.
@@ -225,13 +280,23 @@ assert_all_diffs_by_contradiction'.
 finish.
 Qed.
 *)
-Goal forall  A B C D,
- Par_strict A B C D ->
- ~ Col A B C.
+
+Goal forall A B C D X,
+ Inter A B C D X ->
+ A <> B /\ C <> D.
 Proof.
 intros.
 assert_diffs.
-Col.
+split; auto.
+Qed.
+
+Goal forall A B C D,
+ Par_strict A B C D ->
+ A <> B /\ A <> C /\ A <> D /\ B <> C /\ B <> D /\ C <> D.
+Proof.
+intros.
+assert_diffs.
+repeat split; auto.
 Qed.
 
 Goal forall A B C, (A<>B -> B<>C -> A<>C -> Col A B C) -> Col A B C.
@@ -257,12 +322,6 @@ assert_all_diffs_by_contradiction'.
 finish.
 Qed.
 *)
-Goal forall A B C D, Parallelogram A B C D -> Cong A B C D.
-Proof.
-intros.
-assert_congs_perm.
-finish.
-Qed.
 
 Goal forall A B C, Midpoint A B C -> Cong A B C A.
 Proof.
@@ -320,6 +379,14 @@ assert_diffs.
 repeat split; assumption.
 Qed.
 
+Goal forall A B C D, Parallelogram_strict A B C D ->
+  A <> B /\ B <> C /\ C <> D /\ D <> A /\ A <> C /\ B <> D.
+Proof.
+intros.
+assert_diffs.
+repeat split; assumption.
+Qed.
+
 Goal forall A B C D, A <> B -> Le A B C D -> C <> D.
 Proof.
 intros.
@@ -362,4 +429,55 @@ treat_equalities.
 trivial.
 Qed.
 
+Goal forall A B X Y, TS A B X Y -> ~ Col A B X /\ ~ Col A B Y.
+Proof.
+intros.
+assert_ncols.
+split; assumption.
+Qed.
+
+Goal forall A B X Y, OS A B X Y -> ~ Col A B X /\ ~ Col A B Y.
+Proof.
+intros.
+assert_ncols.
+split; assumption.
+Qed.
+
+Goal forall A B C D, ~ Coplanar A B C D ->
+  ~ Col A B C /\ ~ Col A B D /\ ~ Col A C D /\ ~ Col B C D.
+Proof.
+intros.
+assert_ncols.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C D, Par_strict A B C D ->
+  ~ Col A B C /\ ~ Col B C D /\ ~ Col C D A /\ ~ Col A B D.
+Proof.
+intros.
+assert_ncols.
+repeat split; assumption.
+Qed.
+
+Goal forall A B C D, Parallelogram_strict A B C D ->
+  ~ Col A B C /\ ~ Col B C D /\ ~ Col C D A /\ ~ Col A B D.
+Proof.
+intros.
+assert_ncols.
+repeat split; assumption.
+Qed.
+
 End UnitTests.
+
+Section UnitTestsEucl.
+
+Context `{TE:Tarski_euclidean}.
+
+Goal forall A B C D, Parallelogram A B C D -> Cong A B C D.
+Proof.
+intros.
+assert_congs_perm.
+finish.
+Qed.
+
+End UnitTestsEucl.

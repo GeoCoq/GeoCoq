@@ -71,10 +71,10 @@ by cases on (eq C H \/ neq C H).
   assert (Cong A C A H) by (forward_using lemma_congruenceflip).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

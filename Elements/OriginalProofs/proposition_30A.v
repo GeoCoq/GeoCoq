@@ -15,7 +15,7 @@ assert (Par E F C D) by (conclude lemma_parallelsymmetric).
 assert (neq G H) by (forward_using lemma_betweennotequal).
 assert (neq H G) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists P, (BetS H G P /\ Cong G P G H)) by (conclude postulate_extension);destruct Tf as [P];spliter.
+assert (Tf:exists P, (BetS H G P /\ Cong G P G H)) by (conclude lemma_extension);destruct Tf as [P];spliter.
 assert (BetS P G H) by (conclude axiom_betweennesssymmetry).
 assert (BetS P G K) by (conclude lemma_3_7b).
 let Tf:=fresh in

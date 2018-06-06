@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section Aristotle.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma aristotle__greenberg : aristotle_s_axiom -> greenberg_s_axiom.
 Proof.
@@ -13,8 +13,7 @@ Proof.
   { treat_equalities.
     assert_diffs.
     exists R.
-    split.
-    2: apply out_trivial; auto.
+    split; [|apply out_trivial; auto].
     split.
     apply lea121345; auto.
     intro.
@@ -45,8 +44,7 @@ Proof.
   { intro; treat_equalities.
     assert (T=Q) by (apply l8_8; auto); treat_equalities; absurde.
   }
-  apply conga_preserves_lta with P S Q T S Q; try (apply conga_refl; auto).
-  2: split.
+  apply conga_preserves_lta with P S Q T S Q; try (apply conga_refl; auto); [|split].
   - apply conga_trans with X B Y.
     2: apply (out_conga A B C A B C); CongA; apply out_trivial; auto.
     assert (HInter : (Cong T S Y B /\ (T <> S -> CongA Q T S X Y B /\ CongA Q S T X B Y))).
@@ -62,8 +60,7 @@ Proof.
     split; CongA.
     repeat split; auto.
     exists P.
-    split.
-    2: right; apply out_trivial; auto.
+    split; [|right; apply out_trivial; auto].
     apply l6_13_1.
     apply l6_6; auto.
     apply (le_transitivity Q P X Y).
@@ -94,12 +91,8 @@ Proof.
   intros aristotle obtuse.
   destruct ex_lambert as [Q' [C' [P [Q HLam]]]].
   assert (HObtuse : Obtuse C' P Q) by (apply <- (lam_obtuse__oah Q'); trivial).
+  assert (HPar : Par_strict Q' Q C' P) by (apply lam__par_strict1423, HLam).
   destruct HLam; spliter.
-  assert (HPar : Par_strict Q' Q P C').
-  { apply par_not_col_strict with P; Col.
-      apply l12_9 with C' Q'; Perp.
-    apply per_not_col; auto.
-  }
   destruct (l10_15 P Q P C') as [A' [HPerp HOS]]; Col.
     apply not_col_permutation_1.
     apply par_strict_not_col_1 with Q'; Par.
@@ -122,7 +115,7 @@ Proof.
     apply col_one_side_out with Q; trivial.
   }
   assert (HNCol1 : ~ Col P C A) by (intro; apply HNCol; ColR).
-  assert (HNCol2 : ~ Col P Q C) by (intro; apply (par_strict_not_col_2 Q' Q P C'); ColR).
+  assert (HNCol2 : ~ Col P Q C) by (intro; apply (par_strict_not_col_2 Q' Q C' P); ColR).
   assert (HPer : Per A P Q) by (apply l8_2, per_col with A'; Perp; Col).
   assert (HOS1 : OS A P C Q).
     apply in_angle_one_side; Col.
@@ -131,7 +124,7 @@ Proof.
   { exists A, P, Q; split; Perp; split.
       apply inangle__lea; trivial.
     intro HCongA.
-    destruct (conga__or_out_ts A P C Q); CongA.
+    destruct (conga_cop__or_out_ts A P C Q); CongA; Cop.
       assert_cols; Col.
       apply (l9_9 A P C Q); trivial.
   }
@@ -147,14 +140,17 @@ Proof.
     { intro; subst Z.
       assert_diffs.
       assert (Per Q P C) by (apply per_col with Y; Col; Perp).
-      apply HNCol1, perp_perp_col with P Q; Perp.
+      apply HNCol1, cop_perp2__col with P Q; Perp; Cop.
     }
     assert (HLam : Lambert P X Y Z).
     { assert_diffs.
       repeat split; auto.
         apply per_col with Q; Col.
         apply l8_2, per_col with A; Perp; Col.
-      apply perp_per_1, perp_left_comm, perp_col with Q; auto.
+        apply perp_per_1, perp_left_comm, perp_col with Q; auto.
+        assert (InAngle Y X P Q).
+          apply l11_25 with C A Q; try (apply l6_6); trivial; apply out_trivial; auto.
+        apply coplanar_perm_12, col_cop__cop with Q; Col; Cop.
     }
     apply lam_obtuse__lt; trivial.
     apply <- (lam_obtuse__oah P); trivial.
@@ -164,7 +160,10 @@ Proof.
       apply one_side_transitivity with Y.
         apply l12_6, par_strict_col_par_strict with C'; Par; ColR.
       apply l12_6, par_not_col_strict with Y; Col.
-        apply l12_9 with P Q; Perp.
+      { apply l12_9 with P Q; Perp; [Cop..| |Cop].
+        apply coplanar_perm_12, col_cop__cop with C; Col.
+        apply  col_cop__cop with C'; Col; Cop.
+      }
       apply not_col_permutation_1, par_not_col with P C'; Par; ColR.
     }
     assert_diffs.
@@ -173,7 +172,8 @@ Proof.
     apply col_one_side_out with A; Col.
     apply one_side_transitivity with Y.
     { apply l12_6, par_not_col_strict with Y; Col.
-        apply l12_9 with P Q; Perp.
+        apply l12_9 with P Q; Perp; [Cop..|].
+        apply coplanar_perm_12, col_cop__cop with C; Col; Cop.
       intro; apply HNCol1; ColR.
     }
     apply one_side_symmetry, out_out_one_side with C; Side.

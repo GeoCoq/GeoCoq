@@ -33,7 +33,7 @@ assert (~ eq C A).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists D, (BetS B A D /\ Cong A D C A)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, (BetS B A D /\ Cong A D C A)) by (conclude lemma_extension);destruct Tf as [D];spliter.
 assert (neq A D) by (forward_using lemma_betweennotequal).
 assert (neq D A) by (conclude lemma_inequalitysymmetric).
 assert (neq B D) by (forward_using lemma_betweennotequal).
@@ -113,7 +113,6 @@ assert (LtA C D B D C B) by (conclude lemma_angleorderrespectscongruence2).
 assert (LtA C D B B C D) by (conclude lemma_angleorderrespectscongruence).
 assert (Triangle B C D) by (conclude_def Triangle ).
 assert (Lt B C B D) by (conclude proposition_19).
-assert (Cong B A B A) by (conclude cn_congruencereflexive).
 assert (TG B A A C B C) by (conclude_def TG ).
 close.
 Qed.

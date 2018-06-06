@@ -40,7 +40,8 @@ Ltac scnf :=
 
 Section T17.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Definition O := PA.
 Definition E := PB.
@@ -396,7 +397,8 @@ End T17.
 
 Section T18.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Variable SS U1 U2 : Tpoint.
 Variable orthonormal_grid : Cs O E SS U1 U2.
@@ -1525,7 +1527,7 @@ as so far the only constant different from 0 or 1 which occurs is 2. *)
 Ltac prove_discr_for_powers_of_2 :=
   simpl; try rewrite <- oppF_neq0; repeat apply neqO_mul_neqO; apply neq20.
 
-(*
+
 Lemma nine_point_circle : forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
   ~ Col A B C ->
   Col A B C2 -> Col B C A2 -> Col A C B2 ->
@@ -1545,7 +1547,6 @@ put_negs_in_goal.
 scnf; [| | | | | |spliter; rtauto]; express_disj_as_a_single_poly;
 nsatz; prove_discr_for_powers_of_2.
 Qed.
-*)
 
 (** We deduce the axioms of the area method. *)
 
@@ -1579,7 +1580,7 @@ Definition signed_area A B C :=
   let (Cx, Cy) := Cc in
   let VAB := (Bx-Ax, By-Ay) in
   let VAC := (Cx-Ax, Cy-Ay) in
-  1/2*cross_product VAB VAC.
+  1 / 2 * cross_product VAB VAC.
 
 (** We introduce this definition to simplify the automatic proofs:*)
 
@@ -1712,7 +1713,7 @@ prove_discr_for_powers_of_2.
 Qed.
 
 Lemma Perp_AM_Perp : forall A B C D,
- (AM_Perp A B C D /\ A<>B /\ C<>D) <-> Perp A B C D.
+ (AM_Perp A B C D /\ A <> B /\ C <> D) <-> Perp A B C D.
 Proof.
 intros.
 rewrite (characterization_of_perpendicularity_F).
@@ -1758,7 +1759,7 @@ nsatz.
 Qed.
 
 Lemma Par_AM_Par : forall A B C D,
-  (A<>B /\ C<>D /\ AM_Par A B C D) <-> Par A B C D.
+  (A <> B /\ C <> D /\ AM_Par A B C D) <-> Par A B C D.
 Proof.
 intros.
 unfold AM_Par, twice_signed_area4, twice_signed_area.
@@ -1879,7 +1880,7 @@ rewrite twice_signed_area_cyclic.
 ring.
 assert (Perp U V C D) by (apply Perp_AM_Perp;auto).
 assert (Par A B U V).
-apply par_perp_2_par with C D C D;Par;Perp.
+apply par_perp2__par with C D C D;Par;Perp.
 apply Par_AM_Par;auto.
 Qed.
 
@@ -1907,7 +1908,6 @@ unfold AM_Perp, Py4.
 ring.
 Qed.
 
-
 Lemma AM_perp_AM_Par_AM_perp : forall A B C D U V,
   A<>B ->
   AM_Perp A B C D -> AM_Par A B U V -> AM_Perp U V C D.
@@ -1923,7 +1923,7 @@ apply AM_Perp_triv2.
 assert (Perp A B C D) by (apply Perp_AM_Perp;auto).
 assert (Par A B U V) by (apply Par_AM_Par;auto).
 assert (Perp U V C D).
- apply par_perp_perp with A B;auto.
+ apply par_perp__perp with A B;auto.
 apply Perp_AM_Perp;auto.
 Qed.
 
@@ -1974,7 +1974,6 @@ apply H.
 rewrite <- H0.
 ring.
 Qed.
-
 
 Lemma ratio_zero : forall A B C D, C<>D -> AM_Par A B C D ->  (ratio A B C D =F= 0 -> A = B).
 Proof.
@@ -2178,7 +2177,6 @@ nsatz.
 
 setoid_rewrite characterization_of_parallelism_F.
 *)
- 
 
 (** This is Euclid Book I, Prop 37 *)
 
@@ -2196,7 +2194,6 @@ intros.
 spliter.
 nsatz.
 Qed.
-
 
 (*
 (** This is Euclid Book I, Prop 38 *)

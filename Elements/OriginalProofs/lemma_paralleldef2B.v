@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_parallelcollinear.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_paralleldef2B : 
    forall A B C D, 
@@ -46,12 +46,12 @@ assert (~ Meet a b C D).
   assert (Col A B R) by (forward_using lemma_collinearorder).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Meet A B C D) by (conclude_def Meet ).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists P, (BetS e b P /\ Cong b P e b)) by (conclude postulate_extension);destruct Tf as [P];spliter.
+assert (Tf:exists P, (BetS e b P /\ Cong b P e b)) by (conclude lemma_extension);destruct Tf as [P];spliter.
 assert (BetS P b e) by (conclude axiom_betweennesssymmetry).
 assert (BetS b e c) by (conclude axiom_betweennesssymmetry).
 assert (BetS P b c) by (conclude lemma_3_7b).
@@ -134,7 +134,7 @@ by cases on (neq a B \/ eq a B).
  assert (Col A B M) by (forward_using lemma_collinearorder).
  close.
  }
-(* cases *)
+(** cases *)
 assert (BetS c b P) by (conclude axiom_betweennesssymmetry).
 assert (BetS d M P) by (conclude axiom_betweennesssymmetry).
 assert (~ Col A B c).

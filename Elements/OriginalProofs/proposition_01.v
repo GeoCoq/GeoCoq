@@ -1,6 +1,6 @@
-Require Export GeoCoq.Elements.OriginalProofs.lemma_congruencetransitive.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_nullsegment3.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_congruenceflip.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_partnotequalwhole.
+
 
 Section Euclid.
 
@@ -13,34 +13,34 @@ Lemma proposition_01 :
 Proof.
 intros.
 let Tf:=fresh in
-assert (Tf:exists J, CI J A A B) by (conclude circle);destruct Tf as [J];spliter.
-let Tf:=fresh in
-assert (Tf:exists K, CI K B A B) by (conclude circle);destruct Tf as [K];spliter.
+assert (Tf:exists J, CI J A A B) by (conclude postulate_Euclid3);destruct Tf as [J];spliter.
 assert (neq B A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists D, (BetS B A D /\ Cong A D A B)) by (conclude postulate_extension);destruct Tf as [D];spliter.
-assert (Cong B A A B) by (conclude cn_equalityreverse).
-assert ((CI K B A B /\ OutCirc D K)) by (conclude outside).
+assert (Tf:exists K, CI K B B A) by (conclude postulate_Euclid3);destruct Tf as [K];spliter.
 let Tf:=fresh in
-assert (Tf:exists E, (BetS A B E /\ Cong B E A B)) by (conclude postulate_extension);destruct Tf as [E];spliter.
-assert (Cong B A A B) by (conclude cn_equalityreverse).
-assert ((CI K B A B /\ InCirc B K)) by (conclude inside).
-assert ((CI J A A B /\ OnCirc D J)) by (conclude on).
+assert (Tf:exists D, (BetS B A D /\ Cong A D A B)) by (conclude lemma_localextension);destruct Tf as [D];spliter.
+assert (Cong B A B A) by (conclude cn_congruencereflexive).
+assert (OutCirc D K) by (conclude_def OutCirc) .
+assert (eq B B) by (conclude cn_equalityreflexive).
+assert (InCirc B K) by (conclude_def InCirc ).
 assert (Cong A B A B) by (conclude cn_congruencereflexive).
-assert ((CI J A A B /\ OnCirc B J)) by (conclude on).
+assert (OnCirc B J) by (conclude_def OnCirc ).
+assert (OnCirc D J) by (conclude_def OnCirc ).
+assert (eq A A) by (conclude cn_equalityreflexive).
+assert (InCirc A J) by (conclude_def InCirc ).
 let Tf:=fresh in
 assert (Tf:exists C, (OnCirc C K /\ OnCirc C J)) by (conclude postulate_circle_circle);destruct Tf as [C];spliter.
-assert (Cong A C A B) by (conclude on).
+assert (Cong A C A B) by (conclude axiom_circle_center_radius).
 assert (Cong A B A C) by (conclude lemma_congruencesymmetric).
-assert (Cong B C A B) by (conclude on).
+assert (Cong B C B A) by (conclude axiom_circle_center_radius). 
+assert (Cong B C A B) by (forward_using lemma_congruenceflip). 
 assert (Cong B C A C) by (conclude lemma_congruencetransitive).
 assert (Cong A B B C) by (conclude lemma_congruencesymmetric).
 assert (Cong A C C A) by (conclude cn_equalityreverse).
 assert (Cong B C C A) by (conclude lemma_congruencetransitive).
-
 assert (equilateral A B C) by (conclude_def equilateral ).
-assert (neq B C) by (conclude lemma_nullsegment3).
-assert (neq C A) by (conclude lemma_nullsegment3).
+assert (neq B C) by (conclude axiom_nocollapse).
+assert (neq C A) by (conclude axiom_nocollapse).
 assert (~ BetS A C B).
  {
  intro.
@@ -77,6 +77,8 @@ assert (~ Col A B C).
  }
 assert (Triangle A B C) by (conclude_def Triangle ).
 close.
+Unshelve.
+all: (exact A).
 Qed.
 
 End Euclid.

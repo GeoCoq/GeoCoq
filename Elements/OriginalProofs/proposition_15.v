@@ -38,7 +38,6 @@ assert (BetS B E A) by (conclude axiom_betweennesssymmetry).
 assert (Supp B E D D A) by (conclude_def Supp ).
 assert (BetS D E C) by (conclude axiom_betweennesssymmetry).
 assert (Supp D E B B C) by (conclude_def Supp ).
-assert (CongA B E D D E B) by (conclude lemma_ABCequalsCBA).
 assert (~ Col A E D).
  {
  intro.
@@ -75,7 +74,6 @@ assert (Out E C C) by (conclude lemma_ray4).
 assert (Supp B E C C A) by (conclude_def Supp ).
 assert (BetS C E D) by (conclude axiom_betweennesssymmetry).
 assert (Supp C E B B D) by (conclude_def Supp ).
-assert (CongA B E C C E B) by (conclude lemma_ABCequalsCBA).
 assert (~ Col A E C).
  {
  intro.

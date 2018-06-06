@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section tarski_playfair.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma tarski_s_euclid_implies_playfair :
  tarski_s_parallel_postulate ->
@@ -25,14 +25,22 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
 
   assumption.
 
-  assert (HLineNew : ~ Col C1 B1 B2 \/ ~ Col C2 B1 B2) by (induction (Col_dec C1 B1 B2); induction (Col_dec C2 B1 B2);tauto).
+  assert (HLineNew : ~ Col C1 B1 B2 \/ ~ Col C2 B1 B2) by (induction (col_dec C1 B1 B2); induction (col_dec C2 B1 B2);tauto).
   clear HLine; rename HLineNew into HLine.
   assert(HC' : exists C', Col C1 C2 C' /\ TS B1 B2 A1 C').
     {
+    assert (Coplanar A1 A2 P A1) by (exists A1; left; split; Col).
+    apply par__coplanar in H0.
+    apply par__coplanar in H2.
+    assert (Coplanar A1 A2 P B1) by (apply coplanar_perm_1, col_cop__cop with B2; Col).
+    assert (Coplanar A1 A2 P B2) by (apply coplanar_perm_1, col_cop__cop with B1; Col; Cop).
+    assert (Coplanar A1 A2 P C1) by (apply coplanar_perm_1, col_cop__cop with C2; Col).
+    assert (Coplanar A1 A2 P C2) by (apply coplanar_perm_1, col_cop__cop with C1; Col; Cop).
     elim HLine; clear HLine; intro HNC;
-    [destruct (not_par_other_side B1 B2 C1 C2 P A1) as [C' [HCol HTS]]|
-     destruct (not_par_other_side B1 B2 C2 C1 P A1) as [C' [HCol HTS]]];
-    try exists C'; Col; intro; apply HPar1; exists A1; Col.
+    [destruct (cop_not_par_other_side B1 B2 C1 C2 P A1) as [C' [HCol HTS]]|
+     destruct (cop_not_par_other_side B1 B2 C2 C1 P A1) as [C' [HCol HTS]]];
+    try exists C'; Col; try (intro; apply HPar1; exists A1; Col);
+    apply coplanar_pseudo_trans with A1 A2 P; Col.
     }
   ex_and HC' C'.
   unfold TS in H9.
@@ -101,7 +109,7 @@ assert( A1 <> A2 /\ B1 <> B2) by (apply par_distinct;auto).
 assert( A1 <> A2 /\ C1 <> C2) by (apply par_distinct;auto).
 spliter.
 clear H4.
-induction(Col_dec P A1 A2).
+induction(col_dec P A1 A2).
   (** If P is one line A1A2 then line A1A2=B1B2=C1C2 and we can conclude. *)
   induction H.
 

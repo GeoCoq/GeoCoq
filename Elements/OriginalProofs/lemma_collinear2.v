@@ -41,7 +41,7 @@ by cases on (eq A B \/ eq A C \/ eq B C \/ BetS B A C \/ BetS A B C \/ BetS A C 
  assert (Col B C A) by (conclude_def Col ).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

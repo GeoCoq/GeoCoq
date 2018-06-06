@@ -15,11 +15,11 @@ Proof.
 intros.
 assert (neq A E) by (forward_using lemma_angledistinct).
 let Tf:=fresh in
-assert (Tf:exists B, (BetS A E B /\ Cong E B A E)) by (conclude postulate_extension);destruct Tf as [B];spliter.
+assert (Tf:exists B, (BetS A E B /\ Cong E B A E)) by (conclude lemma_extension);destruct Tf as [B];spliter.
 assert (neq F D) by (forward_using lemma_angledistinct).
 assert (neq D F) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists C, (BetS D F C /\ Cong F C F D)) by (conclude postulate_extension);destruct Tf as [C];spliter.
+assert (Tf:exists C, (BetS D F C /\ Cong F C F D)) by (conclude lemma_extension);destruct Tf as [C];spliter.
 assert (BetS C F D) by (conclude axiom_betweennesssymmetry).
 assert (Par A B C D) by (conclude proposition_27).
 assert (Col D F C) by (conclude_def Col ).

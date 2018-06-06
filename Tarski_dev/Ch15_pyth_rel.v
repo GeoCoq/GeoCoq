@@ -2,7 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch16_coordinates.
 
 Section PythagoreanFun.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma Ps_Col : forall O E A, Ps O E A -> Col O E A.
 Proof.
@@ -974,7 +975,7 @@ intro.
 subst E.
 apply H;Col.
 
-assert(HH:= perp_perp_col O B1 B2 O B H0 H2).
+assert(HH:= perp2__col O B1 B2 O B H0 H2).
 
 assert(B1 = B2 \/ Midpoint O B1 B2).
 apply l7_20; Col.

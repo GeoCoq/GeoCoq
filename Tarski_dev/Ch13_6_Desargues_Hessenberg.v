@@ -4,7 +4,8 @@ Require Export GeoCoq.Tarski_dev.Ch13_5_Pappus_Pascal.
 
 Section Desargues_Hessenberg.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma l13_15_1 : forall A B C A' B' C' O ,
   ~ Col A B C -> ~ Par O B A C ->
@@ -82,7 +83,7 @@ Proof.
         exists A.
         split; Col.
       spliter; Col.
-    induction(Col_dec O B C).
+    induction(col_dec O B C).
       right.
       repeat split.
         intro.
@@ -279,7 +280,7 @@ Proof.
     clean_duplicated_hyps.
     (**********************************)
     assert(Par O N L A').
-      induction(Par_dec A O N L).
+      induction(par_dec A O N L).
         assert(Par_strict A O N L).
           induction H17.
             auto.
@@ -391,7 +392,7 @@ Proof.
     assert(Par O N A C).
       apply (par_trans _ _ A' C'); Par.
     assert(Par N M B C).
-      induction(Par_dec A N O C).
+      induction(par_dec A N O C).
         assert(Par_strict A N O C).
           induction H47.
             auto.
@@ -462,7 +463,7 @@ Proof.
     apply (col_transitivity_1 _ C); Col.
     *)
     assert(Par N M B' C').
-      induction(Par_dec N B' O C').
+      induction(par_dec N B' O C').
         assert(Par_strict N B' O C').
           induction H48.
             auto.
@@ -511,7 +512,7 @@ Proof.
       induction(eq_dec_points C'  L).
         subst L.
         assert(C' = M).
-          induction (Col_dec O X C).
+          induction (col_dec O X C).
             apply (l6_21 O C Y X).
               intro.
               assert(Col O X Y) by ColR.
@@ -749,7 +750,7 @@ Proof.
       apply H3.
       exists C.
       split; Col.
-    induction(Par_dec B C B' C').
+    induction(par_dec B C B' C').
       auto.
     assert(B <> C).
       intro.
@@ -832,7 +833,7 @@ Lemma l13_15_2 : forall A B C A' B' C' O , ~Col A B C
                                          -> Par B C B' C'.
 Proof.
     intros.
-    induction(Par_dec B C B' C').
+    induction(par_dec B C B' C').
       auto.
     assert(HH:=not_par_one_not_par B C B' C' O A H6).
     induction HH.
@@ -932,7 +933,7 @@ Lemma l13_15 : forall A B C A' B' C' O , ~Col A B C
                                          -> Par B C B' C'.
 Proof.
     intros.
-    induction(Par_dec O B A C).
+    induction(par_dec O B A C).
       apply (l13_15_2 A B C A' B' C' O); Col; Par.
     apply (l13_15_1 A B C A' B' C' O); Col; Par.
 Qed.
@@ -1064,7 +1065,7 @@ Proof.
       exists A'.
       split; Col.
     ex_and H6 C''.
-    induction(Col_dec O C C').
+    induction(col_dec O C C').
       auto.
     apply False_ind.
     assert(Par C' C'' B C ).
@@ -1167,7 +1168,7 @@ Proof.
       spliter.
       assert(HH:= parallel_existence1 B B' C H5).
       ex_and HH P.
-      induction(Par_dec C P B C).
+      induction(par_dec C P B C).
         induction H7.
           apply False_ind.
           apply H7.
@@ -1323,7 +1324,7 @@ Proof.
       apply H.
       apply col_permutation_2.
       apply (col_transitivity_1 _ C); Col.
-    induction(Col_dec A D E).
+    induction(col_dec A D E).
       assert(B = D).
         apply(l6_21 O B A E); Col.
         intro.
@@ -1406,7 +1407,7 @@ Proof.
         apply(col_transitivity_1 _ E); Col.
       apply(col_transitivity_1 _ B); Col.
     apply par_comm.
-    induction(Col_dec B C E).
+    induction(col_dec B C E).
       assert(B = D).
         apply(l6_21 O B C E); Col.
         intro.
@@ -1574,7 +1575,7 @@ Proof.
           apply (col_transitivity_1 _ C); Col.
           apply (col_transitivity_1 _ A); Col.
       contradiction.
-    induction(Par_dec C D C' D').
+    induction(par_dec C D C' D').
       auto.
     assert(HH:=not_par_one_not_par C D C' D' A' B' H20).
     induction HH.
@@ -2064,7 +2065,7 @@ Proof.
       apply H13.
       exists C.
       split; Col.
-    induction(Par_dec C D C' D').
+    induction(par_dec C D C' D').
       auto.
     assert(HH:=not_par_one_not_par C D C' D' A B H20).
     induction HH.

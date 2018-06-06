@@ -33,6 +33,16 @@ Proof.
     apply (l5_2 P);auto.
 Qed.
 
+Lemma bet3__bet : forall A B C D E, Bet A B E -> Bet A D E -> Bet B C D -> Bet A C E.
+Proof.
+    intros.
+    destruct (l5_3 A B D E H H0).
+      apply between_exchange4 with D; trivial.
+      apply between_exchange2 with B; assumption.
+    apply between_exchange4 with B; trivial.
+    apply between_exchange2 with D; Between.
+Qed.
+
 Lemma le_bet : forall A B C D, Le C D A B -> exists X, Bet A X B /\ Cong A X C D.
 Proof.
     intros.
@@ -147,7 +157,7 @@ Proof.
     Cong.
 Qed.
 
-Lemma Cong_dec : forall A B C D,
+Lemma cong_dec : forall A B C D,
   Cong A B C D \/ ~ Cong A B C D.
 Proof.
 apply eq_dec_cong_dec; apply eq_dec_points.
@@ -158,7 +168,7 @@ Proof.
 apply eq_dec_bet_dec; apply eq_dec_points.
 Qed.
 
-Lemma Col_dec : forall A B C, Col A B C \/ ~ Col A B C.
+Lemma col_dec : forall A B C, Col A B C \/ ~ Col A B C.
 Proof.
     intros.
     unfold Col.
@@ -516,13 +526,13 @@ Proof.
     intros.
     assert(HH:= le_cases A B C D).
     induction HH.
-      induction(Cong_dec A B C D).
+      induction(cong_dec A B C D).
         right; right.
         assumption.
       left.
       unfold Lt.
       split; assumption.
-    induction(Cong_dec A B C D).
+    induction(cong_dec A B C D).
       right; right.
       assumption.
     right; left.
@@ -610,7 +620,7 @@ Lemma nlt__le : forall A B C D, ~ Lt A B C D -> Le C D A B.
 Proof.
     intros A B C D HNLt.
     destruct (le_cases A B C D); trivial.
-    destruct (Cong_dec C D A B).
+    destruct (cong_dec C D A B).
       apply cong__le; assumption.
     exfalso.
     apply HNLt.
@@ -715,6 +725,7 @@ Qed.
 End T5.
 
 Hint Resolve le_reflexivity le_anti_symmetry le_trivial le_zero cong__le cong__le3412
-             le1221 le_left_comm le_right_comm le_comm lt__le bet__le1213 bet__le2313 : Le.
+             le1221 le_left_comm le_right_comm le_comm lt__le bet__le1213 bet__le2313
+             lt_left_comm lt_right_comm lt_comm bet__lt1213 bet__lt2313 lt1123 : le.
 
-Ltac Le := auto with Le.
+Ltac Le := auto with le.

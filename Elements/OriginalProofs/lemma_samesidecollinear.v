@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_NChelper.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_samesidecollinear : 
    forall A B C P Q, 

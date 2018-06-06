@@ -19,17 +19,13 @@ assert (Tf:exists G, (PG A G B C /\ Col P Q G)) by (conclude lemma_triangletopar
 assert (PG G B C A) by (conclude lemma_PGrotate).
 assert (nCol P B C) by (forward_using lemma_parallelNC).
 assert (neq B C) by (forward_using lemma_NCdistinct).
-assert (neq E F) by (conclude lemma_nullsegment3).
+assert (neq E F) by (conclude axiom_nocollapse).
 assert (Par P Q E F) by (conclude lemma_collinearparallel2).
 assert (Par E F P Q) by (conclude lemma_parallelsymmetric).
 rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (PG D H F E /\ Col P Q H)) by (conclude lemma_triangletoparallelogram);destruct Tf as [H];spliter.
 assert (PG H F E D) by (conclude lemma_PGrotate).
 assert (Cong B C F E) by (forward_using lemma_congruenceflip).
-assert (Par A G B C) by (conclude_def PG ).
-assert (nCol A G C) by (forward_using lemma_parallelNC).
-assert (neq A G) by (forward_using lemma_NCdistinct).
-assert (neq G A) by (conclude lemma_inequalitysymmetric).
 assert (nCol P Q B) by (forward_using lemma_parallelNC).
 assert (neq P Q) by (forward_using lemma_NCdistinct).
 assert (Col G A H) by (conclude lemma_collinear5).

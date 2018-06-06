@@ -20,13 +20,13 @@ Ltac assert_cols :=
 repeat
  match goal with
       | H:Bet ?X1 ?X2 ?X3 |- _ =>
-     not_exist_hyp (Col X1 X2 X3);assert (Col X1 X2 X3) by (apply bet_col;apply H)
+     not_exist_hyp_perm_col X1 X2 X3;assert (Col X1 X2 X3) by (apply bet_col;apply H)
 
       | H:Midpoint ?X1 ?X2 ?X3 |- _ =>
-     not_exist_hyp (Col X1 X2 X3);let N := fresh in assert (N := midpoint_col X2 X1 X3 H)
+     not_exist_hyp_perm_col X1 X2 X3;let N := fresh in assert (N := midpoint_col X2 X1 X3 H)
 
       | H:Out ?X1 ?X2 ?X3 |- _ =>
-     not_exist_hyp (Col X1 X2 X3);let N := fresh in assert (N := out_col X1 X2 X3 H)
+     not_exist_hyp_perm_col X1 X2 X3;let N := fresh in assert (N := out_col X1 X2 X3 H)
  end.
 
 Ltac assert_bets :=
@@ -36,21 +36,17 @@ repeat
  end.
 
 Ltac clean_reap_hyps :=
+  clean_duplicated_hyps;
   repeat
   match goal with
    | H:(Midpoint ?A ?B ?C), H2 : Midpoint ?A ?C ?B |- _ => clear H2
-   | H:(Midpoint ?A ?B ?C), H2 : Midpoint ?A ?B ?C |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : ~Col ?A ?B ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?A ?B ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?B ?A ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?B ?C ?A |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?C ?B ?A |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?C ?A ?B |- _ => clear H2
    | H:(Bet ?A ?B ?C), H2 : Bet ?C ?B ?A |- _ => clear H2
-   | H:(Bet ?A ?B ?C), H2 : Bet ?A ?B ?C |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?D ?C |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?C ?D |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?A ?B |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?B ?A |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?B ?A |- _ => clear H2
@@ -58,7 +54,6 @@ Ltac clean_reap_hyps :=
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?C ?D |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?D ?C |- _ => clear H2
    | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
-   | H:(?A<>?B), H2 : (?A<>?B) |- _ => clear H2
 end.
 
 Ltac assert_diffs :=
@@ -153,6 +148,8 @@ Ltac clean_trivial_hyps :=
    | H:(Midpoint ?X1 ?X1 ?X1) |- _ => clear H
 end.
 
+Ltac clean := clean_trivial_hyps;clean_reap_hyps.
+
 Ltac treat_equalities :=
 try treat_equalities_aux;
 repeat
@@ -215,6 +212,7 @@ Ltac search_contradiction :=
  match goal with
   | H: ?A <> ?A |- _ => exfalso;apply H;reflexivity
   | H: ~ Col ?A ?B ?C |- _ => exfalso;apply H;ColR
+  | H: ~ ?P, H2 : ?P |- _ => exfalso;apply (H H2)
  end.
 
 (* TODO replace show_distinct *)
@@ -328,12 +326,12 @@ Section T8_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma Per_dec : forall A B C, Per A B C \/ ~ Per A B C.
+Lemma per_dec : forall A B C, Per A B C \/ ~ Per A B C.
 Proof.
     intros.
     unfold Per.
     elim (symmetric_point_construction C B);intros C' HC'.
-    elim (Cong_dec A C A C');intro.
+    elim (cong_dec A C A C');intro.
       left.
       exists C'.
       intuition.
@@ -519,6 +517,27 @@ Proof.
     assumption.
 Qed.
 
+Lemma per_distinct : forall A B C, Per A B C -> A <> B -> A <> C.
+Proof.
+    intros.
+    intro.
+    subst C.
+    apply H0.
+    apply (l8_8).
+    assumption.
+Qed.
+
+Lemma per_distinct_1 : forall A B C, Per A B C -> B <> C -> A <> C.
+Proof.
+    intros.
+    intro.
+    subst C.
+    apply H0.
+    apply eq_sym.
+    apply (l8_8).
+    assumption.
+Qed.
+
 Lemma l8_9 : forall A B C, Per A B C -> Col A B C -> A=B \/ C=B.
 Proof.
     intros.
@@ -589,22 +608,22 @@ Proof.
     apply (l8_3 C X U V);Col.
 Qed.
 
-Lemma Perp_in_dec : forall X A B C D, Perp_at X A B C D \/ ~ Perp_at X A B C D.
+Lemma perp_in_dec : forall X A B C D, Perp_at X A B C D \/ ~ Perp_at X A B C D.
 Proof.
     intros.
     unfold Perp_at.
-    elim (eq_dec_points A B);intro; elim (eq_dec_points C D);intro; elim (Col_dec X A B);intro; elim (Col_dec X C D);intro; try tauto.
+    elim (eq_dec_points A B);intro; elim (eq_dec_points C D);intro; elim (col_dec X A B);intro; elim (col_dec X C D);intro; try tauto.
     elim (eq_dec_points B X);intro; elim (eq_dec_points D X);intro;subst;treat_equalities.
-      elim (Per_dec A X C);intro.
+      elim (per_dec A X C);intro.
         left;repeat split;Col;intros; apply col_col_per_per with A C;Col.
       right;intro;spliter;apply H3;apply H8;Col.
-      elim (Per_dec A X D);intro.
+      elim (per_dec A X D);intro.
         left;repeat split;Col;intros; apply col_col_per_per with A D;Col;ColR.
       right;intro;spliter;apply H3;apply H9;Col.
-      elim (Per_dec B X C);intro.
+      elim (per_dec B X C);intro.
         left;repeat split;Col;intros; apply col_col_per_per with B C;Col;ColR.
       right;intro;spliter;apply H4;apply H9;Col.
-    elim (Per_dec B X D);intro.
+    elim (per_dec B X D);intro.
       left;repeat split;Col;intros; apply col_col_per_per with B D;Col;ColR.
     right;intro;spliter;apply H5;apply H10;Col.
 Qed.
@@ -817,17 +836,17 @@ Proof.
     intuition.
 Qed.
 
-Lemma l8_15_1 : forall A B C X, A<>B -> Col A B X -> Perp A B C X -> Perp_at X A B C X.
+Lemma l8_15_1 : forall A B C X, Col A B X -> Perp A B C X -> Perp_at X A B C X.
 Proof.
     intros.
     eapply l8_14_2_1b_bis;Col.
 Qed.
 
-Lemma l8_15_2 : forall A B C X, A<>B -> Col A B X ->  Perp_at X A B C X -> Perp A B C X.
+Lemma l8_15_2 : forall A B C X, Col A B X ->  Perp_at X A B C X -> Perp A B C X.
 Proof.
     intros.
     eapply l8_14_2_1a.
-    apply H1.
+    apply H0.
 Qed.
 
 Lemma perp_in_per : forall A B C, Perp_at B A B B C-> Per A B C.
@@ -874,29 +893,6 @@ Proof.
     assert (Col B X Y).
       eapply col3 with A B;Col.
     eapply col3 with X Y;Col.
-Qed.
-
-Lemma l8_16_1 : forall A B C U X,
-  A<>B -> Col A B X -> Col A B U -> U<>X -> Perp A B C X -> ~ Col A B C /\ Per C X U.
-Proof.
-    intros.
-    split.
-      intro.
-      assert (Perp_at X A B C X).
-        eapply l8_15_1.
-          assumption.
-          assumption.
-        assumption.
-      assert (X = U).
-        eapply l8_14_2_1b.
-          apply H5.
-          Col.
-        eapply col3 with A B;Col.
-      intuition.
-    apply l8_14_2_1b_bis with C X U X;try Col.
-    assert (Col A X U).
-      eapply (col3 A B);Col.
-    eapply perp_col0 with A B;Col.
 Qed.
 
 Lemma per_perp_in : forall A B C, A <> B -> B <> C -> Per A B C -> Perp_at B A B B C.
@@ -1055,19 +1051,444 @@ Proof.
     do 7 (split; Perp).
 Qed.
 
+Lemma perp_in_col : forall A B C D X, Perp_at X A B C D -> Col A B X /\ Col C D X.
+Proof.
+    unfold Perp_at.
+    intuition.
+Qed.
+
+Lemma perp_perp_in : forall A B C, Perp A B C A -> Perp_at A A B C A.
+Proof.
+    intros.
+    apply l8_15_1.
+      unfold Perp in H.
+      ex_and H X.
+      unfold Perp_at in H0.
+      intuition.
+    assumption.
+Qed.
+
+Lemma perp_per_1 : forall A B C, Perp A B C A -> Per B A C.
+Proof.
+    intros.
+    assert (Perp_at A A B C A).
+      apply perp_perp_in.
+      assumption.
+    unfold Perp_at in H0.
+    spliter.
+    apply H4.
+    Col.
+    Col.
+Qed.
+
+Lemma perp_per_2 : forall A B C, Perp A B A C -> Per B A C.
+Proof.
+    intros.
+    apply perp_right_comm in H.
+    apply perp_per_1; assumption.
+Qed.
+
+Lemma perp_col : forall A B C D E, A<>E -> Perp A B C D -> Col A B E -> Perp A E C D.
+Proof.
+    intros.
+    apply perp_sym.
+    apply perp_col0 with A B;finish.
+Qed.
+
+Lemma perp_col2 : forall A B C D  X Y,
+  Perp A B X Y ->
+  C <> D -> Col A B C -> Col A B D -> Perp C D X Y.
+Proof.
+    intros.
+    assert(HH:=H).
+    apply perp_distinct in HH.
+    spliter.
+    induction (eq_dec_points A C).
+      subst A.
+      apply perp_col with B;finish.
+    assert(Perp A C X Y) by (eapply perp_col;eauto).
+    eapply perp_col with A;finish.
+      Perp.
+    ColR.
+Qed.
+
+Lemma perp_not_eq_1 : forall A B C D, Perp A B C D -> A<>B.
+Proof.
+    intros.
+    unfold Perp in H.
+    ex_elim H X.
+    unfold Perp_at in H0.
+    tauto.
+Qed.
+
+Lemma perp_not_eq_2 : forall A B C D, Perp A B C D -> C<>D.
+Proof.
+    intros.
+    apply perp_sym in H.
+    eapply perp_not_eq_1.
+    apply H.
+Qed.
+
+Lemma diff_per_diff : forall A B P R ,
+      A <> B -> Cong A P B R -> Per B A P -> Per A B R -> P <> R.
+Proof.
+    intros.
+    intro.
+    subst.
+    assert (A = B).
+      eapply l8_7.
+        apply l8_2.
+        apply H1.
+      apply l8_2.
+      assumption.
+    intuition.
+Qed.
+
+Lemma per_not_colp : forall A B P R, A <> B -> A <> P -> B <> R -> Per B A P -> Per A B R -> ~Col P A R.
+Proof.
+    intros.
+    intro.
+    assert (Perp A B P A).
+      apply perp_comm.
+      apply per_perp;finish.
+    assert (Perp A B B R).
+      apply per_perp;finish.
+    assert (Per B A R).
+      eapply per_col.
+        apply H0.
+        assumption.
+      ColR.
+    apply l8_2 in H3.
+    apply l8_2 in H7.
+    assert (A = B).
+      eapply l8_7.
+        apply H7.
+      assumption.
+    contradiction.
+Qed.
+
+Lemma per_not_col : forall A B C, A <> B -> B <> C -> Per A B C -> ~Col A B C.
+Proof.
+    intros.
+    intro.
+    unfold Per in H1.
+    ex_and H1 C'.
+    assert (C = C' \/ Midpoint A C C').
+      eapply l7_20.
+        assert_cols;ColR.
+        assumption.
+    induction H4;treat_equalities; intuition.
+Qed.
+
+Lemma perp_not_col2 : forall A B C D, Perp A B C D -> ~ Col A B C \/ ~ Col A B D.
+Proof.
+    intros.
+    induction (col_dec A B C).
+      right.
+      assert(Perp_at C A B C D).
+        apply l8_14_2_1b_bis; Col.
+      intro.
+      assert(Perp_at D A B C D).
+        apply l8_14_2_1b_bis; Col.
+      assert(C = D).
+        eapply l8_14_3.
+          apply H1.
+        assumption.
+      apply perp_not_eq_2 in H.
+      contradiction.
+    left.
+    assumption.
+Qed.
+
+Lemma perp_not_col : forall A B P, Perp A B P A -> ~ Col A B P.
+Proof.
+    intros.
+    assert (Perp_at A A B P A).
+      apply perp_perp_in.
+      assumption.
+    assert (Per P A B).
+      apply perp_in_per.
+      apply perp_in_sym.
+      assumption.
+    apply perp_in_left_comm in H0.
+    assert (~ Col B A P  -> ~ Col A B P).
+      intro.
+      intro.
+      apply H2.
+      apply col_permutation_4.
+      assumption.
+    apply H2.
+    apply perp_distinct in H.
+    spliter.
+    apply per_not_col.
+      auto.
+      auto.
+    apply perp_in_per.
+    apply perp_in_right_comm.
+    assumption.
+Qed.
+
+Lemma perp_in_col_perp_in : forall A B C D E P, C <> E -> Col C D E -> Perp_at P A B C D -> Perp_at P A B C E.
+Proof.
+    intros.
+    unfold Perp_at in *.
+    spliter.
+    repeat split; auto.
+      ColR.
+    intros.
+    apply H5.
+      assumption.
+    ColR.
+Qed.
+
+Lemma perp_col2_bis : forall A B C D P Q,
+  Perp A B P Q ->
+  Col C D P ->
+  Col C D Q ->
+  C <> D ->
+  Perp A B C D.
+Proof.
+intros A B C D P Q HPerp HCol1 HCol2 HCD.
+apply perp_sym.
+apply perp_col2 with P Q; Perp; ColR.
+Qed.
+
+Lemma perp_in_perp_bis : forall A B C D X,
+ Perp_at X A B C D -> Perp X B C D \/ Perp A X C D.
+Proof.
+    intros.
+    induction (eq_dec_points X A).
+      subst X.
+      left.
+      unfold Perp.
+      exists A.
+      assumption.
+    right.
+    unfold Perp.
+    exists X.
+    unfold Perp_at in *.
+    spliter.
+    repeat split.
+      intro.
+      apply H0.
+      subst X.
+      reflexivity.
+      assumption.
+      apply col_trivial_3.
+      assumption.
+    intros.
+    apply H4.
+      apply col_permutation_2.
+      eapply col_transitivity_1.
+        intro.
+        apply H0.
+        apply sym_equal.
+        apply H7.
+        Col.
+      Col.
+    assumption.
+Qed.
+
+Lemma col_per_perp : forall A B C D,
+ A <> B -> B <> C -> D <> B -> D <> C ->
+ Col B C D -> Per A B C -> Perp C D A B.
+Proof.
+    intros.
+    apply per_perp_in in H4.
+      apply perp_in_perp_bis in H4.
+      induction H4.
+        apply perp_distinct in H4.
+        spliter.
+        absurde.
+      eapply (perp_col _ B).
+        auto.
+        apply perp_sym.
+        apply perp_right_comm.
+        assumption.
+      apply col_permutation_4.
+      assumption.
+      assumption.
+    assumption.
+Qed.
+
+Lemma per_cong_mid : forall A B C H,
+ B <> C -> Bet A B C -> Cong A H C H -> Per H B C ->
+ Midpoint B A C.
+Proof.
+    intros.
+    induction (eq_dec_points H B).
+      subst H.
+      unfold Midpoint.
+      split.
+        assumption.
+      apply cong_right_commutativity.
+      assumption.
+    assert(Per C B H).
+      apply l8_2.
+      assumption.
+    assert (Per H B A).
+      eapply per_col.
+        apply H0.
+        assumption.
+      unfold Col.
+      right; right.
+      assumption.
+    assert (Per A B H).
+      apply l8_2.
+      assumption.
+    unfold Per in *.
+    ex_and H3 C'.
+    ex_and H5 H'.
+    ex_and H6 A'.
+    ex_and H7 H''.
+    assert (H' = H'').
+      eapply construction_uniqueness.
+        2: apply  midpoint_bet.
+        2:apply H5.
+        assumption.
+        apply cong_commutativity.
+        apply midpoint_cong.
+        apply l7_2.
+        apply H5.
+        apply midpoint_bet.
+        assumption.
+      apply cong_commutativity.
+      apply midpoint_cong.
+      apply l7_2.
+      assumption.
+    subst H''.
+    assert(IFSC H B H' A H B H' C).
+      repeat split.
+        apply midpoint_bet.
+        assumption.
+        apply midpoint_bet.
+        assumption.
+        apply cong_reflexivity.
+        apply cong_reflexivity.
+        apply cong_commutativity.
+        assumption.
+      apply cong_commutativity.
+      eapply cong_transitivity.
+        apply cong_symmetry.
+        apply H11.
+      eapply cong_transitivity.
+        apply H2.
+      assumption.
+    eapply l4_2 in H12.
+    unfold Midpoint.
+    split.
+      assumption.
+    apply cong_left_commutativity.
+    assumption.
+Qed.
+
+Lemma per_double_cong : forall A B C C',
+ Per A B C -> Midpoint B C C' -> Cong A C A C'.
+Proof.
+    intros.
+    unfold Per in H.
+    ex_and H C''.
+    assert (C' = C'').
+      eapply l7_9.
+        apply l7_2.
+        apply H0.
+      apply l7_2.
+      assumption.
+    subst C''.
+    assumption.
+Qed.
+
+Lemma cong_perp_or_mid : forall A B M X, A <> B -> Midpoint M A B -> Cong A X B X ->
+ X = M \/ ~Col A B X /\ Perp_at M X M A B.
+Proof.
+intros.
+induction(col_dec A B X).
+left.
+assert(A = B \/ Midpoint X A B).
+apply l7_20; Col.
+Cong.
+induction H3.
+contradiction.
+apply (l7_17 A B); auto.
+right.
+split; auto.
+assert(Col M A B).
+unfold Midpoint in *.
+spliter; Col.
+
+assert_diffs.
+assert(Per X M A)
+ by (unfold Per;exists B;split; Cong).
+apply per_perp_in in H4.
+apply perp_in_right_comm in H4.
+apply(perp_in_col_perp_in X M A M B M); Col.
+
+intro;treat_equalities.
+apply H2; Col.
+auto.
+Qed.
+
+Lemma col_per2_cases : forall A B C D B', 
+ B <> C -> B' <> C -> C <> D -> Col B C D -> Per A B C -> Per A B' C -> 
+ B = B' \/ ~Col B' C D.
+Proof.
+intros.
+induction(eq_dec_points B B').
+left; auto.
+right.
+intro.
+assert(Col C B B').
+ColR.
+assert(Per A B' B).
+apply(per_col A B' C B H0 H4); Col.
+assert(Per A B B').
+apply(per_col A B C B' H H3); Col.
+apply H5.
+apply (l8_7 A); auto.
+Qed.
+
+Lemma l8_16_1 : forall A B C U X,
+  Col A B X -> Col A B U -> Perp A B C X -> ~ Col A B C /\ Per C X U.
+Proof.
+      intros.
+      destruct (eq_dec_points U X).
+        subst X.
+        split.
+          destruct (perp_not_col2 A B C U); auto.
+        apply l8_5.
+      split.
+        intro.
+        assert (Perp_at X A B C X).
+          eapply l8_15_1.
+            assumption.
+          assumption.
+        assert (X = U).
+          eapply l8_14_2_1b.
+            apply H4.
+            Col.
+          eapply col3 with A B;Col.
+          apply perp_distinct in H1; spliter; auto.
+        intuition.
+      apply l8_14_2_1b_bis with C X U X;try Col.
+      assert (Col A X U).
+        eapply (col3 A B);Col.
+        apply perp_distinct in H1; spliter; auto.
+      eapply perp_col0 with A B;Col.
+Qed.
+
 Lemma l8_16_2 : forall A B C U X,
-  A<>B -> Col A B X -> Col A B U -> U<>X -> ~ Col A B C -> Per C X U -> Perp A B C X.
+  Col A B X -> Col A B U -> U<>X -> ~ Col A B C -> Per C X U -> Perp A B C X.
 Proof.
     intros.
     assert (C <> X).
       intro.
       subst X.
-      apply H3.
+      apply H2.
       assumption.
     unfold Perp.
     exists X.
     eapply l8_13_2.
-      assumption.
+      assert_diffs; auto.
       assumption.
       Col.
       Col.
@@ -1249,7 +1670,6 @@ Proof.
     absurde.
 Qed.
 
-(* TODO compare with perp_col *)
 Lemma perp_col1 : forall A B C D X,
  C <> X -> Perp A B C D -> Col C D X -> Perp A B C X.
 Proof.
@@ -1567,7 +1987,7 @@ Lemma l8_21 : forall A B C,
  A <> B -> exists P, exists T, Perp A B P A /\ Col A B T /\ Bet C T P.
 Proof.
     intros.
-    induction(Col_dec A B C).
+    induction(col_dec A B C).
       assert (exists C', ~ Col A B C').
         eapply not_col_exists.
         assumption.
@@ -1585,136 +2005,6 @@ Proof.
       apply between_trivial2.
     eapply l8_21_aux.
     assumption.
-Qed.
-
-Lemma perp_in_col : forall A B C D X, Perp_at X A B C D -> Col A B X /\ Col C D X.
-Proof.
-    unfold Perp_at.
-    intuition.
-Qed.
-
-Lemma perp_perp_in : forall A B C, Perp A B C A -> Perp_at A A B C A.
-Proof.
-    intros.
-    apply l8_15_1.
-      unfold Perp in H.
-      ex_and H X.
-      unfold Perp_at in H0.
-      intuition.
-      apply col_trivial_3.
-    assumption.
-Qed.
-
-Lemma perp_per_1 : forall A B C, Perp A B C A -> Per B A C.
-Proof.
-    intros.
-    assert (Perp_at A A B C A).
-      apply perp_perp_in.
-      assumption.
-    unfold Perp_at in H0.
-    spliter.
-    apply H4.
-    Col.
-    Col.
-Qed.
-
-Lemma perp_per_2 : forall A B C, Perp A B A C -> Per B A C.
-Proof.
-    intros.
-    apply perp_right_comm in H.
-    apply perp_per_1; assumption.
-Qed.
-
-Lemma perp_col : forall A B C D E, A<>E -> Perp A B C D -> Col A B E -> Perp A E C D.
-Proof.
-    intros.
-    apply perp_sym.
-    apply perp_col0 with A B;finish.
-Qed.
-
-Lemma perp_col2 : forall A B C D  X Y,
-  Perp A B X Y ->
-  C <> D -> Col A B C -> Col A B D -> Perp C D X Y.
-Proof.
-    intros.
-    assert(HH:=H).
-    apply perp_distinct in HH.
-    spliter.
-    induction (eq_dec_points A C).
-      subst A.
-      apply perp_col with B;finish.
-    assert(Perp A C X Y) by (eapply perp_col;eauto).
-    eapply perp_col with A;finish.
-      Perp.
-    ColR.
-Qed.
-
-Lemma perp_not_eq_1 : forall A B C D, Perp A B C D -> A<>B.
-Proof.
-    intros.
-    unfold Perp in H.
-    ex_elim H X.
-    unfold Perp_at in H0.
-    tauto.
-Qed.
-
-Lemma perp_not_eq_2 : forall A B C D, Perp A B C D -> C<>D.
-Proof.
-    intros.
-    apply perp_sym in H.
-    eapply perp_not_eq_1.
-    apply H.
-Qed.
-
-Lemma diff_per_diff : forall A B P R ,
-      A <> B -> Cong A P B R -> Per B A P -> Per A B R -> P <> R.
-Proof.
-    intros.
-    intro.
-    subst.
-    assert (A = B).
-      eapply l8_7.
-        apply l8_2.
-        apply H1.
-      apply l8_2.
-      assumption.
-    intuition.
-Qed.
-
-Lemma per_not_colp : forall A B P R, A <> B -> A <> P -> B <> R -> Per B A P -> Per A B R -> ~Col P A R.
-Proof.
-    intros.
-    intro.
-    assert (Perp A B P A).
-      apply perp_comm.
-      apply per_perp;finish.
-    assert (Perp A B B R).
-      apply per_perp;finish.
-    assert (Per B A R).
-      eapply per_col.
-        apply H0.
-        assumption.
-      ColR.
-    apply l8_2 in H3.
-    apply l8_2 in H7.
-    assert (A = B).
-      eapply l8_7.
-        apply H7.
-      assumption.
-    contradiction.
-Qed.
-
-Lemma per_not_col : forall A B C, A <> B -> B <> C -> Per A B C -> ~Col A B C.
-Proof.
-    intros.
-    intro.
-    unfold Per in H1.
-    ex_and H1 C'.
-    assert (C = C' \/ Midpoint A C C').
-      eapply l7_20.
-        assert_cols;ColR.
-        assumption.
-    induction H4;treat_equalities; intuition.
 Qed.
 
 Lemma per_cong : forall A B P R X ,
@@ -2023,6 +2313,32 @@ Proof.
     assumption.
 Qed.
 
+Lemma perp_exists : forall O A B, A <> B -> exists X, Perp O X A B.
+Proof.
+    intros.
+    induction(col_dec A B O).
+      destruct (diff_col_ex3 A B O H0) as [C].
+      spliter.
+      destruct (l8_21 O C O H3) as [P [T]].
+      spliter.
+      exists P.
+      apply perp_comm.
+      apply perp_sym.
+      apply (perp_col2 O C); ColR.
+    destruct (l8_18_existence A B O H0) as [X []].
+    exists X.
+    apply perp_sym.
+    apply H2.
+Qed.
+
+Lemma perp_vector : forall A B, A <> B -> (exists X, exists Y, Perp A B X Y).
+Proof.
+    intros.
+    exists A.
+    destruct (perp_exists A A B) as [Y]; auto.
+    exists Y; Perp.
+Qed.
+
 Lemma midpoint_existence_aux : forall A B P Q T,
   A<>B -> Perp A B Q B -> Perp A B P A ->
   Col A B T -> Bet Q T P -> Le A P B Q ->
@@ -2044,7 +2360,7 @@ Proof.
         subst X.
         Col.
      assert_cols;ColR.
-     induction(Col_dec A B P).
+     induction(col_dec A B P).
       assert (B=A \/ P=A).
         eapply l8_9.
           apply perp_per_1.
@@ -2297,7 +2613,7 @@ Proof.
       apply perp_distinct in H.
       spliter.
       auto.
-    induction(Col_dec A B P).
+    induction(col_dec A B P).
       assert (B=A \/ P=A).
         eapply l8_9.
           apply perp_per_1.
@@ -2406,275 +2722,66 @@ Proof.
     assumption.
 Qed.
 
-Lemma perp_not_col2 : forall A B C D, Perp A B C D -> ~ Col A B C \/ ~ Col A B D.
+Lemma col_per2__per : forall A B C P X, A <> B -> Col A B C -> Per A X P -> Per B X P -> Per C X P.
 Proof.
     intros.
-    induction (Col_dec A B C).
-      right.
-      assert(Perp_at C A B C D).
-        apply l8_14_2_1b_bis; Col.
-      intro.
-      assert(Perp_at D A B C D).
-        apply l8_14_2_1b_bis; Col.
-      assert(C = D).
-        eapply l8_14_3.
-          apply H1.
-        assumption.
-      apply perp_not_eq_2 in H.
-      contradiction.
-    left.
-    assumption.
+    destruct (symmetric_point_construction P X) as [Q].
+    exists Q; split.
+      assumption.
+    apply (l4_17 A B); try apply per_double_cong with X; assumption.
 Qed.
 
-Lemma perp_not_col : forall A B P, Perp A B P A -> ~ Col A B P.
-Proof.
-    intros.
-    assert (Perp_at A A B P A).
-      apply perp_perp_in.
-      assumption.
-    assert (Per P A B).
-      apply perp_in_per.
-      apply perp_in_sym.
-      assumption.
-    apply perp_in_left_comm in H0.
-    assert (~ Col B A P  -> ~ Col A B P).
-      intro.
-      intro.
-      apply H2.
-      apply col_permutation_4.
-      assumption.
-    apply H2.
-    apply perp_distinct in H.
-    spliter.
-    apply per_not_col.
-      auto.
-      auto.
-    apply perp_in_per.
-    apply perp_in_right_comm.
-    assumption.
-Qed.
-
-Lemma perp_in_col_perp_in : forall A B C D E P, C <> E -> Col C D E -> Perp_at P A B C D -> Perp_at P A B C E.
-Proof.
-    intros.
-    unfold Perp_at in *.
-    spliter.
-    repeat split; auto.
-      ColR.
-    intros.
-    apply H5.
-      assumption.
-    ColR.
-Qed.
-
-Lemma perp_col2_bis : forall A B C D P Q,
-  Perp A B P Q ->
-  Col C D P ->
-  Col C D Q ->
-  C <> D ->
-  Perp A B C D.
-Proof.
-intros A B C D P Q HPerp HCol1 HCol2 HCD.
-apply perp_sym.
-apply perp_col2 with P Q; Perp; ColR.
-Qed.
-
-Lemma perp_in_perp_bis : forall A B C D X,
- Perp_at X A B C D -> Perp X B C D \/ Perp A X C D.
-Proof.
-    intros.
-    induction (eq_dec_points X A).
-      subst X.
-      left.
-      unfold Perp.
-      exists A.
-      assumption.
-    right.
-    unfold Perp.
-    exists X.
-    unfold Perp_at in *.
-    spliter.
-    repeat split.
-      intro.
-      apply H0.
-      subst X.
-      reflexivity.
-      assumption.
-      apply col_trivial_3.
-      assumption.
-    intros.
-    apply H4.
-      apply col_permutation_2.
-      eapply col_transitivity_1.
-        intro.
-        apply H0.
-        apply sym_equal.
-        apply H7.
-        Col.
-      Col.
-    assumption.
-Qed.
-
-Lemma col_per_perp : forall A B C D,
- A <> B -> B <> C -> D <> B -> D <> C ->
- Col B C D -> Per A B C -> Perp C D A B.
-Proof.
-    intros.
-    apply per_perp_in in H4.
-      apply perp_in_perp_bis in H4.
-      induction H4.
-        apply perp_distinct in H4.
-        spliter.
-        absurde.
-      eapply (perp_col _ B).
-        auto.
-        apply perp_sym.
-        apply perp_right_comm.
-        assumption.
-      apply col_permutation_4.
-      assumption.
-      assumption.
-    assumption.
-Qed.
-
-Lemma per_cong_mid : forall A B C H,
- B <> C -> Bet A B C -> Cong A H C H -> Per H B C ->
- Midpoint B A C.
-Proof.
-    intros.
-    induction (eq_dec_points H B).
-      subst H.
-      unfold Midpoint.
-      split.
-        assumption.
-      apply cong_right_commutativity.
-      assumption.
-    assert(Per C B H).
-      apply l8_2.
-      assumption.
-    assert (Per H B A).
-      eapply per_col.
-        apply H0.
-        assumption.
-      unfold Col.
-      right; right.
-      assumption.
-    assert (Per A B H).
-      apply l8_2.
-      assumption.
-    unfold Per in *.
-    ex_and H3 C'.
-    ex_and H5 H'.
-    ex_and H6 A'.
-    ex_and H7 H''.
-    assert (H' = H'').
-      eapply construction_uniqueness.
-        2: apply  midpoint_bet.
-        2:apply H5.
-        assumption.
-        apply cong_commutativity.
-        apply midpoint_cong.
-        apply l7_2.
-        apply H5.
-        apply midpoint_bet.
-        assumption.
-      apply cong_commutativity.
-      apply midpoint_cong.
-      apply l7_2.
-      assumption.
-    subst H''.
-    assert(IFSC H B H' A H B H' C).
-      repeat split.
-        apply midpoint_bet.
-        assumption.
-        apply midpoint_bet.
-        assumption.
-        apply cong_reflexivity.
-        apply cong_reflexivity.
-        apply cong_commutativity.
-        assumption.
-      apply cong_commutativity.
-      eapply cong_transitivity.
-        apply cong_symmetry.
-        apply H11.
-      eapply cong_transitivity.
-        apply H2.
-      assumption.
-    eapply l4_2 in H12.
-    unfold Midpoint.
-    split.
-      assumption.
-    apply cong_left_commutativity.
-    assumption.
-Qed.
-
-Lemma per_double_cong : forall A B C C',
- Per A B C -> Midpoint B C C' -> Cong A C A C'.
-Proof.
-    intros.
-    unfold Per in H.
-    ex_and H C''.
-    assert (C' = C'').
-      eapply l7_9.
-        apply l7_2.
-        apply H0.
-      apply l7_2.
-      assumption.
-    subst C''.
-    assumption.
-Qed.
-
-Lemma cong_perp_or_mid : forall A B M X, A <> B -> Midpoint M A B -> Cong A X B X ->
- X = M \/ ~Col A B X /\ Perp_at M X M A B.
+Lemma perp_in_per_1 :
+ forall A B C D X,
+  Perp_at X A B C D ->
+  Per A X C.
 Proof.
 intros.
-induction(Col_dec A B X).
-left.
-assert(A = B \/ Midpoint X A B).
-apply l7_20; Col.
-Cong.
-induction H3.
-contradiction.
-apply (l7_17 A B); auto.
-right.
-split; auto.
-assert(Col M A B).
-unfold Midpoint in *.
-spliter; Col.
-
-assert_diffs.
-assert(Per X M A)
- by (unfold Per;exists B;split; Cong).
-apply per_perp_in in H4.
-apply perp_in_right_comm in H4.
-apply(perp_in_col_perp_in X M A M B M); Col.
-
-intro;treat_equalities.
-apply H2; Col.
-auto.
+unfold Perp_at in *.
+decompose [and] H.
+apply H5;
+Col.
 Qed.
 
-Lemma col_per2_cases : forall A B C D B', 
- B <> C -> B' <> C -> C <> D -> Col B C D -> Per A B C -> Per A B' C -> 
- B = B' \/ ~Col B' C D.
+Lemma perp_in_per_2 :
+ forall A B C D X,
+  Perp_at X A B C D ->
+  Per A X D.
 Proof.
 intros.
-induction(eq_dec_points B B').
-left; auto.
-right.
-intro.
-assert(Col C B B').
-ColR.
-assert(Per A B' B).
-apply(per_col A B' C B H0 H4); Col.
-assert(Per A B B').
-apply(per_col A B C B' H H3); Col.
-apply H5.
-apply (l8_7 A); auto.
+unfold Perp_at in *.
+decompose [and] H.
+apply H5;
+Col.
 Qed.
 
+Lemma perp_in_per_3 :
+ forall A B C D X,
+  Perp_at X A B C D ->
+  Per B X C.
+Proof.
+intros.
+unfold Perp_at in *.
+decompose [and] H.
+apply H5;
+Col.
+Qed.
+
+Lemma perp_in_per_4 :
+ forall A B C D X,
+  Perp_at X A B C D ->
+  Per B X D.
+Proof.
+intros.
+unfold Perp_at in *.
+decompose [and] H.
+apply H5;
+Col.
+Qed.
 
 End T8_5.
+
+Hint Resolve perp_in_per_1 perp_in_per_2 perp_in_per_3 perp_in_per_4 : perp.
 
 Ltac midpoint M A B :=
  let T:= fresh in assert (T:= midpoint_existence A B);

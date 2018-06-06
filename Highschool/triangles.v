@@ -1,9 +1,9 @@
-Require Import GeoCoq.Tarski_dev.Ch12_parallel.
-Require Import GeoCoq.Tarski_dev.Annexes.perp_bisect.
+Require Export GeoCoq.Tarski_dev.Ch12_parallel.
+Require Export GeoCoq.Tarski_dev.Annexes.perp_bisect.
 
 Section Triangles.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Section ABC.
 
@@ -91,7 +91,7 @@ assert (Per A H B) by (apply perp_in_per_1 with C H;finish).
 assert (Per C H B) by (apply perp_in_per_3 with A H;finish). 
 (* We prove that A H B and C H B are congruent triangles *)
 assert (Cong H A H C /\ CongA H A B H C B /\ CongA H B A H B C)
- by (apply (per2_cong2__cong_conga2 A H B C H B);finish).
+ by (apply (cong2_per2__cong_conga2 A H B C H B);finish).
 spliter.
 assert (Midpoint H A C)
  by (apply l7_20_bis;finish).

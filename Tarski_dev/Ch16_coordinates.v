@@ -2,7 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch15_lengths.
 
 Section T16.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma grid_exchange_axes : forall O E S U1 U2,
   Cs O E S U1 U2 -> Cs O E S U2 U1.
@@ -66,7 +67,7 @@ Qed.
 Lemma exists_projp : forall A B P, A <> B -> exists P', Projp P P' A B.
 Proof.
 intros A B P HAB.
-elim (Col_dec A B P); intro HNC; [exists P; split; Col; right|].
+elim (col_dec A B P); intro HNC; [exists P; split; Col; right|].
 destruct (l8_18_existence A B P HNC) as [P' HP'].
 exists P'; split; Col.
 Qed.
@@ -142,8 +143,8 @@ destruct (perp_exists PX S U1) as [PX' HPerp1]; [assert_diffs; auto|].
 destruct (perp_exists PY S U2) as [PY' HPerp2]; [assert_diffs; auto|].
 assert (HPerp3 : Perp PX PX' PY PY').
   {
-  apply par_perp_perp with S U2; Perp.
-  apply l12_9 with S U1; Perp.
+  apply par_perp__perp with S U2; Perp.
+  apply l12_9_2D with S U1; Perp.
   destruct HCs as [H [H' [H'' HPer]]]; clear H; clear H'; clear H''.
   assert_diffs; apply per_perp in HPer; Perp.
   }
@@ -162,7 +163,7 @@ split; [exists PX|exists PY]; split; Cong.
    assert_diffs; apply per_perp in HPer; Perp|
   |apply l4_13 with E O Y; try apply cong_3_swap; Col].
   assert (HPar : Par S U1 PY PY')
-    by (apply l12_9 with P PX'; Perp).
+    by (apply l12_9_2D with P PX'; Perp).
   elim HPar; clear HPar; intro HParS; [|spliter; ColR].
   exfalso; apply HParS; exists P; split; Col.
   apply l4_13 with X O E; try (apply cong_3_swap; apply cong_3_swap_2); Col.
@@ -179,7 +180,7 @@ split; [exists PX|exists PY]; split; Cong.
    assert_diffs; apply per_perp in HPer; Perp|
   |apply l4_13 with E O X; try apply cong_3_swap; Col].
   assert (HPar : Par S U2 PX PX')
-    by (apply l12_9 with P PY'; Perp).
+    by (apply l12_9_2D with P PY'; Perp).
   elim HPar; clear HPar; intro HParS; [|spliter; ColR].
   exfalso; apply HParS; exists P; split; Col.
   apply l4_13 with Y O E; try (apply cong_3_swap; apply cong_3_swap_2); Col.
@@ -245,7 +246,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp.
+      apply l12_9_2D with P2 P1; Perp.
       }
 
       {
@@ -253,7 +254,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp3 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp.
+      apply l12_9_2D with P2 P1; Perp.
       apply perp_col0 with P1 PY; Perp; Col.
       }
 
@@ -262,7 +263,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1; Perp.
+      apply l12_9_2D with P2 P1; Perp.
       apply perp_col0 with P1 PX; Perp; Col.
       }
 
@@ -271,7 +272,7 @@ split; intro; spliter; treat_equalities.
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp3 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
-      apply l12_9 with P2 P1;
+      apply l12_9_2D with P2 P1;
       [apply perp_col0 with P1 PX|apply perp_col0 with P1 PY];Perp; Col.
       }
     }
@@ -403,9 +404,9 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     {
     exfalso; unfold Cong_3 in *; spliter; treat_equalities.
     assert (HPar1 : Par P Q S U1)
-      by (apply l12_9 with S U2; Perp).
+      by (apply l12_9_2D with S U2; Perp).
     assert (HPar2 : Par P S Q S)
-      by (apply l12_9 with S U1; Perp).
+      by (apply l12_9_2D with S U1; Perp).
     elim HPar2; clear HPar2; intro HCol1; [apply HCol1; exists S; Col|].
     elim HPar1; clear HPar1; intro HCol2; [apply HCol2; exists S; spliter; Col|].
     spliter; apply perp_not_col2 in HPerp3;
@@ -417,17 +418,17 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     treat_equalities; assert (HCol7 : Col S U2 P).
       {
       assert (H : Par P S S U2)
-        by (apply l12_9 with S U1; Perp).
+        by (apply l12_9_2D with S U1; Perp).
       elim H; clear H; intro H; [exfalso; apply H; exists S|spliter]; Col.
       }
     assert (HNC' : ~ Col S U1 U2) by (apply perp_not_col; Perp).
     assert (H : Rectangle P S QX' Q).
       {
-      apply perp_3_rect; try (intro; assert_diffs; apply HNC'; ColR);
+      apply perp3__rect; try (intro; assert_diffs; apply HNC'; ColR);
       [apply perp_col0 with S U1|apply perp_sym; apply perp_col0 with S U1|];
       Col; Perp.
-      apply perp_sym; apply par_perp_perp with S U1; Perp.
-      apply l12_9 with S U2; Perp.
+      apply perp_sym; apply par_perp__perp with S U1; Perp.
+      apply l12_9_2D with S U2; Perp.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
@@ -439,17 +440,17 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
     treat_equalities; assert (HCol7 : Col S U2 Q).
       {
       assert (H : Par Q S S U2)
-        by (apply l12_9 with S U1; Perp).
+        by (apply l12_9_2D with S U1; Perp).
       elim H; clear H; intro H; [exfalso; apply H; exists S|spliter]; Col.
       }
     assert (HNC' : ~ Col S U1 U2) by (apply perp_not_col; Perp).
     assert (H : Rectangle Q S PX' P).
       {
-      apply perp_3_rect; try (intro; assert_diffs; apply HNC'; ColR);
+      apply perp3__rect; try (intro; assert_diffs; apply HNC'; ColR);
       [apply perp_col0 with S U1|apply perp_sym; apply perp_col0 with S U1|];
       Col; Perp.
-      apply perp_sym; apply par_perp_perp with S U1; Perp.
-      apply l12_9 with S U2; Perp.
+      apply perp_sym; apply par_perp__perp with S U1; Perp.
+      apply l12_9_2D with S U2; Perp.
       }
     apply Rectangle_Plg in H; apply plg_to_parallelogram in H;
     apply plg_cong_2 in H.
@@ -466,7 +467,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
       elim H; clear H; intro H; [|spliter; subst; Col].
       destruct H as [H HPerp5]; clear H.
       assert (HPar : Par P S S U1)
-        by (apply l12_9 with S U2; Perp).
+        by (apply l12_9_2D with S U2; Perp).
       elim HPar; clear HPar; intro HPar;
       [exfalso; apply HPar; exists S|spliter]; Col.
       }
@@ -481,7 +482,7 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
         intro; treat_equalities; apply HDiff1.
         assert_diffs; apply l6_21 with S U1 U2 S; Col.
         assert (HPar : Par P PX' S U2)
-          by (apply l12_9 with S U1; Perp).
+          by (apply l12_9_2D with S U1; Perp).
         elim HPar; clear HPar; intro HPar;
         [exfalso; apply HPar; exists P|]; spliter; Col.
         }
@@ -490,13 +491,13 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
         intro; treat_equalities; apply HDiff2.
         assert_diffs; apply l6_21 with S U1 U2 S; Col.
         assert (HPar : Par Q QX' S U2)
-          by (apply l12_9 with S U1; Perp).
+          by (apply l12_9_2D with S U1; Perp).
         elim HPar; clear HPar; intro HPar;
         [exfalso; apply HPar; exists Q|]; spliter; Col.
         }
       assert (HRect1 : Rectangle PX' S PY' P).
         {
-        apply perp_3_rect; try (intro; assert_diffs; apply HNC'; ColR).
+        apply perp3__rect; try (intro; assert_diffs; apply HNC'; ColR).
 
           {
           apply perp_col0 with S U2; Col.
@@ -509,15 +510,15 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
           }
 
           {
-          apply par_perp_perp with S U1; Perp.
-          apply l12_9 with S U2; Perp.
+          apply par_perp__perp with S U1; Perp.
+          apply l12_9_2D with S U2; Perp.
           apply perp_sym; apply perp_col0 with P Q; Col.
           apply col_permutation_1; apply projp2_col with S U2; auto.
           }
         }
       assert (HRect2 : Rectangle QX' S PY' Q).
         {
-        apply perp_3_rect; try (intro; assert_diffs; apply HNC'; ColR).
+        apply perp3__rect; try (intro; assert_diffs; apply HNC'; ColR).
 
           {
           apply perp_col0 with S U2; Col.
@@ -530,8 +531,8 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
           }
 
           {
-          apply par_perp_perp with S U1; Perp.
-          apply l12_9 with S U2; Perp.
+          apply par_perp__perp with S U1; Perp.
+          apply l12_9_2D with S U2; Perp.
           apply perp_sym; apply perp_col0 with P Q; Col.
           apply col_permutation_1; apply projp2_col with S U2; auto.
           }
@@ -548,14 +549,14 @@ destruct H1 as [HCol5 HPerp3]; destruct H2 as [HCol6 HPerp4]; treat_equalities.
 
   {
   exfalso; elim (perp_not_col2 S U1 P PX'); Perp; intro H; apply H; Col; clear H.
-  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp).
+  assert (HPar : Par P Q S U1) by (apply l12_9_2D with S U2; Perp).
   elim HPar; clear HPar; intro HPar; spliter; Col.
   exfalso; apply HPar; exists Q; Col.
   }
 
   {
   exfalso; elim (perp_not_col2 S U1 Q QX'); Perp; intro H; apply H; Col; clear H.
-  assert (HPar : Par P Q S U1) by (apply l12_9 with S U2; Perp).
+  assert (HPar : Par P Q S U1) by (apply l12_9_2D with S U2; Perp).
   elim HPar; clear HPar; intro HPar; spliter; Col.
   exfalso; apply HPar; exists P; Col.
   }
@@ -670,8 +671,8 @@ try clear HPX; try clear HPY; try clear HQX; try clear HQY.
   assert (HPerp2 : Perp Q R S U2) by (apply projp_projp_perp with QY'; auto);
   assert (HPerp3 : Perp U1 S S U2)
     by (unfold Cs in HCs; spliter; assert_diffs; apply per_perp; Perp).
-  apply perp_per_2; auto; apply perp_sym; apply par_perp_perp with S U1; Perp.
-  apply l12_9 with S U2; Perp.
+  apply perp_per_2; auto; apply perp_sym; apply par_perp__perp with S U1; Perp.
+  apply l12_9_2D with S U2; Perp.
   }
 
   {
@@ -802,7 +803,7 @@ assert (HA : Projp AX' A A1 A2).
   {
   split; auto; induction (eq_dec_points A AX');
   [treat_equalities; right|left; split]; Col.
-  apply par_perp_perp with S U1; auto.
+  apply par_perp__perp with S U1; auto.
   destruct HProjpAX' as [Hclear HAX']; clear Hclear.
   induction HAX'; spliter; Perp; intuition.
   }
@@ -879,7 +880,7 @@ assert (HA : Projp AX' A A1 A2).
   {
   split; auto; induction (eq_dec_points A AX');
   [treat_equalities; right|left; split]; Col.
-  apply par_perp_perp with S U1; auto.
+  apply par_perp__perp with S U1; auto.
   destruct HProjpAX' as [Hclear HAX']; clear Hclear.
   induction HAX'; spliter; Perp; intuition.
   }
@@ -891,7 +892,7 @@ assert (HCX' := HCdC).
 destruct HCX' as [H [H' [HCX' H'']]]; clear H; clear H'; clear H''.
 destruct HCX' as [CX' [HProjpCX' HCongCX']].
 destruct (exists_projp A1 A2 CX') as [CX'' HCX'']; auto.
-elim (Col_dec A B BX''); intro HABBX''.
+elim (col_dec A B BX''); intro HABBX''.
 
   {
   elim (eq_dec_points A BX''); intro HABX''; treat_equalities.
@@ -913,7 +914,7 @@ elim (Col_dec A B BX''); intro HABBX''.
         assert (HCol' : Col A AX' BX') by (apply projp2_col with A1 A2; auto).
         assert (HParS : Par_strict S U1 A1 A2); [|clear HLine].
           {
-          elim (Col_dec S U1 A1); intro HCol'';
+          elim (col_dec S U1 A1); intro HCol'';
           [apply par_not_col_strict with A2|apply par_not_col_strict with A1];
           Col ; try (intro; apply HLine); Col.
           }
@@ -1129,14 +1130,14 @@ elim (Col_dec A B BX''); intro HABBX''.
 
         {
         assert (HCol1 : Par B BX' BX' BX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol1; clear HCol1; intro HCol1;
         [exfalso; apply HCol1; exists BX'; Col|].
         assert (HCol2 : Par C CX' CX' CX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2.
+        left; apply l12_9_2D with A1 A2.
 
           {
           apply perp_sym; apply perp_col0 with BX' BX''; Perp;
@@ -1152,23 +1153,23 @@ elim (Col_dec A B BX''); intro HABBX''.
 
         {
         assert (HCol1 : Par B BX' BX' BX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol1; clear HCol1; intro HCol1;
         [exfalso; apply HCol1; exists BX'; Col|].
-        left; apply l12_9 with A1 A2; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with BX' BX''; Perp;
         assert_diffs; spliter; Col.
         }
 
         {
         assert (HCol1 : Par B BX' BX' BX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol1; clear HCol1; intro HCol1;
         [exfalso; apply HCol1; exists BX'; Col|].
-        left; apply l12_9 with A1 A2; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with BX' BX''; Perp;
         assert_diffs; spliter; Col.
-        apply perp_sym; apply par_perp_perp with S U1; Perp.
+        apply perp_sym; apply par_perp__perp with S U1; Perp.
         }
 
         {
@@ -1177,22 +1178,22 @@ elim (Col_dec A B BX''); intro HABBX''.
 
         {
         assert (HCol2 : Par C CX' CX' CX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
         apply perp_sym; apply perp_col0 with CX' CX''; Perp;
         assert_diffs; spliter; Col.
         intro; treat_equalities; assert_cols; apply HABBX''; ColR.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp; Perp.
+        left; apply l12_9_2D with A1 A2; Perp; Perp.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp.
-        apply perp_sym; apply par_perp_perp with S U1; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
+        apply perp_sym; apply par_perp__perp with S U1; Perp.
         }
 
         {
@@ -1201,13 +1202,13 @@ elim (Col_dec A B BX''); intro HABBX''.
 
         {
         assert (HCol2 : Par C CX' CX' CX'')
-          by (apply par_perp_2_par with S U1 A1 A2; Perp).
+          by (apply par_perp2__par with S U1 A1 A2; Perp).
         elim HCol2; clear HCol2; intro HCol2;
         [exfalso; apply HCol2; exists CX'; Col|].
-        left; apply l12_9 with A1 A2; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
 
           {
-          apply perp_sym; apply par_perp_perp with S U1; Perp.
+          apply perp_sym; apply par_perp__perp with S U1; Perp.
           }
 
           {
@@ -1218,14 +1219,14 @@ elim (Col_dec A B BX''); intro HABBX''.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp.
-        apply perp_sym; apply par_perp_perp with S U1; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
+        apply perp_sym; apply par_perp__perp with S U1; Perp.
         }
 
         {
-        left; apply l12_9 with A1 A2; Perp.
-        apply perp_sym; apply par_perp_perp with S U1; Perp.
-        apply perp_sym; apply par_perp_perp with S U1; Perp.
+        left; apply l12_9_2D with A1 A2; Perp.
+        apply perp_sym; apply par_perp__perp with S U1; Perp.
+        apply perp_sym; apply par_perp__perp with S U1; Perp.
         }
 
         {

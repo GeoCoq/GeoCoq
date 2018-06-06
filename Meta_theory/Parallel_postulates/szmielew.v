@@ -3,7 +3,7 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 
 Section Szmielew.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition hyperbolic_plane_postulate := forall A1 A2 P,
   ~ Col A1 A2 P -> exists B1 B2 C1 C2,
@@ -51,7 +51,7 @@ Proof.
   - apply (conga2_sams__sams X Q P P Q Y); CongA.
     repeat split; auto.
       right; intro; apply HNCol1; Col.
-    exists Y; split; CongA; split; Side.
+    exists Y; split; CongA; repeat split; Side; Cop.
     intro HTS1; destruct HTS1 as [_ []]; assert_cols; Col.
   - assert_diffs; apply inangle__suma; repeat split; Col.
     exists P; split; auto.

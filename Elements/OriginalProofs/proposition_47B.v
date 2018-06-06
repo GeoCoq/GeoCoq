@@ -7,37 +7,22 @@ Section Euclid.
 Context `{Ax:area}.
 
 Lemma proposition_47B : 
-   forall A B C D E F G H K, 
-   Triangle A B C -> Per B A C -> SQ A B F G -> TS G B A C -> SQ A C K H -> TS H C A B -> SQ B C E D -> TS D C B A ->
+   forall A B C D E F G, 
+   Triangle A B C -> Per B A C -> SQ A B F G -> TS G B A C -> SQ B C E D -> TS D C B A ->
    exists X Y, PG B X Y D /\ BetS B X C /\ PG X C E Y /\ BetS D Y E /\ BetS Y X A /\ Per D Y A /\ EF A B F G B X Y D.
 Proof.
 intros.
 let Tf:=fresh in
 assert (Tf:exists M L, (PG B M L D /\ BetS B M C /\ PG M C E L /\ BetS D L E /\ BetS L M A /\ Per D L A)) by (conclude proposition_47A);destruct Tf as [M[L]];spliter.
-assert (PG B C E D) by (conclude lemma_squareparallelogram).
+
 let Tf:=fresh in
 assert (Tf:exists N, (BetS D N A /\ Col C B N /\ nCol C B D)) by (conclude_def TS );destruct Tf as [N];spliter.
 assert (Per G A B) by (conclude_def SQ ).
 assert (BetS G A C) by (conclude lemma_righttogether).
-assert (BetS C A G) by (conclude axiom_betweennesssymmetry).
-assert (Per H A C) by (conclude_def SQ ).
-assert (Per C A B) by (conclude lemma_8_2).
-assert (BetS H A B) by (conclude lemma_righttogether).
-assert (BetS B A H) by (conclude axiom_betweennesssymmetry).
-assert (eq B B) by (conclude cn_equalityreflexive).
-assert (neq A B) by (forward_using lemma_betweennotequal).
-assert (Out A B B) by (conclude lemma_ray4).
-assert (nCol A B C) by (conclude_def Triangle ).
-assert (neq B C) by (forward_using lemma_NCdistinct).
-assert (Cong B C E D) by (conclude_def SQ ).
-assert (neq E D) by (conclude lemma_nullsegment3).
-assert (neq D E) by (conclude lemma_inequalitysymmetric).
 assert (Per A B F) by (conclude_def SQ ).
 assert (Per F B A) by (conclude lemma_8_2).
 assert (Per D B C) by (conclude_def SQ ).
-assert (CongA D B C F B A) by (conclude lemma_Euclid4).
 assert (nCol A B C) by (conclude_def Triangle ).
-assert (CongA A B C C B A) by (conclude lemma_ABCequalsCBA).
 assert (PG A B F G) by (conclude lemma_squareparallelogram).
 assert (Par A B F G) by (conclude_def PG ).
 assert (Par A B G F) by (forward_using lemma_parallelflip).
@@ -49,17 +34,10 @@ assert (TS F A B C) by (conclude lemma_planeseparation).
 let Tf:=fresh in
 assert (Tf:exists a, (BetS F a C /\ Col A B a /\ nCol A B F)) by (conclude_def TS );destruct Tf as [a];spliter.
 assert (Col B A a) by (forward_using lemma_collinearorder).
-assert (eq A A) by (conclude cn_equalityreflexive).
-assert (eq B B) by (conclude cn_equalityreflexive).
-assert (eq F F) by (conclude cn_equalityreflexive).
 assert (Par A G B F) by (conclude_def PG ).
-assert (Col A G A) by (conclude_def Col ).
-assert (Col B F F) by (conclude_def Col ).
 assert (Par A G F B) by (forward_using lemma_parallelflip).
 assert (Col G A C) by (conclude_def Col ).
 assert (Col A G C) by (forward_using lemma_collinearorder).
-assert (eq A A) by (conclude cn_equalityreflexive).
-assert (Col A G A) by (conclude_def Col ).
 assert (neq G C) by (forward_using lemma_betweennotequal).
 assert (neq C G) by (conclude lemma_inequalitysymmetric).
 assert (Par F B A G) by (conclude lemma_parallelsymmetric).
@@ -91,14 +69,9 @@ assert (CongA A B C a B C) by (conclude lemma_equalangleshelper).
 assert (SumA F B A A B C F B C) by (conclude_def SumA ).
 let Tf:=fresh in
 assert (Tf:exists c, (BetS D c A /\ Col C B c /\ nCol C B D)) by (conclude_def TS );destruct Tf as [c];spliter.
-assert (Col B C c) by (forward_using lemma_collinearorder).
-assert (eq C C) by (conclude cn_equalityreflexive).
-assert (eq B B) by (conclude cn_equalityreflexive).
-assert (eq D D) by (conclude cn_equalityreflexive).
 assert (PG B C E D) by (conclude lemma_squareparallelogram).
 assert (Par B D C E) by (conclude_def PG ).
 assert (Par C E B D) by (conclude lemma_parallelsymmetric).
-assert (Col C D C) by (conclude_def Col ).
 assert (Par C E D B) by (forward_using lemma_parallelflip).
 assert (Col B C c) by (forward_using lemma_collinearorder).
 assert (Col B M C) by (conclude_def Col ).
@@ -115,8 +88,6 @@ assert (Par B D A L) by (conclude lemma_collinearparallel).
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Par D B L A) by (forward_using lemma_parallelflip).
 assert (~ Meet D B L A) by (conclude_def Par ).
-assert (nCol D M L) by (forward_using lemma_parallelNC).
-assert (neq M D) by (forward_using lemma_NCdistinct).
 assert (nCol B D L) by (forward_using lemma_parallelNC).
 assert (neq D B) by (forward_using lemma_NCdistinct).
 assert (neq M A) by (forward_using lemma_betweennotequal).
@@ -165,7 +136,6 @@ assert (~ Col C B F).
  assert (~ Per C B A) by (conclude lemma_8_7).
  contradict.
  }
-
 assert (nCol F B C) by (assert (nCol C B F) by auto;forward_using lemma_NCorder).
 assert (CongA F B C C B F) by (conclude lemma_ABCequalsCBA).
 assert (CongA D B A C B F) by (conclude lemma_equalanglestransitive).
@@ -177,10 +147,12 @@ assert (Cong B A B F) by (conclude lemma_congruencesymmetric).
 assert (Cong B C D B) by (conclude_def SQ ).
 assert (Cong D B B C) by (conclude lemma_congruencesymmetric).
 assert (Cong B D B C) by (forward_using lemma_congruenceflip).
-assert (Triangle D B A) by (conclude_def Triangle ).
-assert (Triangle C B F) by (conclude_def Triangle ).
 assert ((Cong D A C F /\ CongA B D A B C F /\ CongA B A D B F C)) by (conclude proposition_04).
 assert (Cong A D F C) by (forward_using lemma_congruenceflip).
+assert (CongA B F C B A D) by (conclude lemma_equalanglessymmetric).
+assert (nCol B A D) by (conclude lemma_equalanglesNC).
+assert (nCol A B D) by (forward_using lemma_NCorder).
+assert (Triangle A B D) by (conclude_def Triangle ).
 assert (Cong_3 A B D F B C) by (conclude_def Cong_3 ).
 assert (ET A B D F B C) by (conclude axiom_congruentequal).
 assert (Par B M L D) by (conclude_def PG ).
@@ -221,20 +193,16 @@ let Tf:=fresh in
 assert (Tf:exists m, (Midpoint A m F /\ Midpoint B m G)) by (conclude lemma_diagonalsbisect);destruct Tf as [m];spliter.
 assert (BetS A m F) by (conclude_def Midpoint ).
 assert (BetS B m G) by (conclude_def Midpoint ).
-assert (Col A m F) by (conclude_def Col ).
-assert (Col F A m) by (forward_using lemma_collinearorder).
-assert (nCol A B F) by (forward_using lemma_parallelNC).
-assert (nCol F A B) by (forward_using lemma_NCorder).
-assert (TS B F A G) by (conclude_def TS ).
+assert (BetS F m A) by (conclude axiom_betweennesssymmetry).
 let Tf:=fresh in
 assert (Tf:exists n, (Midpoint B n L /\ Midpoint M n D)) by (conclude lemma_diagonalsbisect);destruct Tf as [n];spliter.
 assert (BetS B n L) by (conclude_def Midpoint ).
 assert (BetS M n D) by (conclude_def Midpoint ).
+assert (BetS D n M) by (conclude axiom_betweennesssymmetry).
 assert (Col M n D) by (conclude_def Col ).
 assert (Col D M n) by (forward_using lemma_collinearorder).
 assert (nCol B M D) by (forward_using lemma_parallelNC).
 assert (nCol D M B) by (forward_using lemma_NCorder).
-assert (TS B D M L) by (conclude_def TS ).
 assert (EF F B A G D B M L) by (conclude axiom_paste3).
 assert (EF F B A G B M L D) by (forward_using axiom_EFpermutation).
 assert (EF B M L D F B A G) by (conclude axiom_EFsymmetric).

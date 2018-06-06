@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_angleorderrespectscongruence
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_supplementinequality : 
    forall A B C D F a b c d f, 
@@ -18,7 +18,6 @@ let Tf:=fresh in
 assert (Tf:exists P Q R, (BetS P R Q /\ Out B A P /\ Out B C Q /\ CongA a b c A B R)) by (conclude_def LtA );destruct Tf as [P[Q[R]]];spliter.
 assert (nCol A B R) by (conclude lemma_equalanglesNC).
 assert ((Out B C D /\ BetS A B F)) by (conclude_def Supp ).
-assert ((Out b c d /\ BetS a b f)) by (conclude_def Supp ).
 assert (BetS Q R P) by (conclude axiom_betweennesssymmetry).
 assert (BetS F B A) by (conclude axiom_betweennesssymmetry).
 assert ((BetS B P A \/ eq A P \/ BetS B A P)) by (conclude lemma_ray1).
@@ -36,12 +35,11 @@ by cases on (BetS B P A \/ eq A P \/ BetS B A P).
  assert (BetS F B P) by (conclude lemma_3_7b).
  close.
  }
-(* cases *)
+(** cases *)
 assert (~ Col F P Q).
  {
  intro.
  assert (Col B A P) by (conclude lemma_rayimpliescollinear).
- assert (Col B C Q) by (conclude lemma_rayimpliescollinear).
  assert (Col A B F) by (conclude_def Col ).
  assert (neq A B) by (forward_using lemma_betweennotequal).
  assert (Col A B P) by (forward_using lemma_collinearorder).
@@ -70,7 +68,6 @@ assert (~ Col F P Q).
 let Tf:=fresh in
 assert (Tf:exists M, (BetS F M R /\ BetS Q M B)) by (conclude postulate_Pasch_inner);destruct Tf as [M];spliter.
 assert (eq R R) by (conclude cn_equalityreflexive).
-assert (nCol A B R) by (conclude lemma_equalanglesNC).
 assert (~ eq B R).
  {
  intro.
@@ -81,7 +78,6 @@ assert (Out B R R) by (conclude lemma_ray4).
 assert (Supp A B R R F) by (conclude_def Supp ).
 assert (CongA A B R a b c) by (conclude lemma_equalanglessymmetric).
 assert (CongA R B F d b f) by (conclude lemma_supplements).
-assert (eq R R) by (conclude cn_equalityreflexive).
 assert (neq B F) by (forward_using lemma_betweennotequal).
 assert (eq F F) by (conclude cn_equalityreflexive).
 assert (Out B F F) by (conclude lemma_ray4).

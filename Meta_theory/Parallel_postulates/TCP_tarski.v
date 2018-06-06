@@ -5,7 +5,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section TCP_tarski.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma impossible_case_1 :
   forall A B C D T x y,
@@ -72,13 +72,13 @@ apply HTS; apply one_side_transitivity with D.
 
   assert (HABB : Col A B B) by Col.
   assert (HBDC' : Col C D B) by (assert_cols; Col).
-  assert (H := l9_19 A B C D B HAB HABB HBDC'); rewrite H.
+  assert (H := l9_19 A B C D B HABB HBDC'); rewrite H.
   split; try (intro; apply HABC; Col).
   repeat (split; Between).
 
   assert (HABA : Col A B A) by Col.
   assert (HDTA : Col D T A) by (assert_cols; Col).
-  assert (H := l9_19 A B D T A HAB HABA HDTA); rewrite H.
+  assert (H := l9_19 A B D T A HABA HDTA); rewrite H.
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; Between).
 Qed.
@@ -148,7 +148,7 @@ assert (HOS : OS A C x B).
 {
   assert (HACA : Col A C A) by Col.
   assert (HABx' : Col x B A) by (induction HABx; assert_cols; Col).
-  assert (H := l9_19 A C x B A HAC HACA HABx'); rewrite H.
+  assert (H := l9_19 A C x B A HACA HABx'); rewrite H.
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; auto).
 }
@@ -158,13 +158,13 @@ apply HTS; apply one_side_transitivity with D.
 
   assert (HACC : Col A C C) by Col.
   assert (HBDC' : Col B D C) by (assert_cols; Col).
-  assert (H := l9_19 A C B D C HAC HACC HBDC'); rewrite H.
+  assert (H := l9_19 A C B D C HACC HBDC'); rewrite H.
   split; try (intro; apply HABC; Col).
   repeat (split; Between).
 
   assert (HACA : Col A C A) by Col.
   assert (HDTA : Col D T A) by (assert_cols; Col).
-  assert (H := l9_19 A C D T A HAC HACA HDTA); rewrite H.
+  assert (H := l9_19 A C D T A HACA HDTA); rewrite H.
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; Between).
 Qed.
@@ -201,7 +201,7 @@ assert (HOS : OS B C A x).
 {
   assert (HBCB : Col B C B) by Col.
   assert (HABx' : Col A x B) by Col.
-  assert (H := l9_19 B C A x B HBC HBCB HABx'); rewrite H.
+  assert (H := l9_19 B C A x B HBCB HABx'); rewrite H.
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; Between).
   intro; treat_equalities; intuition.
@@ -282,16 +282,46 @@ apply l9_9 in HTS; apply HTS; apply one_side_transitivity with D.
 
   assert (HACC : Col A C C) by Col.
   assert (HBDC' : Col B D C) by (assert_cols; Col).
-  assert (H := l9_19 A C B D C HAC HACC HBDC'); rewrite H.
+  assert (H := l9_19 A C B D C HACC HBDC'); rewrite H.
   split; try (intro; apply HABC; Col).
   repeat (split; Between).
 
   assert (HACA : Col A C A) by Col.
   assert (HDTA : Col D T A) by (assert_cols; Col).
-  assert (H := l9_19 A C D T A HAC HACA HDTA); rewrite H.
+  assert (H := l9_19 A C D T A HACA HDTA); rewrite H.
   split; try (intro; apply HABC; assert_cols; ColR).
   repeat (split; Between).
 Qed.
+
+(*
+Lemma triangle_circumscription_aux : forall A B C P,
+  Cong A P B P -> Cong A P C P -> exists CC, Cong A CC B CC /\ Cong A CC C CC /\ Coplanar A B C CC.
+Proof.
+  intros A B C D HCong1 HCong2.
+  destruct (cop_dec A B C D).
+    exists D; repeat split; assumption.
+  destruct (l11_62_existence A B C D) as [CC [HCop HCC]].
+  exists CC.
+  assert (CC <> D) by (intro; subst; Cop).
+  assert (Per B CC D) by Cop.
+  assert (A <> CC).
+  { intro; subst CC.
+    destruct (l11_46 B A D) as [_ []]; auto.
+    assert_diffs; apply per_not_col; auto.
+  }
+  assert (Per A CC D) by Cop.
+  repeat split; trivial.
+  - destruct (cong2_per2__cong_conga2 A CC D B CC D); Cong.
+    intro; subst CC.
+    destruct (l11_46 A B D) as [_ []]; Cong.
+    assert_diffs; apply per_not_col; auto.
+  - assert (Per C CC D) by Cop.
+    destruct (cong2_per2__cong_conga2 A CC D C CC D); Cong.
+    intro; subst CC.
+    destruct (l11_46 A C D) as [_ []]; Cong.
+    apply per_not_col; auto.
+Qed.
+*)
 
 Lemma triangle_circumscription_implies_tarski_s_euclid_aux :
   forall A B C D T X Y Z M1 Z1 M2 Z2,
@@ -336,32 +366,76 @@ intros A B C D T X Y Z M1 Z1 M2 Z2; intro HTC.
 intros HAB HAC HAD HAT HAY HBC HBD HBT HBY HCD HCT HCY HDT HTX HTY HXY HYZ1 HYZ2.
 intros HABC HABM1 HACM2 HADT HBCT HBDC HTYZ HYTX HYM1Z1.
 intros HYM2Z2 HCong5 HCong6 HCong7 HPerp1 HPerp2 HPerp3.
-elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
+elim (col_dec X Y Z1); intro HXYZ1; elim (col_dec X Y Z2); intro HXYZ2.
 
   exfalso; apply HABC; apply par_id.
   apply l12_9 with Y Z1; Perp.
+    exists A; right; left; split; Col.
+    apply coplanar_perm_16, col_cop__cop with Z2; Cop; ColR.
+    Cop.
+    assert_diffs; apply coplanar_perm_16, col2_cop__cop with T Z; Cop; ColR.
   apply perp_col1 with Z2; assert_diffs; Perp; ColR.
 
   exfalso; apply HABC; apply par_id_1.
-  apply l12_9 with Y Z1; Perp.
+  assert (Coplanar B C Y Z1) by (assert_diffs; apply col2_cop__cop with T Z; Cop; ColR).
+  apply l12_9 with Y Z1; [Cop..| |Perp|].
+    apply coplanar_pseudo_trans with B C T; [assumption|..|Cop].
+    assert_diffs; apply col_cop__cop with Z; Col; Cop.
+    assert_diffs; apply col_cop__cop with Z; Cop; ColR.
+    exists D; left; split; Col.
   apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 
   exfalso; apply HABC; apply par_id_2.
-  apply l12_9 with Y Z2; Perp.
+  assert (Coplanar B C Y Z2) by (assert_diffs; apply col2_cop__cop with T Z; Cop; ColR).
+  apply l12_9 with Y Z2; [Cop..| |Perp|].
+    apply coplanar_pseudo_trans with B C T; [assumption|..|Cop].
+    assert_diffs; apply col_cop__cop with Z; Col; Cop.
+    assert_diffs; apply col_cop__cop with Z; Cop; ColR.
+    exists D; left; split; Col.
   apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 
-  assert (H := HXYZ1); apply HTC in H; destruct H as [x [HCong1 HCong2]]; exists x;
-  assert (H := HXYZ2); apply HTC in H; destruct H as [y [HCong3 HCong4]]; exists y.
+  assert (H := HXYZ1); apply HTC in H;
+  destruct H as [x [HCong1 [HCong2 HCop1]]]; exists x;
+  assert (H := HXYZ2); apply HTC in H;
+  destruct H as [y [HCong3 [HCong4 HCop2]]]; exists y.
+  assert (HYM1 : Y <> M1) by (intro; treat_equalities; auto).
+  assert (HYM2 : Y <> M2) by (intro; treat_equalities; auto).
+  assert (HCopA : Coplanar B C T A) by (exists D; left; split; Col).
+  assert (HCopB : Coplanar B C T B) by Cop.
+  assert (HCopC : Coplanar B C T C) by Cop.
+  assert (HCopT : Coplanar B C T T) by Cop.
+  assert (HCopZ : Coplanar B C T Z) by Cop.
+  assert (HCopY : Coplanar B C T Y) by (assert_diffs; apply col_cop__cop with Z; Col).
+  assert (HCopX : Coplanar B C T X) by (apply col_cop__cop with Y; Col).
+  assert (HCopZ1 : Coplanar B C T Z1).
+  { assert (~ Col A B Y).
+      intro; destruct (perp_not_col2 A B Y Z1) as [|HNCol]; Perp; apply HNCol; ColR.
+    apply coplanar_pseudo_trans with A B Y; [| |apply coplanar_pseudo_trans with B C T..|]; Cop.
+  }
+  assert (HCopZ2 : Coplanar B C T Z2).
+  { assert (~ Col A C Y).
+      intro; destruct (perp_not_col2 A C Y Z2) as [|HNCol]; Perp; apply HNCol; ColR.
+    apply coplanar_pseudo_trans with A C Y;
+    [|apply coplanar_pseudo_trans with B C T| |apply coplanar_pseudo_trans with B C T|]; Cop.
+  }
+  assert (HCopx : Coplanar B C T x).
+    apply coplanar_pseudo_trans with X Y Z1; trivial; apply coplanar_pseudo_trans with B C T; assumption.
+  assert (HCopy : Coplanar B C T y).
+    apply coplanar_pseudo_trans with X Y Z2; trivial; apply coplanar_pseudo_trans with B C T; assumption.
+  assert (HCop : Coplanar X Y x y).
+    apply coplanar_pseudo_trans with B C T; assumption.
   assert (HxTy : Col x T y) by (elim (eq_dec_points T x); intro; elim (eq_dec_points T y);
                                 intro; try (subst; Col); apply col_permutation_4;
-                                apply perp_perp_col with X Y; apply perp_bisect_perp;
-                                apply cong_perp_bisect; Cong).
+                                apply cop_perp2__col with X Y; trivial; apply perp_bisect_perp;
+                                apply cong_cop_perp_bisect; Cong; Cop).
   assert (HABx : Col A B x).
     {
     elim (eq_dec_points A M1); intro HAM1; subst.
 
       {
-      apply cong_perp_bisect_col with Y Z1; trivial.
+      apply cong_cop2_perp_bisect_col with Y Z1; trivial.
+        exists M1; left; split; Col.
+        apply coplanar_pseudo_trans with B C T; assumption.
         apply cong_transitivity with X x; Cong.
       apply perp_mid_perp_bisect; try split; Cong.
       }
@@ -369,7 +443,9 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
       {
       assert (Col M1 A x).
         {
-        apply cong_perp_bisect_col with Y Z1; trivial.
+        apply cong_cop2_perp_bisect_col with Y Z1; trivial.
+          exists M1; left; split; Col.
+          apply coplanar_pseudo_trans with B C T; assumption.
           apply cong_transitivity with X x; Cong.
         apply perp_mid_perp_bisect; try split; Cong.
         apply perp_left_comm; apply perp_col with B; Col.
@@ -383,7 +459,9 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
     elim (eq_dec_points A M2); intro HAM1; subst.
 
       {
-      apply cong_perp_bisect_col with Y Z2; trivial.
+      apply cong_cop2_perp_bisect_col with Y Z2; trivial.
+        exists M2; left; split; Col.
+        apply coplanar_pseudo_trans with B C T; assumption.
         apply cong_transitivity with X y; Cong.
       apply perp_mid_perp_bisect; try split; Cong.
       }
@@ -391,7 +469,9 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
       {
       assert (Col M2 A y).
         {
-        apply cong_perp_bisect_col with Y Z2; trivial.
+        apply cong_cop2_perp_bisect_col with Y Z2; trivial.
+          exists M2; left; split; Col.
+          apply coplanar_pseudo_trans with B C T; assumption.
           apply cong_transitivity with X y; Cong.
         apply perp_mid_perp_bisect; try split; Cong.
         apply perp_left_comm; apply perp_col with C; Col.
@@ -405,11 +485,11 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
     assert (A = x) by (apply l6_21 with A B C A; Col); treat_equalities.
     assert (H : Par B C A T).
     {
-      apply l12_9 with X Y.
+      apply l12_9 with X Y; try (apply coplanar_pseudo_trans with B C T; assumption).
 
         apply perp_sym; apply perp_col2 with Z T; Perp; assert_cols; ColR.
-
-        apply perp_bisect_perp; apply cong_perp_bisect; Cong.
+        apply perp_bisect_perp; apply cong_cop_perp_bisect; Cong.
+        exists T; left; split; Col.
     }
     elim H; clear H; intro H.
 
@@ -419,11 +499,11 @@ elim (Col_dec X Y Z1); intro HXYZ1; elim (Col_dec X Y Z2); intro HXYZ2.
   }
   assert (HPar : Par B C x y).
   {
-    apply l12_9 with X Y.
+    apply l12_9 with X Y; try (apply coplanar_pseudo_trans with B C T; assumption).
 
       apply perp_sym; apply perp_col2 with T Z; Perp; assert_cols; ColR.
 
-      apply perp_bisect_perp; apply cong_perp_bisect; Cong.
+      apply perp_bisect_perp; apply cong_cop_perp_bisect; Cong; Cop.
   }
   clear HPerp1; clear HPerp2; clear HPerp3.
   clear HCong1; clear HCong2; clear HCong3; clear HCong4.

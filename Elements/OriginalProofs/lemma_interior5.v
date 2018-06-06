@@ -1,14 +1,7 @@
-Require Export GeoCoq.Elements.OriginalProofs.lemma_betweennotequal.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_equalitysymmetric.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_nullsegment3.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_sumofparts.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_doublereverse.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_congruenceflip.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_extension.
 
 Section Euclid.
-
-Context `{Ax:euclidean_neutral}.
-
+Context `{Ax:euclidean_neutral_ruler_compass}.
 Lemma lemma_interior5 : 
    forall A B C D a b c d, 
    BetS A B C -> BetS a b c -> Cong A B a b -> Cong B C b c -> Cong A D a d -> Cong C D c d ->
@@ -24,14 +17,11 @@ assert (~ eq C A).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists M, (BetS C A M /\ Cong A M B C)) by (conclude postulate_extension);destruct Tf as [M];spliter.
-assert (BetS M A C) by (conclude axiom_betweennesssymmetry).
-assert (neq M A) by (forward_using lemma_betweennotequal).
-assert (BetS M A C) by (conclude axiom_betweennesssymmetry).
+assert (Tf:exists M, (BetS C A M /\ Cong A M B C)) by (conclude lemma_extension);destruct Tf as [M];spliter.
 assert (Cong A M M A) by (conclude cn_equalityreverse).
 assert (Cong M A A M) by (conclude lemma_congruencesymmetric).
 assert (Cong M A B C) by (conclude lemma_congruencetransitive).
-assert (neq b c) by (conclude lemma_nullsegment3).
+assert (neq b c) by (conclude axiom_nocollapse).
 assert (neq a c) by (forward_using lemma_betweennotequal).
 assert (~ eq c a).
  {
@@ -40,30 +30,20 @@ assert (~ eq c a).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists m, (BetS c a m /\ Cong a m b c)) by (conclude postulate_extension);destruct Tf as [m];spliter.
-assert (BetS m a c) by (conclude axiom_betweennesssymmetry).
+assert (Tf:exists m, (BetS c a m /\ Cong a m b c)) by (conclude lemma_extension);destruct Tf as [m];spliter.
 assert (Cong m a a m) by (conclude cn_equalityreverse).
 assert (Cong m a b c) by (conclude lemma_congruencetransitive).
 assert (Cong b c m a) by (conclude lemma_congruencesymmetric).
 assert (Cong B C m a) by (conclude lemma_congruencetransitive).
 assert (Cong M A m a) by (conclude lemma_congruencetransitive).
-assert (Cong A C a c) by (conclude lemma_sumofparts).
+assert (Cong A C a c) by (conclude cn_sumofparts).
 assert (Cong c a C A) by (forward_using lemma_doublereverse).
 assert (Cong C A c a) by (conclude lemma_congruencesymmetric).
-assert (neq A B) by (forward_using lemma_betweennotequal).
-assert (~ eq B A).
- {
- intro.
- assert (eq A B) by (conclude lemma_equalitysymmetric).
- contradict.
- }
 assert (BetS C B A) by (conclude axiom_betweennesssymmetry).
 assert (BetS B A M) by (conclude lemma_3_6a).
 assert (BetS c b a) by (conclude axiom_betweennesssymmetry).
 assert (BetS b a m) by (conclude lemma_3_6a).
 assert (Cong A M a m) by (forward_using lemma_congruenceflip).
-assert (Cong b a B A) by (forward_using lemma_doublereverse).
-assert (Cong B A b a) by (conclude lemma_congruencesymmetric).
 assert (Cong D M d m) by (conclude axiom_5_line).
 assert (BetS m a b) by (conclude axiom_betweennesssymmetry).
 assert (BetS M A B) by (conclude axiom_betweennesssymmetry).
@@ -74,5 +54,4 @@ close.
 Qed.
 
 End Euclid.
-
 

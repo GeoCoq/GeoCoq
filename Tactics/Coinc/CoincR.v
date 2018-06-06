@@ -221,7 +221,7 @@ Definition pick_varieties (ss : SS.t) (st : STt)
                              | _ => true
                            end) ss) with
     | None => None
-    | Some s1 =>pick_varieties_aux s1 (SS.remove s1 ss) st
+    | Some s1 => pick_varieties_aux s1 (SS.remove s1 ss) st
   end.
 
 Definition eqop (p1 p2 : option SS.elt) :=

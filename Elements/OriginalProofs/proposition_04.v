@@ -77,7 +77,7 @@ by cases on (BetS A U B \/ eq B U \/ BetS A B U).
  assert (eq w u) by (conclude lemma_layoffunique).
  assert (BetS a u b) by (conclude cn_equalitysub).
  assert (Cong U B u b) by (conclude lemma_differenceofparts).
- assert (Cong V B v b) by (conclude axiom_5_line).
+ assert (Cong V B v b) by (eapply (axiom_5_line) with (B0:=U) (b0:=u) (A0:=A) (a0:=a);assumption) .
  assert (Cong B V b v) by (forward_using lemma_congruenceflip).
  close.
  }
@@ -118,7 +118,7 @@ by cases on (BetS A U B \/ eq B U \/ BetS A B U).
    }
   close.
   }
-(* cases *)
+(** cases *)
  assert (Cong B V b v) by (conclude cn_equalitysub).
  close.
  }
@@ -141,7 +141,7 @@ by cases on (BetS A U B \/ eq B U \/ BetS A B U).
  assert (Cong B V b v) by (conclude lemma_interior5).
  close.
  }
-(* cases *)
+(** cases *)
 assert ((BetS A V C \/ eq C V \/ BetS A C V)) by (conclude lemma_ray1).
 assert (Cong B C b c).
 by cases on (BetS A V C \/ eq C V \/ BetS A C V).
@@ -159,7 +159,8 @@ by cases on (BetS A V C \/ eq C V \/ BetS A C V).
  assert (BetS a v c) by (conclude cn_equalitysub).
  assert (Cong V C v c) by (conclude lemma_differenceofparts).
  assert (Cong V B v b) by (forward_using lemma_congruenceflip).
- assert (Cong B C b c) by (conclude axiom_5_line).
+ 
+ assert (Cong B C b c) by (eauto using  (axiom_5_line _ _ _ _ _ _ _ _ H37 H H38)).
  close.
  }
 {
@@ -194,7 +195,7 @@ by cases on (BetS A V C \/ eq C V \/ BetS A C V).
  assert (Cong B C b c) by (forward_using lemma_congruenceflip).
  close.
  }
-(* cases *)
+(** cases *)
 assert (eq A A) by (conclude cn_equalityreflexive).
 assert (eq C C) by (conclude cn_equalityreflexive).
 assert (eq a a) by (conclude cn_equalityreflexive).

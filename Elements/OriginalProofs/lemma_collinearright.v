@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_8_3.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_collinearright : 
    forall A B C D, 
@@ -22,8 +22,6 @@ assert (~ eq A B).
  assert (Col A A D) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (neq B C) by (conclude lemma_inequalitysymmetric).
-assert ((eq A B \/ eq A C \/ eq B C \/ BetS B A C \/ BetS A B C \/ BetS A C B)) by (conclude_def Col ).
 assert (Per D B A) by (conclude lemma_8_2).
 assert (Per D B C).
 by cases on (eq A B \/ eq A C \/ eq B C \/ BetS B A C \/ BetS A B C \/ BetS A C B).
@@ -31,7 +29,6 @@ by cases on (eq A B \/ eq A C \/ eq B C \/ BetS B A C \/ BetS A B C \/ BetS A C 
  assert (~ ~ Per D B C).
   {
   intro.
-  assert (nCol A B D) by (conclude lemma_rightangleNC).
   assert (Col A B D) by (conclude_def Col ).
   contradict.
   }
@@ -79,7 +76,7 @@ by cases on (eq A B \/ eq A C \/ eq B C \/ BetS B A C \/ BetS A B C \/ BetS A C 
  assert (Per D B C) by (conclude lemma_8_3).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Per C B D) by (conclude lemma_8_2).
 close.
 Qed.

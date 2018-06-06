@@ -16,8 +16,6 @@ Proof.
 intros.
 assert (nCol B A C) by (conclude lemma_rightangleNC).
 assert (neq C B) by (forward_using lemma_NCdistinct).
-assert (nCol A M p) by (conclude lemma_rightangleNC).
-assert (neq M p) by (forward_using lemma_NCdistinct).
 assert (~ eq B M).
  {
  intro.
@@ -36,7 +34,6 @@ assert (neq C B) by (forward_using lemma_NCdistinct).
 assert (Col B p M) by (conclude lemma_collinear4).
 assert (Col p M B) by (forward_using lemma_collinearorder).
 assert (Per B M A) by (conclude lemma_collinearright).
-assert (Col p B M) by (forward_using lemma_collinearorder).
 assert (Col B C p) by (forward_using lemma_collinearorder).
 assert (Col B C M) by (forward_using lemma_collinearorder).
 assert (neq B C) by (conclude lemma_inequalitysymmetric).
@@ -124,7 +121,7 @@ by cases on (eq B C \/ eq B M \/ eq C M \/ BetS C B M \/ BetS B C M \/ BetS B M 
  assert (Out B C M) by (conclude lemma_ray5).
  close.
  }
-(* cases *)
+(** cases *)
 assert (~ BetS B C M).
  {
  intro.
@@ -177,7 +174,7 @@ by cases on (eq B C \/ eq B M \/ eq C M \/ BetS C B M \/ BetS B C M \/ BetS B M 
  assert (Out C B M) by (conclude lemma_ray5).
  close.
  }
-(* cases *)
+(** cases *)
 assert (BetS B M C) by (conclude lemma_tworays).
 close.
 Qed.

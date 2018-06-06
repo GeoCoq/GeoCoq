@@ -1,11 +1,12 @@
 Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 Require Export GeoCoq.Tarski_dev.Annexes.suma.
 
-(** This development is inspired by The Foundations of Geometry and the Non-Euclidean Plane, by George E Martin, chapters 21 and 22 *)
+(** This development is inspired by The Foundations of Geometry and the Non-Euclidean Plane,
+    by George E Martin, chapters 21 and 22 *)
 
 Section Saccheri.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma sac_perm : forall A B C D, Saccheri A B C D -> Saccheri D C B A.
 Proof.
@@ -35,7 +36,7 @@ Proof.
   intros.
   unfold Lambert in *.
   spliter.
-  repeat split; Perp.
+  repeat split; Perp; Cop.
 Qed.
 
 (** The two following lemmas come from Theorem 21.10 *)
@@ -69,7 +70,7 @@ Proof.
   unfold Lambert in HLam; spliter.
   assert(HNCol : ~ Col A B C) by (apply per_not_col; trivial).
   apply l12_6, par_not_col_strict with C; Col.
-  apply l12_9 with A D; Perp.
+  apply l12_9 with A D; Perp; Cop.
 Qed.
 
 Lemma per2_os__ncol123 : forall A B C D, Per B A D -> Per A D C -> OS A D B C ->
@@ -81,7 +82,7 @@ Proof.
   assert_diffs.
   apply (par_strict_not_col_1 _ _ _ D).
   apply (par_not_col_strict _ _ _ _ D); Col.
-  apply (l12_9 _ _ _ _ A D); Perp.
+  apply (l12_9 _ _ _ _ A D); Perp; Cop.
 Qed.
 
 Lemma per2_os__ncol234 : forall A B C D,
@@ -95,7 +96,7 @@ Proof.
   assert_diffs.
   apply (par_strict_not_col_2 A).
   apply (par_not_col_strict _ _ _ _ D); Col.
-  apply (l12_9 _ _ _ _ A D); Perp.
+  apply (l12_9 _ _ _ _ A D); Perp; Cop.
 Qed.
 
 Lemma sac__ncol123 : forall A B C D, Saccheri A B C D -> ~ Col A B C.
@@ -132,9 +133,15 @@ Proof.
   apply (per2_os__ncol234 A); assumption.
 Qed.
 
+Lemma sac__coplanar : forall A B C D, Saccheri A B C D -> Coplanar A B C D.
+Proof.
+  intros A B C D [_ [_ [_ HOS]]].
+  apply os__coplanar in HOS; Cop.
+Qed.
+
 (** The five following lemmas come from Theorem 21.8 *)
 
-Lemma lt_per2_os__lta : forall A B C D,
+Lemma lt_os_per2__lta : forall A B C D,
   Per B A D -> Per A D C ->
   OS A D B C ->
   Lt A B C D ->
@@ -161,7 +168,7 @@ Proof.
   assert(~ Col E C B) by (intro; apply HNCol2; ColR).
   assert(Par_strict A B C D).
   { apply (par_not_col_strict _ _ _ _ D); Col.
-    apply (l12_9 _ _ _ _ A D); Perp.
+    apply (l12_9 _ _ _ _ A D); Perp; Cop.
   }
   assert_diffs.
   apply (lta_trans _ _ _ B E D).
@@ -180,9 +187,10 @@ Proof.
       - apply l12_6.
         apply (par_strict_col_par_strict _ _ _ D); Par; Col.
 
-      - apply (one_side_transitivity _ _ _ D).
-        2: apply invert_one_side; apply one_side_symmetry; apply out_one_side; Col; apply bet_out; Between.
-        apply not_two_sides_one_side; Col.
+      - apply (one_side_transitivity _ _ _ D);
+        [|apply invert_one_side; apply one_side_symmetry; apply out_one_side; Col;
+          apply bet_out; Between].
+        apply cop__not_two_sides_one_side; Col; Cop.
         intro Hts.
         destruct Hts as [_ [_ [I []]]].
         assert_diffs.
@@ -205,25 +213,26 @@ Proof.
         apply invert_one_side; apply one_side_symmetry; apply out_one_side; Col; apply bet_out; Between.
     }
     intro.
-    assert(HUn := conga__or_out_ts A B E C).
+    assert(HUn := conga_cop__or_out_ts A B E C).
     destruct HUn; auto.
-    assert_cols; Col.
+      apply col_cop__cop with D; Col; apply sac__coplanar, HSac.
+      assert_cols; Col.
     assert(~ TS A B E C); auto.
     apply l9_9_bis.
     apply l12_6.
     apply par_strict_right_comm; apply (par_strict_col_par_strict _ _ _ D); Col.
 Qed.
 
-Lemma lt4321_per2_os__lta : forall A B C D,
+Lemma lt4321_os_per2__lta : forall A B C D,
   Per B A D -> Per A D C ->
   OS A D B C -> Lt D C B A ->
   LtA A B C B C D.
 Proof.
   intros.
-  apply lta_comm, lt_per2_os__lta; Perp; Side.
+  apply lta_comm, lt_os_per2__lta; Perp; Side.
 Qed.
 
-Lemma lta_per2_os__lt : forall A B C D,
+Lemma lta_os_per2__lt : forall A B C D,
   Per B A D -> Per A D C ->
   OS A D B C -> LtA B C D A B C ->
   Lt A B C D.
@@ -234,20 +243,20 @@ Proof.
     apply lt_comm in Hlt.
     apply (not_and_lta B C D A B C).
     split; trivial.
-    apply lt4321_per2_os__lta; trivial.
+    apply lt4321_os_per2__lta; trivial.
   - destruct HLtA as [HLeA HNCongA].
     apply HNCongA.
     apply conga_sym, sac__conga.
     unfold Saccheri; repeat (split; trivial).
 Qed.
 
-Lemma lta123234_per2_os__lt : forall A B C D,
+Lemma lta123234_os_per2__lt : forall A B C D,
   Per B A D -> Per A D C ->
   OS A D B C -> LtA A B C B C D ->
   Lt D C B A.
 Proof.
   intros.
-  apply lta_per2_os__lt; Perp; Side.
+  apply lta_os_per2__lt; Perp; Side.
   apply lta_comm; trivial.
 Qed.
 
@@ -258,10 +267,10 @@ Lemma conga_per2_os__cong : forall A B C D,
 Proof.
   intros A B C D HPer1 HPer2 Hos HCongA.
   destruct (or_lt_cong_gt A B C D) as [Hlt | [Hlt | Hcong]]; trivial; exfalso.
-  - destruct (lt_per2_os__lta A B C D); auto.
+  - destruct (lt_os_per2__lta A B C D); auto.
   - unfold Gt in Hlt.
     apply lt_comm in Hlt.
-    destruct (lt4321_per2_os__lta A B C D); CongA.
+    destruct (lt4321_os_per2__lta A B C D); CongA.
 Qed.
 
 (** The two following lemmas constitute Theorem 21.11 *)
@@ -334,12 +343,21 @@ Proof.
   destruct HN as [N HN].
   assert(HPerp1 := mid2_sac__perp_lower A B C D M N HSac HM HN).
   assert(HPerp2 := mid2_sac__perp_upper A B C D M N HSac HM HN).
+  assert (~ Col A B C) by (apply sac__ncol123 with D, HSac).
   unfold Saccheri in HSac.
   spliter.
   assert_diffs.
+  assert (~ Col B A D) by (apply per_not_col; auto).
+  assert (Coplanar A B C A) by (exists A; left; split; Col).
+  assert (Coplanar A B C B) by (exists B; left; split; Col).
+  assert (Coplanar A B C C) by (exists C; right; left; split; Col).
+  assert (Coplanar A B C D) by Cop.
+  assert (Coplanar A B C M) by (exists B; left; split; Col).
+  assert (Coplanar A B C N).
+    apply coplanar_perm_12, col_cop__cop with D; Col; Cop.
   apply (par_not_col_strict _ _ _ _ C); Col.
-  2: apply (one_side_not_col123 _ _ _ B); Side.
-  apply (l12_9 _ _ _ _ M N); auto.
+    apply (l12_9 _ _ _ _ M N); auto; apply coplanar_pseudo_trans with A B C; assumption.
+    apply per_not_col; auto.
 Qed.
 
 Lemma sac__par_strict1234 : forall A B C D, Saccheri A B C D -> Par_strict A B C D.
@@ -347,19 +365,46 @@ Proof.
   intros A B C D HSac.
   apply par_not_col_strict with C; Col; [|apply sac__ncol123 with D; trivial].
   assert (Hd := sac_distincts A B C D HSac); unfold Saccheri in HSac; spliter.
-  apply l12_9 with A D; Perp.
+  apply l12_9 with A D; Perp; Cop.
 Qed.
 
 Lemma sac__par1423 : forall A B C D, Saccheri A B C D -> Par A D B C.
 Proof.
   intros A B C D HSac.
-  apply par_strict_par, sac__par_strict1423; trivial.
+  apply par_strict_par, sac__par_strict1423, HSac.
 Qed.
 
 Lemma sac__par1234 : forall A B C D, Saccheri A B C D -> Par A B C D.
 Proof.
   intros A B C D HSac.
-  apply par_strict_par, sac__par_strict1234; trivial.
+  apply par_strict_par, sac__par_strict1234, HSac.
+Qed.
+
+Lemma lam__par_strict1234 : forall A B C D, Lambert A B C D -> Par_strict A B C D.
+Proof.
+  unfold Lambert.
+  intros A B C D HLam.
+  spliter.
+  apply (par_not_col_strict _ _ _ _ C); Col.
+    apply (l12_9 _ _ _ _ A D); Perp; Cop.
+  apply per_not_col; auto.
+Qed.
+
+Lemma lam__par_strict1423 : forall A B C D, Lambert A B C D -> Par_strict A D B C.
+Proof.
+  intros; apply par_strict_right_comm, lam__par_strict1234, lam_perm; assumption.
+Qed.
+
+Lemma lam__par1234 : forall A B C D, Lambert A B C D -> Par A B C D.
+Proof.
+  intros A B C D HLam.
+  apply par_strict_par, lam__par_strict1234, HLam.
+Qed.
+
+Lemma lam__par1423 : forall A B C D, Lambert A B C D -> Par A D B C.
+Proof.
+  intros A B C D HLam.
+  apply par_strict_par, lam__par_strict1423, HLam.
 Qed.
 
 (** The four following constitute Theorem 22.3 *)
@@ -374,6 +419,7 @@ Proof.
   assert(Hdiff := sac_distincts A B C D HSac).
   assert(HPerp1 := mid2_sac__perp_lower A B C D M N HSac HM HN).
   assert(HPerp2 := mid2_sac__perp_upper A B C D M N HSac HM HN).
+  assert (~ Col A B C) by (apply sac__ncol123 with D, HSac).
   unfold Saccheri in HSac.
   spliter.
   assert_diffs.
@@ -383,6 +429,8 @@ Proof.
   - apply (l8_3 D); Perp; Col.
   - apply perp_per_1; auto.
     apply (perp_col1 _ _ _ C); Perp; Col.
+  - apply coplanar_perm_5, col_cop__cop with C; Col.
+    apply coplanar_perm_22, col_cop__cop with D; Col; Cop.
 Qed.
 
 Lemma mid2_sac__lam6534 : forall A B C D M N,
@@ -401,7 +449,8 @@ Lemma lam6521_mid2__sac : forall A B C D M N,
   Saccheri A B C D.
 Proof.
   intros A B C D M N HLam HM HN.
-  unfold Lambert in HLam.
+  assert (HLam' := HLam).
+  unfold Lambert in HLam'.
   spliter.
   assert_diffs.
   assert(Per D A B) by (apply (l8_3 N); Col).
@@ -419,15 +468,13 @@ Proof.
   assert(ReflectL B C M N) by (apply l10_4_spec; auto).
   repeat split; auto.
   - Perp.
-  - apply (image_preserves_per D A B _ _ _ M N); auto.
+  - apply (image_spec_preserves_per D A B _ _ _ M N); auto.
   - apply cong_left_commutativity.
     apply (l10_10_spec M N); auto.
   - apply (col_one_side _ N); Col.
     apply l12_6.
     apply (par_strict_col_par_strict _ _ _ M); Col.
-    apply (par_not_col_strict _ _ _ _ M); Col.
-      apply (l12_9 _ _ _ _ M N); Perp.
-      apply (per_not_col); Perp.
+    apply lam__par_strict1423 in HLam; Par.
 Qed.
 
 Lemma lam6534_mid2__sac : forall A B C D M N,
@@ -447,16 +494,14 @@ Lemma cong_lam__per : forall A B C D,
   Cong A D B C ->
   Per B C D.
 Proof.
-  unfold Lambert.
   intros A B C D HLam HCong.
+  assert (HLam' := HLam).
+  unfold Lambert in HLam'.
   spliter.
   apply l8_2, (l11_17 A D C); auto.
   apply sac__conga.
   repeat split; Perp; Cong.
-  apply l12_6.
-  apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ D A); Perp.
-    apply per_not_col; auto.
+  apply one_side_symmetry, l12_6, lam__par_strict1234, HLam.
 Qed.
 
 Lemma lam_lt__acute : forall A B C D,
@@ -464,18 +509,16 @@ Lemma lam_lt__acute : forall A B C D,
   Lt A D B C ->
   Acute B C D.
 Proof.
-  unfold Lambert.
   intros A B C D HLam HLt.
+  assert (HLam' := HLam).
+  unfold Lambert in HLam'.
   spliter.
   exists A.
   exists D.
   exists C.
   split; trivial.
-  apply lta_left_comm, lt_per2_os__lta; Perp; [|apply lt_right_comm; trivial].
-  apply l12_6.
-  apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ D A); Perp.
-    apply per_not_col; auto.
+  apply lta_left_comm, lt_os_per2__lta; Perp; [|apply lt_right_comm; trivial].
+  apply one_side_symmetry, l12_6, lam__par_strict1234, HLam.
 Qed.
 
 Lemma lam_lt__obtuse : forall A B C D,
@@ -483,18 +526,16 @@ Lemma lam_lt__obtuse : forall A B C D,
   Lt B C A D ->
   Obtuse B C D.
 Proof.
-  unfold Lambert.
   intros A B C D HLam HLt.
+  assert (HLam' := HLam).
+  unfold Lambert in HLam'.
   spliter.
   exists A.
   exists D.
   exists C.
   split; trivial.
-  apply lta_left_comm, lt_per2_os__lta; Perp; [|apply lt_right_comm; trivial].
-  apply l12_6.
-  apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ D A); Perp.
-    apply not_col_permutation_4, per_not_col; auto.
+  apply lta_left_comm, lt_os_per2__lta; Perp; [|apply lt_right_comm; trivial].
+  apply invert_one_side, l12_6, lam__par_strict1234, HLam.
 Qed.
 
 Lemma lam_per__cong : forall A B C D,
@@ -618,13 +659,13 @@ Proof.
   }
   split.
   - intro HLt.
-    apply (obtuse_conga__obtuse M B A); CongA.
+    apply (conga_obtuse__obtuse M B A); CongA.
     apply (lam_lt__obtuse N); trivial.
     apply lt_comm, lt_mid2__lt12 with C D; trivial.
   - intro HObtuse.
     apply lt_mid2__lt13 with M N; trivial.
     apply lt_comm, lam_obtuse__lt; trivial.
-    apply (obtuse_conga__obtuse A B C); trivial.
+    apply (conga_obtuse__obtuse A B C); trivial.
 Qed.
 
 
@@ -648,7 +689,9 @@ Proof.
     subst Q.
     destruct HSac.
     spliter.
-    assert(Col C P D) by (apply (per_per_col _ _ A); Perp).
+    assert(Col C P D).
+      apply cop_per2__col with A; Perp.
+      apply coplanar_perm_3, col_cop__cop with B; Col; Cop.
     apply HNCol2; ColR.
   }
   assert(HSac1 : Saccheri A B P Q).
@@ -669,14 +712,14 @@ Proof.
   apply (bet_suma__per _ _ _ B P C); auto.
   apply (conga3_suma__suma B P Q Q P C B P C); try (apply conga_refl); auto.
   - exists C.
-    repeat (split; CongA).
+    repeat (split; CongA); [|exists C; left; split; Col].
     apply l9_9.
     destruct HSac1.
     destruct HSac2.
     spliter.
     repeat split; auto.
-    apply (per2_os__ncol234 A); auto.
-    apply (per2_os__ncol234 D); auto.
+      apply (per2_os__ncol234 A); auto.
+      apply (per2_os__ncol234 D); auto.
     exists P; Col.
 
   - apply (out_conga B P Q A B P); try apply (out_trivial); auto.
@@ -716,8 +759,10 @@ Proof.
   assert(Q <> D).
   { intro.
     subst Q.
-    assert(Col C P D) by (apply (per_per_col _ _ A); Perp).
     assert(Haux : ~ Col B C D) by (apply (per2_os__ncol234 A); auto).
+    assert(Col C P D). 
+      apply cop_per2__col with A; Perp.
+      apply coplanar_perm_3, col_cop__cop with B; Col; Cop.
     apply Haux; ColR.
   }
   assert(HSuma := ex_suma A B C A B C).
@@ -726,7 +771,7 @@ Proof.
   assert(Hlta1 : LtA A B C B P Q).
   { apply (conga_preserves_lta A B P B P Q); try (apply conga_refl); auto.
       apply (out_conga A B P A B P); try (apply out_trivial); CongA; apply bet_out; auto.
-    apply lt4321_per2_os__lta; auto.
+    apply lt4321_os_per2__lta; auto.
     apply (per_col _ _ D); Col.
     Perp.
     apply lt_comm; auto.
@@ -736,7 +781,7 @@ Proof.
     - apply sac__conga in HSac.
       apply (out_conga D C B A B C); try (apply out_trivial); CongA.
       apply l6_6; apply bet_out; Between.
-    - apply lt4321_per2_os__lta; auto.
+    - apply lt4321_os_per2__lta; auto.
       apply (per_col _ _ A); Perp; Col.
       apply (l8_3 A); Perp; Col.
       apply (col_one_side _ A); Col; apply (l9_17 _ _ B); Between; Side.
@@ -750,11 +795,11 @@ Proof.
   }
   assert(SAMS B P Q Q P C).
   { repeat split; auto.
-    right; intro; Col.
+      right; intro; Col.
     exists C.
     repeat (split; CongA).
-    intro Hts.
-    destruct Hts as [_ []]; assert_cols; Col.
+      intro Hts; destruct Hts as [_ []]; assert_cols; Col.
+    exists C; left; split; Col.
   }
   assert(SAMS A B C A B C).
   { destruct Hlta1.
@@ -768,6 +813,8 @@ Proof.
   exists C.
   split; CongA.
   split; auto.
+  split.
+    exists C; left; split; Col.
   apply conga_line; auto.
 Qed.
 
@@ -791,8 +838,10 @@ Proof.
   assert(Q <> D).
   { intro.
     subst Q.
-    assert(Col C P D) by (apply (per_per_col _ _ A); Perp).
     assert(Haux : ~ Col B C D) by (apply (per2_os__ncol234 A); auto).
+    assert(Col C P D).
+      apply cop_per2__col with A; Perp.
+      apply coplanar_perm_3, col_cop__cop with B; Col; Cop.
     apply Haux; ColR.
   }
   assert(OS D Q C P) by (apply (col_one_side _ A); Col; apply (l9_17 _ _ B); Side; Between).
@@ -807,7 +856,7 @@ Proof.
   apply (sams_lta2_suma2__lta B P Q Q P C _ _ _ A B C A B C); auto.
   - apply (conga_preserves_lta B P Q A B P); try (apply conga_refl); auto.
       apply (out_conga A B P A B P); try (apply out_trivial); CongA; apply bet_out; auto.
-    apply lt_per2_os__lta; auto.
+    apply lt_os_per2__lta; auto.
     apply (per_col _ _ D); Col.
     Perp.
 
@@ -816,13 +865,13 @@ Proof.
       apply (out_conga B C D A B C); try (apply out_trivial); CongA.
       apply l6_6; apply bet_out; Between.
     }
-    apply lt4321_per2_os__lta; Side.
+    apply lt4321_os_per2__lta; Side.
     apply (per_col _ _ A); Perp; Col.
     apply (l8_3 A); Col.
     apply (cong2_lt__lt A B P Q); Cong.
 
   - exists C.
-    repeat (split; CongA).
+    repeat (split; CongA); [|exists C; left; split; Col].
     apply l9_9.
     assert(HNCol4 : ~ Col C P Q).
     { apply (per2_os__ncol234 D); auto.
@@ -830,7 +879,7 @@ Proof.
       apply (l8_3 A); Perp; Col.
     }
     repeat split; Col.
-    intro; apply HNCol4; ColR.
+      intro; apply HNCol4; ColR.
     exists P; Col.
 Qed.
 
@@ -844,7 +893,7 @@ Proof.
   intros A B C D P Q HSac HP HQ HAQ HBP HPC HPerQ HPer.
   assert(Hdiff := sac_distincts A B C D HSac).
   spliter.
-  elim(Cong_dec P Q A B); auto.
+  elim(cong_dec P Q A B); auto.
   intro.
   exfalso.
   apply (nlta A B C).
@@ -870,7 +919,7 @@ Proof.
   intros A B C D P Q HSac HP HQ HAQ HBP HPC HPerQ Hacute.
   assert(Hdiff := sac_distincts A B C D HSac).
   spliter.
-  elim(Cong_dec P Q A B).
+  elim(cong_dec P Q A B).
   { intro.
     exfalso.
     apply (nlta A B C).
@@ -898,7 +947,7 @@ Proof.
   intros A B C D P Q HSac HP HQ HAQ HBP HPC HPerQ Hobtuse.
   assert(Hdiff := sac_distincts A B C D HSac).
   spliter.
-  elim(Cong_dec P Q A B).
+  elim(cong_dec P Q A B).
   { intro.
     exfalso.
     apply (nlta A B C).
@@ -964,8 +1013,10 @@ Proof.
   assert(D <> S).
   { intro.
     subst S.
-    assert(Col C R D) by (apply (per_per_col _ _ A); Perp).
     assert(Haux : ~ Col B C D) by (apply (per2_os__ncol234 A); auto).
+    assert(Col C R D).
+      apply cop_per2__col with A; Perp.
+      apply coplanar_perm_3, col_cop__cop with B; Col; Cop.
     apply Haux; ColR.
   }
   assert(HJ := Hlt).
@@ -981,11 +1032,12 @@ Proof.
     apply (per_col _ _ D); Col.
     apply (per_col _ _ R); Col.
     apply (one_side_transitivity _ _ _ R).
-    2: apply invert_one_side; apply out_one_side; Col; apply l6_6; apply bet_out; auto.
-    apply (col_one_side _ D); Col.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ C); Col.
-    apply sac__par_strict1423; auto.
+    - apply (col_one_side _ D); Col.
+      apply l12_6.
+      apply (par_strict_col_par_strict _ _ _ C); Col.
+      apply sac__par_strict1423; auto.
+    - apply invert_one_side, out_one_side; Col.
+      apply l6_6, bet_out; auto.
   }
   assert(HSac2 : Saccheri D C J S).
   { repeat split; auto.
@@ -993,12 +1045,12 @@ Proof.
     apply (per_col _ _ R); Col; apply (l8_3 A); Col.
     apply (cong_transitivity _ _ A B); Cong.
     apply (one_side_transitivity _ _ _ R).
-    2: apply invert_one_side; apply out_one_side; try (left; intro; apply HNCol1; ColR); apply l6_6; apply bet_out; auto.
-    apply (col_one_side _ A); Col.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ B); Col.
-    apply par_strict_comm.
-    apply sac__par_strict1423; auto.
+    - apply (col_one_side _ A); Col.
+      apply l12_6, (par_strict_col_par_strict _ _ _ B); Col.
+      apply par_strict_comm, sac__par_strict1423; auto.
+    - apply invert_one_side, out_one_side.
+        left; intro; apply HNCol1; ColR.
+      apply l6_6, bet_out; auto.
   }
   assert(CongA A B J B J S) by (apply sac__conga; auto).
   assert(CongA D C J C J S) by (apply sac__conga; auto).
@@ -1025,19 +1077,14 @@ Proof.
     { exists B.
       split; CongA.
       apply os_ts__inangle.
-      - apply l9_2.
-        apply (l9_8_2 _ _ R).
+      - apply l9_2, (l9_8_2 _ _ R).
           repeat split; Col; exists J; Col; Between.
-        apply invert_one_side.
-        apply out_one_side; Col.
-        apply l6_6.
-        apply bet_out; auto.
-
-      - apply invert_one_side.
-        apply (col_one_side _ R); Col.
+        apply invert_one_side, out_one_side; Col.
+        apply l6_6, bet_out; auto.
+      - apply invert_one_side, (col_one_side _ R); Col.
     }
     intro Habs.
-    apply conga__or_out_ts in Habs.
+    apply conga_cop__or_out_ts in Habs; [|exists R; left; split; Col].
     destruct Habs.
       assert_cols; Col.
     assert(~ TS S J B C); auto.
@@ -1051,30 +1098,31 @@ Proof.
   - repeat split; auto.
     right; intro; apply HNCol5; Col.
     exists R.
-    split; CongA; split.
+    split; CongA; repeat split; Cop.
       apply l9_9; auto.
     apply l9_9_bis.
     apply l12_6.
     apply (par_not_col_strict _ _ _ _ J); Col.
     apply (par_col_par _ _ _ S); Col.
-    unfold Saccheri in HSac2.
-    spliter.
-    apply (l12_9 _ _ _ _ D S); Perp.
+    apply sac__par1234, HSac2.
 
   - exists C.
     repeat (split; CongA).
-    apply l9_9.
-    apply (l9_8_2 _ _ S).
-    2: apply l12_6; assert(HPars := sac__par_strict1423 A B J S HSac1); Par. 
+    { apply l9_9.
+      apply (l9_8_2 _ _ S);
+      [|apply l12_6; assert(HPars := sac__par_strict1423 A B J S HSac1); Par].
     apply l9_2.
     apply (l9_8_2 _ _ R).
-    repeat split; Col; exists J; split; Col; Between.
+      repeat split; Col; exists J; split; Col; Between.
     apply out_one_side; Col.
-    apply l6_6.
-    apply bet_out; auto.
-
+    apply l6_6, bet_out; auto.
+    }
+    apply coplanar_trans_1 with S.
+      apply per_not_col; auto; apply l8_2, per_col with D; Col.
+      apply sac__coplanar in HSac1; Cop.
+    apply coplanar_perm_22, col_cop__cop with D; Col; Cop.
   - exists R.
-    repeat (split; CongA).
+    repeat (split; CongA); Cop.
     apply l9_9; auto.
 Qed.
 
@@ -1096,8 +1144,10 @@ Proof.
   assert(D <> S).
   { intro.
     subst S.
-    assert(Col C R D) by (apply (per_per_col _ _ A); Perp).
     assert(Haux : ~ Col B C D) by (apply (per2_os__ncol234 A); auto).
+    assert(Col C R D).
+      apply cop_per2__col with A; Perp.
+      apply coplanar_perm_3, col_cop__cop with B; Col; Cop.
     apply Haux; ColR.
   }
   assert(HPars := sac__par_strict1423 A B C D HSac).
@@ -1113,18 +1163,17 @@ Proof.
   assert_diffs.
   assert(R <> I) by (intro; subst I; destruct Hlt; Cong).
   assert(CongA A B C B C D) by (apply sac__conga; auto).
-  apply (obtuse_gea_obtuse _ _ _ B C D).
-  2: apply conga__lea; CongA.
+  apply (obtuse_gea_obtuse _ _ _ B C D); [|apply conga__lea; CongA].
   apply (obtuse_chara _ _ _ R); auto.
   assert(HSac1 : Saccheri A B I S).
   { repeat split; Cong.
     apply (per_col _ _ D); Col.
     apply (per_col _ _ R); Col.
     apply (one_side_transitivity _ _ _ R).
-    2: apply invert_one_side; apply out_one_side; Col; apply bet_out; auto.
-    apply (col_one_side _ D); Col.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ C); Col.
+    - apply (col_one_side _ D); Col.
+      apply l12_6, (par_strict_col_par_strict _ _ _ C); Col.
+    - apply invert_one_side, out_one_side; Col.
+      apply bet_out; auto.
   }
   assert(HSac2 : Saccheri D C I S).
   { repeat split; auto.
@@ -1132,10 +1181,11 @@ Proof.
     apply (per_col _ _ R); Col; apply (l8_3 A); Col.
     apply (cong_transitivity _ _ A B); Cong.
     apply (one_side_transitivity _ _ _ R).
-    2: apply invert_one_side; apply out_one_side; try (left; intro; apply HNCol1; ColR); apply bet_out; auto.
-    apply (col_one_side _ A); Col.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ B); Col; Par.
+    - apply (col_one_side _ A); Col.
+      apply l12_6, (par_strict_col_par_strict _ _ _ B); Col; Par.
+    - apply invert_one_side, out_one_side.
+        left; intro; apply HNCol1; ColR.
+      apply bet_out; auto.
   }
   assert(CongA A B I B I S) by (apply sac__conga; auto).
   assert(CongA D C I C I S) by (apply sac__conga; auto).
@@ -1168,18 +1218,16 @@ Proof.
     { exists C.
       split; CongA.
       apply os2__inangle.
-      - apply invert_one_side.
-        apply (col_one_side _ R); Col; Side.
-
-      - apply (one_side_transitivity _ _ _ R).
-        2: apply invert_one_side; apply out_one_side; Col; apply l6_6; apply bet_out; auto.
-        apply out_one_side.
+        apply invert_one_side, (col_one_side _ R); Col; Side.
+      apply (one_side_transitivity _ _ _ R).
+      - apply out_one_side.
           right; intro; apply HNCol3; ColR.
-        apply l6_6.
-        apply bet_out; Between.
+        apply l6_6, bet_out; Between.
+      - apply invert_one_side, out_one_side; Col.
+        apply l6_6, bet_out; auto.
     }
     intro Habs.
-    apply conga__or_out_ts in Habs.
+    apply conga_cop__or_out_ts in Habs; [|exists R; left; split; Col].
     destruct Habs.
       assert_cols; Col.
     assert(~ TS S I C B); auto.
@@ -1191,6 +1239,7 @@ Proof.
     exists D.
     split; CongA; split.
       apply l9_9; auto.
+    split; Cop.
     apply l9_9_bis.
     apply (one_side_transitivity _ _ _ S).
     apply out_one_side; Col; apply bet_out; Between.
@@ -1198,18 +1247,23 @@ Proof.
     assert(Haux := sac__par_strict1423 D C I S HSac2); Par.
 
   - exists D.
-    repeat (split; CongA).
+    repeat (split; CongA); Cop.
     apply l9_9; auto.
 
   - exists A.
     repeat (split; CongA).
-    apply l9_9.
-    apply l9_2.
-    apply (l9_8_2 _ _ S).
-      repeat split; Col; try (intro; apply HNCol2; ColR); exists R; split; Col.
-    apply one_side_symmetry.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ D); Col; Par.
+    { apply l9_9.
+      apply l9_2.
+      apply (l9_8_2 _ _ S).
+        repeat split; Col; try (intro; apply HNCol2; ColR); exists R; split; Col.
+      apply one_side_symmetry, l12_6.
+      apply (par_strict_col_par_strict _ _ _ D); Col; Par.
+    }
+    assert (HNCol6 : ~ Col B A D) by (apply per_not_col; auto).
+    apply coplanar_perm_13, coplanar_trans_1 with S.
+      intro; apply HNCol6; ColR.
+      apply sac__coplanar in HSac1; Cop.
+    apply coplanar_perm_19, col_cop__cop with D; Col; Cop.
 Qed.
 
 Lemma t22_8__cong : forall A B C D R S,
@@ -1218,20 +1272,18 @@ Lemma t22_8__cong : forall A B C D R S,
 Proof.
   intros A B C D R S HSac.
   intros.
-  elim(Cong_dec R S A B); auto.
+  elim(cong_dec R S A B); auto.
   intro.
   assert(Hdiff := sac_distincts A B C D HSac).
   spliter.
   exfalso.
   apply (nlta A B C).
-  elim(le_cases R S A B).
-  - intro.
-    apply obtuse_per__lta; auto.
+  destruct(le_cases R S A B).
+  - apply obtuse_per__lta; auto.
     apply (t22_8__obtuse _ _ _ D R S); auto.
     split; auto.
 
-  - intro.
-    apply acute_per__lta; auto.
+  - apply acute_per__lta; auto.
     apply (t22_8__acute _ _ _ D R S); auto.
     split; Cong.
 Qed.
@@ -1246,20 +1298,14 @@ Proof.
   intros A B C D R S HSac.
   intros.
   assert_diffs.
-  elim(Cong_dec R S A B).
-  { intro.
-    exfalso.
-    apply (nlta A B C).
-    apply acute_per__lta; auto.
+  destruct(cong_dec R S A B).
+  { exfalso.
+    apply (nlta A B C), acute_per__lta; auto.
     apply (t22_8__per _ _ _ D R S); auto.
   }
-  intro.
-  elim(le_cases R S A B).
-  2: intro; split; Cong.
-  intro.
+  destruct(le_cases R S A B); [|split; Cong].
   exfalso.
-  apply (nlta A B C).
-  apply acute_obtuse__lta; auto.
+  apply (nlta A B C), acute_obtuse__lta; auto.
   apply (t22_8__obtuse _ _ _ D R S); auto.
   split; auto.
 Qed.
@@ -1274,17 +1320,14 @@ Proof.
   intros A B C D R S HSac.
   intros.
   assert_diffs.
-  elim(Cong_dec R S A B).
-  { intro.
-    exfalso.
+  destruct(cong_dec R S A B).
+  { exfalso.
     apply (nlta A B C).
     apply obtuse_per__lta; auto.
     apply (t22_8__per _ _ _ D R S); auto.
   }
-  intro.
-  elim(le_cases R S A B).
-    intro; split; auto.
-  intro.
+  destruct(le_cases R S A B).
+    split; auto.
   exfalso.
   apply (nlta A B C).
   apply acute_obtuse__lta; auto.
@@ -1299,19 +1342,16 @@ Lemma t22_9__per : forall N M P Q R S,
   (Per S R M <-> Per Q P M).
 Proof.
   intros N M P Q R S HLamP HLamR HR HS.
-  elim(eq_dec_points P R).
-  { intro.
-    unfold Lambert in *.
+  destruct(eq_dec_points P R).
+  { unfold Lambert in *.
     spliter.
     treat_equalities.
-    assert(Q = S).
-    2: subst; split; auto.
+    assert(Q = S); [|subst; split; auto].
     apply (l8_18_uniqueness N Q P); Col.
     apply per_not_col; auto.
-    Perp.
+      Perp.
     apply (perp_col _ S); Perp; Col.
   }
-  intro.
   assert(HP' := symmetric_point_construction P M).
   destruct HP' as [P' HP'].
   apply l7_2 in HP'.
@@ -1338,9 +1378,8 @@ Proof.
   assert_diffs.
   assert(Per Q' S R) by (apply (l8_3 N); auto; ColR).
   assert(Per S' Q P) by (apply (l8_3 N); auto; ColR).
-  split.
-  - intro.
-    apply (per_col _ _ P'); Col.
+  split; intro.
+  - apply (per_col _ _ P'); Col.
     apply (l11_17 Q' P' P); CongA.
     apply (t22_8__per _ _ _ Q R S); auto.
     apply cong_symmetry.
@@ -1351,8 +1390,7 @@ Proof.
     apply (l11_17 S R R'); CongA.
     apply (per_col _ _ M); Col.
 
-  - intro.
-    apply (per_col _ _ R'); Col.
+  - apply (per_col _ _ R'); Col.
     apply (l11_17 S' R' R); CongA.
     apply (t22_7__per _ _ _ S P Q); auto; try (intro; treat_equalities; auto).
       Perp.
@@ -1370,19 +1408,16 @@ Lemma t22_9__acute : forall N M P Q R S,
   (Acute S R M <-> Acute Q P M).
 Proof.
   intros N M P Q R S HLamP HLamR HR HS.
-  elim(eq_dec_points P R).
-  { intro.
-    unfold Lambert in *.
+  destruct(eq_dec_points P R).
+  { unfold Lambert in *.
     spliter.
     treat_equalities.
-    assert(Q = S).
-    2: subst; split; auto.
+    assert(Q = S); [|subst; split; auto].
     apply (l8_18_uniqueness N Q P); Col.
     apply per_not_col; auto.
-    Perp.
+      Perp.
     apply (perp_col _ S); Perp; Col.
   }
-  intro.
   assert(HP' := symmetric_point_construction P M).
   destruct HP' as [P' HP'].
   apply l7_2 in HP'.
@@ -1409,24 +1444,28 @@ Proof.
   assert_diffs.
   assert(Per Q' S R) by (apply (l8_3 N); auto; ColR).
   assert(Per S' Q P) by (apply (l8_3 N); auto; ColR).
-  split.
-  - intro.
-    apply (acute_conga__acute Q' P' P).
-    2: apply (out_conga Q' P' P Q P P'); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
-    apply (t22_8__acute _ _ _ Q R S); auto.
-    apply (cong2_lt__lt P Q S' R'); Cong.
-    apply (t22_7__lt5612 _ _ R S); Perp; try (intro; treat_equalities; auto).
-    apply (acute_conga__acute S R M); auto.
-    apply (out_conga S R R' S' R' R); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
+  split; intro.
+  - apply (acute_conga__acute Q' P' P).
+    { apply (t22_8__acute _ _ _ Q R S); auto.
+      apply (cong2_lt__lt P Q S' R'); Cong.
+      apply (t22_7__lt5612 _ _ R S); Perp; try (intro; treat_equalities; auto).
+      apply (acute_conga__acute S R M); auto.
+      apply (out_conga S R R' S' R' R); try (apply out_trivial); CongA.
+      apply l6_6; apply bet_out; Between.
+    }
+    apply (out_conga Q' P' P Q P P'); try (apply out_trivial); CongA.
+    apply l6_6; apply bet_out; Between.
 
-  - intro.
-    apply (acute_conga__acute S' R' R).
-    2: apply (out_conga S' R' R S R R'); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
-    apply (t22_7__acute _ _ _ S P Q); Perp; try (intro; treat_equalities; auto).
-    apply (cong2_lt__lt Q' P' R S); Cong.
-    apply (t22_8__lt1256 _ _ P Q); auto.
-    apply (acute_conga__acute Q P M); auto.
-    apply (out_conga Q P P' Q' P' P); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
+  - apply (acute_conga__acute S' R' R).
+    { apply (t22_7__acute _ _ _ S P Q); Perp; try (intro; treat_equalities; auto).
+      apply (cong2_lt__lt Q' P' R S); Cong.
+      apply (t22_8__lt1256 _ _ P Q); auto.
+      apply (acute_conga__acute Q P M); auto.
+      apply (out_conga Q P P' Q' P' P); try (apply out_trivial); CongA.
+      apply l6_6; apply bet_out; Between.
+    }
+    apply (out_conga S' R' R S R R'); try (apply out_trivial); CongA.
+    apply l6_6; apply bet_out; Between.
 Qed.
 
 Lemma t22_9__obtuse : forall N M P Q R S,
@@ -1435,42 +1474,24 @@ Lemma t22_9__obtuse : forall N M P Q R S,
   (Obtuse S R M <-> Obtuse Q P M).
 Proof.
   intros N M P Q R S HLamP HLamR HR HS.
-  split.
-  - intro.
-    assert(H' := HLamP).
+  split; intro.
+  - assert(H' := HLamP).
     unfold Lambert in H'.
     spliter.
     assert_diffs.
-    elim(angle_partition Q P M); auto.
-    { intro.
-      exfalso.
-      apply (nlta S R M).
+    destruct(angle_partition Q P M) as [|[|]]; auto; exfalso; apply (nlta S R M).
       apply acute_obtuse__lta; auto.
       apply (t22_9__acute N _ P Q); auto.
-    }
-    intro HUn.
-    destruct HUn; auto.
-    exfalso.
-    apply (nlta S R M).
     apply obtuse_per__lta; auto.
     apply (t22_9__per N _ P Q); auto.
 
-  - intro.
-    assert(H' := HLamR).
+  - assert(H' := HLamR).
     unfold Lambert in H'.
     spliter.
     assert_diffs.
-    elim(angle_partition S R M); auto.
-    { intro.
-      exfalso.
-      apply (nlta Q P M).
+    destruct(angle_partition S R M) as [|[|]]; auto; exfalso; apply (nlta Q P M).
       apply acute_obtuse__lta; auto.
       apply (t22_9__acute N _ _ _ R S); auto.
-    }
-    intro HUn.
-    destruct HUn; auto.
-    exfalso.
-    apply (nlta Q P M).
     apply obtuse_per__lta; auto.
     apply (t22_9__per N _ _ _ R S); auto.
 Qed.
@@ -1483,36 +1504,22 @@ Lemma cong2_lam2__cong : forall N M P Q N' M' P' Q',
   Cong N M N' M'.
 Proof.
   intros N M P Q N' M' P' Q' HLam HLam' HCong1 HCong2.
+  assert(Par_strict N Q M P) by (apply lam__par_strict1423, HLam).
+  assert(Par_strict N M P Q) by (apply lam__par_strict1234, HLam).
+  assert(Par_strict N' Q' M' P') by (apply lam__par_strict1423, HLam').
+  assert(Par_strict N' M' P' Q') by (apply lam__par_strict1234, HLam').
   unfold Lambert in *.
   spliter.
   assert(~ Col N M P) by (apply per_not_col; auto).
   assert(~ Col M N Q) by (apply per_not_col; auto).
   assert(~ Col M' N' Q') by (apply per_not_col; auto).
   assert_diffs.
-  assert(Par_strict N Q M P /\ Par_strict N' Q' M' P').
-  { split;
-    [apply (par_not_col_strict _ _ _ _ M)|apply (par_not_col_strict _ _ _ _ M')]; Col;
-    [apply (l12_9 _ _ _ _ N M)|apply (l12_9 _ _ _ _ N' M')]; Perp.
-  }
-  spliter.
-  assert(OS N Q M P /\ OS N' Q' M' P' /\ OS P M N Q /\ OS P' M' N' Q').
-  { repeat split;
-    apply l12_6; Par.
-  }
-  assert(OS P Q M N  /\ OS P' Q' M' N').
-  { split;
-    apply l12_6;
-    apply par_strict_symmetry;
-    [apply (par_not_col_strict _ _ _ _ Q)|apply (par_not_col_strict _ _ _ _ Q')]; Col;
-    [apply (l12_9 _ _ _ _ N Q)|apply (l12_9 _ _ _ _ N' Q')]; Perp.
-  }
-  spliter.
   assert(HSAS := l11_49 N Q P N' Q' P').
   destruct HSAS as [HCong3 [HConga1 HConga2]]; Cong.
     apply l11_16; auto.
   assert(CongA M N P M' N' P').
   { apply (l11_22b _ _ _ Q _ _ _ Q').
-    split; auto; split; auto; split; auto.
+    split; Side; split; Side; split; auto.
     apply l11_16; auto.
   }
   assert(HAAS := l11_50_2 P N M P' N' M').
@@ -1527,36 +1534,22 @@ Lemma cong2_lam2__conga : forall N M P Q N' M' P' Q',
   CongA M P Q M' P' Q'.
 Proof.
   intros N M P Q N' M' P' Q' HLam HLam' HCong1 HCong2.
+  assert(Par_strict N Q M P) by (apply lam__par_strict1423, HLam).
+  assert(Par_strict N M P Q) by (apply lam__par_strict1234, HLam).
+  assert(Par_strict N' Q' M' P') by (apply lam__par_strict1423, HLam').
+  assert(Par_strict N' M' P' Q') by (apply lam__par_strict1234, HLam').
   unfold Lambert in *.
   spliter.
   assert(~ Col N M P) by (apply per_not_col; auto).
   assert(~ Col M N Q) by (apply per_not_col; auto).
   assert(~ Col M' N' Q') by (apply per_not_col; auto).
   assert_diffs.
-  assert(Par_strict N Q M P /\ Par_strict N' Q' M' P').
-  { split;
-    [apply (par_not_col_strict _ _ _ _ M)|apply (par_not_col_strict _ _ _ _ M')]; Col;
-    [apply (l12_9 _ _ _ _ N M)|apply (l12_9 _ _ _ _ N' M')]; Perp.
-  }
-  spliter.
-  assert(OS N Q M P /\ OS N' Q' M' P' /\ OS P M N Q /\ OS P' M' N' Q').
-  { repeat split;
-    apply l12_6; Par.
-  }
-  assert(OS P Q M N  /\ OS P' Q' M' N').
-  { split;
-    apply l12_6;
-    apply par_strict_symmetry;
-    [apply (par_not_col_strict _ _ _ _ Q)|apply (par_not_col_strict _ _ _ _ Q')]; Col;
-    [apply (l12_9 _ _ _ _ N Q)|apply (l12_9 _ _ _ _ N' Q')]; Perp.
-  }
-  spliter.
   assert(HSAS := l11_49 N Q P N' Q' P').
   destruct HSAS as [HCong3 [HConga1 HConga2]]; Cong.
     apply l11_16; auto.
   assert(CongA M N P M' N' P').
   { apply (l11_22b _ _ _ Q _ _ _ Q').
-    split; auto; split; auto; split; auto.
+    split; Side; split; Side; split; auto.
     apply l11_16; auto.
   }
   assert(HAAS := l11_50_2 P N M P' N' M').
@@ -1565,9 +1558,9 @@ Proof.
     CongA.
   apply (l11_22a _ _ _ N _ _ _ N').
   split.
-  apply l9_31; Side.
+    apply l9_31; Side.
   split.
-  apply l9_31; Side.
+    apply l9_31; Side.
   split; CongA.
 Qed.
 
@@ -1583,8 +1576,8 @@ Proof.
   spliter.
   destruct (l11_49 B A D B' A' D') as [HCongD [HConga1 HConga2]]; Cong.
     apply l11_16; auto.
-  destruct (l11_49 B D C B' D' C'); Cong.
-  2:apply (cong_transitivity _ _ A B); Cong; apply (cong_transitivity _ _ A' B'); Cong.
+  destruct (l11_49 B D C B' D' C'); Cong;
+  [|apply (cong_transitivity _ _ A B); Cong; apply (cong_transitivity _ _ A' B'); Cong].
   apply (l11_22b _ _ _ A _ _ _ A').
   split; Side.
   split; Side.
@@ -1606,12 +1599,14 @@ Proof.
   apply perp_comm, (sac__perp1214 _ _ B), sac_perm; trivial.
 Qed.
 
-Lemma sac2__sac : forall A B C D E F, Saccheri A B C D -> Saccheri A B E F -> D<>F -> Saccheri D C E F.
+Lemma cop_sac2__sac : forall A B C D E F,
+  Saccheri A B C D -> Saccheri A B E F -> D<>F -> Coplanar A B D F -> Saccheri D C E F.
 Proof.
-  intros A B C D E F HSac HSac2 H.
+  intros A B C D E F HSac HSac2 HDF HCop.
   assert(HPerp := sac__perp1214 _ _ _ _ HSac); assert(HPerp2 := sac__perp1214 _ _ _ _ HSac2).
   assert(HPerp3 := sac__perp3414 _ _ _ _ HSac); assert(HPerp4 := sac__perp3414 _ _ _ _ HSac2).
-  assert(Col A D F) by (apply perp_perp_col with A B; Perp).
+  assert(Col A D F).
+    apply cop_perp2__col with A B; Perp.
   assert(Hdiff := sac_distincts _ _ _ _ HSac).
   assert(Hdiff2 := sac_distincts _ _ _ _ HSac2).
   unfold Saccheri in *; spliter; repeat split.
@@ -1634,7 +1629,6 @@ Lemma three_hypotheses_aux : forall A B C D M N A' B' C' D' M' N',
   (Per A B C <-> Per A' B' C') /\ (Acute A B C <-> Acute A' B' C').
 Proof.
   intros A B C D M N A' B' C' D' M' N' HSac HSac' HM HM' HN HN' Hle.
-  assert(H := A).
   assert(HLam1 := mid2_sac__lam6534 A B C D M N HSac HM HN).
   assert(HLam1' := mid2_sac__lam6534 A' B' C' D' M' N' HSac' HM' HN').
   assert(Hdiff := sac_distincts A B C D HSac).
@@ -1642,7 +1636,7 @@ Proof.
   spliter.
   assert(HNCol1 : ~ Col A C D) by (apply (sac__ncol134 _ B); auto).
   assert_diffs.
-  clear H.
+  rename H into HA'B'.
   assert(HH := segment_construction_3 N D N' D').
   destruct HH as [H []]; auto.
   assert(Col A D H) by ColR.
@@ -1669,21 +1663,29 @@ Proof.
     apply per_not_col; auto.
     apply (per_col _ _ D); auto; ColR.
   }
+  assert (HCop : Coplanar A D M G).
+  { apply coplanar_trans_1 with C; Col.
+      assert (~ Col B C D) by (apply (sac__ncol234 A), HSac).
+      apply sac__coplanar in HSac.
+      apply coplanar_perm_12, col_cop__cop with B; Col; Cop.
+    apply coplanar_perm_5, col_cop__cop with N; Col; Cop.
+  }
   assert (HNCol3 : ~ Col M N G).
   { unfold Lambert in HLam1.
     spliter.
     apply (one_side_not_col123 _ _ _ H).
     apply l12_6.
     apply (par_not_col_strict _ _ _ _ H); Col.
-    apply (l12_9 _ _ _ _ A D); auto.
-      apply perp_right_comm; apply (perp_col1 _ _ _ N); Col; Perp.
-      Perp.
+    apply (l12_9 _ _ _ _ A D); Cop; [|Perp].
+    apply perp_right_comm; apply (perp_col1 _ _ _ N); Col; Perp.
   }
   assert_diffs.
   assert(A <> H) by (intro; subst H; assert(Habs := l6_4_1 D A N); destruct Habs; Between).
   assert(Col H A N) by ColR.
   assert(HL := l8_18_existence M N G).
   destruct HL as [L []]; auto.
+  assert(HNCol4 : ~ Col M A D).
+    apply sac__par_strict1423 in HSac; apply (par_not_col B C); Par; Col.
   assert(HLam2 : Lambert N L G H).
   { assert(Per N H G).
     { apply (l8_3 A); Col.
@@ -1703,40 +1705,29 @@ Proof.
     { intro.
       subst L.
       assert(Col G H N); Col.
-      apply (per_per_col _ _ M); auto.
-      Perp.
-      apply (l8_3 A); Col.
+      apply cop_per2__col with M; [|Perp..|apply (l8_3 A); Col].
+      apply coplanar_pseudo_trans with A D M; Cop; Col.
     }
     repeat split; auto.
-    intro; subst; assert_cols; Col.
-    apply perp_per_1; auto.
-    apply perp_left_comm.
-    apply (perp_col _ M); Col; Perp.
+      intro; subst; assert_cols; Col.
+      apply perp_per_1; auto; apply perp_left_comm, (perp_col _ M); Col; Perp.
+      apply coplanar_pseudo_trans with A D M; [Col|Cop| |Cop..].
+      exists N; left; split; Col.
   }
-  assert(Par_strict N D M C).
-  { unfold Lambert in HLam1.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ M N); Perp.
-    intro; apply HNCol1; ColR.
-  }
+  assert(Par_strict N D M C) by (apply lam__par_strict1423, HLam1).
   assert(Bet N M L).
   { assert(HCong := cong2_lam2__cong N' M' C' D' N L G H).
-    apply l6_13_1.
-    2: apply (l5_6 M N M' N'); Cong.
+    apply l6_13_1; [|apply (l5_6 M N M' N'); Cong].
     apply (col_one_side_out _ D); Col.
     apply (one_side_transitivity _ _ _ G).
       apply (one_side_transitivity _ _ _ C); auto; apply l12_6; auto.
     apply (col_one_side _ H); auto; try ColR.
-    apply l12_6.
-    unfold Lambert in HLam2.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ G); Col.
-    apply (l12_9 _ _ _ _ L N); Perp.
-    apply per_not_col; auto.
+    apply one_side_symmetry, l12_6, lam__par_strict1423, HLam2.
   }
-  assert(HNCol4 : ~ Col N M C) by (unfold Lambert in HLam1; spliter; apply per_not_col; auto).
-  assert(HNCol5 : ~ Col N D M) by (apply (par_strict_not_col_1 _ _ _ C); auto).
+  assert(HNCol5 : ~ Col N M C) by (unfold Lambert in HLam1; spliter; apply per_not_col; auto).
+  assert(HNCol6 : ~ Col N D M) by (apply (par_strict_not_col_1 _ _ _ C); auto).
+  assert (Coplanar M C D A).
+    apply pars__coplanar, par_strict_col_par_strict with N; Col; Par.
   assert(HK : exists K, Col K M C /\ Bet G K H).
   { elim(eq_dec_points L M).
     { intro.
@@ -1746,48 +1737,38 @@ Proof.
       apply col_permutation_5.
       unfold Lambert in *.
       spliter.
-      apply (per_per_col _ _ N); Perp.
+      apply cop_per2__col with N; Perp.
+      apply coplanar_pseudo_trans with A D M; Col; Cop.
     }
     intro.
-    assert(HNCol6 : ~ Col L M C) by (intro; apply HNCol4; ColR).
-    assert(Hts : TS M C G H).
-    2: unfold TS in Hts; spliter; auto.
+    assert(HNCol7 : ~ Col L M C) by (intro; apply HNCol5; ColR).
+    assert(Hts : TS M C G H); [|unfold TS in Hts; spliter; auto].
     apply (l9_8_2 _ _ L).
     - apply l9_2.
       apply (l9_8_2 _ _ N).
-      2: apply l12_6; apply (par_strict_col_par_strict _ _ _ D); Par; ColR.
-      repeat split; Col.
-      exists M; Col.
-
-    - apply l12_6.
-      apply (par_not_col_strict _ _ _ _ L); Col.
+        repeat split; Col; exists M; Col.
+      apply l12_6, (par_strict_col_par_strict _ _ _ D); Par; ColR.
+    - apply l12_6, (par_not_col_strict _ _ _ _ L); Col.
       unfold Lambert in *.
       spliter.
-      apply (l12_9 _ _ _ _ M N); Perp.
+      apply (l12_9 _ _ _ _ M N); Perp; [Cop..|].
+      apply coplanar_pseudo_trans with A D M; Col; Cop.
   }
   destruct HK as [K []].
-  assert(HNCol6 : ~ Col H M C) by (apply (par_not_col N D); Col).
+  assert(HNCol7 : ~ Col H M C) by (apply (par_not_col N D); Col).
   assert(K <> H) by (intro; subst K; auto).
-  assert(Par_strict M N C D).
-  { unfold Lambert in *.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ N D); Perp.
-  }
-  assert(HNCol7 : ~ Col N C D) by (apply (par_strict_not_col_2 M); auto).
+  assert(Par_strict N M C D) by (apply lam__par_strict1234, HLam1).
+  assert(HNCol8 : ~ Col N C D) by (apply (par_strict_not_col_2 M); Par).
   assert(Par_strict M N H K).
-  { unfold Lambert in *.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ H); Col.
-    apply (l12_9 _ _ _ _ N D).
-      Perp.
-      apply (perp_col _ G); Col; apply (perp_col1 _ _ _ H); Perp; Col.
+  { apply par_strict_col_par_strict with G; Col.
+    apply par_strict_comm, par_strict_symmetry, par_strict_col_par_strict with L; Col.
+    apply par_strict_symmetry, lam__par_strict1234, HLam2.
   }
-  assert(HNCol8 : ~ Col N H K) by (apply (par_strict_not_col_2 M); auto).
+  assert(HNCol9 : ~ Col N H K) by (apply (par_strict_not_col_2 M); auto).
   assert(HMout : Out M C K).
   { apply (col_one_side_out _ N); Col.
     apply (one_side_transitivity _ _ _ D).
-      apply l12_6; auto.
+      apply l12_6; Par.
     apply (one_side_transitivity _ _ _ H).
       apply invert_one_side; apply out_one_side; Col.
     apply l12_6; auto.
@@ -1797,9 +1778,10 @@ Proof.
   { unfold Lambert in *.
     spliter.
     repeat split; auto.
-    apply (l8_3 L); Col.
-    apply (per_col _ _ G); Col.
-    apply (per_col _ _ C); Col.
+      apply (l8_3 L); Col.
+      apply (per_col _ _ G); Col.
+      apply (per_col _ _ C); Col.
+      apply coplanar_perm_7, pars__coplanar; assumption.
   }
   assert(HConga := sac__conga A B C D HSac).
   assert(CongA A' B' C' H G L).
@@ -1813,25 +1795,25 @@ Proof.
   assert(HPar : Par C D K H).
   { unfold Lambert in *.
     spliter.
-    apply (l12_9 _ _ _ _ N D).
-    Perp.
-    apply perp_comm; apply (perp_col _ G); Col; apply (perp_col1 _ _ _ A); Perp; Col.
+    apply (l12_9 _ _ _ _ N D); [|Cop..].
+      destruct (eq_dec_points C K).
+        subst; Cop.
+      apply pars__coplanar, par_strict_col_par_strict with M; Col; Par.
+      Perp.
+    apply perp_comm, (perp_col _ G); Col; apply (perp_col1 _ _ _ A); Perp; Col.
   }
   assert(Bet M C K -> Bet N D H).
   { intro.
-    elim(eq_dec_points D H).
-      intro; subst; Between.
-    intro HDH.
+    destruct(eq_dec_points D H) as [|HDH].
+      subst; Between.
     apply between_symmetry.
     apply not_out_bet; Col.
     intro.
-    assert(Out C K M).
-    2: assert(Habs := l6_4_1 K M C); destruct Habs; Between.
+    assert(Out C K M);
+    [|assert(Habs := l6_4_1 K M C); destruct Habs; Between].
     apply (col_one_side_out _ D); Col.
-    apply (one_side_transitivity _ _ _ N).
-    2: apply l12_6; Par.
-    apply (one_side_transitivity _ _ _ H).
-    2: apply invert_one_side; apply out_one_side; Col.
+    apply (one_side_transitivity _ _ _ N); [|apply l12_6; Par].
+    apply (one_side_transitivity _ _ _ H); [|apply invert_one_side; apply out_one_side; Col].
     apply l12_6.
     destruct HPar; auto.
     exfalso.
@@ -1841,10 +1823,8 @@ Proof.
     apply (l8_18_uniqueness C D N); Col.
       Perp.
       ColR.
-    apply (perp_col _ H); auto.
-    2: ColR.
-    apply perp_left_comm.
-    apply (perp_col _ G); Perp; ColR.
+    apply (perp_col _ H); auto; [|ColR].
+    apply perp_left_comm, (perp_col _ G); Perp; ColR.
   }
   assert(Bet M K C -> Bet N H D).
   { intro.
@@ -1854,13 +1834,10 @@ Proof.
     apply between_symmetry.
     apply not_out_bet; Col.
     intro.
-    assert(Out K C M).
-    2: assert(Habs := l6_4_1 C M K); destruct Habs; Between.
+    assert(Out K C M); [|assert(Habs := l6_4_1 C M K); destruct Habs; Between].
     apply (col_one_side_out _ H); Col.
-    apply (one_side_transitivity _ _ _ N).
-    2: apply l12_6; Par.
-    apply (one_side_transitivity _ _ _ D).
-    2: apply invert_one_side; apply out_one_side; Col.
+    apply (one_side_transitivity _ _ _ N); [|apply l12_6; Par].
+    apply (one_side_transitivity _ _ _ D); [|apply invert_one_side; apply out_one_side; Col].
     apply l12_6.
     destruct HPar; Par.
     exfalso.
@@ -1870,15 +1847,12 @@ Proof.
     apply (l8_18_uniqueness C D N); Col.
       Perp.
       ColR.
-    apply (perp_col _ H); auto.
-    2: ColR.
-    apply perp_left_comm.
-    apply (perp_col _ G); Perp; ColR.
+    apply (perp_col _ H); auto; [|ColR].
+    apply perp_left_comm, (perp_col _ G); Perp; ColR.
   }
-  split; split.
+  split; split; intro.
 
-  - intro.
-    apply (l11_17 L G H); CongA.
+  - apply (l11_17 L G H); CongA.
     apply (t22_9__per N _ K M); try (apply lam_perm); Between.
     apply l8_2.
     assert(Per D C M).
@@ -1891,20 +1865,18 @@ Proof.
       apply (t22_9__per N _ C D); auto.
       apply (t22_9__per N _ _ _ C D); auto.
 
-  - intro.
-    apply (l11_17 D C M).
-    2: apply (out_conga D C B A B C); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
-    assert(Per H K M).
-    { apply l8_2.
-      apply (t22_9__per N _ _ _ G L); try (apply lam_perm); Between.
-      apply (l11_17 A' B' C'); CongA.
+  - apply (l11_17 D C M).
+    { assert(Per H K M).
+        apply l8_2, (t22_9__per N _ _ _ G L); try (apply lam_perm); Between.
+        apply (l11_17 A' B' C'); CongA.
+      destruct HMout as [_ [_ [HMCK|HMKC]]].
+        apply (t22_9__per N _ _ _ K H); auto.
+        apply (t22_9__per N _ K H); auto.
     }
-    destruct HMout as [_ [_ [HMCK|HMKC]]].
-      apply (t22_9__per N _ _ _ K H); auto.
-      apply (t22_9__per N _ K H); auto.
+    apply (out_conga D C B A B C); try (apply out_trivial); CongA.
+    apply l6_6, bet_out; Between.
 
-  - intro.
-    apply (acute_conga__acute L G H); CongA.
+  - apply (acute_conga__acute L G H); CongA.
     apply (t22_9__acute N _ K M); try (apply lam_perm); Between.
     apply acute_sym.
     assert(Acute D C M).
@@ -1917,17 +1889,17 @@ Proof.
       apply (t22_9__acute N _ C D); auto.
       apply (t22_9__acute N _ _ _ C D); auto.
 
-  - intro.
-    apply (acute_conga__acute D C M).
-    2: apply (out_conga D C B A B C); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
-    assert(Acute H K M).
-    { apply acute_sym.
-      apply (t22_9__acute N _ _ _ G L); try (apply lam_perm); Between.
-      apply (acute_conga__acute A' B' C'); CongA.
+  - apply (acute_conga__acute D C M).
+    { assert(Acute H K M).
+        apply acute_sym.
+          apply (t22_9__acute N _ _ _ G L); try (apply lam_perm); Between.
+          apply (acute_conga__acute A' B' C'); CongA.
+      destruct HMout as [_ [_ [HMCK|HMKC]]].
+        apply (t22_9__acute N _ _ _ K H); auto.
+        apply (t22_9__acute N _ K H); auto.
     }
-    destruct HMout as [_ [_ [HMCK|HMKC]]].
-      apply (t22_9__acute N _ _ _ K H); auto.
-      apply (t22_9__acute N _ K H); auto.
+    apply (out_conga D C B A B C); try (apply out_trivial); CongA.
+    apply l6_6, bet_out; Between.
 Qed.
 
 
@@ -2118,8 +2090,7 @@ Proof.
     apply (l8_3 B); Col.
 
   - intro rah.
-    apply (l8_3 C'); Col.
-    2: unfold Lambert in HLam; spliter; assert_diffs; auto.
+    apply (l8_3 C'); Col ;[|unfold Lambert in HLam; spliter; assert_diffs; auto].
     apply l8_2.
     apply (rah _ _ _ D').
     apply (lam6521_mid2__sac _ _ _ _ B A); auto.
@@ -2169,12 +2140,12 @@ Proof.
     unfold Lambert in HLam.
     spliter.
     assert_diffs.
-    apply (obtuse_conga__obtuse B C D); auto.
+    apply (conga_obtuse__obtuse B C D); auto.
     apply (out_conga B C D D C B); try (apply out_trivial); CongA.
     apply bet_out; Between.
 
   - intro oah.
-    apply (obtuse_conga__obtuse D C C'); auto.
+    apply (conga_obtuse__obtuse D C C'); auto.
       apply (oah _ _ _ D'); apply (lam6521_mid2__sac _ _ _ _ B A); auto.
     unfold Lambert in HLam.
     spliter.
@@ -2273,12 +2244,7 @@ Proof.
   assert_diffs.
 
   assert(HPars1 := sac__par_strict1423 B A D C HSac).
-  assert(HPars2 : Par_strict A B C D).
-  { unfold Saccheri in HSac.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ B C); Perp.
-  }
+  assert(HPars2 := sac__par_strict1234 B A D C HSac).
   assert(TS C A B D) by (apply l9_31; apply l12_6; Par).
   assert(CongA B C D A B C) by (unfold Saccheri in HSac; spliter; apply l11_16; auto).
   split.
@@ -2292,14 +2258,14 @@ Proof.
     { repeat split; auto.
       right; intro; assert_cols; Col.
       exists D.
-      split; CongA; split; Side.
+      split; CongA; repeat split; Side; Cop.
     }
     exists D.
-    repeat (split; CongA); Side.
+    repeat (split; CongA); Side; Cop.
 
   - intro rah.
     apply (conga3_suma__suma B C A A C D B C D); try (apply conga_refl); auto.
-      exists D; repeat (split; CongA); Side.
+      exists D; repeat (split; CongA); Side; Cop.
     apply conga_sym.
     apply conga_left_comm.
     apply t22_11__per; auto.
@@ -2328,12 +2294,7 @@ Proof.
   assert_diffs.
 
   assert(HPars1 := sac__par_strict1423 B A D C HSac).
-  assert(HPars2 : Par_strict A B C D).
-  { unfold Saccheri in HSac.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ B C); Perp.
-  }
+  assert(HPars2 := sac__par_strict1234 B A D C HSac).
   assert(TS C A B D) by (apply l9_31; apply l12_6; Par).
   assert(CongA B C D A B C) by (unfold Saccheri in HSac; spliter; apply l11_16; auto).
   split.
@@ -2347,7 +2308,7 @@ Proof.
       apply lea_refl; auto.
       apply acute_per__lta; auto.
       SumA.
-      exists D; repeat (split; CongA); Side.
+      exists D; repeat (split; CongA); Side; Cop.
 
   - intro aah.
     exists B.
@@ -2358,11 +2319,12 @@ Proof.
     apply (sams_lea_lta456_suma2__lta B C A C A B _ _ _ B C A A C D); auto.
       apply lea_refl; auto.
       apply lta_left_comm; apply t22_11__acute; try (apply (aah _ _ _ C)); auto.
-      2: exists D; repeat (split; CongA); Side.
-    split; auto; split.
-    right; intro; assert_cols; Col.
-    exists D; split; CongA.
-    split; eauto with side.
+      { split; auto; split.
+          right; intro; assert_cols; Col.
+        exists D; split; CongA.
+        repeat split; Side; Cop.
+      }
+      exists D; repeat (split; CongA); Side; Cop.
 Qed.
 
 Lemma t22_12__oah : forall A B C P Q R,
@@ -2387,12 +2349,7 @@ Proof.
   assert_diffs.
 
   assert(HPars1 := sac__par_strict1423 B A D C HSac).
-  assert(HPars2 : Par_strict A B C D).
-  { unfold Saccheri in HSac.
-    spliter.
-    apply (par_not_col_strict _ _ _ _ C); Col.
-    apply (l12_9 _ _ _ _ B C); Perp.
-  }
+  assert(HPars2 := sac__par_strict1234 B A D C HSac).
   assert(TS C A B D) by (apply l9_31; apply l12_6; Par).
   assert(CongA B C D A B C) by (unfold Saccheri in HSac; spliter; apply l11_16; auto).
   split.
@@ -2405,11 +2362,12 @@ Proof.
     apply (sams_lea_lta789_suma2__lta456 B C A _ _ _ B C D B C A _ _ _ P Q R); auto.
       apply lea_refl; auto.
       apply obtuse_per__lta; auto.
-      2: exists D; repeat (split; CongA); Side.
-    split; auto; split.
-    right; intro; assert_cols; Col.
-    exists D; split; CongA.
-    split; Side.
+      { split; auto; split.
+        right; intro; assert_cols; Col.
+        exists D; split; CongA.
+        repeat split; Side; Cop.
+      }
+      exists D; repeat (split; CongA); Side; Cop.
 
   - intro oah.
     exists B.
@@ -2421,7 +2379,7 @@ Proof.
       apply lea_refl; auto.
       apply lta_right_comm; apply t22_11__obtuse; try (apply (oah _ _ _ C)); auto.
       SumA.
-      exists D; repeat (split; CongA); Side.
+      exists D; repeat (split; CongA); Side; Cop.
 Qed.
 
 
@@ -2448,25 +2406,31 @@ Proof.
   assert(~ Col C A A') by (intro; apply HNCol; ColR).
   assert(TS A A' B C) by (repeat split; try (exists A'); Col).
 
-  apply (bet_conga_bet B A' C); auto.
+  apply (bet_conga__bet B A' C); auto.
   apply (suma2__conga D E F B C A); auto.
   apply (suma_assoc B A' A C A A' _ _ _ _ _ _ _ _ _ A A' C).
     apply (conga2_sams__sams C A' A A' A C); try (apply sams123231); CongA.
     apply (conga2_sams__sams A' A C A C A'); try (apply sams123231); CongA.
-  2: apply (conga3_suma__suma A' A C A C A' C A' A); try (apply t22_12__rah); CongA.
-  2: exists C; repeat (split; CongA); Side.
-  apply suma_sym.
-  apply (suma_assoc _ _ _ A' A B A B C _ _ _ C A B); auto.
-    split; auto; split;
-      [right; intro; assert_cols|
-       exists B; split; CongA; split; Side; apply l9_9_bis; apply (out_one_side)]; Col.
-    apply (conga2_sams__sams A' A B A B A'); try (apply sams123231); CongA.
-    exists B; repeat (split; CongA); Side.
-    apply (conga3_suma__suma A' A B A B A' B A' A); try (apply t22_12__rah); CongA.
+    { apply suma_sym.
+      apply (suma_assoc _ _ _ A' A B A B C _ _ _ C A B); auto.
+      - split; auto; split.
+          right; intro; assert_cols; Col.
+        exists B.
+        split; CongA.
+        repeat split; Side.
+          apply l9_9_bis; apply (out_one_side); Col.
+        exists C; left; split; Col.
+      - apply (conga2_sams__sams A' A B A B A'); try (apply sams123231); CongA.
+      - exists B; repeat (split; CongA); Side; exists C; left; split; Col.
+      - apply (conga3_suma__suma A' A B A B A' B A' A); try (apply t22_12__rah); CongA.
+    }
+apply (conga3_suma__suma A' A C A C A' C A' A); try (apply t22_12__rah); CongA.
+exists C; repeat (split; CongA); Side.
+exists C; left; split; Col.
 Qed.
 
-(** Under the right angle hypothesis,
-  the sum of the three angles of a triangle is equal to 180
+(** Under the Right angle hypothesis,
+    the sum of the three angles of a triangle is equal to 180
  *)
 
 Lemma t22_14__bet :
@@ -2474,7 +2438,7 @@ Lemma t22_14__bet :
   forall A B C P Q R, TriSumA A B C P Q R -> Bet P Q R.
 Proof.
   intros rah A B C P Q R HTri.
-  elim(Col_dec A B C).
+  elim(col_dec A B C).
     intro; apply (col_trisuma__bet A B C); auto.
   intro.
   assert_diffs.
@@ -2505,8 +2469,6 @@ Lemma t22_14__sams_nbet_aux : forall A B C D E F P Q R,
   SAMS D E F B C A /\ ~ Bet P Q R.
 Proof.
   intros A B C D E F P Q R aah HNCol HSuma1 HSuma2 HacuteB HacuteC.
-
-  assert(H := A).
   assert(HA' := l8_18_existence B C A).
   destruct HA' as [A' []]; Col.
   assert(Out B A' C) by (apply (acute_col_perp__out A); auto).
@@ -2523,7 +2485,7 @@ Proof.
   assert(TS A A' B C) by (repeat split; try (exists A'); Col).
 
   assert(HSuma3 := ex_suma B A' A C A A').
-  clear H.
+  rename H into HCol.
   destruct HSuma3 as [G [H [I HSuma3]]]; auto.
   suma.assert_diffs.
   assert(LtA D E F G H I).
@@ -2533,13 +2495,19 @@ Proof.
     apply (sams_lea_lta456_suma2__lta C A A' V W X _ _ _ C A A' B A' A); Lea.
       apply (acute_per__lta); auto; apply (t22_12__aah B A' A); auto; apply (conga3_suma__suma A' A B A B C V W X); CongA.
       apply (conga2_sams__sams C A A' A A' C); SumA; CongA.
-    2: apply suma_sym; auto.
-    apply (suma_assoc _ _ _ A' A B A B C _ _ _ C A B); auto.
-      split; auto; split;
-        [right; intro; assert_cols|
-         exists B; split; CongA; split; Side; apply l9_9_bis; apply (out_one_side)]; Col.
-      apply (conga2_sams__sams A' A B A B A'); SumA; CongA.
-      exists B; repeat (split; CongA); Side.
+      { apply (suma_assoc _ _ _ A' A B A B C _ _ _ C A B); auto.
+        - split; auto; split.
+            right; intro; assert_cols; Col.
+          exists B.
+          split; CongA.
+          repeat split; Side.
+            apply l9_9_bis; apply (out_one_side); Col.
+          exists C; left; split; Col.
+        - apply (conga2_sams__sams A' A B A B A'); SumA; CongA.
+        - exists B; repeat (split; CongA); Side.
+          exists C; left; split; Col.
+      }
+      apply suma_sym; auto.
   }
   assert(HSuma4 := ex_suma C A A' B C A).
   destruct HSuma4 as [J [K [L HSuma4]]]; auto.
@@ -2557,11 +2525,12 @@ Proof.
   suma.assert_diffs.
   assert(LtA S T U B A' C).
   { apply (sams_lea_lta456_suma2__lta B A' A J K L _ _ _ B A' A A A' C); Lea.
-      apply (sams_chara _ _ _ _ _ _ C); Lea.
-    2: exists C; repeat(split; CongA); Side.
-    apply (suma_assoc _ _ _ C A A' B C A _ _ _ G H I); auto;
+    - apply (sams_chara _ _ _ _ _ _ C); Lea.
+    - apply (suma_assoc _ _ _ C A A' B C A _ _ _ G H I); auto;
       [apply (conga2_sams__sams C A' A A' A C)|apply (conga2_sams__sams A' A C A C A')];
       SumA; CongA.
+    - exists C; repeat(split; CongA); Side.
+      exists C; left; split; Col.
   }
 
   split.
@@ -2576,7 +2545,7 @@ Proof.
 Qed.
 
 (** Under the Acute angle hypothesis,
-  the sum of the three angles of a triangle is less than 180
+    the sum of the three angles of a triangle is less than 180
  *)
 
 Lemma t22_14__sams_nbet :
@@ -2586,7 +2555,6 @@ Lemma t22_14__sams_nbet :
   SAMS D E F B C A /\ ~ Bet P Q R.
 Proof.
   intros aah A B C D E F P Q R HNCol HSuma1 HSuma2.
-  assert(H := A).
   assert_diffs.
   elim(angle_partition A B C); auto.
   intro; elim(angle_partition A C B); auto.
@@ -2597,7 +2565,7 @@ Proof.
     assert(HInter := l11_43 C A B).
     destruct HInter; Col.
     assert(HSuma3 := ex_suma B C A C A B).
-    clear H.
+    rename H into HAcute.
     destruct HSuma3 as [G [H [I HSuma3]]]; auto.
     suma.assert_diffs.
     assert(HInter := t22_14__sams_nbet_aux C A B G H I P Q R).
@@ -2620,7 +2588,6 @@ Lemma t22_14__nsams_aux : forall A B C D E F,
   ~ SAMS D E F B C A.
 Proof.
   intros A B C D E F oah HNCol HSuma1 HacuteB HacuteC HIsi.
-
   assert(HA' := l8_18_existence B C A).
   destruct HA' as [A' []]; Col.
   assert(Out B A' C) by (apply (acute_col_perp__out A); auto).
@@ -2641,7 +2608,7 @@ Proof.
   absurd (LtA B A' C P Q R).
     apply (lea__nlta); apply l11_31_2; auto.
   assert(HSuma3 := ex_suma B A' A C A A').
-  clear H.
+  rename H into HCol.
   destruct HSuma3 as [G [H [I HSuma3]]]; auto.
   assert(LtA G H I D E F).
   { assert(HSuma4 := ex_suma A' A B A B C).
@@ -2652,10 +2619,11 @@ Proof.
       right; intro; assert_cols; Col.
       exists B.
       repeat (split; CongA); Side.
-      apply l9_9_bis; apply out_one_side; Col.
+        apply l9_9_bis; apply out_one_side; Col.
+      exists C; left; split; Col.
     }
     assert(SAMS A' A B A B C) by (apply (conga2_sams__sams A' A B A B A'); SumA; CongA).
-    assert(SumA C A A' A' A B C A B) by (exists B; repeat (split; CongA); Side).
+    assert(SumA C A A' A' A B C A B) by (exists B; repeat (split; CongA); Side; Cop).
     apply (sams_lea_lta456_suma2__lta C A A' B A' A _ _ _ C A A' V W X); Lea.
       apply (obtuse_per__lta); auto; apply (t22_12__oah B A' A); auto; apply (conga3_suma__suma A' A B A B C V W X); CongA.
       apply (sams_assoc _ _ _ A' A B A B C C A B); SumA.
@@ -2671,8 +2639,8 @@ Proof.
   destruct HSuma5 as [S [T [U HSuma5]]]; auto.
   suma.assert_diffs.
   apply (lta_trans _ _ _ S T U).
-  - apply (sams_lea_lta456_suma2__lta B A' A A A' C _ _ _ B A' A J K L); Lea.
-    2: exists C; repeat (split; CongA); Side.
+  - apply (sams_lea_lta456_suma2__lta B A' A A A' C _ _ _ B A' A J K L); Lea;
+    [|exists C; repeat (split; CongA); Side; Cop].
     apply (sams_assoc _ _ _ C A A' B C A G H I); auto.
       apply (conga2_sams__sams C A' A C A A'); SumA; CongA.
       apply (conga2_sams__sams C A A' A' C A); SumA; CongA.
@@ -2685,7 +2653,7 @@ Proof.
 Qed.
 
 (** Under the Obtuse angle hypothesis,
-  the sum of the three angles of a triangle is greater than 180
+    the sum of the three angles of a triangle is greater than 180
  *)
 
 Lemma t22_14__nsams :
@@ -2695,7 +2663,6 @@ Lemma t22_14__nsams :
   ~ SAMS D E F B C A.
 Proof.
   intros oah A B C D E F HNCol HSuma1.
-  assert(H := A).
   assert_diffs.
   elim(angle_partition A B C); auto.
   intro; elim(angle_partition A C B); auto.
@@ -2706,7 +2673,7 @@ Proof.
     assert(HInter := l11_43 C A B).
     destruct HInter; Col.
     assert(HSuma3 := ex_suma B C A C A B).
-    clear H.
+    rename H into HAcute.
     destruct HSuma3 as [G [H [I HSuma3]]]; auto.
     suma.assert_diffs.
     assert(HNIsi := t22_14__nsams_aux C A B G H I).
@@ -2725,8 +2692,8 @@ Proof.
 Qed.
 
 
-(** If the sum of the angles of a not-degenerate triangle is equal to 180,
-  then the right angle hypothesis holds
+(** If the sum of the angles of a non-degenerate triangle is equal to 180,
+    then the Right angle hypothesis holds
  *)
 
 Lemma t22_14__rah : forall A B C P Q R,
@@ -2734,26 +2701,23 @@ Lemma t22_14__rah : forall A B C P Q R,
 Proof.
   intros A B C P Q R HNCol HTri HBet.
   apply trisuma_perm_312 in HTri.
-  elim(saccheri_s_three_hypotheses).
-  2: intro HUn; destruct HUn as [|oah]; auto.
-  - intro aah.
-    exfalso.
-    destruct HTri as [D [E [F []]]].
+  destruct (saccheri_s_three_hypotheses) as [aah|[rah|oah]]; auto; exfalso.
+  - destruct HTri as [D [E [F []]]].
     assert(HInter := t22_14__sams_nbet aah A B C D E F P Q R).
     destruct HInter; auto.
 
   - exfalso.
     destruct HTri as [D [E [F [HSuma1 HSuma2]]]].
     apply (t22_14__nsams oah A B C D E F); auto.
-    destruct HSuma2 as [G [HConga1 [HNos HConga2]]].
+    destruct HSuma2 as [G [HConga1 [HNos [HCop HConga2]]]].
     apply conga_sym in HConga1.
     assert_diffs.
     apply (sams_chara _ _ _ _ _ _ G); Lea.
-    apply (bet_conga_bet P Q R); CongA.
+    apply (bet_conga__bet P Q R); CongA.
 Qed.
 
 (** If the sum of the angles of a triangle is less than 180,
-  then the Acute angle hypothesis holds
+    then the Acute angle hypothesis holds
  *)
 
 Lemma t22_14__aah : forall A B C D E F P Q R,
@@ -2763,39 +2727,33 @@ Lemma t22_14__aah : forall A B C D E F P Q R,
   hypothesis_of_acute_saccheri_quadrilaterals.
 Proof.
   intros A B C D E F P Q R HSuma1 HSuma2 HIsi HNBet.
-  elim(saccheri_s_three_hypotheses); auto.
-  intro HUn.
-  exfalso.
-  destruct HUn as [rah|oah].
-  2: elim(Col_dec A B C).
+  destruct(saccheri_s_three_hypotheses) as [|[rah|oah]]; auto; exfalso.
   - apply HNBet.
     apply (t22_14__bet rah A B C).
     apply trisuma_perm_231.
     exists D; exists E; exists F.
     split; auto.
 
-  - intro.
-    apply HNBet.
-    apply (col_trisuma__bet C A B); Col.
-    exists D; exists E; exists F.
-    split; auto.
-
-  - intro.
+  - destruct (col_dec A B C).
+    { apply HNBet.
+      apply (col_trisuma__bet C A B); Col.
+      exists D; exists E; exists F.
+      split; auto.
+    }
     absurd(SAMS D E F B C A); auto.
     apply t22_14__nsams; auto.
 Qed.
 
 (** If the sum of the angles of a triangle is greater than 180,
-  then the Obtuse angle hypothesis holds
+    then the Obtuse angle hypothesis holds
  *)
 
 Lemma t22_14__oah : forall A B C D E F,
   SumA C A B A B C D E F -> ~ SAMS D E F B C A -> hypothesis_of_obtuse_saccheri_quadrilaterals.
 Proof.
   intros A B C D E F HSuma1 HNIsi.
-  elim(Col_dec A B C).
-  { intro HCol.
-    exfalso.
+  destruct(col_dec A B C).
+  { exfalso.
     apply HNIsi.
     suma.assert_diffs.
     elim(bet_dec A B C).
@@ -2809,20 +2767,13 @@ Proof.
       apply (out546_suma__conga _ _ _ A B C); auto.
       apply not_bet_out; auto.
   }
-  intro HNCol.
-  elim(saccheri_s_three_hypotheses).
-  2: intro HUn; destruct HUn as [rah|]; auto.
-  - intro aah.
-    exfalso.
-    suma.assert_diffs.
-    assert(HSuma2 := ex_suma D E F B C A).
+  destruct (saccheri_s_three_hypotheses) as [aah|[rah|oah]]; auto; exfalso; suma.assert_diffs.
+  - assert(HSuma2 := ex_suma D E F B C A).
     destruct HSuma2 as [P [Q [R HSuma2]]]; auto.
     assert(HInter := t22_14__sams_nbet aah A B C D E F P Q R).
     destruct HInter; auto.
 
-  - exfalso.
-    suma.assert_diffs.
-    apply HNIsi.
+  - apply HNIsi.
     assert(~ Col D E F) by (apply (ncol_suma__ncol C A B); Col).
     assert(HD' := ex_conga_ts B C A F E D).
     destruct HD' as [D' []]; Col.
@@ -2831,7 +2782,7 @@ Proof.
     apply (t22_14__bet rah C A B).
     exists D; exists E; exists F.
     split; auto.
-    exists D'; repeat (split; CongA); Side.
+    exists D'; repeat (split; CongA); Side; Cop.
 Qed.
 
 
@@ -2845,21 +2796,19 @@ Proof.
   intros A B C M HNCol HM HCong.
   assert_diffs.
   assert(CongA A B C M C B).
-  { apply (out_conga M B C M C B); try (apply out_trivial); auto.
-    2: apply bet_out; Between.
-    apply l11_44_1_a.
-      intro; apply HNCol; ColR.
-      apply (cong_transitivity _ _ M A); eCong.
+  { apply (out_conga M B C M C B); try (apply out_trivial); auto;
+    [|apply bet_out; Between].
+    apply l11_44_1_a; auto.
+    apply (cong_transitivity _ _ M A); Cong.
   }
   assert(CongA B A C M C A).
-  { apply (out_conga M A C M C A); try (apply out_trivial); auto.
-    2: apply bet_out; Between.
+  { apply (out_conga M A C M C A); try (apply out_trivial); auto;
+    [|apply bet_out; Between].
     apply l11_44_1_a; Cong.
-    intro; apply HNCol; ColR.
   }
   apply (conga3_suma__suma A C M M C B A C B); CongA.
   exists B.
-  repeat (split; CongA).
+  repeat (split; CongA); [|exists A; left; split; Col].
   apply l9_9.
   repeat split; auto; try (intro; apply HNCol; ColR).
   exists M.
@@ -2868,8 +2817,8 @@ Qed.
 
 
 (** The three following lemmas link Saccheri's three hypotheses
-  with triangles A B C having C on the circle of diameter AB;
-  the first one states the equivalence between the right angle hypothesis and Thales' theorem
+    with triangles ABC having C on the circle of diameter AB;
+    the first one states the equivalence between the Right angle hypothesis and Thales' theorem
  *)
 
 Lemma t22_17__rah : forall A B C M,
@@ -2922,22 +2871,13 @@ Lemma t22_17__aah : forall A B C M,
 Proof.
   intros A B C M HNCol HM HCong.
   assert_diffs.
-  split.
-  - intro.
-    elim(saccheri_s_three_hypotheses); auto.
-    intro HUn.
-    exfalso.
-    apply (nlta A C B).
-    destruct HUn as [rah|oah].
+  split; intro.
+  - destruct (saccheri_s_three_hypotheses) as [|[rah|oah]]; auto; exfalso; apply (nlta A C B).
       apply (acute_per__lta); auto; rewrite (t22_17__rah _ _ _ M); auto.
       apply (acute_obtuse__lta); auto; rewrite (t22_17__oah _ _ _ M); auto.
 
-  - intro.
-    elim(angle_partition A C B); auto.
-    intro HUn.
-    absurd(hypothesis_of_acute_saccheri_quadrilaterals); auto.
-    apply not_aah.
-    destruct HUn.
+  - destruct (angle_partition A C B) as [|[|]]; auto;
+    absurd(hypothesis_of_acute_saccheri_quadrilaterals); auto; apply not_aah.
       left; apply (t22_17__rah A B C M); auto.
       right; apply (t22_17__oah A B C M); auto.
 Qed.
@@ -2952,10 +2892,10 @@ Proof.
 Qed.
 
 Lemma absolute_exterior_angle_theorem : ~ hypothesis_of_obtuse_saccheri_quadrilaterals ->
-  forall A B C D E F B', ~ Col A B C -> Bet B A B' -> A <> B' -> SumA A B C B C A D E F ->
+  forall A B C D E F B', Bet B A B' -> A <> B' -> SumA A B C B C A D E F ->
   LeA D E F C A B'.
 Proof.
-  intros noah A B C D E F B' HNCol HBet HAB' HSuma.
+  intros noah A B C D E F B' HBet HAB' HSuma.
   assert (HIsi := t22_20 noah A B C D E F HSuma).
   assert_diffs.
   apply sams_chara with B; SumA.
@@ -2963,4 +2903,21 @@ Qed.
 
 End Saccheri.
 
-Hint Resolve sac__par_strict1423 sac__par_strict1234 sac__par1423 sac__par1234 : Par.
+Hint Resolve sac__par_strict1423 sac__par_strict1234 sac__par1423 sac__par1234
+lam__par_strict1234 lam__par_strict1423 lam__par1234 lam__par1423 : Par.
+
+Hint Resolve sac__coplanar : cop.
+
+Section Saccheri_2D.
+
+Context `{T2D:Tarski_2D}.
+
+Lemma sac2__sac : forall A B C D E F,
+  Saccheri A B C D -> Saccheri A B E F -> D <> F -> Saccheri D C E F.
+Proof.
+  intros A B C D E F H1 H2 HDF.
+  assert (HCop := all_coplanar A B D F).
+  apply (cop_sac2__sac A B); assumption.
+Qed.
+
+End Saccheri_2D.

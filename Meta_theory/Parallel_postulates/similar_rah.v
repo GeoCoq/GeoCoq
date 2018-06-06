@@ -4,7 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section similar_rah.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 (**
 This is an adaptation of the proof of Martin's Theorem 23.6.
@@ -17,10 +17,9 @@ Lemma similar__rah_aux : forall A B C D E F,
   LeA B C A A B C -> Lt D E A B -> postulate_of_right_saccheri_quadrilaterals.
 Proof.
   intros A B C D E F HNCol HCongaB HCongaC HCongaA Hlea Hlt.
-  assert(H := A).
   assert_diffs.
   destruct (segment_construction_3 A B D E) as [G []]; auto.
-  clear H.
+  rename H into HFD.
   destruct (segment_construction_3 A C D F) as [H []]; auto.
   apply (cong2_lt__lt _ _ _ _ A G A B) in Hlt; Cong.
   assert(Bet A G B) by (apply (l6_13_1); Le; apply l6_6; auto).
@@ -75,6 +74,7 @@ Proof.
     right; intro; Col.
     exists A; split; CongA.
     split; Side.
+    split; Cop.
     intro Hts.
     destruct Hts as [_ []]; Col.
   }
@@ -84,6 +84,7 @@ Proof.
     right; intro; apply HNCol3; Col.
     exists A; split; CongA.
     split; Side.
+    split; Cop.
     intro Hts.
     destruct Hts as [_ []]; Col.
   }
@@ -101,12 +102,13 @@ Proof.
       apply os_ts__inangle; SumA; eauto with side.
     }
     destruct(ex_suma B C G H G B) as [X [Y [Z]]]; auto.
-    assert(SumA B G C C G H H G B) by (exists H; repeat (split; CongA); Side).
+    assert(SumA B G C C G H H G B) by (exists H; repeat (split; CongA); Side; Cop).
     assert(SAMS B G C C G H).
     { repeat split; auto.
         right; intro; apply HNCol4; Col.
       exists H; split; CongA.
       split; Side.
+      split; Cop.
       apply l9_9_bis.
       apply (col_one_side _ A); Col.
       apply invert_one_side, out_one_side; Col.
@@ -114,8 +116,8 @@ Proof.
     assert(SAMS I J K C G H) by (apply (sams_assoc B C G C G B _ _ _ _ _ _ H G B); SumA).
     assert(SumA I J K C G H X Y Z) by (apply (suma_assoc B C G C G B _ _ _ _ _ _ _ _ _ H G B); SumA).
     assert(SAMS B C G H C G).
-      repeat split; auto; [right; intro; Col|exists H; split; CongA; split; eauto with side].
-    assert(SumA B C G H C G H C B) by (exists H; repeat (split; CongA); Side).
+      repeat split; auto; [right; intro; Col|exists H; split; CongA; repeat split; Side; Cop].
+    assert(SumA B C G H C G H C B) by (exists H; repeat (split; CongA); Side; Cop).
     split.
     - assert(SAMS X Y Z H C G) by (apply (sams_assoc H G B B C G _ _ _ _ _ _ H C B); SumA).
       apply (sams_assoc _ _ _ C G H H C G X Y Z); SumA.
@@ -131,13 +133,13 @@ Proof.
     apply (sams_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); SumA.
     { destruct (t22_14__sams_nbet aah C G B I J K O P Q) as [HIsi HNBet]; Col.
       apply (sams_lea_lta789_suma2__lta123 _ _ _ G B C O P Q _ _ _ G B C A G B); Lea.
-        split; eauto with lea; intro; apply HNBet; apply (bet_conga_bet A G B); CongA.
-        apply (conga3_suma__suma B G H H G A A G B); CongA; exists A; repeat (split; CongA); Side.
+        split; eauto with lea; intro; apply HNBet; apply (bet_conga__bet A G B); CongA.
+        apply (conga3_suma__suma B G H H G A A G B); CongA; exists A; repeat (split; CongA); Side; Cop.
     }
     destruct (t22_14__sams_nbet aah C G H L M N R S T) as [HIsi HNBet]; Col.
     apply (sams_lea_lta789_suma2__lta123 _ _ _ G H C R S T _ _ _ G H C A H C); Lea.
-      split; eauto with lea; intro; apply HNBet; apply (bet_conga_bet A H C); CongA.
-      apply (conga3_suma__suma A H G G H C A H C); CongA; exists C; repeat (split; CongA); Side.
+      split; eauto with lea; intro; apply HNBet; apply (bet_conga__bet A H C); CongA.
+      apply (conga3_suma__suma A H G G H C A H C); CongA; exists C; repeat (split; CongA); Side; Cop.
 
   - intro HUn.
     destruct HUn as [|oah]; auto.

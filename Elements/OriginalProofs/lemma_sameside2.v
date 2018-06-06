@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_9_5a.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_sameside2 : 
    forall A B C E F G, 
@@ -16,7 +16,6 @@ Proof.
 intros.
 let Tf:=fresh in
 assert (Tf:exists Q U V, (Col A C U /\ Col A C V /\ BetS E U Q /\ BetS F V Q /\ nCol A C E /\ nCol A C F)) by (conclude_def OS );destruct Tf as [Q[U[V]]];spliter.
-assert (TS E A C Q) by (conclude_def TS ).
 assert (TS F A C Q) by (conclude_def TS ).
 assert (Col A C B) by (forward_using lemma_collinearorder).
 assert (~ eq A C).
@@ -62,7 +61,7 @@ assert (~ ~ TS G A C Q).
    assert (BetS G B Q) by (conclude lemma_3_7a).
    close.
    }
-(* cases *)
+(** cases *)
   assert (~ Col A C G).
    {
    intro.
@@ -142,7 +141,6 @@ assert (~ ~ TS G A C Q).
   assert (~ Col B G Q).
    {
    intro.
-   assert (Col B F G) by (conclude_def Col ).
    assert (Col G B F) by (forward_using lemma_collinearorder).
    assert (neq B G) by (forward_using lemma_betweennotequal).
    assert (neq G B) by (conclude lemma_inequalitysymmetric).
@@ -154,7 +152,7 @@ assert (~ ~ TS G A C Q).
   assert (TS G A C Q) by (conclude lemma_9_5a).
   close.
   }
-(* cases *)
+(** cases *)
  contradict.
  }
 rename_H H;

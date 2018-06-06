@@ -112,13 +112,17 @@ Qed.
 
 End T2_1.
 
-(* Some tactics *)
+(** Some tactics *)
+
+Ltac not_exist_hyp_perm_col A B C := not_exist_hyp (Col A B C); not_exist_hyp (Col A C B);
+                                 not_exist_hyp (Col B A C); not_exist_hyp (Col B C A);
+                                 not_exist_hyp (Col C A B); not_exist_hyp (Col C B A).
 
 Ltac assert_cols :=
 repeat
  match goal with
       | H:Bet ?X1 ?X2 ?X3 |- _ =>
-     not_exist_hyp (Col X1 X2 X3);assert (Col X1 X2 X3) by (apply bet_col;apply H)
+     not_exist_hyp_perm_col X1 X2 X3;assert (Col X1 X2 X3) by (apply bet_col;apply H)
  end.
 
 Ltac clean_trivial_hyps :=
@@ -135,20 +139,16 @@ Ltac clean_trivial_hyps :=
 end.
 
 Ltac clean_reap_hyps :=
+  clean_duplicated_hyps;
   repeat
   match goal with
-
-   | H:(~Col ?A ?B ?C), H2 : ~Col ?A ?B ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?A ?B ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?B ?A ?C |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?B ?C ?A |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?C ?B ?A |- _ => clear H2
    | H:(Col ?A ?B ?C), H2 : Col ?C ?A ?B |- _ => clear H2
    | H:(Bet ?A ?B ?C), H2 : Bet ?C ?B ?A |- _ => clear H2
-   | H:(Bet ?A ?B ?C), H2 : Bet ?A ?B ?C |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?D ?C |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?C ?D |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?A ?B |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?B ?A |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?B ?A |- _ => clear H2
@@ -156,10 +156,9 @@ Ltac clean_reap_hyps :=
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?C ?D |- _ => clear H2
    | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?D ?C |- _ => clear H2
    | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
-   | H:(?A<>?B), H2 : (?A<>?B) |- _ => clear H2
 end.
 
-Ltac clean := clean_trivial_hyps;clean_duplicated_hyps;clean_reap_hyps.
+Ltac clean := clean_trivial_hyps;clean_reap_hyps.
 
 Ltac smart_subst X := subst X;clean.
 
@@ -225,32 +224,26 @@ Qed.
 Lemma outer_transitivity_between : forall A B C D, Bet A B C -> Bet B C D -> B<>C -> Bet A B D.
 Proof.
     intros.
-    eBetween.
+    apply between_symmetry.
+    apply (outer_transitivity_between2) with C; Between.
+Qed.
+
+Lemma between_exchange4 : forall A B C D, Bet A B C -> Bet A C D -> Bet A B D.
+Proof.
+    intros.
+    apply between_symmetry.
+    apply between_exchange2 with C; Between.
 Qed.
 
 End T2_3.
 
-Hint Resolve between_exchange2 : between.
+Hint Resolve between_exchange2 outer_transitivity_between between_exchange4 : between.
 
 Section T2_4.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma between_exchange4 : forall A B C D, Bet A B C -> Bet A C D -> Bet A B D.
-Proof.
-    intros.
-    eBetween.
-Qed.
-
-End T2_4.
-
-Hint Resolve outer_transitivity_between between_exchange4 : between.
-
-Section T2_5.
-
-Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Lemma l_3_9_4 : forall A1 A2 A3 A4, Bet_4 A1 A2 A3 A4 -> Bet_4 A4 A3 A2 A1.
+Lemma l3_9_4 : forall A1 A2 A3 A4, Bet_4 A1 A2 A3 A4 -> Bet_4 A4 A3 A2 A1.
 Proof.
     unfold Bet_4.
     intros;spliter; auto with between.
@@ -284,9 +277,9 @@ Proof.
     ex_elim ld A.
     ex_elim H B.
     ex_elim H0 C.
-    induction (eq_dec_points A B).
-      subst A; exists B; exists C; auto with between between_no_eauto.
-    exists A; exists B; assumption.
+    exists A; exists B.
+    intro; subst; apply H.
+    right; right; apply between_trivial.
 Qed.
 
 Lemma point_construction_different : forall A B, exists C, Bet A B C /\ B <> C.
@@ -310,7 +303,7 @@ Proof.
     exists B;assumption.
 Qed.
 
-End T2_5.
+End T2_4.
 
 Section Beeson_1.
 

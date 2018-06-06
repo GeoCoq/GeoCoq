@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_crossbar.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_angleordertransitive : 
    forall A B C D E F P Q R, 

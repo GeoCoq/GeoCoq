@@ -29,8 +29,6 @@ assert (nCol A E B) by (conclude lemma_NChelper).
 assert (nCol A B E) by (forward_using lemma_NCorder).
 assert (Triangle A B E) by (conclude_def Triangle ).
 assert (TG B A A E B E) by (conclude proposition_20).
-assert (TG A B A E B E) by (forward_using lemma_TGflip).
-assert (Cong E C E C) by (conclude cn_congruencereflexive).
 assert (TT B A A C B E E C) by (conclude lemma_21helper).
 assert (nCol A C B) by (forward_using lemma_NCorder).
 assert (Col A E C) by (conclude_def Col ).
@@ -57,8 +55,6 @@ assert (TT B A A C B D D C) by (conclude lemma_TTflip2).
 assert (nCol C E D) by (forward_using lemma_NCorder).
 assert (Triangle C E D) by (conclude_def Triangle ).
 assert (LtA D E C C D B) by (conclude proposition_16).
-assert (CongA C E D D E C) by (conclude lemma_ABCequalsCBA).
-assert (LtA C E D C D B) by (conclude lemma_angleorderrespectscongruence2).
 assert (nCol E B C) by (forward_using lemma_NCorder).
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Col E B B) by (conclude_def Col ).
@@ -67,9 +63,6 @@ assert (Col E B D) by (forward_using lemma_collinearorder).
 assert (neq B D) by (forward_using lemma_betweennotequal).
 assert (neq D B) by (conclude lemma_inequalitysymmetric).
 assert (nCol D B C) by (conclude lemma_NChelper).
-assert (nCol B D C) by (forward_using lemma_NCorder).
-assert (CongA B D C C D B) by (conclude lemma_ABCequalsCBA).
-assert (LtA C E D B D C) by (conclude lemma_angleorderrespectscongruence).
 assert (nCol B A E) by (forward_using lemma_NCorder).
 assert (Triangle B A E) by (conclude_def Triangle ).
 assert (LtA E A B B E C) by (conclude proposition_16).
@@ -86,7 +79,6 @@ assert (Out A B B) by (conclude lemma_ray4).
 assert (nCol B A C) by (forward_using lemma_NCorder).
 assert (CongA B A C B A C) by (conclude lemma_equalanglesreflexive).
 assert (CongA B A C B A E) by (conclude lemma_equalangleshelper).
-assert (LtA B A C C E B) by (conclude lemma_angleorderrespectscongruence2).
 assert (BetS E D B) by (conclude axiom_betweennesssymmetry).
 assert (Out E D B) by (conclude lemma_ray4).
 assert (eq C C) by (conclude cn_equalityreflexive).
@@ -95,7 +87,6 @@ assert (nCol C E D) by (forward_using lemma_NCorder).
 assert (CongA C E D C E D) by (conclude lemma_equalanglesreflexive).
 assert (CongA C E D C E B) by (conclude lemma_equalangleshelper).
 assert (LtA B A E C E D) by (conclude lemma_angleorderrespectscongruence).
-assert (CongA B A E B A C) by (conclude lemma_equalanglessymmetric).
 assert (LtA B A C C E D) by (conclude lemma_angleorderrespectscongruence2).
 assert (nCol D E C) by (forward_using lemma_NCorder).
 assert (CongA D E C C E D) by (conclude lemma_ABCequalsCBA).

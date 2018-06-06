@@ -1,9 +1,9 @@
-Require Import GeoCoq.Tarski_dev.Ch13_1.
-Require Import GeoCoq.Highschool.triangles.
+Require Export GeoCoq.Tarski_dev.Ch13_1.
+Require Export GeoCoq.Highschool.triangles.
 
 Section Bisector.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 (** Existence of the interior bisector of an angle. *)
 
@@ -11,7 +11,7 @@ Lemma bisector_existence : forall A B C,  A <> B -> B <> C ->
 exists E,  InAngle E A B C /\ CongA A B E E B C.
 Proof.
 intros A B C HAB HBC.
-destruct (Col_dec A B C) as [HCOL | HNCOL].
+destruct (col_dec A B C) as [HCOL | HNCOL].
 (*case 1: Out B A C*)
 destruct (out_dec B A C) as [HOUT | HNOUT].
 exists C.
@@ -127,17 +127,17 @@ bet.
 assumption.
 Qed.
 
-Lemma not_col_bfoot_not_equality : forall A B C I H1 H2, ~ Col A B C -> 
+Lemma not_col_bfoot_not_equality : forall A B C I H1 H2, ~ Col A B C -> Coplanar A B C I ->
 Col A B H1 -> Col B C H2 -> CongA A B I I B C->
 Perp A B I H1 -> Perp B C I H2 -> H1 <> B /\ H2 <> B.
 Proof.
-intros A B C I H1 H2 HNCOL HCOL1 HCOL2 HCONGA HORTHA HORTHC.
+intros A B C I H1 H2 HNCOL HCOP HCOL1 HCOL2 HCONGA HORTHA HORTHC.
 split.
 intro.
 subst.
 assert (Per A B I) by (apply (perp_per_1 B A I);auto;assert_diffs;auto;Perp).
 assert (Col A C B).
-{  apply (per_per_col A C I B);auto.
+{  apply cop_per2__col with I;Cop.
   assert_diffs;auto.
   apply (l8_2 I B C);auto.
   apply (l11_17 A B I I B C);auto. }
@@ -146,18 +146,18 @@ intro;subst.
 assert (Per C B I) by (apply (perp_per_1 B C I);auto;assert_diffs;auto).
 assert (Per I B C) by (apply (l8_2 C B I);auto).
 assert (Col A C B).
-{ apply (per_per_col A C I B);auto.
-  apply (l11_17 I B C A B I);auto.
-  CongA.
- assert_diffs;auto. }
+{ apply cop_per2__col with I;Cop.
+  assert_diffs; auto.
+ apply (l11_17 I B C A B I);auto.
+ CongA. }
 elim HNCOL; Col.
 Qed.
 
-Lemma bisector_foot_out_out : forall A B C I H1 H2,
- ~ Col A B C -> Col A B H1 -> Col B C H2-> CongA A B I I B C->
+Lemma bisector_foot_out_out : forall A B C I H1 H2, ~ Col A B C ->
+Coplanar A B C I -> Col A B H1 -> Col B C H2-> CongA A B I I B C->
 Perp A B I H1 -> Perp B C I H2 -> (Out B H1 A -> Out B H2 C).
 Proof.
-intros A B C I H1 H2 HNCOL HCOL1 HCOL2 HCONGA HORTHA HORTHC HOUT1.
+intros A B C I H1 H2 HNCOL HCOP HCOL1 HCOL2 HCONGA HORTHA HORTHC HOUT1.
 destruct (not_col_bfoot_not_equality A B C I H1 H2) as [HNEQH1 HNEQH2];auto.
 assert (Acute H1 B I). 
 { apply (perp_out_acute H1 B I H1);auto. 
@@ -177,11 +177,11 @@ assert (Acute I B C) by (apply (acute_conga__acute H1 B I I B C);auto).
 apply (acute_col_perp__out I B C H2);auto.
 Qed.
 
-Lemma not_col_efoot_not_equality : forall A B C I H1 H2, ~ Col A B C ->
+Lemma not_col_efoot_not_equality : forall A B C I H1 H2, ~ Col A B C -> Coplanar A B C I ->
 Col A B H1 -> Col B C H2-> Cong I H1 I H2->
 Perp A B I H1 -> Perp B C I H2 -> H1 <> B /\ H2 <> B.
 Proof.
-intros A B C I H1 H2 HNCOL HCOLH1 HCOLH2 HCONG HPERH1 HPERH2.
+intros A B C I H1 H2 HNCOL HCOP HCOLH1 HCOLH2 HCONG HPERH1 HPERH2.
 assert (H1 <> B).
 intro.
 subst.
@@ -189,7 +189,8 @@ assert (H2 <> B).
 {  intro.
   subst.
   assert (Col B A C).
-   apply (perp_perp_col B A C I B);auto.
+   apply (cop_perp2__col B A C I B);auto.
+  Cop.
   Perp.
   elim HNCOL.
   Col.
@@ -277,7 +278,7 @@ end.
 
 Section Bisector_2.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma equality_foot_out_out : forall A B C I H1 H2, 
  ~ Col A B C -> InAngle I A B C ->
@@ -287,6 +288,7 @@ Lemma equality_foot_out_out : forall A B C I H1 H2,
 Proof.
 intros A B C I H1 H2 HNCOL HINANGLE HCOLH1 HCOLH2 HCONG HPERH1 HPERH2 HOUTH1.
 destruct (not_col_efoot_not_equality A B C I H1 H2) as [HNEQH1 HNEQH2];auto.
+ Cop.
 assert(HMY : Cong H1 B H2 B /\ CongA H1 B I H2 B I /\ CongA H1 I B H2 I B).
 {  apply (l11_52 B H1 I B H2 I).
    apply (l11_16 B H1 I B H2 I).
@@ -304,12 +306,8 @@ assert(HMY : Cong H1 B H2 B /\ CongA H1 B I H2 B I /\ CongA H1 I B H2 I B).
    assert_diffs;auto.
    Cong.
    Cong.
-   apply (l11_46 B H1 I).
-   intro.
-   assert (Col B A I) by (ColR).
-   assert (Perp_at H1 A B I H1) by (apply (l8_14_2_1b_bis A B I H1 H1);auto;Col;Col).
-   assert (HEQIH1 : H1 = I) by (apply (l8_14_2_1b H1 A B I H1 I);auto;Col;Col).
-   assert_diffs;auto.
+   assert_diffs.
+   apply (l11_46 B H1 I); auto.
    left.
    apply (perp_per_1 H1 B I).
    assert_diffs;auto.
@@ -324,7 +322,10 @@ assert (TS I B A C).
    intro.
    assert (Col H2 B H1) by (col_with_conga).
    elim HNCOL;ColR. }
-destruct (conga__or_out_ts I B H1 H2) as [HOUTH1H2 | HTSH1H2].
+destruct (conga_cop__or_out_ts I B H1 H2) as [HOUTH1H2 | HTSH1H2].
+assert_diffs.
+apply coplanar_perm_2, col_cop__cop with C; Col.
+apply coplanar_perm_5, col_cop__cop with A; Col; Cop.
 CongA.
 elim HNCOL;ColR.
 assert (TS I B A H2) by (apply (l9_5 I B H1 H2 B A);auto;Col).
@@ -339,13 +340,13 @@ Qed.
 
 (** The points on the bisector of an angle are at equal distances of the two sides. *)
 
-Lemma bisector_perp_equality : forall A B C I H1 H2, 
- Col B H1 A -> 
- Col B H2 C -> Perp A B I H1 -> Perp B C I H2 ->
+Lemma bisector_perp_equality : forall A B C I H1 H2, Coplanar A B C I ->
+ Col B H1 A -> Col B H2 C ->
+ Perp A B I H1 -> Perp B C I H2 ->
  CongA A B I I B C ->  Cong I H1 I H2.
 Proof.
-intros A B C I H1 H2 HCABH HCCBH HPH1 HPH2 HCONGA.
-destruct (Col_dec A B C) as [HCOL | HNCOL].
+intros A B C I H1 H2 HCOP HCABH HCCBH HPH1 HPH2 HCONGA.
+destruct (col_dec A B C) as [HCOL | HNCOL].
 assert (Perp A B I H2) by(apply (perp_col2 B C A B I H2);auto;assert_diffs;auto;Col;Col).
 assert (H1 = H2).
 { apply (l8_14_2_1b H1 A B I H1 H2);auto.
@@ -355,7 +356,7 @@ assert (H1 = H2).
  assert_diffs; ColR.
  assert (Perp I H1 A B) by (Perp).
  assert (Perp I H2 A B) by (Perp).
- assert (Col I H1 H2) by (apply (perp_perp_col I H1 H2 A B);auto).
+ assert (Col I H1 H2) by (apply (cop_perp2__col I H1 H2 A B); Cop).
  Col. }
 subst;Cong.
 (*for Col A B C End*)
@@ -418,6 +419,9 @@ assert (Out B H2 C').
   elim HNCOL.
   assert_diffs;auto.
   ColR.
+  assert_diffs.
+  apply coplanar_perm_3, col_cop__cop with C; Col.
+  apply coplanar_perm_19, col_cop__cop with A; Col; Cop.
   Col.
   assert_diffs;auto.
   ColR.
@@ -472,6 +476,7 @@ Lemma perp_equality_bisector : forall A B C I H1 H2,  ~ Col A B C ->
 Proof.
 intros A B C I H1 H2 HNCOL HINANGLE HCOLH1 HCOLH2 HPERPH1 HPERPH2 HCONG.
 destruct (not_col_efoot_not_equality A B C I H1 H2) as [HNEQH1 HNEQH2];auto.
+ Cop.
  Col.
  Col.
 assert(HMY : Cong H1 B H2 B /\ CongA H1 B I H2 B I /\ CongA H1 I B H2 I B).
@@ -479,7 +484,7 @@ assert(HMY : Cong H1 B H2 B /\ CongA H1 B I H2 B I /\ CongA H1 I B H2 I B).
 { apply (l11_16 B H1 I B H2 I).
   apply (perp_per_1 H1 B I).
   assert_diffs;auto.
-  assert (Perp B H1 I H1) by ( apply (perp_col B A I H1 H1);auto;Perp;Col).
+  assert (Perp B H1 I H1) . ( apply (perp_col B A I H1 H1);auto;Perp;Col).
   Perp.
   assert_diffs;auto.
   assert_diffs;auto.
@@ -491,13 +496,8 @@ assert(HMY : Cong H1 B H2 B /\ CongA H1 B I H2 B I /\ CongA H1 I B H2 I B).
   assert_diffs;auto. }
 Cong.
 Cong.
-{  apply (l11_46 B H1 I).
-   intro;elim HNCOL.
-   assert_diffs;auto.
-   assert (Col B A I) by (ColR).
-   assert (Perp_at H1 A B I H1) by (apply (l8_14_2_1b_bis A B I H1 H1);auto;Col;Col).
-   assert (H1 = I) by (apply (l8_14_2_1b H1 A B I H1 I);auto;Col;Col).
-   elim H0;auto.
+{  assert_diffs.
+   apply (l11_46 B H1 I); auto.
    left.
    apply (perp_per_1 H1 B I).
    assert_diffs;auto.

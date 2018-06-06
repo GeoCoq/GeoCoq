@@ -2,9 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_8_2.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_8_3.
 
 Section Euclid.
-
-Context `{Ax1:euclidean_neutral}.
-
+Context `{Ax:euclidean_neutral_ruler_compass}.
 Lemma lemma_altitudebisectsbase : 
    forall A B M P, 
    BetS A M B -> Cong A P B P -> Per A M P ->
@@ -20,9 +18,7 @@ assert (Per C M P) by (conclude_def Per ).
 assert (Per P M A) by (conclude lemma_8_2).
 let Tf:=fresh in
 assert (Tf:exists Q, (BetS P M Q /\ Cong P M Q M /\ Cong P A Q A /\ neq M A)) by (conclude_def Per );destruct Tf as [Q];spliter.
-assert (BetS Q M P) by (conclude axiom_betweennesssymmetry).
 assert (Cong Q M P M) by (conclude lemma_congruencesymmetric).
-assert (Cong Q A P A) by (conclude lemma_congruencesymmetric).
 assert (Per P M C) by (conclude lemma_8_2).
 assert (Out M C B) by (conclude_def Out ).
 assert (Per P M B) by (conclude lemma_8_3).
@@ -65,30 +61,19 @@ assert (~ eq P B).
  {
  intro.
  assert (Cong A P B B) by (conclude cn_equalitysub).
- assert (eq A P) by (conclude axiom_nullsegment1).
+ assert (~ neq A P).
+  {
+  intro.
+  assert (neq B B) by (conclude axiom_nocollapse).
+  assert (eq B B) by (conclude cn_equalityreflexive).
+  contradict.
+  }
  contradict.
  }
 assert (Out P B B) by (conclude lemma_ray4).
 assert (Out P M Q) by (conclude lemma_ray4).
 assert (CongA A P M B P M) by (conclude_def CongA ).
 assert (Cong P M P M) by (conclude cn_congruencereflexive).
-assert (nCol A M P) by (conclude lemma_rightangleNC).
-assert (~ Col A P M).
- {
- intro.
- assert (Col A M P) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (Triangle A P M) by (conclude_def Triangle ).
-assert (Per B M P) by (conclude lemma_8_2).
-assert (nCol B M P) by (conclude lemma_rightangleNC).
-assert (~ Col B P M).
- {
- intro.
- assert (Col B M P) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (Triangle B P M) by (conclude_def Triangle ).
 assert ((Cong A M B M /\ CongA P A M P B M /\ CongA P M A P M B)) by (conclude proposition_04).
 assert (Cong A M M B) by (forward_using lemma_congruenceflip).
 assert (Midpoint A M B) by (conclude_def Midpoint ).
@@ -96,5 +81,3 @@ close.
 Qed.
 
 End Euclid.
-
-

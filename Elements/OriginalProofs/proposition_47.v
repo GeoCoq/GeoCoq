@@ -26,8 +26,6 @@ assert (OS E D B C) by (conclude_def TP ).
 assert (TS E B C A) by (conclude lemma_planeseparation).
 let Tf:=fresh in
 assert (Tf:exists m l, (PG C m l E /\ BetS C m B /\ PG m B D l /\ BetS E l D /\ BetS l m A /\ Per E l A /\ EF A C K H C m l E)) by (conclude proposition_47B);destruct Tf as [m[l]];spliter.
-assert (nCol E l A) by (conclude lemma_rightangleNC).
-assert (nCol D L A) by (conclude lemma_rightangleNC).
 assert (neq E D) by (forward_using lemma_betweennotequal).
 assert (neq D E) by (conclude lemma_inequalitysymmetric).
 assert (Col E l D) by (conclude_def Col ).
@@ -42,7 +40,6 @@ assert (eq l L) by (conclude lemma_droppedperpendicularunique).
 assert (eq L l) by (conclude lemma_equalitysymmetric).
 assert (BetS L m A) by (conclude cn_equalitysub).
 assert (BetS C M B) by (conclude axiom_betweennesssymmetry).
-assert (nCol A B C) by (conclude_def Triangle ).
 assert (Col L m A) by (conclude_def Col ).
 assert (Col L M A) by (conclude_def Col ).
 assert (Col L A m) by (forward_using lemma_collinearorder).
@@ -60,8 +57,6 @@ assert (Col M m B) by (forward_using lemma_collinearorder).
 assert (~ neq M m).
  {
  intro.
- assert (Col A m M) by (conclude lemma_collinear4).
- assert (Col B M m) by (conclude lemma_collinear4).
  assert (Col m M A) by (forward_using lemma_collinearorder).
  assert (Col m M B) by (forward_using lemma_collinearorder).
  assert (neq m M) by (conclude lemma_inequalitysymmetric).

@@ -3,12 +3,10 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_oppositesidesymmetric.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_27.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_28B : 
-   forall A B C D E F G H, 
-   BetS A G B -> BetS C H D -> BetS E G H -> BetS G H F -> RT B G H G H D -> OS B D G H ->
+   forall A B C D G H, 
+   BetS A G B -> BetS C H D -> RT B G H G H D -> OS B D G H ->
    Par A B C D.
 Proof.
 intros.
@@ -22,13 +20,6 @@ assert (eq H H) by (conclude cn_equalityreflexive).
 assert (Out G H H) by (conclude lemma_ray4).
 assert (Supp A G H H B) by (conclude_def Supp ).
 assert (Supp B G H H A) by (conclude lemma_supplementsymmetric).
-assert (nCol G H B) by (conclude_def OS ).
-assert (~ Col B G H).
- {
- intro.
- assert (Col G H B) by (forward_using lemma_collinearorder).
- contradict.
- }
 assert (CongA e b d H G A) by (conclude lemma_supplements).
 assert (CongA G H D e b d) by (conclude lemma_equalanglessymmetric).
 assert (CongA G H D H G A) by (conclude lemma_equalanglestransitive).
@@ -54,5 +45,3 @@ close.
 Qed.
 
 End Euclid.
-
-

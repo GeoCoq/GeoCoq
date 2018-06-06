@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section playfair_alternate_interior_angles.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma playfair__alternate_interior :  playfair_s_postulate -> alternate_interior_angles_postulate.
 Proof.

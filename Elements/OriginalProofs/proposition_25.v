@@ -2,9 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_24.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_angletrichotomy2.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_25 : 
    forall A B C D E F, 
    Triangle A B C -> Triangle D E F -> Cong A B D E -> Cong A C D F -> Lt E F B C ->
@@ -27,7 +25,6 @@ assert (~ Col B A C).
  assert (Col A B C) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (Triangle B A C) by (conclude_def Triangle ).
 assert (nCol D E F) by (conclude_def Triangle ).
 assert (~ Col E D F).
  {
@@ -35,7 +32,6 @@ assert (~ Col E D F).
  assert (Col D E F) by (forward_using lemma_collinearorder).
  contradict.
  }
-assert (Triangle E D F) by (conclude_def Triangle ).
 assert (~ CongA E D F B A C).
  {
  intro.
@@ -51,5 +47,3 @@ close.
 Qed.
 
 End Euclid.
-
-

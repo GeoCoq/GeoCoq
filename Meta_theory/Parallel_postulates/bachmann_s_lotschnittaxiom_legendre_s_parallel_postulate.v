@@ -5,26 +5,31 @@ Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section bachmann_s_lotschnittaxiom_legendre_s_parallel_postulate.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma bachmann_s_lotschnittaxiom__legendre_s_parallel_postulate :
   bachmann_s_lotschnittaxiom -> legendre_s_parallel_postulate.
 Proof.
 intro bla.
-cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
+cut (forall A1 A2 B1 B2 C1 C2 D1 D2 IAB IAC IBD,
         Perp A1 A2 B1 B2 -> Perp A1 A2 C1 C2 -> Perp B1 B2 D1 D2 ->
-        ~ Col A1 A2 D1 -> ~ Col B1 B2 C1 ->
+        Col A1 A2 IAB -> Col B1 B2 IAB ->
+        Col A1 A2 IAC -> Col C1 C2 IAC ->
+        Col B1 B2 IBD -> Col D1 D2 IBD ->
+        Coplanar IAB IAC IBD C1 -> Coplanar IAB IAC IBD C2 ->
+        Coplanar IAB IAC IBD D1 -> Coplanar IAB IAC IBD D2 ->
+       ~ Col IAB IAC IBD ->
         exists I, Col C1 C2 I /\ Col D1 D2 I).
   {
   clear bla; intro bla.
   cut (exists A B C,
           ~ Col A B C /\ Acute A B C /\
           forall P Q,
-            Out B A P -> P <> Q -> Per B P Q ->
+            Out B A P -> P <> Q -> Per B P Q -> Coplanar A B C Q ->
             exists Y, Out B C Y /\ Col P Q Y).
     {
     intros [A [B [C [HNC [HAcute HP]]]]]; exists A, B, C; split; try split; Col.
-    intros T HInAngle; elim (Col_dec A B T); intro HABT.
+    intros T HInAngle; elim (col_dec A B T); intro HABT.
 
       {
       assert (HNC' : ~ Col B C T)
@@ -38,8 +43,9 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
       apply l6_6; apply acute_col_perp__out with T; Col.
       apply acute_conga__acute with A B C; auto.
       apply out213_suma__conga with T B A; try apply l6_6; auto.
-      exists C; split; [|split]; try apply col123__nos; Col;
-      apply conga_refl; assert_diffs; auto.
+      assert_diffs.
+      exists C; repeat (split; CongA); Cop.
+      apply col123__nos; Col.
       }
 
       {
@@ -54,7 +60,7 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
       destruct (HP X T) as [Y [HOut2 H]];
       try apply perp_per_1; try solve[assert_diffs; auto];
       try apply perp_sym; try apply perp_col0 with A B;
-      try solve[assert_diffs; assert_cols; Col].
+      try solve[assert_diffs; assert_cols; Col]; Cop.
       exists X, Y; repeat (split; auto); elim H; clear H; intro H; auto.
       elim (eq_dec_points T Y); intro HTY; treat_equalities; Between.
       assert (HACT : ~ Col B C T).
@@ -146,12 +152,11 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
           }
         assert (HSumA : SumA A B D C B D A B C).
           {
-          exists C; split; [apply conga_pseudo_refl|split;[|apply conga_refl]];
-          try solve[intro; treat_equalities; apply HNC; assert_cols; Col].
+          assert_diffs.
+          exists C; repeat (split; CongA); Cop.
           apply l9_9.
-          split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
-          split; [intro; assert_diffs; assert_cols; apply HNC; ColR|].
-          exists D; split; Col; unfold Midpoint in *; spliter; auto.
+          repeat split; [apply per_not_col; auto..|].
+          exists D; split; Col; Between.
           }
         assert (HC := per2_suma__bet _ _ _ _ _ _ _ _ _ HPer1 HPer2 HSumA);
         apply HNC; assert_cols; Col.
@@ -159,18 +164,25 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
       }
 
       {
-      intros P Q HOut1 HNE1 HPer.
+      intros P Q HOut1 HNE1 HPer HCop1.
       destruct (segment_construction_2 C B B P) as [P' [H HCong2]];
       [assert_diffs; auto|]. assert (HOut2 : Out B C P')
         by (assert_diffs; repeat (split; auto)); clear H.
-      destruct (perp_exists P' B C) as [Q' HPerp2]; [assert_diffs; auto|].
+      destruct (ex_perp_cop B C P' A) as [Q' [HPerp2 HCop2]]; [assert_diffs; auto|].
       assert (HPerp3 : Perp B A Q P).
-      {
+        {
         apply l8_16_2 with B; assert_diffs; Col; Perp.
         apply per_not_col in HPer; auto.
         intro; apply HPer; assert_cols; ColR.
-      }
-      destruct (bla B A B C P Q P' Q') as [I [HC1 HC2]]; Perp;
+        }
+      assert (Coplanar B P P' P) by Cop.
+      assert (Coplanar A B C P) by Cop.
+      assert (Coplanar B Q A C)
+        by (assert_diffs; apply col2_cop__cop with A D; Col; Cop).
+      assert (Coplanar A B C P') by Cop.
+      assert (Coplanar B P P' Q) by CopR.
+      assert (Coplanar B P P' Q') by CopR.
+      destruct (bla B A B C P Q P' Q' B P P') as [I [HC1 HC2]]; Col; Perp; Cop;
       try (intro; apply HNC; assert_diffs; assert_cols; ColR).
       assert (HNE2 : B <> D)
         by (intro; treat_equalities; apply HNC; assert_cols; Col).
@@ -181,12 +193,12 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
           {
           intro; treat_equalities; apply (perp_not_col _ _ _ HPerp1).
           destruct (not_strict_par A B P' Q' P) as [HC3 HC4];
-          try apply l12_9 with B C; Perp; try solve[assert_cols; Col].
+          try apply l12_9 with B C; Perp; try solve[assert_cols; Col]; Cop.
           assert_diffs; assert_cols; ColR.
           }
 
           {
-          apply par_not_col_strict with P; try apply l12_9 with A B; Perp; Col.
+          apply par_not_col_strict with P; try apply l12_9 with A B; Perp; Col; Cop.
           intro; apply HNC; assert_diffs; assert_cols; ColR.
           }
         }
@@ -194,15 +206,17 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
       try (intro; apply (l9_9_bis _ _ _ _ HOS)).
 
         {
+        assert (Coplanar A B C I) by (apply col_cop2__cop with P Q; Cop).
+        assert (Coplanar A B C D) by Cop.
         elim (eq_dec_points D I); intro HNE3; treat_equalities; Col.
-        destruct HD as [_ HD]; apply perp_perp_col with A C;
-        apply perp_bisect_perp; apply cong_perp_bisect;
-        try solve[assert_diffs; Cong]. assert (HPerp4 : Perp P I B P).
+        destruct HD as [_ HD]; apply cop_perp2__col with A C; Cop;
+        apply perp_bisect_perp; apply cong_cop_perp_bisect;
+        try solve[assert_diffs; Cong]; try CopR. assert (HPerp4 : Perp P I B P).
           {
           apply perp_col0 with A B; try apply perp_col0 with P Q;
           try solve[assert_diffs; assert_cols; Col; Perp].
           intro; treat_equalities; apply HNC.
-          assert (H : Par B A P' Q') by (apply l12_9 with B C; Perp).
+          assert (HPar : Par B A P' Q') by (apply l12_9 with B C; Perp; Cop).
           destruct (not_strict_par B A P' Q' P);
           assert_diffs; assert_cols; Col; ColR.
           }
@@ -211,7 +225,7 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
           apply perp_col0 with B C; try apply perp_col0 with P' Q';
           try solve[assert_diffs; assert_cols; Col; Perp].
           intro; treat_equalities; apply HNC.
-          assert (H : Par B C P Q) by (apply l12_9 with B A; Perp).
+          assert (HPar : Par B C P Q) by (apply l12_9 with B A; Perp; Cop).
           destruct (not_strict_par B C P Q P');
           assert_diffs; assert_cols; Col; ColR.
           }
@@ -249,24 +263,47 @@ cut (forall A1 A2 B1 B2 C1 C2 D1 D2,
   }
 
   {
-  intros A1 A2 B1 B2 C1 C2 D1 D2 HPerpAB HPerpAC HPerpBD HNCol1 HNCol2.
+  intros A1 A2 B1 B2 C1 C2 D1 D2 IAB IAC IBD HPerpAB HPerpAC HPerpBD.
+  intros HCol1 HCol2 HCol3 HCol4 HCol5 HCol6 HNCop1 HCop2 HCop3 HCop4 HNC1.
+  assert (Col IAB IAC A1) by (assert_diffs; ColR).
+  assert (Col IAB IAC A2) by (assert_diffs; ColR).
+  assert (Col IAB IBD B1) by (assert_diffs; ColR).
+  assert (Col IAB IBD B2) by (assert_diffs; ColR).
+  assert (Coplanar IAB IAC IBD A1) by Cop.
+  assert (Coplanar IAB IAC IBD A2) by Cop.
+  assert (Coplanar IAB IAC IBD B1) by Cop.
+  assert (Coplanar IAB IAC IBD B2) by Cop.
+  assert (HNC2 : ~ Col A1 A2 D1).
+    {
+    apply par_strict_not_col_1 with D2; apply par_not_col_strict with IBD;
+    Col; try (intro; apply HNC1; assert_diffs; ColR).
+    apply l12_9 with B1 B2; Perp; CopR.
+    }
+  assert (HNC3 : ~ Col B1 B2 C1).
+    {
+    apply par_strict_not_col_1 with C2; apply par_not_col_strict with IAC;
+    Col; try (intro; apply HNC1; assert_diffs; ColR).
+    apply l12_9 with A1 A2; Perp; CopR.
+    }
   assert (HParA : Par_strict A1 A2 D1 D2).
-    apply par_not_col_strict with D1; Col; apply l12_9 with B1 B2; Perp.
+    apply par_not_col_strict with D1; Col; apply l12_9 with B1 B2; Perp; CopR.
   assert (HParB : Par_strict B1 B2 C1 C2).
-    apply par_not_col_strict with C1; Col; apply l12_9 with A1 A2; Perp.
-  assert (HP := HPerpAC); destruct HP as [P [_ [_ [HP1 [HP2 HP3]]]]].
-  assert (HQ := HPerpAB); destruct HQ as [Q [_ [_ [HQ1 [HQ2 HQ3]]]]].
-  assert (HR := HPerpBD); destruct HR as [R [_ [_ [HR1 [HR2 HR3]]]]].
-  assert (HNCol3 : ~ Col P B1 B2) by (apply par_not_col with C1 C2; Par).
-  assert (HNCol4 : ~ Col R A1 A2) by (apply par_not_col with D1 D2; Par).
-  assert (HPQ : P <> Q) by (intro; subst; contradiction).
-  assert (HQR : Q <> R) by (intro; subst; contradiction).
-  assert (Per P Q R) by (apply HQ3; trivial).
-  destruct (diff_col_ex3 C1 C2 P) as [P1 [HC1P1 [HC2P1 [HPP1 HCP1]]]]; Col.
-  destruct (diff_col_ex3 D1 D2 R) as [R1 [HD1R1 [HD2R1 [HRR1 HDR1]]]]; Col.
-  destruct (bla P Q R P1 R1) as [I [HI1 HI2]]; auto.
-    apply HP3; Col.
-    apply HR3; Col.
+    apply par_not_col_strict with C1; Col; apply l12_9 with A1 A2; Perp; CopR.
+  assert (HNCol3 : ~ Col IAC B1 B2) by (apply par_not_col with C1 C2; Par; ColR).
+  assert (HNCol4 : ~ Col IBD A1 A2) by (apply par_not_col with D1 D2; Par; ColR).
+  assert (HPQ : IAC <> IAB) by (assert_diffs; auto).
+  assert (HQR : IAB <> IBD) by (assert_diffs; auto).
+  destruct (diff_col_ex3 C1 C2 IAC) as [P1 [HC1P1 [HC2P1 [HPP1 HCP1]]]]; Col.
+  destruct (diff_col_ex3 D1 D2 IBD) as [R1 [HD1R1 [HD2R1 [HRR1 HDR1]]]]; Col.
+  destruct (bla IAC IAB IBD P1 R1) as [I [HI1 HI2]]; auto.
+    apply perp_per_2; apply perp_col2 with A1 A2; Col;
+    apply perp_sym; apply perp_col2 with B1 B2; Col; Perp.
+    apply perp_per_2; apply perp_col2 with A1 A2; Col;
+    apply perp_sym; apply perp_col2 with C1 C2; Col; Perp.
+    apply perp_per_2; apply perp_col2 with B1 B2; Col;
+    apply perp_sym; apply perp_col2 with D1 D2; Col; Perp.
+    assert_diffs; apply col_cop2__cop with C1 C2; Col; CopR.
+    assert_diffs; apply col_cop2__cop with D1 D2; Col; CopR.
   exists I.
   split; assert_diffs; ColR.
   }

@@ -1,10 +1,10 @@
 Require Import GeoCoq.Axioms.tarski_axioms.
-Require Import GeoCoq.Axioms.independent_tarski_axioms.
+Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Tarski_dev.Ch05_bet_le.
 
-Section Independent_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
+Section Gupta_inspired_variant_of_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
 
-Context `{ITnEQD:independent_Tarski_neutral_dimensionless_with_decidable_point_equality}.
+Context `{ITnEQD:Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma g2_1 : forall A B, CongG A B A B.
 Proof.
@@ -205,7 +205,7 @@ Qed.
 
 Definition ColG A B C := BetG A B C \/ BetG B C A \/ BetG C A B.
 
-Lemma Col_decG : forall A B C, ColG A B C \/ ~ ColG A B C.
+Lemma col_decG : forall A B C, ColG A B C \/ ~ ColG A B C.
 Proof.
 intros A B C; unfold ColG; induction (bet_decG A B C); induction (bet_decG B C A);
 induction (bet_decG C A B); tauto.
@@ -228,7 +228,7 @@ elim (point_equality_decidabilityG B Q); intro HDiff3;
 elim (point_equality_decidabilityG Q C); intro HDiff4;
 [rewrite HDiff4 in *; exists P; split; apply bet_symmetryG;
  try apply between_trivialT; auto|].
-elim (Col_decG A B C); intro HCol; [|apply inner_paschG with C; auto].
+elim (col_decG A B C); intro HCol; [|apply inner_paschG with C; auto].
 do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
 
   {
@@ -272,11 +272,11 @@ Global Instance TG_to_TID :
   Tarski_neutral_dimensionless_with_decidable_point_equality TG_to_T.
 Proof. split; exact point_equality_decidabilityG. Defined.
 
-End Independent_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
+End Gupta_inspired_variant_of_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
 
-Section Independent_Tarski_2D_to_Tarski_2D.
+Section Gupta_inspired_variant_of_Tarski_2D_to_Tarski_2D.
 
-Context `{IT2D:independent_Tarski_2D}.
+Context `{IT2D:Gupta_inspired_variant_of_Tarski_2D}.
 
 Lemma upper_dimT : forall A B C P Q,
   P <> Q -> CongG A P A Q -> CongG B P B Q -> CongG C P C Q ->
@@ -323,22 +323,24 @@ Qed.
 Global Instance TG2D_to_T2D : Tarski_2D TG_to_TID.
 Proof. split; exact upper_dimT. Defined.
 
-End Independent_Tarski_2D_to_Tarski_2D.
+End Gupta_inspired_variant_of_Tarski_2D_to_Tarski_2D.
 
-Section Independent_Tarski_2D_euclidean_to_Tarski_2D_euclidean.
+Section Gupta_inspired_variant_of_Tarski_euclidean_to_Tarski_euclidean.
 
-Context `{ITE:independent_Tarski_2D_euclidean}.
+Context `{ITE:Gupta_inspired_variant_of_Tarski_euclidean}.
 
-Global Instance TG2D_euclidean_to_T2D_euclidean :
-  Tarski_2D_euclidean TG2D_to_T2D.
+
+Lemma euclidT : forall A B C D T,
+  Bet A D T -> Bet B D C -> A <> D ->
+  exists X, exists Y, Bet A B X /\ Bet A C Y /\ Bet X T Y.
 Proof.
 assert (H := TG_to_TID).
-split; intros A B C D T HBet1 HBet2 HDiff1.
+intros A B C D T HBet1 HBet2 HDiff1.
 elim (eq_dec_points B D); intro HDiff2;
 [treat_equalities; exists T, C; Between|].
 elim (eq_dec_points D C); intro HDiff3;
 [treat_equalities; exists B, T; Between|].
-elim (Col_dec A B C); intro HCol; [|apply euclidG with D; auto].
+elim (col_dec A B C); intro HCol; [|apply euclidG with D; auto].
 clear HDiff2; clear HDiff3.
 do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
 
@@ -411,6 +413,10 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
       }
     }
   }
-Defined.
+Qed.
 
-End Independent_Tarski_2D_euclidean_to_Tarski_2D_euclidean.
+Global Instance TG_euclidean_to_T_euclidean :
+  Tarski_euclidean TG_to_TID.
+Proof. split; exact euclidT. Defined.
+
+End Gupta_inspired_variant_of_Tarski_euclidean_to_Tarski_euclidean.

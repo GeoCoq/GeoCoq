@@ -3,6 +3,15 @@ Require Export List.
 Definition all_equiv (l: list Prop) :=
   forall x y, In x l -> In y l -> (x <-> y).
 
+Lemma all_equiv_chara : forall l,
+  all_equiv l <-> forall x y, In x l -> In y l -> x -> y.
+Proof.
+  unfold all_equiv.
+  intro l; split; [intros He x y Hx Hy; rewrite (He x y); auto|].
+  intros Himp x y Hxl Hyl.
+  split; apply Himp; assumption.
+Qed.
+
 Definition all_equiv'_aux (l: list Prop) : Prop.
 induction l; [exact True|].
 induction l; [exact True|].
@@ -90,7 +99,7 @@ induction l; [simpl|clear IHl0; rewrite IH; split]; clear IH.
 Qed.
 *)
 
-Lemma all_equiv_equiv : forall l, all_equiv l <-> all_equiv' l.
+Lemma all_equiv__equiv : forall l, all_equiv l <-> all_equiv' l.
 Proof.
 intro l; split.
 
@@ -148,3 +157,129 @@ Definition stronger (l1 l2 : list Prop) :=
 
 Definition all_equiv_under (l1 l2 : list Prop) :=
   forall x y z, In x l1 -> In y l2 -> In z l2 -> (x -> (y <-> z)).
+
+Lemma all_equiv_under_chara : forall l1 l2,
+  all_equiv_under l1 l2 <-> forall x, In x l1 -> x -> all_equiv l2.
+Proof.
+  unfold all_equiv_under, all_equiv.
+  intros; split; intros; eauto.
+Qed.
+
+Lemma all_equiv2_impl__stronger : forall l1 l2 x y,
+  all_equiv l1 -> all_equiv l2 -> In x l1 -> In y l2 -> (x -> y) -> stronger l1 l2.
+Proof.
+  intros l1 l2 x y Heq1 Heq2 HxIn HyIn Hxy x1 y1 Hx1In Hy1In.
+  rewrite (Heq1 x1 x); [rewrite (Heq2 y1 y)|..]; assumption.
+Qed.
+
+Lemma stronger2__stronger_right : forall l1 l2 l2',
+  stronger l1 l2 -> stronger l1 l2' -> stronger l1 (l2++l2').
+Proof.
+  intros l1 l2 l2' Hs Hs' x y Hx Hy.
+  apply in_app_or in Hy.
+  destruct Hy.
+    apply Hs; assumption.
+    apply Hs'; assumption.
+Qed.
+
+Lemma stronger2__stronger_left : forall l1 l1' l2,
+  stronger l1 l2 -> stronger l1' l2 -> stronger (l1++l1') l2.
+Proof.
+  intros l1 l1' l2 Hs Hs' x y Hx Hy.
+  apply in_app_or in Hx.
+  destruct Hx.
+    apply Hs; assumption.
+    apply Hs'; assumption.
+Qed.
+
+Lemma stronger_transitivity : forall l1 l2 l3,
+  stronger l1 l2 -> stronger l2 l3 -> l2 <> nil -> stronger l1 l3.
+Proof.
+  intros l1 l2 l3 Hs1 Hs2 Hl2 x z Hx Hz.
+  destruct l2.
+    contradiction.
+  unfold stronger in *.
+  specialize Hs1 with x P.
+  specialize Hs2 with P z.
+  simpl in *.
+  auto.
+Qed.
+
+Lemma all_equiv2_stronger2__all_equiv : forall l1 l2,
+  all_equiv l1 -> all_equiv l2 ->
+  stronger l1 l2 -> stronger l2 l1 ->
+  all_equiv (l1++l2).
+Proof.
+  intros l1 l2 He1 He2 Hs1 Hs2 x y Hx Hy.
+  apply in_app_or in Hx.
+  apply in_app_or in Hy.
+  destruct Hx; destruct Hy; auto; split.
+    apply Hs1; assumption.
+    apply Hs2; assumption.
+    apply Hs2; assumption.
+    apply Hs1; assumption.
+Qed.
+
+Lemma all_equiv3_stronger3__all_equiv : forall l1 l2 l3,
+  l1 <> nil -> l2 <> nil -> l3 <> nil ->
+  all_equiv l1 -> all_equiv l2 -> all_equiv l3 ->
+  stronger l1 l2 -> stronger l2 l3 ->  stronger l3 l1 ->
+  all_equiv (l1++l2++l3).
+Proof.
+  intros l1 l2 l3 H1 H2 H3 He1 He2 He3 Hs1 Hs2 Hs3.
+  apply all_equiv2_stronger2__all_equiv.
+    assumption.
+    apply all_equiv2_stronger2__all_equiv; [..|apply stronger_transitivity with l1]; assumption.
+    apply stronger2__stronger_right; [|apply stronger_transitivity with l2]; assumption.
+    apply stronger2__stronger_left; [apply stronger_transitivity with l3|]; assumption.
+Qed.
+
+Lemma all_equiv2_impl2__all_equiv : forall l1 l2 x y x' y',
+  all_equiv l1 -> all_equiv l2 ->
+  In x l1 -> In y l2 -> (x -> y) ->
+  In x' l2 -> In y' l1 -> (x' -> y') ->
+  all_equiv (l1++l2).
+Proof.
+  intros l1 l2 x y x' y'; intros.
+  apply all_equiv2_stronger2__all_equiv; trivial.
+    apply all_equiv2_impl__stronger with x y; assumption.
+    apply all_equiv2_impl__stronger with x' y'; assumption.
+Qed.
+
+Lemma all_equiv3_impl3__all_equiv : forall l1 l2 l3 x y x' y' x'' y'',
+  all_equiv l1 -> all_equiv l2 -> all_equiv l3 ->
+  In x l1 -> In y l2 -> (x -> y) ->
+  In x' l2 -> In y' l3 -> (x' -> y') ->
+  In x'' l3 -> In y'' l1 -> (x'' -> y'') ->
+  all_equiv (l1++l2++l3).
+Proof.
+  intros l1 l2 l3 x y x' y' x'' y''; intros.
+  apply all_equiv3_stronger3__all_equiv; trivial; try (intro He; rewrite He in *; auto).
+    apply all_equiv2_impl__stronger with x y; assumption.
+    apply all_equiv2_impl__stronger with x' y'; assumption.
+    apply all_equiv2_impl__stronger with x'' y''; assumption.
+Qed.
+
+Lemma all_equiv_trivial : forall x, all_equiv (x::nil).
+Proof.
+  unfold all_equiv; simpl.
+  induction 1;[|contradiction].
+  induction 1;[|contradiction].
+  subst; reflexivity.
+Qed.
+
+Lemma incl_preserves_all_equiv : forall l1 l2,
+  incl l1 l2 -> all_equiv l2 -> all_equiv l1.
+Proof.
+  unfold all_equiv.
+  intros; eauto.
+Qed.
+
+Lemma incl_preserves_stronger : forall l1 l2 l1' l2',
+  incl l1 l1' -> incl l2 l2' -> stronger l1' l2' -> stronger l1 l2.
+Proof.
+  intros l1 l2 l1' l2' Hi1 Hi2 Hs x y Hxl1 Hyl2.
+  apply Hs; auto.
+Qed.
+
+Ltac inlist := simpl; repeat (try (left; reflexivity); right).

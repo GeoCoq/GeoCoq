@@ -1,6 +1,4 @@
-Require Export GeoCoq.Elements.OriginalProofs.proposition_01.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_doublereverse.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_congruenceflip.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_extension.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_collinearorder.
 
 Section Euclid.
@@ -15,7 +13,7 @@ Proof.
 intros.
 assert (neq A C) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS A C E /\ Cong C E A C)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS A C E /\ Cong C E A C)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (neq A E) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
 assert (Tf:exists F, (equilateral A E F /\ Triangle A E F)) by (conclude proposition_01);destruct Tf as [F];spliter.

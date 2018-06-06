@@ -1,13 +1,13 @@
-Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
-Require Import GeoCoq.Highschool.circumcenter.
-Require Import GeoCoq.Highschool.orthocenter.
-Require Import GeoCoq.Highschool.midpoint_thales.
-Require Import GeoCoq.Highschool.concyclic.
-Require Import GeoCoq.Highschool.gravityCenter.
+Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
+Require Export GeoCoq.Highschool.circumcenter.
+Require Export GeoCoq.Highschool.orthocenter.
+Require Export GeoCoq.Highschool.midpoint_thales.
+Require Export GeoCoq.Highschool.concyclic.
+Require Export GeoCoq.Highschool.gravityCenter.
 
 Section Euler_line.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 (**
 <applet name="ggbApplet" code="geogebra.GeoGebraApplet" archive="geogebra.jar"
@@ -62,9 +62,9 @@ assert (HOM2 : O <> M2).
   }
 assert (HM1M2 : M1 <> M2) by (intro; treat_equalities; Col).
 assert (HPerp1 : Perp_bisect O M1 A B)
-  by (apply cong_perp_bisect; unfold Midpoint in *; spliter; Cong).
+  by (apply cong_cop_perp_bisect; spliter; Cong; Cop).
 assert (HPerp2 : Perp_bisect O M2 A C)
-  by (apply cong_perp_bisect; unfold Midpoint in *; spliter; Cong).
+  by (apply cong_cop_perp_bisect; spliter; Cong; Cop).
 assert (HOM1M2 : ~ Col O M1 M2).
   {
   intro HOM1M2; assert (H := l7_20 O A B); elim H; clear H; try intro H; Cong;
@@ -73,9 +73,11 @@ assert (HOM1M2 : ~ Col O M1 M2).
 assert (HPar_strict : Par_strict O M1 O M2).
   {
   apply par_not_col_strict with M2; Col.
-  apply l12_9 with A B; Col;
-  try (apply perp_col0 with A C; Col; perm_apply perp_bisect_perp);
-  apply perp_bisect_perp; Col.
+  apply l12_9 with A B; [Cop| |Cop..| |].
+    apply coplanar_perm_16, col_cop__cop with C; Col; Cop.
+    apply perp_bisect_perp; Col.
+  apply perp_col0 with A C; Col; perm_apply perp_bisect_perp.
+
   }
 assert (H := not_par_strict_id O M1 M2); Col.
 Qed.
@@ -164,15 +166,14 @@ Lemma Euler_line :
   Col G H O.
 Proof.
 intros.
-elim (Cong_dec A B A C); intro.
+elim (cong_dec A B A C); intro.
 
 Name A' the midpoint of B and C.
 Name B' the midpoint of A and C.
 Name C' the midpoint of A and B.
 
 assert (Perp_bisect A A' B C)
-  by (apply cong_perp_bisect; assert_diffs; unfold Midpoint in *; spliter;
-      Cong; intro; treat_equalities; assert_cols; Col).
+  by (apply cong_cop_perp_bisect; assert_diffs; Cong; Cop; intro; treat_equalities; apply H0; Col).
 
 assert (Col G A' A)
   by (apply is_gravity_center_perm in H1; apply is_gravity_center_col with B C; spliter; Col).
@@ -184,15 +185,17 @@ elim (eq_dec_points O H); intro; treat_equalities; Col.
 
 elim (eq_dec_points O A'); intro; treat_equalities.
 
-assert (Col A H O) by (apply perp_perp_col with B C; Col; apply perp_bisect_perp; Col).
-apply col_permutation_1; apply perp_perp_col with B C.
+assert (Col A H O) by (apply cop_perp2__col with B C; Col; Cop; apply perp_bisect_perp; Col).
+apply col_permutation_1; apply cop_perp2__col with B C.
+
+apply coplanar_trans_1 with A; Cop.
 apply perp_sym; apply perp_col0 with A O; try apply perp_bisect_perp; Col.
 apply perp_sym; apply perp_col0 with A H; Col.
 
-assert (Col A A' H) by (apply perp_perp_col with B C; Col; apply perp_bisect_perp; Col).
+assert (Col A A' H) by (apply cop_perp2__col with B C; Cop; apply perp_bisect_perp; auto).
 assert (Perp_bisect O A' B C) by (apply circumcenter_perp with A; assert_diffs; Col).
 assert (Col A' A O)
-  by (apply perp_perp_col with B C; apply perp_left_comm; apply perp_bisect_perp; Col).
+  by (apply cop_perp2__col with B C; Cop; apply perp_left_comm; apply perp_bisect_perp; auto).
 show_distinct A A'; assert_cols; Col; ColR.
 
 Name A' the symmetric of A wrt O.
@@ -202,7 +205,9 @@ assert_diffs.
 assert (Concyclic A B C A').
  unfold Concyclic.
  split.
- apply all_coplanar.
+ destruct (eq_dec_points A O).
+  treat_equalities; Cop.
+ apply coplanar_perm_12, col_cop__cop with O; Col; Cop.
  exists O.
  apply circumcenter_cong in H3.
  spliter.
@@ -245,8 +250,10 @@ assert (Perp C H A B)
 assert (Perp A' B B A)
  by (apply per_perp;finish).
 
-assert (Par C H A' B)
- by (apply l12_9 with A B;finish).
+assert (Par C H A' B).
+ unfold Concyclic in *; spliter.
+ apply l12_9 with A B; [Cop|Cop| |Cop|Perp..].
+ apply coplanar_trans_1 with C; Col; Cop.
 
 assert (Perp B H A C)
  by (unfold is_orthocenter in *;spliter;finish).
@@ -260,10 +267,12 @@ assert (Per A C A').
 
 assert (Perp A' C C A) by (apply per_perp;finish).
 
-assert (Par B H C A')
- by (apply l12_9 with A C;finish).
+assert (Par B H C A').
+ unfold Concyclic in *; spliter.
+ apply l12_9 with A C; [Cop..| |Perp|Perp].
+ apply coplanar_trans_1 with B; Col; Cop.
 
-induction (Col_dec B H C).
+induction (col_dec B H C).
  * assert (H=B \/ H=C) by (apply (orthocenter_col A B C H);finish).
    induction H26.
    + subst H.
@@ -283,7 +292,7 @@ induction (Col_dec B H C).
 
    destruct T as [I [HI1 HI2]].
 
-   elim (Per_dec B A C); intro.
+   elim (per_dec B A C); intro.
 
    apply Euler_line_special_case with B A C;
    try apply is_gravity_center_cases; auto;

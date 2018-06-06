@@ -24,7 +24,7 @@ assert (Cong B C E H) by (conclude lemma_congruencetransitive).
 assert (Par B C A D) by (conclude lemma_parallelsymmetric).
 assert (nCol A B C) by (forward_using lemma_parallelNC).
 assert (neq B C) by (forward_using lemma_NCdistinct).
-assert (neq E H) by (conclude lemma_nullsegment3).
+assert (neq E H) by (conclude axiom_nocollapse).
 assert (Par B C E H) by (conclude lemma_collinearparallel2).
 assert ((Par B E C H /\ Cong B E C H)) by (conclude proposition_33).
 assert (Par E B C H) by (forward_using lemma_parallelflip).

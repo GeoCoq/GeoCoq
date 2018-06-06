@@ -5,19 +5,20 @@
 
 (**
   We present in this file the formalization of the propositions
-  from the first book of Euclid Elements.
+  from the first book of Euclid's Elements.
   Our formal proofs are not formalizations of
-  Euclid’s proof, the proof can be very different
+  Euclid's proofs; they can be very different
   because we do not use the axiom system of Euclid.
   The proofs are performed in the context of Tarski's axioms.
-  But we have proven the bi-interpretability with
+  We have proven the bi-interpretability with
   the corresponding Hilbert's axioms,
-  hence the use can choose his favorite axiom system.
+  hence the user can choose his favorite axiom system.
 
   The english version of the propositions is imported from the
-  xml version version of Euclid's Elements provided by the Perseus project:
-  http://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0086
-  The GeoGebra figures have been created by Gianluigi Trivia.
+  xml version of Euclid's Elements provided by the Perseus project:
+  http://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0086 .
+  The GeoGebra figures have been created by Gianluigi Trivia:
+  https://www.geogebra.org/m/qScJxt8s .
 
   Hence, this file is licenced under
   https://creativecommons.org/licenses/by-sa/3.0/us/
@@ -128,9 +129,7 @@
     } </script>
 # **)
 
-Require Export GeoCoq.Axioms.continuity_axioms.
-Require Export GeoCoq.Tarski_dev.Annexes.sums.
-Require Export GeoCoq.Tarski_dev.Annexes.circles.
+Require Export GeoCoq.Meta_theory.Continuity.elementary_continuity_props.
 Require Export GeoCoq.Tarski_dev.Ch16_coordinates_with_functions.
 
 (** * Proposition 1
@@ -148,13 +147,13 @@ Require Export GeoCoq.Tarski_dev.Ch16_coordinates_with_functions.
 
 Section Book_1_prop_1_euclidean.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma prop_1_euclidean :
- forall A B,
-  exists C, Cong A B A C /\ Cong A B B C.
+  forall A B, exists C, Cong A B A C /\ Cong A B B C.
 Proof.
- destruct exists_grid_spec as [SS [U1 [U2  Hgrid]]].
+  destruct exists_grid_spec as [SS [U1 [U2 Hgrid]]].
   apply (exists_equilateral_triangle SS U1 U2 Hgrid).
 Qed.
 
@@ -162,19 +161,16 @@ End Book_1_prop_1_euclidean.
 
 Section Book_1_prop_1_circle_circle.
 
-Context `{TE:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma prop_1_circle_circle :
-circle_circle_bis ->
- forall A B,
-  exists C, Cong A B A C /\ Cong A B B C.
+Lemma prop_1_circle_circle : circle_circle ->
+  forall A B, exists C, Cong A B A C /\ Cong A B B C.
 Proof.
-intros.
-unfold circle_circle_bis in H.
-destruct (H A B B A A B) as [C [HC1 HC2]];Circle.
-exists C.
-unfold OnCircle in *.
-split;Cong.
+  intros cc A B.
+  apply circle_circle__circle_circle_bis in cc.
+  destruct (cc A B B A A B) as [C [HC1 HC2]]; Circle.
+  exists C.
+  split;Cong.
 Qed.
 
 End Book_1_prop_1_circle_circle.
@@ -182,80 +178,97 @@ End Book_1_prop_1_circle_circle.
 
 Section Book_1_part_2.
 
-  (** For the next 27 proposition, we do not need the 5th axiom of Euclid,
-      nor any continuity axioms, except for Proposition 22, which needs Circle/Circle intersection axiom
+  (** For the next 27 propositions, we do not need the 5th axiom of Euclid,
+      nor any continuity axioms, except for Proposition 22,
+      which needs Circle/Circle intersection axiom.
   *)
 
-Context `{TE:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 	    (** * Proposition 2
        To place at a given point (as an extremity) a straight line equal to a given straight line.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container2"></div> # **)
 
 
-Lemma prop_2 : forall A B C D, exists E : Tpoint, Bet A B E /\ Cong B E C D.
+Lemma prop_2 : forall A B C, exists L, Cong A L B C.
 Proof.
-  apply segment_construction.
+  intros.
+  apply segment_construction_0.
 Qed.
 
 
 	    (** * Proposition 3
-       Given two unequal straight lines, to cut off from the greater a straight line equal to the less. 
+       Given two unequal straight lines, to cut off from the greater
+       a straight line equal to the less. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container3"></div> # **)
 
-Lemma prop_3 : forall A B C D, Le A B C D -> exists E : Tpoint, Bet C E D /\ Cong A B C E.
+Lemma prop_3 : forall A B C1 C2, Le C1 C2 A B -> exists E, Bet A E B /\ Cong C1 C2 A E.
 Proof.
   auto.
 Qed.
 
 
 	    (** * Proposition 4
-       If two triangles have the two sides equal to two sides respectively, and have the angles contained by the equal straight lines equal, they will also have the base equal to the base, the triangle will be equal to the triangle, and the remaining angles will be equal to the remaining angles respectively, namely those which the equal sides subtend.
+       If two triangles have the two sides equal to two sides respectively,
+       and have the angles contained by the equal straight lines equal,
+       they will also have the base equal to the base, the triangle will be equal to the triangle,
+       and the remaining angles will be equal to the remaining angles respectively,
+       namely those which the equal sides subtend.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container4"></div> # **)
 
-Lemma prop_4 : forall A B C A' B' C', CongA A B C A' B' C' -> Cong B A B' A' -> Cong B C B' C' ->
-  Cong A C A' C' /\ (A <> C -> CongA B A C B' A' C' /\ CongA B C A B' C' A').
+Lemma prop_4 : forall A B C D E F, CongA C A B F D E -> Cong A C D F -> Cong A B D E ->
+  Cong C B F E /\ (C <> B -> CongA A C B D F E /\ CongA A B C D E F).
 Proof.
+  intros A B C D E F.
   apply l11_49.
 Qed.
 
 
 	    (** * Proposition 5
-       In isosceles triangles the angles at the base are equal to one another, and, if the equal straight lines be produced further, the angles under the base will be equal to one another.
+       In isosceles triangles the angles at the base are equal to one another, and,
+       if the equal straight lines be produced further, the angles under the base
+       will be equal to one another.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container5"></div> # **)
 
-Lemma prop_5_1 : forall A B C, ~ Col A B C -> Cong B A B C -> CongA B A C B C A.
+Lemma prop_5_1 : forall A B C, A <> B -> B <> C -> Cong A B A C -> CongA A B C A C B.
 Proof.
-  apply l11_44_1_a.
+  intros.
+  apply l11_44_1_a; auto.
 Qed.
 
-Lemma prop_5_2 : forall A B C A' C', ~ Col A B C -> Cong B A B C ->
-  Bet B A A' -> A <> A' -> Bet B C C' -> C <> C' ->
-  CongA A' A C C' C A.
+Lemma prop_5_2 : forall A B C F G, A <> B -> B <> C -> Cong A B A C ->
+  Bet A B F -> B <> F -> Bet A C G -> C <> G ->
+  CongA F B C G C B.
 Proof.
-  intros A B C A' C'.
+  intros A B C F G.
   intros.
-  apply l11_13 with B B; auto.
-  apply l11_44_1_a; assumption.
+  apply l11_13 with A A; auto.
+  apply l11_44_1_a; auto.
 Qed.
 
 
 	    (** * Proposition 6
-       If in a triangle two angles be equal to one another, the sides which subtend the equal angles will also be equal to one another.
+       If in a triangle two angles be equal to one another,
+       the sides which subtend the equal angles will also be equal to one another.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container6"></div> # **)
 
-Lemma prop_6 : forall A B C, ~ Col A B C -> CongA B A C B C A -> Cong B A B C.
+Lemma prop_6 : forall A B C, ~ Col A B C -> CongA A B C A C B -> Cong A B A C.
 Proof.
-  apply l11_44_1_b.
+  intros A B C H.
+  apply l11_44_1_b; Col.
 Qed.
 
 
 	    (** * Proposition 7
-       Given two straight lines constructed on a straight line (from its extremities) and meeting in a point, there cannot be constructed on the same straight line (from its extremities), and on the same side of it, two other straight lines meeting in another point and equal to the former two respectively, namely each to that which has the same extremity with it.
+       Given two straight lines constructed on a straight line (from its extremities)
+       and meeting in a point, there cannot be constructed on the same straight line
+       (from its extremities), and on the same side of it, two other straight lines
+       meeting in another point and equal to the former two respectively,
+       namely each to that which has the same extremity with it.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container7"></div> # **)
 
@@ -265,22 +278,25 @@ Proof.
   assert (HNCol := one_side_not_col123 A B C C' HOS).
   assert_diffs.
   destruct (l11_51 A B C A B C') as [HCongAA [HCongAB HCongAC]]; Cong.
+  assert (HCop := os__coplanar A B C C' HOS).
   apply l9_9_bis in HOS.
-  destruct (conga__or_out_ts B A C C' HCongAA) as [HOutA|Habs]; [|exfalso; apply HOS; Side].
-  destruct (conga__or_out_ts A B C C' HCongAB) as [HOutB|Habs].
+  destruct (conga_cop__or_out_ts B A C C') as [HOutA|Habs]; Cop; [|exfalso; apply HOS; Side].
+  destruct (conga_cop__or_out_ts A B C C' HCop HCongAB) as [HOutB|Habs].
     apply (l6_21 A C B C); Col.
   exfalso; apply HOS, Habs.
 Qed.
 
 
 	    (** * Proposition 8
-       If two triangles have the two sides equal to two sides respectively, and have also the base equal to the base, they will also have the angles equal which are contained by the equal straight lines. 
+       If two triangles have the two sides equal to two sides respectively,
+       and have also the base equal to the base, they will also have the angles equal
+       which are contained by the equal straight lines. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container8"></div> # **)
 
-Lemma prop_8 : forall A B C A' B' C', A <> B -> A <> C -> B <> C ->
-       Cong A B A' B' -> Cong A C A' C' -> Cong B C B' C' ->
-       CongA B A C B' A' C' /\ CongA A B C A' B' C' /\ CongA B C A B' C' A'.
+Lemma prop_8 : forall A B C D E F, A <> B -> A <> C -> B <> C ->
+       Cong A B D E -> Cong A C D F -> Cong B C E F ->
+       CongA B A C E D F /\ CongA A B C D E F /\ CongA B C A E F D.
 Proof.
   apply l11_51.
 Qed.
@@ -291,10 +307,11 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container9"></div> # **)
 
-Lemma prop_9 : forall A B C, A <> B -> C <> B ->
-  exists P : Tpoint, InAngle P A B C /\ CongA P B A P B C.
+Lemma prop_9 : forall A B C, A <> B -> A <> C ->
+  exists F, InAngle F B A C /\ CongA F A B F A C.
 Proof.
-  apply angle_bisector.
+  intros.
+  apply angle_bisector; auto.
 Qed.
 
 
@@ -303,7 +320,7 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container10"></div> # **)
 
-Lemma prop_10 : forall A B, exists X : Tpoint, Midpoint X A B.
+Lemma prop_10 : forall A B, exists D, Midpoint D A B.
 Proof.
   apply midpoint_existence.
 Qed.
@@ -314,61 +331,59 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container11"></div> # **)
 
-Lemma prop_11 : forall A B C, A <> B -> Col A B C -> exists X, Perp A B X C.
+Lemma prop_11 : forall A B C, A <> B -> Col A B C -> exists F, Perp C F A B.
 Proof.
-  intros A B C HAB HCol.
-  destruct (not_col_exists A B HAB) as [P HNCol].
-  destruct (l10_15 A B C P HCol HNCol) as [X [HPerp HOS]].
-  exists X; assumption.
+  intros.
+  apply perp_exists; assumption.
 Qed.
 
 
 	    (** * Proposition 12
-       To a given infinite straight line, from a given point which is not on it, to draw a perpendicular straight line.
+       To a given infinite straight line, from a given point which is not on it,
+       to draw a perpendicular straight line.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container12"></div> # **)
 
-Lemma prop_12 : forall A B C, ~ Col A B C ->
-  exists X : Tpoint, Col A B X /\ Perp A B C X.
+Lemma prop_12 : forall A B C, ~ Col A B C -> exists H, Col A B H /\ Perp A B C H.
 Proof.
   apply l8_18_existence.
 Qed.
 
 
 	    (** * Proposition 13
-       If a straight line set up on a straight line make angles, it will make either two right angles or angles equal to two right angles.
+       If a straight line set up on a straight line make angles, it will make either
+       two right angles or angles equal to two right angles.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container13"></div> # **)
 
-Lemma prop_13 : forall A B C D P Q R, A <> B -> B <> C -> B <> D -> Bet A B C ->
+Lemma prop_13 : forall A B C D P Q R, A <> B -> B <> C -> B <> D -> Bet C B D ->
   P <> Q -> Q <> R -> Per P Q R ->
-  SumA A B D D B C A B C /\ SumA P Q R P Q R A B C.
+  SumA C B A A B D C B D /\ SumA P Q R P Q R C B D.
 Proof.
-  intros A B C D P Q R HAB HBC HBD HBet HPQ HQR HPer.
+  intros.
   split.
-    apply bet__suma; auto.
-  destruct (ex_suma P Q R P Q R) as [S [T [U HSuma]]]; auto.
-  apply conga3_suma__suma with P Q R P Q R S T U; try (apply conga_refl); auto.
-  assert_diffs.
-  apply conga_line; auto.
-  apply (per2_suma__bet P Q R P Q R); assumption.
+  - apply bet__suma; auto.
+  - apply bet_per2__suma; auto.
 Qed.
 
 
 	    (** * Proposition 14
-       If with any straight line, and at a point on it, two straight lines not lying on the same side make the adjacent angles equal to two right angles, the two straight lines will be in a straight line with one another. 
+       If with any straight line, and at a point on it,
+       two straight lines not lying on the same side
+       make the adjacent angles equal to two right angles,
+       the two straight lines will be in a straight line with one another. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container14"></div> # **)
 
-Lemma prop_14 : forall A B C D, TS A B C D -> Per A B C -> Per A B D -> Bet C B D.
+Lemma prop_14 : forall A B C D P Q R S T U, TS A B C D -> Per P Q R ->
+  SumA A B C A B D S T U -> SumA P Q R P Q R S T U -> Bet C B D.
 Proof.
-  intros A B C D HTS HPer1 HPer2.
-  apply (per2_suma__bet A B C A B D); trivial.
-  apply suma_left_comm.
-  exists D.
-  assert_diffs.
-  split; CongA.
-  split; CongA; Side.
+  intros A B C D P Q R S T U HTS HP HSuma1 HSuma2.
+  apply (bet_conga__bet S T U).
+    apply (per2_suma__bet P Q R P Q R); assumption.
+  apply (suma2__conga A B C A B D).
+    assumption.
+  apply suma_left_comm, ts__suma, HTS.
 Qed.
 
 
@@ -377,23 +392,26 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container15"></div> # **)
 
-Lemma prop_15 : forall A B C A' C', Bet A B A' ->  A <> B -> A' <> B ->
-  Bet C B C' -> B <> C -> B <> C' ->
-  CongA A B C A' B C'.
+Lemma prop_15 : forall A B C D E, Bet A E B -> A <> E -> B <> E ->
+  Bet C E D -> C <> E -> D <> E ->
+  CongA A E C B E D.
 Proof.
-  apply l11_14.
+  intros.
+  apply l11_14; auto.
 Qed.
 
 
 	    (** * Proposition 16
-       In any triangle, if one of the sides is produced, the exterior angle is greater than either of the interior and opposite angles.
+       In any triangle, if one of the sides is produced,
+       the exterior angle is greater than either of the interior and opposite angles.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container16"></div> # **)
 
-Lemma prop_16 : forall A B C D, ~ Col A B C -> Bet B A D -> A <> D ->
-  LtA A C B C A D /\ LtA A B C C A D.
+Lemma prop_16 : forall A B C D, ~ Col A B C -> Bet B C D -> C <> D ->
+  LtA C A B A C D /\ LtA C B A A C D.
 Proof.
-  apply l11_41.
+  intros.
+  apply l11_41; Col.
 Qed.
 
 
@@ -402,14 +420,20 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container17"></div> # **)
 
-Lemma prop_17 : forall A B C D E F, ~ Col A B C -> SumA A B C B C A D E F -> 
-  SAMS A B C B C A /\ ~ Col D E F.
+      (** Here, the fact that the two angles are less than two right angles is described with
+          the SAMS predicate, which means that they have a "sum at most straight", and the fact that
+          their sum is not a straight line.
+        *)
+
+Lemma prop_17 : forall A B C P Q R, ~ Col A B C -> SumA A B C B C A P Q R -> 
+  SAMS A B C B C A /\ ~ Bet P Q R.
 Proof.
-  intros A B C HNCol HSumA.
+  intros A B C P Q R HNCol HSuma.
   split.
   - assert_diffs.
     apply sams123231; auto.
-  - apply (ncol_suma__ncol A B C); assumption.
+  - intro HBet.
+    apply HNCol, col_suma__col with P Q R; Col.
 Qed.
 
 
@@ -418,13 +442,15 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container18"></div> # **)
 
-Lemma prop_18 : forall A B C, ~ Col A B C -> Lt B A B C -> Lt C A C B ->
-  LtA B C A B A C /\ LtA A B C B A C.
+Lemma prop_18 : forall A B C, ~ Col A B C -> Lt A B A C -> Lt B C A C ->
+  LtA B C A A B C /\ LtA C A B A B C.
 Proof.
   intros.
   split.
-  - apply l11_44_2_a; assumption.
-  - apply lta_comm, l11_44_2_a; Col.
+  - apply lta_left_comm, l11_44_2_a; Col.
+  - apply lta_right_comm, l11_44_2_a.
+      Col.
+    apply lt_comm; assumption.
 Qed.
 
 
@@ -433,14 +459,17 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container19"></div> # **)
 
-Lemma prop_19 : forall A B C, ~ Col A B C -> LtA B A C B C A -> LtA B A C A B C ->
-  Lt B C B A /\ Lt C B C A.
+Lemma prop_19 : forall A B C, ~ Col A B C -> LtA B C A A B C -> LtA C A B A B C ->
+  Lt A B A C /\ Lt B C A C.
 Proof.
   intros.
   split.
-  - apply l11_44_2_b; assumption.
-  - apply l11_44_2_b; Col.
-    apply lta_comm; assumption.
+  - apply l11_44_2_b.
+      Col.
+    apply lta_left_comm; assumption.
+  - apply lt_comm, l11_44_2_b.
+      Col.
+    apply lta_right_comm; assumption.
 Qed.
 
 
@@ -449,19 +478,22 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container20"></div> # **)
 
-Lemma prop_20 : forall A B C D E, ~ Bet A B C -> SumS A B B C D E -> Lt A C D E.
+Lemma prop_20 : forall A B C P Q, ~ Bet B A C -> SumS A B A C P Q -> Lt B C P Q.
 Proof.
-  intros A B C D E HNBet HSum.
-  destruct (segment_construction A B B C) as [D' [HBet HCong]].
-  apply (cong2_lt__lt A C A D'); Cong.
-    apply triangle_strict_inequality with B; Cong.
-  apply (sums2__cong56 A B B C); trivial.
-  exists A, B, D'; repeat split; Cong.
+  intros A B C P Q HNBet HSum.
+  destruct (segment_construction B A A C) as [D [HBet HCong]].
+  apply (cong2_lt__lt B C B D); Cong.
+    apply triangle_strict_inequality with A; Cong.
+  apply (sums2__cong56 A B A C); trivial.
+  exists B, A, D; repeat split; Cong.
 Qed.
 
 
 	    (** * Proposition 21
-       If on one of the sides of a triangle, from its extremities, there be constructed two straight lines meeting within the triangle, the straight lines so constructed will be less than the remaining two sides of the triangle, but will contain a greater angle.
+       If on one of the sides of a triangle, from its extremities,
+       there be constructed two straight lines meeting within the triangle,
+       the straight lines so constructed will be less than the remaining two sides of the triangle,
+       but will contain a greater angle.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container21"></div> # **)
 
@@ -501,100 +533,44 @@ Qed.
 
 
 	    (** * Proposition 22
-       Out of three straight lines, which are equal to three given straight lines, to construct a triangle: thus it is necessary that two of the straight lines taken together in any manner should be greater than the remaining one (cf. [I. 20]).
+       Out of three straight lines, which are equal to three given straight lines,
+       to construct a triangle:
+       thus it is necessary that two of the straight lines taken together in any manner
+       should be greater than the remaining one (cf. [I. 20]).
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container22"></div> # **)
 
       (** This needs Circle/Circle intersection axiom *)
 
-Lemma prop_22_aux : forall A B C D E F A' B' E' F' C1 C2 E1,
-  SumS A B C D E' F' -> SumS C D E F A' B' -> Le E F E' F' -> Le A B A' B' ->
-  Out A B C1 -> Cong A C1 C D -> Bet B A C2 -> Cong A C2 C D ->
-  Out B A E1 -> Cong B E1 E F ->
-  Bet C1 E1 C2.
+Lemma prop_22 : circle_circle -> forall A1 A2 B1 B2 C1 C2 A1' A2' B1' B2' C1' C2',
+  SumS A1 A2 B1 B2 C1' C2' -> SumS A1 A2 C1 C2 B1' B2' -> SumS B1 B2 C1 C2 A1' A2' ->
+  Le C1 C2 C1' C2' -> Le B1 B2 B1' B2' -> Le A1 A2 A1' A2' ->
+  exists F G K, Cong F G A1 A2 /\ Cong F K B1 B2 /\ Cong G K C1 C2.
 Proof.
-  intros A B C D E F A' B' E' F'; intros.
-  assert (Bet C1 A C2) by (assert_diffs; apply l6_2 with B; auto).
-  apply not_out_bet.
-    ColR.
-  intro HOut; destruct HOut as [HC1E1 [HC2E1 [HBet|HBet]]].
-  - assert (Bet A C1 E1) by eBetween.
-    assert (Bet A E1 B).
-      apply out2__bet; trivial.
-      apply l6_7 with C1; apply l6_6; trivial.
-      assert_diffs; apply bet_out; trivial.
-    apply (le__nlt A B A' B'); trivial.
-    apply le_lt12_sums2__lt with C D E F A E1 E1 B; Sums; Le.
-    split.
-      exists C1; split; Cong.
-    intro HCong.
-    apply HC1E1, between_cong with A; trivial.
-    apply cong_transitivity with C D; trivial.
-  - assert (Bet A C2 E1) by eBetween.
-    assert (Bet B C2 E1) by (assert_diffs; apply l6_2 with A; auto; apply bet_out; Between).
-    apply (le__nlt E F E' F'); trivial.
-    apply (cong2_lt__lt B C2 B E1); Cong.
-      split; [exists C2; Cong|].
-      intro HCong.
-      apply HC2E1, between_cong with B; trivial.
-    apply (sums2__cong56 A B C D); trivial; exists B, A, C2; repeat split; Cong.
-Qed.
-
-Lemma prop_22 : circle_circle_bis -> forall A B C D E F A' B' C' D' E' F',
-  SumS A B C D E' F' -> SumS A B E F C' D' -> SumS C D E F A' B' ->
-  Le E F E' F' -> Le C D C' D' -> Le A B A' B' ->
-  exists P Q R, Cong P Q A B /\ Cong P R C D /\ Cong Q R E F.
-Proof.
-  intros Hcc A B C D E F A' B' C' D' E' F' HSum1 HSum2 HSum3 HLe1 HLe2 HLe3.
-  exists A, B.
-  destruct (eq_dec_points A B); [|destruct (eq_dec_points C D)]; [| |destruct (eq_dec_points E F)].
-  - destruct (segment_construction_0 C D A) as [P HCong].
-    exists P; repeat split; Cong.
-    subst B.
-    apply cong_transitivity with C D; trivial.
-    apply le_anti_symmetry.
-      apply (l5_6 C D C' D'); Cong; apply (sums2__cong56 A A E F); Sums.
-      apply (l5_6 E F E' F'); Cong; apply (sums2__cong56 A A C D); Sums.
-  - exists A; treat_equalities; repeat split; Cong.
-    apply le_anti_symmetry.
-      apply (l5_6 A B A' B'); Cong; apply (sums2__cong56 C C E F); Sums.
-      apply (l5_6 E F E' F'); Cong; apply (sums2__cong56 A B C C); Sums.
-  - exists B; treat_equalities; repeat split; Cong.
-    apply le_anti_symmetry.
-      apply (l5_6 A B A' B'); Cong; apply (sums2__cong56 C D E E); Sums.
-      apply (l5_6 C D C' D'); Cong; apply (sums2__cong56 A B E E); Sums.
-  - destruct (segment_construction_3 A B C D) as [C1 [HC1 HC1']]; auto.
-    destruct (segment_construction_3 B A E F) as [E1 [HE1 HE1']]; auto.
-    destruct (segment_construction B A C D) as [C2 [HC2 HC2']].
-    destruct (segment_construction A B E F) as [E2 [HE2 HE2']].
-    assert (Bet C1 E1 C2) by (apply (prop_22_aux A B C D E F A' B' E' F'); trivial).
-    assert (Bet E1 C1 E2) by (apply (prop_22_aux B A E F C D B' A' C' D'); Sums; Le).
-    destruct (Hcc A C1 B E1 E1 C1) as [Z [HZ1 HZ2]]; Circle.
-      apply bet_inc2__inc with C1 C2; Circle; apply onc__inc, cong_transitivity with C D; Cong.
-      apply bet_inc2__inc with E1 E2; Circle; apply onc__inc, cong_transitivity with E F; Cong.
-    exists Z; repeat split; Cong.
-      apply cong_transitivity with A C1; Cong.
-      apply cong_transitivity with B E1; Cong.
+  intro cc.
+  apply circle_circle__circle_circle_bis in cc.
+  apply (circle_circle_bis__euclid_22 cc).
 Qed.
 
 
 	    (** * Proposition 23
-       On a given straight line and at a point on it to construct a rectilineal angle equal to a given rectilineal angle.
+       On a given straight line and at a point on it to construct
+       a rectilineal angle equal to a given rectilineal angle.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container23"></div> # **)
 
-Lemma prop_23 : forall A B C A' B', A <> B -> A <> C -> B <> C -> A' <> B' ->
-  exists C', CongA A B C A' B' C'.
+Lemma prop_23 : forall A B C D E, A <> B -> C <> D -> C <> E ->
+  exists F, CongA D C E B A F.
 Proof.
-  intros A B C A' B'.
   intros.
-  destruct (not_col_exists A' B') as [P HNCol]; trivial.
-  destruct (angle_construction_2 A B C A' B' P) as [C' [HCongA]]; auto.
-  exists C'; assumption.
+  apply angle_construction_3; auto.
 Qed.
 
+
 	    (** * Proposition 24
-       If two triangles have the two sides equal to two sides respectively, but have the one of the angles contained by the equal straight lines greater than the other, they will also have the base greater than the base. 
+       If two triangles have the two sides equal to two sides respectively,
+       but have the one of the angles contained by the equal straight lines greater than the other,
+       they will also have the base greater than the base.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container24"></div> # **)
 
@@ -606,7 +582,9 @@ Qed.
 
 
 	    (** * Proposition 25
-       If two triangles have the two sides equal to two sides respectively, but have the base greater than the base, they will also have the one of the angles contained by the equal straight lines greater than the other.
+       If two triangles have the two sides equal to two sides respectively,
+       but have the base greater than the base, they will also have
+       the one of the angles contained by the equal straight lines greater than the other.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container25"></div> # **)
 
@@ -619,98 +597,115 @@ Qed.
 
 
 	    (** * Proposition 26
-       If two triangles have the two angles equal to two angles respectively, and one side equal to one side, namely, either the side adjoining the equal angles, or that subtending one of the equal angles, they will also have the remaining sides equal to the remaining sides and the remaining angle to the remaining angle. 
+       If two triangles have the two angles equal to two angles respectively,
+       and one side equal to one side, namely, either the side adjoining the equal angles,
+       or that subtending one of the equal angles, they will also have the remaining sides
+       equal to the remaining sides and the remaining angle to the remaining angle. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container26"></div> # **)
 
-Lemma prop_26_1 : forall A B C A' B' C', ~ Col A B C ->
-       CongA B A C B' A' C' -> CongA A B C A' B' C' -> Cong A B A' B' ->
-       Cong A C A' C' /\ Cong B C B' C' /\ CongA A C B A' C' B'.
+Lemma prop_26_1 : forall A B C D E F, ~ Col A B C ->
+       CongA B A C E D F -> CongA A B C D E F -> Cong A B D E ->
+       Cong A C D F /\ Cong B C E F /\ CongA A C B D F E.
 Proof.
   apply l11_50_1.
 Qed.
 
-Lemma prop_26_2 : forall A B C A' B' C', ~ Col A B C ->
-       CongA B C A B' C' A' -> CongA A B C A' B' C' -> Cong A B A' B' ->
-       Cong A C A' C' /\ Cong B C B' C' /\ CongA C A B C' A' B'.
+Lemma prop_26_2 : forall A B C D E F, ~ Col A B C ->
+       CongA B C A E F D -> CongA A B C D E F -> Cong A B D E ->
+       Cong A C D F /\ Cong B C E F /\ CongA C A B F D E.
 Proof.
   apply l11_50_2.
 Qed.
 
 
 	    (** * Proposition 27
-       If a straight line falling on two straight lines make the alternate angles equal to one another, the straight lines will be parallel to one another.
+       If a straight line falling on two straight lines
+       make the alternate angles equal to one another,
+       the straight lines will be parallel to one another.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container27"></div> # **)
 
-Lemma prop_27 : forall A B C D, TS A C B D -> CongA B A C D C A -> Par A B C D.
+Lemma prop_27 : forall A D E F, TS E F A D -> CongA A E F D F E -> Par E A F D.
 Proof.
+  intros A D E F.
   apply l12_21_b.
 Qed.
 
 
 	    (** * Proposition 28
-       If a straight line falling on two straight lines make the exterior angle equal to the interior and opposite angle on the same side, or the interior angles on the same side equal to two right angles, the straight lines will be parallel to one another. 
+       If a straight line falling on two straight lines
+       make the exterior angle equal to the interior and opposite angle on the same side,
+       or the interior angles on the same side equal to two right angles,
+       the straight lines will be parallel to one another. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container28"></div> # **)
 
-Lemma prop_28_1 : forall A B C D P, Out P A C -> OS P A B D -> CongA B A P D C P ->
-  Par A B C D.
+Lemma prop_28_1 : forall B D E G H, Out E G H -> OS E G B D -> CongA B G E D H E ->
+  Par G B H D.
 Proof.
+  intros B D E G H.
   apply l12_22_b.
 Qed.
 
-Lemma prop_28_2 : forall A B C D P Q R, OS B C A D -> SumA A B C B C D P Q R -> Bet P Q R ->
-  Par A B C D.
+Lemma prop_28_2 : forall A C G H P Q R, OS G H A C -> SumA A G H G H C P Q R -> Bet P Q R ->
+  Par A G C H.
 Proof.
-  intros A B C D P Q R HOS HSumA HBet.
-  destruct (segment_construction D C D C) as [D' [HBet' HCong]].
-  apply par_left_comm.
+  intros A C G H P Q R HOS HSumA HBet.
+  destruct (segment_construction C H C H) as [D [HBet1 HCong]].
+  apply par_comm.
   assert_diffs.
-  apply par_col_par with D'; Col.
+  apply par_col_par with D; Col.
   apply l12_21_b.
-  - apply l9_8_2 with D; Side.
-    assert (HNCol := one_side_not_col124 B C A D HOS).
+  - apply l9_8_2 with C; Side.
+    assert (HNCol := one_side_not_col124 G H A C HOS).
     repeat split; Col.
       intro; apply HNCol; ColR.
-    exists C; Col.
-  - apply between_symmetry in HBet'.
-    assert (HCongA : CongA D' C D P Q R) by (apply conga_line; auto).
-    assert (HSumA' : SumA D' C B B C D P Q R).
-      apply conga3_suma__suma with D' C B B C D D' C D; CongA; SumA.
-    apply sams2_suma2__conga123 with B C D P Q R; trivial;
-      apply bet_suma__sams with P Q R; assumption.
+    exists H; Col.
+  - apply suppa2__conga123 with G H C.
+      apply bet_suma__suppa with P Q R; assumption.
+      split; auto; exists C; split; [Between|CongA].
 Qed.
 
 End Book_1_part_2.
 
-(** The following propositions are valid only in Euclidean geometry, except for Proposition 31, which is valid in neutral geometry. *)
+(** The following propositions are valid only in Euclidean geometry,
+    except for Proposition 31, which is valid in neutral geometry.
+*)
 
 Section Book_1_part_3.
 
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 	    (** * Proposition 29
-       A straight line falling on parallel straight lines makes the alternate angles equal to one another, the exterior angle equal to the interior and opposite angle, and the interior angles on the same side equal to two right angles. 
+       A straight line falling on parallel straight lines makes
+       the alternate angles equal to one another,
+       the exterior angle equal to the interior and opposite angle,
+       and the interior angles on the same side equal to two right angles. 
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container29"></div> # **)
 
-Lemma prop_29_1 : forall A B C D, TS A C B D -> Par A B C D -> CongA B A C D C A.
+Lemma prop_29_1 : forall A D G H, TS G H A D -> Par G A H D -> CongA A G H D H G.
 Proof.
+  intros A D G H.
   apply l12_21_a.
 Qed.
 
-Lemma prop_29_2 : forall A B C D P, Out P A C -> OS P A B D -> Par A B C D ->
-  CongA B A P D C P.
+Lemma prop_29_2 : forall B D E G H, Out E G H -> OS E G B D -> Par G B H D ->
+  CongA B G E D H E.
 Proof.
+  intros B D E G H.
   apply l12_22_a.
 Qed.
 
-Lemma prop_29_3 : forall A B C D P Q R, OS B C A D -> Par A B C D -> SumA A B C B C D P Q R ->
+Lemma prop_29_3 : forall A C G H P Q R, OS G H A C -> Par A G H C -> SumA A G H G H C P Q R ->
   Bet P Q R.
 Proof.
-  apply alternate_interior__consecutive_interior.
+  intros A C G H P Q R HOS HPar.
+  apply (suma_suppa__bet).
+  apply alternate_interior__consecutive_interior; trivial.
   unfold alternate_interior_angles_postulate.
   apply l12_21_a.
 Qed.
@@ -721,8 +716,8 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container30"></div> # **)
 
-Lemma prop_30 : forall A1 A2 B1 B2 C1 C2, Par A1 A2 B1 B2 -> Par B1 B2 C1 C2 ->
-   Par A1 A2 C1 C2.
+Lemma prop_30 : forall A B C D E F, Par A B C D -> Par C D E F ->
+   Par A B E F.
 Proof.
   apply par_trans.
 Qed.
@@ -736,10 +731,11 @@ Section Book_1_part_4.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container31"></div> # **)
 
-Context `{TE:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma prop_31 : forall A B P, A <> B -> exists Q, Par A B P Q.
+Lemma prop_31 : forall A B C, B <> C -> exists E, Par B C A E.
 Proof.
+  intros A B C.
   apply parallel_existence1.
 Qed.
 
@@ -747,9 +743,12 @@ End Book_1_part_4.
 
 Section Book_1_part_5.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 	    (** * Proposition 32
-       In any triangle, if one of the sides be produced, the exterior angle is equal to the two interior and opposite angles, and the three interior angles of the triangle are equal to two right angles.
+       In any triangle, if one of the sides be produced,
+       the exterior angle is equal to the two interior and opposite angles,
+       and the three interior angles of the triangle are equal to two right angles.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container32"></div> # **)
 
@@ -760,53 +759,56 @@ Proof.
   apply l12_21_a.
 Qed.
 
-Lemma prop_32_2 : forall A B C D, A <> B -> B <> C -> A <> C -> Bet B A D -> A <> D ->
-  SumA A B C B C A C A D.
+Lemma prop_32_2 : forall A B C D, A <> B -> B <> C -> A <> C -> Bet B C D -> C <> D ->
+  SumA C A B A B C A C D.
 Proof.
   intros A B C D HAB HBC HAC HBet HAD.
-  destruct (ex_trisuma A B C HAB HBC HAC) as [P [Q [R HTri]]].
-  assert (Bet P Q R) by (apply (prop_32_1 A B C), HTri).
+  destruct (ex_trisuma C A B) as [P [Q [R HTri]]]; auto.
+  assert (Bet P Q R) by (apply (prop_32_1 C A B), HTri).
   destruct HTri as [S [T [U [HSuma1 HSumA2]]]].
-  apply conga3_suma__suma with A B C B C A S T U; try (apply conga_refl); auto.
+  apply conga3_suma__suma with C A B A B C S T U; try (apply conga_refl); auto.
   assert_diffs.
-  assert (HCongA : CongA B A D P Q R) by (apply conga_line; auto).
-  assert (HSumA' : SumA C A D C A B P Q R).
-    apply conga3_suma__suma with C A D C A B B A D; CongA; SumA.
-  apply sams2_suma2__conga123 with C A B P Q R; trivial;
+  assert (HCongA : CongA B C D P Q R) by (apply conga_line; auto).
+  assert (HSumA' : SumA A C D B C A P Q R).
+    apply conga3_suma__suma with A C D B C A B C D; CongA.
+    apply suma_sym, bet__suma; auto.
+  apply sams2_suma2__conga123 with B C A P Q R; trivial;
     apply bet_suma__sams with P Q R; assumption.
 Qed.
 
 
 	    (** * Proposition 33
-       The straight lines joining equal and parallel straight lines (at the extremities which are) in the same directions (respectively) are themselves also equal and parallel.
+       The straight lines joining at the extremities
+       equal and parallel straight lines which are in the same directions
+       are themselves also equal and parallel.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container33"></div> # **)
 
 Lemma prop_33 : forall A B C D,
- TS A C B D -> Par A B C D -> Cong A B C D ->
- Cong A B C D /\ Cong A D B C /\ Par A D B C.
+ TS B C A D -> Par A B C D -> Cong A B C D ->
+ Cong A C B D /\ Par A C B D.
 Proof.
   intros A B C D HTS HPAR HC.
-  assert (HPara:Parallelogram A B C D) by (unfold Parallelogram;left;unfold Parallelogram_strict;auto).
-  assert (T:=plg_cong A B C D HPara).
+  assert (HPara:Parallelogram B A C D) by (unfold Parallelogram;left;unfold Parallelogram_strict;finish).
+  destruct (plg_cong B A C D HPara).
   assert_diffs.
-  assert (HBC:B<>C) by auto.
-  assert (HPar:=plg_par A B C D H2 HBC HPara).
-  spliter;repeat split; finish.
+  destruct (plg_par B A C D); auto.
+  split; finish.
 Qed.
 
 	    (** * Proposition 34
-       In parallelogrammic areas the opposite sides and angles are equal to one another, and the diameter bisects the areas.
+       In parallelogrammic areas the opposite sides and angles are equal to one another,
+       and the diameter bisects the areas.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container34"></div> # **)
 
-Lemma prop_34_1 : forall A B C D : Tpoint,
-  A <> B /\ A <> C /\ B <> C ->
-  Parallelogram A B C D -> (CongA A B C C D A /\ CongA B C D D A B) /\ (Cong A B C D /\ Cong A D B C).
+Lemma prop_34_1 : forall A B D C,
+  A <> B /\ A <> D /\ B <> D ->
+  Parallelogram A B D C -> (CongA A B D D C A /\ CongA B D C C A B) /\ (Cong A B D C /\ Cong A C B D).
 Proof.
-  intros;split. 
-  apply plg_conga;auto.
-  apply plg_cong;auto.
+  intros; split.
+  - apply plg_conga; auto.
+  - apply plg_cong; auto.
 Qed.
 
 	    (** * Proposition 35
@@ -840,7 +842,8 @@ Qed.
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container40"></div> # **)
 	  
 	    (** * Proposition 41
-       If a parallelogram have the same base with a triangle and be in the same parallels, the parallelogram is double of the triangle.
+       If a parallelogram have the same base with a triangle and be in the same parallels,
+       the parallelogram is double of the triangle.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container41"></div> # **)
 	  
@@ -850,12 +853,14 @@ Qed.
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container42"></div> # **)
 	  
 	    (** * Proposition 43
-       In any parallelogram the complements of the parallelograms about the diameter are equal to one another.
+       In any parallelogram the complements of the parallelograms about the diameter
+       are equal to one another.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container43"></div> # **)
 	  
 	    (** * Proposition 44
-       To a given straight line to apply, in a given rectilineal angle, a parallelogram equal to a given triangle.
+       To a given straight line to apply, in a given rectilineal angle,
+       a parallelogram equal to a given triangle.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container44"></div> # **)
 	  
@@ -869,16 +874,15 @@ Qed.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container46"></div> # **)
 
-
-
-Lemma prop_46 : forall A B, A<>B -> exists C D,  Square A B C D.
+Lemma prop_46 : forall A B, A<>B -> exists E D, Square A B E D.
 Proof.
   exact exists_square.
 Qed.
 
 
 	    (** * Proposition 47
-       In right-angled triangles the square on the side subtending the right angle is equal to the squares on the sides containing the right angle.
+       In right-angled triangles the square on the side subtending the right angle
+       is equal to the squares on the sides containing the right angle.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container47"></div> # **)
 
@@ -890,22 +894,27 @@ Qed.
       *)
 
 Lemma prop_47 :
-     forall O E E' A B C AC BC AB AC2 BC2 AB2 : Tpoint,
+     forall O E E' A B C AC BC AB AC2 BC2 AB2,
        O <> E ->
-       Per A C B ->
+       Per B A C ->
        Length O E E' A B AB ->
        Length O E E' A C AC ->
        Length O E E' B C BC ->
        Prod O E E' AC AC AC2 ->
        Prod O E E' BC BC BC2 ->
        Prod O E E' AB AB AB2 ->
-       Sum O E E' AC2 BC2 AB2.
+       Sum O E E' AB2 AC2 BC2.
 Proof.
-exact pythagoras.
+  intros O E E' A B C AC BC AB AC2 BC2 AB2.
+  intros.
+  apply pythagoras with B C A AB AC BC; trivial; apply length_sym; assumption.
 Qed.
 
+
 	    (** * Proposition 48
-       If in a triangle the square on one of the sides be equal to the squares on the remaining two sides of the triangle, the angle contained by the remaining two sides of the triangle is right.
+       If in a triangle the square on one of the sides be equal
+       to the squares on the remaining two sides of the triangle,
+       the angle contained by the remaining two sides of the triangle is right.
        *)
 	    (** # <div style="width:748px;height:397px;display:block" id="applet_container48"></div> # **)
 
