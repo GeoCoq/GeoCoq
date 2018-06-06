@@ -32,15 +32,7 @@ assert (Par A B C D) by (conclude_def PG ).
 assert (nCol A B D) by (forward_using lemma_parallelNC).
 assert (Par a b c d) by (conclude_def PG ).
 assert (nCol a b d) by (forward_using lemma_parallelNC).
-assert (nCol d a b) by (forward_using lemma_NCorder).
-assert (Triangle d a b) by (conclude_def Triangle ).
-assert (nCol D A B) by (forward_using lemma_NCorder).
-assert (Triangle D A B) by (conclude_def Triangle ).
-assert (nCol A C D) by (forward_using lemma_parallelNC).
-assert (nCol A D C) by (forward_using lemma_NCorder).
 assert (TS A B D C) by (forward_using lemma_crossimpliesopposite).
-assert (nCol a c d) by (forward_using lemma_parallelNC).
-assert (nCol a d c) by (forward_using lemma_NCorder).
 assert (TS a b d c) by (forward_using lemma_crossimpliesopposite).
 assert (ET A B D a b d) by (conclude axiom_halvesofequals).
 assert (Cong a b d a) by (conclude_def SQ ).
@@ -68,21 +60,6 @@ assert (~ Lt a b A B).
  assert (CongA F A E D A B) by (conclude lemma_equalanglessymmetric).
  assert (Per F A E) by (conclude lemma_equaltorightisright).
  assert (CongA F A E d a b) by (conclude lemma_Euclid4).
- assert (Col A F D) by (conclude_def Col ).
- assert (Col A E B) by (conclude_def Col ).
- assert (Col A B E) by (forward_using lemma_collinearorder).
- assert (neq A E) by (forward_using lemma_betweennotequal).
- assert (nCol A B D) by (forward_using lemma_NCorder).
- assert (eq A A) by (conclude cn_equalityreflexive).
- assert (Col A B A) by (conclude_def Col ).
- assert (nCol A E D) by (conclude lemma_NChelper).
- assert (nCol A D E) by (forward_using lemma_NCorder).
- assert (Col A D F) by (forward_using lemma_collinearorder).
- assert (neq A F) by (forward_using lemma_betweennotequal).
- assert (Col A D A) by (conclude_def Col ).
- assert (nCol A F E) by (conclude lemma_NChelper).
- assert (nCol F A E) by (forward_using lemma_NCorder).
- assert (Triangle F A E) by (conclude_def Triangle ).
  assert (Cong F E d b) by (conclude proposition_04).
  assert (Cong F A d a) by (forward_using lemma_congruenceflip).
  assert (Cong_3 F A E d a b) by (conclude_def Cong_3 ).
@@ -117,21 +94,6 @@ assert (~ Lt A B a b).
  assert (CongA f a e d a b) by (conclude lemma_equalanglessymmetric).
  assert (Per f a e) by (conclude lemma_equaltorightisright).
  assert (CongA f a e D A B) by (conclude lemma_Euclid4).
- assert (Col a f d) by (conclude_def Col ).
- assert (Col a e b) by (conclude_def Col ).
- assert (Col a b e) by (forward_using lemma_collinearorder).
- assert (neq a e) by (forward_using lemma_betweennotequal).
- assert (nCol a b d) by (forward_using lemma_NCorder).
- assert (eq a a) by (conclude cn_equalityreflexive).
- assert (Col a b a) by (conclude_def Col ).
- assert (nCol a e d) by (conclude lemma_NChelper).
- assert (nCol a d e) by (forward_using lemma_NCorder).
- assert (Col a d f) by (forward_using lemma_collinearorder).
- assert (neq a f) by (forward_using lemma_betweennotequal).
- assert (Col a d a) by (conclude_def Col ).
- assert (nCol a f e) by (conclude lemma_NChelper).
- assert (nCol f a e) by (forward_using lemma_NCorder).
- assert (Triangle f a e) by (conclude_def Triangle ).
  assert (Cong f e D B) by (conclude proposition_04).
  assert (Cong f a D A) by (forward_using lemma_congruenceflip).
  assert (Cong_3 f a e D A B) by (conclude_def Cong_3 ).

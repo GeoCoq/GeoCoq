@@ -1,5 +1,7 @@
 Require Export GeoCoq.Elements.OriginalProofs.proposition_47.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_squaresequal.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_rectanglerotate.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_paste5.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_48A.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_08.
 
@@ -9,7 +11,7 @@ Context `{Ax:area}.
 
 Lemma proposition_48 : 
    forall A B C D E F G H K L M, 
-   Triangle A B C -> SQ A B F G -> TS G B A C -> SQ A C K H -> TS H C A B -> SQ B C E D -> TS D C B A -> BetS B M C -> BetS E L D -> EF A B F G B M L D -> EF A C K H M C E L -> RE B M L D -> RE M C E L ->
+   Triangle A B C -> SQ A B F G -> SQ A C K H -> SQ B C E D -> BetS B M C -> BetS E L D -> EF A B F G B M L D -> EF A C K H M C E L -> RE M C E L ->
    Per B A C.
 Proof.
 intros.
@@ -18,7 +20,7 @@ assert (neq A C) by (forward_using lemma_NCdistinct).
 assert (neq A B) by (forward_using lemma_NCdistinct).
 assert (neq B A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists R, (BetS B A R /\ Cong A R A B)) by (conclude postulate_extension);destruct Tf as [R];spliter.
+assert (Tf:exists R, (BetS B A R /\ Cong A R A B)) by (conclude lemma_extension);destruct Tf as [R];spliter.
 assert (Col B A R) by (conclude_def Col ).
 assert (Col A B R) by (forward_using lemma_collinearorder).
 assert (eq B B) by (conclude cn_equalityreflexive).
@@ -63,10 +65,18 @@ assert (EF M C E L A C K H) by (conclude axiom_EFsymmetric).
 assert (EF M C E L A c k h) by (conclude axiom_EFtransitive).
 assert (EF M C E L m c e l) by (conclude axiom_EFtransitive).
 assert (BetS e l d) by (conclude axiom_betweennesssymmetry).
-assert (EF B C E D B c e d) by (conclude axiom_paste5).
+assert (Per B c e) by (conclude_def SQ ).
+assert (neq m c) by (forward_using lemma_betweennotequal).
+assert (Col B m c) by (conclude_def Col ).
+assert (Col B c m) by (forward_using lemma_collinearorder).
+assert (Per m c e) by (conclude lemma_collinearright).
+assert (PG c e l m) by (conclude lemma_PGrotate).
+assert (RE c e l m) by (conclude lemma_PGrectangle).
+assert (RE e l m c) by (conclude lemma_rectanglerotate).
+assert (RE l m c e) by (conclude lemma_rectanglerotate).
+assert (RE m c e l) by (conclude lemma_rectanglerotate).
+assert (EF B C E D B c e d) by (conclude lemma_paste5).
 assert (Cong B C B c) by (conclude proposition_48A).
-assert (Cong C B c B) by (forward_using lemma_congruenceflip).
-assert (neq B C) by (forward_using lemma_NCdistinct).
 assert (Cong A C A c) by (conclude lemma_congruencesymmetric).
 assert (Triangle A B c) by (conclude_def Triangle ).
 assert (CongA B A C B A c) by (apply (proposition_08 A B C A B c);auto).

@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_NCorder.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_parallelcollinear2 : 
    forall A B C c d, 

@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_collinearright.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_supplementofright : 
    forall A B C D F, 
@@ -11,11 +11,7 @@ Lemma lemma_supplementofright :
 Proof.
 intros.
 assert ((Out B C D /\ BetS A B F)) by (conclude_def Supp ).
-assert (Per C B A) by (conclude lemma_8_2).
 assert (Col A B F) by (conclude_def Col ).
-assert (nCol A B C) by (conclude lemma_rightangleNC).
-assert (neq A F) by (forward_using lemma_betweennotequal).
-assert (neq F A) by (conclude lemma_inequalitysymmetric).
 assert (neq B F) by (forward_using lemma_betweennotequal).
 assert (neq F B) by (conclude lemma_inequalitysymmetric).
 assert (Per F B C) by (conclude lemma_collinearright).

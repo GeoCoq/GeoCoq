@@ -18,20 +18,17 @@ intros.
 let Tf:=fresh in
 assert (Tf:exists N, (BetS D N A /\ Col C B N /\ nCol C B D)) by (conclude_def TS );destruct Tf as [N];spliter.
 assert (Per C A B) by (conclude lemma_8_2).
-assert (eq B B) by (conclude cn_equalityreflexive).
 assert (nCol C A B) by (conclude lemma_rightangleNC).
 assert (neq A B) by (forward_using lemma_NCdistinct).
-assert (Out A B B) by (conclude lemma_ray4).
 assert (nCol A B C) by (conclude_def Triangle ).
 assert (neq B C) by (forward_using lemma_NCdistinct).
 assert (Cong B C E D) by (conclude_def SQ ).
-assert (neq E D) by (conclude lemma_nullsegment3).
+assert (neq E D) by (conclude axiom_nocollapse).
 assert (neq D E) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
 assert (Tf:exists q, (BetS D q A /\ Col C B q /\ nCol C B D)) by (conclude_def TS );destruct Tf as [q];spliter.
 assert (PG B C E D) by (conclude lemma_squareparallelogram).
 assert (Par B C E D) by (conclude_def PG ).
-assert (Par B C D E) by (forward_using lemma_parallelflip).
 assert (~ Meet B C E D) by (conclude_def Par ).
 assert (~ eq A E).
  {
@@ -57,7 +54,6 @@ assert (~ Col D E A).
  assert (Col A E D) by (conclude lemma_collinear4).
  assert (Col A E q) by (forward_using lemma_collinearorder).
  assert (Col E D q) by (conclude lemma_collinear4).
- assert (Col D E q) by (forward_using lemma_collinearorder).
  assert (Col B C q) by (forward_using lemma_collinearorder).
  assert (Meet B C E D) by (conclude_def Meet ).
  contradict.
@@ -67,20 +63,12 @@ assert (Tf:exists L, Perp_at A L D E L) by (conclude proposition_12);destruct Tf
 let Tf:=fresh in
 assert (Tf:exists p, (Col A L L /\ Col D E L /\ Col D E p /\ Per p L A)) by (conclude_def Perp_at );destruct Tf as [p];spliter.
 assert (Per A L p) by (conclude lemma_8_2).
-assert (neq L p) by (conclude_def Per ).
-assert (Col E D L) by (forward_using lemma_collinearorder).
-assert (eq D D) by (conclude cn_equalityreflexive).
-assert (Col E D D) by (conclude_def Col ).
-assert (neq A D) by (assert (nCol D E A) by auto;forward_using lemma_NCdistinct).
-assert (nCol A B C) by (conclude_def Triangle ).
-assert (neq B A) by (forward_using lemma_NCdistinct).
 assert (~ eq B N).
  {
  intro.
  assert (BetS D B A) by (conclude cn_equalitysub).
  assert (Col D B A) by (conclude_def Col ).
- assert (Col B D A) by (forward_using lemma_collinearorder).
- assert (Per D B C) by (conclude_def SQ ).
+  assert (Per D B C) by (conclude_def SQ ).
  assert (Per A B C) by (conclude lemma_collinearright).
  assert (~ Per C A B) by (conclude lemma_8_7).
  assert (Per C A B) by (conclude lemma_8_2).
@@ -106,7 +94,6 @@ assert (~ eq D L).
  {
  intro.
  assert (Per A D p) by (conclude cn_equalitysub).
- assert (Per E D B) by (conclude_def SQ ).
  assert (Per p D A) by (conclude lemma_8_2).
  assert (Col p D E) by (forward_using lemma_collinearorder).
  assert (Per E D A) by (conclude lemma_collinearright).
@@ -122,8 +109,6 @@ assert (~ eq D L).
  assert (Col N B C) by (forward_using lemma_collinearorder).
  assert (Col N B D) by (forward_using lemma_collinearorder).
  assert (Col B C D) by (conclude lemma_collinear4).
- assert (Per D B C) by (conclude_def SQ ).
- assert (nCol D B C) by (conclude lemma_rightangleNC).
  assert (nCol B C D) by (forward_using lemma_NCorder).
  contradict.
  }
@@ -134,16 +119,12 @@ assert (Par B C L D) by (conclude lemma_collinearparallel).
 assert (Par L D B C) by (conclude lemma_parallelsymmetric).
 assert (TP B C L D) by (conclude lemma_paralleldef2B).
 assert (OS L D B C) by (conclude_def TP ).
-assert (OS D L B C) by (forward_using lemma_samesidesymmetric).
 assert (nCol B C D) by (forward_using lemma_parallelNC).
 assert (Col B C N) by (forward_using lemma_collinearorder).
 assert (TS D B C A) by (conclude_def TS ).
 assert (TS L B C A) by (conclude lemma_planeseparation).
 let Tf:=fresh in
 assert (Tf:exists M, (BetS L M A /\ Col B C M /\ nCol B C L)) by (conclude_def TS );destruct Tf as [M];spliter.
-assert (Par L D C B) by (forward_using lemma_parallelflip).
-assert (Col C B M) by (forward_using lemma_collinearorder).
-assert (nCol B D E) by (forward_using lemma_parallelNC).
 assert (neq D E) by (forward_using lemma_NCdistinct).
 assert (neq E D) by (conclude lemma_inequalitysymmetric).
 assert (neq L M) by (forward_using lemma_betweennotequal).
@@ -153,10 +134,7 @@ assert (Per E D B) by (conclude_def SQ ).
 assert (Col E D p) by (forward_using lemma_collinearorder).
 assert (Col E D L) by (forward_using lemma_collinearorder).
 assert (Col D p L) by (conclude lemma_collinear4).
-assert (nCol p L A) by (conclude lemma_rightangleNC).
-assert (neq p L) by (forward_using lemma_NCdistinct).
 assert (Col p L D) by (forward_using lemma_collinearorder).
-assert (neq L p) by (conclude lemma_inequalitysymmetric).
 assert (Per D L A) by (conclude lemma_collinearright).
 assert (Per D L M) by (conclude lemma_8_3).
 assert (~ eq B M).
@@ -232,7 +210,6 @@ assert (Par E L C M) by (conclude lemma_collinearparallel).
 assert (Par C M E L) by (conclude lemma_parallelsymmetric).
 assert (Par M C E L) by (forward_using lemma_parallelflip).
 assert (Col D L E) by (forward_using lemma_collinearorder).
-assert (neq M L) by (forward_using lemma_betweennotequal).
 assert (Per E L M) by (conclude lemma_collinearright).
 assert (Per M L E) by (conclude lemma_8_2).
 assert (Per C E D) by (conclude_def SQ ).

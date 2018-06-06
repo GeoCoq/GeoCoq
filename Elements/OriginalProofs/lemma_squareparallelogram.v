@@ -16,9 +16,8 @@ intros.
 assert ((Cong A B C D /\ Cong A B B C /\ Cong A B D A /\ Per D A B /\ Per A B C /\ Per B C D /\ Per C D A)) by (conclude_def SQ ).
 assert (nCol D A B) by (conclude lemma_rightangleNC).
 assert (neq D A) by (forward_using lemma_NCdistinct).
-assert (neq A D) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists R, (BetS D A R /\ Cong A R D A)) by (conclude postulate_extension);destruct Tf as [R];spliter.
+assert (Tf:exists R, (BetS D A R /\ Cong A R D A)) by (conclude lemma_extension);destruct Tf as [R];spliter.
 assert (BetS R A D) by (conclude axiom_betweennesssymmetry).
 assert (neq A B) by (forward_using lemma_NCdistinct).
 assert (Col D A R) by (conclude_def Col ).
@@ -34,9 +33,6 @@ assert (Col R A D) by (conclude_def Col ).
 assert (Col D A R) by (forward_using lemma_collinearorder).
 assert (Per R A B) by (conclude lemma_collinearright).
 assert (Per B A R) by (conclude lemma_8_2).
-assert (eq A A) by (conclude cn_equalityreflexive).
-assert (Col B A A) by (conclude_def Col ).
-assert (nCol B A R) by (forward_using lemma_NCorder).
 assert (TS E B A R) by (conclude lemma_oppositesideflip).
 assert (BetS E A R) by (conclude lemma_righttogether).
 assert (BetS R A E) by (conclude axiom_betweennesssymmetry).
@@ -50,8 +46,6 @@ assert (eq D D) by (conclude cn_equalityreflexive).
 assert (Out A D D) by (conclude lemma_ray4).
 assert (eq E D) by (conclude lemma_layoffunique).
 assert (PG A B c D) by (conclude cn_equalitysub).
-assert (nCol B C D) by (conclude lemma_rightangleNC).
-assert (neq C B) by (forward_using lemma_NCdistinct).
 assert (Cong A B C D) by (conclude_def SQ ).
 assert (SQ A B c D) by (conclude cn_equalitysub).
 assert (Cong A B c D) by (conclude_def SQ ).
@@ -65,17 +59,11 @@ assert (Cong c B C B) by (forward_using lemma_congruenceflip).
 assert (Per B C D) by (conclude_def SQ ).
 assert (Per B c D) by (conclude_def SQ ).
 assert (CongA B c D B C D) by (conclude lemma_Euclid4).
-assert (nCol B c D) by (conclude lemma_rightangleNC).
-assert (nCol B C D) by (conclude lemma_rightangleNC).
-assert (Triangle B C D) by (conclude_def Triangle ).
-assert (Triangle B c D) by (conclude_def Triangle ).
 assert ((Cong B D B D /\ CongA c B D C B D /\ CongA c D B C D B)) by (conclude proposition_04).
 let Tf:=fresh in
 assert (Tf:exists m, (Midpoint A m c /\ Midpoint B m D)) by (conclude lemma_diagonalsbisect);destruct Tf as [m];spliter.
 assert ((BetS A m c /\ Cong A m m c)) by (conclude_def Midpoint ).
 assert ((BetS B m D /\ Cong B m m D)) by (conclude_def Midpoint ).
-assert (Per D c B) by (conclude lemma_8_2).
-assert (Per D C B) by (conclude lemma_8_2).
 assert (CongA C D B c D B) by (conclude lemma_equalanglessymmetric).
 assert (Cong D m D m) by (conclude cn_congruencereflexive).
 assert (Cong D c D C) by (forward_using lemma_congruenceflip).
@@ -85,13 +73,11 @@ assert (nCol c D A) by (conclude lemma_rightangleNC).
 assert (nCol A c D) by (forward_using lemma_NCorder).
 assert (eq c c) by (conclude cn_equalityreflexive).
 assert (Col A c c) by (conclude_def Col ).
-assert (eq m m) by (conclude cn_equalityreflexive).
 assert (Col A m c) by (conclude_def Col ).
 assert (Col A c m) by (forward_using lemma_collinearorder).
 assert (neq m c) by (forward_using lemma_betweennotequal).
 assert (nCol m c D) by (conclude lemma_NChelper).
 assert (nCol c D m) by (forward_using lemma_NCorder).
-assert (Triangle c D m) by (conclude_def Triangle ).
 assert (~ Col C D m).
  {
  intro.
@@ -104,7 +90,6 @@ assert (~ Col C D m).
  assert (nCol B C D) by (conclude lemma_rightangleNC).
  contradict.
  }
-assert (Triangle C D m) by (conclude_def Triangle ).
 assert (CongA c D B C D B) by (conclude lemma_equalanglessymmetric).
 assert (BetS D m B) by (conclude axiom_betweennesssymmetry).
 assert (neq D B) by (forward_using lemma_betweennotequal).
@@ -127,10 +112,6 @@ assert (Per c D A) by (conclude cn_equalitysub).
 assert (Per A D c) by (conclude lemma_8_2).
 assert (Per A D C) by (conclude lemma_8_2).
 assert (CongA A D C A D c) by (conclude lemma_Euclid4).
-assert (nCol A D C) by (conclude lemma_rightangleNC).
-assert (nCol A D c) by (conclude lemma_rightangleNC).
-assert (Triangle A D C) by (conclude_def Triangle ).
-assert (Triangle A D c) by (conclude_def Triangle ).
 assert (Cong D C D c) by (conclude lemma_congruencesymmetric).
 assert (Cong A C A c) by (conclude proposition_04).
 assert (Cong A c A C) by (conclude lemma_congruencesymmetric).

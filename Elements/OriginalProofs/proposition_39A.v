@@ -23,7 +23,7 @@ assert (nCol A m C) by (conclude lemma_NChelper).
 assert (neq m C) by (forward_using lemma_NCdistinct).
 assert (neq C m) by (conclude lemma_inequalitysymmetric).
 rename_H H;let Tf:=fresh in
-assert (Tf:exists H, (BetS C m H /\ Cong m H m C)) by (conclude postulate_extension);destruct Tf as [H];spliter.
+assert (Tf:exists H, (BetS C m H /\ Cong m H m C)) by (conclude lemma_extension);destruct Tf as [H];spliter.
 assert (BetS B m A) by (conclude axiom_betweennesssymmetry).
 assert (BetS C M A) by (conclude axiom_betweennesssymmetry).
 assert (Cong m B m A) by (conclude lemma_congruencesymmetric).
@@ -140,7 +140,7 @@ by cases on (BetS B E D \/ eq D E \/ BetS B D E).
   }
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

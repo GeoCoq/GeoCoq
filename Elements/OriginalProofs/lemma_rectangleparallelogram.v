@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_NCdistinct.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_rectangleparallelogram : 
    forall A B C D, 
@@ -36,11 +36,9 @@ assert (~ Meet A B C D).
   contradict.
   }
  assert (Per B A D) by (conclude lemma_8_2).
- assert (Per A D C) by (conclude lemma_8_2).
  assert (Col B A P) by (forward_using lemma_collinearorder).
  assert (neq P A) by (conclude lemma_inequalitysymmetric).
  assert (Per P A D) by (conclude lemma_collinearright).
- assert (Per D A P) by (conclude lemma_8_2).
  assert (neq P D) by (conclude lemma_inequalitysymmetric).
  assert (Per P D A) by (conclude lemma_collinearright).
  assert (Per A D P) by (conclude lemma_8_2).
@@ -86,23 +84,13 @@ assert (~ Meet A D B C).
  assert (Col C B P) by (forward_using lemma_collinearorder).
  assert (neq P B) by (conclude lemma_inequalitysymmetric).
  assert (Per P B A) by (conclude lemma_collinearright).
- assert (Per A B P) by (conclude lemma_8_2).
  assert (Per B A P) by (conclude lemma_8_2).
  assert (~ Per P B A) by (conclude lemma_8_7).
  contradict.
  }
 assert (neq A D) by (forward_using lemma_NCdistinct).
 assert (neq B C) by (forward_using lemma_NCdistinct).
-assert (neq C B) by (forward_using lemma_NCdistinct).
-assert (eq A A) by (conclude cn_equalityreflexive).
-assert (Col A B A) by (conclude_def Col ).
-assert (eq B B) by (conclude cn_equalityreflexive).
-assert (Col A B B) by (conclude_def Col ).
-assert (eq C C) by (conclude cn_equalityreflexive).
-assert (Col C D C) by (conclude_def Col ).
 assert (eq D D) by (conclude cn_equalityreflexive).
-assert (Col C D D) by (conclude_def Col ).
-assert (BetS D M B) by (conclude axiom_betweennesssymmetry).
 assert (Col A D A) by (conclude_def Col ).
 assert (Col A D D) by (conclude_def Col ).
 assert (Col B C B) by (conclude_def Col ).

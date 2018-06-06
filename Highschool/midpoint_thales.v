@@ -3,7 +3,7 @@
 Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Section T_42.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma midpoint_thales : forall O A B C : Tpoint,
    ~ Col A B C ->
@@ -22,7 +22,7 @@ assert_cols.
 assert(Hid2 : Perp O X C A)
  by perm_apply (col_per_perp O X A C).
 assert (Perp B C C A).
- apply (par_perp_perp O X B C C A);finish.
+ apply (cop_par_perp__perp O X B C C A);finish.
 apply perp_per_1;Perp.
 Qed.
 
@@ -36,7 +36,7 @@ Lemma midpoint_thales_reci :
 Proof.
 intros.
 
-induction (Col_dec a b c).
+induction (col_dec a b c).
 
 induction (l8_9 a c b H);
 treat_equalities;assert_congs_perm;try split;finish.
@@ -56,8 +56,10 @@ apply (triangle_mid_par c b a o x);finish.
 (* Demonstration du sous but Perp pour appliquer par_perp_perp *)
 assert(Hper : Perp c b c a)
  by (apply perp_left_comm;apply per_perp;Perp).
+(* Demonstratin du sous but Cop pour appliquer par_perp_perp *)
+assert(Hcop : Coplanar x o c a) by Cop.
 (* Application de par_perp_perp *)
-assert(HH := par_perp_perp c b x o c a Hpar Hper).
+assert(HH := cop_par_perp__perp c b x o c a Hpar Hper).
 assert(Hper2 : Perp c x o x).
   apply (perp_col c a o x x).
   assert_diffs.

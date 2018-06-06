@@ -4,6 +4,7 @@ Section Euclid.
 
 Context `{Ax1:area}.
 
+
 Lemma lemma_squaresequal : 
    forall A B C D a b c d, 
    Cong A B a b -> SQ A B C D -> SQ a b c d ->
@@ -24,13 +25,10 @@ assert (Par A B C D) by (conclude_def PG ).
 assert (Par a b c d) by (conclude_def PG ).
 assert (nCol A B D) by (forward_using lemma_parallelNC).
 assert (nCol a b d) by (forward_using lemma_parallelNC).
-assert (nCol D A B) by (forward_using lemma_NCorder).
-assert (nCol d a b) by (forward_using lemma_NCorder).
-assert (Triangle D A B) by (conclude_def Triangle ).
-assert (Triangle d a b) by (conclude_def Triangle ).
 assert (Cong A D a d) by (forward_using lemma_congruenceflip).
 assert (Cong D B d b) by (conclude proposition_04).
 assert (Cong B D b d) by (forward_using lemma_congruenceflip).
+assert (Triangle A B D) by (conclude_def Triangle ).
 assert (Cong_3 A B D a b d) by (conclude_def Cong_3 ).
 assert (ET A B D a b d) by (conclude axiom_congruentequal).
 assert (ET A B D b d a) by (forward_using axiom_ETpermutation).
@@ -47,6 +45,8 @@ assert (Cong B C b c) by (conclude lemma_congruencetransitive).
 assert (Cong C D A B) by (conclude lemma_congruencesymmetric).
 assert (Cong C D a b) by (conclude lemma_congruencetransitive).
 assert (Cong C D c d) by (conclude lemma_congruencetransitive).
+assert (nCol B C D) by (forward_using lemma_parallelNC).
+assert (Triangle B C D) by (conclude_def Triangle ).
 assert (Cong_3 B C D b c d) by (conclude_def Cong_3 ).
 assert (ET B C D b c d) by (conclude axiom_congruentequal).
 assert (ET B C D b d c) by (forward_using axiom_ETpermutation).
@@ -55,12 +55,12 @@ assert (ET b d c B D C) by (forward_using axiom_ETpermutation).
 assert (ET B D C b d c) by (conclude axiom_ETsymmetric).
 assert (RE A B C D) by (conclude lemma_squarerectangle).
 assert (CR A C B D) by (conclude_def RE ).
-assert (nCol A C D) by (forward_using lemma_parallelNC).
-assert (TS A B D C) by (forward_using lemma_crossimpliesopposite).
+let Tf:=fresh in
+assert (Tf:exists M, (BetS A M C /\ BetS B M D)) by (conclude_def CR );destruct Tf as [M];spliter.
 assert (RE a b c d) by (conclude lemma_squarerectangle).
 assert (CR a c b d) by (conclude_def RE ).
-assert (nCol a c d) by (forward_using lemma_parallelNC).
-assert (TS a b d c) by (forward_using lemma_crossimpliesopposite).
+let Tf:=fresh in
+assert (Tf:exists m, (BetS a m c /\ BetS b m d)) by (conclude_def CR );destruct Tf as [m];spliter.
 assert (EF B A D C b a d c) by (conclude axiom_paste3).
 assert (EF B A D C a b c d) by (forward_using axiom_EFpermutation).
 assert (EF a b c d B A D C) by (conclude axiom_EFsymmetric).

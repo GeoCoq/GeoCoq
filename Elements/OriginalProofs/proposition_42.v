@@ -161,7 +161,8 @@ assert (~ ~ Meet E f P Q).
   contradict.
   }
  let Tf:=fresh in
- assert (Tf:exists a d p q, (Out E C d /\ Out E A a /\ Out E C p /\ Out E f q /\ Cong E d E p /\ Cong E a E q /\ Cong d a p q /\ nCol C E A)) by (conclude_def CongA );destruct Tf as [a[d[p[q]]]];spliter.
+ assert (Tf:exists d a p q, (Out E C d /\ Out E A a /\ Out E C p /\ Out E f q /\ Cong E d E p /\ Cong E a E q /\ Cong d a p q /\ nCol C E A))
+  by (remove_double_neg;unfold CongA in *; assumption);destruct Tf as [d[a[p[q]]]];spliter.
  assert (Col P Q A) by (conclude_def Col ).
  assert (eq d p) by (conclude lemma_layoffunique).
  assert (Cong d a d q) by (conclude cn_equalitysub).
@@ -317,7 +318,7 @@ by cases on (eq E f \/ eq E F \/ eq f F \/ BetS f E F \/ BetS E f F \/ BetS E F 
  assert (Out E F f) by (conclude lemma_ray4).
  close.
  }
-(* cases *)
+(** cases *)
 assert (CongA C E F c E f) by (conclude lemma_equalangleshelper).
 assert (CongA F E C f E c) by (conclude lemma_equalanglesflip).
 assert (CongA F E C J D K) by (conclude lemma_equalanglestransitive).

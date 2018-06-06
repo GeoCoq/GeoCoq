@@ -28,7 +28,7 @@ assert (~ eq C F).
  }
 assert (neq F C) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS C F E /\ Cong F E F C)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS C F E /\ Cong F E F C)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (Cong A C A E).
 by cases on (eq A F \/ neq A F).
 {
@@ -54,7 +54,7 @@ by cases on (eq A F \/ neq A F).
  assert (Cong A C A E) by (forward_using lemma_congruenceflip).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Cong B C B E).
 by cases on (eq B F \/ neq B F).
 {
@@ -81,7 +81,7 @@ by cases on (eq B F \/ neq B F).
  assert (Cong B C B E) by (forward_using lemma_congruenceflip).
  close.
  }
-(* cases *)
+(** cases *)
 assert (TS C A B E) by (conclude_def TS ).
 assert (OS D C A B) by (forward_using lemma_samesidesymmetric).
 assert (TS D A B E) by (conclude lemma_planeseparation).
@@ -120,15 +120,15 @@ by cases on (eq A B \/ eq A G \/ eq B G \/ BetS B A G \/ BetS A B G \/ BetS A G 
  assert (Cong B A B A) by (conclude cn_congruencereflexive).
  assert (Cong A G A G) by (conclude cn_congruencereflexive).
  assert (Cong A D A E) by (conclude lemma_congruencesymmetric).
- assert (neq B A) by (conclude lemma_inequalitysymmetric).
- assert (Cong D G E G) by (conclude axiom_5_line).
+ assert (Cong D G E G)
+  by (auto using (axiom_5_line B A G D B A G E)). 
  assert (Cong G D G E) by (forward_using lemma_congruenceflip).
  close.
  }
 {
  assert (Cong A B A B) by (conclude cn_congruencereflexive).
  assert (Cong B G B G) by (conclude cn_congruencereflexive).
- assert (Cong D G E G) by (conclude axiom_5_line).
+ assert (Cong D G E G) by (auto using (axiom_5_line A B G D A B G E)).
  assert (Cong G D G E) by (forward_using lemma_congruenceflip).
  close.
  }
@@ -138,13 +138,11 @@ by cases on (eq A B \/ eq A G \/ eq B G \/ BetS B A G \/ BetS A B G \/ BetS A G 
  assert (Cong G D G E) by (conclude lemma_interior5).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Cong D A E A) by (forward_using lemma_congruenceflip).
 assert (eq F G).
 by cases on (eq A G \/ neq A G).
 {
- assert (neq G E) by (forward_using lemma_betweennotequal).
- assert (neq E G) by (conclude lemma_inequalitysymmetric).
  assert (BetS E G D) by (conclude axiom_betweennesssymmetry).
  assert (Cong E G D G) by (forward_using lemma_doublereverse).
  assert (Cong E B D B) by (forward_using lemma_doublereverse).
@@ -155,17 +153,12 @@ by cases on (eq A G \/ neq A G).
   contradict.
   }
  assert (Per E G B) by (conclude_def Per ).
- assert (neq F E) by (forward_using lemma_betweennotequal).
- assert (neq E F) by (conclude lemma_inequalitysymmetric).
  assert (BetS E F C) by (conclude axiom_betweennesssymmetry).
  assert (Cong E F C F) by (forward_using lemma_doublereverse).
  assert (Cong E B C B) by (forward_using lemma_doublereverse).
  assert (~ eq F B).
   {
   intro.
-  assert (Cong B E B C) by (forward_using lemma_congruenceflip).
-  assert (Cong B C B D) by (forward_using lemma_congruenceflip).
-  assert (Cong B E B E) by (conclude lemma_congruencetransitive).
   assert (Cong A E A D) by (forward_using lemma_congruenceflip).
   assert (neq B A) by (conclude lemma_inequalitysymmetric).
   assert (BetS E A D) by (conclude cn_equalitysub).
@@ -174,9 +167,8 @@ by cases on (eq A G \/ neq A G).
   assert (Per B A E) by (conclude lemma_8_2).
   assert (BetS E B C) by (conclude cn_equalitysub).
   assert (Per E B A) by (conclude_def Per ).
-  assert (Per A B E) by (conclude lemma_8_2).
   let Tf:=fresh in
-  assert (Tf:exists J, (BetS B A J /\ Cong A J A B)) by (conclude postulate_extension);destruct Tf as [J];spliter.
+  assert (Tf:exists J, (BetS B A J /\ Cong A J A B)) by (conclude lemma_extension);destruct Tf as [J];spliter.
   assert (Out B A J) by (conclude lemma_ray4).
   assert (Per E B J) by (conclude lemma_8_3).
   assert (Per J B E) by (conclude lemma_8_2).
@@ -186,7 +178,6 @@ by cases on (eq A G \/ neq A G).
   assert (neq A J) by (forward_using lemma_betweennotequal).
   assert (neq J A) by (conclude lemma_inequalitysymmetric).
   assert (Per J A E) by (conclude lemma_collinearright).
-  assert (Col B A J) by (conclude_def Col ).
   assert (Col J A B) by (forward_using lemma_collinearorder).
   assert (eq A B) by (conclude lemma_droppedperpendicularunique).
   contradict.
@@ -228,7 +219,7 @@ by cases on (eq A G \/ neq A G).
    assert (Per E A B) by (conclude_def Per ).
    assert (Per B A E) by (conclude lemma_8_2).
    let Tf:=fresh in
-   assert (Tf:exists K, (BetS A B K /\ Cong B K B A)) by (conclude postulate_extension);destruct Tf as [K];spliter.
+   assert (Tf:exists K, (BetS A B K /\ Cong B K B A)) by (conclude lemma_extension);destruct Tf as [K];spliter.
    assert (Out A B K) by (conclude lemma_ray4).
    assert (Per E A K) by (conclude lemma_8_3).
    assert (Per K A E) by (conclude lemma_8_2).
@@ -275,10 +266,10 @@ by cases on (eq A G \/ neq A G).
   assert (eq F G) by (conclude lemma_droppedperpendicularunique).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 assert (Cong A F A F) by (conclude cn_congruencereflexive).
 assert (Cong B F B F) by (conclude cn_congruencereflexive).
 assert (Cong A F A G) by (conclude cn_equalitysub).

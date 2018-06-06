@@ -4,7 +4,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section alternate_interior_angles_proclus.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma alternate_interior__proclus :
   greenberg_s_axiom ->
@@ -12,8 +12,8 @@ Lemma alternate_interior__proclus :
   proclus_postulate.
 Proof.
   intros greenberg aia.
-  intros A B C D P Q HPar HP HQ.
-  elim(Col_dec C D P).
+  intros A B C D P Q HPar HP HQ HCop.
+  elim(col_dec C D P).
     intro HConf; exists P; split; Col.
   intro HStrict.
   assert(HParS : Par_strict A B C D).
@@ -23,14 +23,26 @@ Proof.
   }
   assert (HC0 := l8_18_existence C D P).
   destruct HC0 as [C0 []]; auto.
-  elim(Col_dec P Q C0).
+  elim(col_dec P Q C0).
     intro; exists C0; split; auto.
   intro HNCol1.
   assert_diffs.
   assert(HQ1 : exists Q1, Col Q P Q1 /\ OS A B C0 Q1).
-  { apply (not_par_same_side _ _ _ _ P); Col.
+  { apply (cop_not_par_same_side _ _ _ _ P); Col.
     apply not_col_permutation_1.
     apply (par_not_col C D); Col; Par.
+    assert (Coplanar C D P A).
+      {
+      elim (eq_dec_points P A); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P B).
+      {
+      elim (eq_dec_points P B); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P C0) by Cop.
+    CopR.
   }
   destruct HQ1 as [Q1 []].
   assert(~Col A B Q1) by (apply (one_side_not_col123 _ _ _ C0); Side).
@@ -39,25 +51,53 @@ Proof.
 
   assert(HNCol2 : ~Col C0 A B) by (apply (par_not_col C D); Par; Col).
   assert(HA1 : exists A1, Col A B A1 /\ OS P C0 Q1 A1).
-  { elim(Col_dec P C0 A).
-    2: intro; apply (not_par_same_side _ _ _ _ P); Col.
+  { assert (Coplanar C D P A).
+      {
+      elim (eq_dec_points P A); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P B).
+      {
+      elim (eq_dec_points P B); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P C0) by Cop.
+    assert (Coplanar A B C0 Q1) by Cop.
+    elim(col_dec P C0 A).
+    2: intro; apply (cop_not_par_same_side _ _ _ _ P); Col.
     intro.
-    assert(HA1 := not_par_same_side P C0 B A P Q1).
+    assert(HA1 := cop_not_par_same_side P C0 B A P Q1).
     destruct HA1 as [A1 []]; Col.
     intro; apply HNCol2; ColR.
+    CopR.
     exists A1; split; Col.
+    CopR.
   }
   destruct HA1 as [A1 []].
   assert(~Col P C0 A1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
   assert(HNCol3 : ~Col P C D) by (apply (par_not_col A B); Col).
   assert(HC1 : exists C1, Col C D C1 /\ OS P C0 Q1 C1).
-  { elim(Col_dec P C0 C).
-    2: intro; apply (not_par_same_side _ _ _ _ C0); Col.
+  { assert (Coplanar C D P A).
+      {
+      elim (eq_dec_points P A); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P B).
+      {
+      elim (eq_dec_points P B); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P C0) by Cop.
+    assert (Coplanar A B C0 Q1) by Cop.
+    elim(col_dec P C0 C).
+    2: intro; apply (cop_not_par_same_side _ _ _ _ C0); Col.
     intro.
-    assert(HC1 := not_par_same_side P C0 D C C0 Q1).
+    assert(HC1 := cop_not_par_same_side P C0 D C C0 Q1).
     destruct HC1 as [C1 []]; Col.
     intro; apply HNCol3; ColR.
+    CopR.
     exists C1; split; Col.
+    CopR.
   }
   destruct HC1 as [C1 []].
   assert(HNCol4 : ~Col P C0 C1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
@@ -72,13 +112,27 @@ Proof.
   { split.
     exists Q1; split; CongA; apply l11_24; auto.
     intro HConga.
-    apply conga__or_out_ts in HConga.
+    apply conga_cop__or_out_ts in HConga.
     destruct HConga as [Habs|Habs].
     assert_cols; Col.
     apply l9_9 in Habs.
     apply Habs.
     apply one_side_symmetry.
     apply (col2_os__os A B); auto.
+    assert (Coplanar C D P A).
+      {
+      elim (eq_dec_points P A); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P B).
+      {
+      elim (eq_dec_points P B); intro; treat_equalities; Cop.
+      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
+      }
+    assert (Coplanar C D P C0) by Cop.
+    assert (Coplanar A B C0 Q1) by Cop.
+    assert (Coplanar P C0 Q1 A1) by Cop.
+    CopR.
   }
   assert(Acute A1 P Q1).
   { exists A1.

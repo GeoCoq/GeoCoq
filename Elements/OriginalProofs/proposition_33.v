@@ -40,9 +40,6 @@ assert (CongA A B C D C B) by (conclude lemma_equalanglestransitive).
 assert (Cong B C B C) by (conclude cn_congruencereflexive).
 assert (nCol A B C) by (assert (nCol B C A) by auto;
  (forward_using lemma_NCorder)). 
-assert (Triangle A B C) by (conclude_def Triangle ).
-assert (nCol D C B) by (assert (nCol B C D) by auto;forward_using lemma_NCorder).
-assert (Triangle D C B) by (conclude_def Triangle ).
 assert (Cong B A C D) by (forward_using lemma_congruenceflip).
 assert (Cong B C C B) by (forward_using lemma_congruenceflip).
 assert ((Cong A C D B /\ CongA B A C C D B /\ CongA B C A C B D)) by (conclude proposition_04).

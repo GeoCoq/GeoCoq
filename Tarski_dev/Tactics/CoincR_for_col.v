@@ -1,6 +1,6 @@
 Require Import NArith.
 Require Import GeoCoq.Utils.sets.
-Require Import GeoCoq.Tactics.Coinc.tarski_to_coinc_theory_for_col.
+Require Import GeoCoq.Meta_theory.Models.tarski_to_coinc_theory_for_col.
 Require Import GeoCoq.Tactics.Coinc.CoincR.
 
 Section CoincR_for_col.

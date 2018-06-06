@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_altitudebisectsbase.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_droppedperpendicularunique : 
    forall A J M P, 
@@ -12,18 +12,15 @@ Lemma lemma_droppedperpendicularunique :
    eq M J.
 Proof.
 intros.
-assert (Per P M A) by (conclude lemma_8_2).
-let Tf:=fresh in
-assert (Tf:exists Q, (BetS P M Q /\ Cong P M Q M /\ Cong P A Q A /\ neq M A)) by (conclude_def Per );destruct Tf as [Q];spliter.
 assert (~ neq M J).
  {
  intro.
  assert (neq J M) by (conclude lemma_inequalitysymmetric).
  let Tf:=fresh in
- assert (Tf:exists E, (BetS M J E /\ Cong J E M J)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+ assert (Tf:exists E, (BetS M J E /\ Cong J E M J)) by (conclude lemma_extension);destruct Tf as [E];spliter.
  assert (neq M E) by (forward_using lemma_betweennotequal).
  let Tf:=fresh in
- assert (Tf:exists F, (BetS J M F /\ Cong M F M E)) by (conclude postulate_extension);destruct Tf as [F];spliter.
+ assert (Tf:exists F, (BetS J M F /\ Cong M F M E)) by (conclude lemma_extension);destruct Tf as [F];spliter.
  assert (BetS E J M) by (conclude axiom_betweennesssymmetry).
  assert (BetS E J F) by (conclude lemma_3_7b).
  assert (BetS F J E) by (conclude axiom_betweennesssymmetry).

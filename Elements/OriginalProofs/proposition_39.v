@@ -27,7 +27,6 @@ assert (eq A A) by (conclude cn_equalityreflexive).
 assert (eq C C) by (conclude cn_equalityreflexive).
 assert (eq D D) by (conclude cn_equalityreflexive).
 assert (eq B B) by (conclude cn_equalityreflexive).
-assert (eq D D) by (conclude cn_equalityreflexive).
 assert (Out B C C) by (conclude lemma_ray4).
 assert (Out B A A) by (conclude lemma_ray4).
 assert (Out B D D) by (conclude lemma_ray4).
@@ -48,7 +47,6 @@ assert (~ ~ Par A D B C).
  assert (~ LtA C B A C B D).
   {
   intro.
-  assert (OS D A B C) by (forward_using lemma_samesidesymmetric).
   let Tf:=fresh in
   assert (Tf:exists M, (BetS D M C /\ Out B A M)) by (conclude lemma_crossbar2);destruct Tf as [M];spliter.
   assert (ET D B C A B C) by (conclude axiom_ETsymmetric).
@@ -85,7 +83,6 @@ assert (~ ~ Par A D B C).
  assert (~ LtA B C A B C D).
   {
   intro.
-  assert (OS D A C B) by (forward_using lemma_samesidesymmetric).
   let Tf:=fresh in
   assert (Tf:exists M, (BetS D M B /\ Out C A M)) by (conclude lemma_crossbar2);destruct Tf as [M];spliter.
   assert (ET D C B A C B) by (conclude axiom_ETsymmetric).

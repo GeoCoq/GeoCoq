@@ -198,7 +198,7 @@ by cases on (eq A F \/ eq A E \/ eq F E \/ BetS F A E \/ BetS A F E \/ BetS A E 
 {
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

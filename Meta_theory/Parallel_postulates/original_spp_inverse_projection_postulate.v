@@ -4,14 +4,15 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section original_spp_inverse_projection_postulate.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma original_spp__inverse_projection_postulate : alternative_strong_parallel_postulate -> inverse_projection_postulate.
+Lemma original_spp__inverse_projection_postulate :
+  alternative_strong_parallel_postulate -> inverse_projection_postulate.
 Proof.
-  intros ospp A B C P Q Hacute Hout HPQ HPer.
+  intros ospp A B C P Q Hacute Hout HPQ HPer HCop.
   assert_diffs.
   assert_cols.
-  elim(Col_dec A B C).
+  elim(col_dec A B C).
   { intro.
     exists P.
     split; Col.
@@ -29,8 +30,8 @@ Proof.
   }
   intro HNCol1.
   assert(HNCol2 : ~ Col B P Q) by (apply per_not_col; auto).
-  assert(HQ0 := not_par_same_side A B Q P P C).
-  destruct HQ0 as [Q0 []]; Col.
+  assert(HQ0 := cop_not_par_same_side A B Q P P C).
+  destruct HQ0 as [Q0 []]; Col; Cop.
     intro; apply HNCol2; ColR.
   assert(HNCol3 : ~ Col A B Q0) by (apply (one_side_not_col123 _ _ _ C); Side).
   assert(P<>Q0) by (intro; subst; Col).
@@ -83,7 +84,8 @@ Proof.
 
   - apply l12_6.
     assert(HPar : Par B B0 P Y).
-    { apply (l12_9 _ _ _ _ A B); Perp.
+    { apply (l12_9 _ _ _ _ A B); Perp; Cop.
+      apply coplanar_trans_1 with C; Col; Cop.
       apply perp_right_comm.
       apply (perp_col1 _ _ _ P); Col.
       apply perp_sym.

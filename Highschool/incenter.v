@@ -1,9 +1,9 @@
-Require Import GeoCoq.Highschool.bisector.
-Require Import GeoCoq.Tarski_dev.Ch13_1.
+Require Export GeoCoq.Highschool.bisector.
+Require Export GeoCoq.Tarski_dev.Ch13_1.
 
 Section InCenter.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 
 Definition is_incenter I A B C :=
@@ -75,8 +75,9 @@ assert (CongA A B X X B C).
  apply (out_trivial B A);auto.
  apply (out_trivial B C);auto.
 }
-assert (Cong X HB X HC) by (apply (bisector_perp_equality C A B X HB HC);auto;Col;Col;Perp;CongA).
-assert (Cong X HC X HA) by (apply (bisector_perp_equality A B C X HC HA);auto;Col;Col).
+assert (Coplanar C A B X) by (exists XB; left; split; Col).
+assert (Cong X HB X HC) by (apply (bisector_perp_equality C A B X HB HC);Col;Perp;CongA).
+assert (Cong X HC X HA) by (apply (bisector_perp_equality A B C X HC HA);Col;Cop).
 assert (Cong X HB X HA) by (apply (cong_transitivity X HB X HC X HA);auto).
 assert (CongA A C X X C B).
 { 
@@ -169,7 +170,7 @@ Qed.
 Lemma incenter_dec : forall A B C I, is_incenter I A B C \/ ~ is_incenter I A B C.
 Proof.
 intros A B C I.
-destruct (Col_dec A B C) as [HCOL | HNCOL].
+destruct (col_dec A B C) as [HCOL | HNCOL].
 right.
 unfold is_incenter.
 intro HCOLIN.

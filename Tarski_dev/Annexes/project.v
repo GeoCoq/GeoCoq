@@ -4,7 +4,8 @@ Require Export GeoCoq.Tarski_dev.Annexes.vectors.
 
 Section Projections.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma project_id : forall A B X Y P P', Proj P P' A B X Y -> Col A B P -> P = P'.
 Proof.
@@ -734,24 +735,6 @@ subst R'.
 assumption.
 Qed.
 
-Lemma symmetry_preserves_conga :
- forall A B C A' B' C' M, A <> B -> C <> B ->
-  Midpoint M A A' ->
-  Midpoint M B B' ->
-  Midpoint M C C' ->
-  CongA A B C A' B' C'.
-Proof.
-intros.
-assert(Cong A B A' B').
-apply (l7_13 M); Midpoint.
-assert(Cong B C B' C').
-apply (l7_13 M); Midpoint.
-assert(Cong A C A' C').
-apply (l7_13 M); Midpoint.
-apply cong3_conga; auto.
-repeat split; Cong.
-Qed.
-
 Lemma triangle_par :
  forall A B C A' B' C',
  ~ Col A B C ->
@@ -787,14 +770,14 @@ spliter.
 tauto.
 
 assert(Par B' C' B C'').
-apply (midpoint_par _ _ _ _ M); Midpoint.
+apply (l12_17 _ _ _ _ M); Midpoint.
 
 assert(Col B B C /\ Col C'' B C).
 apply(parallel_uniqueness B' C' B C B C'' B); Col.
 Par.
 
 assert(Par B' A' B A'').
-apply (midpoint_par _ _ _ _ M); Midpoint.
+apply (l12_17 _ _ _ _ M); Midpoint.
 assert(Col B B A /\ Col A'' B A).
 apply(parallel_uniqueness B' A' B A B A'' B); Col.
 apply par_symmetry.
@@ -828,7 +811,7 @@ tauto.
 assert(Par A C A'' C'').
 eapply par_trans.
 apply H2.
-eapply (midpoint_par _ _ _ _ M); Midpoint.
+eapply (l12_17 _ _ _ _ M); Midpoint.
 
 intro.
 subst C'.
@@ -1573,7 +1556,7 @@ apply eqv_sym in H.
 apply null_vector in H.
 contradiction.
 
-induction (Par_dec P Q A B).
+induction (par_dec P Q A B).
 
 assert(EqV P Q P' Q').
 eapply project_par_eqv.
@@ -1599,7 +1582,7 @@ eapply eqv_trans.
 apply H.
 assumption.
 
-induction (Par_dec P Q X Y).
+induction (par_dec P Q X Y).
 assert(P' = Q').
 eapply project_par.
 apply H0.
@@ -1982,7 +1965,7 @@ spliter.
 induction H3.
 spliter.
 left.
-eapply l12_9.
+eapply l12_9_2D.
 apply perp_sym.
 apply H4.
 Perp.
@@ -2028,7 +2011,7 @@ spliter.
 induction H3.
 spliter.
 left.
-eapply l12_9.
+eapply l12_9_2D.
 apply perp_sym.
 apply H4.
 Perp.
@@ -2066,7 +2049,7 @@ spliter.
 induction H1.
 spliter.
 left.
-eapply l12_9.
+eapply l12_9_2D.
 apply perp_sym.
 apply H2.
 Perp.
@@ -2094,7 +2077,7 @@ split.
 assumption.
 apply perp_sym.
 
-eapply par_perp_perp.
+eapply par_perp__perp.
 apply par_symmetry.
 apply H4.
 Perp.
@@ -2118,7 +2101,7 @@ induction H6;
 induction H5.
 spliter.
 apply perp_sym.
-eapply par_perp_perp.
+eapply par_perp__perp.
 apply H5.
 Perp.
 contradiction.
@@ -2281,7 +2264,7 @@ Proof.
 intros A B C P Q H1 H2.
 destruct H1 as [H1 H3]; destruct H2 as [H2 H4];
 induction H3; induction H4; spliter; treat_equalities; Col.
-apply perp_perp_col with B C; Perp.
+apply perp2__col with B C; Perp.
 Qed.
 
 Lemma projp_projp_perp : forall P P1 P2 Q1 Q2,
@@ -2292,7 +2275,7 @@ destruct H1 as [H H1]; clear H; destruct H2 as [H H2]; clear H.
 elim H1; clear H1; intro H1; elim H2; clear H2; intro H2;
 spliter; treat_equalities; Perp; [|intuition].
 apply perp_sym; apply perp_col0 with P1 P; Perp; Col.
-apply col_permutation_2; apply perp_perp_col with Q1 Q2; Perp.
+apply col_permutation_2; apply perp2__col with Q1 Q2; Perp.
 Qed.
 
 Lemma col_projp_eq : forall A B P P', Col A B P -> Projp P P' A B -> P = P'.
@@ -2328,13 +2311,13 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
 
       {
       assert (HPar : Par A B A A')
-        by (apply l12_9 with C D; Perp).
+        by (apply l12_9_2D with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
       }
 
       {
       assert (HPar : Par A B B B')
-        by (apply l12_9 with C D; Perp).
+        by (apply l12_9_2D with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
       }
     }
@@ -2344,13 +2327,13 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
 
       {
       assert (HPar : Par A B A A')
-        by (apply l12_9 with C D; Perp).
+        by (apply l12_9_2D with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
       }
 
       {
       assert (HPar : Par A B B B')
-        by (apply l12_9 with C D; Perp).
+        by (apply l12_9_2D with C D; Perp).
       elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
       }
     }
@@ -2362,7 +2345,7 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
   intro HNC; [|intuition]; destruct HA' as [HColA' HA'].
   apply l6_21 with C D A B; Col; try (intro; assert_diffs; intuition).
   assert (HPar : Par A B A A')
-    by (apply l12_9 with C D; Perp).
+    by (apply l12_9_2D with C D; Perp).
   elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists A|spliter]; Col.
   }
 
@@ -2372,7 +2355,7 @@ elim HA'; clear HA'; intro HA'; elim HB'; clear HB'; intro HB'.
   intro HNC; [intuition|]; destruct HB' as [HColB' HB'].
   apply l6_21 with C D B A; Col; try (intro; assert_diffs; intuition).
   assert (HPar : Par A B B B')
-    by (apply l12_9 with C D; Perp).
+    by (apply l12_9_2D with C D; Perp).
   elim HPar; clear HPar; intro HPar; [exfalso; apply HPar; exists B|spliter]; Col.
   }
 
@@ -2396,8 +2379,8 @@ elim HP'; clear HP'; intro HP'; elim HP''; clear HP''; intro HP''.
   destruct HP' as [HCol2 HPerp1]; destruct HP'' as [HCol3 HPerp2].
   assert (H : Par P P' P' P'').
     {
-    apply l12_9 with L11 L12; Perp.
-    apply perp_sym; apply par_perp_perp with L21 L22; Par.
+    apply l12_9_2D with L11 L12; Perp.
+    apply perp_sym; apply par_perp__perp with L21 L22; Par.
     }
   elim H; clear H; intro H; [exfalso; apply H; exists P'; Col|].
   destruct H as [HDiff3 [HDiff4 [HCol4 H]]]; clear H.
@@ -2408,7 +2391,7 @@ elim HP'; clear HP'; intro HP'; elim HP''; clear HP''; intro HP''.
   {
   destruct HP' as [HCol2 HPerp1]; destruct HP'' as [HCol3 HPerp2]; treat_equalities.
   assert (HPerp2 : Perp L11 L12 P' P)
-    by (apply par_perp_perp with L21 L22; Par; Perp).
+    by (apply par_perp__perp with L21 L22; Par; Perp).
   elim (perp_not_col2 L11 L12 P' P HPerp2); [intro HNC|intuition].
   apply l6_21 with L11 L12 P' P; Col.
   }
@@ -2465,7 +2448,7 @@ elim HPar; clear HPar; intro HPar.
         destruct HProjpB as [H HElim]; clear H;
         elim HElim; clear HElim; intro H; destruct H as [HColB HPerp2];
         [|exfalso; apply HPar; exists B'; Col].
-        apply l12_9 with L21 L22; Perp.
+        apply l12_9_2D with L21 L22; Perp.
         }
       }
     apply plg_to_parallelogram in HPara; apply plg_cong in HPara; spliter; Cong.

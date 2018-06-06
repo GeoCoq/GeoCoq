@@ -78,12 +78,6 @@ assert (~ Col A C B).
 assert (CongA A C B A C B) by (conclude lemma_equalanglesreflexive).
 assert (CongA A C B D C B) by (conclude lemma_equalangleshelper).
 assert (LtA A C B B D A) by (conclude lemma_angleorderrespectscongruence2).
-assert (~ Col B D A).
- {
- intro.
- assert (Col A D B) by (forward_using lemma_collinearorder).
- contradict.
- }
 assert (CongA A D B B D A) by (conclude lemma_ABCequalsCBA).
 assert (LtA A C B A D B) by (conclude lemma_angleorderrespectscongruence).
 assert (CongA A B D A D B) by (conclude lemma_equalanglessymmetric).

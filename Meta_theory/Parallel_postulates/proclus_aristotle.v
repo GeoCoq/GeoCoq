@@ -8,7 +8,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section proclus_aristotle.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma proclus__aristotle : proclus_postulate -> aristotle_s_axiom.
 Proof.
@@ -22,11 +22,19 @@ Proof.
   assert(D<>B) by (intro;Between).
   assert(~ Col D B A) by (intro; apply HNCol1; ColR).
   assert(HY0 := l10_15 D B D A).
-  destruct HY0 as [Y0 [HPerp _]]; Col.
+  destruct HY0 as [Y0 [HPerp HOS]]; Col.
   assert(Perp B A B D) by (apply (perp_col1 _ _ _ D0); Perp; Col).
-  assert(HPar : Par B A Y0 D) by (apply (l12_9 _ _ _ _ D B); Perp).
+  assert(HPar : Par B A Y0 D).
+    {
+    apply (l12_9 _ _ _ _ D B); Perp; Cop.
+    }
   assert(HY := proclus B A Y0 D B C).
   destruct HY as [Y []]; Col.
+  assert (Coplanar B A C D0) by Cop.
+  assert (Coplanar A C B D)
+    by (assert_diffs; assert_cols; apply col2_cop__cop with B D0; Col; Cop).
+  assert (Coplanar D B A Y0) by Cop.
+  CopR.
   apply (par_not_col_strict _ _ _ _ D) in HPar; Col.
   assert(~ Col Y B A) by (apply (par_not_col Y0 D); Col; Par).
   assert(HX := l8_18_existence A B Y).
@@ -69,7 +77,11 @@ Proof.
     apply (one_side_transitivity _ _ _ D0); auto; apply out_one_side; Col; apply bet_out; auto.
   assert(Par_strict B D X Y).
   { apply (par_not_col_strict _ _ _ _ Y); Col.
-    apply (l12_9 _ _ _ _ B A); Perp.
+    apply (l12_9 _ _ _ _ B A); Perp; Cop.
+  assert (Coplanar B A C D0) by Cop.
+  assert (Coplanar A C B D)
+    by (assert_diffs; assert_cols; apply col2_cop__cop with B D0; Col; Cop).
+  apply coplanar_perm_12, col2_cop__cop with B C; Col; Cop.
     intro; assert(Col B C D); Col; ColR.
   }
   assert(InAngle C A B D) by (apply lea_in_angle; Lea; CongA; Side).

@@ -3,18 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section midpoint_playfair.
 
-Context `{T2D:Tarski_2D}.
-
-Lemma hilbert_s_version_of_pasch : forall A B C P Q,
-  ~ Col C Q P -> ~ Col A B P -> BetS A Q B ->
-  exists X, Col P Q X /\ (BetS A X C \/ BetS B X C).
-Proof.
-intros A B C P Q HNC1 HNC2 HAQB.
-rewrite BetSEq in HAQB; spliter.
-destruct (hilbert_s_version_of_pasch_aux C A B Q P) as [X [HPQX HBetS]];
-try exists X; try split; Col; do 2 rewrite BetSEq;
-induction HBetS; spliter; repeat split; Between.
-Qed.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma midpoint_converse_postulate_implies_playfair :
   midpoint_converse_postulate ->
@@ -38,7 +27,13 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 B1 P) as [B3 [HCol HBet]];
       assert_diffs; unfold Midpoint in *; spliter;
-      try (exists B3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
+      try (exists B3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
+
+        {
+        apply coplanar_perm_22, col_cop__cop with P; Col.
+        apply coplanar_perm_2, col_cop__cop with B2; Col.
+        apply par__coplanar; Par.
+        }
 
         {
         intro; apply HPar1; exists A2; split; Col; ColR.
@@ -66,7 +61,13 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 B2 P) as [B3 [HCol HBet]];
       assert_diffs; unfold Midpoint in *; spliter;
-      try (exists B3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
+      try (exists B3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
+
+        {
+        apply coplanar_perm_22, col_cop__cop with P; Col.
+        apply coplanar_perm_2, col_cop__cop with B1; Col.
+        apply par__coplanar; Par.
+        }
 
         {
         intro; apply HPar1; exists A2; split; Col; ColR.
@@ -110,7 +111,13 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 C1 P) as [C3 [HCol HBet]];
       assert_diffs; unfold Midpoint in *; spliter;
-      try (exists C3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
+      try (exists C3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
+
+        {
+        apply coplanar_perm_22, col_cop__cop with P; Col.
+        apply coplanar_perm_2, col_cop__cop with C2; Col.
+        apply par__coplanar; Par.
+        }
 
         {
         intro; apply HPar2; exists A2; split; Col; ColR.
@@ -138,7 +145,13 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
       {
       destruct (hilbert_s_version_of_pasch X A1 A2 C2 P) as [C3 [HCol HBet]];
       assert_diffs; unfold Midpoint in *; spliter;
-      try (exists C3; split); Col; unfold BetS in *; try ColR; [| |repeat split; Between|].
+      try (exists C3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
+
+        {
+        apply coplanar_perm_22, col_cop__cop with P; Col.
+        apply coplanar_perm_2, col_cop__cop with C1; Col.
+        apply par__coplanar; Par.
+        }
 
         {
         intro; apply HPar2; exists A2; split; Col; ColR.
@@ -177,7 +190,7 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
   assert (B3 = C3) by (apply l7_17 with A2 X; apply HT with A1 P; Col; Par).
   elim (par_strict_distinct A1 A2 B1 B2 HPar1); intros.
   elim (par_strict_distinct A1 A2 C1 C2 HPar2); intros.
-  treat_equalities; split; ColR.
+  spliter; treat_equalities; split; ColR.
   }
 
   {

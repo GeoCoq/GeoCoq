@@ -3,7 +3,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_1.
 
 Section Length_1.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 (** Pappus Desargues *)
 
@@ -86,7 +86,7 @@ Ltac lg_instance l A B :=
 
 Section Length_2.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma is_len_cong : forall A B C D l, Len A B l -> Len C D l -> Cong A B C D.
 Proof.
@@ -317,7 +317,7 @@ Tactic Notation "soit" ident(B) "sur" "la" "demie" "droite" ident(A) ident(P) "/
 
 Section Length_3.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma ex_points_lg_not_col : forall l P, Q_Cong l -> ~ Q_Cong_Null l -> exists A, exists B, l A B /\ ~Col A B P.
 Proof.
@@ -372,9 +372,11 @@ Ltac lg_instance_not_col l P A B :=
 
 Tactic Notation "soit" ident(B) "sur" "la" "demie" "droite" ident(A) ident(P) "/" "longueur" ident(A) ident(B) "=" ident(l) := lg_instance2 l A P B.
 
+Require Import Setoid.
+
 Section Length_4.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Notation "l1 =l= l2" := (EqL l1 l2) (at level 80, right associativity).
 
@@ -437,8 +439,6 @@ Proof.
       apply H.
     eapply (is_len_cong_is_len B B); Cong.
 Qed.
-
-Require Export Setoid.
 
 Global Instance eqL_equivalence : Equivalence EqL.
 Proof.

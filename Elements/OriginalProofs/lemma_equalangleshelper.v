@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_ray3.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_equalangleshelper : 
    forall A B C a b c p q, 

@@ -3,20 +3,20 @@
   Book III
 *)
 
-Require Import GeoCoq.Tarski_dev.Annexes.circles.
-Require Import GeoCoq.Tarski_dev.Annexes.tangency.
+Require Export GeoCoq.Tarski_dev.Annexes.tangency.
+Require Export GeoCoq.Tarski_dev.Annexes.inscribed_angle.
 
 Section Book_3.
 
 Context `{TE:Tarski_2D}.
 
 (** * Proposition 1
-To find the centre of a given circle.
+To find the center of a given circle.
         *)
 
 (** We do not formalize this proposition,
     because in our formalization circles are given by
-    its center and point on the circle. *)
+    their center and one point on the circle. *)
 
 (** * Proposition 2
 If on the circumference of a circle two points are taken at random, the straight line joining the points will fall within the circle.
@@ -29,7 +29,8 @@ Lemma prop_2 : forall O P U V X,
  OnCircle V O P ->
  InCircleS X O P.
 Proof.
-exact bet_onc2__incs.
+intros O P U V X; intros.
+apply bet_inc2__incs with U V; Circle.
 Qed.
 
 (** * Proposition 3
@@ -37,7 +38,7 @@ If in a circle a straight line passing through the center bisects a straight lin
         *)
 
 Lemma prop_3_1 : forall O P A B X,
- O<>X -> A<>B ->
+ O <> X -> A <> B ->
  OnCircle A O P ->
  OnCircle B O P ->
  Midpoint X A B ->
@@ -61,7 +62,7 @@ Qed.
 If in a circle two straight lines cut one another which are not through the center, they do not bisect one another.
         *)
 
-Lemma prop_4 : forall O P A B C D X, B <> C-> A <> B ->
+Lemma prop_4 : forall O P A B C D X, B <> C -> A <> B ->
  OnCircle A O P ->
  OnCircle B O P ->
  OnCircle C O P ->
@@ -79,7 +80,7 @@ If two circles cut one another, they will not have the same center.
 
 Lemma prop_5 :  forall A B C D,
  InterCC A B C D ->
- A<>C.
+ A <> C.
 Proof.
 exact intercc__neq.
 Qed.
@@ -90,9 +91,9 @@ If two circles touch one another, they will not have the same center.
         *)
 
 Lemma prop_6: forall A B C D,
- A<>B ->
+ A <> B ->
  TangentCC A B C D ->
- A<>C.
+ A <> C.
 Proof.
 exact tangentcc__neq.
 Qed.
@@ -113,7 +114,7 @@ exact cong2_onc3__eq.
 Qed.
 
 (** * Proposition 11
-If two circles touch one another internally, and their centers are taken, the straight line joining their centres, being produced, will fall on the point of contact of the circles.
+If two circles touch one another internally, and their centers are taken, the straight line joining their centers, being produced, will fall on the point of contact of the circles.
        *)
 
 (** * Proposition 12
@@ -134,7 +135,7 @@ Qed.
 
 
 (** * Proposition 18
-If a straight line touches a circle, and a straight line is joined from the centre to the point of contact, the straight line so joined will be perpendicular to the tangent.
+If a straight line touches a circle, and a straight line is joined from the center to the point of contact, the straight line so joined will be perpendicular to the tangent.
 *)
 
 Lemma prop_18 : 

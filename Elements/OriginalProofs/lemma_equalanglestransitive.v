@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_04.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_equalanglestransitive : 
    forall A B C D E F P Q R, 
@@ -35,33 +35,16 @@ assert (Tf:exists u, (Out Q P u /\ Cong Q u E U)) by (conclude lemma_layoff);des
 let Tf:=fresh in
 assert (Tf:exists v, (Out Q R v /\ Cong Q v E V)) by (conclude lemma_layoff);destruct Tf as [v];spliter.
 assert (nCol A B C) by (conclude_def CongA ).
-assert (Triangle A B C) by (conclude_def Triangle ).
-assert (nCol D E F) by (conclude lemma_equalanglesNC).
-assert (eq U U) by (conclude cn_equalityreflexive).
-assert (eq V V) by (conclude cn_equalityreflexive).
-assert (neq E U) by (conclude lemma_raystrict).
-assert (neq E V) by (conclude lemma_raystrict).
-assert (Out E U U) by (conclude lemma_ray4).
-assert (Out E V V) by (conclude lemma_ray4).
-assert (Cong E U E U) by (conclude cn_congruencereflexive).
-assert (Cong E V E V) by (conclude cn_congruencereflexive).
-assert (Cong U V U V) by (conclude cn_congruencereflexive).
 assert (CongA A B C U E V) by (conclude lemma_equalangleshelper).
-assert (nCol U E V) by (conclude lemma_equalanglesNC).
-assert (Triangle U E V) by (conclude_def Triangle ).
 assert (Cong B A E U) by (conclude lemma_congruencesymmetric).
 assert (Cong B C E V) by (conclude lemma_congruencesymmetric).
 assert ((Cong A C U V /\ CongA B A C E U V /\ CongA B C A E V U)) by (conclude proposition_04).
-assert (Triangle U E V) by (conclude_def Triangle ).
 assert (Cong E U Q u) by (conclude lemma_congruencesymmetric).
 assert (Cong E V Q v) by (conclude lemma_congruencesymmetric).
 assert (CongA D E F u Q v) by (conclude lemma_equalangleshelper).
-assert (nCol u Q v) by (conclude lemma_equalanglesNC).
 assert (CongA u Q v D E F) by (conclude lemma_equalanglessymmetric).
 assert (CongA u Q v U E V) by (conclude lemma_equalangleshelper).
 assert (CongA U E V u Q v) by (conclude lemma_equalanglessymmetric).
-assert (nCol u Q v) by (conclude lemma_equalanglesNC).
-assert (Triangle u Q v) by (conclude_def Triangle ).
 assert ((Cong U V u v /\ CongA E U V Q u v /\ CongA E V U Q v u)) by (conclude proposition_04).
 assert (Cong A C u v) by (conclude lemma_congruencetransitive).
 assert (Cong B A Q u) by (conclude lemma_congruencetransitive).

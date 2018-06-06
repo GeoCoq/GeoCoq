@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rectangle_principle_rectangle_existence.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma rectangle_principle__rectangle_existence : postulate_of_right_lambert_quadrilaterals -> postulate_of_existence_of_a_right_lambert_quadrilateral.
 Proof.

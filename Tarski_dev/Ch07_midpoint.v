@@ -1,7 +1,5 @@
 Require Export GeoCoq.Tarski_dev.Ch06_out_lines.
-Require Export GeoCoq.Tactics.Coinc.ColR.
-
-
+Require Export GeoCoq.Tarski_dev.Tactics.ColR.
 
 Ltac not_exist_hyp_comm A B := not_exist_hyp (A<>B);not_exist_hyp (B<>A).
 
@@ -59,24 +57,21 @@ repeat
        decompose [and] T;clear T;clean_reap_hyps
  end.
 
-
 Ltac ColR :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in
    treat_equalities; assert_cols; assert_diffs; try (solve [Col]); Col_refl tpoint col.
 
-
-
 Section T7_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma is_midpoint_dec :
+Lemma midpoint_dec :
  forall I A B, Midpoint I A B \/ ~ Midpoint I A B.
 Proof.
     intros.
     unfold Midpoint.
-    elim (bet_dec A I B);intro; elim (Cong_dec A I I B);intro; tauto.
+    elim (bet_dec A I B);intro; elim (cong_dec A I I B);intro; tauto.
 Qed.
 
 Lemma is_midpoint_id : forall A B, Midpoint A A B -> A = B.
@@ -263,7 +258,7 @@ Qed.
 End T7_1.
 
 Hint Resolve l7_13 : cong.
-Hint Resolve l7_2 l7_3_2 symmetry_preserves_midpoint : midpoint.
+Hint Resolve l7_2 l7_3_2 : midpoint.
 
 Ltac Midpoint := auto with midpoint.
 
@@ -644,7 +639,7 @@ Lemma l7_25 : forall A B C,
   exists X, Midpoint X A B.
 Proof.
     intros.
-    induction(Col_dec A B C).
+    induction(col_dec A B C).
       assert(A = B \/ Midpoint C A B).
         apply l7_20.
           unfold Col in *.
@@ -1185,6 +1180,7 @@ Proof.
 Qed.
 
 Lemma col_cong_bet : forall A B C D, Col A B D -> Cong A B C D -> Bet A C B -> Bet  C A D \/ Bet C B D.
+Proof.
 intros.
 
 prolong B A D1 B C.
@@ -1283,6 +1279,7 @@ assumption.
 Qed.
 
 Lemma col_cong2_bet1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A C B D -> Bet C B D.
+Proof.
 intros.
 induction(eq_dec_points A C).
 subst C.
@@ -1306,6 +1303,7 @@ assumption.
 Qed.
 
 Lemma col_cong2_bet2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Cong A D B C -> Bet C A D.
+Proof.
 intros.
 
 induction(eq_dec_points B C).
@@ -1330,6 +1328,7 @@ Between.
 Qed.
 
 Lemma col_cong2_bet3 : forall A B C D, Col A B D -> Bet A B C -> Cong A B C D -> Cong A C B D -> Bet B C D.
+Proof.
 intros.
 
 induction(eq_dec_points A B).
@@ -1349,6 +1348,7 @@ Cong.
 Qed.
 
 Lemma col_cong2_bet4 : forall A B C D, Col A B C -> Bet A B D -> Cong A B C D -> Cong A D B C -> Bet B D C.
+Proof.
 intros.
 induction(eq_dec_points A B).
 subst B.
@@ -1365,11 +1365,13 @@ Cong.
 Qed.
 
 Lemma col_bet2_cong1 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C B D -> Cong A C D B.
+Proof.
 intros.
 apply (l4_3 A C B D B C); Between; Cong.
 Qed.
 
 Lemma col_bet2_cong2 : forall A B C D, Col A B D -> Bet A C B -> Cong A B C D -> Bet C A D -> Cong D A B C.
+Proof.
 intros.
 apply (l4_3 D A C B C A); Between; Cong.
 Qed.
@@ -1413,7 +1415,11 @@ unfold Le in H2.
 ex_and H2 b'.
 
 assert(Bet a' O b').
-eBetween.
+  apply between_inner_transitivity with B.
+    apply between_exchange3 with A.
+      Between.
+    assumption.
+  Between.
 assert(Cong a b a' b').
 {
   apply (l2_11 a o b a' O b'); Cong.
@@ -1475,15 +1481,23 @@ induction H17.
 assert(A = a').
 {
   apply(between_equality _ _ b').
-  eBetween.
-  Between.
+    apply between_exchange4 with O.
+      Between.
+      apply between_inner_transitivity with B.
+        assumption.
+      assumption.
+  assumption.
 }
 treat_equalities; tauto.
 assert(b' = B).
 {
   apply(between_equality _ _ a').
   Between.
-  eBetween.
+  apply between_exchange4 with O.
+    Between.
+  apply between_inner_transitivity with A.
+    Between.
+  Between.
 }
 treat_equalities; tauto.
 Qed.

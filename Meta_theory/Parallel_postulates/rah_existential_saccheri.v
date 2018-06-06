@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rah_existential_saccheri.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma rah__existential_saccheri : postulate_of_right_saccheri_quadrilaterals -> postulate_of_existence_of_a_right_saccheri_quadrilateral.
 Proof.

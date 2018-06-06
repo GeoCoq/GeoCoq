@@ -3,29 +3,14 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_19.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_lessthancongruence2.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_24 : 
    forall A B C D E F, 
    Triangle A B C -> Triangle D E F -> Cong A B D E -> Cong A C D F -> LtA E D F B A C ->
    Lt E F B C.
 Proof.
 intros.
-assert (nCol D E F) by (conclude_def Triangle ).
-assert (~ eq D E).
- {
- intro.
- assert (Col D E F) by (conclude_def Col ).
- contradict.
- }
 assert (nCol A B C) by (conclude_def Triangle ).
-assert (~ Col B A C).
- {
- intro.
- assert (Col A B C) by (forward_using lemma_collinearorder).
- contradict.
- }
 assert (~ eq A B).
  {
  intro.
@@ -55,7 +40,6 @@ assert (~ eq A T).
  assert (Col B A T) by (conclude_def Col ).
  contradict.
  }
-assert (nCol A B C) by (conclude_def Triangle ).
 assert (~ eq A C).
  {
  intro.
@@ -65,7 +49,6 @@ assert (~ eq A C).
 rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (Out A T H /\ Cong A H A C)) by (conclude lemma_layoff);destruct Tf as [H];spliter.
 assert (Cong A H D F) by (conclude lemma_congruencetransitive).
-assert (nCol B A T) by (conclude lemma_equalanglesNC).
 assert (~ Col H A B).
  {
  intro.
@@ -83,16 +66,6 @@ assert (~ eq H B).
  assert (Col H A B) by (conclude_def Col ).
  contradict.
  }
-assert (Triangle H A B) by (conclude_def Triangle ).
-assert (CongA B A T E D F) by (conclude lemma_equalanglessymmetric).
-assert (nCol E D F) by (conclude lemma_equalanglesNC).
-assert (~ Col F D E).
- {
- intro.
- assert (Col E D F) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (Triangle F D E) by (conclude_def Triangle ).
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Out A B B) by (conclude lemma_ray4).
 assert (CongA E D F B A H) by (conclude lemma_equalangleshelper).
@@ -128,12 +101,9 @@ assert (Cong A C A H) by (conclude lemma_congruencesymmetric).
 assert (~ Col A C H).
  {
  intro.
- assert (Col A T H) by (conclude lemma_rayimpliescollinear).
- assert (Col H A T) by (forward_using lemma_collinearorder).
  assert (Col H A C) by (forward_using lemma_collinearorder).
  assert (neq A H) by (conclude lemma_raystrict).
  assert (neq H A) by (conclude lemma_inequalitysymmetric).
- assert (Col A T C) by (conclude lemma_collinear4).
  assert (Col A J H) by (conclude lemma_rayimpliescollinear).
  assert (Col H A J) by (forward_using lemma_collinearorder).
  assert (Col A C J) by (conclude lemma_collinear4).
@@ -187,8 +157,6 @@ by cases on (BetS A H J \/ eq J H \/ BetS A J H).
   contradict.
   }
  assert (CongA A H C C H A) by (conclude lemma_ABCequalsCBA).
- assert (neq C H) by (forward_using lemma_angledistinct).
- assert (neq H C) by (conclude lemma_inequalitysymmetric).
  assert (LtA H C J A H C) by (conclude lemma_angleorderrespectscongruence).
  assert (Out H B B) by (conclude lemma_ray4).
  assert (eq C C) by (conclude cn_equalityreflexive).
@@ -260,8 +228,6 @@ by cases on (BetS A H J \/ eq J H \/ BetS A J H).
  }
 {
  assert (BetS H J A) by (conclude axiom_betweennesssymmetry).
- assert (Cong C A C A) by (conclude cn_congruencereflexive).
- assert (Cong C H C H) by (conclude cn_congruencereflexive).
  assert (~ Col C J H).
   {
   intro.
@@ -295,7 +261,6 @@ by cases on (BetS A H J \/ eq J H \/ BetS A J H).
   assert (Col H C B) by (forward_using lemma_collinearorder).
   contradict.
   }
- assert (Out C H H) by (conclude lemma_ray4).
  assert (Out C A A) by (conclude lemma_ray4).
  assert (CongA H C B H C B) by (conclude lemma_equalanglesreflexive).
  assert (Out C B J) by (conclude lemma_ray4).
@@ -357,7 +322,7 @@ by cases on (BetS A H J \/ eq J H \/ BetS A J H).
  assert (Lt H B C B) by (conclude lemma_lessthancongruence).
  close.
  }
-(* cases *)
+(** cases *)
 assert (Cong F E E F) by (conclude cn_equalityreverse).
 assert (Cong H B E F) by (conclude lemma_congruencetransitive).
 assert (Lt E F C B) by (conclude lemma_lessthancongruence2).
@@ -367,5 +332,3 @@ close.
 Qed.
 
 End Euclid.
-
-

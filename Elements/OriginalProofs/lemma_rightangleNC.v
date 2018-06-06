@@ -2,9 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_midpointunique.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_collinear4.
 
 Section Euclid.
-
-Context `{Ax:euclidean_neutral}.
-
+Context `{Ax:euclidean_neutral_ruler_compass}.
 Lemma lemma_rightangleNC : 
    forall A B C, 
    Per A B C ->
@@ -14,7 +12,6 @@ intros.
 let Tf:=fresh in
 assert (Tf:exists D, (BetS A B D /\ Cong A B D B /\ Cong A C D C /\ neq B C)) by (conclude_def Per );destruct Tf as [D];spliter.
 assert (Cong A B B D) by (forward_using lemma_congruenceflip).
-assert (neq C B) by (conclude lemma_inequalitysymmetric).
 assert (Midpoint A B D) by (conclude_def Midpoint ).
 assert (~ BetS A C D).
  {
@@ -30,7 +27,13 @@ assert (~ eq C A).
  intro.
  assert (Cong C C D C) by (conclude cn_equalitysub).
  assert (Cong D C C C) by (conclude lemma_congruencesymmetric).
- assert (eq D C) by (conclude axiom_nullsegment1).
+ assert (~ neq D C).
+  {
+  intro.
+  assert (neq C C) by (conclude axiom_nocollapse).
+  assert (eq C C) by (conclude cn_equalityreflexive).
+  contradict.
+  }
  assert (eq A C) by (conclude lemma_equalitysymmetric).
  assert (eq D A) by (conclude cn_equalitytransitive).
  assert (eq A D) by (conclude lemma_equalitysymmetric).
@@ -41,14 +44,19 @@ assert (~ eq C D).
  {
  intro.
  assert (Cong A C D D) by (conclude cn_equalitysub).
- assert (eq A C) by (conclude axiom_nullsegment1).
+ assert (~ neq A C).
+  {
+  intro.
+  assert (neq D D) by (conclude axiom_nocollapse).
+  assert (eq D D) by (conclude cn_equalityreflexive).
+  contradict.
+  }
  assert (eq C A) by (conclude lemma_equalitysymmetric).
  contradict.
  }
 assert (~ BetS C A D).
  {
  intro.
- assert (Cong C A A C) by (conclude cn_equalityreverse).
  assert (Cong C A C D) by (forward_using lemma_congruenceflip).
  assert (~ Cong C A C D) by (conclude lemma_partnotequalwhole).
  contradict.
@@ -129,5 +137,3 @@ close.
 Qed.
 
 End Euclid.
-
-

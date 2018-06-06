@@ -22,7 +22,7 @@ assert (OS A C B D) by (conclude_def TP ).
 assert (nCol A C B) by (forward_using lemma_parallelNC).
 assert (neq A B) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS A B E /\ Cong B E A B)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS A B E /\ Cong B E A B)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Col B D B) by (conclude_def Col ).
 assert (nCol A B D) by (forward_using lemma_parallelNC).
@@ -34,15 +34,12 @@ let Tf:=fresh in
 assert (Tf:exists F, (BetS C F E /\ Col B D F /\ nCol B D C)) by (conclude_def TS );destruct Tf as [F];spliter.
 assert (neq B D) by (forward_using lemma_NCdistinct).
 assert (nCol A B D) by (forward_using lemma_parallelNC).
-assert (neq B D) by (forward_using lemma_NCdistinct).
 assert (neq A D) by (forward_using lemma_NCdistinct).
 assert (nCol A C D) by (forward_using lemma_parallelNC).
-assert (neq A D) by (forward_using lemma_NCdistinct).
 assert (neq A C) by (forward_using lemma_NCdistinct).
 assert (neq C D) by (forward_using lemma_NCdistinct).
 assert (neq C A) by (conclude lemma_inequalitysymmetric).
 assert (nCol A C B) by (forward_using lemma_parallelNC).
-assert (neq A B) by (forward_using lemma_NCdistinct).
 assert (neq C B) by (forward_using lemma_NCdistinct).
 assert (neq B C) by (conclude lemma_inequalitysymmetric).
 assert ((eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F D)) by (conclude_def Col ).
@@ -60,13 +57,9 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  assert (~ ~ CR A D B C).
   {
   intro.
-  assert (Col A B E) by (conclude_def Col ).
-  assert (Col A F E) by (conclude cn_equalitysub).
   assert (Col C F E) by (conclude_def Col ).
   assert (Col E F C) by (forward_using lemma_collinearorder).
-  assert (Col E F A) by (forward_using lemma_collinearorder).
   assert (neq B E) by (forward_using lemma_betweennotequal).
-  assert (neq F E) by (conclude cn_equalitysub).
   assert (Col A B E) by (conclude_def Col ).
   assert (Col E B A) by (forward_using lemma_collinearorder).
   assert (Col E F C) by (forward_using lemma_collinearorder).
@@ -100,7 +93,6 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  assert (~ ~ CR A D B C).
   {
   intro.
-  assert (nCol C B D) by (forward_using lemma_parallelNC).
   assert (nCol D B C) by (forward_using lemma_NCorder).
   assert (eq D D) by (conclude cn_equalityreflexive).
   assert (Col D B D) by (conclude_def Col ).
@@ -111,21 +103,6 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
   assert (Col C F E) by (conclude_def Col ).
   assert (eq C C) by (conclude cn_equalityreflexive).
   assert (Col C F C) by (conclude_def Col ).
-  assert (~ eq F E).
-   {
-   intro.
-   assert (Col D B F) by (conclude_def Col ).
-   assert (Col D B E) by (conclude cn_equalitysub).
-   assert (neq B E) by (forward_using lemma_betweennotequal).
-   assert (neq E B) by (conclude lemma_inequalitysymmetric).
-   assert (Col E B D) by (forward_using lemma_collinearorder).
-   assert (Col A B E) by (conclude_def Col ).
-   assert (Col E B A) by (forward_using lemma_collinearorder).
-   assert (Col B D A) by (conclude lemma_collinear4).
-   assert (Col A B D) by (forward_using lemma_collinearorder).
-   assert (nCol A B D) by (forward_using lemma_parallelNC).
-   contradict.
-   }
   assert (neq C E) by (forward_using lemma_betweennotequal).
   assert (nCol C E D) by (conclude lemma_NChelper).
   assert (nCol E C D) by (forward_using lemma_NCorder).
@@ -145,9 +122,7 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
   assert (~ Meet C A B D) by (conclude_def Par ).
   assert (eq A A) by (conclude cn_equalityreflexive).
   assert (Col C A A) by (conclude_def Col ).
-  assert (eq D D) by (conclude cn_equalityreflexive).
   assert (eq B B) by (conclude cn_equalityreflexive).
-  assert (Col B D D) by (conclude_def Col ).
   assert (Col B B D) by (conclude_def Col ).
   assert (BetS A M B) by (conclude lemma_collinearbetween).
   assert (CR A B C D) by (conclude_def CR ).
@@ -156,7 +131,6 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  close.
  }
 {
- assert (BetS F D B) by (conclude axiom_betweennesssymmetry).
  assert (nCol A C B) by (forward_using lemma_parallelNC).
  assert (eq A A) by (conclude cn_equalityreflexive).
  assert (Col A B A) by (conclude_def Col ).
@@ -175,7 +149,6 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  assert (BetS A J E) by (conclude lemma_3_5b).
  assert (nCol A C B) by (forward_using lemma_parallelNC).
  assert (nCol A B C) by (forward_using lemma_NCorder).
- assert (Col A B E) by (conclude_def Col ).
  assert (Col A J E) by (conclude_def Col ).
  assert (Col E A B) by (forward_using lemma_collinearorder).
  assert (Col E A J) by (forward_using lemma_collinearorder).
@@ -222,8 +195,6 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  assert (Col F F D) by (conclude_def Col ).
  assert (Col C F Q) by (forward_using lemma_collinearorder).
  assert (BetS C Q F) by (conclude lemma_collinearbetween).
- assert (BetS F Q C) by (conclude axiom_betweennesssymmetry).
- assert (BetS E B A) by (conclude axiom_betweennesssymmetry).
  assert (nCol A C B) by (forward_using lemma_parallelNC).
  assert (nCol A B C) by (forward_using lemma_NCorder).
  assert (Col A B A) by (conclude_def Col ).
@@ -238,7 +209,7 @@ by cases on (eq B D \/ eq B F \/ eq D F \/ BetS D B F \/ BetS B D F \/ BetS B F 
  assert (CR A D B C) by (conclude_def CR ).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

@@ -12,9 +12,6 @@ Lemma proposition_33B :
    Par A C B D /\ Cong A C B D.
 Proof.
 intros.
-assert (OS C A B D) by (forward_using lemma_samesidesymmetric).
-assert (nCol A B C) by (forward_using lemma_parallelNC).
-assert (neq A B) by (forward_using lemma_NCdistinct).
 assert (~ CR A C B D).
  {
  intro.

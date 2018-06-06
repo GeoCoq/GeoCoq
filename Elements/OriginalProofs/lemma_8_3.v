@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_interior5.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_8_3 : 
    forall A B C D, 
@@ -39,7 +39,7 @@ by cases on (BetS B D C \/ eq C D \/ BetS B C D).
  assert (Per A B D) by (conclude_def Per ).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

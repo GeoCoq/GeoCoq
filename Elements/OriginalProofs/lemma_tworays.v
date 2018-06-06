@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_raystrict.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_tworays : 
    forall A B C, 
@@ -53,10 +53,10 @@ by cases on (BetS A C B \/ eq B C \/ BetS A B C).
    }
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

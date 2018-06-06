@@ -25,7 +25,7 @@ assert (~ eq C P).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists Q, (BetS B C Q /\ Cong C Q C P)) by (conclude postulate_extension);destruct Tf as [Q];spliter.
+assert (Tf:exists Q, (BetS B C Q /\ Cong C Q C P)) by (conclude lemma_extension);destruct Tf as [Q];spliter.
 assert (~ eq P Q).
  {
  intro.
@@ -148,7 +148,7 @@ assert (~ Per A C M).
  assert (~ Per Q M C) by (conclude lemma_8_7).
  contradict.
  }
-close.
+exists M;close.
 Qed.
 
 End Euclid.

@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_lessthancongruence.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_crossbar : 
    forall A B C E U V, 
@@ -41,9 +41,9 @@ assert (~ eq B C).
 assert (neq B U) by (conclude lemma_raystrict).
 assert (neq B V) by (conclude lemma_raystrict).
 let Tf:=fresh in
-assert (Tf:exists P, (BetS B A P /\ Cong A P B U)) by (conclude postulate_extension);destruct Tf as [P];spliter.
+assert (Tf:exists P, (BetS B A P /\ Cong A P B U)) by (conclude lemma_extension);destruct Tf as [P];spliter.
 let Tf:=fresh in
-assert (Tf:exists Q, (BetS B C Q /\ Cong C Q B V)) by (conclude postulate_extension);destruct Tf as [Q];spliter.
+assert (Tf:exists Q, (BetS B C Q /\ Cong C Q B V)) by (conclude lemma_extension);destruct Tf as [Q];spliter.
 assert (~ Col B Q A).
  {
  intro.
@@ -72,7 +72,6 @@ assert (~ Col B P Q).
  }
 let Tf:=fresh in
 assert (Tf:exists W, (BetS Q W P /\ BetS B F W)) by (conclude postulate_Pasch_outer);destruct Tf as [W];spliter.
-assert (BetS P W Q) by (conclude axiom_betweennesssymmetry).
 assert (BetS B E W) by (conclude lemma_3_6b).
 let Tf:=fresh in
 assert (Tf:exists J, (BetS J B U /\ BetS J B A)) by (conclude_def Out );destruct Tf as [J];spliter.
@@ -88,13 +87,10 @@ let Tf:=fresh in
 assert (Tf:exists S, (BetS B S P /\ Cong B S B U)) by (conclude_def Lt );destruct Tf as [S];spliter.
 assert (BetS J B P) by (conclude lemma_3_7b).
 assert (BetS J B S) by (conclude axiom_innertransitivity).
-assert (neq J B) by (forward_using lemma_betweennotequal).
 assert (eq S U) by (conclude lemma_extensionunique).
 assert (BetS B U P) by (conclude cn_equalitysub).
-assert (BetS Q W P) by (conclude axiom_betweennesssymmetry).
 let Tf:=fresh in
 assert (Tf:exists K, (BetS K B V /\ BetS K B C)) by (conclude_def Out );destruct Tf as [K];spliter.
-assert (Cong B Q Q B) by (conclude cn_equalityreverse).
 assert (Cong B V C Q) by (conclude lemma_congruencesymmetric).
 assert (Cong C Q Q C) by (conclude cn_equalityreverse).
 assert (Cong B V Q C) by (conclude lemma_congruencetransitive).
@@ -107,7 +103,6 @@ let Tf:=fresh in
 assert (Tf:exists R, (BetS B R Q /\ Cong B R B V)) by (conclude_def Lt );destruct Tf as [R];spliter.
 assert (BetS K B Q) by (conclude lemma_3_7b).
 assert (BetS K B R) by (conclude axiom_innertransitivity).
-assert (neq K B) by (forward_using lemma_betweennotequal).
 assert (eq R V) by (conclude lemma_extensionunique).
 assert (BetS B V Q) by (conclude cn_equalitysub).
 assert (~ Col Q P B).
@@ -119,15 +114,12 @@ assert (~ Col Q P B).
 let Tf:=fresh in
 assert (Tf:exists M, (BetS Q M U /\ BetS B M W)) by (conclude postulate_Pasch_inner);destruct Tf as [M];spliter.
 assert (BetS U M Q) by (conclude axiom_betweennesssymmetry).
-assert (BetS Q V B) by (conclude axiom_betweennesssymmetry).
 assert (~ Col U Q B).
  {
  intro.
  assert (Col B U P) by (conclude_def Col ).
  assert (Col B U Q) by (forward_using lemma_collinearorder).
  assert (neq B U) by (forward_using lemma_betweennotequal).
- assert (Col U P Q) by (conclude lemma_collinear4).
- assert (Col U Q P) by (forward_using lemma_collinearorder).
  assert (Col U B P) by (forward_using lemma_collinearorder).
  assert (Col U B Q) by (forward_using lemma_collinearorder).
  assert (neq U B) by (conclude lemma_inequalitysymmetric).
@@ -135,8 +127,7 @@ assert (~ Col U Q B).
  assert (Col Q P B) by (forward_using lemma_collinearorder).
  contradict.
  }
-rename_H H;
-let Tf:=fresh in
+rename_H H;let Tf:=fresh in
 assert (Tf:exists H, (BetS U H V /\ BetS B H M)) by (conclude postulate_Pasch_inner);destruct Tf as [H];spliter.
 assert (~ eq E B).
  {
@@ -145,7 +136,7 @@ assert (~ eq E B).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists N, (BetS E B N /\ Cong B N B E)) by (conclude postulate_extension);destruct Tf as [N];spliter.
+assert (Tf:exists N, (BetS E B N /\ Cong B N B E)) by (conclude lemma_extension);destruct Tf as [N];spliter.
 assert (BetS N B E) by (conclude axiom_betweennesssymmetry).
 assert (BetS B H W) by (conclude lemma_3_6b).
 assert (BetS N B W) by (conclude lemma_3_7b).

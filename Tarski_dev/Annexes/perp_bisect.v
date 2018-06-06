@@ -1,8 +1,8 @@
-Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity_2D.
+Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity_2.
 
 Section PerpBisect_1.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma perp_bisect_equiv_def :
   forall P Q A B, Perp_bisect P Q A B <-> Perp_bisect_bis P Q A B.
@@ -63,54 +63,6 @@ apply perp_bisect_sym_2.
 trivial.
 Qed.
 
-Lemma perp_in_per_1 :
- forall A B C D X,
-  Perp_at X A B C D ->
-  Per A X C.
-Proof.
-intros.
-unfold Perp_at in *.
-decompose [and] H.
-apply H5;
-Col.
-Qed.
-
-Lemma perp_in_per_2 :
- forall A B C D X,
-  Perp_at X A B C D ->
-  Per A X D.
-Proof.
-intros.
-unfold Perp_at in *.
-decompose [and] H.
-apply H5;
-Col.
-Qed.
-
-Lemma perp_in_per_3 :
- forall A B C D X,
-  Perp_at X A B C D ->
-  Per B X C.
-Proof.
-intros.
-unfold Perp_at in *.
-decompose [and] H.
-apply H5;
-Col.
-Qed.
-
-Lemma perp_in_per_4 :
- forall A B C D X,
-  Perp_at X A B C D ->
-  Per B X D.
-Proof.
-intros.
-unfold Perp_at in *.
-decompose [and] H.
-apply H5;
-Col.
-Qed.
-
 Lemma perp_bisect_perp :
  forall P Q A B,
   Perp_bisect P Q A B ->
@@ -127,13 +79,11 @@ Qed.
 
 End PerpBisect_1.
 
-Hint Resolve perp_in_per_1 perp_in_per_2 perp_in_per_3 perp_in_per_4 : perp.
-
-Hint Resolve perp_bisect_perp : Perp_bisect.
+Hint Resolve perp_bisect_perp : perp.
 
 Section PerpBisect_2.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma perp_bisect_cong_1 :
  forall P Q A B,
@@ -169,13 +119,13 @@ Qed.
 
 End PerpBisect_2.
 
-Hint Resolve perp_bisect_cong_1 perp_bisect_cong_2 : Perp_bisect.
+Hint Resolve perp_bisect_cong_1 perp_bisect_cong_2 : cong.
 
 Section PerpBisect_3.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma perp_bisect_cong :
+Lemma perp_bisect_cong2 :
  forall P Q A B,
  Perp_bisect P Q A B ->
  Cong A P B P /\ Cong A Q B Q.
@@ -186,7 +136,7 @@ eauto using perp_bisect_cong_1.
 eauto using perp_bisect_cong_2.
 Qed.
 
-Lemma perp_bisect_conc :
+Lemma perp_bisect_cong :
  forall A A1 B B1 C C1 O: Tpoint,
  ~ Col A B C ->
  Perp_bisect O A1 B C -> Perp_bisect O B1 A C -> Perp_bisect O C1 A B ->
@@ -197,10 +147,10 @@ intros.
 apply (cong_transitivity A O B O C O); assumption.
 Qed.
 
-(* TODO add coplanar:not true in 3D *)
-Lemma cong_perp_bisect :
+Lemma cong_cop_perp_bisect :
  forall P Q A B,
  P <> Q -> A <> B ->
+ Coplanar P Q A B ->
  Cong A P B P ->
  Cong A Q B Q ->
  Perp_bisect P Q A B.
@@ -242,7 +192,12 @@ assumption.
 assumption.
 
 apply col_permutation_2.
-apply per_per_col with A; Col.
+apply cop_per2__col with A; Col.
+destruct(col_dec B A P).
+exists I.
+left.
+split; ColR.
+apply coplanar_perm_12, col_cop__cop with B; Col; Cop.
 exists B; split; Cong.
 
 apply midpoint_col;auto.
@@ -274,32 +229,95 @@ split...
 assert_cols; apply l8_14_2_1b_bis...
 Qed.
 
-Lemma cong_perp_bisect_col : forall A B C D E,
+Lemma cong_cop2_perp_bisect_col : forall A B C D E,
+  Coplanar A C D E ->
+  Coplanar B C D E ->
   Cong C D C E ->
   Perp_bisect A B D E ->
   Col A B C.
 Proof.
-intros A B C D E HCong1 HPerp.
-assert (HCong2 := HPerp); apply perp_bisect_cong in HCong2; destruct HCong2 as [HCong2 Hc]; clear Hc.
+intros A B C D E HCop1 HCop2 HCong1 HPerp.
+assert (HCong2 := HPerp); apply perp_bisect_cong2 in HCong2; destruct HCong2 as [HCong2 Hc]; clear Hc.
 apply perp_bisect_equiv_def in HPerp.
 destruct HPerp as [F [HPerp [HBet HCong3]]].
 assert (HDE : D <> E) by (assert_diffs; auto).
 assert (HCol := HPerp); apply perp_in_col in HCol; destruct HCol as [HCol Hc]; clear Hc.
 apply l8_14_2_1a in HPerp.
 elim (eq_dec_points A C); intro; try (subst; Col).
-apply perp_perp_col with D E; Perp. apply perp_bisect_perp; apply cong_perp_bisect; Cong.
+apply cop_perp2__col with D E; Perp; Cop.
+apply perp_bisect_perp; apply cong_cop_perp_bisect; Cong.
+Qed.
+
+Lemma perp_bisect_cop2_existence : forall A B C,
+  A <> B -> exists P, exists Q, Perp_bisect P Q A B /\ Coplanar A B C P /\ Coplanar A B C Q.
+Proof.
+intros A B C HDiff.
+destruct (midpoint_existence A B) as [M HM].
+destruct (ex_perp_cop A B M C HDiff) as [Q []].
+exists M; exists Q; unfold Perp_bisect.
+repeat split; Cop.
+  exists M; split; Col; Midpoint.
+  left; Perp.
 Qed.
 
 Lemma perp_bisect_existence :
   forall A B, A <> B -> exists P, exists Q, Perp_bisect P Q A B.
 Proof.
 intros A B HDiff.
+destruct (perp_bisect_cop2_existence A B A HDiff) as [P [Q []]].
+exists P; exists Q; assumption.
+Qed.
+
+Lemma perp_bisect_existence_cop : forall A B C,
+  A <> B -> exists P, exists Q, Perp_bisect P Q A B /\ Coplanar A B C P /\
+                                Coplanar A B C Q.
+Proof.
+intros A B C HDiff.
 destruct (midpoint_existence A B) as [M HM].
-destruct (perp_exists M B A) as [Q HQ]; auto.
+destruct (ex_perp_cop A B M C) as [Q [HQ HCop]]; auto.
 exists M; exists Q; unfold Perp_bisect.
-split; Col.
-split; auto.
-exists M; split; Col; Midpoint.
+split.
+
+  {
+  split; Col.
+  split; Perp.
+  exists M; split; Col; Midpoint.
+  }
+
+  {
+  split; auto.
+  assert (Coplanar A B Q M) by Cop.
+  apply perp_not_col2 in HQ.
+  elim HQ; clear HQ; intro; [CopR|].
+  assert_cols; exfalso; Col.
+  }
 Qed.
 
 End PerpBisect_3.
+
+Section PerpBisect_2D.
+
+Context `{T2D:Tarski_2D}.
+
+Lemma cong_perp_bisect :
+ forall P Q A B,
+ P <> Q -> A <> B ->
+ Cong A P B P ->
+ Cong A Q B Q ->
+ Perp_bisect P Q A B.
+Proof.
+intros P Q A B HPQ HAB.
+assert (HCop := all_coplanar P Q A B).
+apply cong_cop_perp_bisect; assumption.
+Qed.
+
+Lemma cong_perp_bisect_col : forall A B C D E,
+  Cong C D C E ->
+  Perp_bisect A B D E ->
+  Col A B C.
+Proof.
+intros A B C D E.
+apply cong_cop2_perp_bisect_col; apply all_coplanar.
+Qed.
+
+End PerpBisect_2D.

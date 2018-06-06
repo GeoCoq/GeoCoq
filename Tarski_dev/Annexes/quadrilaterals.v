@@ -4,7 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Quadrilateral.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma cong_identity_inv :
  forall A B C, A <> B -> ~ Cong A B C C.
@@ -95,160 +95,6 @@ Col.
 ColR.
 Qed.
 
-Lemma midpoint_par :
- forall A B A' B' M,
- A <> B ->
- Midpoint M A A' ->
- Midpoint M B B' ->
- Par A B A' B'.
-Proof.
-intros.
-
-assert(A' <> B').
-intro.
-apply H.
-assert(Cong A' B' A B).
-eapply l7_13.
-apply H0.
-assumption.
-apply cong_symmetry in H3.
-subst B'.
-apply cong_identity in H3.
-assumption.
-
-induction(Col_dec A B B').
-assert(A' <> B' /\ Col A A' B' /\ Col B A' B').
-eapply (midpoint_midpoint_col _ _ _ _ M); auto.
-
-unfold Par.
-right.
-split; auto.
-
-assert(HH0:= H0).
-assert(HH1:= H1).
-unfold Midpoint in HH0.
-unfold Midpoint in HH1.
-spliter.
-
-assert(Col M A A').
-apply bet_col in H6.
-Col.
-assert(Col M B B').
-apply bet_col in H4.
-Col.
-
-unfold Par.
-left.
-unfold Par_strict.
-repeat split; auto; try apply all_coplanar.
-intro.
-ex_and H10 X.
-
-prolong X M X' M X.
-assert(Col A' B' X').
-eapply mid_preserves_col.
-2: apply H0.
-2: apply H1.
-apply col_permutation_1.
-apply H10.
-unfold Midpoint.
-split.
-assumption.
-apply cong_left_commutativity.
-Cong.
-
-assert(Col B' X X').
-eapply (col_transitivity_1 _ A').
-auto.
-Col.
-Col.
-induction(eq_dec_points X X').
-subst X'.
-apply between_identity in H12.
-subst X.
-
-apply H3.
-induction(eq_dec_points B M).
-subst M.
-apply cong_symmetry in H5.
-apply cong_identity in H5.
-subst B'.
-Col.
-apply col_permutation_2.
-apply (col_transitivity_1 _ M); Col.
-
-assert(Col X M B').
-apply bet_col in H12.
-apply (col_transitivity_1 _ X'); Col.
-
-assert(Col X' M B').
-apply bet_col in H12.
-apply (col_transitivity_1 _ X); Col.
-
-assert(Col M B X).
-eapply (col_transitivity_1 ).
-2: apply col_permutation_5.
-2: apply H9.
-intro.
-subst B'.
-apply cong_identity in H5.
-subst B.
-
-
-apply H3.
-Col.
-Col.
-
-assert(Col X M A).
-eapply (col_transitivity_1 ).
-2: apply col_permutation_3.
-2:apply H19.
-intro.
-subst X.
-
-assert(Cong M X' M B').
-eapply cong_transitivity.
-apply H13.
-Cong.
-assert (HH:=l7_20 M X' B' H18 H20).
-induction HH.
-subst X'.
-apply H3.
-apply col_permutation_2.
-apply (col_transitivity_1 _ M).
-intro.
-subst M.
-apply cong_identity in H13.
-contradiction.
-Col.
-
-assert(Col M B A').
-ColR.
-induction(eq_dec_points M A').
-subst A'.
-apply cong_identity in H7.
-subst A.
-Col.
-ColR.
-assert(X'= B).
-eapply l7_9.
-apply H21.
-assumption.
-subst X'.
-tauto.
-Col.
-apply H3.
-eapply col3.
-2: apply H20.
-intro.
-subst X.
-apply cong_identity in H13.
-subst X'.
-tauto.
-Col.
-Col.
-Qed.
-
 Lemma midpoint_par_strict :
  forall A B A' B' M,
  A <> B ->
@@ -259,7 +105,7 @@ Lemma midpoint_par_strict :
 Proof.
 intros.
 assert(Par A B A' B').
-eapply (midpoint_par A B A' B' M); assumption.
+eapply (l12_17 A B A' B' M); assumption.
 induction H3.
 assumption.
 spliter.
@@ -279,128 +125,9 @@ apply H0.
 Col.
 Qed.
 
-Lemma le_left_comm : forall A B C D, Le A B C D -> Le B A C D.
-intros.
-unfold Le in *.
-ex_and H P.
-exists P.
-split.
-assumption.
-Cong.
-Qed.
-
-Lemma le_right_comm : forall A B C D, Le A B C D -> Le A B D C.
-intros.
-induction(eq_dec_points D C).
-subst D.
-apply le_zero in H.
-subst B.
-eapply le_trivial.
-
-induction(eq_dec_points A B).
-subst B.
-apply le_trivial.
-
-assert(HH:=segment_construction_3 D C A B H0 H1).
-ex_and HH P'.
-unfold Out in H2.
-spliter.
-induction H5.
-
-assert(Le D C A B).
-eapply l5_5_2.
-exists P'.
-split; auto.
-apply le_left_comm in H6.
-assert(Cong A B C D).
-apply le_anti_symmetry.
-auto.
-auto.
-unfold Le.
-exists C.
-split.
-apply between_trivial.
-Cong.
-unfold Le.
-exists P'.
-split.
-assumption.
-Cong.
-Qed.
-
-Lemma le_comm :
- forall A B C D, Le A B C D -> Le B A D C.
-Proof.
-intros.
-apply le_left_comm.
-apply le_right_comm.
-assumption.
-Qed.
-
-Lemma le_cong_le :
- forall A B C A' B' C',
- Bet A B C ->
- Bet A' B' C' ->
- Le A B A' B' ->
- Cong B C B' C' ->
- Le A C A' C'.
-Proof.
-intros.
-eapply l5_5_2.
-unfold Le in H1.
-ex_and H1 P.
-prolong A C T P B'.
-exists T.
-split.
-assumption.
-
-assert(Bet A B T).
-eapply between_exchange4.
-apply H.
-assumption.
-
-eapply l2_11.
-apply H6.
-2: apply H3.
-eapply between_exchange4.
-apply H1.
-assumption.
-apply cong_left_commutativity.
-eapply l2_11.
-4: apply cong_left_commutativity.
-4:apply H2.
-apply between_symmetry.
-eapply between_exchange3.
-apply H.
-assumption.
-eapply between_exchange3.
-apply H1.
-assumption.
-Cong.
-Qed.
-
-Lemma cong_le_le :
- forall A B C A' B' C',
- Bet A  B  C ->
- Bet A' B' C' ->
- Le B C B' C' ->
- Cong A B A' B' ->
- Le A C A' C'.
-Proof.
-intros.
-apply le_comm.
-eapply le_cong_le.
-apply between_symmetry.
-apply H.
-apply between_symmetry.
-apply H0.
-apply le_comm.
-assumption.
-Cong.
-Qed.
-
 Lemma bet3_cong3_bet : forall A B C D D', A <> B -> A <> C -> A <> D -> Bet D A C -> Bet A C B -> Bet D C D' -> Cong A B C D -> Cong A D B C -> Cong D C C D'
                               -> Bet C B D'.
+Proof.
 intros.
 assert(Bet D C B).
 eBetween.
@@ -448,71 +175,17 @@ exists A.
 split; Cong.
 
 assert(Le D B D D').
-eapply (le_cong_le _ A _ _ C).
+eapply (bet2_le2__le1346 _ A _ _ C).
 eBetween.
 assumption.
 assumption.
-eCong.
+apply cong__le; eCong.
 
 assert(Bet D B D').
 
 apply l6_13_1; auto.
 eapply (between_exchange3 D); auto.
 Qed.
-
-Lemma bet_le_le :
- forall A B C A' B' C',
- Bet A  B  C ->
- Bet A' B' C' ->
- Le A B A' B' ->
- Le B C B' C' ->
- Le A C A' C'.
-Proof.
-intros.
-assert(HH1:=H1).
-assert(HH2:=H2).
-unfold Le in HH1.
-unfold Le in HH2.
-ex_and HH1 X.
-ex_and HH2 Y.
-assert(Le A C A' Y).
-eapply le_cong_le.
-3: apply H1.
-apply H.
-eBetween.
-assumption.
-
-
-induction (eq_dec_points B' Y).
-subst Y.
-
-assert(Le A' B' A' C').
-unfold Le.
-exists B'.
-split.
-assumption.
-apply cong_reflexivity.
-eapply le_transitivity.
-apply H7.
-assumption.
-
-assert(Bet A' Y C').
-eapply outer_transitivity_between2.
-2: apply H5.
-
-eapply between_inner_transitivity.
-apply H0.
-assumption.
-assumption.
-eapply le_transitivity.
-apply H7.
-unfold Le.
-exists Y.
-split.
-assumption.
-apply cong_reflexivity.
-Qed.
-
 
 Lemma bet_double_bet :
  forall A B C B' C',
@@ -536,7 +209,7 @@ apply H4.
 auto.
 auto.
 assert(Le A B A C).
-eapply bet_le_le.
+eapply bet2_le2__le1346.
 apply H.
 apply H0.
 assumption.
@@ -761,50 +434,22 @@ Lemma bet_cong_bet :
   A <> B ->
   Bet A B C ->
   Bet A B D ->
-  Cong A D B C ->
-  Bet B D C.
+  Cong A C B D ->
+  Bet B C D.
 Proof.
 intros.
 
 assert(Bet B C D \/ Bet B D C).
-eapply (l5_2 A); assumption.
+eapply (l5_2 A); auto.
 induction H3.
-
-assert(Le B C B D).
-eapply l5_5_2.
-exists D.
-split.
 assumption.
-Cong.
 
-assert(Le D B D A).
-eapply l5_5_2.
-
-exists A.
-split.
-Between.
+assert(D = C /\ A = B).
+eapply (bet_cong_eq A B D C); auto.
+eBetween.
 Cong.
-
-assert(Cong B C B D).
-eapply le_anti_symmetry.
-assumption.
-eapply l5_6.
-apply H5.
-Cong.
-Cong.
-
-assert(C=D).
-eapply between_cong.
-apply H3.
-assumption.
-subst D.
-assert(B = A).
-eapply (between_cong C).
-Between.
-Cong.
-subst A.
-tauto.
-assumption.
+spliter.
+contradiction.
 Qed.
 
 Lemma col_cong_mid :
@@ -1362,7 +1007,7 @@ intros.
 split.
 eapply (l7_13 M);
 Midpoint.
-apply (midpoint_par _ _ _ _ M); auto.
+apply (l12_17 _ _ _ _ M); auto.
 Qed.
 
 Lemma mid_par_cong2 :
@@ -1376,7 +1021,7 @@ intros.
 spliter.
 split.
 apply (l7_13 M); Midpoint.
-eapply (midpoint_par _ _ _ _ M); Midpoint.
+eapply (l12_17 _ _ _ _ M); Midpoint.
 Qed.
 
 
@@ -1726,7 +1371,7 @@ split.
 apply bet_col in H0.
 Col.
 apply H1.
-apply (midpoint_par _ _ _ _ M).
+apply (l12_17 _ _ _ _ M).
 intro.
 subst B.
 apply H.
@@ -1996,7 +1641,7 @@ Proof.
 intros.
 unfold Parallelogram.
 
-induction(Col_dec A B C).
+induction(col_dec A B C).
 right.
 apply (mid_plgf _ _ _ _ M);
 assumption.
@@ -2142,6 +1787,7 @@ split; Cong.
 Qed.
 
 Lemma plg_to_parallelogram : forall A B C D, Plg A B C D -> Parallelogram A B C D.
+Proof.
 intros.
 unfold Plg in H.
 spliter.
@@ -2186,6 +1832,76 @@ apply two_sides_not_col in H.
 Col.
 Qed.
 
+Lemma parallelogram_strict_not_col_2 : forall A B C D,
+ Parallelogram_strict A B C D ->
+ ~ Col B C D.
+Proof.
+intros.
+apply plgs_one_side in H.
+destruct H.
+apply one_side_not_col124 in H0.
+Col.
+Qed.
+
+Lemma parallelogram_strict_not_col_3 : forall A B C D,
+ Parallelogram_strict A B C D ->
+ ~ Col C D A.
+Proof.
+unfold Parallelogram_strict, TS.
+intros.
+spliter.
+Col.
+Qed.
+
+Lemma parallelogram_strict_not_col_4 : forall A B C D,
+ Parallelogram_strict A B C D ->
+ ~ Col A B D.
+Proof.
+intros.
+apply plgs_one_side in H.
+destruct H.
+apply one_side_not_col124 in H.
+Col.
+Qed.
+
+Lemma plgs__pars :
+ forall A B C D,
+ Parallelogram_strict A B C D ->
+ Par_strict A B C D.
+Proof.
+intros.
+assert (HH := H).
+unfold Parallelogram_strict in HH; spliter.
+destruct H1; auto; spliter.
+apply parallelogram_strict_not_col_2 in H.
+contradiction.
+Qed.
+
+Lemma plgs_sym :
+ forall A B C D,
+  Parallelogram_strict A B C D ->
+  Parallelogram_strict C D A B.
+Proof.
+unfold Parallelogram_strict.
+intros; spliter.
+repeat (split; finish).
+Qed.
+
+Lemma plg_sym :
+ forall A B C D,
+  Parallelogram A B C D ->
+  Parallelogram C D A B.
+Proof.
+intros.
+induction H.
+left.
+apply plgs_sym.
+assumption.
+right.
+apply plgf_sym.
+assumption.
+Qed.
+
 Lemma Rhombus_Plg : forall A B C D, Rhombus A B C D -> Plg A B C D.
 Proof.
 unfold Rhombus.
@@ -2224,6 +1940,7 @@ Qed.
 (*////////////////////////////////////////////////////////////////*)
 
 Lemma plg_trivial : forall A B, A <> B -> Parallelogram A B B A.
+Proof.
 intros.
 right.
 unfold Parallelogram_flat.
@@ -2231,6 +1948,7 @@ repeat split; Col; Cong.
 Qed.
 
 Lemma plg_trivial1 : forall A B, A <> B -> Parallelogram A A B B.
+Proof.
 intros.
 right.
 unfold Parallelogram_flat.
@@ -2238,6 +1956,7 @@ repeat split; Col; Cong.
 Qed.
 
 Lemma col_not_plgs : forall A B C D, Col A B C -> ~Parallelogram_strict A B C D.
+Proof.
 intros.
 intro.
 unfold Parallelogram_strict in H0.
@@ -2250,6 +1969,7 @@ Col.
 Qed.
 
 Lemma plg_col_plgf : forall A B C D, Col A B C -> Parallelogram A B C D -> Parallelogram_flat A B C D.
+Proof.
 intros.
 induction H0.
 eapply (col_not_plgs A B C D) in H.
@@ -2262,6 +1982,7 @@ Qed.
 
 
 Lemma plg_bet1 : forall A B C D, Parallelogram A B C D -> Bet A C B -> Bet D A C.
+Proof.
 intros.
 
 apply plg_col_plgf in H.
@@ -2278,16 +1999,19 @@ Col.
 Qed.
 
 Lemma plgf_trivial1 : forall A B, A <> B -> Parallelogram_flat A B B A.
+Proof.
 intros.
 repeat split; Col; Cong.
 Qed.
 
 Lemma plgf_trivial2 : forall A B, A <> B -> Parallelogram_flat A A B B.
+Proof.
 intros.
 repeat split; Col; Cong.
 Qed.
 
 Lemma plgf_not_point : forall A B, Parallelogram_flat A A B B -> A <> B.
+Proof.
 intros.
 unfold Parallelogram_flat in H.
 spliter.
@@ -2297,6 +2021,7 @@ induction H3; tauto.
 Qed.
 
 Lemma plgf_trivial_neq : forall A C D, Parallelogram_flat A A C D -> C = D /\ A <> C.
+Proof.
 intros.
 unfold Parallelogram_flat in H.
 spliter.
@@ -2310,6 +2035,7 @@ Qed.
 
 Lemma plgf_trivial_trans : forall A B C, Parallelogram_flat A A B B -> Parallelogram_flat B B C C 
                                            -> Parallelogram_flat A A C C \/ A = C.
+Proof.
 intros.
 
 induction(eq_dec_points A C).
@@ -2325,6 +2051,7 @@ Qed.
 (**********************************************************************************************************)
 
 Lemma plgf_trivial : forall A B, A <> B -> Parallelogram_flat A B B A.
+Proof.
 intros.
 repeat split; Col; Cong.
 Qed.
@@ -2332,6 +2059,7 @@ Qed.
 
 
 Lemma plgf3_mid : forall A B C, Parallelogram_flat A B A C -> Midpoint A B C.
+Proof.
 intros.
 unfold Parallelogram_flat in H.
 spliter.
@@ -2349,6 +2077,7 @@ Qed.
 
 Lemma cong3_id : forall A B C D, A <> B -> Col A B C -> Col A B D -> Cong A B C D -> Cong A D B C -> Cong A C B D 
                              -> A = D /\ B = C \/ A = C /\ B = D.
+Proof.
 intros.
 
 induction(eq_dec_points A C).
@@ -2410,6 +2139,7 @@ Qed.
 
 Lemma col_cong_mid1 : forall A B C D, A <> D -> Col A B C -> Col A B D -> Cong A B C D -> Cong A C B D 
                                  -> exists M, Midpoint M A D /\ Midpoint M B C.
+Proof.
 intros.
 
 assert(exists M : Tpoint,
@@ -2466,6 +2196,7 @@ Qed.
 
 Lemma col_cong_mid2 : forall A B C D, A <> C -> Col A B C -> Col A B D -> Cong A B C D -> Cong A D B C 
                                  -> exists M, Midpoint M A C /\ Midpoint M B D.
+Proof.
 intros.
 
 assert(exists M : Tpoint,
@@ -2522,33 +2253,19 @@ Qed.
 
 (*******************************************************************************************************)
 
-Lemma plgs_not_col : forall A B C D, Parallelogram_strict A B C D -> ~Col A B C /\ ~Col A B D.
+Lemma plgs_not_col : forall A B C D, Parallelogram_strict A B C D ->
+  ~ Col A B C /\ ~ Col B C D /\ ~ Col C D A /\ ~ Col A B D.
+Proof.
 intros.
-unfold Parallelogram_strict in H.
-spliter.
-unfold TS in H.
-spliter.
-
-assert(~Col A B C).
-intro.
-apply H.
-Col.
-split.
-assumption.
-intro.
-
-induction H0.
-unfold Par_strict in H0.
-spliter.
-apply H8.
-exists D.
-split; Col.
-spliter.
-apply H4.
-ColR.
+repeat split.
+apply parallelogram_strict_not_col in H; assumption.
+apply parallelogram_strict_not_col_2 in H; assumption.
+apply parallelogram_strict_not_col_3 in H; assumption.
+apply parallelogram_strict_not_col_4 in H; assumption.
 Qed.
 
 Lemma not_col_sym_not_col : forall A B B' C , ~Col A B C -> Midpoint A B B' -> ~Col A B' C.
+Proof.
 intros.
 intro.
 apply H.
@@ -2570,6 +2287,7 @@ ColR.
 Qed.
 
 Lemma plg_existence : forall A B C, A <> B -> exists D, Parallelogram A B C D.
+Proof.
 intros.
 assert(HH:=midpoint_existence A C).
 ex_and HH M.
@@ -2601,6 +2319,7 @@ assumption.
 Qed.
 
 Lemma plgs_diff : forall A B C D, Parallelogram_strict A B C D -> Parallelogram_strict A B C D /\ A <> B /\ B <> C /\ C <> D /\ D <> A /\ A <> C /\ B <> D.
+Proof.
 intros.
 split.
 assumption.
@@ -2633,12 +2352,14 @@ Qed.
 
 Lemma sym_par : forall A B M, A <> B -> forall A' B', Midpoint M A A' -> Midpoint M B B' -> Par A B A' B'.
 
+Proof.
 intros.
-eapply (midpoint_par _ _ _ _ M); assumption.
+eapply (l12_17 _ _ _ _ M); assumption.
 Qed.
 
 Lemma symmetry_preserves_two_sides : forall A B X Y M A' B', Col X Y M -> TS X Y A B -> Midpoint M A A' -> Midpoint M B B'
                                                -> TS X Y A' B'.
+Proof.
 intros.
 
 assert(X <> Y /\ ~Col A X Y /\ ~Col B X Y).
@@ -2738,6 +2459,7 @@ Qed.
 
 Lemma symmetry_preserves_one_side : forall A B X Y M A' B', Col X Y M -> OS X Y A B -> Midpoint M A A' -> Midpoint M B B'
                                                -> OS X Y A' B'.
+Proof.
 intros.
 
 assert(X <> Y /\ ~Col A X Y /\ ~Col B X Y).
@@ -2842,6 +2564,7 @@ Lemma plgf_bet : forall A B A' B', Parallelogram_flat A B B' A'
                                  \/ Bet A A' B /\ Bet A' B B'
                                  \/ Bet A B A' /\ Bet B A' B'.
 
+Proof.
 intros.
 induction H.
 spliter.
@@ -2945,38 +2668,8 @@ contradiction.
 assumption.
 Qed.
 
-Lemma bet2_cong_bet : forall A B C D, A <> B -> Bet A B C -> Bet A B D -> Cong A C B D -> Bet B C D.
-intros.
-
-assert(Bet B C D \/ Bet B D C).
-eapply (l5_2 A); auto.
-induction H3.
-assumption.
-
-assert(D = C /\ A = B).
-eapply (bet_cong_eq A B D C); auto.
-eBetween.
-Cong.
-spliter.
-contradiction.
-Qed.
-
-(*
-Lemma not_col_exists : forall A B, A <> B -> exists P, ~Col A B P.
-intros.
-assert(HH:= ex_col2 A B).
-ex_and HH C.
-assert(HH:=l8_21 A B C H).
-
-ex_and HH P.
-ex_and H3 T.
-apply perp_not_col in H3.
-exists P.
-assumption.
-Qed.
-*)
-
 Lemma plgs_existence : forall A B, A <> B -> exists C, exists D, Parallelogram_strict A B C D.
+Proof.
 intros.
 
 assert(HH:=not_col_exists A B H).

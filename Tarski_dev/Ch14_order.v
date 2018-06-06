@@ -2,7 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch14_prod.
 
 Section Order.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma l14_36_a : forall O E E' A B C,
  Sum O E E' A B C -> Out O A B -> Bet O A C.

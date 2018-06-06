@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_collinear4.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_collinearbetween : 
    forall A B C D E F H, 
@@ -10,14 +10,6 @@ Lemma lemma_collinearbetween :
    BetS E H F.
 Proof.
 intros.
-assert (~ Col A B C).
- {
- intro.
- assert (eq C C) by (conclude cn_equalityreflexive).
- assert (Col C D C) by (conclude_def Col ).
- assert (Meet A B C D) by (conclude_def Meet ).
- contradict.
- }
 assert (~ eq H E).
  {
  intro.
@@ -36,7 +28,6 @@ assert (~ eq H E).
 assert (~ eq H F).
  {
  intro.
- assert (Col C D F) by (forward_using lemma_collinearorder).
  assert (Col A H D) by (conclude_def Col ).
  assert (Col A F D) by (conclude cn_equalitysub).
  assert (Col F D A) by (forward_using lemma_collinearorder).
@@ -51,7 +42,6 @@ assert (~ eq H F).
 assert (~ BetS E F H).
  {
  intro.
- assert (BetS H F E) by (conclude axiom_betweennesssymmetry).
  assert (BetS D H A) by (conclude axiom_betweennesssymmetry).
  assert (~ Col D A E).
   {
@@ -170,7 +160,7 @@ by cases on (eq E F \/ eq E H \/ eq F H \/ BetS F E H \/ BetS E F H \/ BetS E H 
 {
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

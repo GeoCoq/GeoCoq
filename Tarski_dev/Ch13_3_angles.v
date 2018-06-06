@@ -4,7 +4,7 @@ Require Export GeoCoq.Tarski_dev.Ch13_2_length.
 
 Section Angles_1.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 (************************************* angle *****************************)
 
@@ -56,7 +56,7 @@ Ltac ang_instance a A B C :=
 
 Section Angles_2.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma ang_conga : forall a A B C A' B' C', Q_CongA a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
@@ -340,9 +340,11 @@ Ltac anga_instance a A B C :=
   end;
   clear tempo_anga.
 
+Require Import Setoid.
+
 Section Angles_3.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma anga_conga : forall a A B C A' B' C', Q_CongA_Acute a -> a A B C -> a A' B' C' -> CongA A B C A' B' C'.
 Proof.
@@ -576,7 +578,7 @@ Proof.
       apply (ang_conga a); auto.
     intro.
     apply H1.
-    apply (out_conga_out A0 B0 C0); auto.
+    apply (l11_21_a A0 B0 C0); auto.
 Qed.
 
 Lemma not_flat_ang_def_equiv : forall a, Q_CongA_nFlat a <-> (Q_CongA a /\ exists A, exists B, exists C, a A B C /\  ~Bet A B C).
@@ -617,7 +619,7 @@ Proof.
       apply (ang_conga a); auto.
     intro.
     apply H1.
-    apply (bet_conga_bet A0 B0 C0); auto.
+    apply (bet_conga__bet A0 B0 C0); auto.
 Qed.
 
 Lemma ang_const : forall a A B, Q_CongA a -> A <> B -> exists C, a A B C.
@@ -660,7 +662,7 @@ Ltac ang_instance1 a A B C :=
 
 Section Angles_4.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma ang_sym : forall a A B C, Q_CongA a -> a A B C -> a C B A.
 Proof.
@@ -902,7 +904,7 @@ Ltac anga_instance1 a A B C :=
 
 Section Angles_5.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma null_anga_null_anga' : forall a, Q_CongA_Null_Acute a <-> is_null_anga' a.
 Proof.
@@ -931,7 +933,7 @@ Proof.
     intros.
     assert(CongA A B C A0 B0 C0).
       apply (anga_conga a); auto.
-    apply (out_conga_out A B C); auto.
+    apply (l11_21_a A B C); auto.
 Qed.
 
 Lemma is_null_anga_out : forall a A B C, Q_CongA_Acute a -> a A B C -> Q_CongA_Null_Acute a -> Out B A C.
@@ -968,7 +970,7 @@ Proof.
       apply H1.
       apply conga_line; auto.
     assert(Bet A0 B0 P).
-      apply (bet_conga_bet A B C); auto.
+      apply (bet_conga__bet A B C); auto.
     assert(Bet A0 B0 C0).
       unfold Out in H6.
       spliter.
@@ -1009,23 +1011,6 @@ Proof.
     auto.
 Qed.
 
-Lemma acute_col_out : forall A B C, Acute A B C -> Col A B C -> Out B A C.
-Proof.
-    intros.
-    assert(HH:= acute_not_bet A B C H).
-    induction H0.
-      contradiction.
-    unfold Out.
-    apply acute_distincts in H.
-    spliter.
-    repeat split; auto.
-    induction H0.
-      right.
-      auto.
-    left.
-    Between.
-Qed.
-
 Lemma not_null_not_col : forall a A B C, Q_CongA_Acute a -> ~ Q_CongA_Null_Acute a -> a A B C -> ~Col A B C.
 Proof.
     intros.
@@ -1038,9 +1023,9 @@ Proof.
       apply (anga_acute a); auto.
     intros.
     assert(Out B A C).
-      apply acute_col_out; auto.
+      apply acute_col__out; auto.
     assert(HH:= anga_conga a A B C A0 B0 C0 H H1 H4).
-    apply (out_conga_out A B C); auto.
+    apply (l11_21_a A B C); auto.
 Qed.
 
 
@@ -1073,7 +1058,7 @@ Proof.
     split.
       auto.
     intros.
-    assert(HH:=out_conga_out A B C A0 B0 C0 H1).
+    assert(HH:=l11_21_a A B C A0 B0 C0 H1).
     apply HH.
     apply (ang_conga a); auto.
 Qed.
@@ -1085,7 +1070,7 @@ Proof.
     split.
       auto.
     intros.
-    assert(HH:=bet_conga_bet A B C A0 B0 C0 H1).
+    assert(HH:=bet_conga__bet A B C A0 B0 C0 H1).
     apply HH.
     apply (ang_conga a); auto.
 Qed.
@@ -1097,7 +1082,7 @@ Proof.
     split.
       auto.
     intros.
-    assert(HH:=out_conga_out A B C A0 B0 C0 H1).
+    assert(HH:=l11_21_a A B C A0 B0 C0 H1).
     apply HH.
     apply (anga_conga a); auto.
 Qed.
@@ -1351,7 +1336,7 @@ Proof.
           apply HH.
           split; auto.
         spliter.
-        apply in_angle_trivial_2; auto.
+        apply inangle3123; auto.
       eapply (is_ang_conga _ _ _ _ _ _ a).
         split; auto.
       split; auto.

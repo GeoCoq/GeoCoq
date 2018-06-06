@@ -5,7 +5,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_9_5b.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_9_5 : 
    forall A B C P Q R, 
@@ -43,7 +43,7 @@ by cases on (nCol C P R \/ Col C P R).
   assert (TS Q A B C) by (conclude lemma_9_5b).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
 {
@@ -106,7 +106,7 @@ by cases on (nCol C P R \/ Col C P R).
   assert (BetS C R Q) by (conclude axiom_innertransitivity).
   close.
   }
-(* cases *)
+(** cases *)
  assert (BetS Q R C) by (conclude axiom_betweennesssymmetry).
  assert (~ Col A B Q).
   {
@@ -144,7 +144,7 @@ by cases on (nCol C P R \/ Col C P R).
  assert (TS Q A B C) by (conclude_def TS ).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

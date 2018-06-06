@@ -1,11 +1,11 @@
-Require Export GeoCoq.Axioms.continuity_axioms.
-Require Export GeoCoq.Tarski_dev.Annexes.circles.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Tarski_dev.Annexes.circles.
 
 Section Dedekind_circle_circle.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-(** This proof is inspired by Several topics from geometry, by Franz Rothe *)
+(** This proof is inspired by Franz Rothe's proof of Theorem 8.5 in Several topics from geometry *)
 
 Lemma circle_circle_aux : (forall A B C D P Q,
   OnCircle P C D -> OnCircle Q C D -> InCircleS P A B -> OutCircleS Q A B ->
@@ -16,11 +16,22 @@ Proof.
   intro Haux.
   cut (forall A B C D P Q,
   OnCircle P C D -> OnCircle Q C D -> InCircleS P A B -> OutCircleS Q A B ->
-  (~ Col P A C \/ ~ Col Q A C) -> exists Z : Tpoint, OnCircle Z A B /\ OnCircle Z C D).
+  Coplanar A C P Q -> (~ Col P A C \/ ~ Col Q A C) ->
+  exists Z : Tpoint, OnCircle Z A B /\ OnCircle Z C D).
   - intros Haux' A B C D P Q HPOn HQOn HPIn HQOut.
-    destruct (Cong_dec A P A B).
+    assert (HQ' : exists Q', OnCircle Q' C D /\ OutCircle Q' A B /\ Col Q' A C).
+    { destruct (segment_construction A C C D) as [Q' []].
+      exists Q'.
+      repeat split; Col.
+      apply le_transitivity with A Q; trivial.
+      apply triangle_inequality with C; trivial.
+      apply cong_transitivity with C D; Cong.
+    }
+    clear dependent Q.
+    destruct HQ' as [Q [HQOn [HQOut HCol]]].
+    destruct (cong_dec A P A B).
       exists P; split; trivial.
-    destruct (Cong_dec A B A Q).
+    destruct (cong_dec A B A Q).
       exists Q; Circle.
     assert (HPInS : InCircleS P A B) by (split; trivial).
     assert (HQOutS : OutCircleS Q A B) by (split; trivial).
@@ -32,28 +43,28 @@ Proof.
     }
     assert (C <> D).
       intro; treat_equalities; apply (not_and_lt A C A B); split; trivial.
-    destruct (Col_dec P A C); [|apply Haux' with P Q; auto].
-    destruct (Col_dec Q A C); [|apply Haux' with P Q; auto].
+    destruct (col_dec P A C); [|apply Haux' with P Q; Cop].
     destruct (exists_cong_per A C C D) as [R [HR1 HR2]].
     assert_diffs.
     apply per_not_col in HR1; auto.
     destruct (circle_cases A B R) as [HOn|HNOn].
       exists R; split; trivial.
-    destruct HNOn; [apply Haux' with R Q|apply Haux' with P R]; Col.
+    destruct HNOn; [apply Haux' with R Q|apply Haux' with P R]; Col; Cop.
 
-  - intros A B C D P Q HPOn HQOn HPIn HQOut HDij.
-    destruct (Col_dec P A C) as [HCol|HNCol].
+  - intros A B C D P Q HPOn HQOn HPIn HQOut HCop HDij.
+    destruct (col_dec P A C) as [HCol|HNCol].
     { destruct HDij.
         contradiction.
       apply Haux with P Q; auto.
     }
-    destruct (Col_dec Q A C).
+    destruct (col_dec Q A C).
       apply Haux with P Q; auto.
-    destruct (one_or_two_sides A C P Q); trivial; [|apply Haux with P Q; auto].
+    destruct (cop__one_or_two_sides A C P Q); trivial; [|apply Haux with P Q; auto].
     destruct (l10_2_existence A C P) as [P' HP'].
     assert_diffs.
     apply Haux with P' Q; trivial.
-      apply cong_transitivity with C P; trivial. apply cong_commutativity, (is_image_col_cong A C); Col.
+      apply cong_transitivity with C P; trivial.
+      apply cong_commutativity, (is_image_col_cong A C); Col.
       apply cong2_lt__lt with A P A B; Cong.
       apply cong_symmetry, cong_commutativity, (is_image_col_cong A C); Col.
     left.
@@ -130,19 +141,22 @@ Proof.
         right; apply out_trivial; auto.
       destruct HDij as [HOS'|[[HCol HNCol]|[HNCol HCol]]].
       - apply l11_24, lea_in_angle; Lea; Side.
-      - apply out341__inangle; auto. (* Col P A C -> Out C A P *)
+      - apply out341__inangle; auto.
         apply not_bet_out; Col.
         intro; apply (lta__nlea A C P A C Q); trivial.
         apply l11_31_2; auto.
-      - apply in_angle_line; auto. (* Col Q A C -> Bet A C Q *)
+      - apply in_angle_line; auto.
         apply between_symmetry, not_out_bet; Col.
         intro; apply (lta__nlea A C P A C Q); trivial.
         apply l11_31_1; auto.
     }
     intro.
-    destruct (conga__or_out_ts A C X Y); trivial.
-      absurd (X = Y); trivial; apply (l6_21 P Q C X); ColR.
-      apply (HNTS X Y); trivial.
+    destruct (conga_cop__or_out_ts A C X Y); trivial.
+    - assert (Col P Q X) by ColR.
+      apply coplanar_pseudo_trans with P Q C; [assumption| |Cop..].
+      destruct HDij as [|[[]|[]]]; Cop.
+    - absurd (X = Y); trivial; apply (l6_21 P Q C X); ColR.
+    - apply (HNTS X Y); trivial.
   }
 
   assert (HR : exists R, forall X Y,
@@ -151,8 +165,7 @@ Proof.
     Bet X R Y).
   { apply dedekind; [repeat constructor..|].
     exists P.
-    intros X Y [HX [X0 HX0]] [HY [Y0 HY0]].
- (*   intros X Y [HX [X0]] [HY [Y0]]. *)
+    intros X Y [HX [X0]] [HY [Y0]].
     destruct (l5_3 P X Y Q); trivial.
     destruct (eq_dec_points X Y).
       subst; Between.
@@ -206,9 +219,10 @@ Proof.
     assert (X0 <> I) by (intro; apply (nlt C I); subst; assumption).
     assert (HNCol4 : ~ Col I X0 Z) by (intro; apply (one_side_not_col123 C R I Q); ColR).
     assert (HLt1 : Lt X0 Z I Z).
-    { destruct (l11_46 I X0 Z); auto.
+    { assert_diffs.
+      destruct (l11_46 I X0 Z); auto.
       right.
-      apply bet_acute__obtuse with C; auto.
+      apply acute_bet__obtuse with C; auto.
         apply l6_13_1; [apply l6_6|]; Le.
       assert_diffs; apply cong__acute; auto.
       apply cong_transitivity with C D; Cong.
@@ -292,9 +306,10 @@ Proof.
     assert (Y0 <> I) by (intro; apply (nlt C I); subst; assumption).
     assert (HNCol4 : ~ Col I Y0 Z) by (intro; apply (one_side_not_col123 C R I P); ColR).
     assert (HLt1 : Lt Y0 Z I Z).
-    { destruct (l11_46 I Y0 Z); auto.
+    { assert_diffs.
+      destruct (l11_46 I Y0 Z); auto.
       right.
-      apply bet_acute__obtuse with C; auto.
+      apply acute_bet__obtuse with C; auto.
         apply l6_13_1; [apply l6_6|]; Le.
       assert_diffs; apply cong__acute; auto.
       apply cong_transitivity with C D; Cong.

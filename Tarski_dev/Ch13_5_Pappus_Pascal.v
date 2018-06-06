@@ -6,6 +6,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.project.
 Section Pappus_Pascal.
 
 Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
  Col O A B -> Col O P Q -> Perp O P P A -> Perp O Q Q B ->
@@ -14,7 +15,7 @@ Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
 Proof.
     intros.
     assert(Acute A O P).
-      eapply (perp_acute _ _ P);finish.
+      apply (perp_acute _ _ P);finish.
     assert(P <> O).
       intro.
       subst P.
@@ -70,7 +71,7 @@ Proof.
         unfold Proj.
         repeat split; Col.
         left.
-        eapply (l12_9 _ _ _ _ O P).
+        apply (l12_9 _ _ _ _ O P); Cop.
           apply perp_sym.
           eapply (perp_col _ Q); Col.
           Perp.
@@ -303,8 +304,8 @@ Proof.
     intros.
     unfold Eq_Lcos2 in H.
     ex_and H lp.
-    unfold lcos2 in H.
-    unfold lcos2 in H0.
+    unfold Lcos2 in H.
+    unfold Lcos2 in H0.
     ex_and H lx.
     ex_and H0 ly.
     unfold Eq_Lcos.
@@ -338,7 +339,7 @@ Proof.
       assert(Cong O' A' O' P').
         apply (cong_transitivity _ _ O P); Cong.
       assert(A' = P').
-        induction(Col_dec A' P' O').
+        induction(col_dec A' P' O').
           assert(A' = P' \/ O' = P').
             apply l8_9; auto.
           induction H16.
@@ -346,9 +347,7 @@ Proof.
           subst P'.
           eapply (cong_identity _  O' O'); Cong.
         assert(Lt P' A' A' O' /\ Lt P' O' A' O').
-          apply(l11_46 A' P' O' H15).
-          left.
-          auto.
+          assert_diffs; apply(l11_46 A' P' O'); auto.
         spliter.
         unfold Lt in H17.
         spliter.
@@ -385,7 +384,7 @@ Proof.
         auto.
       exists O.
       auto.
-    induction(Col_dec A P O).
+    induction(col_dec A P O).
       assert (HH:=anga_distincts a P' O' A' H5 H9).
       spliter.
       assert(A' <> P').
@@ -407,9 +406,7 @@ Proof.
       assert(Cong O P O A).
         apply (cong_transitivity _ _ O' P'); Cong.
       assert(Lt P A A O /\ Lt P O A O).
-        apply(l11_46 A P O H16).
-        left.
-        auto.
+        assert_diffs; apply(l11_46 A P O); auto.
       spliter.
       unfold Lt in H21.
       spliter.
@@ -419,9 +416,7 @@ Proof.
       apply l11_16; auto.
     assert(Cong P A P' A' /\ CongA P A O P' A' O' /\ CongA P O A P' O' A').
       assert(Lt P A A O /\ Lt P O A O).
-        apply(l11_46 A P O H16).
-        left.
-        auto.
+        assert_diffs; apply(l11_46 A P O); auto.
       spliter.
       unfold Lt in H22.
       spliter.
@@ -434,8 +429,9 @@ Proof.
     auto.
 Qed.
 
-Lemma lcos_lcos_col : forall la lb lp a b O A B P,
- Lcos lp la a -> Lcos lp lb b -> la O A -> lb O B -> lp O P -> a A O P -> b B O P -> Col A B P.
+Lemma lcos_lcos_cop__col : forall la lb lp a b O A B P,
+ Lcos lp la a -> Lcos lp lb b -> la O A -> lb O B -> lp O P -> a A O P -> b B O P -> Coplanar O A B P ->
+ Col A B P.
 Proof.
     intros.
     apply lcos_lg_anga in H.
@@ -447,12 +443,12 @@ Proof.
     assert(Per O P B).
       apply (lcos_per O P B lp lb b); auto.
       apply anga_sym; auto.
-    eapply (per_per_col _ _ O); Perp.
+    apply cop_per2__col with O; Perp.
     intro.
     subst P.
     assert(HH:=lcos_lg_not_null lp la a H).
     spliter.
-    apply H14.
+    apply H15.
     unfold Q_Cong_Null.
     split; auto.
     exists O.
@@ -506,7 +502,7 @@ apply perp_distinct in H4.
 tauto.
 
 assert(Par A A' C C').
-apply(l12_9 A A' C C' B A');Perp.
+apply(l12_9 A A' C C' B A'); Perp; Cop.
 apply perp_sym.
 apply(perp_col _ C'); Perp.
 ColR.
@@ -728,10 +724,22 @@ Proof.
     ColR.
     induction(eq_dec_points A B).
       subst B.
-assert(HH:= perp2_trans C A' A C' C B' O H9 H8).
+    assert (HH : Par C A' C B').
+      assert(~ Col A C' O).
+        intro.
+        apply H.
+        ColR.
+    assert(HH:= perp2_pseudo_trans C A' A C' C B' O H9 H8 H14).
+      ex_and HH X.
+      ex_and H15 Y.
+      apply (l12_9 _ _ _ _ X Y); Perp.
+        Cop.
+        Cop.
+        Cop.
+        exists O.
+        left.
+        split; Col.
       assert(A' = B').
-      apply perp2_par in HH.
-
         assert(Col A' B' C).
           induction HH.
             apply False_ind.
@@ -878,36 +886,38 @@ Proof.
     auto.
 Qed.
 
-Lemma per_per_perp : forall A B X Y,
+Lemma cop_per2__perp : forall A B X Y,
  A <> B -> X <> Y ->
- (B <> X \/ B <> Y) -> Per A B X -> Per A B Y ->
+ (B <> X \/ B <> Y) ->
+ Coplanar A B X Y ->
+ Per A B X -> Per A B Y ->
  Perp A B X Y.
 Proof.
     intros.
     induction H1.
-      assert(HH:=H2).
-      apply per_perp_in in H2; auto.
-      apply perp_in_perp_bis in H2.
-      induction H2.
-        apply perp_not_eq_1 in H2.
+      assert(HH:=H3).
+      apply per_perp_in in H3; auto.
+      apply perp_in_perp_bis in H3.
+      induction H3.
+        apply perp_not_eq_1 in H3.
         tauto.
       apply perp_sym.
       apply (perp_col _ B); auto.
         Perp.
       apply col_permutation_5.
-      eapply (per_per_col _ _ A); Perp.
-    assert(HH:=H3).
-    apply per_perp_in in H3; auto.
-    apply perp_in_perp_bis in H3.
-    induction H3.
-      apply perp_not_eq_1 in H3.
+      apply cop_per2__col with A; Perp; Cop.
+    assert(HH:=H4).
+    apply per_perp_in in H4; auto.
+    apply perp_in_perp_bis in H4.
+    induction H4.
+      apply perp_not_eq_1 in H4.
       tauto.
     apply perp_sym.
     apply perp_left_comm.
     apply (perp_col _ B); auto.
       Perp.
     apply col_permutation_5.
-    eapply (per_per_col _ _ A); Perp.
+    eapply cop_per2__col with A; Perp; Cop.
 Qed.
 
 Lemma l13_10 : forall A B C A' B' C' O,
@@ -1298,12 +1308,12 @@ Proof.
           assert(HH:= lcos_lg_not_null bn' lb n' H74 ).
           tauto.
         ex_and H73 bn'l'.
-        assert(lcos2 bl'n' lb l' n').
-          unfold lcos2.
+        assert(Lcos2 bl'n' lb l' n').
+          unfold Lcos2.
           exists ll.
           split; auto.
-        assert(lcos2 bn'l' lb n' l').
-          unfold lcos2.
+        assert(Lcos2 bn'l' lb n' l').
+          unfold Lcos2.
           exists bn'.
           split; auto.
         assert(EqL bl'n' bn'l').
@@ -1485,13 +1495,21 @@ Proof.
             auto.
 (*************** we prove (Perp O N B A')  ********************) 
           apply (perp_col _ N'); Col.
-          apply per_per_perp; auto.
+          apply cop_per2__perp; auto.
           induction(eq_dec_points N' B).
             right.
             subst N'.
             auto.
           left.
           auto.
+          apply coplanar_perm_16.
+          apply col_cop__cop with N; Col.
+          apply coplanar_perm_5.
+          apply col_cop__cop with B'; Col.
+          exists A.
+          right.
+          left.
+          split; Col.
         induction H93.
 (*************** case : out O A B  ********************)
 (*************** we construct N' on the half-line ON such as ln' O N' /\ out O N' N  ********************)        
@@ -1541,7 +1559,7 @@ Proof.
             auto.
           apply(perp_col _ N').
             auto.
-            eapply (per_per_perp); auto.
+            apply (cop_per2__perp); auto.
               intro.
               subst N'.
               unfold Out in H95.
@@ -1557,6 +1575,14 @@ Proof.
               contradiction.
             left.
             auto.
+            apply coplanar_perm_16.
+            apply col_cop__cop with N; Col.
+            apply coplanar_perm_5.
+            apply col_cop__cop with B'; Col.
+            exists A.
+            right.
+            left.
+            split; Col.
           apply out_col in H95.
           Col.
         apply False_ind.
@@ -1568,11 +1594,15 @@ Qed.
 
 End Pappus_Pascal.
 
+(** lcos_lcos_col -> lcos2_cop__col
+    per_per_perp -> cop_per2__perp *)
+
 Section Pappus_Pascal_2.
 
-Context `{T2D:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
-Lemma par_perp2 : forall A B C D P, Par A B C D -> Perp2 A B C D P.
+Lemma par__perp2 : forall A B C D P, Par A B C D -> Perp2 A B C D P.
 Proof.
     intros.
     apply par_distincts in H.
@@ -1586,7 +1616,7 @@ Proof.
       Col.
       Perp.
     apply perp_sym.
-    apply (par_perp_perp A B); auto.
+    apply (par_perp__perp A B); auto.
     apply perp_sym; auto.
 Qed.
 
@@ -1599,8 +1629,8 @@ Lemma l13_11 : forall A B C A' B' C' O,
   Par A B' B A'.
 Proof.
     intros.
-    assert(HH:=par_perp2 B C' C B' O H8).
-    assert(HP:=par_perp2 C A' A C' O H9).
+    assert(HH:=par__perp2 B C' C B' O H8).
+    assert(HP:=par__perp2 C A' A C' O H9).
     assert(HQ:=perp2_par A B' B A' O).
     apply HQ.
     apply(l13_10 A B C A' B' C' O); auto.

@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rah_triangle.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma rah__triangle : postulate_of_right_saccheri_quadrilaterals -> triangle_postulate.
 Proof.

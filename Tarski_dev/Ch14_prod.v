@@ -2,7 +2,8 @@ Require Export GeoCoq.Tarski_dev.Ch14_sum.
 
 Section T14_prod.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma prod_to_prodp : forall O E E' A B C, Prod O E E' A B C -> Prodp O E E' A B C.
 Proof.
@@ -629,7 +630,7 @@ Proof.
       subst B''.
       left.
       Par.
-    induction(Col_dec E E' E'').
+    induction(col_dec E E' E'').
       assert(~Col E' E'' A).
         intro.
         apply H25.
@@ -686,7 +687,7 @@ Proof.
     assert(Par E'' E' B'' B').
       apply(l13_15 E E'' E' B B'' B' O ); Par.
       Col.
-    induction(Col_dec A E' E'').
+    induction(col_dec A E' E'').
       assert(Par B' C E' E'').
         apply (par_col_par _ _ _ A); Par.
         Col.
@@ -733,7 +734,7 @@ Proof.
         Col.
       ColR.
     spliter.
-    induction(Col_dec O E' E'').
+    induction(col_dec O E' E'').
       left.
       apply par_comm.
       apply (l13_19 E E' A E'' B B' C B'' O); Col.

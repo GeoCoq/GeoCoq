@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_8_2.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_rectanglereverse : 
    forall A B C D, 

@@ -16,7 +16,7 @@ assert (nCol D H E) by (conclude_def Triangle ).
 assert (neq H E) by (forward_using lemma_NCdistinct).
 assert (neq E H) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists R, (BetS E H R /\ Cong H R E H)) by (conclude postulate_extension);destruct Tf as [R];spliter.
+assert (Tf:exists R, (BetS E H R /\ Cong H R E H)) by (conclude lemma_extension);destruct Tf as [R];spliter.
 assert (BetS R H E) by (conclude axiom_betweennesssymmetry).
 assert (nCol H E D) by (forward_using lemma_NCorder).
 assert (Col R H E) by (conclude_def Col ).
@@ -28,8 +28,6 @@ assert (nCol R E D) by (conclude lemma_NChelper).
 let Tf:=fresh in
 assert (Tf:exists P Q M, (BetS P D Q /\ CongA P D H D H E /\ Par P Q R E /\ BetS P M E /\ BetS D M H)) by (conclude proposition_31short);destruct Tf as [P[Q[M]]];spliter.
 assert (Col R E H) by (forward_using lemma_collinearorder).
-assert (eq E E) by (conclude cn_equalityreflexive).
-assert (Col R E E) by (conclude_def Col ).
 assert (Par P Q H E) by (conclude lemma_collinearparallel).
 assert (Col P D Q) by (conclude_def Col ).
 assert (Col P Q D) by (forward_using lemma_collinearorder).

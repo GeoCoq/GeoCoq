@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_rayimpliescollinear.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_together2 : 
    forall A B C F G M N a b c, 
@@ -17,7 +17,7 @@ intros.
 let Tf:=fresh in
 assert (Tf:exists J, (BetS A a J /\ Cong a J C c /\ Lt B b A J)) by (conclude_def TG );destruct Tf as [J];spliter.
 assert (neq a J) by (forward_using lemma_betweennotequal).
-assert (neq C c) by (conclude lemma_nullsegment3).
+assert (neq C c) by (conclude axiom_nocollapse).
 assert (~ eq M N).
  {
  intro.
@@ -27,14 +27,13 @@ assert (~ eq M N).
  assert (Cong G M C c) by (conclude cn_equalitysub).
  assert (Cong M G C c) by (forward_using lemma_congruenceflip).
  assert (Lt F G F G) by (conclude lemma_together).
- assert (Cong F G F G) by (conclude cn_congruencereflexive).
  assert (~ Lt F G F G) by (conclude lemma_trichotomy2).
  contradict.
  }
 assert (neq F M) by (conclude lemma_raystrict).
 assert (neq M F) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists D, (BetS M F D /\ Cong F D M F)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, (BetS M F D /\ Cong F D M F)) by (conclude lemma_extension);destruct Tf as [D];spliter.
 assert ((BetS F M G \/ eq G M \/ BetS F G M)) by (conclude lemma_ray1).
 assert (BetS G F D).
 by cases on (BetS F M G \/ eq G M \/ BetS F G M).
@@ -52,7 +51,7 @@ by cases on (BetS F M G \/ eq G M \/ BetS F G M).
  assert (BetS G F D) by (conclude lemma_3_6a).
  close.
  }
-(* cases *)
+(** cases *)
 assert (BetS D F M) by (conclude axiom_betweennesssymmetry).
 assert (BetS D F G) by (conclude axiom_betweennesssymmetry).
 assert (~ BetS F M N).
@@ -60,18 +59,13 @@ assert (~ BetS F M N).
  intro.
  assert (neq F M) by (forward_using lemma_betweennotequal).
  let Tf:=fresh in
- assert (Tf:exists P, (BetS F M P /\ Cong M P C c)) by (conclude postulate_extension);destruct Tf as [P];spliter.
- assert (Cong C c G N) by (conclude lemma_congruencesymmetric).
- assert (Cong M P G N) by (conclude lemma_congruencetransitive).
+ assert (Tf:exists P, (BetS F M P /\ Cong M P C c)) by (conclude lemma_extension);destruct Tf as [P];spliter.
  assert (Lt F G F P) by (conclude lemma_together).
  assert (Cong C c G N) by (conclude lemma_congruencesymmetric).
  assert (Cong C c N G) by (forward_using lemma_congruenceflip).
  assert (Cong M P N G) by (conclude lemma_congruencetransitive).
- assert (Cong N G G N) by (conclude cn_equalityreverse).
  assert (Cong F M F M) by (conclude cn_congruencereflexive).
  assert (Lt F M F N) by (conclude_def Lt ).
- assert (Cong N G C c) by (forward_using lemma_congruenceflip).
- assert (Cong C c N G) by (conclude lemma_congruencesymmetric).
  assert (~ BetS F N G).
   {
   intro.
@@ -164,7 +158,7 @@ by cases on (eq M F \/ eq M N \/ eq F N \/ BetS F M N \/ BetS M F N \/ BetS M N 
  assert (Out M F N) by (conclude lemma_ray4).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

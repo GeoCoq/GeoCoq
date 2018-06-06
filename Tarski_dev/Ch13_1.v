@@ -1,11 +1,10 @@
   (* Gabriel Braun April 2013 *)
 
 Require Export GeoCoq.Tarski_dev.Ch12_parallel.
-(*Require Export Ch12_parallel_inter_dec.*)
 
 Section L13_1.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 (** Pappus Desargues *)
 
@@ -45,16 +44,6 @@ apply perp_distinct in H1.
 tauto.
 apply perp_distinct in H1.
 tauto.
-Qed.
-
-Lemma per_distinct : forall A B C, Per A B C -> A <> B -> A <> C.
-Proof.
-intros.
-intro.
-subst C.
-apply H0.
-apply (l8_8).
-assumption.
 Qed.
 
 Lemma per2_preserves_diff : forall O A B A' B', O <> A' -> O <> B' -> Col O A' B' -> Per O A' A -> Per O B' B -> A' <> B' -> A <> B.
@@ -120,7 +109,7 @@ apply perp_distinct in H4.
 tauto.
 
 assert(Par B B' C C').
-apply(l12_9 B B' C C' A B');Perp.
+apply(l12_9 B B' C C' A B');Perp; Cop.
 apply perp_sym.
 apply(perp_col _ C'); Perp.
 ColR.
@@ -145,7 +134,8 @@ subst C'.
 clean_trivial_hyps.
 
 assert(Col B C B').
-apply(per_per_col B C A B'); Perp.
+apply cop_per2__col with A; Perp.
+exists C; left; split; Col.
 apply H13; ColR.
 
 induction H10.
@@ -242,7 +232,7 @@ apply bet_col in H.
 apply(perp_col _ C'); Col.
 
 assert( Par B' B C' C).
-apply(l12_9 B' B C' C A B').
+apply(l12_9 B' B C' C A B'); Cop.
 Perp.
 Perp.
 
@@ -363,7 +353,7 @@ apply perp_distinct in H4.
 tauto.
 
 assert(Par A A' C C').
-apply(l12_9 A A' C C' B A');Perp.
+apply(l12_9 A A' C C' B A'); Perp; Cop.
 apply perp_sym.
 apply(perp_col _ C'); Perp.
 ColR.
@@ -509,7 +499,7 @@ apply perp_distinct in H4.
 tauto.
 
 assert(Par A A' C C').
-apply(l12_9 A A' C C' B A');Perp.
+apply(l12_9 A A' C C' B A'); Perp; Cop.
 apply perp_sym.
 apply(perp_col _ C'); Perp.
 ColR.
@@ -701,7 +691,7 @@ apply bet_col in H.
 ColR.
 
 assert(Par B B' C C').
-apply(l12_9 B B' C C' O A);auto.
+apply(l12_9 B B' C C' O A); Cop.
 induction H16.
 
 assert(HH:=l12_6 B B' C C' H16).
@@ -803,12 +793,14 @@ ColR.
 apply perp_distinct in H5.
 tauto.
 
+assert(Col O A A').
+ColR.
 assert(Par A A' C C').
-apply(l12_9 A A' C C' O A');auto.
-induction H16.
+apply(l12_9 A A' C C' O A'); Cop.
+induction H17.
 
 
-assert(HH:=l12_6 A A' C C' H16).
+assert(HH:=l12_6 A A' C C' H17).
 
 (*--------------------------------*)
 assert(OS C C' A A').
@@ -818,7 +810,7 @@ assert(OS C C' A B).
 apply(out_one_side C C' A B).
 left.
 intro.
-apply H16.
+apply H17.
 exists A.
 split; Col.
 unfold Out.
@@ -842,15 +834,15 @@ repeat split.
 intro.
 subst C'.
 clean_trivial_hyps.
-unfold OS in H17.
-ex_and H17 T.
+unfold OS in H18.
+ex_and H18 T.
 unfold TS in H4.
 spliter.
 apply H4.
 Col.
 intro.
 subst C'.
-apply H16.
+apply H17.
 exists A'.
 split; Col.
 left.
@@ -862,32 +854,32 @@ assert(TS C C' B A').
 unfold TS.
 repeat split.
 intro.
-unfold OS in H18.
-ex_and H18 T.
-unfold TS in H21.
+unfold OS in H19.
+ex_and H19 T.
+unfold TS in H22.
 spliter.
 contradiction.
 intro.
-apply H16.
+apply H17.
 exists A'.
 split; Col.
 exists C'.
 split; Col.
-apply one_side_symmetry in H19.
-apply l9_9_bis in H19.
+apply one_side_symmetry in H20.
+apply l9_9_bis in H20.
 contradiction.
 
 unfold Out.
 repeat split.
 intro.
 subst C'.
-apply H16.
+apply H17.
 exists A.
 apply bet_col in H.
 split; Col.
 intro.
 subst C'.
-apply H16.
+apply H17.
 exists A'.
 split; Col.
 right; auto.
@@ -901,35 +893,35 @@ repeat split.
 intro.
 subst A'.
 clean_trivial_hyps.
-apply H16.
+apply H17.
 exists C.
 apply bet_col in H.
 split; Col.
 intro.
 subst C'.
-unfold Out in H20.
+unfold Out in H21.
 tauto.
 left.
 auto.
 
 induction H6.
-unfold Out in H20.
+unfold Out in H21.
 spliter.
 unfold Out.
 repeat split.
 intro.
 subst A'.
-apply H16.
+apply H17.
 exists C.
 apply bet_col in H.
 split; Col.
 auto.
-induction H22.
+induction H23.
 left.
 Between.
 
 apply False_ind.
-apply H21.
+apply H22.
 apply (between_equality _ _ B); Between.
 
 (***************************)
@@ -938,7 +930,7 @@ assert(OS A A' B C).
 apply(out_one_side A A' B C).
 right.
 intro.
-apply H16.
+apply H17.
 exists C.
 split; Col.
 unfold Out.
@@ -958,36 +950,36 @@ assert(TS A A' B C').
 unfold TS.
 repeat split.
 intro.
-unfold OS in H21.
-ex_and H21 T.
-unfold TS in H21.
+unfold OS in H22.
+ex_and H22 T.
+unfold TS in H22.
 spliter.
 contradiction.
 intro.
-apply H16.
+apply H17.
 exists C'.
 split; Col.
 exists A'.
 split; Col.
 Between.
-apply one_side_symmetry in H22.
-apply l9_9_bis in H22.
+apply one_side_symmetry in H23.
+apply l9_9_bis in H23.
 contradiction.
 
 unfold Out in *.
 spliter.
 clean_duplicated_hyps.
 
-induction H25; induction H23.
+induction H26; induction H24.
 assumption.
 apply False_ind.
-apply H20.
+apply H21.
 apply(between_equality _ _ A'); Between.
 apply False_ind.
 apply H10.
 apply(between_equality _ _ C'); Between.
 apply False_ind.
-apply H24.
+apply H25.
 apply(between_equality _ _ B); Between.
 spliter.
 
@@ -995,7 +987,7 @@ spliter.
 assert(~Col O C' C).
 apply(per_not_col); auto.
 apply False_ind.
-apply H20.
+apply H21.
 
 assert(A<>C).
 intro.
@@ -1029,7 +1021,7 @@ apply perp_distinct in H4.
 tauto.
 
 assert(Par A A' B B').
-apply(l12_9 A A' B B' O A');auto.
+apply(l12_9 A A' B B' O A'); Cop.
 
 induction H15.
 assert(HH:=l12_6 A A' B B' H15).
@@ -1093,7 +1085,19 @@ apply perp_distinct in H5.
 tauto.
 
 assert(Par B B' C C').
-apply(l12_9 B B' C C' O A');auto.
+apply(l12_9 B B' C C' O A'); auto.
+exists O.
+left.
+split; ColR.
+exists C'.
+left.
+split; ColR.
+exists B'.
+left.
+split; Col.
+exists B'.
+left.
+split; Col.
 induction H20.
 
 assert(HQ:=l12_6 B B' C C' H20).
@@ -1384,13 +1388,40 @@ apply perp_distinct in H5.
 tauto.
 
 assert(Par B B' A A').
-apply(l12_9 B B' A A' O A');finish.
+apply(l12_9 B B' A A' O A'); Perp.
+exists O.
+left.
+assert_diffs.
+split; ColR.
+exists A'.
+left.
+split; Col.
+exists B'.
+left.
+split; ColR.
+exists A'.
+left.
+split; Col.
 
 induction H16.
 assert(HQ:=l12_6 B B' A A' H16).
 
 assert(Par B B' C C').
-apply(l12_9 B B' C C' O A');finish.
+apply(l12_9 B B' C C' O A'); Perp.
+exists O.
+left.
+assert_diffs.
+split; ColR.
+exists C'.
+left.
+split; Col.
+exists B'.
+left.
+assert_diffs.
+split; ColR.
+exists A'.
+left.
+split; Col.
 induction H17.
 assert(HR:=l12_6 B B' C C' H17).
 
@@ -1490,11 +1521,9 @@ assumption.
 Cong.
 Qed.
 
-
-
-Lemma l13_1 : forall A B C P Q R,
+Lemma l13_1_aux : forall A B C P Q R,
    ~ Col A B C -> Midpoint P B C -> Midpoint Q A C -> Midpoint R A B ->
-   exists X, exists Y, Perp_at R X Y A B /\ Perp X Y P Q.
+   exists X, exists Y, Perp_at R X Y A B /\ Perp X Y P Q /\ Coplanar A B C X /\ Coplanar A B C Y.
 Proof.
 intros A B C P Q R HC MBC MAC MAB.
 assert(Q <> C).
@@ -1750,22 +1779,23 @@ apply per_not_col in H12; auto.
 assert(HM:=midpoint_existence A' B').
 ex_and HM X.
 
-assert(HP:=perp_exists X A' B' NE1).
-ex_and HP y.
+assert(HP:=l10_15 A' B' X A).
+destruct HP as [y []]; Col.
 
 assert(HH:=ex_sym X y A).
 ex_and HH B''.
 
 assert( X <> y).
 apply perp_distinct in H15.
-tauto.
+spliter.
+auto.
 
 
 assert(Reflect B'' A X y).
 unfold Reflect.
 left.
 repeat split;auto.
-ex_and H17 M.
+ex_and H18 M.
 exists M.
 split; finish.
 
@@ -1778,16 +1808,16 @@ exists X.
 split; finish.
 left.
 finish.
-apply l10_4 in H19.
+apply l10_4 in H20.
 
-assert(HH:= l10_10 X y B''  B' A A' H19 H20).
+assert(HH:= l10_10 X y B''  B' A A' H20 H21).
 
 assert(Per A' B' B'').
 unfold Reflect in *.
-induction H19; induction H20.
+induction H20; induction H21.
 spliter.
 
-apply(image_preserves_per B' A' A A' B' B'' X y); auto.
+apply(image_spec_preserves_per B' A' A A' B' B'' X y); auto.
 apply l10_4_spec.
 assumption.
 spliter.
@@ -1797,24 +1827,37 @@ contradiction.
 spliter.
 contradiction.
 
-unfold Reflect in H20.
-induction H20.
+unfold Reflect in H21.
+induction H21.
 spliter.
-unfold ReflectL in H22.
+unfold ReflectL in H23.
 
 
 assert(OS A' B' A B'').
-induction H16.
+induction H17.
 assert(Par A' B' A B'').
-apply(l12_9 A' B' A B'' X y); finish.
-
-induction H23.
-apply( l12_6 A' B' A B'' H23).
+assert(Coplanar A y A' X).
+apply col_cop__cop with B'; Col; Cop.
+assert(Coplanar A y B' X).
+apply col_cop__cop with A'; Col; Cop.
+assert(~ Col A X y).
+intro.
+assert(A=B'').
+apply (image_id X y); Col.
+assert_diffs.
+auto.
+apply(l12_9 A' B' A B'' X y); Perp.
+Cop.
+apply coplanar_trans_1 with A; Cop.
+Cop.
+apply coplanar_trans_1 with A; Cop.
+induction H24.
+apply( l12_6 A' B' A B'' H24).
 spliter.
 
-apply per_not_col in H21; auto.
+apply per_not_col in H22; auto.
 apply False_ind.
-apply H21.
+apply H22.
 ColR.
 intro.
 subst B''.
@@ -1824,6 +1867,7 @@ subst A'.
 apply cong_identity in H7.
 subst C'.
 tauto.
+
 subst B''.
 apply one_side_reflexivity.
 intro.
@@ -1857,8 +1901,9 @@ tauto.
 
 
 assert( Col B B'' B').
-apply(per_per_col B B'' A' B'); finish.
-
+apply cop_per2__col with A'; Perp.
+apply coplanar_perm_3.
+apply coplanar_trans_1 with A; Col; Cop.
 assert(Cong B B' A A').
 apply cong_transitivity with C C'; Cong.
 
@@ -1866,13 +1911,13 @@ assert(B = B'' \/ Midpoint B' B B'').
 apply( l7_20); Col.
 
 apply cong_transitivity with A A'; Cong.
-induction H27.
+induction H28.
 subst B''.
 
 exists R.
 exists X.
 
-ex_and H17 M.
+ex_and H18 M.
 assert(R = M).
 apply (l7_17 A B); auto.
 subst M.
@@ -1885,19 +1930,33 @@ apply HC; Col.
 assert(Col R A B).
 unfold Midpoint in MAB.
 spliter.
-apply bet_col in H30.
+apply bet_col in H31.
 Col.
 
 assert(X <> R).
 intro.
 subst X.
 assert(Par A B A' B').
-apply(l12_9 A B A' B' R y);finish.
-induction H16.
+assert(Coplanar A y A' R).
+apply col_cop__cop with B'; Col; Cop.
+assert(Coplanar A y B' R).
+apply col_cop__cop with A'; Col; Cop.
+assert(~ Col A R y).
+intro.
+assert(A=B).
+apply (image_id R y); Col.
+assert_diffs.
+auto.
+apply(l12_9 A B A' B' R y); Perp.
+Cop.
+Cop.
+apply coplanar_trans_1 with A; Cop.
+apply coplanar_trans_1 with A; Cop.
+induction H17.
 Perp.
 contradiction.
-induction H31.
-apply H31.
+induction H32.
+apply H32.
 exists R.
 
 unfold Midpoint in H14.
@@ -1911,10 +1970,12 @@ Col.
 split.
 
 apply(l8_14_2_1b_bis R X A B R); Col.
-induction H16.
+induction H17.
 apply perp_left_comm.
 apply(perp_col _ y); auto.
 contradiction.
+
+split.
 
 apply perp_left_comm.
 apply(perp_col _ y);auto.
@@ -1932,40 +1993,60 @@ Perp.
 Col.
 ColR.
 
+split.
+exists R.
+left.
+split; Col.
+assert(Col P Q X).
+ColR.
+apply coplanar_pseudo_trans with P Q C; Cop.
+
 assert(TS A' B' B B'').
 unfold TS.
 repeat split; auto.
 intro.
 apply NC2; Col.
 intro.
-apply per_not_col in H21; auto.
-apply H21.
+apply per_not_col in H22; auto.
+apply H22.
 Col.
 intro.
 subst B''.
-unfold Midpoint in H27.
+unfold Midpoint in H28.
 spliter.
-apply cong_identity in H29.
+apply cong_identity in H30.
 subst B'.
-unfold OS in H23.
-ex_and H23 T.
-unfold TS in H29.
+unfold OS in H24.
+ex_and H24 T.
+unfold TS in H30.
 spliter.
-apply H29.
+apply H30.
 Col.
 exists B'.
 split; Col.
-unfold Midpoint in H27.
+unfold Midpoint in H28.
 tauto.
 assert(OS A' B' B B'').
 apply (one_side_transitivity A' B' B A ).
 apply one_side_symmetry.
 assumption.
 assumption.
-apply l9_9 in H28.
+apply l9_9 in H29.
 contradiction.
 spliter.
 contradiction.
+Qed.
+
+Lemma l13_1 : forall A B C P Q R,
+   ~ Col A B C -> Midpoint P B C -> Midpoint Q A C -> Midpoint R A B ->
+   exists X, exists Y, Perp_at R X Y A B /\ Perp X Y P Q.
+Proof.
+intros.
+destruct (l13_1_aux A B C P Q R) as [X [Y]]; trivial.
+spliter.
+exists X.
+exists Y.
+split; assumption.
 Qed.
 
 
@@ -1974,10 +2055,7 @@ Lemma per_lt : forall A B C, A <> B ->  C <> B -> Per A B C -> Lt A B A C /\ Lt 
   Proof.
     intros.
     assert(Lt B A A C /\ Lt B C A C).
-      apply( l11_46 A B C).
-        apply per_not_col; auto.
-      left.
-      assumption.
+      apply( l11_46 A B C); auto.
     spliter.
     split; apply lt_left_comm; assumption.
   Qed.
@@ -2004,7 +2082,7 @@ Proof.
       subst B.
       apply cong_identity in H.
       contradiction.
-    induction(Col_dec A B C).
+    induction(col_dec A B C).
       assert(~ Col B A P).
         apply perp_not_col.
         apply perp_comm.
@@ -2383,7 +2461,10 @@ Proof.
     assert(Perp C D A B).
       apply( cong_conga_perp C A D B); Cong.
     assert(Col A B E).
-      eapply perp_perp_col.
+      apply cop_perp2__col with C D.
+        exists E.
+        left.
+        split; Col.
         apply perp_sym.
         apply H15.
       auto.
@@ -2437,9 +2518,28 @@ Qed.
   intros.
    assert(HM:= midpoint_existence A B).
    ex_and HM R.
-   assert(HH:= l13_1 A B C P Q R H H0 H1 H2).
+   assert(HH:= l13_1_aux A B C P Q R H H0 H1 H2).
    ex_and HH X.
    ex_and H3 Y.
+assert(Coplanar X Y A P /\ Coplanar X Y A Q /\ Coplanar X Y B P /\ Coplanar X Y B Q).
+  assert(Coplanar A B C A).
+  exists A.
+  left.
+  split; Col.
+  assert(Coplanar A B C B).
+  exists B.
+  left.
+  split; Col.
+  assert(Coplanar A B C P).
+  exists B.
+  left.
+  split; Col.
+  assert(Coplanar A B C Q).
+  exists A.
+  left.
+  split; Col.
+  repeat split; apply coplanar_pseudo_trans with A B C; assumption.
+spliter.
 assert(HH:= perp_in_col X Y A B R H3).
 spliter.
    apply perp_in_perp_bis in H3.
@@ -2454,10 +2554,10 @@ tauto.
    assert(Perp Y X A B).
 apply (perp_col _ R); Perp.
 Col.
-apply perp_left_comm in H9.
+apply perp_left_comm in H15.
 assert(Par A B P Q).
    apply(l12_9 A B P Q X Y);Perp.
-induction H10.
+induction H16.
 finish.
 spliter.
 assert(Col A B P).
@@ -2474,8 +2574,8 @@ contradiction.
 subst P.
 unfold Midpoint in H0.
 spliter.
-apply cong_symmetry in H15.
-apply cong_identity in H15.
+apply cong_symmetry in H21.
+apply cong_identity in H21.
 subst C.
 contradiction.
 
@@ -2484,7 +2584,7 @@ apply (perp_col _ R); Perp.
 Col.
 assert(Par A B P Q).
    apply(l12_9 A B P Q X Y);Perp.
-induction H10.
+induction H16.
 finish.
 spliter.
 assert(Col A B P).
@@ -2501,73 +2601,82 @@ contradiction.
 subst P.
 unfold Midpoint in H0.
 spliter.
-apply cong_symmetry in H15.
-apply cong_identity in H15.
+apply cong_symmetry in H21.
+apply cong_identity in H21.
 subst C.
 contradiction.
 Qed.
 
-Lemma perp_in_perp_in_col : forall A B A' B' X Y P, Perp_at P A B X Y -> Perp_at P A' B' X Y  -> Col A B A'.
+Lemma cop4_perp_in2__col : forall A B A' B' X Y P,
+  Coplanar X Y A A' -> Coplanar X Y A B' ->
+  Coplanar X Y B A' -> Coplanar X Y B B' ->
+  Perp_at P A B X Y -> Perp_at P A' B' X Y  -> Col A B A'.
 Proof.
 intros.
-assert(HP1:= H).
-assert(HP2:=H0).
+assert(HP1:= H3).
+assert(HP2:=H4).
 assert(Col A B P /\ Col X Y P).
-apply perp_in_col in H.
+apply perp_in_col in H3.
 spliter.
 split; Col.
 spliter.
-unfold Perp_at in H.
-unfold Perp_at in H0.
+unfold Perp_at in H3.
+unfold Perp_at in H4.
 spliter.
 induction(eq_dec_points A P);
 induction(eq_dec_points P X).
 subst A.
 subst X.
 assert(Per B P Y).
-apply(H10 B Y); Col.
+apply(H14 B Y); Col.
 assert(Per A' P Y).
-apply(H6 A' Y); Col.
+apply(H10 A' Y); Col.
 apply col_permutation_2.
-apply(per_per_col B A' Y P); auto.
+apply cop_per2__col with Y; Cop.
 subst A.
 assert(Per B P X).
-apply(H10 B X); Col.
+apply(H14 B X); Col.
 assert(Per A' P X).
-apply(H6 A' X); Col.
+apply(H10 A' X); Col.
 apply col_permutation_2.
-apply(per_per_col B A' X P); auto.
+apply cop_per2__col with X; auto.
+apply coplanar_perm_12.
+apply col_cop__cop with Y; Col; Cop.
 subst X.
 assert(Per A P Y).
-apply(H10 A Y); Col.
+apply(H14 A Y); Col.
 induction(eq_dec_points P A').
 subst A'.
 assert(Per B' P Y).
-apply(H6 B' Y); Col.
+apply(H10 B' Y); Col.
 assert(Col A B' P).
-apply(per_per_col A B' Y P); auto.
+apply cop_per2__col with Y; Cop.
 ColR.
 
 assert(Per A' P Y).
-apply(H6 A' Y); Col.
+apply(H10 A' Y); Col.
 assert(Col A A' P).
-apply(per_per_col A A' Y P); auto.
+apply cop_per2__col with Y; Cop.
 ColR.
 
 assert(Per A P X).
-apply(H10 A X); Col.
+apply(H14 A X); Col.
 induction(eq_dec_points P A').
 subst A'.
 assert(Per B' P X).
-apply(H6 B' X); Col.
+apply(H10 B' X); Col.
 assert(Col A B' P).
-apply(per_per_col A B' X P); auto.
+apply cop_per2__col with X; auto.
+apply coplanar_perm_12.
+apply col_cop__cop with Y; Col; Cop.
 ColR.
 
 assert(Per A' P X).
-apply(H6 A' X); Col.
+apply(H10 A' X); Col.
 assert(Col A A' P).
-apply(per_per_col A A' X P); auto.
+apply cop_per2__col with X; auto.
+apply coplanar_perm_12.
+apply col_cop__cop with Y; Col; Cop.
 ColR.
 Qed.
 
@@ -2627,12 +2736,8 @@ Proof.
         intro.
         subst T.
         assert(~ Col C D A /\ Per A E D).
-          apply(l8_16_1 C D A D E H8 H2).
+          apply(l8_16_1 C D A D E H2).
             Col.
-            intro.
-            subst E.
-            apply H15.
-            auto.
           apply perp_sym.
           assumption.
         spliter.
@@ -2712,7 +2817,8 @@ Proof.
       intro.
       subst E''.
       assert(Out A B D \/ TS C A B D).
-        apply(conga__or_out_ts C A B D).
+        apply(conga_cop__or_out_ts C A B D).
+          Cop.
         apply conga_comm.
         assumption.
       induction H31.
@@ -2796,7 +2902,7 @@ Proof.
           unfold Out.
           repeat split; auto.
         left.
-        apply not_one_side_two_sides in H34; auto.
+        apply cop__not_one_side_two_sides in H34; auto.
         split.
           auto.
         assert(OS A B D E'').
@@ -2841,6 +2947,7 @@ Proof.
           Col.
         unfold Out.
         repeat split; auto.
+        apply col_cop__cop with D; Col; Cop.
 
       split.
         apply conga_left_comm.
@@ -3084,7 +3191,7 @@ Proof.
     assert(Perp  C' D' A E'').
       eapply cong_conga_perp.
         apply conga_right_comm in H43.
-        apply conga__or_out_ts in H43.
+        apply conga_cop__or_out_ts in H43.
         induction H43.
           assert(OS A B C' D').
             eapply (out_one_side_1 _ _ _ _ A); Col.
@@ -3105,6 +3212,7 @@ Proof.
           contradiction.
         apply invert_two_sides.
         assumption.
+        apply coplanar_pseudo_trans with B C D; Cop.
         unfold Cong_3 in *.
         spliter.
         apply cong_transitivity with B A; Cong.
@@ -3137,8 +3245,8 @@ apply cong_transitivity with A B; Cong.
 
 assert(HM:=midpoint_existence C' D').
 ex_and HM R.
-assert(exists X Y : Tpoint, Perp_at R X Y C' D' /\ Perp X Y D C).
-apply(l13_1 C' D' B D C R);
+assert(exists X Y : Tpoint, Perp_at R X Y C' D' /\ Perp X Y D C /\ Coplanar C' D' B X /\ Coplanar C' D' B Y).
+apply l13_1_aux;
 finish.
 split; Between; Cong.
 split; Between; Cong.
@@ -3158,10 +3266,24 @@ assert(Perp_at A C' D' A E'').
 assert_cols.
 apply(l8_14_2_1b_bis C' D' A E'' A); Col.
 
+assert(Coplanar B C' D' E'').
+apply coplanar_pseudo_trans with B C D; Cop.
+assert(Coplanar C' D' X E'').
+apply coplanar_trans_1 with B; Col; Cop.
+assert(Coplanar C' D' Y E'').
+apply coplanar_trans_1 with B; Col; Cop.
+assert(Coplanar C' D' X A).
+exists A.
+left.
+split; Col.
+assert(Coplanar C' D' Y A).
+exists A.
+left.
+split; Col.
 assert(Col X Y A).
-apply(perp_in_perp_in_col X Y A E'' C' D' A); finish.
+apply(cop4_perp_in2__col X Y A E'' C' D' A); Perp.
 assert(Col X Y E'').
-apply(perp_in_perp_in_col X Y E'' A C' D' A); finish.
+apply(cop4_perp_in2__col X Y E'' A C' D' A); Perp.
 apply perp_sym.
 induction(eq_dec_points Y A).
 subst Y.
@@ -3181,8 +3303,8 @@ intro.
 subst R.
 unfold Midpoint in H58.
 spliter.
-apply cong_symmetry in H62.
-apply cong_identity in H62.
+apply cong_symmetry in H64.
+apply cong_identity in H64.
 subst D'.
 apply perp_distinct in H54.
 tauto.
@@ -3191,11 +3313,11 @@ assert(Per A R C').
 unfold Per.
 exists D'.
 split; finish.
-apply per_perp_in in H63; auto.
-apply perp_in_sym in H63.
-apply perp_in_perp_bis in H63.
-induction H63.
-apply perp_comm in H63.
+apply per_perp_in in H65; auto.
+apply perp_in_sym in H65.
+apply perp_in_perp_bis in H65.
+induction H65.
+apply perp_comm in H65.
 assert(Perp C' D' R A).
 apply(perp_col _ R).
 intro.
@@ -3211,13 +3333,28 @@ apply(l8_14_2_1b_bis C' D' R A R); Col.
 assert_cols.
 Col.
 
+assert(Coplanar C' D' X A).
+apply coplanar_trans_1 with B; Cop; Col.
+assert(Coplanar C' D' Y A).
+apply coplanar_trans_1 with B; Cop; Col.
+assert(Coplanar C' D' X R).
+exists R.
+left.
+split; Col.
+assert(Coplanar C' D' Y R).
+exists R.
+left.
+split; Col.
 assert( Col X Y A).
-apply(perp_in_perp_in_col X Y A R C' D' R); Perp.
+apply(cop4_perp_in2__col X Y A R C' D' R); Perp.
 assert( Col X Y R).
-apply(perp_in_perp_in_col X Y R A C' D' R); Perp.
+apply(cop4_perp_in2__col X Y R A C' D' R); Perp.
 
 assert(Col A E'' R).
-apply(perp_perp_col A E'' R C' D'); Perp.
+apply(cop_perp2__col A E'' R C' D'); Perp.
+exists R.
+left.
+split; Col.
 
 assert(Col A R X).
 ColR.
@@ -3234,15 +3371,14 @@ apply (perp_col _ X); finish.
 apply perp_left_comm.
 apply(perp_col _ Y); finish.
 ColR.
-apply perp_distinct in H63.
+apply perp_distinct in H65.
 tauto.
 
     assert(Col A E E'').
-      eapply perp_perp_col.
-
-        apply H3.
-Perp.
-
+      apply cop_perp2__col with C D; Perp.
+      exists E.
+      left.
+      split; Col.
     assert(E'' = E).
       apply (l6_21 C D A E); Col.
       apply perp_not_eq_1 in H3.
@@ -3260,7 +3396,7 @@ Qed.
 Lemma perp2_refl : forall A B P, A <> B -> Perp2 A B A B P.
 Proof.
     intros.
-    induction(Col_dec A B P).
+    induction(col_dec A B P).
       assert(HH:=not_col_exists A B H).
       ex_and HH X.
       assert(HH:=l10_15 A B P X  H0 H1).
@@ -3328,31 +3464,58 @@ Proof.
 Qed.
 
 
-Lemma perp2_trans : forall A B C D E F P, Perp2 A B C D P -> Perp2 C D E F P -> Perp2 A B E F P.
+Lemma perp2_pseudo_trans : forall A B C D E F P, Perp2 A B C D P -> Perp2 C D E F P -> ~ Col C D P ->
+  Perp2 A B E F P.
 Proof.
     intros.
     unfold Perp2 in *.
     ex_and H X.
-    ex_and H1 Y.
+    ex_and H2 Y.
     ex_and H0 X'.
-    ex_and H3 Y'.
+    ex_and H4 Y'.
     assert(Par X Y X' Y').
-      eapply (l12_9 _ _ _ _ C D); Perp.
+      assert(Coplanar P C D X).
+      induction(eq_dec_points X P).
+        subst.
+        exists P.
+        left.
+        split; Col.
+      apply coplanar_perm_9.
+      apply perp__coplanar.
+      apply perp_col with Y; Col.
+      assert(Coplanar P C D Y).
+      induction(eq_dec_points Y P).
+        subst.
+        exists P.
+        left.
+        split; Col.
+      apply coplanar_perm_9.
+      apply perp__coplanar.
+      apply perp_col with X; Perp; Col.
+      assert(Coplanar P C D X').
+      induction(eq_dec_points X' P).
+        subst.
+        exists P.
+        left.
+        split; Col.
+      apply coplanar_perm_9.
+      apply perp__coplanar.
+      apply perp_col with Y'; Col.
+      assert(Coplanar P C D Y').
+      induction(eq_dec_points Y' P).
+        subst.
+        exists P.
+        left.
+        split; Col.
+      apply coplanar_perm_9.
+      apply perp__coplanar.
+      apply perp_col with X'; Perp; Col.
+      apply (l12_9 _ _ _ _ C D); Perp; apply coplanar_trans_1 with P; Col.
     exists X.
     exists Y.
     assert(Col X X' Y').
-      induction H5.
-        unfold Par_strict in H5.
-        spliter.
-        apply False_ind.
-        apply H8.
-        exists P.
-        split; Col.
-      spliter.
-      auto.
-    assert(Col Y X' Y').
-      induction H5.
-        unfold Par_strict in H5.
+      induction H6.
+        unfold Par_strict in H6.
         spliter.
         apply False_ind.
         apply H9.
@@ -3360,12 +3523,19 @@ Proof.
         split; Col.
       spliter.
       auto.
+    assert(Col Y X' Y').
+      induction H6.
+        unfold Par_strict in H6.
+        spliter.
+        apply False_ind.
+        apply H10.
+        exists P.
+        split; Col.
+      spliter.
+      auto.
     repeat split; auto.
     assert(X <> Y).
-      apply perp_not_eq_1 in H1.
-      assert(X' <> Y').
-        apply perp_not_eq_1 in H3.
-        auto.
+      apply perp_not_eq_1 in H2.
       auto.
     induction(eq_dec_points X Y').
       subst Y'.
@@ -3380,32 +3550,17 @@ Proof.
         auto.
         Perp.
       ColR.
-    apply par_symmetry in H5.
-    induction H5.
-      unfold Par_strict in H5.
+    apply par_symmetry in H6.
+    induction H6.
+      unfold Par_strict in H6.
       spliter.
       apply False_ind.
-      apply H12.
+      apply H13.
       exists P.
       split; Col.
     spliter.
     Col.
 Qed.
-
-
-
-
-Lemma perp2_par : forall A B C D O, Perp2 A B C D O -> Par A B C D.
-Proof.
-    intros.
-    unfold Perp2 in H.
-    ex_and H X.
-    ex_and H0 Y.
-    eapply (l12_9 _ _ _ _ X Y).
-      Perp.
-    Perp.
-Qed.
-
 
 Lemma perp2_preserves_bet23 : forall O A B A' B', Bet O A B -> Col O A' B' -> ~Col O A A' ->
     Perp2 A A' B B' O -> Bet O A' B'.
@@ -3430,12 +3585,37 @@ unfold Perp2 in H2.
 ex_and H2 X.
 ex_and H4 Y.
 assert(Col A A' B').
-apply(perp_perp_col A A' B' X Y); Perp.
+apply(cop_perp2__col A A' B' X Y); Perp.
+exists O.
+left.
+split; Col.
 apply H1.
 ColR.
 
 assert(Par A A' B B').
-apply(perp2_par A A' B B' O H2).
+unfold Perp2 in H2.
+ex_and H2 X.
+ex_and H5 Y.
+assert(Coplanar X Y A B).
+exists O.
+left.
+split; Col.
+apply (l12_9 _ _ _ _ X Y); Perp.
+induction(col_dec B X Y).
+exists A.
+left.
+assert_diffs.
+split; ColR.
+apply coplanar_trans_1 with B; Cop.
+induction(col_dec A X Y).
+exists B.
+left.
+assert_diffs.
+split; ColR.
+apply coplanar_trans_1 with A; Cop.
+exists O.
+left.
+split; Col.
 induction H5.
 assert(OS A A' B B').
 apply l12_6; Par.
@@ -3506,7 +3686,31 @@ apply between_identity in H.
 contradiction.
 
 assert(Par B C' C B').
-apply (perp2_par _ _ _ _ O); auto.
+unfold Perp2 in H2.
+ex_and H2 X.
+ex_and H9 Y.
+assert(Coplanar X Y B C).
+exists O.
+left.
+split; Col.
+assert(Coplanar X Y C' B').
+exists O.
+left.
+split; Col.
+apply (l12_9 _ _ _ _ X Y); Perp.
+induction(col_dec C' X Y).
+exists B'.
+left.
+assert_diffs.
+split; ColR.
+apply coplanar_trans_1 with C'; Cop.
+induction(col_dec B X Y).
+exists C.
+left.
+assert_diffs.
+split; ColR.
+apply coplanar_trans_1 with B; Cop.
+
 assert(Par_strict B C' C B').
 induction H9.
 assumption.
@@ -3544,7 +3748,7 @@ assert(X <> Y).
 apply perp_distinct in H13.
 tauto.
 
-induction(Col_dec X Y B).
+induction(col_dec X Y B).
 assert(Col X Y C).
 ColR.
 
@@ -3596,7 +3800,7 @@ assert(B0 <> O).
 intro.
 subst B0.
 assert(Par B O B C').
-apply(l12_9 B O B C' X Y); Perp.
+apply(l12_9 B O B C' X Y); Perp; Cop.
 induction H22.
 apply H22.
 exists B.
@@ -3609,7 +3813,7 @@ assert(C0 <> O).
 intro.
 subst C0.
 assert(Par C O C B').
-apply(l12_9 C O C B' X Y); Perp.
+apply(l12_9 C O C B' X Y); Perp; Cop.
 induction H23.
 apply H23.
 exists C.
@@ -3661,7 +3865,7 @@ assert(B' = C0).
 apply bet_col in H24.
 apply (l6_21 C' O C C0); Col.
 assert(Par C B' C C0).
-apply(l12_9 C B' C C0 X Y); Perp.
+apply(l12_9 C B' C C0 X Y); Perp; Cop.
 
 induction H25.
 apply False_ind.
@@ -3677,7 +3881,10 @@ intro.
 subst C0.
 apply H1.
 ColR.
-apply(perp_perp_col C C0 B' X Y); Perp.
+apply(cop_perp2__col C C0 B' X Y); Perp.
+exists C0.
+left.
+split; Col.
 subst C0.
 Between.
 
@@ -3690,7 +3897,7 @@ intro.
 subst B0.
 Col.
 assert(Par B C' B B0).
-apply(l12_9 B C' B B0 X Y); Perp.
+apply(l12_9 B C' B B0 X Y); Perp; Cop.
 
 induction H26.
 apply False_ind.
@@ -3701,9 +3908,15 @@ spliter.
 Col.
 
 assert(Col C C0 B').
-apply(perp_perp_col C C0 B' X Y); Perp.
+apply(cop_perp2__col C C0 B' X Y); Perp.
+exists C0.
+left.
+split; Col.
 assert(Col B B0 C').
-apply(perp_perp_col B B0 C' X Y); Perp.
+apply(cop_perp2__col B B0 C' X Y); Perp.
+exists B0.
+left.
+split; Col.
 
 apply(per13_preserves_bet_inv B' O C' C0 B0); Between.
 Col.
@@ -3760,7 +3973,8 @@ Perp.
 Qed.
 
 
-Lemma is_image_perp_in : forall A A' X Y, A <> A' -> X <> Y -> Reflect A A' X Y -> exists P, Perp_at P A A' X Y.
+Lemma is_image_perp_in : forall A A' X Y, A <> A' -> X <> Y -> Reflect A A' X Y ->
+  exists P, Perp_at P A A' X Y.
 Proof.
 intros.
 unfold Reflect in H.
@@ -3793,7 +4007,7 @@ assert(A <> B /\ C <> D).
 apply perp_distinct in H.
 tauto.
 spliter.
-induction(Col_dec A B C).
+induction(col_dec A B C).
 exists C.
 split; Col.
 split; Col.
@@ -3803,7 +4017,10 @@ assert(HH:=l8_18_existence A B C H2).
 ex_and HH P.
 exists P.
 assert(Col C D P).
-apply(perp_perp_col C D P A B); Perp.
+apply(cop_perp2__col C D P A B); Perp.
+exists P.
+left.
+split; Col.
 split; Col.
 split; Col.
 apply(l8_14_2_1b_bis A B C D P); Col.
@@ -3883,7 +4100,7 @@ Lemma perp2_perp_in : forall A B C D O, Perp2 A B C D O -> ~Col O A B /\ ~Col O 
 Qed.
 
 
-Lemma l13_8 : forall O P Q U V, U <> O -> V <> O ->Col O P Q -> Col O U V
+Lemma l13_8 : forall O P Q U V, U <> O -> V <> O -> Col O P Q -> Col O U V
     -> Per P U O -> Per Q V O -> (Out O P Q <-> Out O U V).
 Proof.
     intros.
@@ -3977,47 +4194,15 @@ Qed.
 
 Lemma gta_to_lta : forall A B C D E F, GtA A B C D E F -> LtA D E F A B C.
 Proof.
-intros.
-unfold GtA in H.
-assumption.
+unfold GtA.
+tauto.
 Qed.
 
 Lemma lta_to_gta : forall A B C D E F, LtA A B C D E F -> GtA D E F A B C.
 Proof.
-intros.
 unfold GtA.
-assumption.
+tauto.
 Qed.
-
-Lemma conga_preserves_obtuse : forall A B C A' B' C', Obtuse A B C -> CongA A B C A' B' C' -> Obtuse A' B' C'.
-Proof.
-intros.
-unfold Obtuse in *.
-ex_and H A1.
-ex_and H1 B1.
-ex_and H C1.
-
-exists A1.
-exists B1.
-exists C1.
-split; auto.
-
-assert(A1 <> B1 /\ C1 <> B1).
-unfold GtA in H1.
-unfold LtA in H1.
-spliter.
-unfold LeA in H1.
-ex_and H1 P.
-unfold CongA in H3.
-spliter.
-split; auto.
-
-unfold GtA in *.
-spliter.
-apply(conga_preserves_lta A1 B1 C1 A B C A1 B1 C1 A' B' C'); auto.
-apply conga_refl; auto.
-Qed.
-
 
 Lemma perp_out_acute : forall A B C C', Out B A C' -> Perp A B C C' -> Acute A B C.
 Proof.
@@ -4041,12 +4226,9 @@ assumption.
 assert(Acute C' C B /\ Acute C' B C).
 apply( l11_43 C' C B).
 
-apply perp_left_comm in H3.
-apply perp_not_col in H3.
-intro.
-apply H3.
-assert_cols.
-ColR.
+assert_diffs.
+auto.
+assumption.
 left.
 assumption.
 spliter.
@@ -4082,414 +4264,11 @@ split; auto.
 apply conga_refl; auto.
 Qed.
 
-Lemma acute_bet_obtuse : forall A B C P, B <> C -> Bet A B C -> Acute A B P -> Obtuse C B P.
-Proof.
-intros.
-
-assert(A <> C).
-intro.
-subst C.
-apply between_identity in H0.
-subst B.
-tauto.
-
-assert(A <> B).
-unfold Acute in H1.
-ex_and H1 A'.
-ex_and H3 B'.
-ex_and H1 P'.
-unfold LtA in H3.
-spliter.
-unfold LeA in H3.
-ex_and H3 X.
-apply conga_distinct in H5.
-tauto.
-
-assert(D : P <> B).
-unfold Acute in H1.
-ex_and H1 A'.
-ex_and H4 B'.
-ex_and H1 Q'.
-unfold LtA in H4.
-spliter.
-unfold LeA in H4.
-ex_and H4 X.
-apply conga_distinct in H6.
-tauto.
-
-induction(Col_dec A B P).
-assert(HH:= perp_exists B A B H3).
-ex_and HH Q.
-
-assert(HD: Q <> B).
-apply perp_distinct in H5.
-intro.
-subst Q.
-tauto.
-
-assert(Per A B Q).
-apply perp_in_per.
-apply perp_perp_in in H5.
-Perp.
-
-unfold Obtuse.
-exists A.
-exists B.
-exists Q.
-split; auto.
-
-assert(Out B A P).
-apply(col_in_angle_out A B Q); Col.
-intro.
-apply perp_not_col in H5.
-apply H5.
-apply bet_col in H7.
-Col.
-
-unfold Acute in H1.
-ex_and H1 A'.
-ex_and H7 B'.
-ex_and H1 Q'.
-
-assert(CongA A B Q A' B' Q').
-apply l11_16; auto.
-
-intro.
-subst B'.
-unfold LtA in H7.
-spliter.
-unfold LeA in H7.
-ex_and H7 X.
-apply conga_distinct in H9.
-tauto.
-intro.
-subst Q'.
-unfold LtA in H7.
-spliter.
-unfold LeA in H7.
-ex_and H7 X.
-unfold InAngle in H7.
-tauto.
-
-assert(LtA A B P A B Q).
-
-apply(conga_preserves_lta A B P A' B' Q' A B P A B Q).
-apply conga_refl;auto.
-apply conga_sym.
-assumption.
-assumption.
-unfold InAngle.
-repeat split; auto.
-unfold LtA in H9.
-spliter.
-exists A.
-split.
-Between.
-right.
-
-induction H4.
-
-assert(HH:= flat_all_lea A B P H3 D H4).
-assert(HP:=HH Q HD).
-assert(HQ:=lea_asym A B P A B Q H9 HP).
-contradiction.
-
-induction H4.
-unfold Out.
-repeat split; auto.
-unfold Out.
-repeat split; auto.
-left.
-Between.
-
-unfold GtA.
-unfold LtA.
-split.
-unfold LeA.
-exists Q.
-split.
-unfold InAngle.
-repeat split; auto.
-exists B.
-split.
-
-induction H7.
-spliter.
-induction H9.
-
-apply (outer_transitivity_between _ _ A); Between.
-apply (between_inner_transitivity _ _ _ A); Between.
-left.
-auto.
-apply l11_16; Perp.
-
-assert(Perp B C B Q).
-apply (perp_col _ A);Perp.
-apply bet_col in H0.
-Col.
-apply perp_in_per.
-apply perp_right_comm in H8.
-apply perp_perp_in in H8.
-Perp.
-intro.
-
-assert(HH:= l11_17 A B Q C B P H6 H8).
-apply per_not_col in HH; auto.
-apply HH.
-apply bet_col in  H0.
-ColR.
-
-assert(HC:Col A B C).
-apply bet_col in H0.
-Col.
-
-assert(exists Q : Tpoint, Perp A C Q B /\ OS A C P Q).
-apply(l10_15 A C B P); Col.
-intro.
-apply H4.
-ColR.
-
-ex_and H5 Q.
-assert(Perp A B Q B).
-apply (perp_col _ C); Perp.
-Col.
-apply perp_left_comm in H7.
-
-assert(~Col B A Q).
-apply perp_not_col in H7.
-assumption.
-
-assert(Per A B Q).
-apply perp_in_per.
-apply perp_perp_in in H7.
-Perp.
-
-assert(B <> Q).
-intro.
-subst Q.
-apply H8.
-Col.
-
-
-assert(OS B Q A P).
-unfold Acute in H1.
-ex_and H1 A'.
-ex_and H11 B'.
-ex_and H1 Q'.
-assert(CongA A B Q A' B' Q').
-apply l11_16; auto.
-unfold LtA in H11.
-spliter.
-unfold LeA in H11.
-ex_and H11 X.
-apply conga_distinct in H13.
-tauto.
-unfold LtA in H11.
-spliter.
-unfold LeA in H11.
-ex_and H11 X.
-unfold InAngle in H11.
-tauto.
-
-assert(LtA A B P A B Q).
-apply(conga_preserves_lta A B P A' B' Q' A B P A B Q ); auto.
-apply conga_refl; auto.
-apply conga_sym.
-assumption.
-unfold LtA in H13.
-spliter.
-unfold LeA in H13.
-ex_and H13 P0.
-
-assert(InAngle P A B Q).
-
-apply(conga_preserves_in_angle A B Q P0 A B Q P).
-apply conga_refl; auto.
-apply conga_sym.
-assumption.
-assumption.
-apply (col_one_side _ C); Col.
-
-unfold InAngle in H16.
-spliter.
-
-ex_and H19 X.
-
-induction H20.
-subst X.
-apply False_ind.
-apply H8.
-apply bet_col in H19.
-Col.
-
-assert(OS Q B A X).
-apply out_one_side.
-left.
-intro.
-apply H8.
-Col.
-repeat split.
-intro.
-subst Q.
-apply l8_8 in H9.
-contradiction.
-intro.
-subst X.
-apply H14.
-apply conga_sym.
-apply(out_conga A B P A B P A Q A P).
-apply conga_refl; auto.
-apply out_trivial; auto.
-apply l6_6.
-assumption.
-apply out_trivial; auto.
-apply out_trivial; auto.
-right.
-Between.
-
-assert(OS B Q X P).
-
-apply( out_one_side B Q X P).
-right.
-intro.
-apply H14.
-
-apply conga_sym.
-apply(out_conga A B P A B P A Q A P).
-apply conga_refl; auto.
-apply out_trivial; auto.
-
-apply(col_one_side_out _ C).
-Col.
-apply invert_one_side.
-
-apply(col_one_side _ A); Col.
-apply invert_one_side.
-assumption.
-apply out_trivial; auto.
-apply out_trivial; auto.
-assumption.
-apply invert_one_side in H21.
-eapply(one_side_transitivity _ _ _ X); auto.
-
-assert(TS B Q A C).
-unfold TS.
-repeat split; auto.
-intro.
-apply H8.
-Col.
-intro.
-apply H8.
-ColR.
-exists B.
-split; Col.
-
-assert(TS B Q P C).
-apply(l9_8_2 B Q A P C); auto.
-
-unfold Obtuse.
-exists A.
-exists B.
-exists Q.
-split; auto.
-unfold GtA.
-unfold LtA.
-
-assert(HP:Per C B Q).
-assert(Perp B C Q B).
-apply(perp_col _ A); Perp.
-Col.
-apply perp_in_per.
-apply perp_perp_in in H14.
-Perp.
-
-split.
-unfold LeA.
-exists Q.
-split.
-unfold InAngle.
-repeat split; auto.
-unfold TS in H13.
-spliter.
-ex_and H15 X.
-exists X.
-split; Between.
-right.
-
-assert(OS C A X P).
-apply out_one_side.
-right.
-intro.
-apply H4.
-ColR.
-repeat split.
-intro.
-subst X.
-contradiction.
-intro.
-subst P.
-apply between_identity in H16.
-subst X.
-contradiction.
-left.
-Between.
-apply invert_one_side in H17.
-assert(OS A C X Q).
-apply (one_side_transitivity _ _ _ P); auto.
-apply(col_one_side_out B C X Q).
-Col.
-apply invert_one_side.
-apply(col_one_side _ A); Col.
-apply invert_one_side.
-assumption.
-apply l11_16; Perp.
-
-assert(CongA A B Q C B Q).
-apply l11_16; Perp.
-intro.
-assert(CongA C B Q C B P).
-apply(conga_trans _ _ _ A B Q); auto.
-apply conga_sym.
-auto.
-
-unfold Acute in H1.
-ex_and H1 A'.
-ex_and H17 B'.
-ex_and H1 Q'.
-assert(CongA A B Q A' B' Q').
-apply l11_16; Perp.
-intro.
-subst B'.
-unfold LtA in H17.
-spliter.
-unfold LeA in H17.
-ex_and H17 X.
-apply conga_distinct in H19.
-tauto.
-intro.
-subst Q'.
-unfold LtA in H17.
-spliter.
-unfold LeA in H17.
-ex_and H17 X.
-unfold InAngle in H17.
-tauto.
-assert(LtA A B P A B Q).
-apply(conga_preserves_lta A B P A' B' Q' A B P A B Q); auto.
-apply conga_refl; auto.
-apply conga_sym; auto.
-unfold LtA in H19.
-spliter.
-apply H20.
-apply conga_sym.
-apply(l11_13 C B Q C B P A A H16); Between.
-Qed.
-
 Lemma perp_bet_obtuse : forall A B C C', B <> C' -> Perp A B C C' -> Bet A B C' -> Obtuse A B C.
 Proof.
 intros.
 assert(HPO:=perp_out_acute).
-assert(HBO:=acute_bet_obtuse).
+assert(HBO:=acute_bet__obtuse).
 assert(Col A B C').
 apply bet_col in H1.
 Col.
@@ -4500,12 +4279,100 @@ apply perp_left_comm.
 apply(perp_col _ A); Perp.
 Col.
 apply (HBO C').
+Between.
 intro.
 subst B.
 apply perp_distinct in H0.
 tauto.
-Between.
 assumption.
 Qed.
 
 End L13_1.
+
+Section L13_1_2D.
+
+Context `{T2D:Tarski_2D}.
+
+Lemma perp_in2__col : forall A B A' B' X Y P, Perp_at P A B X Y -> Perp_at P A' B' X Y  ->
+  Col A B A'.
+Proof.
+intros A B A' B' X Y P.
+apply cop4_perp_in2__col; apply all_coplanar.
+Qed.
+
+Lemma perp2_trans : forall A B C D E F P, Perp2 A B C D P -> Perp2 C D E F P -> Perp2 A B E F P.
+Proof.
+    intros.
+    unfold Perp2 in *.
+    ex_and H X.
+    ex_and H1 Y.
+    ex_and H0 X'.
+    ex_and H3 Y'.
+    assert(Par X Y X' Y').
+      apply (l12_9_2D _ _ _ _ C D); Perp.
+    exists X.
+    exists Y.
+    assert(Col X X' Y').
+      induction H5.
+        unfold Par_strict in H5.
+        spliter.
+        apply False_ind.
+        apply H8.
+        exists P.
+        split; Col.
+      spliter.
+      auto.
+    assert(Col Y X' Y').
+      induction H5.
+        unfold Par_strict in H5.
+        spliter.
+        apply False_ind.
+        apply H9.
+        exists P.
+        split; Col.
+      spliter.
+      auto.
+    repeat split; auto.
+    assert(X <> Y).
+      apply perp_not_eq_1 in H1.
+      assert(X' <> Y').
+        apply perp_not_eq_1 in H3.
+        auto.
+      auto.
+    induction(eq_dec_points X Y').
+      subst Y'.
+      apply (perp_col _ X').
+        auto.
+        Perp.
+      ColR.
+    apply (perp_col _ Y').
+      auto.
+      apply perp_left_comm.
+      apply(perp_col _ X').
+        auto.
+        Perp.
+      ColR.
+    apply par_symmetry in H5.
+    induction H5.
+      unfold Par_strict in H5.
+      spliter.
+      apply False_ind.
+      apply H12.
+      exists P.
+      split; Col.
+    spliter.
+    Col.
+Qed.
+
+Lemma perp2_par : forall A B C D O, Perp2 A B C D O -> Par A B C D.
+Proof.
+    intros.
+    unfold Perp2 in H.
+    ex_and H X.
+    ex_and H0 Y.
+    apply (l12_9_2D _ _ _ _ X Y).
+      Perp.
+    Perp.
+Qed.
+
+End L13_1_2D.

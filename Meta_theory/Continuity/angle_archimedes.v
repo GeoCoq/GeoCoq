@@ -1,11 +1,11 @@
 Require Import GeoCoq.Axioms.continuity_axioms.
-Require Export GeoCoq.Meta_theory.Continuity.archimedes.
+Require Import GeoCoq.Meta_theory.Continuity.archimedes.
 Require Import GeoCoq.Tarski_dev.Annexes.suma.
 Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Archimedes_for_angles.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma grada_distincts : forall A B C D E F,
   GradA A B C D E F ->
@@ -258,11 +258,11 @@ Proof.
     - apply (conga2_sams__sams A0 O A' A' O A''); CongA.
       split; auto; split.
         right; intro; Col.
-      exists A''; repeat (split; CongA).
+      exists A''; repeat (split; CongA); Cop.
       apply l9_9_bis, out_one_side; Col.
       apply bet_out; auto.
     - apply (conga3_suma__suma A0 O A' A' O A'' A0 O A''); CongA.
-      exists A''; repeat (split; CongA).
+      exists A''; repeat (split; CongA); Cop.
   }
   assert (HLe'' : Le A0 A1 A' A'').
     apply le_transitivity with A A'; trivial; assert_diffs.
@@ -282,7 +282,7 @@ Lemma archi_in_acute_angles :
 Proof.
   intros archi A B C D E F HNCol HAcute.
   assert_diffs.
-  elim (Col_dec D E F).
+  elim (col_dec D E F).
   { intro HCol; exists A; exists B; exists C; split.
       apply grada_init; CongA.
     apply l11_31_1; auto; apply not_bet_out; trivial.
@@ -363,22 +363,22 @@ Proof.
   destruct (angle_bisector D E F) as [F1 [HInangle HConga]]; auto.
   assert(HNOS : ~ OS E F1 D F).
   { assert_diffs.
-    elim (Col_dec D E F1).
+    elim (col_dec D E F1).
       intros HCol; apply col123__nos; Col.
     intro HNCol1.
     apply l9_9, invert_two_sides, in_angle_two_sides; Col.
     apply not_col_permutation_1, (ncol_conga_ncol D E F1); CongA.
   }
-  assert (HSuma : SumA D E F1 D E F1 D E F) by (assert_diffs; exists F; repeat (split; CongA)).
+  assert (HSuma : SumA D E F1 D E F1 D E F) by (assert_diffs; exists F; repeat (split; CongA); Cop).
   destruct (archi_in_acute_angles archi A B C D E F1) as [P1 [Q1 [R1 [HGA HLea]]]]; trivial.
   { apply nbet_sams_suma__acute with D E F; trivial.
     assert_diffs; split; trivial; split.
       right; intro HBet; apply HNBet, bet_in_angle_bet with F1; trivial.
-    exists F; repeat (split; CongA).
-    elim (Col_dec D E F1).
+    exists F; repeat (split; CongA); Cop.
+    elim (col_dec D E F1).
       intros HCol HTS; destruct HTS; Col.
     intro HNCol1.
-    elim (Col_dec D E F).
+    elim (col_dec D E F).
       intros HCol HTS; destruct HTS as [_ []]; Col.
     intro HNCol2; apply l9_9_bis, in_angle_one_side; Col.
   }
@@ -418,7 +418,7 @@ Proof.
   left; apply l11_31_2; auto.
   apply (bet_lea__bet A B A0); trivial.
   apply sams_lea2_suma2__lea with A0 B C A B C P1 Q1 R1 A B C; Lea.
-  exists A; repeat (split; CongA).
+  exists A; repeat (split; CongA); Cop.
   apply l9_9; repeat split; auto.
   exists B; split; Col; Between.
 Qed.

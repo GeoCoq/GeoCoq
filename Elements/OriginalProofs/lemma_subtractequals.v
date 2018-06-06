@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_trichotomy2.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_subtractequals : 
    forall A B C D E, 
@@ -15,15 +15,12 @@ assert (~ BetS A D B).
  {
  intro.
  assert (BetS A D C) by (conclude lemma_3_6b).
- assert (BetS D C E) by (conclude lemma_3_6a).
  assert (BetS A D C) by (conclude lemma_3_6b).
  assert (BetS B C E) by (conclude lemma_3_6a).
  assert (Cong B C B C) by (conclude cn_congruencereflexive).
  assert (Lt B C B E) by (conclude_def Lt ).
  assert (Cong B E E B) by (conclude cn_equalityreverse).
  assert (Lt B C E B) by (conclude lemma_lessthancongruence).
- assert (BetS E C D) by (conclude axiom_betweennesssymmetry).
- assert (BetS E C B) by (conclude axiom_betweennesssymmetry).
  assert (BetS D C E) by (conclude lemma_3_6a).
  assert (BetS D B C) by (conclude lemma_3_6a).
  assert (BetS D B E) by (conclude lemma_3_6b).
@@ -45,7 +42,7 @@ assert (~ ~ BetS A B D).
  assert (eq B D) by (conclude axiom_connectivity).
  assert (Cong A B A B) by (conclude cn_congruencereflexive).
  assert (Cong A B A D) by (conclude cn_equalitysub).
- assert (Cong A C A E) by (conclude lemma_sumofparts).
+ assert (Cong A C A E) by (conclude cn_sumofparts).
  assert (BetS A B E) by (conclude cn_equalitysub).
  assert (neq A B) by (forward_using lemma_betweennotequal).
  assert (Out A B E) by (conclude lemma_ray4).

@@ -3,28 +3,12 @@ Require Export GeoCoq.Meta_theory.Parallel_postulates.par_trans_NID.
 
 Section T13.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
-
-Lemma tarski_s_euclid : tarski_s_parallel_postulate.
+Lemma cop_npar__inter_exists : forall A1 B1 A2 B2,
+  Coplanar A1 B1 A2 B2 -> ~ Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
 Proof.
-unfold tarski_s_parallel_postulate.
-apply euclid.
-Qed.
-
-Lemma inter_dec : decidability_of_intersection.
-Proof.
-apply strong_parallel_postulate_implies_inter_dec.
-apply strong_parallel_postulate_SPP.
-cut tarski_s_parallel_postulate.
-apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis; simpl; tauto.
-apply tarski_s_euclid.
-Qed.
-
-Lemma not_par_inter_exists : forall A1 B1 A2 B2,
-  ~Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
-Proof.
-    intros.
+intros.
 induction (eq_dec_points A1 B1).
 subst; exists A2; Col.
 induction (eq_dec_points A2 B2).
@@ -34,11 +18,35 @@ induction (inter_dec A1 B1 A2 B2).
   assumption.
 
   exfalso.
-  apply H.
+  apply H0.
   unfold Par.
   left.
   unfold Par_strict.
-  repeat split; try apply all_coplanar; assumption.
+  repeat split; assumption.
+Qed.
+
+Lemma cop_npar__inter : forall A1 B1 A2 B2, A1 <> B1 -> A2 <> B2 ->
+  Coplanar A1 B1 A2 B2 -> ~ Par A1 B1 A2 B2 -> exists X, Inter A1 B1 A2 B2 X.
+Proof.
+intros.
+destruct (cop_npar__inter_exists A1 B1 A2 B2) as [X []].
+  assumption.
+  assumption.
+exists X.
+split.
+  assumption.
+split.
+  induction (col_dec A2 A1 B1).
+    exists B2.
+    split.
+      Col.
+    intro.
+    apply H2.
+    right.
+    repeat split; ColR.
+  exists A2.
+  split; Col.
+split; Col.
 Qed.
 
 Lemma parallel_uniqueness :
@@ -47,76 +55,45 @@ Lemma parallel_uniqueness :
   Par A1 A2 C1 C2 -> Col P C1 C2 ->
   Col C1 B1 B2 /\ Col C2 B1 B2.
 Proof.
-    intros.
-    apply tarski_s_euclid_implies_playfair with A1 A2 P; try assumption.
-    apply tarski_s_euclid.
+    apply tarski_s_euclid_implies_playfair.
+    unfold tarski_s_parallel_postulate; apply euclid.
 Qed.
 
 Lemma par_trans : forall A1 A2 B1 B2 C1 C2,
   Par A1 A2 B1 B2 -> Par B1 B2 C1 C2 -> Par A1 A2 C1 C2.
 Proof.
     intros.
-    apply playfair_implies_par_trans with B1 B2; try assumption.
+    apply playfair_implies_par_trans with B1 B2; [|assumption..].
     unfold playfair_s_postulate.
     apply parallel_uniqueness.
 Qed.
 
-Lemma l12_16 : forall A1 A2 B1 B2 C1 C2 X,
-  Par A1 A2 B1 B2 -> Inter A1 A2 C1 C2 X -> exists Y, Inter B1 B2 C1 C2 Y.
+Lemma inter__npar : forall A1 A2 B1 B2 X,
+  Inter A1 A2 B1 B2 X -> ~ Par A1 A2 B1 B2.
 Proof.
     intros.
-    assert(HH:= H).
-    unfold Par in H.
-    induction H.
-      unfold Inter in H0.
-      spliter.
-      ex_and H0 P.
-      assert(HNCol : ~Col B1 B2 X) by (intro; unfold Par_strict in H; spliter; apply H7; exists X; Col).
-      assert(HH1 := l8_18_existence B1 B2 X HNCol).
-      ex_and HH1 X0.
-      assert(HPar : ~Par B1 B2 C1 C2).
-        intro.
-        assert(Par A1 A2 C1 C2) by (apply par_trans with B1 B2; assumption).
-        assert(~Par A1 A2 C1 C2).
-          apply col_not_col_not_par.
-            exists X; Col.
-          exists P; Col.
-        contradiction.
-      apply not_par_inter_exists in HPar.
-      ex_and HPar Y.
-      exists Y.
-      split; try Col.
-      exists X.
-      split.
-        Col.
-      intro.
-      apply HNCol; Col.
-    unfold Inter in H0.
+    destruct H as [HA [[P []] []]].
+    induction 1.
+    apply (par_not_col A1 A2 B1 B2 X); Col.
     spliter.
-    ex_and H0 P.
-    exists X.
-    split.
-      exists P.
-      split.
-        Col.
-      intro.
-      apply H6.
-      apply (col3 B1 B2); Col.
-    split; try Col.
-    apply par_symmetry in HH.
-    unfold Par in HH.
-    induction HH.
-      unfold Par_strict in H7.
-      spliter.
-      apply False_ind.
-      apply H10.
-      exists A1.
-      split; try Col.
-    spliter.
-    apply (col3 A1 A2); Col.
+    apply H0, (col3 B1 B2); Col.
 Qed.
 
-Lemma Par_dec : forall A B C D, Par A B C D \/ ~ Par A B C D.
+Lemma l12_16 : forall A1 A2 B1 B2 C1 C2 X,
+  Par A1 A2 B1 B2 -> Coplanar B1 B2 C1 C2 -> Inter A1 A2 C1 C2 X -> exists Y, Inter B1 B2 C1 C2 Y.
+Proof.
+    intros.
+    assert_diffs.
+    apply cop_npar__inter; auto.
+      destruct H1.
+      auto.
+    intro.
+    apply inter__npar in H1.
+    apply H1.
+    apply par_trans with B1 B2; assumption.
+Qed.
+
+Lemma par_dec : forall A B C D, Par A B C D \/ ~ Par A B C D.
 Proof. exact (par_trans__par_dec par_trans). Qed.
 
 Lemma par_not_par : forall A B C D P Q, Par A B C D -> ~Par A B P Q -> ~Par C D P Q.
@@ -127,65 +104,17 @@ apply HNPar.
 apply par_trans with C D; Par.
 Qed.
 
-(*
-Lemma par_inter : forall A B C D P Q X, Par A B C D -> ~Par A B P Q -> Col P Q X -> Col A B X -> exists Y, Col P Q Y /\ Col C D Y.
+Lemma cop_par__inter : forall A B C D P Q,
+  Par A B C D -> ~Par A B P Q -> Coplanar C D P Q ->
+  exists Y, Col P Q Y /\ Col C D Y.
 Proof.
-    intros A B C D P Q X HPar HNPar HCol1 HCol2.
-    elim (eq_dec_points P Q); intro HDiff; treat_equalities.
-
-      {
-      exists C; Col.
-      }
-
-      {
-      elim (Col_dec A B P); intro HNC1; elim (Col_dec A B Q); intro HNC2.
-
-        {
-        apply par_distincts in HPar; spliter.
-        exfalso; apply HNPar; right; repeat (split; Col; try ColR).
-        }
-
-        {
-        assert (HY : exists Y : Tpoint, Col X Q Y /\ Col C D Y).
-          {
-          assert (~ Par A B X Q)
-            by (apply col_not_col_not_par; [exists P; Col | exists Q; Col]).
-          assert(~ Par C D X Q) by (apply par_not_par with A B; Par).
-          destruct (not_par_inter_exists X Q C D) as [Y HY]; Par.
-          exists Y; spliter; Col.
-          }
-        show_distinct Q X; Col.
-        destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
-        }
-
-        {
-        assert (HY : exists Y : Tpoint, Col X P Y /\ Col C D Y).
-          {
-          assert (~ Par A B X P)
-            by (apply col_not_col_not_par; [exists Q; Col | exists P; Col]).
-          assert(~ Par C D X P) by (apply par_not_par with A B; Par).
-          destruct (not_par_inter_exists X P C D) as [Y HY]; Par.
-          exists Y; spliter; Col.
-          }
-        show_distinct P X; Col.
-        destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
-        }
-
-        {
-        assert (HY : exists Y : Tpoint, Col X Q Y /\ Col C D Y).
-          {
-          assert (~ Par A B X Q)
-            by (apply col_not_col_not_par; [exists X; Col | exists Q; Col]).
-          assert(~ Par C D X Q) by (apply par_not_par with A B; Par).
-          destruct (not_par_inter_exists X Q C D) as [Y HY]; Par.
-          exists Y; spliter; Col.
-          }
-        show_distinct Q X; Col.
-        destruct HY as [Y [HCol3 HCol4]]; exists Y; split; ColR.
-        }
-      }
+    intros A B C D P Q HPar HNPar HCop.
+    destruct (cop_npar__inter_exists C D P Q) as [Y []].
+      assumption.
+      intro.
+      apply HNPar, par_trans with C D; assumption.
+    exists Y; split; Col.
 Qed.
-*)
 
 Lemma l12_19 :
   forall A B C D ,
@@ -349,12 +278,7 @@ Lemma l12_21_a :
   TS A C B D ->
   (Par A B C D -> CongA B A C D C A).
 Proof.
-    assert (aia : alternate_interior_angles_postulate).
-    { cut tarski_s_parallel_postulate.
-        apply stronger_postulates; simpl; tauto.
-      apply tarski_s_euclid.
-    }
-    apply aia.
+    apply postulates_in_euclidean_context; simpl; repeat (try (left; reflexivity); right).
 Qed.
 
 Lemma l12_21 : forall A B C D,
@@ -410,8 +334,8 @@ Lemma l12_22 :
 Proof.
     intros.
     split; intro.
-      eapply (l12_22_b _ _ _ _ P); assumption.
-    apply l12_22_a; assumption.
+      apply (l12_22_b _ _ _ _ P); assumption.
+      apply l12_22_a; assumption.
 Qed.
 
 Lemma l12_23 :
@@ -529,9 +453,9 @@ Proof.
     assert(HH:= l12_21_a C B A B' H6 H8); CongA.
 Qed.
 
-Lemma not_par_strict_inter_exists :
+Lemma cop_npars__inter_exists :
  forall A1 B1 A2 B2,
-  ~Par_strict A1 B1 A2 B2 ->
+  Coplanar A1 B1 A2 B2 -> ~ Par_strict A1 B1 A2 B2 ->
   exists X, Col X A1 B1 /\ Col X A2 B2.
 Proof.
     intros.
@@ -545,29 +469,32 @@ Proof.
       Col.
     induction (inter_dec A1 B1 A2 B2).
       assumption.
-    unfold Par_strict in H.
     exfalso.
-    apply H.
-    repeat split; try assumption; try apply all_coplanar.
+    apply H0.
+    repeat split; assumption.
 Qed.
 
-Lemma not_par_inter : forall A B A' B' X Y, ~Par A B A' B' -> (exists P, Col P X Y /\ (Col P A B \/ Col P A' B')).
+Lemma cop2_npar__inter : forall A B A' B' X Y,
+  Coplanar A B X Y -> Coplanar A' B' X Y -> ~ Par A B A' B' ->
+  (exists P, Col P X Y /\ (Col P A B \/ Col P A' B')).
 Proof.
     intros.
-    induction(Par_dec A B X Y).
+    induction(par_dec A B X Y).
       assert(~ Par A' B' X Y).
         intro.
-        apply H.
+        apply H1.
         apply(par_trans _ _ X Y); Par.
-      assert(HH:=not_par_inter_exists A' B' X Y H1).
-      ex_and HH P.
+      destruct(cop_npar__inter_exists A' B' X Y) as [P []].
+        assumption.
+        assumption.
       exists P.
       split.
         Col.
       right.
       Col.
-    assert(HH:=not_par_inter_exists A B X Y H0).
-    ex_and HH P.
+    destruct(cop_npar__inter_exists A B X Y) as [P []].
+      assumption.
+      assumption.
     exists P.
     split.
       Col.
@@ -578,15 +505,13 @@ Qed.
 Lemma not_par_one_not_par : forall A B A' B' X Y, ~Par A B A' B' -> ~Par A B X Y \/ ~Par A' B' X Y.
 Proof.
     intros.
-    assert(HH:=not_par_inter A B A' B' X Y H).
-    ex_and HH P.
-    induction(Par_dec A B X Y).
+    destruct (par_dec A B X Y).
       right.
       intro.
       apply H.
-      apply(par_trans _ _ X Y); Par.
+      apply par_trans with X Y; Par.
     left.
-    auto.
+    assumption.
 Qed.
 
 Lemma col_par_par_col : forall A B C A' B' C', Col A B C -> Par A B A' B' -> Par B C B' C' -> Col A' B' C'.
@@ -613,37 +538,90 @@ Proof.
     Col.
 Qed.
 
-
-Lemma trisuma__bet : forall A B C D E F, TriSumA A B C D E F -> Bet D E F.
+Lemma cop_par_perp__perp : forall A B C D P Q, Par A B C D -> Perp A B P Q -> Coplanar C D P Q ->
+  Perp C D P Q.
 Proof.
-    apply alternate_interior__triangle.
-    unfold alternate_interior_angles_postulate.
-    apply l12_21_a.
+    apply universal_posidonius_postulate__perpendicular_transversal_postulate.
+    apply playfair__universal_posidonius_postulate.
+    unfold playfair_s_postulate; apply parallel_uniqueness.
 Qed.
 
-Lemma bet__trisuma : forall A B C D E F, Bet D E F -> A <> B -> B <> C -> A <> C -> D <> E -> E <> F ->
-  TriSumA A B C D E F.
+Lemma cop4_par_perp2__par : forall A B C D E F G H,
+  Par A B C D -> Perp A B E F -> Perp C D G H ->
+  Coplanar A B E G -> Coplanar A B E H ->
+  Coplanar A B F G -> Coplanar A B F H ->
+  Par E F G H.
 Proof.
-    intros A B C D E F HBet; intros.
-    destruct (ex_trisuma A B C) as [P [Q [R HTri]]]; auto.
-    apply conga_trisuma__trisuma with P Q R; trivial.
-    assert (Hd := HTri).
-    apply trisuma_distincts in Hd; spliter.
-    apply conga_line; auto.
-    apply (trisuma__bet A B C); trivial.
+    apply par_perp_perp_implies_par_perp_2_par.
+    intros A B; intros.
+    apply (cop_par_perp__perp A B); assumption.
 Qed.
-
-Lemma not_obtuse : ~ hypothesis_of_obtuse_saccheri_quadrilaterals.
-Proof.
-    apply not_oah.
-    right.
-    assert (Hr : postulate_of_right_saccheri_quadrilaterals); [|apply Hr].
-    cut alternate_interior_angles_postulate.
-      apply stronger_postulates_bis; simpl; tauto.
-    unfold alternate_interior_angles_postulate; apply l12_21_a.
-Qed.
-
-Lemma suma__sams : forall A B C D E F, SumA A B C B C A D E F -> SAMS D E F C A B.
-Proof. exact (t22_20 not_obtuse). Qed.
 
 End T13.
+
+Section T13_2D.
+
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
+
+Lemma not_par_inter_exists : forall A1 B1 A2 B2,
+  ~ Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
+Proof.
+intros.
+apply cop_npar__inter_exists.
+apply all_coplanar.
+assumption.
+Qed.
+
+Lemma l12_16_2D : forall A1 A2 B1 B2 C1 C2 X,
+  Par A1 A2 B1 B2 -> Inter A1 A2 C1 C2 X -> exists Y, Inter B1 B2 C1 C2 Y.
+Proof.
+    intros.
+    assert (HC := all_coplanar B1 B2 C1 C2).
+    apply l12_16 with A1 A2 X; assumption.
+Qed.
+
+Lemma par_inter : forall A B C D P Q,
+  Par A B C D -> ~Par A B P Q ->
+  exists Y, Col P Q Y /\ Col C D Y.
+Proof.
+    intros.
+    assert (HC := all_coplanar C D P Q).
+    apply (cop_par__inter A B); assumption.
+Qed.
+
+Lemma not_par_strict_inter_exists :
+ forall A1 B1 A2 B2,
+  ~Par_strict A1 B1 A2 B2 ->
+  exists X, Col X A1 B1 /\ Col X A2 B2.
+Proof.
+    intros.
+    apply (cop_npars__inter_exists).
+    apply all_coplanar.
+    assumption.
+Qed.
+
+Lemma not_par_inter : forall A B A' B' X Y, ~Par A B A' B' -> (exists P, Col P X Y /\ (Col P A B \/ Col P A' B')).
+Proof.
+    intros.
+    assert (HC := all_coplanar).
+    apply (cop2_npar__inter); auto.
+Qed.
+
+Lemma par_perp__perp : forall A B C D P Q, Par A B C D -> Perp A B P Q ->
+  Perp C D P Q.
+Proof.
+intros A B C D P Q HPar HPer.
+assert (HCop := all_coplanar C D P Q).
+apply (cop_par_perp__perp A B); assumption.
+Qed.
+
+Lemma par_perp2__par : forall A B C D E F G H,
+  Par A B C D -> Perp A B E F -> Perp C D G H ->
+  Par E F G H.
+Proof.
+intros A B C D; intros.
+apply (cop4_par_perp2__par A B C D); try (apply all_coplanar); assumption.
+Qed.
+
+End T13_2D.

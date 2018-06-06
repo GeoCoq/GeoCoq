@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_collinear4.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_oppositesidesymmetric : 
    forall A B P Q, 
@@ -50,7 +50,7 @@ assert (~ Col A B Q).
   assert (Col A P B) by (forward_using lemma_collinearorder).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Col A B P) by (forward_using lemma_collinearorder).
  contradict.
  }

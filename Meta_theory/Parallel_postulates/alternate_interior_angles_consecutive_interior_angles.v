@@ -4,30 +4,23 @@ Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section alternate_interior_angles_consecutive_interior_angles.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma alternate_interior__consecutive_interior :
    alternate_interior_angles_postulate -> consecutive_interior_angles_postulate.
 Proof.
-  intros aia A B C D P Q R Hos HPar HSuma.
-  assert(HA' := symmetric_point_construction A B).
-  destruct HA' as [A'].
-  apply (bet_conga_bet A B A'); Between.
-  apply (suma2__conga A B C B C D); auto.
-  assert(HNCol : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
-  assert_diffs.
-  assert(TS B C A A').
-  { repeat split; Col.
-    intro; apply HNCol; ColR.
-    exists B.
-    split; Col; Between.
-  }
-  apply (conga3_suma__suma A B C C B A' A B A'); try (apply conga_refl); auto.
-    exists A'; repeat (split; CongA); apply l9_9; auto.
-  apply conga_comm.
-  apply aia.
-    apply l9_2; apply (l9_8_2 _ _ A); auto.
-  apply (par_col_par_2 _ A); Col; Par.
+  intros aia A B C D Hos HPar.
+  split.
+    assert_diffs; auto.
+  destruct (segment_construction A B B A) as [A' []].
+  exists A'; split; trivial.
+  apply conga_comm, conga_sym, aia; [|assert_diffs; apply par_col_par_2 with A; Col; Par].
+  apply l9_2, l9_8_2 with A; trivial.
+  apply one_side_not_col123 in Hos.
+  repeat split.
+    Col.
+    intro; apply Hos; ColR.
+  exists B; split; Col.
 Qed.
 
 End alternate_interior_angles_consecutive_interior_angles.

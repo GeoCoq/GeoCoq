@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section triangle_existential_triangle.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma triangle__existential_triangle : triangle_postulate -> postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights.
 Proof.

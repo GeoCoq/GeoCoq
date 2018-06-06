@@ -4,7 +4,8 @@ Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.
 
 Section Vectors.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma eqv_refl : forall A B, EqV A B A B.
 Proof.
@@ -737,7 +738,7 @@ apply False_ind.
 apply H17.
 Col.
 
-induction(Col_dec A B T).
+induction(col_dec A B T).
 apply False_ind.
 assert(B = T).
 apply (l6_21 A B C B); Col.
@@ -747,7 +748,7 @@ exists D.
 apply bet_col in H14.
 split; Col.
 
-induction(Col_dec C D T).
+induction(col_dec C D T).
 apply False_ind.
 assert(C = T).
 apply (l6_21 C D B C); Col.

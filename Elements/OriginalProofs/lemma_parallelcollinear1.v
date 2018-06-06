@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_NCorder.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_parallelcollinear1 : 
    forall A B C c d, 
@@ -129,7 +129,7 @@ assert (Col c p E) by (conclude lemma_collinear4).
 assert (Col c E p) by (forward_using lemma_collinearorder).
 assert (neq r p) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists J, (BetS r p J /\ Cong p J r p)) by (conclude postulate_extension);destruct Tf as [J];spliter.
+assert (Tf:exists J, (BetS r p J /\ Cong p J r p)) by (conclude lemma_extension);destruct Tf as [J];spliter.
 assert (BetS J p r) by (conclude axiom_betweennesssymmetry).
 assert (Col J p r) by (conclude_def Col ).
 assert (neq J r) by (forward_using lemma_betweennotequal).

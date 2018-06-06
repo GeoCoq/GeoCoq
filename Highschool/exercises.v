@@ -1,9 +1,9 @@
-Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
-Require Import GeoCoq.Highschool.varignon.
+Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
+Require Export GeoCoq.Highschool.varignon.
 
 Section Exercises.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma Per_mid_rectangle : forall A B C I J K,
   A <> B ->
@@ -29,7 +29,7 @@ elim (eq_dec_points A C); intro; apply plg_per_rect.
   by (apply triangle_mid_par_cong; intuition).
   spliter.
 
-  elim (Col_dec A B C); intro; assert_diffs.
+  elim (col_dec A B C); intro; assert_diffs.
 
     apply parallelogram_to_plg; unfold Parallelogram; right; unfold Parallelogram_flat; repeat split.
     ColR.

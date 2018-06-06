@@ -22,7 +22,7 @@ assert (~ eq G B).
  }
 assert (neq B G) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists A, (BetS B G A /\ Cong G A B G)) by (conclude postulate_extension);destruct Tf as [A];spliter.
+assert (Tf:exists A, (BetS B G A /\ Cong G A B G)) by (conclude lemma_extension);destruct Tf as [A];spliter.
 assert (BetS A G B) by (conclude axiom_betweennesssymmetry).
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (Col A B G) by (conclude_def Col ).
@@ -36,24 +36,10 @@ assert (Par H D G A) by (conclude lemma_collinearparallel).
 assert (Par H D A G) by (forward_using lemma_parallelflip).
 assert (Par A G H D) by (conclude lemma_parallelsymmetric).
 let Tf:=fresh in
-assert (Tf:exists a d g h m, (neq A G /\ neq H D /\ Col A G a /\ Col A G g /\ neq a g /\ Col H D h /\ Col H D d /\ neq h d /\ ~ Meet A G H D /\ BetS a m d /\ BetS h m g)) by (conclude_def Par );destruct Tf as [a[d[g[h[m]]]]];spliter.
+assert (Tf:exists a g h d m, (neq A G /\ neq H D /\ Col A G a /\ Col A G g /\ neq a g /\ Col H D h /\ Col H D d /\ neq h d /\ ~ Meet A G H D /\ BetS a m d /\ BetS h m g)) by (conclude_def Par );destruct Tf as [a[g[h[d[m]]]]];spliter.
 assert (neq D H) by (conclude lemma_inequalitysymmetric).
-assert (~ eq H G).
- {
- intro.
- assert (eq H H) by (conclude cn_equalityreflexive).
- assert (Col H D H) by (conclude_def Col ).
- assert (eq G G) by (conclude cn_equalityreflexive).
- assert (Col A G G) by (conclude_def Col ).
- assert (Col A G H) by (conclude cn_equalitysub).
- assert (Meet A G H D) by (conclude_def Meet ).
- contradict.
- }
-assert (neq G H) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists F, (BetS G H F /\ Cong H F G H)) by (conclude postulate_extension);destruct Tf as [F];spliter.
-let Tf:=fresh in
-assert (Tf:exists C, (BetS D H C /\ Cong H C D H)) by (conclude postulate_extension);destruct Tf as [C];spliter.
+assert (Tf:exists C, (BetS D H C /\ Cong H C D H)) by (conclude lemma_extension);destruct Tf as [C];spliter.
 assert (BetS H G E) by (conclude axiom_betweennesssymmetry).
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (neq B A) by (conclude lemma_inequalitysymmetric).

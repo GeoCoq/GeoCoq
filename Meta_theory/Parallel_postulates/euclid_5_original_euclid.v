@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.suma.
 
 Section euclid_5_original_euclid.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma euclid_5__original_euclid : euclid_5 -> euclid_s_parallel_postulate.
 Proof.
@@ -60,12 +60,12 @@ Proof.
   { intro.
     subst.
     apply HNBet.
-    apply (bet_conga_bet D' C D); Between.
+    apply (bet_conga__bet D' C D); Between.
     apply (suma2__conga A B C B C D); auto.
     apply (conga3_suma__suma D' C B B C D D' C D); try (apply conga_refl); auto.
     2: apply (out_conga D' C M E B M); try (apply out_trivial); CongA; try (apply bet_out); Between.
     exists D.
-    repeat (split; CongA).
+    repeat (split; CongA); Cop.
     apply l9_9.
     repeat split; Col.
     exists C; Col; Between.
@@ -74,7 +74,7 @@ Proof.
   spliter.
   exists Y.
   split.
-  apply (l6_7 _ _ A'); try solve [apply l6_6; auto]; apply (bet_out); auto.
+    apply (l6_7 _ _ A'); try solve [apply l6_6; auto]; apply (bet_out); auto.
   apply (l6_2 _ _ D'); Between.
 Qed.
 

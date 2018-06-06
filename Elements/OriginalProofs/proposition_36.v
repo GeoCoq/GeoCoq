@@ -15,13 +15,10 @@ Proof.
 intros.
 assert ((Par A B C D /\ Par A D B C)) by (conclude_def PG ).
 assert ((Par E F G H /\ Par E H F G)) by (conclude_def PG ).
-assert (nCol A C D) by (forward_using lemma_parallelNC).
-assert (neq A D) by (forward_using lemma_NCdistinct).
 assert (nCol E H G) by (forward_using lemma_parallelNC).
 assert (neq E H) by (forward_using lemma_NCdistinct).
 assert (nCol A B C) by (forward_using lemma_parallelNC).
 assert (neq B C) by (forward_using lemma_NCdistinct).
-assert (Cong A D B C) by (forward_using proposition_34).
 assert (Cong E H F G) by (forward_using proposition_34).
 assert (Cong F G E H) by (conclude lemma_congruencesymmetric).
 assert (Cong B C E H) by (conclude lemma_congruencetransitive).
@@ -42,7 +39,6 @@ by cases on (CR E C B H \/ CR E B H C).
  assert (Tf:exists M, (BetS E M C /\ BetS B M H)) by (conclude_def CR );destruct Tf as [M];spliter.
  assert (BetS H M B) by (conclude axiom_betweennesssymmetry).
  assert ((Par E B H C /\ Cong E B H C)) by (conclude proposition_33).
- assert (Par E H C B) by (forward_using lemma_parallelflip).
  assert (Par E B C H) by (forward_using lemma_parallelflip).
  assert (PG E B C H) by (conclude_def PG ).
  assert (EF A B C D E B C H) by (conclude proposition_35).
@@ -58,7 +54,6 @@ by cases on (CR E C B H \/ CR E B H C).
  assert (Par E F G H) by (conclude_def PG ).
  assert (Par G H E F) by (conclude lemma_parallelsymmetric).
  assert (PG G H E F) by (conclude_def PG ).
- assert ((Par E B C H /\ Par E H B C)) by (conclude_def PG ).
  assert (Par C H E B) by (conclude lemma_parallelsymmetric).
  assert (Par B C E H) by (conclude lemma_parallelsymmetric).
  assert (Par C B H E) by (forward_using lemma_parallelflip).
@@ -73,13 +68,9 @@ by cases on (CR E C B H \/ CR E B H C).
 {
  let Tf:=fresh in
  assert (Tf:exists M, (BetS E M B /\ BetS H M C)) by (conclude_def CR );destruct Tf as [M];spliter.
- assert (neq E B) by (forward_using lemma_betweennotequal).
- assert (neq B E) by (conclude lemma_inequalitysymmetric).
- assert (BetS B M E) by (conclude axiom_betweennesssymmetry).
  assert (Par H E B C) by (forward_using lemma_parallelflip).
  assert (Cong H E B C) by (forward_using lemma_congruenceflip).
  assert ((Par H B E C /\ Cong H B E C)) by (conclude proposition_33).
- assert (Par H E C B) by (forward_using lemma_parallelflip).
  assert (Par H B C E) by (forward_using lemma_parallelflip).
  assert (PG H B C E) by (conclude_def PG ).
  assert (EF A B C D H B C E) by (conclude proposition_35).
@@ -95,9 +86,7 @@ by cases on (CR E C B H \/ CR E B H C).
  assert (Par F G E H) by (forward_using lemma_parallelflip).
  assert (Par F E H G) by (forward_using lemma_parallelflip).
  assert (PG F E H G) by (conclude_def PG ).
- assert ((Par H B C E /\ Par H E B C)) by (conclude_def PG ).
  assert (Par C E H B) by (conclude lemma_parallelsymmetric).
- assert (Par B C H E) by (conclude lemma_parallelsymmetric).
  assert (Par C B E H) by (forward_using lemma_parallelflip).
  assert (PG C E H B) by (conclude_def PG ).
  assert (EF F E H G C E H B) by (conclude proposition_35).
@@ -107,7 +96,7 @@ by cases on (CR E C B H \/ CR E B H C).
  assert (EF A B C D E F G H) by (forward_using axiom_EFpermutation).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

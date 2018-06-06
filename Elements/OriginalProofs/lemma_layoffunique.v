@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6b.
 
 Section Euclid.
 
-Context `{Ax1:euclidean_neutral}.
+Context `{Ax1:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_layoffunique : 
    forall A B C D, 
@@ -34,7 +34,7 @@ by cases on (BetS A C B \/ eq B C \/ BetS A B C).
   assert (~ neq C D).
    {
    intro.
-   assert (neq C C) by (conclude lemma_nullsegment3).
+   assert (neq C C) by (conclude axiom_nocollapse).
    assert (eq C C) by (conclude cn_equalityreflexive).
    contradict.
    }
@@ -60,7 +60,7 @@ by cases on (BetS A C B \/ eq B C \/ BetS A B C).
    }
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
 {
@@ -93,7 +93,7 @@ by cases on (BetS A C B \/ eq B C \/ BetS A B C).
    }
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
 {
@@ -126,10 +126,10 @@ by cases on (BetS A C B \/ eq B C \/ BetS A B C).
   assert (eq C D) by (conclude lemma_extensionunique).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

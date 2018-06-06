@@ -1,6 +1,5 @@
-Require Export GeoCoq.Axioms.continuity_axioms.
-Require Export GeoCoq.Tarski_dev.Ch07_midpoint.
-Require Import Classical.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Tarski_dev.Ch07_midpoint.
 
 Section Dedekind_archimedes.
 
@@ -20,12 +19,13 @@ Proof.
   apply le_transitivity with A E; Le.
 Qed.
 
-Lemma dedekind__archimedes : dedekind_s_axiom -> archimedes_axiom.
+Lemma dedekind__archimedes : (forall A B C D, ~ ~ Reach A B C D -> Reach A B C D) ->
+  dedekind_s_axiom -> archimedes_axiom.
 Proof.
-  intro dedekind.
+  intros Hstab dedekind.
   apply archimedes_aux.
   intros A B C HOut.
-  apply NNPP.
+  apply Hstab.
   intro HNReach.
   assert (HX : exists X, forall P Q, (Out A B P /\ ~ ~ Reach A B A P) ->
                                        (Out A B Q /\ ~ Reach A B A Q) -> Bet P X Q).
@@ -112,6 +112,5 @@ Proof.
     apply bet2_le2__le1346 with X B'; Le.
     apply cong__le, cong_transitivity with A B; Cong.
 Qed.
-
 
 End Dedekind_archimedes.

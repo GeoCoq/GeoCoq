@@ -73,7 +73,7 @@ assert (~ eq G A).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists P, (BetS G A P /\ Cong A P G A)) by (conclude postulate_extension);destruct Tf as [P];spliter.
+assert (Tf:exists P, (BetS G A P /\ Cong A P G A)) by (conclude lemma_extension);destruct Tf as [P];spliter.
 assert (eq A A) by (conclude cn_equalityreflexive).
 assert (Col B A A) by (conclude_def Col ).
 assert (~ Col B A G).
@@ -198,7 +198,7 @@ by cases on (TS G B C A \/ ~ TS G B C A).
    assert (Out B C H) by (conclude cn_equalitysub).
    close.
    }
-(* cases *)
+(** cases *)
   close.
   }
  {
@@ -219,7 +219,7 @@ by cases on (TS G B C A \/ ~ TS G B C A).
   assert (Out B C H) by (conclude lemma_ray4).
   close.
   }
-(* cases *)
+(** cases *)
  assert (CongA A B C A B C) by (conclude lemma_equalanglesreflexive).
  assert (CongA A B C A B H) by (conclude lemma_equalangleshelper).
  assert (LtA A B C D E F) by (conclude lemma_angleorderrespectscongruence2).
@@ -557,10 +557,10 @@ by cases on (TS G B C A \/ ~ TS G B C A).
    }
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

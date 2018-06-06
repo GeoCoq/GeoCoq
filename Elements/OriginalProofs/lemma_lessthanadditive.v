@@ -6,7 +6,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_outerconnectivity.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_lessthanadditive : 
    forall A B C D E F, 
@@ -21,9 +21,9 @@ assert (neq C b) by (forward_using lemma_betweennotequal).
 assert (neq b C) by (conclude lemma_inequalitysymmetric).
 assert (neq B E) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists e, (BetS C b e /\ Cong b e B E)) by (conclude postulate_extension);destruct Tf as [e];spliter.
+assert (Tf:exists e, (BetS C b e /\ Cong b e B E)) by (conclude lemma_extension);destruct Tf as [e];spliter.
 assert (Cong B E b e) by (conclude lemma_congruencesymmetric).
-assert (Cong A E C e) by (conclude lemma_sumofparts).
+assert (Cong A E C e) by (conclude cn_sumofparts).
 assert (Cong e D e D) by (conclude cn_congruencereflexive).
 assert (BetS e b C) by (conclude axiom_betweennesssymmetry).
 assert (BetS C b F) by (conclude lemma_3_6b).
@@ -81,7 +81,7 @@ assert (~ ~ BetS b e F).
  contradict.
  }
 assert (BetS C e F) by (conclude lemma_3_7a).
-assert (Cong A E C e) by (conclude lemma_sumofparts).
+assert (Cong A E C e) by (conclude cn_sumofparts).
 assert (Cong C e A E) by (conclude lemma_congruencesymmetric).
 assert (Lt A E C F) by (conclude_def Lt ).
 close.

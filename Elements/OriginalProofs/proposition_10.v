@@ -27,7 +27,7 @@ assert (~ eq C B).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists D, (BetS C B D /\ Cong B D A B)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, (BetS C B D /\ Cong B D A B)) by (conclude lemma_extension);destruct Tf as [D];spliter.
 assert (~ eq C A).
  {
  intro.
@@ -36,7 +36,7 @@ assert (~ eq C A).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists E, (BetS C A E /\ Cong A E A B)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS C A E /\ Cong A E A B)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (BetS D B C) by (conclude axiom_betweennesssymmetry).
 assert (BetS E A C) by (conclude axiom_betweennesssymmetry).
 assert (~ Col D C E).
@@ -59,19 +59,6 @@ assert (~ Col D C E).
  }
 let Tf:=fresh in
 assert (Tf:exists F, (BetS D F A /\ BetS E F B)) by (conclude postulate_Pasch_inner);destruct Tf as [F];spliter.
-assert (~ Col C E B).
- {
- intro.
- assert (Col C A E) by (conclude_def Col ).
- assert (Col E A C) by (forward_using lemma_collinearorder).
- assert (Col C E A) by (forward_using lemma_collinearorder).
- assert (neq C E) by (forward_using lemma_betweennotequal).
- assert (Col E B A) by (conclude lemma_collinear4).
- assert (Col E A B) by (forward_using lemma_collinearorder).
- assert (neq E A) by (forward_using lemma_betweennotequal).
- assert (Col A B C) by (conclude lemma_collinear4).
- contradict.
- }
 assert (BetS B F E) by (conclude axiom_betweennesssymmetry).
 assert (BetS A F D) by (conclude axiom_betweennesssymmetry).
 assert (neq C D) by (forward_using lemma_betweennotequal).
@@ -93,33 +80,24 @@ assert (Cong A B A E) by (conclude lemma_congruencesymmetric).
 assert (Cong B D A E) by (conclude lemma_congruencetransitive).
 assert (Cong A E B D) by (conclude lemma_congruencesymmetric).
 assert (Cong A B B A) by (conclude cn_equalityreverse).
-assert (neq B C) by (forward_using lemma_betweennotequal).
-assert (neq C B) by (conclude lemma_inequalitysymmetric).
 assert (Cong C B C A) by (conclude lemma_congruencesymmetric).
 assert (Cong B E A D) by (conclude axiom_5_line).
 assert (Cong B F B F) by (conclude cn_congruencereflexive).
 assert (Lt B F B E) by (conclude_def Lt ).
-assert (neq B E) by (forward_using lemma_betweennotequal).
-assert (neq B F) by (forward_using lemma_betweennotequal).
 assert (Cong A D B E) by (conclude lemma_congruencesymmetric).
 let Tf:=fresh in
 assert (Tf:exists G, (BetS A G D /\ Cong A G B F)) by (conclude proposition_03);destruct Tf as [G];spliter.
 assert (Cong G D F E) by (conclude lemma_differenceofparts).
 assert (Cong E F D G) by (forward_using lemma_doublereverse).
 assert (Cong F B G A) by (forward_using lemma_doublereverse).
-assert (Cong G A F B) by (conclude lemma_congruencesymmetric).
 assert (Cong E A D B) by (forward_using lemma_congruenceflip).
 assert (Cong B A A B) by (conclude cn_equalityreverse).
 assert (BetS D G A) by (conclude axiom_betweennesssymmetry).
 assert (Cong F A G B) by (conclude lemma_interior5).
 assert (Cong A F B G) by (forward_using lemma_congruenceflip).
-assert (Cong B F A G) by (forward_using lemma_congruenceflip).
 assert (Cong E D D E) by (conclude cn_equalityreverse).
 assert (Cong F D G E) by (conclude lemma_interior5).
 assert (BetS B G E) by (conclude lemma_betweennesspreserved).
-assert (neq A E) by (conclude lemma_nullsegment3).
-assert (Cong A B B D) by (conclude lemma_congruencesymmetric).
-assert (neq B D) by (conclude lemma_nullsegment3).
 assert (BetS E G B) by (conclude axiom_betweennesssymmetry).
 assert (~ Col A D E).
  {

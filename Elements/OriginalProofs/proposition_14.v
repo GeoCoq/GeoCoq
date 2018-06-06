@@ -19,11 +19,10 @@ assert (CongA a b c A B C) by (conclude lemma_equalanglessymmetric).
 assert (CongA d b e D B E) by (conclude lemma_equalanglessymmetric).
 assert (nCol A B C) by (conclude lemma_equalanglesNC).
 assert (neq A B) by (forward_using lemma_NCdistinct).
-assert (neq B A) by (conclude lemma_inequalitysymmetric).
 assert (nCol D B E) by (conclude lemma_equalanglesNC).
 assert (neq B E) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
-assert (Tf:exists T, (BetS A B T /\ Cong B T B E)) by (conclude postulate_extension);destruct Tf as [T];spliter.
+assert (Tf:exists T, (BetS A B T /\ Cong B T B E)) by (conclude lemma_extension);destruct Tf as [T];spliter.
 assert (Cong B D B D) by (conclude cn_congruencereflexive).
 assert (Supp A B C D T) by (conclude_def Supp ).
 assert (CongA a b c A B C) by (conclude lemma_equalanglessymmetric).
@@ -43,8 +42,6 @@ assert (Col C B D) by (forward_using lemma_collinearorder).
 assert (neq D B) by (forward_using lemma_NCdistinct).
 assert (Col C B B) by (conclude_def Col ).
 assert (nCol D B T) by (conclude lemma_NChelper).
-assert (Triangle D B T) by (conclude_def Triangle ).
-assert (Triangle D B E) by (conclude_def Triangle ).
 assert (Cong D T D E) by (conclude proposition_04).
 assert (Cong T D E D) by (forward_using lemma_congruenceflip).
 assert (Cong T B E B) by (forward_using lemma_congruenceflip).

@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_3_7b.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_partnotequalwhole : 
    forall A B C, 
@@ -14,11 +14,10 @@ intros.
 assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (neq B A) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists D, (BetS B A D /\ Cong A D B A)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, BetS B A D) by (conclude postulate_Euclid2);destruct Tf as [D];spliter.
 assert (BetS D A B) by (conclude axiom_betweennesssymmetry).
 assert (BetS D A C) by (conclude lemma_3_7b).
 assert (neq B C) by (forward_using lemma_betweennotequal).
-assert (neq D A) by (forward_using lemma_betweennotequal).
 assert (~ Cong A B A C).
  {
  intro.

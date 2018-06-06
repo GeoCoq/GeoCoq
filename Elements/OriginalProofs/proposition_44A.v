@@ -24,7 +24,7 @@ assert (Par G F B E) by (conclude_def PG ).
 assert (nCol G B E) by (forward_using lemma_parallelNC).
 assert (neq G B) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
-assert (Tf:exists q, (BetS G B q /\ Cong B q G B)) by (conclude postulate_extension);destruct Tf as [q];spliter.
+assert (Tf:exists q, (BetS G B q /\ Cong B q G B)) by (conclude lemma_extension);destruct Tf as [q];spliter.
 assert (nCol E B G) by (forward_using lemma_NCorder).
 assert (Col A B E) by (conclude_def Col ).
 assert (Col E B A) by (forward_using lemma_collinearorder).
@@ -97,7 +97,7 @@ assert (neq F E) by (forward_using lemma_NCdistinct).
 assert (neq G B) by (forward_using lemma_NCdistinct).
 assert (nCol H A G) by (forward_using lemma_parallelNC).
 assert (neq H A) by (forward_using lemma_NCdistinct).
-assert (Par H A F E) by (conclude proposition_30).
+assert (Par H A F E) by (eauto using (proposition_30 _ _ _ _ _ _ _ _ _ _ H79 H1 H93)).
 assert (Cong G B F E) by (forward_using proposition_34).
 assert (Cong H A F E) by (conclude lemma_congruencetransitive).
 assert (Par G F B E) by (conclude_def PG ).

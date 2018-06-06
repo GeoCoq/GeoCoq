@@ -1,9 +1,9 @@
+Require Export GeoCoq.Elements.OriginalProofs.lemma_extension.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_3_6b.
-Require Export GeoCoq.Elements.OriginalProofs.lemma_differenceofparts.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_outerconnectivity : 
    forall A B C D, 
@@ -20,7 +20,7 @@ assert (~ eq A C).
  }
 assert (neq A D) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS A C E /\ Cong C E A D)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS A C E /\ Cong C E A D)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (BetS A B E) by (conclude lemma_3_6b).
 assert (~ eq A D).
  {
@@ -29,17 +29,9 @@ assert (~ eq A D).
  assert (~ BetS A B A) by (conclude axiom_betweennessidentity).
  contradict.
  }
-assert (~ eq B D).
- {
- intro.
- assert (BetS A B B) by (conclude cn_equalitysub).
- assert (neq B B) by (forward_using lemma_betweennotequal).
- assert (eq B B) by (conclude cn_equalityreflexive).
- contradict.
- }
 assert (neq A C) by (forward_using lemma_betweennotequal).
 let Tf:=fresh in
-assert (Tf:exists F, (BetS A D F /\ Cong D F A C)) by (conclude postulate_extension);destruct Tf as [F];spliter.
+assert (Tf:exists F, (BetS A D F /\ Cong D F A C)) by (conclude lemma_extension);destruct Tf as [F];spliter.
 assert (BetS F D A) by (conclude axiom_betweennesssymmetry).
 assert (BetS D B A) by (conclude axiom_betweennesssymmetry).
 assert (BetS F B A) by (conclude lemma_3_5b).
@@ -49,13 +41,12 @@ assert (Cong F D A C) by (conclude lemma_congruencetransitive).
 assert (Cong A D C E) by (conclude lemma_congruencesymmetric).
 assert (Cong D A A D) by (conclude cn_equalityreverse).
 assert (Cong D A C E) by (conclude lemma_congruencetransitive).
-assert (Cong F A A E) by (conclude lemma_sumofparts).
+assert (Cong F A A E) by (conclude cn_sumofparts).
 assert (Cong A E F A) by (conclude lemma_congruencesymmetric).
 assert (Cong F A A F) by (conclude cn_equalityreverse).
 assert (Cong A E A F) by (conclude lemma_congruencetransitive).
 assert (Cong A B A B) by (conclude cn_congruencereflexive).
 assert (Cong B E B F) by (conclude lemma_differenceofparts).
-assert (neq A B) by (forward_using lemma_betweennotequal).
 assert (eq E F) by (conclude lemma_extensionunique).
 assert (BetS A D E) by (conclude cn_equalitysub).
 assert (BetS B C E) by (conclude lemma_3_6a).

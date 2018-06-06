@@ -13,24 +13,8 @@ Lemma proposition_19 :
 Proof.
 intros.
 assert (nCol A B C) by (conclude_def Triangle ).
-assert (~ Col B C A).
- {
- intro.
- assert (Col A B C) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (~ Col A C B).
- {
- intro.
- assert (Col A B C) by (forward_using lemma_collinearorder).
- contradict.
- }
-assert (~ Col C B A).
- {
- intro.
- assert (Col A B C) by (forward_using lemma_collinearorder).
- contradict.
- }
+assert (nCol B C A) by (forward_using lemma_NCorder).
+assert (nCol A C B) by (forward_using lemma_NCorder).
 assert (~ Cong A C A B).
  {
  intro.
@@ -48,7 +32,6 @@ assert (~ Lt A C A B).
  {
  intro.
  assert (Triangle A C B) by (conclude_def Triangle ).
- assert (Triangle C B A) by (conclude_def Triangle ).
  assert (LtA C B A A C B) by (conclude proposition_18).
  assert (CongA A B C C B A) by (conclude lemma_ABCequalsCBA).
  assert (LtA A B C A C B) by (conclude lemma_angleorderrespectscongruence2).

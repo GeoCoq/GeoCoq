@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section par_trans_playfair.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma par_trans_implies_playfair :
   postulate_of_transitivity_of_parallelism -> playfair_s_postulate.

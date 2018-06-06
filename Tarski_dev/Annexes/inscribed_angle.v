@@ -1,260 +1,719 @@
-Require Export GeoCoq.Tarski_dev.Annexes.tangency.
-Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
+Require Export GeoCoq.Tarski_dev.Annexes.circles.
 Require Export GeoCoq.Tarski_dev.Annexes.half_angles.
-
-
+Require Export GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
 Section Inscribed_angle.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
-Lemma sum_two_angles_aux1 : forall A B C B', ~ Col A B C -> B <> B'-> Bet A B B' ->
- exists P, InAngle P B' B C /\ CongA B C A C B P /\ CongA B A C B' B P.
+(** The sum of the angles of a triangle is the flat angle. *)
+
+Lemma trisuma__bet : forall A B C D E F, TriSumA A B C D E F -> Bet D E F.
 Proof.
-intros.
-assert_diffs.
-assert(HPS:exists P, Par_strict A C B P /\ OS A B P C).
-{
-  assert(HH := parallel_existence1 A C B H7).
-  ex_and HH P.
-  assert(Par_strict A C B P).
-  {
-    unfold Par in H3.
-    induction H3.
+  apply alternate_interior__triangle.
+  unfold alternate_interior_angles_postulate.
+  apply l12_21_a.
+Qed.
+
+Lemma bet__trisuma : forall A B C D E F, Bet D E F -> A <> B -> B <> C -> A <> C -> D <> E -> E <> F ->
+  TriSumA A B C D E F.
+Proof.
+  intros A B C D E F HBet; intros.
+  destruct (ex_trisuma A B C) as [P [Q [R HTri]]]; auto.
+  apply conga_trisuma__trisuma with P Q R; trivial.
+  assert (Hd := HTri).
+  apply trisuma_distincts in Hd; spliter.
+  apply conga_line; auto.
+  apply (trisuma__bet A B C); trivial.
+Qed.
+
+Lemma right_saccheris : forall A B C D, Saccheri A B C D -> Per A B C.
+Proof.
+  apply postulates_in_euclidean_context; simpl; repeat (try (left; reflexivity); right).
+Qed.
+
+Lemma not_obtuse_saccheris : ~ hypothesis_of_obtuse_saccheri_quadrilaterals.
+Proof.
+  apply not_oah; right.
+  unfold hypothesis_of_right_saccheri_quadrilaterals; apply right_saccheris.
+Qed.
+
+Lemma suma123231__sams : forall A B C D E F, SumA A B C B C A D E F -> SAMS D E F C A B.
+Proof. exact (t22_20 not_obtuse_saccheris). Qed.
+
+Lemma bet_suma__suma : forall A B C D E F G H I, G <> H -> H <> I ->
+  Bet G H I -> SumA A B C B C A D E F -> SumA D E F C A B G H I.
+Proof.
+  intros A B C D E F G H I HGH HHI HBet HSuma.
+  suma.assert_diffs.
+  destruct (bet__trisuma A B C G H I) as [D' [E' [F' []]]]; auto.
+  apply (conga3_suma__suma D' E' F' C A B G H I); try apply conga_refl; auto.
+  apply (suma2__conga A B C B C A); assumption.
+Qed.
+
+Lemma high_school_exterior_angle_theorem : forall A B C B', A <> B -> B <> C -> A <> C -> A <> B' ->
+  Bet B A B' -> SumA A B C B C A C A B'.
+Proof.
+  intros A B C B'; intros.
+  assert (SumA C A B' C A B B A B').
+    apply suma_sym, suma_left_comm, bet__suma; auto.
+  destruct (ex_suma A B C B C A) as [D [E [F]]]; auto.
+  apply (conga3_suma__suma A B C B C A D E F); try apply conga_refl; auto.
+  apply sams2_suma2__conga123 with C A B B A B'.
+    apply suma123231__sams; assumption.
+    apply bet_suma__sams with B A B'; assumption.
+    apply bet_suma__suma; auto.
     assumption.
+Qed.
+
+(** If A, B and C are points on a circle where the line AB is a diameter of the circle,
+    then the angle ACB is a right angle. *)
+
+Lemma thales_theorem : forall A B C M, ~ Col A B C ->
+  Midpoint M A B -> Cong M A M C -> Per A C B.
+Proof.
+  apply rah__thales_postulate.
+  unfold postulate_of_right_saccheri_quadrilaterals; apply right_saccheris.
+Qed.
+
+(** In a right triangle, the midpoint of the hypotenuse is the circumcenter. *)
+
+Lemma thales_converse_theorem : forall A B C M, A <> C -> B <> C ->
+  Midpoint M A B -> Per A C B -> Cong M A M C.
+Proof.
+  intros A B C M HAC HBC HM HPer.
+  apply thales_postulate__thales_converse_postulate with B; [| |assumption..].
+    unfold thales_postulate; apply thales_theorem.
+  apply not_col_permutation_5, per_not_col; auto.
+Qed.
+
+Lemma bet_cong__ghalfa : forall A B C B', A <> B -> B <> C -> A <> B' ->
+  Bet B A B' -> Cong A B A C -> gHalfA A B C C A B'.
+Proof.
+  intros A B C B' HAB HBC HAB' HBet HCong.
+  apply ghalfa_chara; split.
+    apply cong__acute; auto.
+  assert_diffs.
+  apply (conga3_suma__suma A B C B C A C A B'); try apply conga_refl; auto.
+    apply high_school_exterior_angle_theorem; auto.
+  apply conga_left_comm, l11_44_1_a; Cong.
+Qed.
+
+(** If the angle ACB is inscribed in a circle of center O and
+    C, O lie on the same side of AB, then this angle is acute. *)
+
+Lemma onc3_os__acute : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OS A B O C ->
+  Acute A C B.
+Proof.
+  intros O P A B C HA HB HC HOS.
+  destruct (midpoint_existence A B) as [M HM].
+  assert (HNCol : ~ Col A B C) by (eapply one_side_not_col124, HOS).
+  assert (HLt : Lt M A M C).
+  { assert (HNCol1 : ~ Col A B O) by (eapply one_side_not_col123, HOS).
+    assert (M <> O) by (intro; treat_equalities; apply HNCol1; Col).
+    assert (O <> C) by (intro; treat_equalities; auto).
+    assert_diffs.
+    assert (Cong O A O C) by (apply (onc2__cong O P); assumption).
+    destruct (angle_partition M O C); auto.
+    - assert (HMO := H).
+      clear H.
+      destruct (l8_18_existence M O C) as [H []].
+      { intro.
+        destruct (acute_col__out M O C) as [_ [_ [HBet|HBet]]]; auto.
+        - apply l9_9_bis in HOS.
+          apply HOS.
+          repeat split; Col.
+          exists M; split; Col.
+        - apply (le__nlt O C O M); Le.
+          apply (cong2_lt__lt O M O P); Cong.
+          apply bet_inc2__incs with A B; Circle; Between.
+      }
+      assert (Perp O M A B) by (apply mid_onc2__perp with P; auto).
+      assert (HOS1 : OS A B C H).
+      { apply l12_6, par_not_col_strict with C; Col.
+        apply l12_9 with O M; Perp; [|Cop| |Cop].
+          apply coplanar_perm_5, col_cop__cop with B; Col; Cop.
+          apply coplanar_perm_5, col_cop__cop with A; Col; Cop.
+      }
+      assert (M <> H) by (intro; subst; apply one_side_not_col124 in HOS1; apply HOS1; Col).
+      assert (Per M H C) by (apply perp_per_1, perp_left_comm, perp_col with O; Col).
+      apply lt_transitivity with H C; [|assert_diffs; apply l11_46; auto].
+      apply cong_lt_per2__lt_1 with O O; Cong.
+        apply l8_2, per_col with M; Col; Perp.
+        apply perp_per_1, perp_left_comm, perp_col1 with B; Col.
+      apply bet__lt1213; auto; apply out2__bet.
+        apply (acute_col_perp__out C); [apply acute_sym|..]; Col; Perp.
+        apply (l9_19 A B); Col; apply one_side_transitivity with C; assumption.
+    - apply lt_transitivity with O C; [|apply l11_46; auto].
+      apply (cong2_lt__lt M A O A); Cong.
+      apply l11_46; auto.
+      left.
+      apply mid_onc2__per with P B; auto.
+  }
+  destruct HLt as [[C' [HBet HCong]] HNCong].
+  exists A, C', B; split.
+    apply thales_theorem with M; trivial; intro; apply HNCol; ColR.
+  assert_diffs.
+  assert (C <> C') by (intro; subst; apply HNCong, HCong).
+  apply os3__lta.
+  - apply one_side_transitivity with M.
+      apply invert_one_side, out_one_side; [Col|apply l6_6, bet_out; Between].
+      apply out_one_side; [left; intro; apply HNCol; ColR|apply l6_6, bet_out; Between].
+  - apply out_one_side_1 with M; Col; apply l6_6, bet_out; auto.
+  - apply one_side_transitivity with M.
+      apply invert_one_side, out_one_side; [Col|apply l6_6, bet_out; Between].
+      apply out_one_side; [left; intro; apply HNCol; ColR|apply l6_6, bet_out; Between].
+Qed.
+
+Lemma inscribed_angle_aux : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+  OS A B O C -> TS O C A B ->
+  gHalfA A C B A O B.
+Proof.
+  intros O P A B C HA HB HC HOS HTS.
+  destruct (segment_construction C O O P) as [C' []].
+  assert_diffs.
+  assert (O <> C') by (intro; treat_equalities; auto).
+  assert (HCong := (onc2__cong O P)).
+  apply suma_preserves_ghalfa with A C C' C' C B A O C' C' O B.
+    apply (onc3_os__acute O P); assumption.
+    apply ts__suma, invert_two_sides, col_two_sides with O; Side; Col.
+    apply ts__suma, invert_two_sides, col_two_sides with C; Col.
+    apply ghalfa_out4__ghalfa with A O A C'; try apply out_trivial; auto;
+      [apply l6_6, bet_out|apply ghalfa_left_comm, bet_cong__ghalfa]; auto.
+    apply ghalfa_out4__ghalfa with O B C' B; try apply out_trivial; auto;
+      [apply l6_6, bet_out|apply ghalfa_right_comm, bet_cong__ghalfa]; auto.
+Qed.
+
+Lemma inscribed_angle_aux1 : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+  OS A B O C -> OS O C A B ->
+  gHalfA A C B A O B.
+Proof.
+  assert (Haux : forall O P A B C, OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+  OS A B O C -> OS O C A B -> OS O B A C -> gHalfA A C B A O B).
+  { intros O P A B C HA HB HC HOS1 HOS2 HOS3.
+    destruct (chord_completion O P C O) as [C' [HC' HBet ]]; Circle.
+    assert_diffs.
+    assert (C' <> O) by (intro; treat_equalities; auto).
+    assert (TS O B A C').
+    { apply l9_8_2 with C; [|Side].
+      apply one_side_not_col124 in HOS3.
+      repeat split.
+        Col.
+        intro; apply HOS3; ColR.
+      exists O; split; Col.
+    }
+    assert (HCong := (onc2__cong O P)).
+    apply acute_ghalfa2_sams_suma2__ghalfa123 with B C O A C O B O C' A O C'.
+    - repeat split; auto.
+        right; intro; assert_cols; assert_ncols; Col.
+      exists C'.
+      split; CongA.
+      repeat split; [Side| |Cop].
+      apply l9_9_bis, invert_one_side, one_side_symmetry, os_ts1324__os; [|Side].
+      apply col_one_side with C; Col; Side.
+    - apply (onc3_os__acute O P); assumption.
+    - exists O.
+      repeat (split; CongA); [|Cop].
+      apply l9_9, invert_two_sides, l9_31; Side.
+    - exists C'.
+      repeat (split; CongA); [Side|Cop].
+    - apply ghalfa_left_comm, bet_cong__ghalfa; auto.
+    - apply ghalfa_left_comm, bet_cong__ghalfa; auto.
+  }
+  intros O P A B C HA HB HC HOS1 HOS2.
+  assert_ncols.
+  destruct (cop__one_or_two_sides O B A C) as [HTS|]; Col; Cop.
+    apply ghalfa_comm, Haux with P; auto; [..|apply one_side_symmetry, os_ts1324__os]; Side.
+    apply Haux with P; assumption.
+Qed.
+
+(** Euclid Book III Prop 20:
+    In a circle the angle at the centre is double of the angle at the circumference,
+    when the angles have the same circumference as base. *)
+
+Lemma inscribed_angle : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OS A B O C ->
+  gHalfA A C B A O B.
+Proof.
+  intros O P A B C HA HB HC HOS.
+  assert (HCong := (onc2__cong O P)).
+  destruct (col_dec A O C).
+  { assert_diffs.
+    assert (Bet C O A) by (apply col_inc_onc2__bet with O P; Col; Circle).
+    assert (O <> C) by (intro; treat_equalities; auto).
+    apply ghalfa_right_comm, ghalfa_out4__ghalfa with O B B A; try apply out_trivial; auto.
+      apply l6_6, bet_out; auto.
+    apply bet_cong__ghalfa; auto.
+  }
+  destruct (col_dec B O C).
+  { assert_diffs.
+    assert (Bet C O B) by (apply col_inc_onc2__bet with O P; Col; Circle).
+    assert (O <> C) by (intro; treat_equalities; auto).
+    apply ghalfa_left_comm, ghalfa_out4__ghalfa with O A A B; try apply out_trivial; auto.
+      apply l6_6, bet_out; auto.
+    apply bet_cong__ghalfa; auto.
+  }
+  destruct (cop__one_or_two_sides O C A B); Cop.
+    apply inscribed_angle_aux with P; assumption.
+    apply inscribed_angle_aux1 with P; assumption.
+Qed.
+
+Lemma diam_onc2_ts__suppa : forall O P A B C C',
+  OnCircle A O P -> OnCircle B O P -> Diam C C' O P -> TS A B C C' ->
+  SuppA A C B A C' B.
+Proof.
+  intros O P A B C C' HA HB [HBet [HC HC']] HTS.
+  assert_diffs.
+  assert (HCong := onc2__cong O P).
+  assert (HMid : Midpoint O C C') by (split; Cong).
+  assert (C <> C') by (intro; treat_equalities; auto).
+  assert (HNColA : ~ Col C C' A) by (apply (onc3__ncol O P); auto).
+  assert (HNColB : ~ Col C C' B) by (apply (onc3__ncol O P); auto).
+  assert (HSumaA : SumA A C C' C C' A C A C') by (apply cong_mid__suma with O; auto).
+  assert (HSumaB : SumA B C C' C C' B C B C') by (apply cong_mid__suma with O; auto).
+  assert (Per C A C') by (apply thales_theorem with O; auto).
+  assert (Per C B C') by (apply thales_theorem with O; auto).
+  assert (HSuma : SumA C A C' C B C' C O C') by (assert_diffs; apply bet_per2__suma; auto).
+  apply bet_suma__suppa with C O C'; trivial.
+  destruct (ex_suma C A C' C' C B) as [D [E [F HSuma1]]]; auto.
+  assert (HTS2 : TS C C' A B) by (apply (chord_intersection O P); assumption).
+  assert (HTS3 : TS C' C A B) by (apply invert_two_sides, HTS2).
+  assert (Acute C' C A).
+  { assert_diffs; apply acute_out2__acute with O A.
+      apply l6_6, bet_out; auto.
+      apply out_trivial; auto.
+      apply cong__acute; auto.
+  }
+  assert (Acute C' C B).
+  { assert_diffs; apply acute_out2__acute with O B.
+      apply l6_6, bet_out; auto.
+      apply out_trivial; auto.
+      apply cong__acute; auto.
+  }
+  assert (Acute C C' A).
+  { assert_diffs; apply acute_out2__acute with O A.
+      apply l6_6, bet_out; Between.
+      apply out_trivial; auto.
+      apply cong__acute; auto.
+  }
+  assert (Acute C C' B).
+  { assert_diffs; apply acute_out2__acute with O B.
+      apply l6_6, bet_out; Between.
+      apply out_trivial; auto.
+      apply cong__acute; auto.
+  }
+  assert (HSuma2 : SumA A C B A C' C D E F).
+    apply suma_sym, suma_assoc_1 with A C C' C' C B C A C'; SumA.
+  assert (HSAMS : SAMS A C B A C' C).
+    apply sams_sym, sams_assoc_1 with A C C' C' C B C A C'; SumA.
+  apply suma_assoc_1 with A C' C C C' B D E F; [SumA..|].
+  apply suma_assoc_2 with C A C' B C C' C B C'; SumA.
+Qed.
+
+(** In a circle the angle at the centre is double of the angle at the circumference. *)
+
+Lemma inscribed_angle_1 : forall O P A B C, A <> B -> B <> C -> A <> C ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O ->
+  SumA A C B A C B A O B.
+Proof.
+  intros O P A B C HAB HBC HAC HA HB HC HCop.
+  assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
+  destruct (col_dec A B O).
+  { assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
+    assert (Per A C B) by (apply thales_theorem with O; auto; apply cong_transitivity with O P; Cong).
+    assert_diffs; apply bet_per2__suma; Between.
+  }
+  destruct (cop__one_or_two_sides A B O C); Col; Cop.
+  - destruct (chord_completion O P C O) as [C' []]; Circle.
+    assert (TS A B C' C) by (apply l9_2, bet_ts__ts with O; Side).
+    assert (SuppA A C' B A C B).
+      apply (diam_onc2_ts__suppa O P); [..|repeat split|]; Between.
+    apply (suma_suppa2__suma A C' B A C' B); trivial.
+    apply ghalfa__suma, inscribed_angle with P; trivial.
+    exists C; split; trivial.
+  - apply ghalfa__suma, inscribed_angle with P; trivial.
+Qed.
+
+(** If two angles ACB and ADB are inscribed in the same circle,
+    then they are either congruent or supplementary. *)
+
+Lemma cop2_onc4__or_conga_suppa : forall O P A B C C',
+  A <> B -> B <> C -> A <> C -> B <> C' -> A <> C' ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OnCircle C' O P ->
+  Coplanar A B C O -> Coplanar A B C' O ->
+  CongA A C B A C' B \/ SuppA A C B A C' B.
+Proof.
+  intros O P A B C C'; intros.
+  apply suma2__or_conga_suppa with A O B; trivial; apply inscribed_angle_1 with P; assumption.
+Qed.
+
+(** If the angle ACB is inscribed in a circle of center O and
+    C, O lie on opposite sides of AB, then this angle is obtuse. *)
+
+Lemma onc3_ts__obtuse : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> TS A B O C ->
+  Obtuse A C B.
+Proof.
+  intros O P A B C HA HB HC HTS.
+  destruct (chord_completion O P C O) as [C' []]; Circle.
+  assert (TS A B C C') by (apply bet_ts__ts with O; Side).
+  apply (acute_suppa__obtuse A C' B).
+    apply (onc3_os__acute O P); trivial; exists C; split; Side.
+  apply (diam_onc2_ts__suppa O P); Side.
+  repeat split; Between.
+Qed.
+
+(** Euclid Book III Prop 21:
+    In a circle the angles in the same segment are equal to one another. *)
+
+Lemma cop_onc4_os__conga : forall O P A B C C',
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OnCircle C' O P ->
+  OS A B C C' -> Coplanar A B C O ->
+  CongA A C B A C' B.
+Proof.
+  intros O P A B C C' HA HB HC HC' HOS HCop.
+  assert_ncols.
+  destruct (col_dec A B O).
+  { assert_diffs.
+    assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
+    apply l11_16; auto; apply thales_theorem with O; Col; apply cong_transitivity with O P; Cong.
+  }
+  destruct (cop__one_or_two_sides A B O C); Col; Cop.
+  - assert_diffs; destruct (cop2_onc4__or_conga_suppa O P A B C C') as [|Habs]; auto.
+      apply coplanar_trans_1 with C; Col; Cop.
+    exfalso.
+    apply (nlta A C' B), acute_obtuse__lta.
+      apply (obtuse_suppa__acute A C B); [apply (onc3_ts__obtuse O P)|]; trivial.
+      apply (onc3_ts__obtuse O P); trivial; apply l9_2, l9_8_2 with C; Side.
+  - apply ghalfa2__conga_2 with A O B; apply inscribed_angle with P; trivial.
+    apply one_side_transitivity with C; Side.
+Qed.
+
+(** Euclid Book III Prop 22:
+    The opposite angles of quadrilaterals in circles are equal to two right angles. *)
+
+Lemma cop_onc4_ts__suppa : forall O P A B C C',
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OnCircle C' O P ->
+  TS A B C C' -> Coplanar A B C O ->
+  SuppA A C B A C' B.
+Proof.
+  intros O P A B C C' HA HB.
+  revert C C'.
+  assert (Haux : forall C C', OnCircle C O P -> OnCircle C' O P -> TS A B C C' -> OS A B O C ->
+    SuppA A C B A C' B).
+  { intros C C' HC HC' HTS HOS.
+    assert_diffs.
+    assert (~ Col C A B) by (destruct HTS; assumption).
+    assert (Coplanar A B C' O) by (apply coplanar_trans_1 with C; Cop).
+    destruct (cop2_onc4__or_conga_suppa O P A B C C') as [Habs|]; Cop.
+    exfalso.
+    assert (HLta : LtA A C B A C' B); [|destruct HLta as [_ HN]; apply HN, Habs].
+    apply acute_obtuse__lta.
+      apply (onc3_os__acute O P); assumption.
+    apply (onc3_ts__obtuse O P); trivial.
+    apply l9_8_2 with C; Side.
+  }
+  intros C C' HC HC' HTS HCop.
+  assert (~ Col C A B) by (destruct HTS; assumption).
+  destruct (col_dec A B O).
+  { assert_diffs.
+    assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
+    destruct HTS as [_ []].
+    apply per2__suppa; auto; apply thales_theorem with O; Col; apply cong_transitivity with O P; Cong.
+  }
+  destruct (cop__one_or_two_sides A B O C); Col; Cop.
+  apply suppa_sym, Haux; [..|exists C; split]; Side.
+Qed.
+
+(** If the angle ACB is acute and inscribed in a circle of center O,
+    then C and O lie on the same side of AB. *)
+
+Lemma acute_cop_onc3__os : forall O P A B C, A <> B ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O -> Acute A C B ->
+  OS A B O C.
+Proof.
+  intros O P A B C HAB HA HB HC HCop HAcute.
+  assert_diffs.
+  assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
+  apply coplanar_perm_1 in HCop.
+  apply cop__not_two_sides_one_side; Col; intro Habs; apply (nlta A C B).
+  - apply acute_per__lta; auto.
+    apply thales_theorem with O; trivial.
+      apply col_onc2__mid with P; Col.
+      apply (onc2__cong O P); assumption.
+  - apply acute_obtuse__lta; trivial.
+    apply (onc3_ts__obtuse O P); assumption.
+Qed.
+
+(** If the angle ACB is obtuse and inscribed in a circle of center O,
+    then C and O lie on opposite sides of AB. *)
+
+Lemma cop_obtuse_onc3__ts : forall O P A B C,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O -> Obtuse A C B ->
+  TS A B O C.
+Proof.
+  intros O P A B C HA HB HC HCop HObtuse.
+  assert_diffs.
+  assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
+  apply coplanar_perm_1 in HCop.
+  apply cop__not_one_side_two_sides; Col; intro Habs; apply (nlta A C B).
+  - apply obtuse_per__lta; auto.
+    apply thales_theorem with O; trivial.
+      apply col_onc2__mid with P; Col.
+      apply (onc2__cong O P); assumption.
+  - apply acute_obtuse__lta; trivial.
+    apply (onc3_os__acute O P); assumption.
+Qed.
+
+(** If the angles ACB and ADB are congruent and inscribed in the same circle,
+    then C and D lie on the same side of AB. *)
+
+Lemma conga_cop2_onc4__os : forall O P A B C D, ~ Col A B O ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OnCircle D O P ->
+  Coplanar A B O C -> Coplanar A B O D -> CongA A C B A D B ->
+  OS A B C D.
+Proof.
+  intros O P A B C D HNCol HA HB HC HD HCopC HCopD HConga.
+  assert_diffs.
+  destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
+  - apply one_side_transitivity with O; [apply one_side_symmetry|];
+      apply acute_cop_onc3__os with P; Cop.
+    apply (acute_conga__acute A C B); assumption.
+  - exfalso.
+    apply HNCol, col_permutation_1, midpoint_col.
+    destruct (midpoint_existence A B) as [M HM].
+    assert (M = O); [|subst; apply HM].
+    assert (HCong := onc2__cong O P).
+    apply (cong4_cop2__eq A C B); Cong; [..|Cop|Cop].
+      apply per_not_col; auto.
+      apply cong_commutativity, thales_converse_theorem with B; auto.
+  - exists O; split; apply l9_2; apply cop_obtuse_onc3__ts with P; Cop.
+    apply (conga_obtuse__obtuse A C B); assumption.
+Qed.
+
+(** If the angles ACB and ADB are supplementary and inscribed in the same circle,
+    then C and D lie on opposite sides of AB. *)
+
+Lemma cop2_onc4_suppa__ts : forall O P A B C D, ~ Col A B O ->
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> OnCircle D O P ->
+  Coplanar A B O C -> Coplanar A B O D -> SuppA A C B A D B ->
+  TS A B C D.
+Proof.
+  intros O P A B C D HNCol HA HB HC HD HCopC HCopD HSuppa.
+  assert_diffs.
+  destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
+  - apply l9_8_2 with O.
+      apply cop_obtuse_onc3__ts with P; Cop; apply (acute_suppa__obtuse A C B); assumption.
+      apply acute_cop_onc3__os with P; Cop.
+  - exfalso.
+    apply HNCol, col_permutation_1, midpoint_col.
+    destruct (midpoint_existence A B) as [M HM].
+    assert (M = O); [|subst; apply HM].
+    assert (HCong := onc2__cong O P).
+    apply (cong4_cop2__eq A C B); Cong; [..|Cop|Cop].
+      apply per_not_col; auto.
+      apply cong_commutativity, thales_converse_theorem with B; auto.
+  - apply l9_2, l9_8_2 with O.
+      apply cop_obtuse_onc3__ts with P; Cop.
+    apply acute_cop_onc3__os with P; Cop; apply (obtuse_suppa__acute A C B); assumption.
+Qed.
+
+(** Non degenerated triangles can be circumscribed. *)
+
+Lemma triangle_circumscription : forall A B C, ~ Col A B C ->
+  exists CC : Tpoint, Cong A CC B CC /\ Cong A CC C CC /\ Coplanar A B C CC.
+Proof.
+  apply postulates_in_euclidean_context; simpl; repeat (try (left; reflexivity); right).
+Qed.
+
+(** Euclid Book III Prop 23:
+    On the same straight line there cannot be constructed
+    two similar and unequal segments of circles on the same side. *)
+
+Lemma conga_cop_onc6_os__eq : forall A B C D O P O' P',
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O ->
+  OnCircle A O' P' -> OnCircle B O' P' -> OnCircle D O' P' -> Coplanar A B D O' ->
+  OS A B C D -> CongA A C B A D B ->
+  (O = O' /\ Cong O P O' P').
+Proof.
+  intros A B C D O P O' P' HA HB HC HCop HA' HB' HD' HCop' HOS HConga.
+  assert (O = O'); [|split; trivial; subst O'; apply cong_transitivity with O A; Cong].
+  assert (HNCol : ~ Col A B C) by (apply one_side_not_col123 with D, HOS).
+  assert (HCong := onc2__cong O P).
+  destruct (col_dec A B O) as [|HNCol1].
+  { assert_diffs.
+    apply cong2_cop2_onc3__eq with P' A B D; auto; [|apply coplanar_trans_1 with C; Col; Cop].
+    assert (Midpoint O A B) by (apply col_onc2__mid with P; assumption).
+    apply thales_converse_theorem with B; auto.
+    apply (l11_17 A C B); trivial.
+    apply thales_theorem with O; Cong.
+  }
+  assert (HNCol' : ~ Col A B D) by (apply one_side_not_col124 with C, HOS).
+  assert (HCong' := onc2__cong O' P').
+  destruct (midpoint_existence A B) as [M HM].
+  assert (HOS1 : OS A B O O').
+  { assert_diffs; destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
+    - apply one_side_transitivity with C;
+        [|apply one_side_transitivity with D; trivial; apply one_side_symmetry].
+        apply acute_cop_onc3__os with P; auto.
+      apply acute_cop_onc3__os with P'; auto.
+      apply (acute_conga__acute A C B); assumption.
+    - exfalso.
+      apply HNCol1.
+      assert (O = M); [|subst; Col].
+      apply (cong4_cop2__eq A B C); Cong; [|Cop].
+      apply cong_commutativity, thales_converse_theorem with B; auto.
+    - exists C; split; [|apply l9_2, l9_8_2 with D; [apply l9_2|Side]].
+        apply cop_obtuse_onc3__ts with P; auto.
+      apply cop_obtuse_onc3__ts with P'; auto.
+      apply (conga_obtuse__obtuse A C B); assumption.
+  }
+  assert (HNCol1' : ~ Col A B O') by (apply one_side_not_col124 with O, HOS1).
+  destruct (bet_cop_onc2__ex_onc_os_out O P A B C M) as [C1]; Between; Col; [assert_diffs; auto..|].
+  destruct (bet_cop_onc2__ex_onc_os_out O' P' A B D M) as [D1]; Between; Col; [assert_diffs; auto..|].
+  spliter.
+  assert (HNCol2 : ~ Col A B C1) by (apply one_side_not_col124 with C; assumption).
+  assert (HOut : Out M C1 D1).
+  { apply (l9_19 A B); [Col| |
+      apply one_side_transitivity with C; [|apply one_side_transitivity with D]; Side].
+    assert (O <> M) by (intro; subst; apply HNCol1; Col).
+    assert (O' <> M) by (intro; subst; apply HNCol1'; Col).
+    assert (Col O O' M); [|ColR].
+    assert_diffs; apply (cop_per2__col A); auto;
+      [|apply mid_onc2__per with P B; auto|apply mid_onc2__per with P' B; auto].
+    apply coplanar_trans_1 with B; Col; [|Cop].
+    apply coplanar_trans_1 with C; Col; [Cop|].
+    apply coplanar_perm_12, coplanar_trans_1 with D; Col; Cop.
+  }
+  destruct (eq_dec_points C1 D1).
+  { subst D1.
+    apply (cong4_cop2__eq A B C1); Cong; exists M; left; split; Col.
+  }
+  assert (HNCol2' : ~ Col A B D1) by (apply one_side_not_col124 with D; assumption).
+  assert (CongA A C1 B A C B) by (apply (cop_onc4_os__conga O P); Side; exists M; left; split; Col).
+  assert (CongA A D1 B A D B) by (apply (cop_onc4_os__conga O' P'); Side; exists M; left; split; Col).
+  assert (Out A B M) by (assert_diffs; apply l6_6, bet_out; Between).
+  assert (Out B A M) by (assert_diffs; apply l6_6, bet_out; Between).
+  assert (HH := HOut).
+  destruct HH as [HMC1 [HMD1 [HBet|HBet]]]; exfalso.
+  - apply (lta_not_conga A D B A C B); CongA.
+    apply (conga_preserves_lta A D1 B A C1 B); trivial.
+    assert (Out D1 M C1) by (apply l6_6, bet_out; Between).
+    apply os3__lta; [|apply one_side_symmetry, l9_19 with M; Col|];
+      apply one_side_transitivity with M.
+      apply invert_one_side, out_one_side; Col.
+      apply out_one_side; trivial; left; intro; apply HNCol2'; ColR.
+      apply invert_one_side, out_one_side; Col.
+      apply out_one_side; trivial; left; intro; apply HNCol2'; ColR.
+  - apply (lta_not_conga A C B A D B); trivial.
+    apply (conga_preserves_lta A C1 B A D1 B); trivial.
+    assert (Out C1 M D1) by (apply l6_6, bet_out; Between).
+    apply os3__lta; [|apply l9_19 with M; Col|];
+      apply one_side_transitivity with M.
+      apply invert_one_side, out_one_side; Col.
+      apply out_one_side; trivial; left; intro; apply HNCol2; ColR.
+      apply invert_one_side, out_one_side; Col.
+      apply out_one_side; trivial; left; intro; apply HNCol2; ColR.
+Qed.
+
+Lemma conga_cop_onc3_os__onc : forall A B C D O P,
+  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
+  Coplanar A B C O -> OS A B C D -> CongA A C B A D B ->
+  OnCircle D O P.
+Proof.
+  intros A B C D O P HA HB HC HCop HOS HConga.
+  destruct (triangle_circumscription A B D) as [O'].
+    apply one_side_not_col124 in HOS; Col.
+  spliter.
+  assert (OnCircle A O' A /\ OnCircle B O' A /\ OnCircle D O' A).
+    unfold OnCircle; repeat split; Cong.
+  spliter.
+  destruct (conga_cop_onc6_os__eq A B C D O P O' A); trivial.
+  subst O'; apply cong_transitivity with O A; Cong.
+Qed.
+
+(** If the angles ACB and ADB are congruent and C, D lie on the same side of AB,
+    then A, B, C and D are concyclic. *)
+
+Lemma conga_os__ex_circle : forall A B C D,
+  OS A B C D -> CongA A C B A D B -> exists O P,
+  OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O.
+Proof.
+  intros A B C D HOS HConga.
+  destruct (triangle_circumscription A B C) as [O]; spliter.
+    apply one_side_not_col123 with D, HOS.
+  assert (OnCircle A O A /\ OnCircle B O A /\ OnCircle C O A).
+    unfold OnCircle; repeat split; Cong.
+  spliter.
+  exists O, A; repeat split; trivial.
+  apply (conga_cop_onc3_os__onc A B C); assumption.
+Qed.
+
+(** If the angles ACB and ADB are supplementary and C, D lie on opposite sides of AB,
+    then A, B, C and D are concyclic. *)
+
+Lemma suppa_ts__ex_circle : forall A B C D,
+  TS A B C D -> SuppA A C B A D B -> exists O P,
+  OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O.
+Proof.
+  intros A B.
+  assert (Haux : forall C D, TS A B C D -> Obtuse A C B -> SuppA A C B A D B -> exists O P,
+    OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O).
+  { intros C D HTS HObtuse HSuppa.
+    assert (HNCol : ~ Col A B C) by (destruct HTS; Col).
+    destruct (triangle_circumscription A B C HNCol) as [O]; spliter.
+    assert (OnCircle A O A /\ OnCircle B O A /\ OnCircle C O A).
+      unfold OnCircle; repeat split; Cong.
     spliter.
-    apply False_ind.
-    apply H.
-    ColR.
+    exists O, A; repeat split; trivial.
+    destruct (chord_completion O A C O) as [C'[HC' HBet]]; Circle.
+    assert (TS A B C C').
+      apply bet_ts__ts with O; [apply l9_2, cop_obtuse_onc3__ts with A|]; assumption.
+    apply (conga_cop_onc3_os__onc A B C'); trivial.
+      apply coplanar_trans_1 with C; Col; Cop.
+      exists C; split; Side.
+      apply (suppa2__conga456 A C B); [apply (cop_onc4_ts__suppa O A)|]; assumption.
   }
-  assert(TS A B C P \/ OS A B C P).
-  {
-    apply(one_or_two_sides A B C P).
-    Col.
-    intro.
-    apply H6.
-    exists A.
-    split; Col.
+  intros C D HTS HSuppa.
+  assert_diffs; destruct (angle_partition A C B) as [|[|]]; auto.
+  { destruct (Haux D C) as [O [P]].
+      Side.
+      apply (acute_suppa__obtuse A C B); trivial.
+      apply suppa_sym, HSuppa.
+    exists O, P.
+    spliter; repeat split; trivial.
+    apply coplanar_trans_1 with D; [destruct HTS as [_ []]; Col|Cop..].
   }
-  induction H8.
-  assert(HH:=segment_construction P B B P).
-  ex_and HH Q.
-  exists Q.
-  assert(B <> Q).
-  {
-    intro.
-    treat_equalities.
-    unfold Par_strict in H6; tauto.
-  }
-  assert(Par_strict A C B Q).
-  {
-    apply(par_strict_col2_par_strict A C B P B Q); Col.
-  }
-  split; auto.
-  assert(TS A B Q P).
-  {
-    unfold TS.
-    repeat split.
-    intro.
-    apply H12.
-    exists A.
-    split; Col.
-    intro.
-    apply H6.
-    exists A.
-    split; Col.
-    exists B.
-    split; Col.
-    Between.
-  }
-  apply (l9_8_1 A B Q C P); auto.
-  exists P.
-  split.
-  assumption.
-  apply one_side_symmetry; auto.
-}
-ex_and HPS P.
-
-assert(TS B P A B').
-{
-  unfold TS.
-  repeat split.
-  intro.
-  apply H3.
-  exists A.
-  split; Col.
-  intro.
-  apply H3.
-  exists A.
-  split; ColR.
-  exists B.
-  split; Col.
-}
-
-assert(TS B P C B').
-{
-  apply (l9_8_2 B P A); auto.
-  apply l12_6.
-  Par.
-}
-unfold TS in H9.
-spliter.
-ex_and H11 T.
-exists T.
-split.
-unfold InAngle.
-repeat split; auto.
-intro.
-treat_equalities.
-apply H; ColR.
-exists T.
-split.
-Between.
-right.
-apply out_trivial.
-intro.
-treat_equalities.
-apply H; ColR.
-
-assert(B <> T).
-{
-  intro.
-  treat_equalities.
-  assert(B <> B').
-  {
-    intro.
-    treat_equalities.
-    apply H10; Col.
-  }
-  apply H.
-  ColR.
-}
-split.
-apply conga_comm.
-apply(l12_21_a C A B T).
-assert(OS C B B' T).
-{
-  apply out_one_side.
-  right.
-  intro.
-  apply H9.
-  ColR.
-  unfold Out.
-  repeat split.
-  intro.
-  treat_equalities.
-  contradiction.
-  intro.
-  treat_equalities.
-  contradiction.
-  right; auto.
-}
-assert(TS C B B' A).
-{
-  unfold TS.
-  repeat split.
-  Col.
-  intro.
-  apply H.
-  ColR.
-  Col.
-  exists B.
-  split; Col.
-  Between.
-}
-apply l9_2.
-apply(l9_8_2 C B B' T A); auto.
-
-left.
-apply par_strict_left_comm.
-apply(par_strict_col_par_strict A C B P T); Col.
-
-assert(CongA T B B' C A B').
-{
-  apply(l12_22_a B T A C B').
-  apply bet_out; Between.
-  apply(out_one_side B' B T C).
-  right.
-  intro.
-  apply H.
-  ColR.
-  unfold Out.
-  repeat split.
-  intro.
-  treat_equalities.
-  contradiction.
-  intro.
-  treat_equalities.
-  contradiction.
-  left; Between.
-  apply par_symmetry.
-  apply (par_col_par A C B P T); Col.
-  left; auto.
-}
-apply conga_sym.
-apply conga_comm.
-apply(l11_10 T B B' C A B' T B' C B); (try (apply out_trivial));auto.
-unfold Out.
-repeat split; auto.
+  destruct (midpoint_existence A B) as [M].
+  exists M, A.
+  destruct HTS as [HNCol1 [HNCol2 _]].
+  unfold OnCircle; repeat split; [Cong..| | |Cop];
+    apply cong_symmetry, thales_converse_theorem with B; auto.
+  apply (per_suppa__per A C B); assumption.
 Qed.
 
+(** In a convex quadrilateral, if two opposite angles are supplementary
+    then the two other angles are also supplementary. *)
 
-Lemma sum_two_angles_aux2 : forall A B C B', 
-  Col A B C -> A <> B -> A <> C -> C <> B -> B <> B'-> Bet A B B' ->
-  exists P, InAngle P B' B C /\ CongA B C A C B P /\ CongA B A C B' B P.
+Lemma suppa_ts2__suppa : forall A B C D,
+  TS A C B D -> TS B D A C -> SuppA A B C A D C -> SuppA B A D B C D.
 Proof.
-intros.
-induction H.
-exists C.
-split.
-apply l11_24.
-apply inangle1123; auto.
-split.
-apply(out_conga A C A C B C B A C C); try(apply out_trivial; auto).
-apply conga_trivial_1; auto.
-unfold Out.
-repeat split; auto.
-right; Between.
-apply(out_conga C A C C B C B C B' C); try(apply out_trivial; auto).
-apply conga_trivial_1; auto.
-unfold Out.
-repeat split; auto.
-unfold Out.
-repeat split; auto.
-apply(l5_2 A); auto.
-
-induction H.
-exists B'.
-split.
-apply inangle1123; auto.
-split.
-apply(conga_line); eBetween.
-apply(out_conga C A C B' B B' B C B' B'); try(apply out_trivial; auto).
-apply conga_trivial_1; auto.
-apply bet_out; Between.
-
-exists C.
-split.
-apply l11_24.
-apply inangle1123; auto.
-split.
-apply(out_conga B C B C B C B A C C); try(apply out_trivial; auto).
-apply conga_trivial_1; auto.
-unfold Out.
-repeat split; auto.
-apply conga_line; eBetween.
+  intros A B C D HTS1 HTS2 HSuppa.
+  destruct (suppa_ts__ex_circle A C B D) as [O [P]]; trivial.
+  spliter.
+  apply (cop_onc4_ts__suppa O P); trivial.
+  apply coplanar_perm_2, coplanar_trans_1 with C; [destruct HTS1; Col|Cop..].
 Qed.
 
+End Inscribed_angle.
 
-Lemma sum_two_angles : forall A B C B', A <> B -> A <> C -> C <> B -> B <> B'-> Bet A B B' ->
- exists P, InAngle P B' B C /\ CongA B C A C B P /\ CongA B A C B' B P.
-Proof.
-intros.
-induction(Col_dec A B C).
-apply sum_two_angles_aux2; auto.
-apply sum_two_angles_aux1; auto.
-Qed.
+Section Inscribed_angle_2.
 
+Context `{T2D:Tarski_2D}.
+Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
 Lemma chord_par_diam : forall O P A B C C' A' U,
  O <> P -> ~Col A B C' -> Diam C C' O P -> Midpoint A' A C' -> OnCircle A O P -> OnCircle B O P ->
@@ -291,16 +750,17 @@ spliter.
 assert(HH:=mid_onc2__perp O P A C' A' H15 H13 H3 H17 H2).
 assert(Perp O U O A').
 {
-  apply(par_perp_perp A C' O U O A' H7); Perp.
+  apply(par_perp__perp A C' O U O A' H7); Perp.
 }
 
 assert(Par O A' A B).
 {
-  apply (l12_9 _ _ _ _ O U); Perp.
+  apply (l12_9_2D _ _ _ _ O U); Perp.
 }
 assert(HM:=midpoint_existence B C').
 ex_and HM O'.
-assert(HP:= triangle_mid_par A B C' O' A' H11 H20 H2).
+assert(HP:= triangle_mid_par A B C' O' A' H0 H20 H2).
+apply par_strict_par in HP.
 assert(Par O A' A' O').
 {
   apply (par_trans _ _ A B); Par.
@@ -326,7 +786,7 @@ assert(HQ:= mid_onc2__perp O P B C' O' H23  H10 H4 H17 H20).
 apply(perp_col O A' A C' O') in HH; Col.
 assert(Par A C' B C').
 {
-  apply(l12_9 A C' B C' O O'); Perp.
+  apply(l12_9_2D A C' B C' O O'); Perp.
 }
 apply False_ind.
 induction H24.
@@ -338,1497 +798,4 @@ apply H0.
 Col.
 Qed.
 
-
-
-
-
-Lemma cong_mid2__conga3 : forall O A A' C C',
-  O <> C -> A <> C -> Cong O A O C -> Midpoint O C C' -> Midpoint A' A C' ->
-   CongA O A C O C A /\ CongA O A C A O A' /\ CongA O C A C' O A'.
-Proof.
-intros.
-
-assert(A' <> O).
-{
-  intro.
-  treat_equalities; tauto.
-}
-induction(Col_dec A O C).
-assert(HH:= l7_20 O A C H5 H1).
-induction HH.
-treat_equalities; tauto.
-assert(A = C').
-{
-  apply(symmetric_point_uniqueness C O A C'); Midpoint.
-}
-subst C'.
-assert(A' = A).
-apply l7_3;auto.
-subst A'.
-split.
-unfold Midpoint in H2.
-apply(l11_21_b).
-spliter.
-repeat split; auto.
-left; Between.
-repeat split; auto.
-left; Between.
-split.
-apply (conga_trans _ _ _ O A O).
-apply (out_conga O A C O A C O C O O); try(apply out_trivial; auto).
-apply conga_refl; auto.
-repeat split; auto.
-unfold Midpoint in H2.
-spliter.
-Between.
-apply(conga_trivial_1); auto.
-
-apply (conga_trans _ _ _ O C O).
-apply (out_conga O C O O C O O A O O); try(apply out_trivial; auto).
-apply conga_refl; auto.
-repeat split; auto.
-unfold Midpoint in H2.
-spliter.
-Between.
-apply(conga_trivial_1); auto.
-
-
-(********** general case ************)
-
-assert(CongA O A C O C A ).
-{
-  apply(l11_44_1_a); auto.
-}
-split; auto.
-
-assert(exists P : Tpoint,
-         InAngle P C' O A /\ CongA O A C A O P /\ CongA O C A C' O P).
-{
-  assert_diffs.
-  apply(sum_two_angles C O A C'); Between.
-}
-ex_and H7 AA.
-
-assert(CongA A' O A A' O C').
-{
-  assert_diffs.
-  apply(cong3_conga A' O A A' O C'); auto.
-  repeat split; Cong.
-  unfold Midpoint in *.
-  spliter.
-  eCong.
-}
-
-assert(CongA AA O A AA O C').
-{
-  apply (conga_trans _ _ _ O A C);
-  CongA.
-  apply (conga_trans _ _ _ O C A);
-  CongA.
-}
-
-
-assert(Col O A' AA).
-{
-  apply(conga2__col A O C' A' AA); CongA.
-  intro.
-  apply out_col in H12.
-  unfold Midpoint in *.
-  spliter.
-  assert(A = C' \/ Midpoint O A C').
-  apply l7_20; eCong; Col.
-  induction H15.  
-  treat_equalities.
-  apply H5; Col.
-  assert(A = C).
-  apply(symmetric_point_uniqueness C' O); Midpoint.
-  split; Between; Cong.
-  assert_diffs.
-  treat_equalities; tauto.
-}
-
-assert(Out O AA A').
-{
-  assert_diffs.
-  apply(col_inangle2__out C' O A AA A');Col.
-  intro.
-  assert(Midpoint O A C').
-  {
-    unfold Midpoint in *.
-    spliter.
-    split; eCong.
-    Between.
-  }
-  assert(A = C).
-  apply(symmetric_point_uniqueness C' O); Midpoint.
-  treat_equalities; tauto.
-  unfold InAngle.
-  repeat split; auto.
-  exists A'.
-  split; Between.
-  right.
-  apply out_trivial; auto.
-}
-
-split.
-assert_diffs.
-apply(l11_10 O A C A O AA O C A A'); try (apply out_trivial; auto).
-auto.
-apply l6_6; auto.
-assert_diffs.
-apply(l11_10 O C A C' O AA O A C' A'); try (apply out_trivial; auto).
-auto.
-apply l6_6; auto.
-Qed.
-
-
-Lemma inscribed_angle_ts : forall  O P A B C,
-   O <> P -> TS O C A B -> OS A B O C ->
-   OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
-   exists T, InAngle T A O B /\ CongA A O T A C B /\ CongA B O T A C B.
-Proof.
-intros.
-unfold OnCircle in *.
-assert(H5: ~Col O A B).
-{
-  unfold OS in H1.
-  ex_and H1 R.
-  unfold TS in H1.
-  tauto.
-}
-
-assert(HH:=symmetric_point_construction C O).
-ex_and HH C'.
-assert(HH:=midpoint_existence C' A).
-ex_and HH A'.
-assert(HH:=midpoint_existence C' B).
-ex_and HH B'.
-
-assert(~Col A B C').
-{
-  apply (onc3__ncol O P); Circle.
-  intro.
-  treat_equalities.
-  apply H5; Col.
-  intro.
-  treat_equalities.
-  unfold TS in H0.
-  spliter.
-  apply H0.
-  Col.
-  intro.
-  treat_equalities.
-  unfold TS in H0.
-  spliter.
-  apply H8.
-  Col.
-  unfold Midpoint in H6.
-  spliter.
-  unfold OnCircle.
-  eCong.
-}
-
-assert(A <> A' /\ B <> B').
-{
-  split;
-  intro;
-  treat_equalities;
-  apply H9;Col.
-}
-
-assert(A <> B /\ A' <> B').
-{
-  split;
-  intro;
-  treat_equalities;
-  apply H9;Col.
-}
-spliter.
-
-assert(Par A B A' B').
-{
-  apply(triangle_mid_par A B C' B' A'); Midpoint.
-}
-assert(HPS:Par_strict A B A' B').
-{
-  induction H14.
-  assumption.
-  spliter.
-  unfold Midpoint in *.
-  spliter.
-  apply False_ind.
-  apply H9.
-  assert_diffs.
-  ColR.
-}
-
-assert(HH:=midpoint_existence A B).
-ex_and HH U.
-assert(Perp O U A B).
-{
-  apply(mid_onc2__perp O P A B U); Circle.
-  intro.
-  treat_equalities.
-  unfold Midpoint in H15.
-  spliter.
-  apply H5.
-  Col.
-}
-
-assert(Perp A' B' O U).
-{
-  apply(par_perp_perp A B A' B' O U); Perp.
-}
-
-assert(HH:= perp_inter_perp_in A' B' O U H17).
-ex_and HH T.
-exists T.
-
-
-
-assert(OnCircle C' O P).
-{
-  unfold Midpoint in H6; spliter.
-  unfold OnCircle; eCong.
-}
-
-assert(Per C' A' O).
-{
-  apply l8_2.
-  apply(mid_onc2__per O P C' A A'); Circle.
-}
-assert(Per C' B' O).
-{
-  apply l8_2.
-  apply(mid_onc2__per O P C' B B'); Circle.
-}
-
-assert(O <> T).
-{
-  intro.
-  treat_equalities.
-  assert(Par C' A C' B).
-  {
-    apply(chords_midpoints_col_par O P C' A' A C' B' B H); Circle.
-    Col.
-    intro.
-    assert(A = C' \/ Midpoint O A C').
-    apply l7_20; Col.
-    eCong.
-    induction H24.
-    treat_equalities.
-    apply H9; Col.
-    assert(A = C).
-    {
-      apply(symmetric_point_uniqueness C' O A C); Midpoint.
-    }
-    treat_equalities.
-    unfold TS in H0.
-    spliter.
-    apply H0; Col.
-    intro.
-    assert(B = C' \/ Midpoint O B C').
-    apply l7_20; Col.
-    eCong.
-    induction H24.
-    treat_equalities; tauto.
-    assert(B' = O).
-    {
-      apply (l7_17 B C'); Midpoint.
-    }
-    apply sym_equal in H25.
-    treat_equalities.
-    unfold TS in H0.
-    spliter.
-    apply H4; Col.
-  }
-  unfold Par in H19.
-  induction H19.
-  apply H19.
-  exists C'.
-  repeat split; Col.
-  spliter.
-  apply H9; Col.
-}
-
-assert(Perp O T A' B').
-{
-  apply (perp_col O U A' B' T); Col.
-  apply perp_in_perp in H20.
-  Perp.
-}
-
-assert(TS O C' A B).
-{
-  assert_diffs.
-  eapply(col_preserves_two_sides O C); Col.
-}
-
-assert(TS O C' A' B').
-{
-  apply(l9_8_2 _ _ A).
-  apply l9_2.
-  apply(l9_8_2 _ _ B).
-  apply l9_2.
-  assumption.
-  apply one_side_symmetry.
-  apply invert_one_side.
-  apply(out_one_side C' O B' B).
-  apply l9_2 in H26.
-  assert(HH:= two_sides_not_col O C' B A H26).
-  right; Col.
-  unfold Midpoint in H8.
-  spliter.
-  assert_diffs.
-  repeat split; auto.
-  apply one_side_symmetry.
-  apply invert_one_side.
-  apply(out_one_side C' O A' A).
-  assert(HH:= two_sides_not_col O C' A B H26).
-  right; Col.
-  unfold Midpoint in H7.
-  spliter.
-  assert_diffs.
-  repeat split; auto.
-}
-
-assert(HL:=l13_2 O C' A' B' T H27 H22 H23 H18 H25); spliter.
-assert(CongA O A C O C A /\ CongA O A C A O A' /\ CongA O C A C' O A').
-{
-  assert_diffs.
-  apply(cong_mid2__conga3 O A A' C C'); auto.
-  eCong.
-  Midpoint.
-}
-
-assert(CongA O B C O C B /\ CongA O B C B O B' /\ CongA O C B C' O B').
-{
-  assert_diffs.
-  apply(cong_mid2__conga3 O B B' C C'); auto.
-  eCong.
-  Midpoint.
-}
-
-spliter.
-assert(OS A B A' T).
-{
-  apply (l12_6).
-  apply(par_strict_col_par_strict A B A' B'); Par.
-  intro.
-  treat_equalities.
-  apply conga_sym in H29.
-  apply eq_conga_out in H29.
-  apply out_col in H29.
-  assert(C' = B' \/ O = B').
-  apply(l8_9 C' B' O H23); Col.
-  induction H18.
-  treat_equalities; tauto.
-  assert_diffs.
-  treat_equalities; tauto.
-}
-assert(OS A B A' C').
-{
-  apply out_one_side.
-  right.
-  assert_diffs.
-  apply (onc3__ncol O P); auto.
-  apply bet_out; Between.
-}
-assert(OS A B C' T).
-{
-  apply(one_side_transitivity _ _ _ A'); auto.
-  apply one_side_symmetry; auto.
-}
-assert(TS A B O C').
-{
-  apply(ray_cut_chord O P C C' A B H); Circle.
-  unfold Diam.
-  repeat split; Circle.
-  Between.
-  apply(col_preserves_two_sides C' O C C' A B); Col.
-  assert_diffs; auto.
-  apply invert_two_sides; auto.
-  apply one_side_symmetry; auto.
-}
-assert(TS A B O T).
-{
-  apply l9_2.
-  apply(l9_8_2 A B C' T O);auto.
-  apply l9_2;auto.
-}
-
-assert(Hout:Out O U T).
-{
-  induction H19.
-  assert_diffs.
-  apply bet_out; auto.
-  induction H19.
-  apply l6_6.
-  assert_diffs.
-  apply bet_out; Between.
-  apply False_ind.
-
-  assert(OS U A O T).
-  {
-    apply out_one_side.
-    left.
-    apply perp_sym in H16.
-    apply(perp_col A B O U U) in H16.
-    apply perp_left_comm in H16.
-    apply perp_not_col in H16.
-    Col.
-    assert_diffs; auto.
-    Col.
-    apply bet_out; auto.
-    assert_diffs; auto.
-    Between.
-  }
-  apply invert_one_side in H42.
-  apply (col_one_side A U B O T) in H42; Col.
-  apply l9_9 in H41.
-  contradiction.
-}
-
-split.
-unfold InAngle.
-assert_diffs.
-repeat split; auto.
-exists U.
-split.
-Between.
-right.
-auto.
-
-assert(HalfA A' A O C').
-{
-  assert_diffs.
-  apply(halfa_chara2 ).
-  exists C'.
-  exists A'.
-  split; eCong.
-  split.
-  apply out_trivial; auto.
-  split.
-  Midpoint.
-  apply out_trivial; auto.
-}
-
-assert(HalfA T A O B).
-{
-  assert_diffs.
-  apply(halfa_chara2 ).
-  exists B.
-  exists U.
-  split; eCong.
-  split.
-  apply out_trivial; auto.
-  split.
-  Midpoint.
-  auto.
-}
-
-assert(LtA A O C' A O B).
-{
-  unfold LtA.
-  split.
-  apply(inangle__lea).
-  apply(ts2__inangle A O B C'); auto.
-  intro.
-  assert(Out O C' B \/ TS A O C' B) by (apply (conga__or_out_ts);auto).
-  induction H45.
-  unfold TS in H26.
-  spliter.
-  apply H46; Col.
-  assert(OS A O C' B).
-  {
-    apply(in_angle_one_side A O B C').
-    Col.
-    intro.
-    assert(A = C' \/ Midpoint O A C').
-    apply l7_20; Col.
-    eCong.
-    induction H47.
-    treat_equalities.
-    apply H9; Col.
-    assert(C = A).
-    apply (symmetric_point_uniqueness C' O); Midpoint.
-    treat_equalities.
-    unfold TS in H27.
-    spliter.
-    intuition Col.
-    apply(ts2__inangle A O B C'); auto.
-  }
-  apply l9_9 in H45.
-  contradiction.
-}
-
-assert(HalfA B' B O C').
-{
-  assert_diffs.
-  apply(halfa_chara2 ).
-  exists C'.
-  exists B'.
-  split; eCong.
-  split.
-  apply out_trivial; auto.
-  split.
-  Midpoint.
-  apply out_trivial; auto.
-}
-
-assert(HalfA T B O A).
-{
-  assert_diffs.
-  apply(halfa_chara2 ).
-  exists A.
-  exists U.
-  split; eCong.
-  split.
-  apply out_trivial; auto.
-  split.
-  Midpoint.
-  auto.
-}
-
-assert(LtA B O C' B O A).
-{
-  unfold LtA.
-  split.
-  apply(inangle__lea).
-  apply(ts2__inangle B O A C'); auto.
-  apply invert_two_sides; auto.
-  apply l9_2; auto.
-  intro.
-  assert(Out O C' A \/ TS B O C' A).
-  {
-    apply(conga__or_out_ts B O C' A); auto.
-  }
-  induction H48.
-  unfold TS in H26.
-  spliter.
-  apply H26; Col.
-  assert(OS B O C' A).
-  {
-    apply(in_angle_one_side B O A C').
-    Col.
-    intro.
-    assert(B = C' \/ Midpoint O B C').
-    apply l7_20; Col.
-    eCong.
-    induction H50.
-    treat_equalities.
-    apply H9; Col.
-    assert(C = B).
-    apply (symmetric_point_uniqueness C' O); Midpoint.
-    treat_equalities.
-    unfold TS in H27.
-    spliter.
-    intuition Col.
-    apply(ts2__inangle B O A C').
-    apply invert_two_sides; auto.
-    apply l9_2.
-    apply(col_preserves_two_sides O C O C' A B); Col.
-    intro.
-    treat_equalities; tauto.
-  }
-  apply l9_9 in H48.
-  contradiction.
-}
-
-assert(LtA A O A' A O T).
-{
-  apply(galfa_preseves_lta A O C' A O B A O A' A O T); auto;
-  unfold gHalfA.
-  exists A'.
-  split; CongA.
-  apply conga_refl;
-  intro;
-  treat_equalities.
-  tauto.
-  unfold HalfA in H39.
-  spliter.
-  assert_diffs; tauto.
-  exists T.
-  split; CongA.
-  apply conga_refl; auto.
-  intro;
-  treat_equalities;
-  tauto.
-}
-
-assert(LtA B O B' B O T).
-{
-  apply(galfa_preseves_lta B O C' B O A B O B' B O T); auto;
-  unfold gHalfA.
-  exists B'.
-  split; CongA.
-  apply conga_refl;
-  intro;
-  treat_equalities.
-  tauto.
-  unfold HalfA in H45.
-  spliter.
-  assert_diffs; tauto.
-  exists T.
-  split; CongA.
-  apply conga_refl; auto.
-  intro;
-  treat_equalities;
-  tauto.
-}
-
-
-assert(InAngle C' A O B).
-{
-  apply(ts2__inangle A O B C'); auto.
-}
-assert(InAngle A' A O B).
-{
-  apply (in_angle_trans _ _ _ C'); auto.
-  unfold InAngle.
-  assert_diffs.
-  unfold Midpoint in H7.
-  spliter.
-  repeat split; auto.
-  exists A'.
-  split; Between.
-  right.
-  apply out_trivial; auto.
-}
-assert(InAngle T A O B).
-{
-  assert_diffs.
-  repeat split;auto.
-  exists U.
-  unfold Midpoint in H15; spliter.
-  split; auto.
-}
-
-assert(OS A O A' T).
-{
-  apply(inangle_one_side _ _ B); Col.
-  intro.
-  unfold Midpoint in *.
-  spliter.
-  unfold TS in H0.
-  spliter.
-  apply H0.
-  ColR.
-  intro.
-  apply perp_sym in H16.
-  apply (perp_col _ _ _ _ U) in H16.
-  apply perp_left_comm in H16.
-  apply perp_not_col in H16.
-  assert(Col A O U)by ColR.
-  apply H16; Col.
-  intro.
-  treat_equalities; tauto.
-  Col.
-}
-
-apply invert_one_side in H53.
-apply one_side_symmetry in H53.
-
-assert(TS O A' A T).
-{
-  apply(lta_os__ts A O T A'); auto.
-  apply(halfa_not_null _ _ _ C'); auto.
-  unfold TS in H0.
-  spliter.
-  intro.
-  apply H0.
-  ColR.
-}
-
-assert(CongA A O T A C B).
-{
-  apply(l11_22a A O T A' A C B O).
-  split; auto.
-  split.
-  apply invert_two_sides; auto.
-  split.
-  apply(conga_trans _ _ _ O A C); CongA.
-  apply(conga_trans _ _ _ C' O B'); CongA.
-}
-
-split; auto.
-unfold HalfA in H43.
-spliter.
-apply(conga_trans _ _ _ A O T); CongA.
-Qed.
-
-
-
-Lemma inscribed_angle_os : forall  O P A B C, O <> P ->
- TS O B A C -> OS O C A B -> OS A B O C -> OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
- exists T, InAngle T A O B /\ CongA A O T A C B /\ CongA B O T A C B.
-Proof.
-intros O P A B C H h.
-intros.
-unfold OnCircle in *.
-assert(H5: ~Col O A B).
-{
-  unfold OS in H1.
-  ex_and H1 R.
-  unfold TS in H1.
-  tauto.
-}
-
-assert(HH:=symmetric_point_construction C O).
-ex_and HH C'.
-assert(HH:=midpoint_existence C' A).
-ex_and HH A'.
-assert(HH:=midpoint_existence C' B).
-ex_and HH B'.
-
-assert(~Col A B C').
-{
-  unfold OS in H0.
-  ex_and H0 R.
-  unfold TS in H0.
-  spliter.
-  apply (onc3__ncol O P); Circle.
-  intro.
-  treat_equalities.
-  apply H5; Col.
-  intro.
-  treat_equalities.
-  apply H0.
-  Col.
-  intro.
-  treat_equalities.
-  unfold TS in H9.
-  spliter. 
-  apply H8.
-  Col.
-  unfold Midpoint in H6.
-  spliter.
-  unfold OnCircle.
-  eCong.
-}
-
-assert(A <> A' /\ B <> B').
-{
-  split;
-  intro;
-  treat_equalities;
-  apply H9;Col.
-}
-
-assert(A <> B /\ A' <> B').
-{
-  split;
-  intro;
-  treat_equalities;
-  apply H9;Col.
-}
-spliter.
-
-assert(HH:=midpoint_existence A B).
-ex_and HH U.
-
-assert(Par C' B A' U).
-{
-  apply(triangle_mid_par C' B A U A'); Midpoint.
-  intro.
-  treat_equalities; tauto.
-}
-
-assert(HPS:Par_strict C' B A' U).
-{
-  induction H15.
-  assumption.
-  spliter.
-  unfold Midpoint in *.
-  spliter.
-  apply False_ind.
-  apply H9.
-  assert_diffs.
-  ColR.
-}
-
-
-assert(OnCircle C' O P).
-{
-  unfold Midpoint in H6; spliter.
-  unfold OnCircle; eCong.
-}
-
-assert(Perp O B' C' B).
-{
-  assert_diffs.
-  apply(mid_onc2__perp O P C' B B'); Circle.
-  intro.
-  treat_equalities; tauto.
-}
-
-assert(Perp A' U O B').
-{
-  apply(par_perp_perp C' B A' U O B'); Perp.
-}
-
-assert(HH:= perp_inter_perp_in A' U O B' H18).
-ex_and HH T.
-exists U.
-
-assert(Per A A' O).
-{
-  apply l8_2.
-  apply(mid_onc2__per O P A C' A'); Circle.
-  Midpoint.
-}
-
-
-assert(Per A U O).
-{
-  apply l8_2.
-  apply(mid_onc2__per O P A B U); Circle.
-}
-assert(O <> T).
-{
-  intro.
-  treat_equalities.
-  assert(Par A C' A B).
-  {
-    apply l7_2 in H7.
-    apply(chords_midpoints_col_par O P A A' C' A U B H); Circle.
-    Col.
-    intro.
-    assert(A = C' \/ Midpoint O A C').
-    apply l7_20; Col.
-    eCong.
-    induction H24.
-    treat_equalities.
-    apply H9; Col.
-    assert(A = C).
-    {
-      apply(symmetric_point_uniqueness C' O A C); Midpoint.
-    }
-    treat_equalities.
-    unfold OS in H0.
-    ex_and H0 R.
-
-    unfold TS in H0.
-    spliter.
-    apply H0; Col.
-  }
-  unfold Par in H20.
-  induction H20.
-  apply H20.
-  exists A.
-  repeat split; Col.
-  spliter.
-  apply H9; Col.
-}
-
-assert(Perp O T A' U).
-{
-  apply (perp_col O B' A' U T); Col.
-  apply perp_in_perp in H21.
-  Perp.
-}
-
-assert(OS A O U B).
-{
-  apply out_one_side;Col.
-  repeat split; auto.
-  intro.
-  treat_equalities.
-  unfold Midpoint in H14.
-  spliter.
-  apply H5; Col.
-  left.
-  unfold Midpoint in H14.
-  tauto.
-}
-
-assert(OS A O A' C').
-{
-  apply out_one_side;Col.
-  left.
-  assert(Diam A C' O P \/ ~ Col O A A' /\ ~ Col O C' A').
-  apply(mid_chord__diam_or_ncol O P A C' A'); Circle.
-  intro.
-  treat_equalities; auto.
-  apply l7_2; auto;
-  repeat split; auto.
-  induction H27.
-  apply diam__midpoint in H27.
-  assert(A' = O).
-  {
-    apply(l7_17 A C');
-    Midpoint.
-  }
-  treat_equalities.
-  assert(hh:= not_two_sides_id A A' B).
-  contradiction.
-  spliter.
-  Col.
-  repeat split; auto.
-  intro.
-  treat_equalities; tauto.
-  unfold Midpoint in H7.
-  spliter.
-  left; Between.
-}
-
-
-
-assert(OS O A B C).
-{
-  apply one_side_symmetry.
-  apply(os_ts1324__os O C B A).
-  apply one_side_symmetry; auto.
-  apply l9_2; auto.
-}
-
-assert(HN1:~Col O A C).
-{
-  intro.
-  assert(Diam C A O P).
-  {
-    apply(center_col__diam O P C A); Circle.
-    intro.
-    treat_equalities.
-    assert(hh:= not_two_sides_id C A' B).
-    contradiction.
-    Col.
-  }
-  assert(Diam C C' O P).
-  {
-    repeat split; Circle.
-    unfold Midpoint in H6.
-    spliter; Between.
-  }
-  assert(HH:= diam_end_uniqueness O P C A C' H30 H31).
-  treat_equalities; tauto.
-}
-
-assert(HN2:~Col O A C').
-{
-  intro.
-  assert(Diam C' A O P).
-  {
-    apply(center_col__diam O P C' A); Circle.
-    intro.
-    treat_equalities; tauto.
-    Col.
-  }
-  assert(Diam C' C O P).
-  {
-    repeat split; Circle.
-    unfold Midpoint in H6.
-    spliter; Between.
-  }
-  assert(HH:= diam_end_uniqueness O P C' A C H30 H31).
-  treat_equalities.
-  assert(hh:= not_two_sides_id A A' B) || 
-  assert(hh:= not_two_sides_id A O B). 
-  contradiction.
-}
-
-assert(HN3:~Col O B C).
-{
-  intro.
-  assert(Diam C B O P).
-  {
-    apply(center_col__diam O P C B); Circle.
-    intro.
-    treat_equalities.
-    apply perp_distinct in H18.
-    tauto.
-    assert(hh:= not_two_sides_id C A' C).
-    Col.
-  }
-  assert(Diam C C' O P).
-  {
-    repeat split; Circle.
-    unfold Midpoint in H6.
-    spliter; Between.
-  }
-  assert(HH:= diam_end_uniqueness O P C B C' H30 H31).
-  treat_equalities; tauto.
-}
-
-assert(TS O A B C').
-{
-  apply (l9_8_2 _ _ C).
-  unfold TS.
-  repeat split; Col.
-  exists O.
-  split; Col.
-  unfold Midpoint in H6.
-  spliter.
-  Between.
-  apply one_side_symmetry; auto.
-}
-
-
-assert(TS O A A' U).
-{
-  apply(l9_8_2 _ _ C').
-  apply l9_2.
-  eapply (l9_8_2 _ _ B);auto.
-  apply one_side_symmetry; auto.
-  apply invert_one_side; auto.
-  apply invert_one_side.
-  apply one_side_symmetry; auto.
-}
-
-assert(HT:=l13_2 O A A' U T H30 H22 H23 H19 H25).
-spliter.
-
-
-assert(U <> O).
-{
-  intro.
-  treat_equalities.
-  unfold TS in H30.
-  spliter.
-  apply H34; Col.
-}
-
-assert(Perp A B O U).
-{
-  apply perp_sym.
-  apply(mid_onc2__perp O P A B U);auto.
-}
-
-
-split.
-
-repeat split; auto.
-intro.
-treat_equalities; tauto.
-intro.
-treat_equalities; tauto.
-exists U.
-split.
-Between.
-right.
-apply out_trivial; auto.
-
-assert(CongA A O U B O U).
-{
-  apply(cong_perp_conga); auto.
-  eCong.
-}
-
-assert(CongA O A C O C A /\ CongA O A C A O A' /\ CongA O C A C' O A').
-{
-  assert_diffs.
-  apply(cong_mid2__conga3 O A A' C C'); auto.
-  eCong.
-  Midpoint.
-}
-
-assert(CongA O B C O C B /\ CongA O B C B O B' /\ CongA O C B C' O B').
-{
-  assert_diffs.
-  apply(cong_mid2__conga3 O B B' C C'); auto.
-  eCong.
-  Midpoint.
-}
-
-spliter.
-assert(InAngle A C' O B).
-{
-  unfold InAngle.
-  assert_diffs.
-  repeat split; auto.
-  unfold TS in H29.
-  spliter.
-  ex_and H66 X.
-  exists X.
-
-  assert(OS O C X B).
-  {
-    apply(col_one_side O C' C X B);
-    Col.
-    apply invert_one_side.
-    apply out_one_side.
-    right.
-    intro.
-    apply HN3.
-    ColR.
-    repeat split; auto.
-    intro.
-    treat_equalities.
-    apply HN2.
-    Col.
-    left; Between.
-  }
-  split.
-  Between.
-  right.
-
-  apply (col_one_side_out O C X A).
-  Col.
-  apply (one_side_transitivity _ _ _ B); auto.
-  apply one_side_symmetry; auto.
-}
-
-assert(~Col C' O B).
-{
-  intro.
-  unfold Midpoint in H6.
-  spliter.
-  apply HN3.
-  assert_diffs.
-  ColR.
-}
-
-assert(OS C' O A' A).
-{
-  apply out_one_side.
-  right; Col.
-  unfold Midpoint in H7.
-  spliter.
-  unfold Out.
-  repeat split; auto.
-  intro.
-  treat_equalities.
-  apply H9; Col.
-  intro.
-  treat_equalities.
-  apply H9; Col.
-}
-
-assert(OS C' O B' B).
-{
-  apply out_one_side.
-  right; Col.
-  unfold Midpoint in H8.
-  spliter.
-  unfold Out.
-  repeat split; auto.
-  intro.
-  treat_equalities.
-  apply H9; Col.
-  intro.
-  treat_equalities.
-  apply H9; Col.
-}
-
-assert(OS C' O A U).
-{
-  apply (l9_17 _ _ B).
-  apply invert_one_side.
-  eapply (col_one_side _ C); Col.
-  intro.
-  treat_equalities.
-  intuition Col.
-  unfold Midpoint in H14.
-  tauto.
-}
-
-assert(OS C' O A' B').
-{
-  apply (one_side_transitivity _ _ _ A); auto.
-  apply (one_side_transitivity _ _ _ B); auto.
-  apply invert_one_side.
-  eapply (col_one_side _ C); Col.
-  intro; treat_equalities.
-  intuition Col.
-  apply one_side_symmetry.
-  auto.
-}
-
-assert(OS C' O A' U).
-{
-  apply (one_side_transitivity _ _ _ A); auto.
-}
-assert(OS C' O A' T).
-{
-  apply (l9_17 _ _ U); auto.
-}
-assert(OS C' O B' T).
-{
-  apply (one_side_transitivity _ _ _ B); auto.
-  apply (one_side_transitivity _ _ _ A); auto.
-  apply invert_one_side.
-  eapply (col_one_side _ C); Col.
-  intro; treat_equalities.
-  intuition Col.
-  apply one_side_symmetry.
-  auto.
-  apply (one_side_transitivity _ _ _ A'); auto.
-  apply one_side_symmetry.
-  auto.
-}
-
-assert(Out O B' T).
-{
-  assert(HH:= l9_19 C' O B' T O).
-  destruct HH; Col.
-  intro; treat_equalities.
-  intuition Col.
-  apply H52 in H51.
-  tauto.
-}
-
-
-assert(InAngle U T O B).
-{
-  apply(inangle_halfa_inangle O C' B A T U); auto.
-  unfold HalfA.
-  split.
-  intro.
-  apply H44; Col.
-  split.
-  unfold InAngle.
-  assert_diffs.
-  repeat split; auto.
-  exists B'.
-  unfold Midpoint in H8.
-  spliter.
-  split; auto.
-  apply (out_conga C' O B' B O B' C' T B T);
-  try(apply out_trivial; auto); auto.
-  apply (conga_trans _ _ _ O B C); CongA.
-  apply (conga_trans _ _ _ O C B); CongA.
-  intro; treat_equalities; tauto.
-  intro; treat_equalities; tauto.
-  apply halfa_chara2.
-  exists B.
-  exists U.
-  split; eCong.
-  split.
-  apply out_trivial; auto.
-  intro; treat_equalities.
-  tauto.
-  split; auto.
-  apply out_trivial; auto.
-}
-
-assert(Perp T O A' T).
-{
-  apply perp_left_comm.
-  apply (perp_col _ B'); auto.
-  apply perp_sym.
-  apply (perp_col _ U); auto.
-  intro.
-  apply sym_equal in H54.
-  treat_equalities.
-  
-  apply conga_sym in H32.
-  apply(eq_conga_out) in H32.
-  assert(Col O U A) by Col.
-  apply per_not_col in H23; auto.
-  apply H23; Col.
-  intro.
-  treat_equalities.
-  apply perp_distinct in H35.
-  tauto.
-}
-
-assert(T <> U).
-{
-  intro.
-  treat_equalities.
-  apply conga_sym in H31.
-  apply(eq_conga_out) in H31.
-  unfold OS in H27.
-  ex_and H27 R.
-  unfold TS in H30.
-  spliter.
-  apply H30; Col.
-}
-assert(~Col O T U).
-{
-  apply per_not_col ; auto.
-  apply perp_sym in H54.
-  apply perp_comm in H54.
-  apply (perp_col _ _ _ _ U) in H54; auto.
-  apply perp_perp_in in H54.
-  apply perp_in_comm in H54.
-  apply perp_in_per in H54.
-  apply l8_2; auto.
-  Col.
-}
-
-
-assert(CongA B O U A C B).
-{
-  apply conga_left_comm.
-  apply (l11_22b U O B T A C B O).
-  split.
-  apply invert_one_side.
-  apply in_angle_one_side; auto.
-  intro.
-  assert(Col B O B').
-  ColR.
-  apply H44; ColR.
-  split.
-  apply invert_one_side; auto.
-  split.
-  apply(conga_trans _ _ _ A O A'); CongA.
-  apply(conga_trans _ _ _ O A C); CongA.
-
-  apply conga_sym.
-  apply(conga_trans _ _ _ B' O B); CongA.
-  apply(conga_trans _ _ _ O B C); CongA.
-  assert_diffs.
-  apply (out_conga B' O B B' O B B' B T B);auto;
-  try(apply out_trivial; auto). 
-  apply conga_refl; auto.
-}
-split.
-apply(conga_trans A O U B O U); CongA.
-auto.
-Qed.
-
-Lemma inscribed_angle_col : forall  O P A B C,
- Col A O C -> O <> P -> OS A B O C -> OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
- exists T, InAngle T A O B /\ CongA A O T A C B /\ CongA B O T A C B.
-Proof.
-intros.
-unfold OnCircle in *.
-assert(A = C \/ Midpoint O A C).
-apply l7_20; Col.
-eCong.
-
-induction H5.
-treat_equalities.
-unfold OS in H0.
-ex_and H1 R.
-unfold TS in H1.
-spliter.
-apply False_ind.
-apply H1; Col.
-
-assert(HH:=midpoint_existence A B).
-ex_and HH T.
-exists T.
-assert_diffs.
-assert(O <> T).
-{
-  intro.
-  treat_equalities;tauto.
-}
-split.
-unfold InAngle.
-repeat split; auto.
-exists T.
-split.
-Between.
-right.
-apply out_trivial; auto.
-assert(HN: ~Col O A B).
-{
-  intro.
-  unfold OS in H0.
-  ex_and H1 R.
-  unfold TS in H1.
-  spliter.
-  contradiction.
-}
-
-assert(CongA O B C O C B /\ CongA O B C B O T /\ CongA O C B A O T).
-{
-  assert_diffs.
-  apply(cong_mid2__conga3 O B T C A); Midpoint.
-  eCong.
-}
-spliter.
-
-assert(CongA A C B O C B).
-{
-  apply(out_conga O C B O C B A B O B);try (apply out_trivial; auto).
-  apply conga_refl; auto.
-  unfold Midpoint  in H5.
-  spliter.
-  unfold Out.
-  repeat split; auto.
-  left; Between.
-}
-
-
-split.
-apply(conga_trans _ _ _ O C B); CongA.
-apply(conga_trans _ _ _ O B C); CongA.
-apply(conga_trans _ _ _ O C B); CongA.
-Qed.
-
-Lemma inscribed_angleg_aux : forall  O P A B C,
-  O <> P -> OS A B O C ->
-  OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
- exists T, InAngle T A O B /\ CongA A O T A C B /\ CongA B O T A C B.
-Proof.
-intros.
-induction(Col_dec A O C).
-apply (inscribed_angle_col O P);auto.
-induction(Col_dec B O C).
-assert(exists T : Tpoint,
-       InAngle T B O A /\ CongA B O T B C A /\ CongA A O T B C A).
-{
-  apply(inscribed_angle_col O P B A C H5 H);auto.
-  apply invert_one_side; auto.
-}
-ex_and H6 T.
-exists T.
-split.
-apply l11_24; auto.
-split; CongA.
-
-(******** general case **********)
-assert(HH:=one_or_two_sides O C A B H4 H5).
-induction HH.
-
-(* case TS O C A B *)
-
-
-apply(inscribed_angle_ts O P); auto.
-assert(TS O A C B \/ TS O B C A).
-{
-  apply(two_sides_cases O C A B);auto.
-  unfold OS in H0.
-  ex_and H0 R.
-  unfold TS in H0.
-  spliter.
-  Col.
-}
-
-induction H7.
-
-assert(exists T : Tpoint,
-       InAngle T B O A /\ CongA B O T B C A /\ CongA A O T B C A).
-{
-  apply(inscribed_angle_os O P B A C); auto.
-  apply l9_2; auto.
-  apply one_side_symmetry; auto.
-  apply invert_one_side; auto.
-}
-ex_and H8 T.
-exists T.
-split.
-apply l11_24;auto.
-split; CongA.
-apply l9_2 in H7.
-apply(inscribed_angle_os O P); auto.
-Qed.
-
-Lemma inscribed_angleg : forall O P A B C,
-  O <> P -> OS A B O C -> OnCircle A O P -> OnCircle B O P -> OnCircle C O P ->
-  gHalfA A C B A O B.
-Proof.
-intros.
-unfold gHalfA.
-assert(HH:=inscribed_angleg_aux O P A B C H H0 H1 H2 H3).
-ex_and HH T.
-exists T.
-split; CongA.
-unfold HalfA.
-split.
-intro.
-unfold OS in H0.
-ex_and H0 R.
-unfold TS in H0.
-spliter.
-apply H0.
-Col.
-split; auto.
-apply (conga_trans _ _ _ A C B); CongA.
-Qed.
-
-End Inscribed_angle.
+End Inscribed_angle_2.

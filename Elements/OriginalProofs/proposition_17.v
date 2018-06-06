@@ -18,7 +18,7 @@ intros.
 assert (nCol A B C) by (conclude_def Triangle ).
 assert (neq B C) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
-assert (Tf:exists D, (BetS B C D /\ Cong C D B C)) by (conclude postulate_extension);destruct Tf as [D];spliter.
+assert (Tf:exists D, (BetS B C D /\ Cong C D B C)) by (conclude lemma_extension);destruct Tf as [D];spliter.
 assert (nCol B C A) by (forward_using lemma_NCorder).
 assert (Col B C D) by (conclude_def Col ).
 assert (eq B B) by (conclude cn_equalityreflexive).

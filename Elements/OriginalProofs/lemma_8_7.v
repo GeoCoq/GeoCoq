@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_droppedperpendicularunique.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 
 Lemma lemma_8_7 : 
@@ -16,7 +16,7 @@ assert (Per A B C) by (conclude lemma_8_2).
 assert (neq B C) by (conclude_def Per ).
 assert (neq C B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS B C E /\ Cong C E C B)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS B C E /\ Cong C E C B)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (Col B C E) by (conclude_def Col ).
 assert (Col E C B) by (forward_using lemma_collinearorder).
 assert (Per A B C) by (conclude lemma_8_2).

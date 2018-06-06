@@ -49,8 +49,6 @@ assert (~ eq F H).
  assert (Col A B F) by (conclude cn_equalitysub).
  contradict.
  }
-assert (Per F H J) by (conclude lemma_8_2).
-assert (nCol J H F) by (conclude lemma_rightangleNC).
 assert (~ eq J H).
  {
  intro.
@@ -59,7 +57,7 @@ assert (~ eq J H).
  }
 assert (neq H J) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists T, (BetS J H T /\ Cong H T H J)) by (conclude postulate_extension);destruct Tf as [T];spliter.
+assert (Tf:exists T, (BetS J H T /\ Cong H T H J)) by (conclude lemma_extension);destruct Tf as [T];spliter.
 assert (Col J H T) by (conclude_def Col ).
 assert (Col B J H) by (conclude lemma_collinear4).
 assert (neq J T) by (forward_using lemma_betweennotequal).
@@ -98,47 +96,16 @@ assert (~ eq H F).
  }
 let Tf:=fresh in
 assert (Tf:exists S, (Out H Q S /\ Cong H S H F)) by (conclude lemma_layoff);destruct Tf as [S];spliter.
-let Tf:=fresh in
-assert (Tf:exists L, (BetS Q L P /\ Col J T L /\ nCol J T Q)) by (conclude_def TS );destruct Tf as [L];spliter.
-assert (Col A B L) by (conclude lemma_collinear5).
-assert (eq Q Q) by (conclude cn_equalityreflexive).
-assert (eq G G) by (conclude cn_equalityreflexive).
-assert (eq D D) by (conclude cn_equalityreflexive).
-assert (eq E E) by (conclude cn_equalityreflexive).
 assert (eq F F) by (conclude cn_equalityreflexive).
-assert (eq S S) by (conclude cn_equalityreflexive).
-assert (Out A G G) by (conclude lemma_ray4).
 assert (neq D C) by (forward_using lemma_angledistinct).
 assert (neq C D) by (conclude lemma_inequalitysymmetric).
 assert (neq C E) by (forward_using lemma_angledistinct).
-assert (Out C D D) by (conclude lemma_ray4).
-assert (Out C E E) by (conclude lemma_ray4).
 assert (Col J H A) by (forward_using lemma_collinearorder).
 assert (Per J H S) by (conclude lemma_8_3).
 assert (Per S H J) by (conclude lemma_8_2).
 assert (CongA J H F J H S) by (conclude lemma_Euclid4).
-assert (Out H F F) by (conclude lemma_ray4).
-assert (Supp J H F F T) by (conclude_def Supp ).
-assert (eq T T) by (conclude cn_equalityreflexive).
 assert (eq S S) by (conclude cn_equalityreflexive).
 assert (neq H S) by (forward_using lemma_angledistinct).
-assert (Out H S S) by (conclude lemma_ray4).
-assert (Supp J H S S T) by (conclude_def Supp ).
-assert (CongA F H T S H T) by (conclude lemma_supplements).
-assert (Col A H J) by (forward_using lemma_collinearorder).
-assert (Supp J H F F T) by (conclude_def Supp ).
-assert (Supp J H S S T) by (conclude_def Supp ).
-assert (~ Col F A G).
- {
- intro.
- assert (Col A B G) by (conclude lemma_rayimpliescollinear).
- assert (Col G A B) by (forward_using lemma_collinearorder).
- assert (Col G A F) by (forward_using lemma_collinearorder).
- assert (neq G A) by (conclude lemma_inequalitysymmetric).
- assert (Col A B F) by (conclude lemma_collinear4).
- contradict.
- }
-assert ((eq A H \/ eq A J \/ eq H J \/ BetS H A J \/ BetS A H J \/ BetS A J H)) by (conclude_def Col ).
 assert (CongA F A G S A G).
 by cases on (eq A H \/ neq A H).
 {
@@ -156,9 +123,7 @@ by cases on (eq A H \/ neq A H).
  close.
  }
 {
- assert (Cong A H A H) by (conclude cn_congruencereflexive).
  assert (Cong F H S H) by (forward_using lemma_doublereverse).
- assert (Per F H J) by (conclude lemma_8_2).
  assert (Per A H F) by (conclude lemma_collinearright).
  assert (Per F H A) by (conclude lemma_8_2).
  assert (Per J H S) by (conclude lemma_8_2).
@@ -172,15 +137,12 @@ by cases on (eq A H \/ neq A H).
  assert (CongA F H A S H A) by (conclude lemma_equalanglestransitive).
  assert (Cong H F H S) by (forward_using lemma_congruenceflip).
  assert (Cong H A H A) by (conclude cn_congruencereflexive).
- assert (nCol F H A) by (conclude lemma_rightangleNC).
- assert (Triangle F H A) by (conclude_def Triangle ).
  assert (~ Col S H A).
   {
   intro.
   assert (Col A H S) by (forward_using lemma_collinearorder).
   contradict.
   }
- assert (Triangle S H A) by (conclude_def Triangle ).
  assert ((Cong F A S A /\ CongA H F A H S A /\ CongA H A F H A S)) by (conclude proposition_04).
  assert (~ Col F A H).
   {
@@ -198,7 +160,6 @@ by cases on (eq A H \/ neq A H).
  assert (CongA H A S S A H) by (conclude lemma_ABCequalsCBA).
  assert (CongA F A H H A S) by (conclude lemma_equalanglestransitive).
  assert (CongA F A H S A H) by (conclude lemma_equalanglestransitive).
- assert (Cong A F A S) by (forward_using lemma_congruenceflip).
  assert (eq A A) by (conclude cn_equalityreflexive).
  assert (Col A B A) by (conclude_def Col ).
  assert (Col A B G) by (conclude lemma_rayimpliescollinear).
@@ -212,7 +173,7 @@ by cases on (eq A H \/ neq A H).
   assert (Col G H A) by (conclude lemma_collinear5).
   close.
   }
-(* cases *)
+(** cases *)
  assert (neq F A) by (forward_using lemma_angledistinct).
  assert (neq A F) by (conclude lemma_inequalitysymmetric).
  assert (Out A F F) by (conclude lemma_ray4).
@@ -261,12 +222,6 @@ by cases on (eq A H \/ neq A H).
    contradict.
    }
   assert (CongA S A H S A H) by (conclude lemma_equalanglesreflexive).
-  assert (neq H A) by (forward_using lemma_betweennotequal).
-  assert (neq A H) by (conclude lemma_inequalitysymmetric).
-  assert (eq H H) by (conclude cn_equalityreflexive).
-  assert (Out A H H) by (conclude lemma_ray4).
-  assert (Out A G H) by (conclude lemma_ray4).
-  assert (Cong A G A G) by (conclude cn_congruencereflexive).
   assert (CongA F A H F A G) by (conclude lemma_equalangleshelper).
   assert (CongA S A H S A G) by (conclude lemma_equalangleshelper).
   assert (CongA F A G F A H) by (conclude lemma_equalanglessymmetric).
@@ -285,11 +240,6 @@ by cases on (eq A H \/ neq A H).
    contradict.
    }
   assert (CongA S A H S A H) by (conclude lemma_equalanglesreflexive).
-  assert (neq H A) by (forward_using lemma_betweennotequal).
-  assert (neq A H) by (conclude lemma_inequalitysymmetric).
-  assert (eq H H) by (conclude cn_equalityreflexive).
-  assert (Out A H H) by (conclude lemma_ray4).
-  assert (Out A G H) by (conclude lemma_ray4).
   assert (CongA F A H F A G) by (conclude lemma_equalangleshelper).
   assert (CongA S A H S A G) by (conclude lemma_equalangleshelper).
   assert (CongA F A G F A H) by (conclude lemma_equalanglessymmetric).
@@ -305,15 +255,14 @@ by cases on (eq A H \/ neq A H).
   assert (CongA F A G S A G) by (conclude lemma_supplements).
   close.
   }
-(* cases *)
+(** cases *)
  close.
  }
-(* cases *)
+(** cases *)
 assert (CongA S A G F A G) by (conclude lemma_equalanglessymmetric).
 assert (CongA S A G D C E) by (conclude lemma_equalanglestransitive).
 assert (Out H S Q) by (conclude lemma_ray5).
 assert (Col J T H) by (forward_using lemma_collinearorder).
-assert (Col Q L P) by (conclude_def Col ).
 assert (TS S J T P) by (conclude lemma_9_5).
 let Tf:=fresh in
 assert (Tf:exists M, (BetS S M P /\ Col J T M /\ nCol J T S)) by (conclude_def TS );destruct Tf as [M];spliter.

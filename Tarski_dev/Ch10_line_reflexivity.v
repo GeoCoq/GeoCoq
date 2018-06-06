@@ -1,4 +1,11 @@
 Require Export GeoCoq.Tarski_dev.Ch09_plane.
+Require Export GeoCoq.Tarski_dev.Tactics.CoincR_for_cop.
+
+Ltac CopR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+ let cop := constr:(Coplanar) in
+   assert_ncols; Cop_refl tpoint col cop.
 
 Section T10.
 
@@ -8,7 +15,7 @@ Lemma ex_sym : forall A B X, exists Y, (Perp A B X Y \/ X = Y) /\
    (exists M, Col A B M /\ Midpoint M X Y).
 Proof.
     intros.
-    induction (Col_dec A B X).
+    induction (col_dec A B X).
       exists X.
       split.
         right.
@@ -53,13 +60,11 @@ Proof.
     tauto.
 Qed.
 
-Require Import Setoid.
-
 Lemma ex_sym1 : forall A B X, A<>B -> exists Y, (Perp A B X Y \/ X = Y) /\
  (exists M, Col A B M /\ Midpoint M X Y /\ Reflect X Y A B).
 Proof.
     intros.
-    induction (Col_dec A B X).
+    induction (col_dec A B X).
       exists X.
       split.
         right.
@@ -192,7 +197,6 @@ Proof.
         subst X.
         assert (~ Col A B P /\ Per P A B).
           eapply l8_16_1.
-            assumption.
             apply col_trivial_3.
             apply col_trivial_2.
             auto.
@@ -214,7 +218,6 @@ Proof.
         apply H0.
       assert (~ Col A B P /\ Per P X A).
         eapply l8_16_1.
-          assumption.
           assumption.
           apply col_trivial_3.
           auto.
@@ -262,7 +265,6 @@ Proof.
         assert (~ Col A B P /\ Per P A B).
           eapply l8_16_1.
             assumption.
-            assumption.
             apply col_trivial_2.
             auto; auto.
           apply perp_sym.
@@ -271,7 +273,6 @@ Proof.
         contradiction.
       assert (~ Col A B P /\ Per P Y A).
         eapply l8_16_1.
-          assumption.
           assumption.
           apply col_trivial_3.
           auto.
@@ -307,7 +308,6 @@ Proof.
         assert (~ Col A B P /\ Per P A B).
           eapply l8_16_1.
             assumption.
-            assumption.
             apply col_trivial_2.
             auto.
           apply perp_sym.
@@ -316,7 +316,6 @@ Proof.
         contradiction.
       assert (~ Col A B P /\ Per P X A).
         eapply l8_16_1.
-          assumption.
           assumption.
           apply col_trivial_3.
           auto.
@@ -346,7 +345,7 @@ Lemma l10_2_existence_spec : forall A B P,
  exists P', ReflectL P' P A B.
 Proof.
     intros.
-    induction (Col_dec A B P).
+    induction (col_dec A B P).
       unfold ReflectL.
       exists P.
       split.
@@ -588,7 +587,6 @@ Proof.
         eapply l8_16_1.
           assumption.
           assumption.
-          assumption.
           auto.
         apply perp_sym.
         eapply perp_col.
@@ -640,7 +638,6 @@ Proof.
       assert (Perp M0 X P' P) by (eauto using perp_col2).
       assert(~ Col A B P /\ Per P M0 X).
         eapply l8_16_1.
-          assumption.
           assumption.
           assumption.
           auto.
@@ -1160,9 +1157,6 @@ Proof.
                 subst M'.
                 assert (~ Col A B P /\ Per P A B).
                   eapply l8_16_1.
-                    apply perp_distinct in H3.
-                    spliter.
-                    assumption.
                     apply col_trivial_3.
                     apply col_trivial_2.
                     apply perp_distinct in H3.
@@ -1176,12 +1170,8 @@ Proof.
                 assumption.
               assert (~ Col A B P /\ Per P M' A).
                 eapply l8_16_1.
-                  apply perp_distinct in H3.
-                  spliter.
-                  assumption.
                   assumption.
                   apply col_trivial_3.
-                  assumption.
                 apply perp_sym.
                 assumption.
               spliter.
@@ -1285,7 +1275,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma image_col : forall A B X, Col A B X -> ReflectL X X A B.
+Lemma col__image_spec : forall A B X, Col A B X -> ReflectL X X A B.
 Proof.
     intros.
     unfold ReflectL.
@@ -1298,11 +1288,65 @@ Proof.
     reflexivity.
 Qed.
 
-Lemma is_image_spec_triv : forall A B, ReflectL A A B B.
+Lemma image_triv : forall A B, Reflect A A A B.
 Proof.
     intros.
-    apply image_col.
+    induction (eq_dec_points A B).
+      right; split; Midpoint.
+    left; split.
+      auto.
+    apply col__image_spec; Col.
+Qed.
+
+Lemma cong_midpoint__image : forall A B X Y, Cong A X A Y -> Midpoint B X Y -> Reflect Y X A B.
+Proof.
+    intros.
+    induction (eq_dec_points A B).
+      right; subst; split; auto.
+    left; repeat split; auto.
+      exists B; split; Col.
+    induction(eq_dec_points X Y).
+      right.
+      assumption.
+    left.
+    apply perp_sym.
+    assert(B <> X /\ B <> Y).
+      apply midpoint_distinct_1.
+        assumption.
+      assumption.
+    spliter.
+      apply col_per_perp; Col.
+    exists Y.
+    split.
+      assumption.
+    assumption.
+Qed.
+
+Lemma col_image_spec__eq : forall A B P P', Col A B P -> ReflectL P P' A B -> P = P'.
+Proof.
+    intros.
+    apply (l10_6_uniqueness_spec A B P).
+      apply col__image_spec; assumption.
+      assumption.
+Qed.
+
+Lemma image_spec_triv : forall A B, ReflectL A A B B.
+Proof.
+    intros.
+    apply col__image_spec.
     Col.
+Qed.
+
+Lemma image_spec__eq : forall A P P', ReflectL P P' A A -> P = P'.
+Proof.
+    intros A P P'; apply col_image_spec__eq; Col.
+Qed.
+
+Lemma image__midpoint : forall A P P', Reflect P P' A A -> Midpoint A P' P.
+Proof.
+    induction 1; spliter.
+      contradiction.
+      assumption.
 Qed.
 
 Lemma is_image_spec_dec :
@@ -1314,7 +1358,7 @@ Proof.
       elim (eq_dec_points A B); intro HAB.
         subst.
         left.
-        apply is_image_spec_triv.
+        apply image_spec_triv.
       right.
       intro H.
       unfold ReflectL in *.
@@ -1553,7 +1597,6 @@ Proof.
       Col.
     assert (exists X , TS A B P X).
       apply l9_10.
-        assumption.
       intro.
       apply H0.
       apply col_permutation_1.
@@ -1627,40 +1670,6 @@ Proof.
       assumption.
     apply between_symmetry.
     assumption.
-Qed.
-
-Lemma perp_exists : forall O A B, A <> B -> exists X, Perp O X A B.
-Proof.
-    intros.
-    assert(HH:=not_col_exists A B H).
-    ex_and HH Q.
-    induction(Col_dec O A B).
-      assert(exists P, Perp A B P O /\ OS A B Q P).
-        apply(l10_15 A B O Q ).
-          Col.
-        auto.
-      ex_and H2 P.
-      exists P.
-      apply perp_sym.
-      apply perp_right_comm.
-      auto.
-    assert(exists P : Tpoint, Col A B P /\ Perp A B O P).
-      apply (l8_18_existence A B O).
-      intro.
-      apply H1.
-      Col.
-    ex_and H2 P.
-    exists P.
-    apply perp_sym.
-    auto.
-Qed.
-
-Lemma perp_vector : forall A B, A <> B -> (exists X, exists Y, Perp A B X Y).
-Proof.
-intros.
-exists A.
-destruct (perp_exists A A B) as [Y]; auto.
-exists Y; Perp.
 Qed.
 
 Lemma ex_per_cong : forall A B C D X Y,

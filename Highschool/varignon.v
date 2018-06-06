@@ -1,8 +1,8 @@
-Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
+Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 
 Section Varignon.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 (** This is the usual proof presented in classroom based on
 the midpoint theorem but this proof suffers from two problems.

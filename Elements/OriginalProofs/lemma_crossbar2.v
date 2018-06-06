@@ -70,27 +70,10 @@ assert (CongA H G M H G K) by (conclude lemma_equalangleshelper).
 assert (CongA H G M H G A) by (conclude lemma_equalanglestransitive).
 assert (nCol H G A) by (conclude lemma_equalanglesNC).
 assert (CongA H G A H G A) by (conclude lemma_equalanglesreflexive).
-assert (eq A A) by (conclude cn_equalityreflexive).
-assert (Out G A A) by (conclude lemma_ray4).
 assert (CongA H G A H G N) by (conclude lemma_equalangleshelper).
 assert (CongA H G M H G N) by (conclude lemma_equalanglestransitive).
 assert (CongA H G N H G M) by (conclude lemma_equalanglessymmetric).
 assert (Cong G H G H) by (conclude cn_congruencereflexive).
-assert (Triangle H G M) by (conclude_def Triangle ).
-assert (~ Col H G N).
- {
- intro.
- assert (Col G A N) by (conclude lemma_rayimpliescollinear).
- assert (Col N G A) by (forward_using lemma_collinearorder).
- assert (Col N G H) by (forward_using lemma_collinearorder).
- assert (neq G N) by (conclude lemma_raystrict).
- assert (neq N G) by (conclude lemma_inequalitysymmetric).
- assert (Col G A H) by (conclude lemma_collinear4).
- assert (Col H G A) by (forward_using lemma_collinearorder).
- assert (nCol H G A) by (conclude lemma_equalanglesNC).
- contradict.
- }
-assert (Triangle H G N) by (conclude_def Triangle ).
 assert (Cong H N H M) by (conclude proposition_04).
 assert (eq G G) by (conclude cn_equalityreflexive).
 assert (Col G G H) by (conclude_def Col ).

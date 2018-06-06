@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_oppositesidesymmetric.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_crossimpliesopposite : 
    forall A B C D, 

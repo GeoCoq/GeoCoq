@@ -1,10 +1,9 @@
 Require Export GeoCoq.Elements.OriginalProofs.lemma_angletrichotomy.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_equalanglesreflexive.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_trichotomy1.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_26A : 
    forall A B C D E F, 
    Triangle A B C -> Triangle D E F -> CongA A B C D E F -> CongA B C A E F D -> Cong B C E F ->
@@ -54,29 +53,10 @@ assert (~ Lt D E A B).
  assert (CongA A B C G B C) by (conclude_def CongA ).
  assert (CongA G B C A B C) by (conclude lemma_equalanglessymmetric).
  assert (CongA G B C D E F) by (conclude lemma_equalanglestransitive).
- assert (~ Col G B C).
-  {
-  intro.
-  assert (Col B G A) by (conclude_def Col ).
-  assert (Col G B A) by (forward_using lemma_collinearorder).
-  assert (neq B G) by (forward_using lemma_betweennotequal).
-  assert (neq G B) by (conclude lemma_inequalitysymmetric).
-  assert (Col B C A) by (conclude lemma_collinear4).
-  assert (Col A B C) by (forward_using lemma_collinearorder).
-  contradict.
-  }
- assert (Triangle G B C) by (conclude_def Triangle ).
  assert ((Cong G C D F /\ CongA B G C E D F /\ CongA B C G E F D)) by (conclude proposition_04).
  assert (CongA E F D B C A) by (conclude lemma_equalanglessymmetric).
  assert (CongA B C G B C A) by (conclude lemma_equalanglestransitive).
  assert (CongA B C A B C G) by (conclude lemma_equalanglessymmetric).
- assert (~ Col B C G).
-  {
-  intro.
-  assert (Col G B C) by (forward_using lemma_collinearorder).
-  contradict.
-  }
- assert (CongA B C G B C G) by (conclude lemma_equalanglesreflexive).
  assert (Out C B B) by (conclude lemma_ray4).
  assert (eq A A) by (conclude cn_equalityreflexive).
  assert (Out C A A) by (conclude lemma_ray4).
@@ -115,29 +95,11 @@ assert (~ Lt A B D E).
  assert (CongA G E F D E F) by (conclude lemma_equalanglessymmetric).
  assert (CongA D E F A B C) by (conclude lemma_equalanglessymmetric).
  assert (CongA G E F A B C) by (conclude lemma_equalanglestransitive).
- assert (~ Col G E F).
-  {
-  intro.
-  assert (Col E G D) by (conclude_def Col ).
-  assert (Col G E D) by (forward_using lemma_collinearorder).
-  assert (neq E G) by (forward_using lemma_betweennotequal).
-  assert (neq G E) by (conclude lemma_inequalitysymmetric).
-  assert (Col E F D) by (conclude lemma_collinear4).
-  assert (Col D E F) by (forward_using lemma_collinearorder).
-  contradict.
-  }
- assert (Triangle G E F) by (conclude_def Triangle ).
  assert (Cong E F B C) by (conclude lemma_congruencesymmetric).
  assert ((Cong G F A C /\ CongA E G F B A C /\ CongA E F G B C A)) by (conclude proposition_04).
- assert (CongA B C A E F G) by (conclude lemma_equalanglessymmetric).
  assert (CongA E F G E F D) by (conclude lemma_equalanglestransitive).
  assert (CongA E F D E F G) by (conclude lemma_equalanglessymmetric).
- assert (~ Col E F G).
-  {
-  intro.
-  assert (Col G E F) by (forward_using lemma_collinearorder).
-  contradict.
-  }
+ assert (nCol E F G) by (conclude lemma_equalanglesNC).
  assert (CongA E F G E F G) by (conclude lemma_equalanglesreflexive).
  assert (neq E F) by (forward_using lemma_angledistinct).
  assert (neq F E) by (conclude lemma_inequalitysymmetric).
@@ -162,5 +124,3 @@ close.
 Qed.
 
 End Euclid.
-
-

@@ -50,7 +50,7 @@ assert (~ Col a b c).
   assert (Col V A B) by (conclude lemma_collinear4).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Col V B A) by (forward_using lemma_collinearorder).
  assert (Col V B C) by (forward_using lemma_collinearorder).
  assert (neq B V) by (conclude lemma_raystrict).

@@ -3,7 +3,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_equalanglestransitive.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_equalanglesflip : 
    forall A B C D E F, 

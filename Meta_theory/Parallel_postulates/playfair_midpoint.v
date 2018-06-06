@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Ch13_1.
 
 Section playfair_midpoints.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma playfair_s_postulate_implies_midpoint_converse_postulate :
   playfair_s_postulate ->

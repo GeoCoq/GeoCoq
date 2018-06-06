@@ -1,7 +1,7 @@
-Require Export GeoCoq.Tarski_dev.Coplanar_trans.
+Require Import GeoCoq.Tarski_dev.Ch09_plane.
 Require Import GeoCoq.Tactics.Coinc.tactics_axioms.
 
-(* In this file we prove that Col in Tarski neutral dimensionless is a Coinc_theory *)
+(* In this file we prove that Cop in Tarski neutral dimensionless is a Coinc_theory *)
 
 Section Tarski_is_a_Coinc_theory_for_cop.
 

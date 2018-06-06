@@ -1,9 +1,9 @@
 Require Export GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
-Require Import GeoCoq.Highschool.varignon.
+Require Export GeoCoq.Highschool.varignon.
 
 Section GravityCenter.
 
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 (**
 Center of gravity
@@ -67,6 +67,14 @@ Qed.
 Definition is_gravity_center G A B C :=
  ~ Col A B C /\
  exists I, exists J, Midpoint I B C /\ Midpoint J A C /\ Col G A I /\ Col G B J.
+
+Lemma is_gravity_center_coplanar : forall A B C G,
+  is_gravity_center G A B C -> Coplanar G A B C.
+Proof.
+intros.
+destruct H as [HNCol [I [J]]]; spliter.
+exists I; left; split; Col.
+Qed.
 
 Lemma is_gravity_center_exist_unique : forall A B C,
   ~ Col A B C ->
@@ -322,7 +330,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       assert (HH1 : A' <> B'') by (intro; treat_equalities; Col).
       assert (HH2 : Col A' B'' A') by Col.
       assert (HH3 : Col G A''  A') by (assert_cols; Col).
-      assert (HH := l9_19 A' B'' G A'' A' HH1 HH2 HH3); rewrite HH.
+      assert (HH := l9_19 A' B'' G A'' A' HH2 HH3); rewrite HH.
       assert_diffs; assert_cols; show_distinct G A'; treat_equalities; Col.
       show_distinct G A''; treat_equalities; Col.
       show_distinct G B''; treat_equalities; Col.
@@ -337,7 +345,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       assert (HH1 : A' <> B'') by (intro; treat_equalities; Col).
       assert (HH2 : Col A' B'' B'') by Col.
       assert (HH3 : Col G B'''  B'') by (assert_cols; Col).
-      assert (HH := l9_19 A' B'' G B''' B'' HH1 HH2 HH3); rewrite HH.
+      assert (HH := l9_19 A' B'' G B''' B'' HH2 HH3); rewrite HH.
       assert_diffs; assert_cols; show_distinct G A'; treat_equalities; Col.
       show_distinct G A''; treat_equalities; Col.
       show_distinct G B''; treat_equalities; Col.
@@ -378,7 +386,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
         assert (HH1 : A' <> B'') by (intro; treat_equalities; Col).
         assert (HH2 : Col A' B'' A') by Col.
         assert (HH3 : Col G A  A') by ColR.
-        assert (HH := l9_19 A' B'' G A A' HH1 HH2 HH3); rewrite HH.
+        assert (HH := l9_19 A' B'' G A A' HH2 HH3); rewrite HH.
         assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
         split; try (intro; apply HABG; ColR).
         split; Col.
@@ -420,7 +428,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       assert (HH1 : A' <> B'') by (intro; treat_equalities; Col).
       assert (HH2 : Col A' B'' A') by Col.
       assert (HH3 : Col A A''  A') by ColR.
-      assert (HH := l9_19 A' B'' A A'' A' HH1 HH2 HH3); rewrite HH.
+      assert (HH := l9_19 A' B'' A A'' A' HH2 HH3); rewrite HH.
       assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
       show_distinct A A'; Col.
       split; try (intro; apply HABG; ColR).
@@ -512,6 +520,8 @@ End GravityCenter.
 (* If we prove it with "Context `{Tn:Tarski_neutral_dimensionless}." we do not get the warning
 "the hint: eapply @is_gravity_center_perm_1 will only be used by eauto".
 There must be a bug with the handling of bases of hints. *)
+Hint Resolve is_gravity_center_coplanar : cop.
+
 Hint Resolve
      is_gravity_center_perm_1
      is_gravity_center_perm_2

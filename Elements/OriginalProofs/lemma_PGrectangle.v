@@ -34,7 +34,7 @@ assert (TP A B C D) by (conclude lemma_paralleldef2B).
 assert (OS C D A B) by (conclude_def TP ).
 assert (neq C A) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS B A E /\ Cong A E A B)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS B A E /\ Cong A E A B)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (BetS E A B) by (conclude axiom_betweennesssymmetry).
 assert (RT C A B A B D) by (conclude proposition_29C).
 let Tf:=fresh in

@@ -10,7 +10,6 @@ Lemma proposition_23C :
    exists X Y, Out A B Y /\ CongA X A Y D C E /\ OS X P A B.
 Proof.
 intros.
-assert (neq B A) by (conclude lemma_inequalitysymmetric).
 assert (~ eq P A).
  {
  intro.
@@ -19,10 +18,9 @@ assert (~ eq P A).
  contradict.
  }
 let Tf:=fresh in
-assert (Tf:exists Q, (BetS P A Q /\ Cong A Q P A)) by (conclude postulate_extension);destruct Tf as [Q];spliter.
+assert (Tf:exists Q, (BetS P A Q /\ Cong A Q P A)) by (conclude lemma_extension);destruct Tf as [Q];spliter.
 assert (eq A A) by (conclude cn_equalityreflexive).
 assert (Col A B A) by (conclude_def Col ).
-assert (TS P A B Q) by (conclude_def TS ).
 assert (~ Col A B Q).
  {
  intro.

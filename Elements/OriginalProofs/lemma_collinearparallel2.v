@@ -5,7 +5,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_collinearparallel.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_collinearparallel2 : 
    forall A B C D E F, 
@@ -42,7 +42,7 @@ by cases on (eq E D \/ neq E D).
   assert (Col F D E) by (conclude lemma_collinear4).
   close.
   }
-(* cases *)
+(** cases *)
  assert (Col D F E) by (forward_using lemma_collinearorder).
  assert (Par A B E F) by (conclude lemma_collinearparallel).
  close.
@@ -55,7 +55,7 @@ by cases on (eq E D \/ neq E D).
  assert (Par A B E F) by (forward_using lemma_parallelflip).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

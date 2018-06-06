@@ -3,7 +3,7 @@ Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
 
 Section rah_similar.
 
-Context `{T2D:Tarski_2D}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma rah__similar : postulate_of_right_saccheri_quadrilaterals -> postulate_of_existence_of_similar_triangles.
 Proof.
@@ -20,7 +20,7 @@ Proof.
   destruct (l8_18_existence A C B') as [C' []]; auto.
   exists A; exists B; exists C; exists A; exists B'; exists C'.
   assert(Par_strict B C B' C').
-    apply (par_not_col_strict _ _ _ _ B'); Col; apply (l12_9 _ _ _ _ A C); Perp.
+    apply (par_not_col_strict _ _ _ _ B'); Col; apply (l12_9 _ _ _ _ A C); Perp; Cop.
   assert(HNCol4 : ~ Col B C C') by (apply (par_strict_not_col_4 _ _ B'); auto).
   assert_diffs.
   assert(Bet A C C').

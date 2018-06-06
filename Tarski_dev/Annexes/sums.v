@@ -1,24 +1,8 @@
-Require Export GeoCoq.Tarski_dev.Ch07_midpoint.
+Require Export GeoCoq.Tarski_dev.Ch06_out_lines.
 
 Section Sums.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Lemma sums_diff_1 : forall A B C D E F, A <> B -> SumS A B C D E F -> E <> F.
-Proof.
-  intros A B C D E F Hdiff HSumS Heq.
-  apply Hdiff.
-  destruct HSumS as [P [Q [R [HBet [HCong1 [HCong2 HCong3]]]]]].
-  treat_equalities; reflexivity.
-Qed.
-
-Lemma sums_diff_2 : forall A B C D E F, C <> D -> SumS A B C D E F -> E <> F.
-Proof.
-  intros A B C D E F Hdiff HSumS Heq.
-  apply Hdiff.
-  destruct HSumS as [P [Q [R [HBet [HCong1 [HCong2 HCong3]]]]]].
-  treat_equalities; reflexivity.
-Qed.
 
 (** Existence of the sum *)
 
@@ -90,7 +74,7 @@ Proof.
   exists P, Q, R; repeat split; trivial; eapply cong_transitivity; eauto.
 Qed.
 
-(** The degenerate segment is the additive identity *)
+(** The degenerate segments represent the additive identity *)
 
 Lemma sums123312 : forall A B C, SumS A B C C A B.
 Proof.
@@ -219,6 +203,30 @@ Lemma sums__le3456 : forall A B C D E F, SumS A B C D E F -> Le C D E F.
 Proof.
   intros A B C D E F HSumS.
   apply sums__le1256 with A B, sums_sym; trivial.
+Qed.
+
+(** If the sum of two segments is degenerate, then the segments are degenerate *)
+
+Lemma eq_sums__eq : forall A B C D E, SumS A B C D E E -> A = B /\ C = D.
+Proof.
+  intros A B C D E HSumS.
+  split; apply le_zero with E; [apply sums__le1256 with C D|apply (sums__le3456 A B)]; assumption.
+Qed.
+
+Lemma sums_diff_1 : forall A B C D E F, A <> B -> SumS A B C D E F -> E <> F.
+Proof.
+  intros A B C D E F Hdiff HSumS Heq.
+  subst F.
+  apply Hdiff.
+  destruct (eq_sums__eq A B C D E HSumS); assumption.
+Qed.
+
+Lemma sums_diff_2 : forall A B C D E F, C <> D -> SumS A B C D E F -> E <> F.
+Proof.
+  intros A B C D E F Hdiff HSumS Heq.
+  subst F.
+  apply Hdiff.
+  destruct (eq_sums__eq A B C D E HSumS); assumption.
 Qed.
 
 (** SumS preserves Le *)
@@ -368,6 +376,8 @@ Proof.
 Qed.
 
 End Sums.
+
+Hint Resolve sums__le1256 sums__le3456 : le.
 
 Hint Resolve sums_sym sums_left_comm sums_middle_comm sums_right_comm
              sums_comm sums112323 sums123312 bet__sums : sums.

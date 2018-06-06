@@ -5,9 +5,7 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_27.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_parallelflip.
 
 Section Euclid.
-
 Context `{Ax:euclidean_neutral_ruler_compass}.
-
 Lemma proposition_31 : 
    forall A B C D, 
    BetS B D C -> nCol B C A ->
@@ -25,16 +23,12 @@ assert (~ eq A D).
 let Tf:=fresh in
 assert (Tf:exists M, (BetS A M D /\ Cong M A M D)) by (conclude proposition_10);destruct Tf as [M];spliter.
 assert (Cong A M M D) by (forward_using lemma_congruenceflip).
-assert (Col A M D) by (conclude_def Col ).
-assert (Col A D M) by (forward_using lemma_collinearorder).
-assert (nCol A B C) by (forward_using lemma_NCorder).
 assert (Col C B D) by (forward_using lemma_collinearorder).
 assert (eq B B) by (conclude cn_equalityreflexive).
 assert (Col C B B) by (conclude_def Col ).
 assert (nCol C B A) by (forward_using lemma_NCorder).
 assert (neq B D) by (forward_using lemma_betweennotequal).
 assert (nCol B D A) by (conclude lemma_NChelper).
-assert (neq M D) by (forward_using lemma_betweennotequal).
 assert (Col B D C) by (conclude_def Col ).
 assert (eq D D) by (conclude cn_equalityreflexive).
 assert (Col B D D) by (conclude_def Col ).
@@ -57,7 +51,7 @@ assert (~ eq C M).
  }
 assert (neq M C) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists E, (BetS C M E /\ Cong M E M C)) by (conclude postulate_extension);destruct Tf as [E];spliter.
+assert (Tf:exists E, (BetS C M E /\ Cong M E M C)) by (conclude lemma_extension);destruct Tf as [E];spliter.
 assert (Cong M C M E) by (conclude lemma_congruencesymmetric).
 assert (Cong C M M E) by (forward_using lemma_congruenceflip).
 assert (Midpoint C M E) by (conclude_def Midpoint ).
@@ -73,7 +67,7 @@ assert (~ eq B M).
  }
 assert (neq M B) by (conclude lemma_inequalitysymmetric).
 let Tf:=fresh in
-assert (Tf:exists F, (BetS B M F /\ Cong M F M B)) by (conclude postulate_extension);destruct Tf as [F];spliter.
+assert (Tf:exists F, (BetS B M F /\ Cong M F M B)) by (conclude lemma_extension);destruct Tf as [F];spliter.
 assert (Cong M F B M) by (forward_using lemma_congruenceflip).
 assert (Cong B M M F) by (conclude lemma_congruencesymmetric).
 assert (Midpoint B M F) by (conclude_def Midpoint ).
@@ -81,6 +75,9 @@ assert (Cong M D M A) by (conclude lemma_congruencesymmetric).
 assert (BetS D M A) by (conclude axiom_betweennesssymmetry).
 assert (Cong D M M A) by (forward_using lemma_congruenceflip).
 assert (Midpoint D M A) by (conclude_def Midpoint ).
+assert (neq B D) by (forward_using lemma_betweennotequal).
+assert (neq D C) by (forward_using lemma_betweennotequal).
+assert (neq B C) by (forward_using lemma_NCdistinct).
 assert (Cong B D F A) by (conclude lemma_pointreflectionisometry).
 assert (Cong D C A E) by (conclude lemma_pointreflectionisometry).
 assert (Cong B C F E) by (conclude lemma_pointreflectionisometry).
@@ -113,32 +110,17 @@ assert (nCol A D F) by (conclude lemma_NChelper).
 assert (nCol F A D) by (forward_using lemma_NCorder).
 assert (Cong D B A F) by (forward_using lemma_congruenceflip).
 assert (Midpoint A M D) by (conclude_def Midpoint ).
+assert (neq B A) by (forward_using lemma_NCdistinct).
 assert (Cong B A F D) by (conclude lemma_pointreflectionisometry).
 assert (Cong F D B A) by (conclude lemma_congruencesymmetric).
 assert (Cong A F D B) by (conclude lemma_congruencesymmetric).
 assert (Cong A D D A) by (conclude cn_equalityreverse).
 assert (CongA F A D B D A) by (conclude_def CongA ).
-assert (Col B D C) by (conclude_def Col ).
-assert (Col B C D) by (forward_using lemma_collinearorder).
-assert (eq B B) by (conclude cn_equalityreflexive).
-assert (Col B C B) by (conclude_def Col ).
 assert (nCol B D A) by (conclude lemma_NChelper).
 assert (CongA B D A A D B) by (conclude lemma_ABCequalsCBA).
 assert (CongA F A D A D B) by (conclude lemma_equalanglestransitive).
 assert (CongA A D B F A D) by (conclude lemma_equalanglessymmetric).
-assert (Col A M D) by (conclude_def Col ).
-assert (Col D A M) by (forward_using lemma_collinearorder).
 assert (nCol D A B) by (forward_using lemma_NCorder).
-assert (Col D A A) by (conclude_def Col ).
-assert (neq A M) by (forward_using lemma_betweennotequal).
-assert (neq M A) by (conclude lemma_inequalitysymmetric).
-assert (nCol M A B) by (conclude lemma_NChelper).
-assert (nCol B M A) by (forward_using lemma_NCorder).
-assert (Col B M F) by (conclude_def Col ).
-assert (nCol F M A) by (conclude lemma_NChelper).
-assert (nCol M A F) by (forward_using lemma_NCorder).
-assert (Col M A D) by (forward_using lemma_collinearorder).
-assert (nCol D A F) by (conclude lemma_NChelper).
 assert (nCol F A D) by (forward_using lemma_NCorder).
 assert (CongA F A D D A F) by (conclude lemma_ABCequalsCBA).
 assert (CongA A D B D A F) by (conclude lemma_equalanglestransitive).
@@ -165,13 +147,29 @@ assert (neq D C) by (forward_using lemma_betweennotequal).
 assert (eq C C) by (conclude cn_equalityreflexive).
 assert (Out D C C) by (conclude lemma_ray4).
 assert (Cong E M M C) by (forward_using lemma_congruenceflip).
-assert (Cong A M M D) by (forward_using lemma_congruenceflip).
-assert (Cong D M M A) by (forward_using lemma_doublereverse).
 assert (BetS E M C) by (conclude axiom_betweennesssymmetry).
 assert (Midpoint E M C) by (conclude_def Midpoint ).
+assert (~ eq E D).
+ {
+ intro.
+ assert (BetS C M D) by (conclude cn_equalitysub).
+ assert (Col C M D) by (conclude_def Col ).
+ assert (Col M D C) by (forward_using lemma_collinearorder).
+ assert (Col A M D) by (conclude_def Col ).
+ assert (Col M D A) by (forward_using lemma_collinearorder).
+ assert (neq M D) by (forward_using lemma_betweennotequal).
+ assert (Col D C A) by (conclude lemma_collinear4).
+ assert (Col D C B) by (forward_using lemma_collinearorder).
+ assert (neq D C) by (forward_using lemma_betweennotequal).
+ assert (Col C A B) by (conclude lemma_collinear4).
+ assert (Col B C A) by (forward_using lemma_collinearorder).
+ contradict.
+ }
+assert (neq E D) by auto.
+assert (neq D A) by (forward_using lemma_betweennotequal).
+assert (neq A D) by (conclude lemma_inequalitysymmetric).
 assert (Cong E D C A) by (conclude lemma_pointreflectionisometry).
 assert (Cong A E D C) by (conclude lemma_pointreflectionisometry).
-assert (Cong A D D A) by (conclude lemma_pointreflectionisometry).
 assert (Col E A F) by (conclude_def Col ).
 assert (Col F A E) by (forward_using lemma_collinearorder).
 assert (Col F A A) by (conclude_def Col ).
@@ -187,5 +185,3 @@ remove_exists;eauto 20.
 Qed.
 
 End Euclid.
-
-

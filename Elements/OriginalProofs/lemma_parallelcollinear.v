@@ -4,7 +4,7 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_parallelcollinear2.
 
 Section Euclid.
 
-Context `{Ax:euclidean_neutral}.
+Context `{Ax:euclidean_neutral_ruler_compass}.
 
 Lemma lemma_parallelcollinear : 
    forall A B C c d, 
@@ -13,8 +13,6 @@ Lemma lemma_parallelcollinear :
 Proof.
 intros.
 assert ((neq A B /\ neq c d /\ ~ Meet A B c d /\ OS c d A B)) by (conclude_def TP ).
-let Tf:=fresh in
-assert (Tf:exists p q r, (Col A B p /\ Col A B r /\ BetS c p q /\ BetS d r q /\ nCol A B c /\ nCol A B d)) by (conclude_def OS );destruct Tf as [p[q[r]]];spliter.
 assert ((eq c d \/ eq c C \/ eq d C \/ BetS d c C \/ BetS c d C \/ BetS c C d)) by (conclude_def Col ).
 assert (TP A B C d).
 by cases on (eq c d \/ eq c C \/ eq d C \/ BetS d c C \/ BetS c d C \/ BetS c C d).
@@ -57,7 +55,7 @@ by cases on (eq c d \/ eq c C \/ eq d C \/ BetS d c C \/ BetS c d C \/ BetS c C 
  assert (TP A B C d) by (conclude lemma_parallelcollinear2).
  close.
  }
-(* cases *)
+(** cases *)
 close.
 Qed.
 

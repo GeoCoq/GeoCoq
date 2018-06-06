@@ -1,12 +1,9 @@
-Require Import GeoCoq.Axioms.parallel_postulates.
 Require Import GeoCoq.Tactics.Coinc.tactics_axioms.
-Require Export GeoCoq.Tarski_dev.Ch12_parallel.
-Require Export GeoCoq.Highschool.concyclic.
+Require Import GeoCoq.Tarski_dev.Annexes.inscribed_angle.
 
+Section Tarski_is_a_Coinc_theory_for_concyclic.
 
-Section Tarski_is_a_Coinc_theory_for_cocyclic.
-
-Context `{TE:Tarski_2D_euclidean}.
+Context `{TE:Tarski_euclidean}.
 
 Definition not_col : arity Tpoint 3 := fun A B C : Tpoint => ~ Col A B C.
 
@@ -16,6 +13,18 @@ Proof. unfold not_col; simpl; Col. Qed.
 Lemma not_col_perm_2 : forall A B (X : cartesianPower Tpoint 1),
   app_2_n not_col A B X -> app_2_n not_col B A X.
 Proof. unfold not_col, app_2_n; simpl; Col. Qed.
+
+Lemma concyclic_aux : forall A B C D, Concyclic A B C D -> exists O P,
+  OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O.
+Proof.
+  intros A B C D [HCop [O1 [P1]]]; spliter.
+  destruct (col_dec A B C).
+    exists O1, P1; repeat split; Cop.
+  destruct (l11_62_existence A B C O1) as [O []].
+  exists O, A.
+  assert (HCong := onc2__cong O1 P1).
+  repeat split; [Circle|apply cong2_per2__cong with O1 O1; Cop; Cong..|assumption].
+Qed.
 
 Definition Concyclic_gen A B C D :=
   Concyclic A B C D \/ (Col A B C /\ Col A B D /\ Col A C D /\ Col B C D).
@@ -27,7 +36,7 @@ Lemma concyclic_gen_2341 : forall A B C D,
 Proof.
 unfold Concyclic_gen; simpl; intros A B C D H.
 elim H; clear H; intro H;
-[left; apply concyclic_perm_9|right; spliter; repeat split]; Col.
+[left; destruct H as [HCop [O [P]]]; split; Cop; exists O, P|right]; spliter; repeat split; Col.
 Qed.
 
 Lemma concy_perm_1 : forall (A : Tpoint) (X : cartesianPower Tpoint 3),
@@ -39,7 +48,7 @@ Lemma concyclic_gen_2134 : forall A B C D,
 Proof.
 unfold Concyclic_gen; simpl; intros A B C D H.
 elim H; clear H; intro H;
-[left; apply concyclic_perm_6|right; spliter; repeat split]; Col.
+[left; destruct H as [HCop [O [P]]]; split; Cop; exists O, P|right]; spliter; repeat split; Col.
 Qed.
 
 Lemma concy_perm_2 : forall (A B : Tpoint) (X : cartesianPower Tpoint 2),
@@ -51,8 +60,11 @@ Qed.
 Lemma concyclic_gen_1123 : forall A B C, Concyclic_gen A A B C.
 Proof.
 unfold Concyclic_gen; simpl; intros A B C.
-elim (Col_dec A B C); intro;
-[right; repeat split|left; apply concyclic_1123]; Col.
+elim (col_dec A B C); intro; [right; repeat split; Col|].
+left.
+split; Cop.
+destruct (triangle_circumscription A B C H) as [O]; spliter.
+exists O, A; unfold OnCircle; repeat split; Cong.
 Qed.
 
 Lemma concy_bd : forall (A : Tpoint) (X  : cartesianPower Tpoint 2),
@@ -67,7 +79,23 @@ Proof.
 unfold Concyclic_gen; intros P Q R A B HNC H1 H2.
 elim H1; clear H1; intro H1; [|spliter; exfalso; apply HNC; Col].
 elim H2; clear H2; intro H2; [|spliter; exfalso; apply HNC; Col].
-left; apply concyclic_trans with P; try apply concyclic_perm_8; Col.
+destruct (concyclic_aux P Q R A H1) as [O [M]].
+destruct (concyclic_aux P Q R B H2) as [O' [M']].
+spliter.
+assert (O = O').
+  apply (cong4_cop2__eq P Q R); trivial;
+  [apply cong_transitivity with O M..|
+   apply cong_transitivity with O' M'|apply cong_transitivity with O' M']; Cong.
+subst O'.
+assert (OnCircle B O M).
+  apply cong_transitivity with O M'; [|apply cong_transitivity with O P]; Cong.
+clear dependent M'.
+destruct H1 as [HCop1 _].
+destruct H2 as [HCop2 _].
+left.
+split.
+  apply coplanar_trans_1 with P; Col; Cop.
+exists O, M; repeat split; assumption.
 Qed.
 
 Lemma concyclic_gen_pseudo_trans : forall A B C D P Q R,
@@ -79,18 +107,18 @@ Lemma concyclic_gen_pseudo_trans : forall A B C D P Q R,
   Concyclic_gen A B C D.
 Proof.
 intros A B C D P Q R HNC HConcy1 HConcy2 HConcy3 HConcy4.
-elim (Col_dec R A B); intro HRAB.
+elim (col_dec R A B); intro HRAB.
 
   {
-  elim (Col_dec R C D); intro HRCD.
+  elim (col_dec R C D); intro HRCD.
 
     {
-    elim (Col_dec Q A B); intro HQAB.
+    elim (col_dec Q A B); intro HQAB.
 
       {
       elim (eq_dec_points A B); intro HAB; try (subst A; apply concyclic_gen_1123).
       assert (HPAB : ~ Col P A B) by (intro; apply HNC; ColR).
-      elim (Col_dec P Q A); intro HPQA.
+      elim (col_dec P Q A); intro HPQA.
 
         {
         assert (HQRB : ~ Col P Q B) by (intro; assert_diffs; apply HPAB; ColR).
@@ -142,7 +170,7 @@ elim (Col_dec R A B); intro HRAB.
       }
 
       {
-      elim (Col_dec P Q A); intro HPQA.
+      elim (col_dec P Q A); intro HPQA.
 
         {
         assert (HPQB : ~ Col P Q B) by (intro; assert_diffs; apply HQAB; ColR).
@@ -187,7 +215,7 @@ elim (Col_dec R A B); intro HRAB.
     }
 
     {
-    elim (Col_dec Q R C); intro HQRC.
+    elim (col_dec Q R C); intro HQRC.
 
       {
       assert (HQRD : ~ Col Q R D) by (intro; assert_diffs; apply HRCD; ColR).
@@ -214,7 +242,7 @@ elim (Col_dec R A B); intro HRAB.
   }
 
   {
-  elim (Col_dec Q R A); intro HQRA.
+  elim (col_dec Q R A); intro HQRA.
 
     {
     assert (HQRB : ~ Col Q R B) by (intro; assert_diffs; apply HRAB; ColR).
@@ -255,4 +283,4 @@ Proof.
 exact (Build_Coinc_theory (Build_Arity Tpoint 1) (Build_Coinc_predicates (Build_Arity Tpoint 1) not_col concy) not_col_perm_1 not_col_perm_2 concy_perm_1 concy_perm_2 concy_bd concy_3).
 Qed.
 
-End Tarski_is_a_Coinc_theory_for_cocyclic.
+End Tarski_is_a_Coinc_theory_for_concyclic.
