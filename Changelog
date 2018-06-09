@@ -10,7 +10,7 @@ Release 2.4.0
 	- Add some definitions and properties about planes.
 	- Definition of five equivalent versions of the upper 3-dimensional axiom and related proofs.
 	- The fixed axioms of Euclid's Elements is modified to be closer to Euclid's. Proofs for Book I are updated accordingly.
-	- Model of Tarski's axioms: a cartesian plane over a real closed field.
+	- Model of Tarski's axioms: a cartesian plane over a real closed field: this part of the development depends on mathcomp library.
 
 Release 2.3.0
 ==========================
