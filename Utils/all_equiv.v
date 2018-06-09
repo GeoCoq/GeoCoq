@@ -197,7 +197,7 @@ Lemma stronger_transitivity : forall l1 l2 l3,
 Proof.
   intros l1 l2 l3 Hs1 Hs2 Hl2 x z Hx Hz.
   destruct l2.
-    contradiction.
+    intuition.
   unfold stronger in *.
   specialize Hs1 with x P.
   specialize Hs2 with P z.
