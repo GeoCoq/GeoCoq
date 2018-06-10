@@ -205,7 +205,6 @@ exists x.
 intuition.
 Qed.
 
-Lemma colH_dec : forall A B C, ColH A B C \/ ~ColH A B C.
 Hint Resolve colH_trivial121 colH_trivial122 colH_trivial112 colH_trivial111 colH_permut_231 colH_permut_312 colH_permut_321 
              colH_permut_213 colH_permut_132 colH_permut_231 : colH.
 
