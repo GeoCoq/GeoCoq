@@ -1,6 +1,10 @@
 Require Import mathcomp.ssreflect.ssreflect.
 From mathcomp
+<<<<<<< HEAD
 Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
+=======
+Require Import ssrbool ssrfun ssrnat eqtype seq.
+>>>>>>> 31f43c2 (Deleting unnecessary items (require import))
 From mathcomp
 Require Import fintype bigop.
 From mathcomp
@@ -1460,6 +1464,7 @@ move: HParS => [HCop HNI]; split; [intuition|].
 by move => [x [? ?]]; apply HNI; exists x; intuition.
 Qed.
 
+<<<<<<< HEAD
 End Rcf_to_independent_Tarski_nD_euclidean.
 
 Section Rcf_to_independent_Tarski_2D.
@@ -1474,3 +1479,6 @@ Global Instance Rcf_to_T2D : Tarski_2D (@Rcf_to_T_PED R 0).
 Proof. split; exact upper_dimT. Defined.
 
 End Rcf_to_independent_Tarski_2D.
+=======
+End Rcf_to_independent_Tarski_2D_euclidean.
+>>>>>>> 31f43c2 (Deleting unnecessary items (require import))
