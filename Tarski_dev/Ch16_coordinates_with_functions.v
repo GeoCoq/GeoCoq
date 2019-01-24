@@ -739,7 +739,7 @@ Qed.
 Add Ring GeometricRing : ringF.
 Add Field GeometricField : fieldF.
 
-Global Instance Fops: (@Ring_ops F OF OneF AddF MulF SubF OppF EqF).
+Global Instance Fops: (@Ring_ops F OF OneF AddF MulF SubF OppF EqF) := {}.
 
 Global Instance FRing : (Ring (Ro:=Fops)).
 Proof.
