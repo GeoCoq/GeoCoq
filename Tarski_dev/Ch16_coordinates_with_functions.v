@@ -3,9 +3,9 @@ Require Import Ring.
 Require Import Field.
 Require Import Nsatz.
 Require Import Rtauto.
-Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 Require Export GeoCoq.Tarski_dev.Ch16_coordinates.
 Require Import GeoCoq.Tarski_dev.Ch15_pyth_rel.
+Require Import GeoCoq.Tarski_dev.Annexes.midpoint_theorems.
 
 Ltac cnf2 f :=
   match f with
