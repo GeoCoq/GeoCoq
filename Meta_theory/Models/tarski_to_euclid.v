@@ -4,6 +4,8 @@ Require Export GeoCoq.Axioms.continuity_axioms.
 Require Export GeoCoq.Meta_theory.Continuity.elementary_continuity_props.
 Require Export GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 
+Import euclidean_axioms.
+
 Section Tarski_neutral_to_Euclid_neutral.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
