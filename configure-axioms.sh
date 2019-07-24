@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
-cp -f Make.in Make
-find . -name "*.v" | grep Axioms >> Make
-find . -name "*.v" | grep Definitions >> Make
-find . -name "*.v" | grep finish >> Make
-coq_makefile -f Make -o Makefile
+cp -f _CoqProject.in _CoqProject
+find . -name "*.v" | grep Axioms >> _CoqProject
+find . -name "*.v" | grep Definitions >> _CoqProject
+find . -name "*.v" | grep finish >> _CoqProject
+coq_makefile -f _CoqProject -o Makefile
