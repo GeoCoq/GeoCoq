@@ -4,6 +4,8 @@ Require Export GeoCoq.Tarski_dev.Annexes.sums.
 
 Require Import GeoCoq.Utils.all_equiv.
 
+Import circles.
+
 Section Elementary_Continuity_Props.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.

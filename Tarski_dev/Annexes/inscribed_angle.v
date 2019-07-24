@@ -2,6 +2,8 @@ Require Export GeoCoq.Tarski_dev.Annexes.circles.
 Require Export GeoCoq.Tarski_dev.Annexes.half_angles.
 Require Export GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
+Import circles.
+
 Section Inscribed_angle.
 
 Context `{TE:Tarski_euclidean}.

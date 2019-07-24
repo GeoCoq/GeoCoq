@@ -1,5 +1,6 @@
 Require Export GeoCoq.Tarski_dev.Ch13_1.
 Require Export GeoCoq.Highschool.triangles.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section Bisector.
 

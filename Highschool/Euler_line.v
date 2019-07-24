@@ -5,6 +5,8 @@ Require Export GeoCoq.Highschool.midpoint_thales.
 Require Export GeoCoq.Highschool.concyclic.
 Require Export GeoCoq.Highschool.gravityCenter.
 
+Import concyclic.
+
 Section Euler_line.
 
 Context `{TE:Tarski_euclidean}.
