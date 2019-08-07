@@ -4,11 +4,10 @@ Require Export GeoCoq.Tarski_dev.Ch13_5_Pappus_Pascal.
 
 Section Desargues_Hessenberg.
 
-Context `{T2D:Tarski_2D}.
-Context `{TE:@Tarski_euclidean Tn TnEQD}.
+Context `{TE:Tarski_euclidean}.
 
-Lemma l13_15_1 : forall A B C A' B' C' O ,
-  ~ Col A B C -> ~ Par O B A C ->
+Lemma l13_15_1 : forall A B C A' B' C' O,
+  ~ Col A B C -> ~ Par O B A C -> Coplanar O B A C ->
   Par_strict A B A' B' -> Par_strict A C A' C'->
   Col O A A' -> Col O B B' -> Col O C C' ->
   Par B C B' C'.
@@ -16,24 +15,24 @@ Proof.
     intros.
     assert(~Col B A' B').
       intro.
-      apply H1.
+      apply H2.
       exists B.
       split; Col.
     assert(~Col A A' B').
       intro.
-      apply H1.
+      apply H2.
       exists A.
       split; Col.
     assert(B <> O).
       intro.
       subst B.
-      apply H1.
+      apply H2.
       exists A'.
       split; Col.
     assert(A <> O).
       intro.
       subst A.
-      apply H1.
+      apply H2.
       exists B'.
       split; Col.
     assert(~ Col A' A C).
@@ -43,11 +42,11 @@ Proof.
     assert(C <> O).
       intro.
       subst C.
-      apply H10.
+      apply H11.
       Col.
     assert(~Col O A B).
       intro.
-      apply H1.
+      apply H2.
       exists O.
       split.
         Col.
@@ -56,7 +55,7 @@ Proof.
       apply (col_transitivity_1 _ A); Col.
     assert(~Col O A C).
       intro.
-      apply H2.
+      apply H3.
       exists O.
       split.
         Col.
@@ -68,18 +67,17 @@ Proof.
       apply H.
       assert(Par A' C' A B).
         apply(par_col_par_2 A' B' A B C').
-          intro.
-          subst C'.
-          unfold Par_strict in H2.
-          tauto.
+          apply par_strict_distinct in H3.
+          spliter.
+          auto.
           auto.
         left.
         Par.
       assert(Par A C A B).
         apply(par_trans A C A' C'); Par.
-      induction H16.
+      induction H17.
         apply False_ind.
-        apply H16.
+        apply H17.
         exists A.
         split; Col.
       spliter; Col.
@@ -92,7 +90,7 @@ Proof.
         Col.
         intro.
         subst C'.
-        apply H14.
+        apply H15.
         Col.
         assert(Col O B C').
           apply (col_transitivity_1 _ C); Col.
@@ -103,31 +101,30 @@ Proof.
     assert(B' <> O).
       intro.
       subst B'.
-      apply H7.
+      apply H8.
       Col.
     assert(B' <> O).
       intro.
       subst B'.
-      apply H7.
+      apply H8.
       Col.
     assert(A' <> O).
       intro.
       subst A'.
-      apply H6.
+      apply H7.
       Col.
-    (* TODO modify assert_diffs in order to use par_not_col automatically *)
     assert(~ Col A A' C').
-      eapply (par_not_col A C).
+      apply (par_not_col A C).
         Par.
       Col.
     assert(C' <> O).
       intro.
       subst C'.
-      apply H19.
+      apply H20.
       Col.
     assert(~Col O A' B').
       intro.
-      apply H1.
+      apply H2.
       exists O.
       split.
         assert(Col O A' B).
@@ -136,29 +133,33 @@ Proof.
       Col.
     assert(~Col O A' C').
       intro.
-      apply H2.
+      apply H3.
       exists O.
       split.
         ColR.
       Col.
     assert(~Col B' A B).
       intro.
-      apply H1.
+      apply H2.
       exists B'.
       Col.
     assert(~Col A' A B).
       intro.
-      apply H1.
+      apply H2.
       exists A'.
       split; Col.
     (********** construct L *********)
     assert(exists C : Tpoint, exists D : Tpoint, C <> D /\ Par O B C D /\ Col A C D).
       apply(parallel_existence O B A).
       auto.
-    ex_and H25 X.
-    ex_and H26 Y.
+    ex_and H26 X.
+    ex_and H27 Y.
+    assert(Coplanar O B X A) by (apply col_cop__cop with Y; Col; Cop).
+    assert(Coplanar O B Y A) by (apply col_cop__cop with X; Col; Cop).
     assert(exists L : Tpoint, Col L X Y /\ Col L A' C').
-      apply(not_par_inter_exists X Y A' C').
+      apply(cop_npar__inter_exists X Y A' C').
+      apply coplanar_pseudo_trans with O A B; [Cop..|].
+        apply coplanar_perm_12, col_cop__cop with C; Cop.
       intro.
       apply H0.
       eapply (par_trans O B X Y).
@@ -168,7 +169,7 @@ Proof.
         left.
         auto.
       Par.
-    ex_and H28 L.
+    ex_and H31 L.
     assert(A <> L).
       intro.
       subst L.
@@ -192,19 +193,21 @@ Proof.
       intro.
       assert(Par O B O C).
         apply (par_trans O B X Y); Par.
-      induction H33.
-        apply H33.
+      induction H36.
+        apply H36.
         exists O.
         split; Col.
       spliter.
-      apply H15.
+      apply H16.
       Col.
-    assert(HH:=not_par_inter_exists X Y O C H32).
+    assert(Coplanar X Y O C).
+      apply coplanar_pseudo_trans with O A B; Cop.
+    assert(HH:=cop_npar__inter_exists X Y O C H36 H35).
     ex_and HH M.
     assert(A <> M).
       intro.
       subst M.
-      apply H13.
+      apply H14.
       Col.
     assert(Par O B A M).
       apply (par_col_par_2 _ B'); Col.
@@ -216,15 +219,15 @@ Proof.
       intro.
       subst L.
       clean_trivial_hyps.
-      apply H12.
+      apply H13.
       induction(eq_dec_points A' X).
         subst X.
         assert(Par A' A O B).
           apply (par_col_par_2 _ Y); Col.
           Par.
-        induction H29.
+        induction H32.
           apply False_ind.
-          apply H29.
+          apply H32.
           exists O.
           split; Col.
         spliter.
@@ -236,42 +239,44 @@ Proof.
         apply (par_col_par_2 _ X); try auto.
           ColR.
         Par.
-      induction H38.
+      induction H42.
         apply False_ind.
-        apply H38.
+        apply H42.
         exists O.
         split; Col.
       spliter.
       Col.
     assert(~ Par L B' A' B').
       intro.
-      induction H38.
-        apply H38.
+      induction H42.
+        apply H42.
         exists B'.
         split;Col.
       spliter.
-      apply H14.
+      apply H15.
       eapply (col_transitivity_1 _ L); Col.
     assert(~ Par A B L B').
       apply(par_not_par A' B' A B L B').
         left.
         Par.
       intro.
-      apply H38.
+      apply H42.
       Par.
-    assert(HH:=not_par_inter_exists A B L B' H39 ).
+    assert(Coplanar A B L B').
+      apply coplanar_perm_4, col_cop__cop with O; Col; Cop.
+    assert(HH:=cop_npar__inter_exists A B L B' H44 H43).
     ex_and HH N.
     assert(Par_strict A L O B').
-      induction H31.
+      induction H34.
         auto.
       spliter.
       apply False_ind.
-      apply H12.
+      apply H13.
       apply (col_transitivity_1 _ B'); Col.
     assert(A <> N).
       intro.
       subst N.
-      apply H42.
+      apply H47.
       exists B'; Col.
     assert(Par A N A' B').
       apply (par_col_par_2 _ B); Col.
@@ -282,11 +287,11 @@ Proof.
     assert(Par O N L A').
       induction(par_dec A O N L).
         assert(Par_strict A O N L).
-          induction H17.
+          induction H18.
             auto.
           spliter.
           apply False_ind.
-          apply H23.
+          apply H24.
           assert(Col N A B').
             eapply (col_transitivity_1 _ L); Col.
           apply col_permutation_2.
@@ -297,22 +302,24 @@ Proof.
       assert(N <> L).
         intro.
         subst L.
-        apply H42.
+        apply H47.
         exists B.
         split; Col.
-      assert(HH:=not_par_inter_exists A O N L H17).
+      assert(Coplanar A O N L).
+        assert_diffs; apply coplanar_perm_1, col_cop__cop with B'; Col; Cop.
+      assert(HH:=cop_npar__inter_exists A O N L H51 H18).
       ex_and HH P.
       apply par_right_comm.
       assert(P <> L).
         intro.
         subst P.
-        apply H42.
+        apply H47.
         exists O.
         split; Col.
       assert(P <> O).
         intro.
         subst P.
-        apply H42.
+        apply H47.
         exists L.
         split.
           Col.
@@ -320,7 +327,7 @@ Proof.
       assert(L <> B').
         intro.
         subst L.
-        apply H42.
+        apply H47.
         exists B'.
         split; Col.
       assert(A <> P).
@@ -330,43 +337,43 @@ Proof.
           apply (col_transitivity_1 _ N); Col.
         assert(Col L A B').
           apply (col_transitivity_1 _ N); Col.
-        apply H39.
+        apply H43.
         apply par_symmetry.
         right.
         repeat split.
           assumption.
           intro.
           subst B.
-          apply H23.
+          apply H24.
           Col.
           Col.
         ColR.
       assert(P <> N).
         intro.
         subst P.
-        apply H12.
+        apply H13.
         apply col_permutation_2.
         apply (col_transitivity_1 _ N); Col.
       assert(A' <> P).
         intro.
         subst P.
-        apply H38.
+        apply H42.
         right.
         repeat split; try assumption.
           intro.
           subst B'.
-          apply H21.
+          apply H22.
           Col.
           ColR.
         Col.
       assert(B' <> P).
         intro.
         subst P.
-        apply H21.
+        apply H22.
         apply (col_transitivity_1 _ A); Col.
       apply(l13_11 O A' A L N B' P); Par; try ColR.
       intro.
-      apply H42.
+      apply H47.
       exists L.
       split.
         Col.
@@ -385,7 +392,7 @@ Proof.
       apply (par_col_par_2 _ L).
         intro.
         subst C'.
-        apply H22.
+        apply H23.
         Col.
         Col.
       Par.
@@ -394,59 +401,60 @@ Proof.
     assert(Par N M B C).
       induction(par_dec A N O C).
         assert(Par_strict A N O C).
-          induction H47.
+          induction H52.
             auto.
           spliter.
           apply False_ind.
-          apply H13.
+          apply H14.
           Col.
         apply par_right_comm.
         apply(l13_14 A N B A O C M O ); Par; Col.
-      assert(HH:= not_par_inter_exists A N O C H47).
+      assert(Coplanar A N O C) by Cop.
+      assert(HH:= cop_npar__inter_exists A N O C H53 H52).
       ex_and HH P.
       assert(B <> P).
         intro.
         subst P.
-        apply H15.
+        apply H16.
         Col.
       assert(A <> P).
         intro.
         subst P.
-        apply H13.
+        apply H14.
         Col.
       assert(M <> P).
         intro.
         subst P.
-        induction H36.
-          apply H36.
+        induction H40.
+          apply H40.
           exists B.
           split.
             Col.
           apply col_permutation_2.
           apply (col_transitivity_1 _ N); Col.
         spliter.
-        apply H12.
+        apply H13.
         apply col_permutation_2.
         apply (col_transitivity_1 _ M); Col.
       assert(O <> P).
         intro.
         subst P.
-        induction H46.
-          apply H46.
+        induction H51.
+          apply H51.
           exists A.
           split; Col.
         spliter.
-        apply H13.
+        apply H14.
         Col.
       assert(P <> N).
         intro.
         subst P.
-        induction H46.
-          apply H46.
+        induction H51.
+          apply H51.
           exists C.
           split; Col.
         spliter.
-        apply H13.
+        apply H14.
         Col.
       apply(l13_11 N B A C M O P); Par; try ColR.
       intro.
@@ -465,12 +473,12 @@ Proof.
     assert(Par N M B' C').
       induction(par_dec N B' O C').
         assert(Par_strict N B' O C').
-          induction H48.
+          induction H53.
             auto.
           spliter.
           apply False_ind.
-          induction H46.
-            apply H46.
+          induction H51.
+            apply H51.
             exists C.
             split.
               ColR.
@@ -480,7 +488,7 @@ Proof.
         assert(M <> L).
           intro.
           subst M.
-          apply H49.
+          apply H54.
           exists L.
           split.
             Col.
@@ -489,7 +497,7 @@ Proof.
         assert(L <> C').
           intro.
           subst C'.
-          apply H49.
+          apply H54.
           exists L.
           split; Col.
         assert(Par L M O B').
@@ -501,13 +509,16 @@ Proof.
           apply (par_col_par_2 _ A'); Col.
           Par.
         apply par_right_comm.
-        apply(l13_14 B' N B' L O C' M O);sfinish.
-      assert(HH:= not_par_inter_exists N B' O C' H48).
+        apply(l13_14 B' N B' L O C' M O); Par; ColR.
+      assert(Coplanar N B' O C').
+        apply coplanar_pseudo_trans with O A B; [Cop..|].
+        apply coplanar_perm_12, col_cop__cop with C; Col; Cop.
+      assert(HH:= cop_npar__inter_exists N B' O C' H54 H53).
       ex_and HH P.
       assert(B' <> P).
         intro.
         subst P.
-        apply H15.
+        apply H16.
         ColR.
       induction(eq_dec_points C'  L).
         subst L.
@@ -516,12 +527,12 @@ Proof.
             apply (l6_21 O C Y X).
               intro.
               assert(Col O X Y) by ColR.
-              induction H26.
-                apply H26.
+              induction H27.
+                apply H27.
                 exists O.
                 split; Col.
               spliter.
-              apply H12.
+              apply H13.
               apply(col3 X Y); Col.
               auto.
               Col.
@@ -531,17 +542,15 @@ Proof.
           apply (l6_21 O C X Y); Col.
         subst M.
         right.
-        repeat split; try auto.
-          intro.
-          subst N.
-          apply par_distincts in H47; spliter; auto.
-          intro; subst; apply H14; Col.
+        repeat split; auto.
+          apply par_distincts in H52; spliter; auto.
+          intro; subst; apply H15; Col.
           Col.
         Col.
       assert(L <> P).
         intro.
         subst P.
-        apply H22.
+        apply H23.
         apply col_permutation_1.
         apply (col_transitivity_1 _ L); Col.
       induction (eq_dec_points L M).
@@ -549,15 +558,15 @@ Proof.
         assert(C' = M).
           apply (l6_21 O C A' C'); Col.
             intro.
-            apply H22.
+            apply H23.
             ColR.
             intro.
             subst C'.
-            apply H22.
+            apply H23.
             Col.
             subst M.
             right.
-            repeat split; try auto. Col. Col.
+            repeat split; auto. Col. Col.
               assert(Par L M O B').
             apply (par_col_par_2 _ A); try assumption. ColR.
               Par.
@@ -574,12 +583,12 @@ Proof.
                 apply (col_transitivity_1 _ N).
                   intro.
                   subst N.
-                  induction H45.
-                    apply H45.
+                  induction H50.
+                    apply H50.
                     exists C'.
                     split; Col.
                   spliter.
-                  apply H22.
+                  apply H23.
                   ColR.
                   Col.
                 Col.
@@ -590,13 +599,13 @@ Proof.
                   clean_trivial_hyps.
                   assert(Col B' C' L).
                     apply (col_transitivity_1 _ N); Col.
-                  apply H14.
+                  apply H15.
                   ColR.
                   Col.
                 Col.
               assert(Col O B C').
                 apply (col_transitivity_1 _ B'); Col.
-              apply H15.
+              apply H16.
               ColR.
               ColR.
               intro.
@@ -607,7 +616,7 @@ Proof.
                 assert(Col P A L).
                   apply (col3 X Y); Col.
                 apply (col_transitivity_1 _ P); Col.
-              apply H42.
+              apply H47.
               exists B'.
               split; Col.
               intro.
@@ -615,23 +624,23 @@ Proof.
               assert(N = B).
                 apply (l6_21 A B O B'); Col.
                   subst N.
-                  induction H47.
-                    apply H47.
+                  induction H52.
+                    apply H52.
                     exists B.
                     split; Col.
                   spliter.
                   assert(B = O).
                     apply (l6_21 O B' M C); Col.
                   subst B.
-                  induction H56.
-                    apply H56.
+                  induction H61.
+                    apply H61.
                     exists L.
                     split; Col.
                   tauto.
                   ColR.
                   ColR.
                   apply (par_trans _ _ N M); Par.
-              Qed.
+Qed.
 
 Lemma l13_15_2_aux : forall A B C A' B' C' O , ~Col A B C
                                          -> ~Par O A B C
@@ -770,7 +779,17 @@ Proof.
         split; Col.
       spliter.
       contradiction.
-    assert(HH:=not_par_inter_exists X Y O C H27).
+    assert(Coplanar X Y O C).
+      induction H25.
+        apply coplanar_pseudo_trans with B C B'.
+          apply not_col_permutation_1, (par_not_col X Y); Par.
+          apply coplanar_perm_1, col_cop__cop with Y; Col; Cop.
+          apply coplanar_perm_1, col_cop__cop with X; Col; Cop.
+          Cop.
+          Cop.
+      spliter.
+      Cop.
+    assert(HH:=cop_npar__inter_exists X Y O C H28 H27).
     ex_and HH C''.
     assert(B' <> C'').
       intro.
@@ -793,10 +812,11 @@ Proof.
       apply (par_col_par_2 _ Y); Col.
       Par.
     assert(Par A C A' C'').
-      eapply(l13_15_1 B A C B' A' C'' O); Col.
+      apply(l13_15_1 B A C B' A' C'' O); Col.
+        Cop.
         apply par_strict_comm.
         auto.
-      induction H31.
+      induction H32.
         Par.
       spliter.
       apply False_ind.
@@ -815,9 +835,9 @@ Proof.
       Par.
     assert(C' = C'').
       apply (l6_21 A' C' O C); Col.
-        induction H34.
+        induction H35.
         apply False_ind.
-        apply H34.
+        apply H35.
         exists A'.
         split; Col.
         spliter.
@@ -926,7 +946,7 @@ Proof.
 Qed.
 
 
-Lemma l13_15 : forall A B C A' B' C' O , ~Col A B C
+Lemma l13_15 : forall A B C A' B' C' O , ~Col A B C -> Coplanar O B A C
                                          -> Par_strict A B A' B'
                                          -> Par_strict A C A' C'
                                          -> Col O A A' -> Col O B B' -> Col O C C'
@@ -1047,7 +1067,9 @@ Proof.
       exists A'.
       split; Col.
     assert(exists X : Tpoint, Col X B' C' /\ Col X O C).
-      apply not_par_inter_exists, par_not_par with B C; Par.
+      apply cop_npar__inter_exists.
+        assert_diffs; apply coplanar_perm_13, col_cop__cop with B; Col; Cop.
+      apply par_not_par with B C; Par.
       intro.
       induction H6.
         apply H6.
@@ -1131,6 +1153,9 @@ Proof.
       split; Col.
     assert(Par A C A' C'').
       apply(l13_15 B A C B' A' C'' O); Par; Col.
+      assert_diffs; apply coplanar_perm_3, coplanar_trans_1 with C'; Col.
+        apply coplanar_perm_4, col_cop__cop with A'; Col; Cop.
+        apply coplanar_perm_4, col_cop__cop with B'; Col; Cop.
     assert(Par A' C' A' C'').
       apply (par_trans _ _ A C).
         left.
@@ -1193,7 +1218,10 @@ Proof.
         intro.
         apply H7.
         apply(par_trans _ _ B' C'); Par.
-      assert(HH:=not_par_inter_exists C P B' C' H8).
+      assert(Coplanar C P B' C').
+        apply coplanar_perm_2, coplanar_trans_1 with B; [|Cop..].
+        apply not_col_permutation_1, par_not_col with B' C'; Par; Col.
+      assert(HH:=cop_npar__inter_exists C P B' C' H9 H8).
       ex_and HH C''.
       induction(eq_dec_points B' C'').
         subst C''.
@@ -1224,19 +1252,18 @@ Proof.
         apply H.
         assert(Par C' A' B C).
           apply (par_col_par_2 _ B').
-            intro.
-            subst C'.
-            unfold Par_strict in H1.
-            tauto.
+            apply par_strict_distinct in H1.
+            spliter.
+            auto.
             Col.
           apply par_left_comm.
           left.
           Par.
         assert(Par B C A C).
           apply (par_trans _ _ A' C'); Par.
-        induction H16.
+        induction H17.
           apply False_ind.
-          apply H16.
+          apply H17.
           exists C.
           split; Col.
         spliter; Col.
@@ -1247,7 +1274,7 @@ Proof.
           Col.
           apply par_strict_comm.
           Par.
-          induction H13.
+          induction H14.
             Par.
           spliter.
           apply False_ind.
@@ -1260,7 +1287,7 @@ Proof.
         apply (l6_21 C' A' B' C'); Col.
           intro.
           subst C'.
-          apply H14.
+          apply H15.
           Col.
           eapply (col_par_par_col A C A); Col.
             apply par_right_comm.
@@ -1303,20 +1330,23 @@ Lemma l13_19_aux : forall A B C D A' B' C' D' O, ~Col O A B -> A <> A' -> A <> C
                                           -> Par C D C' D'.
 Proof.
     intros.
-    assert(HH:= not_par_inter_exists A B C D H16).
+    assert(Coplanar A B C D) by (exists O; right; left; split; Col).
+    assert(HH:= cop_npar__inter_exists A B C D H20 H16).
     ex_and HH E.
     assert(~Par A' B' O E).
       intro.
       assert(Par A B O E).
         apply (par_trans _ _ A' B'); Par.
-      induction H23.
-        apply H23.
+      induction H24.
+        apply H24.
         exists E.
         split; Col.
       spliter.
       apply H.
       apply (col_transitivity_1 _ E); Col.
-    assert(HH:= not_par_inter_exists A' B' O E H22).
+    assert(Coplanar A' B' O E).
+      apply coplanar_pseudo_trans with O A B; Cop.
+    assert(HH:= cop_npar__inter_exists A' B' O E H24 H23).
     ex_and HH E'.
     assert(C <> E).
       intro.
@@ -1336,9 +1366,9 @@ Proof.
       subst D.
       assert(Par A' B' A' D').
         apply (par_trans _ _ A B); Par.
-      induction H27.
+      induction H29.
         apply False_ind.
-        apply H27.
+        apply H29.
         exists A'.
         split; Col.
       spliter.
@@ -1363,7 +1393,8 @@ Proof.
       apply col_permutation_2.
       apply (col_transitivity_1 _ A'); Col.
     assert(Par D E D' E').
-      eapply (l13_15 A _ _ A' _ _ O); Col.
+      apply (l13_15 A _ _ A' _ _ O); Col.
+        exists B; left; split; Col.
         induction H18.
           auto.
         spliter.
@@ -1378,7 +1409,7 @@ Proof.
           apply(par_col_par_2 _ B); Col.
             intro.
             subst E.
-            apply H26.
+            apply H28.
             Col.
           apply par_symmetry.
           apply(par_col_par_2 _ B'); Col.
@@ -1391,10 +1422,10 @@ Proof.
             apply(col_transitivity_1 _ E); Col.
             intro.
             subst E.
-            apply H26.
+            apply H28.
             Col.
           Par.
-        induction H28.
+        induction H30.
           auto.
         spliter.
         apply False_ind.
@@ -1416,9 +1447,9 @@ Proof.
       subst D.
       assert(Par A' B' A' D').
         apply (par_trans _ _ A B); Par.
-      induction H30.
+      induction H32.
         apply False_ind.
-        apply H30.
+        apply H32.
         exists A'.
         split; Col.
       spliter.
@@ -1429,7 +1460,8 @@ Proof.
       subst D'.
       Par.
     assert(Par C E C' E').
-      eapply (l13_15 B _ _ B' _ _ O); Col.
+      apply (l13_15 B _ _ B' _ _ O); Col.
+        exists D; right; left; split; Col.
         induction H19.
           auto.
         spliter.
@@ -1442,7 +1474,7 @@ Proof.
           apply (par_col_par_2 _ A); Col.
             intro.
             subst E.
-            apply H29.
+            apply H31.
             Col.
           apply par_symmetry.
           apply (par_col_par_2 _ A'); Col.
@@ -1455,10 +1487,10 @@ Proof.
             apply (col_transitivity_1 _ E); Col.
             intro.
             subst E.
-            apply H29.
+            apply H31.
             Col.
           Par.
-        induction H30.
+        induction H32.
           auto.
         spliter.
         apply False_ind.
@@ -1617,7 +1649,10 @@ Lemma l13_19_par_aux : forall A B C D A' B' C' D' X Y,
                                           -> Par C D C' D'.
 Proof.
     intros.
-    assert(HH := not_par_inter_exists A B C D H17).
+    assert(Coplanar A B C D).
+      apply coplanar_perm_2, col_cop__cop with Y; Col.
+      apply coplanar_perm_16, col_cop__cop with X; Col; Cop.
+    assert(HH := cop_npar__inter_exists A B C D H21 H17).
     ex_and HH E.
     assert(HH:= parallel_existence1 X A E H).
     ex_and HH Z.
@@ -1625,18 +1660,18 @@ Proof.
       intro.
       assert(Par Y B E Z).
         apply (par_trans _ _ X A); Par.
-      induction H24.
-        apply H24.
+      induction H25.
+        apply H25.
         exists E.
         split; Col.
       spliter.
-      induction H23.
-        apply H23.
+      induction H24.
+        apply H24.
         exists A.
         split; Col.
       spliter.
-      induction H25.
-        apply H25.
+      induction H26.
+        apply H26.
         exists B.
         split; Col.
       spliter.
@@ -1645,9 +1680,24 @@ Proof.
       split;ColR.
     assert(~Par A' B' E Z).
       intro.
-      apply H24.
+      apply H25.
       apply (par_trans _ _ A' B'); Par.
-    assert(HH:= not_par_inter_exists A' B' E Z H25).
+    assert(Coplanar A' B' E Z).
+      induction H24.
+        CopR.
+      spliter.
+      exfalso.
+      apply H25.
+      right.
+      assert_diffs.
+      repeat split; auto.
+      assert (A <> E).
+        intro.
+        subst E.
+        apply H16.
+        exists D; split; ColR.
+      ColR.
+    assert(HH:= cop_npar__inter_exists A' B' E Z H27 H26).
     ex_and HH E'.
     assert(~Col A D E).
       intro.
@@ -1668,7 +1718,7 @@ Proof.
       split; Col.
       ColR.
     assert(Par_strict X A E Z).
-      induction H23.
+      induction H24.
         Par.
       spliter.
       apply False_ind.
@@ -1692,7 +1742,7 @@ Proof.
     assert(Par Y B E Z).
       apply (par_trans _ _ X A); Par.
     assert(Par_strict Y B E Z).
-      induction H30.
+      induction H32.
         Par.
       spliter.
       apply False_ind.
@@ -1719,14 +1769,14 @@ Proof.
       apply H16.
       exists C.
       split; Col.
-      assert_diffs; ColR.
+      ColR.
     assert(~Col A' D' E').
       intro.
       assert(Col A' B' D').
         apply (col_transitivity_1  _ E'); Col.
         intro.
         subst E'.
-        apply H29.
+        apply H31.
         exists A'.
         split; Col.
       apply H16.
@@ -1740,8 +1790,8 @@ Proof.
         subst D'.
         assert(Par A D A B).
           apply(par_trans _ _ A' B'); Par.
-        induction H35.
-          apply H35.
+        induction H37.
+          apply H37.
           exists A.
           split; Col.
         spliter.
@@ -1769,7 +1819,7 @@ Proof.
       apply(l6_21 X A B A); Col.
         intro.
         subst B.
-        apply H33.
+        apply H35.
         Col.
         induction H18.
           apply False_ind.
@@ -1809,8 +1859,8 @@ Proof.
       subst C'.
       assert(Par B C A B).
         apply (par_trans _ _ A' B'); Par.
-      induction H38.
-        apply H38.
+      induction H40.
+        apply H40.
         exists B.
         split; Col.
       spliter.
@@ -1822,8 +1872,8 @@ Proof.
       subst D'.
       assert(Par A D A B).
         apply (par_trans _ _ A' B'); Par.
-      induction H39.
-        apply H39.
+      induction H41.
+        apply H41.
         exists A.
         split; Col.
       spliter.
@@ -1835,23 +1885,23 @@ Proof.
     assert(A <> E).
       intro.
       subst E.
-      apply H28.
+      apply H30.
       Col.
     assert(A' <> E').
       intro.
       subst E'.
-      apply H32.
+      apply H34.
       Col.
     assert(B <> E).
       intro.
       subst E.
-      apply H31.
+      apply H33.
       exists B.
       split; Col.
     assert(B' <> E').
       intro.
       subst E'.
-      apply H31.
+      apply H33.
       exists B'.
       split; Col.
     (*-------------------*)
@@ -1861,11 +1911,11 @@ Proof.
       apply (par_col_par_2 _ B'); Col.
       Par.
     assert(Par_strict A E A' E').
-      induction H44.
+      induction H46.
         Par.
       spliter.
       apply False_ind.
-      apply H45.
+      apply H47.
       apply (l6_21 X A' B' E'); Col.
         intro.
         apply H16.
@@ -1901,7 +1951,7 @@ Proof.
       apply (par_col_par_2 _ Z); Col.
         intro.
         subst E'.
-        apply H45.
+        apply H47.
         exists E.
         split; Col.
       Par.
@@ -1930,14 +1980,14 @@ Proof.
           apply par_symmetry.
           apply (par_col_par_2 _ A'); Col.
           Par.
-        induction H47.
+        induction H49.
           Par.
         spliter.
         apply False_ind.
         assert(Col B' A' B) by ColR.
         apply H16.
         exists A'.
-        split; sfinish.
+        split; ColR.
         apply (par_col_par_2 _ Y); Col.
         apply par_symmetry.
         apply (par_col_par_2 _ X); Col.
@@ -1951,7 +2001,7 @@ Proof.
       apply (par_col_par_2 _ Z); Col.
         intro.
         subst E'.
-        apply H45.
+        apply H47.
         exists E.
         split; Col.
       Par.
@@ -2080,13 +2130,13 @@ Proof.
       intro.
       subst C'.
       apply H17.
-      apply (l6_21 X A B A); finish.
+      apply (l6_21 X A B A); Col.
         intro.
         apply H13.
         exists B.
         split; Col.
         assert(Par B C B A).
-          apply(par_trans _ _ A' B');finish.
+          apply(par_trans _ _ A' B'); Par.
         induction H24.
           apply False_ind.
           apply H24.
@@ -2114,10 +2164,12 @@ Proof.
       unfold Par_strict in H13.
       spliter.
       unfold Par_strict.
-      repeat split; auto; try apply all_coplanar.
+      split.
+        apply coplanar_perm_16, col_cop__cop with A; Col.
+        apply coplanar_perm_16, col_cop__cop with B; Col.
       intro.
-      apply H26.
-      ex_and H27 P.
+      apply H24.
+      ex_and H25 P.
       exists P.
       split.
         ColR.

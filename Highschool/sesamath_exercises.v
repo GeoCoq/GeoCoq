@@ -82,19 +82,19 @@ intros G A Z F E R HnCol HPER HM1 HM2 HM3.
 assert_diffs.
 assert_cols.
 assert (Par A Z E R)
- by (perm_apply (triangle_mid_par Z A G R E);finish).
+ by (perm_apply (triangle_mid_par Z A G R E)).
 assert (Par A G F E)
  by perm_apply (triangle_mid_par A G Z E F).
 assert (Par A F E R)
  by (apply par_col_par_2 with Z;finish).
 assert (Par A R E F)
- by (apply par_col_par_2 with G;finish;Par).
+ by (apply par_col_par_2 with G;finish).
 assert (~Col A R F)
   by (intro;apply HnCol;ColR).
 assert (Par_strict A R E F)
  by (apply par_not_col_strict with F;finish).
 assert (Plg F E R A)
-  by (apply pars_par_plg;finish;Par).
+  by (apply pars_par_plg;finish).
 assert (Per F A R)
  by (apply col_col_per_per with Z G;finish).
 apply (plg_per_rect);auto.
@@ -124,11 +124,11 @@ Proof.
 intros.
 assert_diffs.
 assert (Par A B J K)
- by (perm_apply (triangle_mid_par B A C J K);finish).
+ by (perm_apply (triangle_mid_par B A C J K)).
 assert (Par B I J K)
  by (apply par_col_par_2 with A;finish).
 assert (Par B C I J)
- by (perm_apply (triangle_mid_par B C A J I);finish).
+ by (perm_apply (triangle_mid_par B C A J I)).
 assert (Par B K I J)
  by (apply par_col_par_2 with C;finish).
 assert (~ Col B K J)
@@ -166,7 +166,7 @@ assert (Plg A I H J).
  spliter;auto.
  }
 assert (Par I J B C)
-  by (perm_apply (triangle_mid_par B C A J I);finish).
+  by (perm_apply (triangle_mid_par B C A J I)).
 assert (Perp A H I J)
   by (perm_apply (cop_par_perp__perp B C I J A H)).
 apply perp_rmb;finish.
@@ -201,8 +201,7 @@ assert (Par L E I M)
 assert (Perp A O L E)
   by(apply(perp_bisect_perp A O L E);finish).
 assert (Perp I M O A).
-  apply(cop_par_perp__perp L E I M O A);Perp.
-  apply coplanar_pseudo_trans with S E L; Cop.
+  apply(cop_par_perp__perp L E I M O A);Perp; CopR.
 assert (Perp A O I M);finish.
 Qed.
 
@@ -267,8 +266,7 @@ assert (Cong C S T S /\ Cong T S A S /\ Cong A S C S)
 spliter.
 assert(Per C A T)
   by (perm_apply(midpoint_thales S C T A);finish).
-assert(Perp T A A C)
-  by (perm_apply(per_perp T A C);finish).
+assert(Perp T A A C) by finish.
 assert(Par S H T A)
   by (perm_apply(l12_9 S H T A A C);finish).
 assert(Midpoint H A C)
@@ -301,9 +299,6 @@ intros.
 assert_diffs.
 assert_cols.
 assert_all_diffs_by_contradiction.
-(*
-assert (R<>A)
- by (intro;treat_equalities;apply H;finish). *)
 assert (Par A R M S)
  by (perm_apply (triangle_mid_par A R B S M);finish).
 assert (Par A R N T)
@@ -322,7 +317,7 @@ assert(Plg M N T S)
  by(apply(sesamath_4ieme_G2_ex36_aux A S C M N T);finish).
 assert(Parallelogram M N T S)
  by(apply(plg_to_parallelogram M N T S);finish).
-apply(Plg_perm M N T S);finish. (* todo improve finish *)
+apply(Plg_perm M N T S);finish.
 }
 destruct (eq_dec_points R C).
 {
@@ -519,6 +514,7 @@ assert(Par A B J x /\ Cong A x0 J x)
 assert(Par B A I x /\ Cong B x0 I x)
   by(apply(triangle_mid_par_cong_1 D B A x0 I x);finish).
 spliter.
+
 assert(Cong A x0 I x)
   by(apply(cong_transitivity A x0 x0 B I x);finish).
 assert( Cong I x J x)

@@ -65,7 +65,7 @@ assert(Hper2 : Perp c x o x).
   assert_diffs.
   finish.
   Perp.
-  assert_cols;Col.
+  Col.
 (*Transformation de Perp c x o x en Per *)
 assert_diffs.
 assert (Per o x c)

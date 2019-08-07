@@ -21,7 +21,7 @@ Proof.
     intro.
     destruct Hacute as [x [y [z [HPer2 Hlta]]]].
     assert_diffs.
-    assert(HN := not_lta_and_gta A B C x y z).
+    assert(HN := not_and_lta A B C x y z).
     apply HN.
     split; auto.
     split.
@@ -51,12 +51,12 @@ Proof.
     destruct Hlta as [Hlea HNConga].
     apply HNConga.
     apply conga_right_comm.
-    apply (out_conga A B C A B C); try (apply out_trivial); CongA.
+    apply l6_6 in Hout.
+    apply out2__conga; try (apply out_trivial); auto.
   }
 
   exists Y.
-  split.
-  2: ColR.
+  split; [|ColR].
   assert(HB0 := l10_15 A B B C).
   destruct HB0 as [B0 []]; Col.
   assert(HNCol4 : ~ Col A B B0) by (apply (one_side_not_col123 _ _ _ C); Side).
@@ -75,7 +75,7 @@ Proof.
       destruct Habs; CongA.
     }
     apply l11_24.
-    apply lea_in_angle; CongA; Side.
+    apply lea_in_angle; Side.
     apply lta__lea.
     apply acute_per__lta; auto.
     apply perp_per_1; Perp.
@@ -89,7 +89,7 @@ Proof.
       apply perp_right_comm.
       apply (perp_col1 _ _ _ P); Col.
       apply perp_sym.
-      apply (perp_col1 _ _ _ Q); Col; Perp; ColR.
+      apply (perp_col1 _ _ _ Q); Perp; ColR.
     }
     destruct HPar; auto.
     exfalso.

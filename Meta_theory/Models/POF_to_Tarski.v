@@ -681,7 +681,7 @@ Implicit Types (a b c d : (@Vector R 1)).
 Lemma vector2_eq a b : a == b = (a 0 0 == b 0 0) && (a 0 1 == b 0 1).
 Proof.
 apply /eqP/andP=> [->|[/eqP eq0 /eqP eq1]]; rewrite ?eqxx //.
-apply/rowP=> j; case: j => [] [|[|]] //= p.
+apply /rowP=> j; case: j => [] [|[|//]] p.
   by rewrite (@ord_inj _ (Ordinal p) 0).
 by rewrite (@ord_inj _ (Ordinal p) 1).
 Qed.
@@ -689,8 +689,8 @@ Qed.
 Lemma vector2_eq0 (v :(@Vector R 1)) : (v == 0) = (v 0 0 == 0) && (v 0 1 == 0).
 Proof.
 apply /eqP; case: (v 0 0 =P 0); case: (v 0 1 =P 0)=> V01 V00 /=;
-try (by apply/rowP=> H; try apply V01; try apply V00; rewrite H mxE).
-apply/rowP=> j;  case: j => [] [|[| //]] //= p.
+try (by apply /rowP=> H; try apply V01; try apply V00; rewrite H mxE).
+apply /rowP=> j;  case: j => [] [|[|//]] p.
   by rewrite (@ord_inj _ (Ordinal p) 0) // V00 mxE.
 by rewrite (@ord_inj _ (Ordinal p) 1) // V01 mxE.
 Qed.
@@ -698,8 +698,8 @@ Qed.
 Lemma vector2_neq0 (v : 'rV[R]_(2)) : (v != 0) = (v 0 0 != 0) || (v 0 1 != 0).
 Proof.
 apply /eqP; case: (v 0 0 =P 0)=> Hv0; case: (v 0 1 =P 0)=> Hv1 /=;
-try (by apply/rowP=> H; try apply Hv0; try apply Hv1; rewrite H mxE).
-apply/rowP=> j;  case: j => [] [|[| //]] //= p.
+try (by apply /rowP=> H; try apply Hv0; try apply Hv1; rewrite H mxE).
+apply /rowP=> j;  case: j => [] [|[|//]] p.
   by rewrite (@ord_inj _ (Ordinal p) 0) // Hv0 mxE .
 by rewrite (@ord_inj _ (Ordinal p) 1) // Hv1 mxE.
 Qed.
@@ -775,7 +775,7 @@ Lemma ratioP_aux (v1 v2 : 'rV[R]_(2)) :
   v1 0 0 * v2 0 1 == v1 0 1 * v2 0 0 -> ratio v1 v2 = v1 0 0 / v2 0 0.
 Proof.
 move=> NE1 NE2 NE3 NE4 /eqP E; apply ratio_eq; [by rewrite vector2_neq0 NE3|].
-apply/eqP/rowP=> j; rewrite !mxE; case: j => [] [|[| //]] //= p.
+apply /eqP/rowP=> j; rewrite !mxE; case: j => [] [|[|//]] p.
   by rewrite (@ord_inj _ (Ordinal p) 0) // -mulrA mulVf // mulr1.
 by rewrite (@ord_inj _ (Ordinal p) 1) // -mulrAC E -mulrA divff // mulr1.
 Qed.
@@ -1204,7 +1204,7 @@ Variable R : rcfType.
 
 Definition point := (@Vector R 1).
 
-Global Instance Rcf_to_IT_PED :
+Global Instance Rcf_to_GI_PED :
   Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact
@@ -1219,19 +1219,19 @@ exact
 Defined.
 
 Global Instance Rcf_to_T : Tarski_neutral_dimensionless.
-Proof. apply TG_to_T. Defined.
+Proof. apply GI_to_T. Defined.
 
 Global Instance Rcf_to_T_PED :
   Tarski_neutral_dimensionless_with_decidable_point_equality Rcf_to_T.
 Proof. split; exact (@point_equality_decidability R 1). Defined.
 
-Global Instance Rcf_to_IT2D : Gupta_inspired_variant_of_Tarski_2D Rcf_to_IT_PED.
+Global Instance Rcf_to_GI2D : Gupta_inspired_variant_of_Tarski_2D Rcf_to_GI_PED.
 Proof. split; exact (@upper_dim R). Defined.
 
 Global Instance Rcf_to_T2D : Tarski_2D Rcf_to_T_PED.
 Proof. split; exact upper_dimT. Defined.
 
-Global Instance Rcf_to_IT_euclidean : Gupta_inspired_variant_of_Tarski_euclidean Rcf_to_IT_PED.
+Global Instance Rcf_to_GI_euclidean : Gupta_inspired_variant_of_Tarski_euclidean Rcf_to_GI_PED.
 Proof. split; exact (@euclid R 1). Defined.
 
 Global Instance Rcf_to_T_euclidean : Tarski_euclidean Rcf_to_T_PED.
@@ -1247,7 +1247,7 @@ Definition coplanar a b c d :=
             (col a d x /\ col b c x).
 
 Definition par_strict a b c d :=
-  a <> b /\ c <> d /\ coplanar a b c d /\ ~ exists x, col x a b /\ col x c d.
+  coplanar a b c d /\ ~ exists x, col x a b /\ col x c d.
 
 Definition par a b c d :=
   par_strict a b c d \/ (a <> b /\ c <> d /\ col a c d /\ col b c d).
@@ -1256,7 +1256,7 @@ Lemma proclus a b c d p q :
   par a b c d -> col a b p -> ~ col a b q -> coplanar c d p q ->
   exists y, col p q y /\ col c d y.
 Proof.
-cut (proclus_postulate); [intros; apply H with a b; tauto|].
+cut (proclus_postulate); [intros; assert_diffs; apply H with a b; tauto|].
 have: tarski_s_parallel_postulate.
   by unfold tarski_s_parallel_postulate; apply euclidT.
 apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;

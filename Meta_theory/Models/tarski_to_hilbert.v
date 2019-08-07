@@ -1,4 +1,3 @@
-Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 Require Import Morphisms.
 Require Import GeoCoq.Axioms.hilbert_axioms.
 Require Import GeoCoq.Axioms.parallel_postulates.
@@ -20,7 +19,7 @@ Definition Lin := build_couple Tpoint.
 
 Definition IncidentL := fun A l => Col A (P1 l) (P2 l).
 
-(** * Group I Combination *)
+(** * Group I Incidence *)
 
 (** For every pair of distinct points there is a line containing them. *)
 
@@ -284,7 +283,6 @@ assert (T := H X).
 intuition.
 Qed.
 
-(** * Group II Order *)
 Instance EqP_Equiv : Equivalence EqP.
 Proof.
 split.
@@ -598,7 +596,7 @@ Qed.
 
 
 
-(** * Group IV Congruence *)
+(** * Group III Congruence *)
 
 (** The cong predicate of Hilbert is the same as the one of Tarski: *)
 
@@ -658,7 +656,7 @@ spliter.
 induction(out_dec M A' A'').
 left.
 assert(A' = A'').
-eapply (l6_11_uniqueness M A B A''); try assumption.
+apply (l6_11_uniqueness M A B A''); try assumption.
 apply out_trivial.
 assumption.
 
@@ -666,7 +664,7 @@ split.
 assumption.
 subst A''.
 
-eapply (l6_11_uniqueness M A B B''); try assumption.
+apply (l6_11_uniqueness M A B B''); try assumption.
 
 unfold Out.
 repeat split; try assumption.
@@ -681,7 +679,7 @@ right.
 apply not_out_bet in H23.
 
 assert(A' = B'').
-eapply (l6_11_uniqueness M A B A'); try assumption.
+apply (l6_11_uniqueness M A B A'); try assumption.
 apply out_trivial.
 assumption.
 
@@ -698,7 +696,7 @@ split.
 assumption.
 
 subst B''.
-eapply (l6_11_uniqueness M A B B'); try assumption.
+apply (l6_11_uniqueness M A B B'); try assumption.
 apply out_trivial.
 assumption.
 unfold Out.
@@ -1129,26 +1127,17 @@ apply conga_sym.
 apply H1.
 assumption.
 
-apply conga_cop__or_out_ts in T.
-induction T.
 apply out_outH.
+apply (conga_os__out X).
 assumption.
 
 apply same_side_OS in H3.
 apply same_side_OS in H4.
-exfalso.
-assert (OS O X Y Y').
+apply invert_one_side.
 apply one_side_transitivity with P.
 apply one_side_symmetry.
 assumption.
 assumption.
-apply invert_one_side in H6.
-apply l9_9 in H5.
-intuition.
-
-apply same_side_OS in H3.
-apply same_side_OS in H4.
-apply coplanar_trans_1 with P; Col; Cop.
 Qed.
 
 Lemma axiom_conga_comm : forall A B C,
@@ -1170,7 +1159,7 @@ Lemma axiom_congaH_outH_congaH :
   CongA A' B C' D' E F'.
 Proof.
 intros.
-apply out_conga with A C D F;auto using outH_out.
+apply l11_10 with A C D F; trivial; apply l6_6; apply outH_out; auto.
 Qed.
 
 Lemma axiom_conga_permlr:

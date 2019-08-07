@@ -101,10 +101,8 @@ Proof.
     - destruct HDij as [HOS'|[[HCol HNCol]|[HNCol HCol]]]; [apply l9_9_bis; trivial|intro..].
         apply (two_sides_not_col A C P Q); Col.
         apply (two_sides_not_col A C Q P); Col; Side.
-    - destruct (eq_dec_points P X); destruct (eq_dec_points Q Y); treat_equalities; trivial.
-        apply bet_ts__ts with Y; trivial.
-        apply l9_2, bet_ts__ts with X; Side; Between.
-        apply bet_ts__ts with Y; trivial; apply l9_2, bet_ts__ts with X; Side; Between.
+    - apply bet_ts__ts with Y; trivial.
+      apply l9_2, bet_ts__ts with X; Side; Between.
   }
   assert (HLta : LtA A C P A C Q).
   { apply t18_19; Cong.
@@ -115,7 +113,7 @@ Proof.
   assert (HNCol1 : ~ Col P Q C).
   { intro.
     destruct HDij as [HOS'|[[HCol HNCol]|[HNCol HCol]]];
-      [|apply HNCol; assert_diffs; ColR..].
+      [|apply HNCol; ColR..].
     destruct HLta as [_ HNCongA].
     apply HNCongA, out2__conga.
       apply out_trivial; auto.
@@ -140,11 +138,10 @@ Proof.
         exists Y; split; Between.
         right; apply out_trivial; auto.
       destruct HDij as [HOS'|[[HCol HNCol]|[HNCol HCol]]].
-      - apply l11_24, lea_in_angle; Lea; Side.
+      - apply l11_24, lea_in_angle; [Lea|Side].
       - apply out341__inangle; auto.
         apply not_bet_out; Col.
-        intro; apply (lta__nlea A C P A C Q); trivial.
-        apply l11_31_2; auto.
+        intro; apply (lta__nlea A C P A C Q); Lea.
       - apply in_angle_line; auto.
         apply between_symmetry, not_out_bet; Col.
         intro; apply (lta__nlea A C P A C Q); trivial.
@@ -155,7 +152,7 @@ Proof.
     - assert (Col P Q X) by ColR.
       apply coplanar_pseudo_trans with P Q C; [assumption| |Cop..].
       destruct HDij as [|[[]|[]]]; Cop.
-    - absurd (X = Y); trivial; apply (l6_21 P Q C X); ColR.
+    - absurd (X = Y); trivial; assert_diffs; apply (l6_21 P Q C X); ColR.
     - apply (HNTS X Y); trivial.
   }
 
@@ -190,7 +187,7 @@ Proof.
 
   - assert (Q <> R).
     { intro; subst R.
-      assert (Q = Z) by (apply (onc2_out__eq C D); trivial).
+      assert (Q = Z) by (apply (inc_onc2_out__eq C D C); Circle).
       subst.
       apply outcs__ninc in HQOut; Circle.
     }
@@ -278,7 +275,7 @@ Proof.
 
   - assert (P <> R).
     { intro; subst R.
-      assert (P = Z) by (apply (onc2_out__eq C D); trivial).
+      assert (P = Z) by (apply (inc_onc2_out__eq C D C); Circle).
       subst.
       apply incs__noutc in HPIn; Circle.
     }

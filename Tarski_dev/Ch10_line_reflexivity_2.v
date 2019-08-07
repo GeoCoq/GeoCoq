@@ -29,7 +29,7 @@ apply (cop__cong_on_bissect A B); Cong.
 apply l8_15_1; Col.
 Qed.
 
-Lemma cop__image_in_col : forall A B P P' Q Q' M,
+Lemma cop_image_in2__col : forall A B P P' Q Q' M,
  Coplanar A B P Q -> ReflectL_at M P P' A B -> ReflectL_at M Q Q' A B ->
  Col M P Q.
 Proof.
@@ -468,39 +468,6 @@ Proof.
     apply cong_transitivity with A2 C0; Cong.
 Qed.
 
-Lemma cong4_cop2__eq : forall A B C P Q, ~ Col A B C ->
-  Cong A P B P -> Cong A P C P -> Coplanar A B C P ->
-  Cong A Q B Q -> Cong A Q C Q -> Coplanar A B C Q ->
-  P = Q.
-Proof.
-    intros A B C P Q HNCol; intros.
-    destruct (eq_dec_points P Q); [assumption|].
-    exfalso.
-    apply HNCol.
-    assert (Haux : forall R, Col P Q R -> Cong A R B R /\ Cong A R C R).
-      intros R HR; split; apply cong_commutativity, (l4_17 P Q); Cong.
-    destruct (midpoint_existence A B) as [D].
-    assert_diffs.
-    assert (HCol1 : Col P Q D).
-    { assert (Coplanar A B C D) by Cop.
-      apply cong3_cop2__col with A B; Cong; apply coplanar_pseudo_trans with A B C; Cop.
-    }
-    destruct (diff_col_ex3 P Q D HCol1) as [R1]; spliter.
-    destruct (segment_construction R1 D R1 D) as [R2 []].
-    assert_diffs.
-    assert (Col P Q R2) by ColR.
-    destruct (Haux R1); trivial.
-    destruct (Haux R2); trivial.
-    assert (Cong A R1 A R2).
-    { assert (Per A D R1) by (apply l8_2; exists B; split; Cong).
-      apply l10_12 with D D; Cong.
-      apply per_col with R1; ColR.
-    }
-    apply cong3_cop2__col with R1 R2; auto; [apply col_cop2__cop with P Q; auto..| |].
-      apply cong_transitivity with A R1; [|apply cong_transitivity with A R2]; Cong.
-      apply cong_transitivity with A R1; [|apply cong_transitivity with A R2]; Cong.
-Qed.
-
 Lemma l10_16 : forall A B C A' B' P,
  ~ Col A B C -> ~ Col A' B' P -> Cong A B A' B' ->
  exists C', Cong_3 A B C A' B' C' /\ OS  A' B' P C' .
@@ -550,8 +517,7 @@ Proof.
         subst X'.
         apply cong_symmetry.
         assumption.
-      eapply l10_12.
-        3: apply H10.
+      apply l10_12 with X X'.
         apply perp_in_per.
         eapply l8_14_2_1b_bis.
           eapply perp_col.
@@ -590,6 +556,7 @@ Proof.
           repeat split;assumption.
           apply col_trivial_3.
         apply col_trivial_1.
+        assumption.
       apply cong_symmetry.
       assumption.
     assert (Cong B C B' C').
@@ -600,8 +567,7 @@ Proof.
         subst X'.
         apply cong_symmetry.
         assumption.
-      eapply l10_12.
-        3: apply H11.
+      apply l10_12 with X X'.
         apply perp_in_per.
         eapply l8_14_2_1b_bis.
           eapply perp_col.
@@ -642,6 +608,7 @@ Proof.
           repeat split; assumption.
           apply col_trivial_3.
         apply col_trivial_1.
+        assumption.
       apply cong_symmetry.
       assumption.
     repeat split.
@@ -882,7 +849,7 @@ elim (two_sides_dec I P A B); intro HTS'.
     {
     apply l9_8_2 with B; Col.
     unfold TS in HTS; spliter.
-    apply cop__not_two_sides_one_side; Cop.
+    apply cop_nts__os; Cop.
     intro; apply HOS; apply l9_2; Col.
     }
   destruct HTS' as [Hc1 [Hc2 [T [HCol HBet']]]].
@@ -899,8 +866,8 @@ Lemma hilbert_s_version_of_pasch : forall A B C P Q, Coplanar A B C P ->
 Proof.
 intros A B C P Q HCop HNC1 HNC2 HAQB.
 rewrite BetSEq in HAQB; spliter.
-destruct (hilbert_s_version_of_pasch_aux C A B Q P) as [X [HPQX HBetS]]; Cop;
-try exists X; try split; Col; do 2 rewrite BetSEq;
+destruct (hilbert_s_version_of_pasch_aux C A B Q P) as [X [HPQX HBetS]]; Cop.
+exists X; split; Col; unfold BetS.
 induction HBetS; spliter; repeat split; Between.
 Qed.
 
@@ -909,7 +876,6 @@ Lemma two_sides_cases : forall O P A B,
  ~ Col O A B -> OS O P A B -> TS O A P B \/ TS O B P A.
 Proof.
 intros.
-assert (HCop := os__coplanar O P A B H0).
 assert(TS O A P B \/ OS O A P B).
 {
   apply(cop__one_or_two_sides O A P B); Col.
@@ -923,25 +889,7 @@ assert(TS O A P B \/ OS O A P B).
 induction H1.
 left; auto.
 right.
-
-assert(TS O B P A \/ OS O B P A).
-{
-  apply(cop__one_or_two_sides O B P A); Col.
-    Cop.
-  unfold OS in H0.
-  ex_and H0 R.
-  unfold TS in H2.
-  spliter.
-  Col.
-}
-induction H2.
-assumption.
-assert(TS O P A B).
-{
-  apply(l9_31 O A P B); auto.
-}
-apply l9_9 in H3.
-contradiction.
+apply l9_31; Side.
 Qed.
 
 Lemma not_par_two_sides :
@@ -952,10 +900,9 @@ intros A B C D I HCD HCol1 HCol2 HNC.
 assert (HX : exists X, Col C D X /\ I <> X) by (exists C; split; try intro; treat_equalities; Col).
 destruct HX as [X [HCol3 HIX]].
 destruct (symmetric_point_construction X I) as [Y HMid].
-exists X; exists Y; assert_diffs; assert_cols; do 2 (split; try ColR).
-split; try (intro; assert (I = X) by (assert_diffs; assert_cols; apply l6_21 with A B C D; Col); Col).
-split; try (intro; assert (I = Y) by (assert_diffs; assert_cols; apply l6_21 with A B C D;
-                                      Col; ColR); Col).
+exists X; exists Y; assert_diffs; assert_cols; repeat split; try ColR.
+  intro; apply HIX, l6_21 with A B C D; Col.
+  intro; absurd (I = Y); [auto|apply l6_21 with A B C D; ColR].
 exists I; unfold Midpoint in HMid; spliter; split; Col; Between.
 Qed.
 
@@ -970,7 +917,7 @@ assert (Coplanar A B P X).
   apply coplanar_trans_1 with C; [Col|Cop|].
   exists I; right; right; split; ColR.
 elim (two_sides_dec A B P X); intro HOS; [exists X; Col|].
-assert_diffs; apply cop__not_two_sides_one_side in HOS; Col; [|intro; unfold TS in HTS; intuition].
+assert_diffs; apply cop_nts__os in HOS; Col; [|intro; unfold TS in HTS; intuition].
 exists Y; split; Col.
 apply l9_8_2 with X; [|apply one_side_symmetry]; Col.
 Qed.
@@ -986,7 +933,7 @@ assert (Coplanar A B P X).
   apply coplanar_trans_1 with C; [Col|Cop|].
   exists I; right; right; split; ColR.
 elim (one_side_dec A B P X); intro HTS2; [exists X; Col|].
-assert_diffs; apply cop__not_one_side_two_sides in HTS2; Col; [|intro; unfold TS in HTS; intuition].
+assert_diffs; apply cop_nos__ts in HTS2; Col; [|intro; unfold TS in HTS; intuition].
 exists Y; split; Col.
 exists X; split; Side.
 Qed.
@@ -1016,134 +963,12 @@ Proof.
     apply cop_perp2__col, all_coplanar.
 Qed.
 
-Lemma cong_on_bissect : forall A B M P X,
- Midpoint M A B -> Perp_at M A B P M -> Cong X A X B ->
- Col M P X.
-Proof.
-intros A B M P X.
-apply cop__cong_on_bissect, all_coplanar.
-Qed.
-
-Lemma cong_mid_perp__col : forall A B M P X, Cong A X B X -> Midpoint M A B -> Perp A B P M -> Col M P X.
-Proof.
-intros A B M P X.
-apply cong_cop_mid_perp__col, all_coplanar.
-Qed.
-
-Lemma image_in_col : forall A B P P' Q Q' M,
- ReflectL_at M P P' A B -> ReflectL_at M Q Q' A B ->
- Col M P Q.
-Proof.
-intros A B P P' Q Q' M.
-apply cop__image_in_col, all_coplanar.
-Qed.
-
-Lemma cong_image__col : forall A B P P' X,
- P <> P' -> Reflect P P' A B -> Cong P X P' X ->
- Col A B X.
-Proof.
-    intros.
-    assert (HCop := all_coplanar A B P X).
-    apply cong_cop_image__col with P P'; assumption.
-Qed.
-
-Lemma cong_per2_1 :
- forall A B X Y, A <> B -> Per A B X -> Per A B Y ->
- Cong B X B Y -> X = Y \/ Midpoint B X Y.
-Proof.
-    intros.
-    assert (HCop := all_coplanar A B X Y).
-    apply (cong_cop_per2_1 A); assumption.
-Qed.
-
-
-Lemma cong_per2 : forall A B X Y,
- A <> B -> Per A B X -> Per A B Y -> Cong B X B Y ->
- X = Y \/ ReflectL X Y A B.
-Proof.
-    intros.
-    assert (HCop := all_coplanar A B X Y).
-    apply cong_cop_per2; assumption.
-Qed.
-
-Lemma cong_per2_gen : forall A B X Y,
- A <> B -> Per A B X -> Per A B Y -> Cong B X B Y ->
- X = Y \/ Reflect X Y A B.
-Proof.
-    intros.
-    assert (HCop := all_coplanar A B X Y).
-    apply cong_cop_per2_gen; assumption.
-Qed.
-
-Lemma not_two_sides_one_side :
- forall A B X Y,
-  ~ Col X A B ->
-  ~ Col Y A B ->
-  ~ TS A B X Y ->
-  OS A B X Y.
-Proof.
-intros A B X Y.
-apply cop__not_two_sides_one_side, all_coplanar.
-Qed.
-
-Lemma col_perp2__col :
- forall A B X Y P,
-  Col A B P ->
-  Perp A B X P ->
-  Perp P A Y P ->
-  Col Y X P.
-Proof.
-apply upper_dim_implies_col_perp2__col;
-unfold upper_dim_axiom; apply upper_dim.
-Qed.
-
-Lemma hilbert_s_version_of_pasch_2D : forall A B C P Q,
-  ~ Col C Q P -> ~ Col A B P -> BetS A Q B ->
-  exists X, Col P Q X /\ (BetS A X C \/ BetS B X C).
-Proof.
-intros A B C P Q.
-apply hilbert_s_version_of_pasch, all_coplanar.
-Qed.
-
-Lemma not_one_side_two_sides :
- forall A B X Y,
-  ~ Col X A B ->
-  ~ Col Y A B ->
-  ~ OS A B X Y ->
-  TS A B X Y.
-Proof.
-apply upper_dim_implies_not_one_side_two_sides.
-unfold upper_dim_axiom; apply upper_dim.
-Qed.
-
-Lemma one_or_two_sides :
- forall A B X Y,
-  ~ Col X A B ->
-  ~ Col Y A B ->
-  TS A B X Y \/ OS A B X Y.
-Proof.
-apply upper_dim_implies_one_or_two_sides.
-unfold upper_dim_axiom; apply upper_dim.
-Qed.
-
-Lemma not_par_other_side :
-  forall A B C D I P, C <> D -> Col A B I -> Col C D I -> ~ Col A B C -> ~ Col A B P ->
-  exists Q, Col C D Q /\ TS A B P Q.
-Proof.
-intros.
-assert (HCop := all_coplanar A B C P).
-apply cop_not_par_other_side with I; assumption.
-Qed.
-
-Lemma not_par_same_side :
-  forall A B C D I P, C <> D -> Col A B I -> Col C D I -> ~ Col A B C -> ~ Col A B P ->
-  exists Q, Col C D Q /\ OS A B P Q.
-Proof.
-intros.
-assert (HCop := all_coplanar A B C P).
-apply cop_not_par_same_side with I; assumption.
-Qed.
-
 End T10_2D.
 
 Hint Resolve all_coplanar : cop.
+(* the hint: eapply @all_coplanar will only be used by eauto *)
+
+Ltac Cop := auto; try (intros; solve [apply all_coplanar|apply col__coplanar; Col
+     |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
+     |apply coplanar_perm_18, col__coplanar; Col
+     |assert_cops; auto 2 with cop_perm]).

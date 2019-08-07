@@ -37,7 +37,7 @@ Fixpoint arity (T:Type) (n:nat) :=
  | S p => T -> arity T p
  end.
 
-(* Warning cartesianPower T 0 represents T but it is never used *)
+(** Warning: cartesianPower T 0 represents T but it is never used *)
 
 Fixpoint cartesianPowerAux (T:Type) (n:nat) :=
  match n with
@@ -116,7 +116,7 @@ induction n; simpl in *;
 apply injective_projections; assumption.
 Qed.
 
-Definition CPPair {T : Type} :
+Lemma CPPair {T : Type} :
   forall (cp : cartesianPower T 2),
   cp = (fst cp, snd cp).
 Proof.
@@ -1156,8 +1156,8 @@ Qed.
 Lemma PermOKAux {T : Type} {m : nat} :
   forall (appPred : (cartesianPower T (S (S m))) -> Prop) n,
   (forall (A : T) (X : cartesianPower T (S m)), appPred (consHeadCP A X) -> appPred (consTailCP X A)) ->
-  (forall (X : cartesianPower T (S (S m))),
-          appPred X -> appPred (circPermNCP n X)).
+  forall (X : cartesianPower T (S (S m))),
+          appPred X -> appPred (circPermNCP n X).
 Proof.
 intros appPred n HPerm.
 induction n.

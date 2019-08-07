@@ -377,9 +377,7 @@ Qed.
 
 End Sums.
 
-Hint Resolve sums__le1256 sums__le3456 : le.
-
 Hint Resolve sums_sym sums_left_comm sums_middle_comm sums_right_comm
              sums_comm sums112323 sums123312 bet__sums : sums.
 
-Ltac Sums := auto with sums.
+Ltac Sums := auto 4 with sums.

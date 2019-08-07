@@ -91,7 +91,7 @@ Proof.
     apply grad2__grad123 in HG.
     apply grad__bet in HG.
     destruct (l10_15 A0 A1 A B0) as [P [HPerp HOS]]; Col.
-      assert (HH := sac__ncol124 A0 B0 B1 A1); Col.
+      apply par_strict_not_col_1 with B1, sac__pars1423, HSac1.
     destruct (l6_11_existence A A0 B0 P) as [B [HOut Hcong5]].
       assert_diffs; auto.
       assert(Hdiff := sac_distincts A0 B0 B1 A1 HSac1); spliter; auto.
@@ -99,8 +99,7 @@ Proof.
     unfold Saccheri in *; spliter; assert_diffs.
     repeat split; Cong.
     - apply (per_col _ _ A1); Col.
-    - apply perp_per_2; auto.
-      apply (perp_col1 _ _ _ P); Col.
+    - apply perp_per_2, (perp_col1 _ _ _ P); Col.
       apply perp_comm; apply (perp_col _ A1); Col.
     - apply invert_one_side.
       apply (out_out_one_side _ _ _ P); [|apply l6_6; auto].
@@ -140,7 +139,7 @@ Proof.
     apply grad__bet in Hbet5.
     destruct (l10_15 A0 A1 A B0) as [P [HPerp HOS]].
       Col.
-      assert (H := sac__ncol124 A0 B0 B1 A1); Col.
+      apply par_strict_not_col_1 with B1, sac__pars1423, HSac.
     destruct (l6_11_existence A A0 B0 P) as [B [HOut Hcong5]].
       assert_diffs; auto.
       assert(Hdiff := sac_distincts A0 B0 B1 A1 HSac); spliter; auto.
@@ -148,9 +147,8 @@ Proof.
     { unfold Saccheri in *; spliter; assert_diffs; assert(A0 <> A) by (intro; treat_equalities; auto).
       repeat split; Cong.
       - apply (per_col _ _ A1); Col.
-      - apply perp_per_2; auto.
-        apply (perp_col1 _ _ _ P); Col.
-        apply perp_comm; apply (perp_col _ A1); Col.
+      - apply perp_per_2, (perp_col1 _ _ _ P); Col.
+        apply perp_comm, (perp_col _ A1); Col.
       - apply invert_one_side.
         apply (out_out_one_side _ _ _ P); [|apply l6_6; auto].
         apply invert_one_side.
@@ -198,7 +196,7 @@ Proof.
         intro; apply (l4_3 _ _ B' _ _ Q'); Cong; eBetween.
       intro HNBet.
       apply sac_distincts in HSac2; spliter; assert_diffs.
-      assert (Q' <> B0') by (intro; apply HNBet; Between).
+      assert (Q' <> B0') by (intro; subst; apply HNBet; Between).
       assert (A' <> B0') by (intro; treat_equalities; auto).
       assert (HOut3 : Out B0' B' Q').
        apply (l6_7 _ _ A'); [| apply l6_6]; apply bet_out; Between.
@@ -265,8 +263,8 @@ Proof.
     apply l8_2, per_col with M; Col; Perp.
   - apply l8_2, per_col with A; Col.
   - apply l11_17 with M N A; auto.
-    apply (out_conga M N A M L B); auto; try (apply out_trivial; auto).
-    apply bet_out; Between.
+    apply (l11_10 M N A M L B); auto; try (apply out_trivial; auto).
+    apply l6_6, bet_out; Between.
   - apply coplanar_perm_16, col_cop__cop with M; Col.
     apply coplanar_perm_12, col_cop__cop with A; Col; Cop.
 Qed.
@@ -326,10 +324,10 @@ Proof.
     apply (l8_18_uniqueness A C0 B0); Col.
     apply perp_right_comm, perp_col1 with B'; Perp; ColR.
   }
-  assert (HPer : Per A C B) by (apply perp_per_1; auto; apply perp_left_comm, perp_col with C0; trivial).
-  destruct (t22_23 HNob A B' C' B C D) as [_ []]; Perp; assert_diffs.
-  - apply per_not_col in HPer; Col.
-  - apply perp_per_1; auto; apply perp_col1 with C0; Perp.
+  assert (HPer : Per A C B) by (apply perp_per_1, perp_left_comm, perp_col with C0; assumption).
+  destruct (t22_23 HNob A B' C' B C D) as [_ []]; Perp.
+  - assert_diffs; apply per_not_col in HPer; Col.
+  - apply perp_per_1, perp_col1 with C0; Perp.
   - split; auto.
   - ColR.
 Qed.
@@ -374,23 +372,24 @@ Proof.
     apply gradexp2__gradexp123, gradexp__grad, grad__bet in HGE2; assert_diffs; apply bet_out; auto.
   assert(HAcute : Acute D A B).
     apply (acute_conga__acute D A B0); trivial.
-    assert_diffs; apply (out_conga D A B0 D A B0); CongA; apply out_trivial; auto.
+    apply l6_6 in HOut.
+    assert_diffs; apply out2__conga; auto; apply out_trivial; auto.
   assert (HAC : A <> C) .
     intro; subst C; assert_diffs; apply (acute_not_per D A B); trivial.
-    apply perp_per_1; auto; apply perp_col with C0; Col.
-  exists C; exists B; split.
+    apply perp_per_1, perp_col with C0; Col.
+  exists C, B; split.
     assert_diffs; apply l6_6, acute_col_perp__out with B; [apply acute_sym; trivial|ColR|apply perp_col with C0; Col].
   split; trivial; split.
-    apply perp_per_1; auto; apply perp_left_comm, perp_col with C0; trivial.
+    apply perp_per_1, perp_left_comm, perp_col with C0; trivial.
   apply le3456_lt__lt with P Q'.
   split.
     apply bet__le1213; trivial.
-    intro; assert (Q = Q'); treat_equalities; auto.
-    apply between_cong with P; trivial.
+    intro; assert (Q = Q'); [|treat_equalities; auto].
+    apply between_cong with P; assumption.
   apply le_transitivity with B0 E; trivial.
   apply le_right_comm.
   apply t22_24_aux with A B0 C0; trivial.
-  apply archi__obtuse_case_elimination; trivial.
+  apply archi__obtuse_case_elimination; assumption.
 Qed.
 
 

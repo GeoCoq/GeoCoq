@@ -1,59 +1,5 @@
 Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity_2.
 
-Ltac permut :=
-match goal with
-   |H : (Col ?X ?Y ?Z) |- Col ?X ?Y ?Z => assumption
-   |H : (Col ?X ?Y ?Z) |- Col ?Y ?Z ?X => apply col_permutation_1; assumption
-   |H : (Col ?X ?Y ?Z) |- Col ?Z ?X ?Y => apply col_permutation_2; assumption
-   |H : (Col ?X ?Y ?Z) |- Col ?X ?Z ?Y => apply col_permutation_5; assumption
-   |H : (Col ?X ?Y ?Z) |- Col ?Y ?X ?Z => apply col_permutation_4; assumption
-   |H : (Col ?X ?Y ?Z) |- Col ?Z ?Y ?X => apply col_permutation_3; assumption
-   |_ : _ |- _ => idtac
-end.
-
-Ltac bet :=
-match goal with
-   |H0 : Bet ?A ?B ?C |- Bet ?A ?B ?C => assumption
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?B ?C ?D , H : ?B <> ?C |- Bet ?A ?B ?D => apply (outer_transitivity_between _ _ _ _ H0 H1 H)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?B ?C ?D , H : ?B <> ?C |- Bet ?A ?C ?D => apply (outer_transitivity_between2 _ _ _ _ H0 H1 H)
-   |H0 : Bet ?A ?B ?D, H1 : Bet ?B ?C ?D  |- Bet ?A ?B ?C => apply (between_inner_transitivity _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?A ?C ?D  |- Bet ?B ?C ?D => apply (between_exchange3 _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?D, H1 : Bet ?B ?C ?D  |- Bet ?A ?C ?D => apply (between_exchange2 _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?A ?C ?D  |- Bet ?A ?B ?D => apply (between_exchange4 _ _ _ _ H0 H1)
-
-   |H0 : Bet ?A ?B ?C |- Bet ?A ?B ?C => assumption
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?B ?C ?D , H : ?B <> ?C |- Bet ?D ?B ?A => apply between_symmetry; apply (outer_transitivity_between _ _ _ _ H0 H1 H)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?B ?C ?D , H : ?B <> ?C |- Bet ?D ?C ?A => apply (outer_transitivity_between2 _ _ _ _ H0 H1 H)
-   |H0 : Bet ?A ?B ?D, H1 : Bet ?B ?C ?D  |- Bet ?C ?B ?A => apply between_symmetry; apply (between_inner_transitivity _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?A ?C ?D  |- Bet ?D ?C ?B => apply between_symmetry; apply (between_exchange3 _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?D, H1 : Bet ?B ?C ?D  |- Bet ?D ?C ?A => apply between_symmetry; apply (between_exchange2 _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?C, H1 : Bet ?A ?C ?D  |- Bet ?D ?B ?A => apply between_symmetry; apply (between_exchange4 _ _ _ _ H0 H1)
-   |H0 : Bet ?A ?B ?C |- Bet ?C ?B ?A => apply (between_symmetry _ _ _  H0)
-
-   |H0 : Bet ?A ?B ?C |- Bet ?C ?B ?A => apply (between_symmetry _ _ _  H0)
-   |_ : _ |- Bet ?A ?B ?B => apply between_trivial
-   |_ : _ |- Bet ?A ?A ?B => apply between_trivial2
-   |_ : _ |- _ => idtac
-end.
-
-Ltac cong :=
-match goal with
-   |_ :  Cong ?A ?B ?C ?BD |- Cong ?A ?B ?C ?D => assumption
-   |_ : _ |- Cong ?A ?B ?A ?B => apply cong_reflexivity
-   |_ : _ |- Cong ?A ?A ?B ?B => apply cong_trivial_identity
-
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?A ?B ?C ?C => assumption
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?A ?B ?D ?C => apply (cong_right_commutativity _ _ _ _ H0)
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?B ?A ?D ?C => apply (cong_commutativity _ _ _ _ H0)
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?B ?A ?C ?D => apply (cong_left_commutativity _ _ _ _ H0)
-
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?C ?D ?A ?B => apply (cong_symmetry _ _ _ _ H0)
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?C ?D ?B ?A => apply (cong_symmetry _ _ _ _ (cong_left_commutativity _ _ _ _ H0))
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?D ?C ?B ?B => apply (cong_symmetry _ _ _ _ (cong_commutativity _ _ _ _ H0))
-   |H0 : Cong ?A ?B ?C ?D |- Cong ?D ?C ?A ?B => apply (cong_symmetry _ _ _ _ (cong_right_commutativity _ _ _ _ H0))
-   |_ : _ |- _ => idtac
-end.
-
 Section T11_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
@@ -76,11 +22,9 @@ Proof.
     exists D'.
     exists F'.
     assert_diffs.
-    repeat split;finish.
-      apply cong_left_commutativity.
-      eapply l2_11 with A D;finish.
-    apply cong_left_commutativity.
-    eapply l2_11; eBetween; Cong.
+    repeat split; auto; apply cong_left_commutativity.
+      apply l2_11 with A D; Cong; Between.
+      apply l2_11 with C F; Cong; Between.
 Qed.
 
 Lemma l11_aux : forall B A A' A0 E D D' D0,
@@ -96,7 +40,7 @@ Proof.
       assumption.
     assert(Cong B A0 E D0).
       apply cong_right_commutativity.
-      apply l2_11 with A D;finish.
+      apply l2_11 with A D; Cong; Between.
     split.
       apply H7.
     unfold Out in *.
@@ -107,47 +51,31 @@ Proof.
 
       induction H12.
         assert(Bet E D' D0).
-          eapply cong_preserves_bet.
-            2: apply H1.
-            apply H12.
-            assumption.
+          apply (cong_preserves_bet B A' A0); trivial.
           unfold Out.
           repeat split.
             assumption.
             assert_diffs.
             auto.
-          eapply l5_1.
-            2:apply H9.
-            auto.
-          assumption.
+          apply l5_1 with D; auto.
         apply cong_commutativity.
-        eapply l4_3  with B E;finish.
+        apply l4_3  with B E; Cong; Between.
       assert(Bet E D0 D').
-        eapply cong_preserves_bet.
-          2: apply H7.
-          apply H12.
-          assumption.
+        apply (cong_preserves_bet B A0 A'); trivial.
         unfold Out.
         repeat split.
           assert_diffs;auto.
           assert_diffs;auto.
-        eapply l5_1.
-          2:apply H3.
-          auto.
-        assumption.
-      eapply l4_3 with B E;finish.
+        apply l5_1 with D; auto.
+      apply l4_3 with B E; Between; Cong.
       apply cong_commutativity.
-      eapply l4_3.
-        3:apply cong_commutativity.
-        3:apply H7.
+      apply l4_3 with B E; Cong.
         apply between_symmetry.
         eapply between_exchange4.
           apply H11.
         assumption.
         apply between_symmetry.
-        eapply cong_preserves_bet.
-          2: apply H1.
-          2: apply H7.
+        apply (cong_preserves_bet B A' A0); Cong.
           eapply between_exchange4.
             apply H11.
           assumption.
@@ -155,21 +83,11 @@ Proof.
         repeat split.
           assumption.
           assert_diffs;auto.
-        eapply l5_1.
-          2:apply H9.
-          auto.
-        assumption.
-      finish.
+        apply l5_1 with D; auto.
       apply cong_commutativity.
-      eapply l4_3.
-        3:apply cong_commutativity.
-        3:apply H7.
+      apply l4_3 with B E; Cong.
         apply between_symmetry.
-        eapply cong_preserves_bet.
-          2:apply cong_symmetry.
-          2:apply H1.
-          2:apply cong_symmetry.
-          2:apply H7.
+        apply (cong_preserves_bet E D' D0); Cong.
           eapply between_exchange4.
             apply H9.
           assumption.
@@ -182,11 +100,8 @@ Proof.
         eapply between_exchange4.
           apply H9.
         assumption.
-      finish.
     apply cong_commutativity.
-    eapply l4_3.
-      3:apply cong_commutativity.
-      3:apply H7.
+    apply l4_3 with B E; Cong.
       apply between_symmetry.
       eapply between_exchange4.
         apply H11.
@@ -195,7 +110,6 @@ Proof.
       eapply between_exchange4.
         apply H9.
       assumption.
-    finish.
 Qed.
 
 Lemma l11_3_bis : forall A B C D E F,
@@ -232,19 +146,19 @@ Proof.
     unfold Cong_3 in H3.
     spliter.
     assert(Cong B A0 E D0 /\ Cong A' A0 D' D0).
-      eapply l11_aux with A D;finish.
+      apply l11_aux with A D; Out; Cong.
     assert(Cong B C0 E F0 /\ Cong C' C0 F' F0).
-      eapply l11_aux with C F;finish.
+      apply l11_aux with C F; Out.
     spliter.
     assert (Cong_3 B A' A0 E D' D0)
-      by (repeat split;finish).
+      by (repeat split;Cong).
     assert (Cong_3 B C' C0 E F' F0)
-      by (repeat split;finish).
+      by (repeat split;Cong).
     assert (Cong C0 A' F0 D').
       apply l4_16 with B C' E F';
-        unfold FSC;repeat split;finish;ColR.
+        unfold FSC; repeat split; Cong; ColR.
     apply l4_16 with B A' E D';
-    unfold FSC;repeat split;finish;ColR.
+    unfold FSC; repeat split; Cong; ColR.
 Qed.
 
 Lemma l11_4_1 : forall A B C D E F,
@@ -286,7 +200,7 @@ Proof.
       eapply (l4_16 B A0 A' C0 E D0 D' F0).
         unfold FSC.
         repeat split.
-          assert_cols;Col.
+          Col.
           Cong.
           assumption.
           Cong.
@@ -306,28 +220,12 @@ Proof.
         apply H7.
       assumption.
     assert(Cong C' C0 F' F0).
-      eapply out_cong_cong.
-        3:apply H9.
-        assumption.
-        assumption.
-      assumption.
+      apply out_cong_cong with B E; auto.
     apply cong_commutativity.
-    eapply (l4_16 B C0 C' A' E F0 F' D').
-      unfold FSC.
-      repeat split.
-        apply out_col.
-        apply l6_6.
-        assumption.
-        assumption.
-        assumption.
-        Cong.
-        assumption.
-      Cong.
-    intro.
-    subst C0.
-    unfold Out in H10.
-    spliter.
-    absurde.
+    apply (l4_16 B C0 C' A' E F0 F' D').
+      repeat split; Col; Cong.
+    assert_diffs.
+    auto.
 Qed.
 
 
@@ -351,13 +249,13 @@ Proof.
     assert(Cong A' B D' E).
      {
       apply cong_right_commutativity.
-      eapply l2_11 with A D;finish.
+      apply l2_11 with A D; Cong; Between.
      }
     assert (Cong B C' E F').
       apply cong_right_commutativity.
-      eapply l2_11 with C F;finish.
-    assert_diffs;repeat split;finish.
-    apply H3;repeat split;finish.
+      apply l2_11 with C F; Cong; Between.
+    assert_diffs; repeat split; auto.
+    apply H3; repeat split; Cong.
 Qed.
 
 Lemma conga_refl : forall A B C, A <> B -> C <> B -> CongA A B C A B C.
@@ -368,7 +266,7 @@ Proof.
     exists C.
     exists A.
     exists C.
-    repeat split; finish.
+    repeat split; Between; Cong.
 Qed.
 
 Lemma conga_sym : forall A B C A' B' C', CongA A B C A' B' C' -> CongA A' B' C' A B C.
@@ -385,33 +283,36 @@ Proof.
     exists F0.
     exists A0.
     exists C0.
-    repeat split; finish.
+    repeat split; Cong.
 Qed.
 
-Lemma out_conga :
- forall A B C A' B' C' A0 C0 A1 C1,
- CongA A B C A' B' C' ->
- Out B A A0 ->
- Out B C C0 ->
- Out B' A' A1 ->
- Out B' C' C1 ->
- CongA A0 B C0 A1 B' C1.
+Lemma l11_10 : forall A B C D E F A' C' D' F',
+  CongA A B C D E F -> Out B A' A -> Out B C' C -> Out E D' D -> Out E F' F ->
+  CongA A' B C' D' E F'.
 Proof.
     intros.
     apply l11_4_1 in H.
     spliter.
     apply l11_4_2.
     assert_diffs.
-    repeat split;try assumption.
+    repeat split; auto.
     intros.
     spliter.
     apply H7.
     assert_diffs.
-    repeat split;finish.
-      eapply l6_7 with A0;finish.
-      eapply l6_7 with C0;finish.
-      eapply l6_7 with A1;finish.
-      eapply l6_7 with C1;finish.
+    repeat split;Cong.
+      apply l6_7 with A'; Out.
+      apply l6_7 with C'; Out.
+      apply l6_7 with D'; Out.
+      apply l6_7 with F'; Out.
+Qed.
+
+Lemma out2__conga : forall A B C A' C', Out B A' A -> Out B C' C -> CongA A B C A' B C'.
+Proof.
+  intros A B C A' C' HAOut HCOut.
+  assert_diffs.
+  apply l11_10 with A C A C; Out.
+  apply conga_refl;auto.
 Qed.
 
 Lemma cong3_diff : forall A B C A' B' C',
@@ -443,8 +344,8 @@ Proof.
     assert (A' <> B') by (eauto using cong3_diff).
     assert (B' <> C') by (eauto using cong3_diff2).
     apply (l11_3_bis A B C A' B' C').
-    exists A. exists C. exists A'. exists C'.
-    intuition finish.
+    exists A, C, A', C'.
+    intuition Out.
 Qed.
 
 Lemma cong3_conga2 : forall A B C A' B' C' A'' B'' C'',
@@ -463,32 +364,29 @@ Proof.
     spliter.
     unfold CongA.
     assert_diffs.
-    repeat split;try solve [auto].
+    repeat split; auto.
     prolong B' A' A1 B'' A''.
     prolong B' C' C1 B'' C''.
-    exists A1.
-    exists C1.
-    exists A2.
-    exists C2.
+    exists A1, C1, A2, C2.
     repeat split;try assumption.
-      eapply cong_transitivity with B A;finish.
-      eapply cong_transitivity with B C;finish.
+      apply cong_transitivity with B A; Cong.
+      apply cong_transitivity with B C; auto.
     assert (Cong A A0 A' A1).
-      eapply cong_transitivity with B'' A'';finish.
+      apply cong_transitivity with B'' A''; Cong.
     assert(Cong B A0 B' A1).
-      eapply l2_11 with A A';finish.
+      apply l2_11 with A A'; Cong.
     assert (Cong C C0 C' C1).
-      eapply cong_transitivity with B'' C'';finish.
+      apply cong_transitivity with B'' C''; Cong.
     assert(Cong B C0 B' C1).
-      eapply l2_11 with C C';finish.
+      eapply l2_11 with C C'; auto.
     assert(FSC B A A0 C B' A' A1 C').
-      unfold FSC;assert_cols;repeat split;finish.
+      unfold FSC; assert_cols; repeat split; Cong.
     assert(Cong A0 C A1 C').
       eauto using l4_16.
     apply cong_commutativity.
     assert(Cong C0 A0 C1 A1).
-      eapply (l4_16 B C C0 A0 B' C' C1 A1).
-        unfold FSC;assert_cols;repeat split;finish.
+      apply (l4_16 B C C0 A0 B' C' C1 A1).
+        unfold FSC;assert_cols;repeat split; Cong.
       auto.
     apply cong_transitivity with A0 C0; Cong.
 Qed.
@@ -540,32 +438,32 @@ Proof.
       split; assumption.
     spliter.
     assert(CongA A1 B' C1 A'' B'' C'')
-      by (apply out_conga with A' C' A'' C'';finish).
+      by (apply l11_10 with A' C' A'' C'';Out).
     assert (CongA A0 B C0 A' B' C')
-      by (apply out_conga with A C A' C';finish).
+      by (apply l11_10 with A C A' C';Out).
     assert (Cong B A0 B' A1).
       {
       apply cong_right_commutativity.
-      apply l2_11 with A A';finish.
+      apply l2_11 with A A'; Between; Cong.
       }
     assert (Cong B C0 B' C1).
       {
       apply cong_right_commutativity.
-      eapply l2_11 with C C';finish.
+      apply l2_11 with C C'; Between; Cong.
       }
     assert (Cong A0 C0 A1 C1).
     {
       apply (l11_4_1) in H24.
       spliter.
       apply H30.
-      repeat split;finish.
+      repeat split;Between.
     }
     assert (Cong_3 A0 B C0 A1 B' C1)
-      by (repeat split;finish).
+      by (repeat split; Cong).
     apply cong3_symmetry in H28.
-    assert( CongA A0 B C0 A'' B'' C'')
+    assert (CongA A0 B C0 A'' B'' C'')
       by (eauto using cong3_conga2).
-    eapply out_conga with A0 C0 A'' C'';finish.
+    apply l11_10 with A0 C0 A'' C''; Out.
 Qed.
 
 Lemma conga_pseudo_refl : forall A B C,
@@ -578,10 +476,7 @@ Proof.
     prolong B C C' B A.
     prolong B A A'' B C.
     prolong B C C'' B A.
-    exists A'.
-    exists C'.
-    exists C''.
-    exists A''.
+    exists A', C', C'', A''.
     repeat split; try assumption.
     assert (A' = A'') by (eauto using (construction_uniqueness B A)).
     subst A''.
@@ -598,27 +493,8 @@ Proof.
     repeat split; try assumption.
     prolong B A A' D C.
     prolong D C C' B A.
-    exists A'.
-    exists A'.
-    exists C'.
-    exists C'.
-    repeat split;finish.
-Qed.
-
-Lemma l11_10 : forall A B C D E F A' C' D' F',
-  CongA A B C D E F -> Out B A' A -> Out B C' C -> Out E D' D -> Out E F' F ->
-  CongA A' B C' D' E F'.
-Proof.
-    intros.
-    apply (out_conga A B C D E F); auto using l6_6.
-Qed.
-
-Lemma out2__conga : forall A B C A' C', Out B A' A -> Out B C' C -> CongA A B C A' B C'.
-Proof.
-  intros A B C A' C' HAOut HCOut.
-  assert_diffs.
-  apply l11_10 with A C A C;finish.
-  apply conga_refl;auto.
+    exists A', A', C', C'.
+    repeat split;Cong.
 Qed.
 
 Lemma l11_13 : forall A B C D E F A' D',
@@ -676,7 +552,7 @@ Proof.
         Cong.
         assumption.
       apply cong_right_commutativity.
-      eapply l2_11 with C F;finish.
+      apply l2_11 with C F; Cong; Between.
     assert_diffs;auto.
 Qed.
 
@@ -693,14 +569,7 @@ Qed.
 Lemma conga_left_comm : forall A B C D E F, CongA A B C D E F -> CongA C B A D E F.
 Proof.
     intros.
-    apply conga_sym.
-    apply conga_trans with A B C.
-      apply conga_sym.
-      apply H.
-    unfold CongA in H.
-    spliter.
-    apply conga_pseudo_refl.
-      assumption.
+    apply conga_sym, conga_right_comm, conga_sym.
     assumption.
 Qed.
 
@@ -779,12 +648,11 @@ Proof.
     assert_diffs.
     assert (CongA A' B C  C' B A).
     {
-      apply l11_13 with A C;finish.
-      apply conga_pseudo_refl;finish.
+      apply l11_13 with A C; Between.
+      apply conga_pseudo_refl; auto.
     }
-      apply l11_13 with A' A;finish.
-      apply conga_right_comm.
-      auto.
+      apply l11_13 with A' A; Between.
+      apply conga_right_comm; assumption.
 Qed.
 
 End T11_1.
@@ -811,11 +679,11 @@ Proof.
     exists C1.
     repeat split; try assumption.
     apply (l10_12 A0 B C0 A1 B' C1).
-      eapply (per_col _ _ C).
+      apply (per_col _ _ C).
         intro;subst.
         auto.
         apply l8_2.
-        eapply (per_col _ _ A).
+        apply (per_col _ _ A).
           auto.
           apply l8_2.
           assumption.
@@ -825,10 +693,10 @@ Proof.
       unfold Col.
       left.
       assumption.
-      eapply (per_col _ _ C').
+      apply (per_col _ _ C').
         auto.
         apply l8_2.
-        eapply (per_col _ _ A').
+        apply (per_col _ _ A').
           auto.
           apply l8_2.
           assumption.
@@ -872,10 +740,10 @@ Proof.
     ex_and H4 A1.
     ex_and H5 C1.
     assert (Per A0 B C0).
-      eapply (per_col _ _ C).
+      apply (per_col _ _ C).
         auto.
         apply l8_2.
-        eapply (per_col _ _ A).
+        apply (per_col _ _ A).
           auto.
           apply l8_2.
           assumption.
@@ -911,14 +779,14 @@ Proof.
         assumption.
       apply cong_right_commutativity.
       assumption.
-    eapply (per_col _ _ C1).
+    apply (per_col _ _ C1).
       intro.
       subst C1.
       apply between_identity in H10.
       subst C'.
       absurde.
       apply l8_2.
-      eapply (per_col _ _ A1).
+      apply (per_col _ _ A1).
         intro.
         subst A1.
         apply between_identity in H8.
@@ -949,9 +817,7 @@ Proof.
       right; right.
       apply between_symmetry.
       assumption.
-    eapply l11_16; try assumption.
-      auto.
-    auto.
+    apply l11_16; auto.
 Qed.
 
 Lemma l11_18_2 : forall A B C D,
@@ -964,13 +830,8 @@ Proof.
     ex_and H5 C0.
     ex_and H4 A1.
     ex_and H5 D0.
-    assert( A0 = A1).
-      eapply construction_uniqueness.
-        2: apply H4.
-        auto.
-        apply H5.
-        assumption.
-      assumption.
+    assert (A0 = A1).
+      apply (construction_uniqueness B A B A); auto.
     subst A1.
     assert(Per A0 B C0).
       unfold Per.
@@ -994,14 +855,14 @@ Proof.
         apply cong_right_commutativity.
         assumption.
       assumption.
-    eapply (per_col _ _ C0).
+    apply (per_col _ _ C0).
       intro.
       subst C0.
       apply between_identity in H6.
       subst C.
       absurde.
       apply l8_2.
-      eapply (per_col _ _ A0).
+      apply (per_col _ _ A0).
         intro.
         subst A0.
         apply between_identity in H8.
@@ -1041,18 +902,12 @@ Proof.
       absurde.
     induction H2.
       left.
-      eapply l4_6.
-        2:apply HH.
-      assumption.
+      apply (l4_6 A B C); assumption.
     right.
-    eapply l4_6.
+    apply (l4_6 A C B).
       apply H2.
     unfold Cong_3.
-    repeat split.
-      assumption.
-      assumption.
-    apply cong_commutativity.
-    assumption.
+    repeat split; Cong.
 Qed.
 
 Lemma l11_21_a : forall A B C A' B' C', Out B A C -> CongA A B C A' B' C' -> Out B' A' C'.
@@ -1080,15 +935,11 @@ Proof.
       unfold Out in H.
       spliter.
       induction H14.
-        eapply l5_1.
-          2: apply H4.
-          auto.
+        apply l5_1 with A; auto.
         eapply between_exchange4.
           apply H14.
         assumption.
-      eapply l5_1.
-        3: apply H6.
-        auto.
+      apply l5_1 with C; auto.
       eapply between_exchange4.
         apply H14.
       assumption.
@@ -1157,44 +1008,28 @@ Proof.
     prolong C B C0 B C.
     prolong A' B' A1 A' B'.
     prolong C' B' C1 B' C'.
-    eapply l11_13.
-      eapply conga_line.
-        5: apply between_symmetry.
-        5: apply H3.
-        5: apply between_symmetry.
-        5: apply H7.
+    apply l11_13 with C0 C1.
+      apply conga_line; Between.
         intro.
-        subst C0.
-        apply cong_symmetry in H4.
-        apply cong_identity in H4.
-        subst C.
+        treat_equalities.
         unfold Out in H.
         spliter.
         absurde.
-        intro.
-        subst C.
         unfold Out in H.
         spliter.
-        absurde.
+        auto.
         intro.
-        subst C1.
-        apply cong_symmetry in H8.
-        apply cong_identity in H8.
-        subst C'.
+        treat_equalities.
         unfold Out in H0.
         spliter.
         absurde.
         intro.
-        subst C'.
         unfold Out in H0.
         spliter.
-        absurde.
-      unfold Out in H0.
-      spliter.
-      auto.
+        auto.
       unfold Out in H.
       spliter.
-      induction H12.
+      induction H10.
         eapply between_inner_transitivity.
           apply between_symmetry.
           apply H3.
@@ -1206,7 +1041,7 @@ Proof.
       auto.
       unfold Out in H.
       spliter.
-      assumption.
+      auto.
       unfold Out in H0.
       spliter.
       induction H10.
@@ -1221,7 +1056,7 @@ Proof.
       auto.
     unfold Out in H0.
     spliter.
-    assumption.
+    auto.
 Qed.
 
 Lemma conga_cop__or_out_ts : forall A B C C', Coplanar A B C C' -> CongA A B C A B C' ->
@@ -1235,12 +1070,7 @@ Proof.
     ex_and H4 A1.
     ex_and H5 C1.
     assert (A0=A1).
-      eapply construction_uniqueness.
-        3:apply H5.
-        2:apply H4.
-        auto.
-        assumption.
-      assumption.
+      apply (construction_uniqueness B A B A); auto.
     subst A1.
     induction (eq_dec_points C0 C1).
       subst C1.
@@ -1334,17 +1164,17 @@ Proof.
     induction(eq_dec_points B M).
       subst M.
       assert(~Col A B C).
-        eapply per_not_col.
+        apply per_not_col.
           assumption.
           auto.
-        eapply per_col.
-          2:apply H23.
+        apply per_col with C1.
           intro.
           subst C1.
           apply l7_2 in H15.
           apply is_midpoint_id in H15.
           subst C0.
           absurde.
+          assumption.
         assert(Bet C B C1).
           eapply between_exchange3.
             apply between_symmetry.
@@ -1355,17 +1185,17 @@ Proof.
         right; right.
         assumption.
       assert(~Col A B C').
-        eapply per_not_col.
+        apply per_not_col.
           assumption.
           auto.
-        eapply per_col.
-          2:apply H23.
+        apply per_col with C1.
           intro.
           subst C1.
           apply l7_2 in H15.
           apply is_midpoint_id in H15.
           subst C0.
           absurde.
+          assumption.
         assert(Bet C' B C0).
           eapply between_exchange3.
             apply between_symmetry.
@@ -1466,6 +1296,15 @@ Proof.
     auto.
 Qed.
 
+Lemma conga_os__out : forall A B C C',
+ CongA A B C A B C' -> OS A B C C' -> Out B C C'.
+Proof.
+    intros.
+    destruct (conga_cop__or_out_ts A B C C'); trivial.
+      Cop.
+    exfalso; eapply l9_9; eassumption.
+Qed.
+
 
 Lemma cong2_conga_cong : forall A B C A' B' C',
  CongA A B C A' B' C' -> Cong A B A' B' -> Cong B C B' C' ->
@@ -1490,18 +1329,12 @@ Proof.
           apply H6.
         apply cong_commutativity.
         apply cong_symmetry.
-        eapply cong_transitivity.
-          2: apply H0.
-        apply cong_commutativity.
-        assumption.
+        apply cong_transitivity with A B; Cong.
         eapply cong_transitivity.
           apply H6.
         apply cong_commutativity.
         apply cong_symmetry.
-        eapply cong_transitivity.
-          2: apply H0.
-        apply cong_commutativity.
-        assumption.
+        apply cong_transitivity with A B; Cong.
       eapply cong_transitivity.
         eapply l2_11.
           apply H7.
@@ -1678,16 +1511,16 @@ Proof.
         assumption.
       exists C'.
       split.
-        eapply (l11_10 C0 _ _ C0').
+        apply l11_10 with C0 C C0' C'.
           apply cong3_conga.
-            3: apply H10.
             intro.
             subst C0.
             absurde.
-          intro.
-          subst C.
-          apply H.
-          apply col_trivial_2.
+            intro.
+            subst C.
+            apply H.
+            apply col_trivial_2.
+            assumption.
           assumption.
           apply out_trivial.
           intro.
@@ -1704,15 +1537,15 @@ Proof.
         spliter.
         absurde.
       apply invert_one_side.
-      eapply col_one_side.
-        3: apply H9.
+      apply col_one_side with C0'.
         apply out_col.
         apply l6_6.
         assumption.
-      intro.
-      subst A'.
-      apply H0.
-      apply col_trivial_1.
+        intro.
+        subst A'.
+        apply H0.
+        apply col_trivial_1.
+        assumption.
     (*********************)
     apply not_out_bet in H4.
       prolong A' B' C0' B C0.
@@ -1733,14 +1566,11 @@ Proof.
         intro.
         apply H0.
         apply col_permutation_2.
-        eapply col_transitivity_1.
-          2:apply H7.
+        eapply col_transitivity_1 with C0'.
           intro.
-          subst C0'.
-          apply cong_symmetry in H6.
-          apply cong_identity in H6.
-          subst C0.
+          treat_equalities.
           absurde.
+          assumption.
         unfold Col.
         right; right.
         assumption.
@@ -1756,7 +1586,7 @@ Proof.
             apply cong_commutativity.
             assumption.
           apply cong_commutativity.
-          eapply (l10_12 _ C0 _ _ C0').
+          apply (l10_12 _ C0 _ _ C0').
             assert(Perp  B C0 C C0 ).
               eapply perp_col.
                 intro.
@@ -1777,10 +1607,8 @@ Proof.
           apply cong_symmetry.
           apply cong_commutativity.
           assumption.
-        eapply l11_13.
-          apply cong3_conga.
-            3: apply H10.
-            auto.
+        apply l11_13 with C0 C0'.
+          apply cong3_conga; auto.
           intro.
           subst C.
           apply H.
@@ -1798,15 +1626,15 @@ Proof.
         apply H0.
         apply col_trivial_1.
       apply invert_one_side.
-      eapply col_one_side.
-        3: apply H9.
+      apply col_one_side with C0'.
         unfold Col.
         right; right.
         assumption.
-      intro.
-      subst A'.
-      apply H0.
-      apply col_trivial_1.
+        intro.
+        subst A'.
+        apply H0.
+        apply col_trivial_1.
+        assumption.
     apply col_permutation_4.
     assumption.
 Qed.
@@ -1822,19 +1650,15 @@ Proof.
         exists A'.
         split.
           assert(CongA A B A A B C).
-            eapply l11_10.
-              apply conga_refl.
-                3: apply H5.
-              auto.
-              2: apply H5.
-              auto.
-              assumption.
+            apply out2__conga.
             apply out_trivial.
             auto.
+            apply l6_6.
+            assumption.
           assert (CongA A B A A' B' A').
             apply conga_trivial_1.
-              assumption.
-            assumption.
+              auto.
+            auto.
           apply conga_sym.
           eapply conga_trans.
             apply conga_sym.
@@ -1914,23 +1738,13 @@ Proof.
       assumption.
     intros.
     spliter.
-    assert(Out E F1 F2 \/ TS D E F1 F2).
-      apply conga_cop__or_out_ts.
-      apply coplanar_trans_1 with P; Cop; Col.
-      eapply conga_trans.
+    apply (conga_os__out D).
+      apply conga_trans with A B C.
         apply conga_sym.
-        apply H3.
+        assumption.
       assumption.
-    induction H7.
-      assumption.
-    assert(OS E D F1 F2).
-      eapply one_side_transitivity.
-        apply H6.
-      apply one_side_symmetry.
-      assumption.
-    apply l9_9_bis in H8.
-    apply invert_two_sides in H7.
-    contradiction.
+    apply invert_one_side.
+    apply one_side_transitivity with P; Side.
 Qed.
 
 Lemma l11_19 : forall A B P1 P2,
@@ -1998,8 +1812,8 @@ Proof.
     prolong A' B' C'' B C.
     assert(CongA C B P C'' B' P').
       eapply l11_13.
-        2:apply H.
         apply H1.
+        assumption.
         unfold CongA in H2.
         spliter.
         assumption.
@@ -2228,18 +2042,7 @@ Proof.
         apply cong_symmetry.
         assumption.
       assert(Cong C B C'' B').
-        eapply (five_segment).
-          5:apply H16.
-          5: apply H24.
-          assumption.
-          apply cong_symmetry.
-          assumption.
-          apply cong_symmetry.
-          apply cong_commutativity.
-          assumption.
-          apply cong_symmetry.
-          apply cong_commutativity.
-          assumption.
+        apply (five_segment A A'' T T''); Cong.
         intro.
         subst T.
         apply H13.
@@ -2443,18 +2246,7 @@ Proof.
         apply cong_symmetry.
         assumption.
       assert(Cong C B C'' B').
-        eapply (five_segment).
-          5:apply H16.
-          5: apply H24.
-          assumption.
-          apply cong_symmetry.
-          assumption.
-          apply cong_symmetry.
-          apply cong_commutativity.
-          assumption.
-          apply cong_symmetry.
-          apply cong_commutativity.
-          assumption.
+        apply (five_segment A A'' T T''); Cong.
         intro.
         apply H13.
         subst T.
@@ -2597,8 +2389,7 @@ Proof.
       eapply (l11_22a _ _ _ P _ _ _ P').
       split.
         eapply l9_2.
-        eapply l9_8_2.
-          2: apply H.
+        eapply l9_8_2; [|apply H].
         unfold OS in H.
         ex_and H T.
         unfold TS in H.
@@ -2626,8 +2417,7 @@ Proof.
         assumption.
       split.
         eapply l9_2.
-        eapply l9_8_2.
-          2: apply H0.
+        eapply l9_8_2; [|apply H0].
         unfold OS in H0.
         ex_and H0 T'.
         unfold TS in H0.
@@ -2682,8 +2472,8 @@ Proof.
     intros.
     spliter.
     induction H.
-      eapply (l11_22a _ _ _ P _ _ _ P');tauto.
-    eapply (l11_22b _ _ _ P _ _ _ P');tauto.
+      apply (l11_22a _ _ _ P _ _ _ P');tauto.
+    apply (l11_22b _ _ _ P _ _ _ P');tauto.
 Qed.
 
 Lemma l11_24 :
@@ -2701,198 +2491,6 @@ Proof.
       assumption.
     assumption.
 Qed.
-
-Lemma out_in_angle :
- forall A B C P,
-  Out B A C -> Out B P A ->
-  InAngle P A B C.
-Proof.
-    intros.
-    unfold InAngle.
-    unfold Out in H.
-    unfold Out in H0.
-    spliter.
-    split.
-      assumption.
-    split.
-      assumption.
-    split.
-      assumption.
-    induction H4; induction H2.
-      assert(exists X, Midpoint X A C).
-        eapply midpoint_existence.
-      ex_and H5 X.
-      exists X.
-      split.
-        apply midpoint_bet.
-        assumption.
-      right.
-      repeat split.
-        intro.
-        subst X.
-        apply midpoint_bet in H6.
-        assert (A = B).
-          eapply between_equality.
-            apply H6.
-          assumption.
-        contradiction.
-        assumption.
-      right.
-      induction (eq_dec_points P A).
-        subst P.
-        eapply between_inner_transitivity.
-          apply H4.
-        apply midpoint_bet.
-        assumption.
-      assert(Bet P A C).
-        eapply between_exchange3.
-          apply H2.
-        assumption.
-      assert(Bet P A X).
-        eapply between_inner_transitivity.
-          apply H7.
-        apply midpoint_bet.
-        assumption.
-      eapply outer_transitivity_between.
-        apply H2.
-        assumption.
-      assumption.
-      assert(exists X, Midpoint X A C).
-        eapply midpoint_existence.
-      ex_and H5 X.
-      exists X.
-      repeat split.
-        apply midpoint_bet.
-        assumption.
-      right.
-      repeat split.
-        intro.
-        subst X.
-        apply midpoint_bet in H6.
-        assert (A = B).
-          eapply between_equality.
-            apply H6.
-          assumption.
-        contradiction.
-        assumption.
-      assert(Bet B C P \/ Bet B P C).
-        eapply l5_1.
-          2: apply H4.
-          auto.
-        assumption.
-      induction H5.
-        left.
-        assert(Bet B X C).
-          eapply between_exchange2.
-            apply H4.
-          apply midpoint_bet.
-          assumption.
-        eapply between_exchange4.
-          apply H7.
-        assumption.
-      assert(Bet B A X).
-        eapply between_inner_transitivity.
-          apply H4.
-        apply  midpoint_bet.
-        assumption.
-      eapply l5_1.
-        2:apply H7.
-        auto.
-      assumption.
-      assert(Bet B P C \/ Bet B C P).
-        eapply l5_3.
-          apply H2.
-        assumption.
-      induction H5.
-        assert(exists X, Midpoint X A C).
-          eapply midpoint_existence.
-        ex_and H6 X.
-        exists X.
-        split.
-          apply midpoint_bet.
-          assumption.
-        right.
-        repeat split.
-          intro.
-          subst X.
-          apply midpoint_bet in H7.
-          apply between_symmetry in H7.
-          assert (C = B).
-            eapply between_equality.
-              apply H7.
-            assumption.
-          contradiction.
-          assumption.
-        right.
-        assert(Bet B C X).
-          eapply between_inner_transitivity.
-            apply H4.
-          apply midpoint_bet.
-          apply l7_2.
-          assumption.
-        eapply between_exchange4.
-          apply H5.
-        assumption.
-      assert(exists X, Midpoint X A C).
-        eapply midpoint_existence.
-      ex_and H6 X.
-      exists X.
-      repeat split.
-        apply midpoint_bet.
-        assumption.
-      right.
-      repeat split.
-        intro.
-        subst X.
-        apply midpoint_bet in H7.
-        apply between_symmetry in H7.
-        assert (C = B).
-          eapply between_equality.
-            apply H7.
-          assumption.
-        contradiction.
-        assumption.
-      assert (Bet B C X).
-        eapply between_inner_transitivity.
-          apply H4.
-        apply midpoint_bet.
-        eapply l7_2.
-        assumption.
-      eapply l5_1.
-        2:apply H6.
-        auto.
-      assumption.
-    assert(exists X, Midpoint X A C).
-      eapply midpoint_existence.
-    ex_and H5 X.
-    exists X.
-    split.
-      apply midpoint_bet.
-      assumption.
-    right.
-    repeat split.
-      intro.
-      subst X.
-      apply midpoint_bet in H6.
-      apply between_symmetry in H6.
-      assert (C = B).
-        eapply between_equality.
-          apply H6.
-        assumption.
-      contradiction.
-      assumption.
-    left.
-    assert(Bet B X A).
-      eapply between_exchange2.
-        apply H4.
-      apply midpoint_bet.
-      apply l7_2.
-      assumption.
-    eapply between_exchange4.
-      apply H5.
-    assumption.
-Qed.
-
 
 Lemma col_in_angle :
  forall A B C P,
@@ -3047,11 +2645,8 @@ Proof.
           apply H8.
         apply between_symmetry.
         assumption.
-      eapply l5_1.
-        2: apply H9.
-        auto.
-      assumption.
-    repeat split; try assumption.
+      apply l5_1 with X; auto.
+    repeat split; auto.
     right.
     assert(Bet B X A).
       eapply between_exchange2.
@@ -3089,21 +2684,8 @@ Proof.
       spliter.
       assumption.
     assert (Col B A X).
-      eapply col_transitivity_1.
-        2: apply col_permutation_5.
-        2: apply H.
-        auto.
-      apply out_col in H5.
-      apply col_permutation_5.
-      assumption.
-    eapply col_transitivity_2.
-      2: apply col_permutation_3.
-      2:apply H7.
-      auto.
-    unfold Col.
-    right; right.
-    apply between_symmetry.
-    assumption.
+      apply col_transitivity_1 with P; Col.
+    apply col_transitivity_2 with X; Col.
 Qed.
 
 Lemma l11_25_aux : forall P A B C A',
@@ -3180,10 +2762,7 @@ Proof.
       absurde.
       assumption.
     induction H11.
-      eapply l5_1.
-        2: apply H9.
-        auto.
-      assumption.
+      apply l5_1 with X; auto.
     right.
     eapply between_exchange4.
       apply H11.
@@ -3375,7 +2954,7 @@ Proof.
         apply cong_symmetry.
         assumption.
         assert(CongA B A D B' A' D').
-          eapply (l11_10 B A D B' A' D''); try apply out_trivial; try solve [auto].
+          eapply (l11_10 B A D B' A' D''); try apply out_trivial; auto.
             intro.
             subst B'.
             unfold CongA in H6.
@@ -3480,15 +3059,9 @@ Proof.
     ex_and H4 A1.
     ex_and H5 C1.
     assert(Bet A0 B C0).
-      eapply outer_transitivity_between.
-        2:apply H6.
-        apply between_symmetry.
-        eapply outer_transitivity_between.
-          2:apply H4.
-          apply between_symmetry.
-          assumption.
-        auto.
-      auto.
+      apply outer_transitivity_between with C; auto.
+      apply between_symmetry.
+      apply outer_transitivity_between with A; Between.
     assert(Cong_3 A0 B C0 A1 B' C1).
       repeat split.
         apply cong_right_commutativity.
@@ -3516,82 +3089,11 @@ Proof.
       eapply l4_6.
         apply H13.
       assumption.
-    eapply between_inner_transitivity.
-      2:apply H10.
+    eapply between_inner_transitivity with C1; auto.
     eapply between_exchange3.
       apply between_symmetry.
       apply H8.
     assumption.
-Qed.
-
-Lemma out_in_angle_out :
- forall A B C P,
-  Out B A C ->
-  InAngle P A B C ->
-  Out B A P.
-Proof.
-    intros.
-    unfold InAngle in H0.
-    spliter.
-    ex_and H3 X.
-    induction H4.
-      subst X.
-      unfold Out in H.
-      spliter.
-      induction H5.
-        assert (A = B).
-          eapply between_equality.
-            apply H3.
-          assumption.
-        contradiction.
-      assert (C = B).
-        eapply between_equality.
-          apply between_symmetry.
-          apply H3.
-        assumption.
-      contradiction.
-    unfold Out in H.
-    spliter.
-    induction H6.
-      assert(Bet B A X).
-        eapply between_inner_transitivity.
-          apply H6.
-        assumption.
-      unfold Out in H4.
-      spliter.
-      induction H9.
-        assert(Bet B A P).
-          eapply between_exchange4.
-            apply H7.
-          assumption.
-        apply bet_out; assumption.
-      assert(Bet B A P \/ Bet B P A).
-        eapply l5_3.
-          apply H7.
-        assumption.
-      unfold Out.
-      repeat split; assumption.
-    assert (Bet B X A).
-      eapply between_exchange2.
-        apply H6.
-      apply between_symmetry.
-      assumption.
-    unfold Out in H4.
-    spliter.
-    induction H9.
-      assert(Bet B A P \/ Bet B P A).
-        eapply l5_1.
-          2: apply H7.
-          auto.
-        assumption.
-      unfold Out.
-      repeat split; try assumption.
-    assert(Bet B P A).
-      eapply between_exchange4.
-        apply H9.
-      assumption.
-    eapply l6_6.
-    apply bet_out; assumption.
 Qed.
 
 Lemma in_angle_one_side :
@@ -3650,15 +3152,9 @@ Proof.
       exists A.
       split.
         apply col_trivial_1.
-      eapply between_exchange3.
-        2: apply H6.
-      apply between_symmetry.
-      assumption.
+      eapply between_exchange3 with C; Between.
     split.
-      eapply l9_5.
-        apply H8.
-        2: apply H5.
-      apply col_trivial_3.
+      apply l9_5 with X B; Col.
     repeat split.
       intro.
       apply H.
@@ -3813,8 +3309,7 @@ Proof.
       assumption.
     induction H.
       assert (Out E D F).
-        eapply l11_21_a.
-          2: apply H0.
+        apply (l11_21_a A B C); [|apply H0].
         apply bet_out in H.
           apply l6_6.
           assumption.
@@ -3831,13 +3326,12 @@ Proof.
       right; left.
       assumption.
     assert (Out E D F).
-      eapply l11_21_a.
-        2: apply H0.
+      apply (l11_21_a A B C); [|apply H0].
       apply between_symmetry in H.
-      apply bet_out in H.
-        assumption.
+      apply bet_out.
         unfold CongA in H0.
         spliter.
+        auto.
         assumption.
     unfold Out in H1.
     spliter.
@@ -3888,15 +3382,6 @@ Proof.
   repeat split; auto.
   apply (conga_diff1 A B C D E X); auto.
   apply (conga_diff2 A B C D E X); auto.
-Qed.
-
-Lemma gea_distincts : forall A B C D E F, GeA A B C D E F ->
-   A<>B /\ C<>B /\ D<>E /\ F<>E.
-Proof.
-  intros A B C D E F Hgea.
-  apply lea_distincts in Hgea.
-  spliter.
-  repeat split; auto.
 Qed.
 
 Lemma l11_29_a : forall A B C D E F, LeA A B C D E F ->
@@ -3971,10 +3456,7 @@ Proof.
           repeat split.
             auto.
             auto.
-          eapply l5_2.
-            2:apply H9.
-            auto.
-          assumption.
+          apply (l5_2 D); auto.
         assert(Bet D P X).
           eapply outer_transitivity_between2.
             apply H9.
@@ -4020,8 +3502,6 @@ Proof.
           spliter.
           intuition.
           auto.
-        (* absurde.
-        assumption. *)
         exists A.
         split.
           apply between_trivial2.
@@ -4157,7 +3637,7 @@ Proof.
       apply cong_symmetry.
       assumption.
     assert(CongA CC B Q X E FF).
-      eapply (l11_22b _ _ _ A).
+      apply l11_22b with A DD.
       split.
         apply one_side_symmetry.
         eapply out_out_one_side.
@@ -4186,9 +3666,7 @@ Proof.
           assumption.
         intro.
         apply H8.
-        eapply col_conga_col.
-          2:apply conga_sym.
-          2: apply H0.
+        eapply (col_conga_col D E P); [|apply conga_sym, H0].
         eapply col_out2_col.
           apply col_permutation_4.
           apply H30.
@@ -4234,10 +3712,7 @@ Proof.
         split.
           eapply l4_6.
             apply H21.
-          repeat split.
-            cong.
-            cong.
-          cong.
+          repeat split; Cong.
         right.
         apply out_trivial.
         unfold Out in H23.
@@ -4333,14 +3808,7 @@ Proof.
           assumption.
         assumption.
       assert(CongA A B C A B Q).
-        eapply l11_10.
-          apply conga_refl.
-            apply H1.
-          apply H3.
-          apply out_trivial.
-          auto.
-          apply out_trivial.
-          auto.
+        apply out2__conga.
           apply out_trivial.
           auto.
         unfold Out in H5.
@@ -4355,15 +3823,9 @@ Proof.
               apply H17.
             assumption.
           assert(Bet B Q C \/ Bet B C Q).
-            eapply l5_1.
-              2:apply H18.
-              auto.
-            assumption.
+            apply l5_1 with X; auto.
           unfold Out.
-          repeat split.
-            assumption.
-            assumption.
-          assumption.
+          repeat split; auto.
         assert(Bet A B X).
           eapply outer_transitivity_between.
             apply H14.
@@ -4379,8 +3841,8 @@ Proof.
           assumption.
         unfold Out.
         repeat split.
-          assumption.
-          assumption.
+          auto.
+          auto.
         right.
         assumption.
       eapply conga_trans.
@@ -4393,14 +3855,7 @@ Proof.
           assumption.
         assumption.
       assert(CongA A B C A B A).
-        eapply l11_10.
-          apply conga_refl.
-            apply H1.
-          apply H3.
-          apply out_trivial.
-          auto.
-          apply out_trivial.
-          auto.
+        apply out2__conga.
           apply out_trivial.
           auto.
         assumption.
@@ -4413,11 +3868,11 @@ Proof.
     induction HJ.
       assert(exists P, CongA A B C D E P).
         apply angle_construction_3.
-          assumption.
-          assumption.
+          auto.
+          auto.
         unfold Out in H6.
         spliter.
-        assumption.
+        auto.
       ex_and H16 P.
       exists P.
       split.
@@ -4433,7 +3888,7 @@ Proof.
       assumption.
     induction H15.
       assert(Out B A C).
-        eapply out_in_angle_out.
+        eapply in_angle_out.
           apply H15.
         assumption.
       apply False_ind.
@@ -4465,20 +3920,17 @@ Proof.
         spliter.
         auto.
       ex_and H18 PP.
-      eapply l11_25.
-        2:apply H6.
-        2:apply H8.
-        2:apply H18.
+      apply l11_25 with PP DD FF; trivial.
       repeat split.
-        assumption.
-        assumption.
+        auto.
+        auto.
         unfold Out in H18.
         spliter.
-        assumption.
+        auto.
       exists PP.
       split.
         assert(CongA C B Q P E F).
-          eapply (l11_22b _ _ _ A).
+          apply l11_22b with A D.
           split.
             apply invert_one_side.
             eapply in_angle_one_side.
@@ -4578,7 +4030,7 @@ Proof.
           apply H.
         assumption.
       assert(Bet A P C \/ Bet A C P).
-        eapply (l5_1 _ X).
+        apply (l5_1 _ X).
           intro.
           subst X.
           assert(A = B).
@@ -4665,8 +4117,7 @@ Proof.
         assumption.
       assumption.
     assert(Out E D' F').
-      eapply cong3_preserves_out.
-        2:apply H12.
+      apply (cong3_preserves_out B A' C'); [|apply H12].
       unfold Out.
       repeat split.
         intro.
@@ -4679,10 +4130,7 @@ Proof.
         apply between_identity in H5.
         subst A.
         absurde.
-      eapply l5_1.
-        2:apply H3.
-        auto.
-      assumption.
+      apply l5_1 with A; auto.
     eapply bet2_out_out.
       assumption.
       assumption.
@@ -4748,18 +4196,15 @@ Proof.
       apply in_angle_line; assumption.
     induction H9.
       assert(Out B A I).
-        eapply out_in_angle_out.
+        eapply in_angle_out.
           apply H9.
         assumption.
       assert(Out B' A' I').
         eapply l11_21_a.
           apply H10.
         assumption.
-      apply out_in_angle.
-        eapply l11_21_a.
-          apply H9.
-        assumption.
-      apply l6_6.
+      apply out321__inangle.
+        auto.
       assumption.
     assert(HH2:= or_bet_out A B I).
     induction HH2.
@@ -4882,17 +4327,11 @@ Proof.
       apply l6_6.
       assumption.
     assert(CongA A' B' J' A' B' JJ').
-      eapply l11_10.
-        apply conga_refl.
-          apply H5.
-        3: apply H24.
-        auto.
+      apply out2__conga.
         apply out_trivial.
         auto.
-        apply out_trivial.
-        auto.
-      apply out_trivial.
-      auto.
+      apply l6_6.
+      assumption.
     assert(Out B' I' JJ' \/ TS A' B' I' JJ').
       apply conga_cop__or_out_ts.
       apply coplanar_perm_2, col_cop__cop with J'; Col; Cop.
@@ -4919,7 +4358,7 @@ Proof.
       auto.
     induction H32.
       assert(CongA J B C J' B' C').
-        eapply (l11_22b _ _ _ A _ _ _ A').
+        apply (l11_22b _ _ _ A _ _ _ A').
         split.
           apply invert_one_side.
           apply in_angle_one_side.
@@ -4941,11 +4380,7 @@ Proof.
             auto.
           assumption.
         split.
-          eapply one_side_transitivity.
-            2:apply invert_one_side.
-            2:apply H2.
-          apply invert_one_side.
-          assumption.
+          apply one_side_transitivity with I'; apply invert_one_side; assumption.
         split.
           apply conga_comm.
           assumption.
@@ -4984,20 +4419,7 @@ Proof.
         apply cong_symmetry.
         assumption.
       assert(CongA J' B' C' JJ' B' CC').
-        eapply l11_10.
-          apply conga_refl.
-            4:apply H12.
-          3:apply H24.
-          auto.
-          unfold CongA in H30.
-          spliter.
-          assumption.
-          apply out_trivial.
-          auto.
-        apply out_trivial.
-        unfold CongA in H30.
-        spliter.
-        auto.
+        apply out2__conga; apply l6_6; assumption.
       assert(Cong J C JJ' CC').
         eapply (cong2_conga_cong).
           eapply conga_trans.
@@ -5009,25 +4431,17 @@ Proof.
         apply cong_symmetry.
         assumption.
       assert(Bet AA' JJ' CC').
-        eapply l4_6.
+        apply (l4_6 A J C).
           apply H17.
-        repeat split.
-          assumption.
-          assumption.
-        assumption.
-      eapply l11_25.
-        2: apply H11.
-        2: apply H12.
-        unfold InAngle.
-        repeat split; try assumption.
+        repeat split; assumption.
+      apply l11_25 with JJ' AA' CC'; trivial.
+        repeat split; auto.
           unfold Out in H11.
           spliter.
-          assumption.
+          auto.
           unfold Out in H12.
           spliter.
-          assumption.
-          3:apply H32.
-        auto.
+          auto.
       exists JJ'.
       split.
         assumption.
@@ -5160,7 +4574,7 @@ Proof.
         apply conga_sym.
         assumption.
       assert(Out B A C).
-        eapply out_in_angle_out.
+        eapply in_angle_out.
           apply H16.
         assumption.
       assert(Out  B' A' C').
@@ -5168,9 +4582,10 @@ Proof.
           apply H17.
         assumption.
       split.
-        eapply out_in_angle.
-          assumption.
-        apply l6_6.
+        apply out321__inangle.
+          apply out_distinct in H13.
+          spliter.
+          auto.
         assumption.
       apply conga_sym.
       assumption.
@@ -5181,16 +4596,12 @@ Proof.
     ex_and H13 Q'.
     exists Q'.
     split.
-      eapply conga_preserves_in_angle.
-        3: apply H.
+      apply (conga_preserves_in_angle A B Q C); trivial.
         eapply conga_trans.
           apply H2.
         eapply conga_trans.
           apply H1.
         assumption.
-        apply H0.
-      (************** etrange ****************)
-      try assumption.
       apply one_side_symmetry.
       assumption.
     apply conga_sym.
@@ -5251,12 +4662,81 @@ Proof.
     intros; apply conga__lea, conga_sym; trivial.
 Qed.
 
+Lemma lea_left_comm : forall A B C D E F, LeA A B C D E F -> LeA C B A D E F.
+Proof.
+    intros.
+    unfold LeA in *.
+    ex_and H P.
+    exists P.
+    split.
+      assumption.
+    apply conga_left_comm.
+    assumption.
+Qed.
+
+Lemma lea_right_comm : forall A B C D E F, LeA A B C D E F -> LeA A B C F E D.
+Proof.
+    intros.
+    apply l11_29_b.
+    apply l11_29_a in H.
+    ex_and H P.
+    exists P.
+    split.
+      assumption.
+    apply conga_right_comm.
+    assumption.
+Qed.
+
+Lemma lea_comm : forall A B C D E F, LeA A B C D E F -> LeA C B A F E D.
+Proof.
+    intros.
+    apply lea_left_comm.
+    apply lea_right_comm.
+    assumption.
+Qed.
+
+Lemma lta_left_comm : forall A B C D E F, LtA A B C D E F -> LtA C B A D E F.
+Proof.
+    unfold LtA.
+    intros.
+    spliter.
+    split.
+      apply lea_left_comm.
+      assumption.
+    intro.
+    apply H0.
+    apply conga_left_comm.
+    assumption.
+Qed.
+
+Lemma lta_right_comm : forall A B C D E F, LtA A B C D E F -> LtA A B C F E D.
+Proof.
+    unfold LtA.
+    intros.
+    spliter.
+    split.
+      apply lea_right_comm.
+      assumption.
+    intro.
+    apply H0.
+    apply conga_right_comm.
+    assumption.
+Qed.
+
+Lemma lta_comm : forall A B C D E F, LtA A B C D E F -> LtA C B A F E D.
+Proof.
+    intros.
+    apply lta_left_comm.
+    apply lta_right_comm.
+    assumption.
+Qed.
+
 Lemma lea_out4__lea : forall A B C D E F A' C' D' F',
  LeA A B C D E F -> Out B A A' -> Out B C C' -> Out E D D' -> Out E F F' ->
  LeA A' B C' D' E F'.
 Proof.
-    intros A B C D E F A' C' D' F' Hl HA HC HD HF.
-    apply (l11_30 A B C D E F); trivial; apply out2__conga; apply l6_6; assumption.
+  intros A B C D E F A' C' D' F' Hl HA HC HD HF.
+  apply (l11_30 A B C D E F); trivial; apply out2__conga; apply l6_6; assumption.
 Qed.
 
 Lemma lea121345 : forall A B C D E, A<>B -> C<>D -> D<>E -> LeA A B A C D E.
@@ -5271,6 +4751,26 @@ Proof.
   exists P; split; trivial.
   unfold InAngle in HIn; spliter.
   apply conga_refl; auto.
+Qed.
+
+Lemma inangle__lea_1 : forall A B C P, InAngle P A B C -> LeA P B C A B C.
+Proof.
+  intros; apply lea_comm, inangle__lea, l11_24; assumption.
+Qed.
+
+Lemma inangle__lta : forall A B C P, ~ Col P B C -> InAngle P A B C -> LtA A B P A B C.
+Proof.
+  intros A B C P HNCol HIn.
+  split.
+    apply inangle__lea, HIn.
+  intro HConga.
+  apply conga_cop__or_out_ts in HConga; [|Cop].
+  destruct HConga as [|Habs].
+    apply HNCol; Col.
+  apply (l9_9 A B P C).
+    assumption.
+  destruct Habs as [HP [HC]].
+  apply in_angle_one_side; Col.
 Qed.
 
 Lemma in_angle_trans : forall A B C D E,
@@ -5314,16 +4814,11 @@ Proof.
           apply H12.
         assumption.
       apply in_angle_line; assumption.
-    eapply l11_25.
-      4: apply l6_6.
-      4:apply H13.
-      2: apply out_trivial.
-      3: apply out_trivial.
-      unfold InAngle.
-      repeat split; try assumption.
+    apply l11_25 with CC' A E; [|apply out_trivial..|apply l6_6]; auto.
+      repeat split; auto.
         unfold Out in H13.
         spliter.
-        assumption.
+        auto.
       exists CC'.
       split.
         eapply between_exchange4.
@@ -5334,8 +4829,6 @@ Proof.
       unfold Out in H13.
       spliter.
       auto.
-      auto.
-    auto.
 Qed.
 
 Lemma lea_trans : forall A B C A1 B1 C1 A2 B2 C2,
@@ -5412,13 +4905,13 @@ Proof.
           intro.
           subst P2.
           assert(Out B1 A1 C1).
-            eapply l11_21_a.
-              2: apply conga_sym.
-              2:apply H2.
-            apply out_trivial.
-            assumption.
+            apply (l11_21_a A2 B2 A2).
+              apply out_trivial.
+              auto.
+            apply conga_sym.
+            apply H2.
           assert(Out B1 A1 P1).
-            eapply out_in_angle_out.
+            eapply in_angle_out.
               apply H14.
             assumption.
           assert(Out B A C).
@@ -5476,16 +4969,13 @@ Proof.
     exists P.
     split.
       eapply (in_angle_trans _ _ _ P2).
-        eapply conga_preserves_in_angle.
-          apply H2.
-          2: apply H.
+        apply (conga_preserves_in_angle A1 B1 C1 P1); trivial.
           eapply conga_trans.
             apply conga_sym.
             apply H1.
           assumption.
         assumption.
       assumption.
-    assumption.
 Qed.
 
 
@@ -5508,8 +4998,7 @@ Proof.
       spliter.
       induction H9.
         assert(Bet A B C).
-          eapply between_exchange4.
-            2: apply H6.
+          apply between_exchange4 with DD; trivial.
           eapply between_inner_transitivity.
             apply H3.
           assumption.
@@ -5561,20 +5050,15 @@ Proof.
         apply H8.
       assumption.
     assert (Out B C D).
-      eapply out2_out_1.
-        apply H11.
+      apply l6_7 with X.
+        apply l6_6.
+        assumption.
       assumption.
-    eapply l11_10.
-      apply conga_refl.
-        4:apply H13.
-      3: apply out_trivial.
-      assumption.
-      assumption; apply H7.
-      auto.
+    apply out2__conga.
       apply out_trivial.
       auto.
-    apply out_trivial.
-    auto.
+    apply l6_6.
+    assumption.
 Qed.
 
 Lemma lea_asym : forall A B C D E F,
@@ -5592,7 +5076,7 @@ Proof.
       apply l11_21_b; trivial.
       ex_and H0 P.
       apply (l11_21_a A B P).
-        apply out_in_angle_out with C; assumption.
+        apply in_angle_out with C; assumption.
       apply conga_sym; assumption.
     apply l11_29_a in H.
     unfold LeA in *.
@@ -5683,10 +5167,10 @@ Proof.
     induction H12.
       assert(InAngle C A B P).
         eapply l11_25.
-          3: apply H12.
           apply H.
           apply out_trivial.
           auto.
+          assumption.
         apply out_trivial.
         intro.
         subst C.
@@ -5876,10 +5360,7 @@ Proof.
       repeat split.
         auto.
         auto.
-      eapply l5_2.
-        2:apply H10.
-        auto.
-      assumption.
+      apply (l5_2 P); auto.
     induction H10.
       left.
       unfold InAngle.
@@ -5927,8 +5408,9 @@ Proof.
             apply H2.
             assumption.
           assumption.
-        apply out_in_angle.
-          assumption.
+        apply out321__inangle.
+          auto.
+        apply l6_6.
         assumption.
       induction H6.
         repeat split; try assumption.
@@ -6400,7 +5882,7 @@ Proof.
       apply H.
       assert(Col B A P).
         apply col_permutation_2.
-        eapply (col_transitivity_1 _ D).
+        apply (col_transitivity_1 _ D).
           assumption.
           apply out_col.
           assumption.
@@ -6418,7 +5900,7 @@ Proof.
         assumption.
       assert(Col M B A).
         apply col_permutation_2.
-        eapply (col_transitivity_1 _ P).
+        apply (col_transitivity_1 _ P).
           assumption.
           apply col_permutation_5.
           assumption.
@@ -6443,7 +5925,7 @@ Proof.
         apply H.
         assert(Col M C P).
           apply col_permutation_2.
-          eapply (col_transitivity_1 _ A).
+          apply (col_transitivity_1 _ A).
             auto.
             apply col_permutation_3.
             assumption.
@@ -6452,7 +5934,7 @@ Proof.
           apply midpoint_bet.
           assumption.
         assert(Col M B C).
-          eapply (col_transitivity_1 _ P).
+          apply (col_transitivity_1 _ P).
             intro.
             subst M.
             apply l7_2 in H2.
@@ -6468,7 +5950,7 @@ Proof.
           apply col_permutation_5.
           assumption.
         apply col_permutation_1.
-        eapply (col_transitivity_1 _ M).
+        apply (col_transitivity_1 _ M).
           intro.
           subst M.
           apply l7_2 in H3.
@@ -6497,7 +5979,7 @@ Proof.
         assumption.
         intro.
         apply H.
-        eapply (col_transitivity_1 _ D).
+        apply (col_transitivity_1 _ D).
           assumption.
           apply col_permutation_1.
           apply bet_col.
@@ -6555,7 +6037,7 @@ Proof.
     unfold LtA in *.
     spliter.
     repeat split.
-      eapply l11_30 with A B C B A E;finish.
+      apply l11_30 with A B C B A E; trivial.
         apply conga_refl;assert_diffs;auto.
       apply conga_sym.
       apply conga_comm.
@@ -6629,20 +6111,6 @@ Proof.
     assumption.
 Qed.
 
-Lemma conga_preserves_gta : forall A B C D E F A' B' C' D' E' F',
- CongA A B C A' B' C' ->
- CongA D E F D' E' F' ->
- GtA A B C D E F ->
- GtA A' B' C' D' E' F'.
-Proof.
-    intros.
-    unfold GtA in *.
-    eapply conga_preserves_lta.
-      apply H0.
-      apply H.
-    assumption.
-Qed.
-
 Lemma lta_trans : forall A B C A1 B1 C1 A2 B2 C2,
  LtA A B C A1 B1 C1 ->
  LtA A1 B1 C1 A2 B2 C2 ->
@@ -6680,87 +6148,6 @@ Proof.
     split; assumption.
 Qed.
 
-Lemma gta_trans : forall A B C A1 B1 C1 A2 B2 C2,
- GtA A B C A1 B1 C1 ->
- GtA A1 B1 C1 A2 B2 C2 ->
- GtA A B C A2 B2 C2.
-Proof.
-    intros.
-    unfold GtA in *.
-    eapply lta_trans.
-      apply H0.
-    assumption.
-Qed.
-
-Lemma lea_left_comm : forall A B C D E F, LeA A B C D E F -> LeA C B A D E F.
-Proof.
-    intros.
-    unfold LeA in *.
-    ex_and H P.
-    exists P.
-    split.
-      assumption.
-    apply conga_left_comm.
-    assumption.
-Qed.
-
-Lemma lea_right_comm : forall A B C D E F, LeA A B C D E F -> LeA A B C F E D.
-Proof.
-    intros.
-    apply l11_29_b.
-    apply l11_29_a in H.
-    ex_and H P.
-    exists P.
-    split.
-      assumption.
-    apply conga_right_comm.
-    assumption.
-Qed.
-
-Lemma lea_comm : forall A B C D E F, LeA A B C D E F -> LeA C B A F E D.
-Proof.
-    intros.
-    apply lea_left_comm.
-    apply lea_right_comm.
-    assumption.
-Qed.
-
-Lemma lta_left_comm : forall A B C D E F, LtA A B C D E F -> LtA C B A D E F.
-Proof.
-    unfold LtA.
-    intros.
-    spliter.
-    split.
-      apply lea_left_comm.
-      assumption.
-    intro.
-    apply H0.
-    apply conga_left_comm.
-    assumption.
-Qed.
-
-Lemma lta_right_comm : forall A B C D E F, LtA A B C D E F -> LtA A B C F E D.
-Proof.
-    unfold LtA.
-    intros.
-    spliter.
-    split.
-      apply lea_right_comm.
-      assumption.
-    intro.
-    apply H0.
-    apply conga_right_comm.
-    assumption.
-Qed.
-
-Lemma lta_comm : forall A B C D E F, LtA A B C D E F -> LtA C B A F E D.
-Proof.
-    intros.
-    apply lta_left_comm.
-    apply lta_right_comm.
-    assumption.
-Qed.
-
 Lemma obtuse_sym : forall A B C, Obtuse A B C -> Obtuse C B A.
 Proof.
     unfold Obtuse.
@@ -6773,7 +6160,6 @@ Proof.
     exists C'.
     split.
       assumption.
-    unfold GtA in *.
     apply lta_right_comm.
     assumption.
 Qed.
@@ -6929,7 +6315,6 @@ Proof.
     ex_and H1 a.
     ex_and H12 b.
     ex_and H1 c.
-    unfold GtA in H12.
     assert(HH1:= H12).
     unfold LtA in H12.
     spliter.
@@ -7034,7 +6419,7 @@ Proof.
       apply l11_43_aux;auto.
     apply l11_43_aux;auto.
     induction H1.
-      left;finish.
+      left;Perp.
     right;apply obtuse_sym;assumption.
 Qed.
 
@@ -7045,9 +6430,7 @@ Proof.
     ex_and H A'.
     ex_and H1 B'.
     ex_and H C'.
-    exists A'.
-    exists B'.
-    exists C'.
+    exists A', B', C'.
     split.
       assumption.
     assert(HH1:=H1).
@@ -7086,32 +6469,25 @@ Proof.
     split; assumption.
 Qed.
 
-Lemma obtuse_gea_obtuse : forall A B C D E F, Obtuse D E F -> GeA A B C D E F -> Obtuse A B C.
+Lemma lea_obtuse_obtuse : forall A B C D E F, Obtuse D E F -> LeA D E F A B C -> Obtuse A B C.
 Proof.
     intros.
     ex_and H A'.
     ex_and H1 B'.
     ex_and H C'.
-    exists A'.
-    exists B'.
-    exists C'.
+    exists A', B', C'.
     split.
       assumption.
     assert(HH1:=H1).
-    unfold GtA in H1.
     unfold LtA in H1.
     spliter.
-    unfold GtA.
-    unfold LtA.
     split.
       eapply lea_trans.
         apply H1.
       assumption.
     intro.
-    assert(GtA A' B' C' D E F).
-      eapply conga_preserves_gta.
-        apply conga_sym.
-        apply H3; apply H3.
+    assert(LtA D E F A' B' C').
+      eapply conga_preserves_lta.
         apply conga_refl.
           unfold LeA in H0.
           ex_and H0 X.
@@ -7119,12 +6495,13 @@ Proof.
           spliter.
           assumption.
         apply lea_comm in H0.
-        unfold LeA in H0.
-        ex_and H0 X.
-        unfold CongA in H4.
-        spliter.
-        assumption.
-      unfold GtA.
+          unfold LeA in H0.
+          ex_and H0 X.
+          unfold CongA in H4.
+          spliter.
+          assumption.
+      apply conga_sym.
+      apply H3.
       split.
         assumption.
       intro.
@@ -7133,7 +6510,6 @@ Proof.
         apply H3.
       apply conga_sym.
       assumption.
-    unfold GtA in *.
     apply (not_and_lta A' B' C' D E F).
     split; assumption.
 Qed.
@@ -7147,10 +6523,8 @@ Proof.
     intros.
     destruct (midpoint_existence A C) as [P HP].
     assert_diffs.
-    assert(Cong_3 B C P B A P) by (repeat split;finish).
-    assert(CongA B C P B A P) by (auto using cong3_conga).
-    apply conga_sym.
-    eapply l11_10 with B P B P;finish.
+    assert(CongA B A P B C P) by (apply cong3_conga; auto; repeat split; Cong).
+    apply l11_10 with B P B P; Out.
 Qed.
 
 (** This is Euclid: Book 1, Proposition 18 *)
@@ -7220,8 +6594,7 @@ Proof.
           auto.
         assumption.
       intro.
-      apply conga_cop__or_out_ts in H12; Cop.
-      induction H12.
+      apply conga_os__out in H12.
         apply H.
         apply out_col in H12.
         apply bet_col in H0.
@@ -7230,22 +6603,15 @@ Proof.
           apply H6.
           Col.
         Col.
-      assert(OS B A C' C).
         apply out_one_side.
           right.
           intro.
           apply H.
           Col.
         apply bet_out;auto.
-      apply l9_9 in H12.
-      contradiction.
     assert(LtA B C A A C' B).
-      eapply conga_preserves_lta.
-        3: apply H11.
-        eapply out_conga.
-          apply conga_refl.
-            apply H2.
-          apply H3.
+      apply (conga_preserves_lta C' C A A C' B).
+        apply out2__conga.
           apply l6_6.
           apply bet_out.
             auto.
@@ -7253,22 +6619,15 @@ Proof.
           assumption.
           apply out_trivial.
           auto.
-          apply out_trivial.
-          auto.
-        apply out_trivial.
-        auto.
-      apply conga_refl.
-        auto.
-      auto.
+      apply conga_refl; auto.
+      assumption.
     assert(CongA B A C' B C' A).
       apply (l11_44_1_a A B C'); auto.
     apply conga_right_comm in H14.
     assert(LtA B C A B A C').
-      eapply conga_preserves_lta.
-        2: apply conga_sym.
-        2: apply H14.
-        apply conga_refl.
-          assumption.
+      apply (conga_preserves_lta B C A A C' B).
+        apply conga_refl; auto.
+        apply conga_sym.
         assumption.
       assumption.
     eapply lta_trans.
@@ -7284,32 +6643,6 @@ Proof.
     unfold LtA in H.
     spliter.
     contradiction.
-Qed.
-
-Lemma not_gta_and_conga : forall A B C D E F, ~ (GtA A B C D E F /\ CongA A B C D E F).
-Proof.
-    intros.
-    intro.
-    spliter.
-    unfold GtA in H.
-    unfold LtA in H.
-    spliter.
-    apply conga_sym in H0.
-    contradiction.
-Qed.
-
-Lemma not_lta_and_gta : forall  A B C D E F, ~ (LtA A B C D E F /\ GtA A B C D E F).
-Proof.
-    intros.
-    intro.
-    spliter.
-    unfold GtA in H0.
-    unfold LtA in *.
-    spliter.
-    apply H2.
-    apply lea_asym.
-      assumption.
-    assumption.
 Qed.
 
 Lemma conga_sym_equiv : forall A B C A' B' C', CongA A B C A' B' C' <-> CongA A' B' C' A B C.
@@ -7349,10 +6682,10 @@ Proof.
     unfold CongA.
     intro.
     decompose [and ex] H4; clear H4.
-    assert (x3 = x) by (apply construction_uniqueness with B A E D; intuition).
-    assert (x4 = x0) by (apply construction_uniqueness with B C E F; intuition).
-    assert (x5 = x1) by (apply construction_uniqueness with E D B A; intuition).
-    assert (x6 = x2) by (apply construction_uniqueness with E F B C; intuition).
+    assert (x3 = x) by (apply construction_uniqueness with B A E D; auto).
+    assert (x4 = x0) by (apply construction_uniqueness with B C E F; auto).
+    assert (x5 = x1) by (apply construction_uniqueness with E D B A; auto).
+    assert (x6 = x2) by (apply construction_uniqueness with E F B C; auto).
     subst.
     contradiction.
 Qed.
@@ -7364,6 +6697,39 @@ Proof.
     unfold LtA in H.
     spliter.
     contradiction.
+Qed.
+
+Lemma lta__lea : forall A B C D E F, LtA A B C D E F -> LeA A B C D E F.
+Proof.
+  intros.
+  destruct H.
+  assumption.
+Qed.
+
+Lemma nlta : forall A B C, ~ LtA A B C A B C.
+Proof.
+  intros A B C.
+  intro.
+  apply (not_and_lta A B C A B C).
+  split; assumption.
+Qed.
+
+Lemma lea__nlta : forall A B C D E F, LeA A B C D E F -> ~ LtA D E F A B C.
+Proof.
+  intros.
+  intro Hlta.
+  destruct Hlta as [Hlea HNConga].
+  apply HNConga.
+  apply lea_asym; assumption.
+Qed.
+
+Lemma lta__nlea : forall A B C D E F, LtA A B C D E F -> ~ LeA D E F A B C.
+Proof.
+  intros A B C D E F Hlta.
+  destruct Hlta as [Hlea HNConga].
+  intro.
+  apply HNConga.
+  apply lea_asym; assumption.
 Qed.
 
 (** If the base angles are equal, then the triangle is isosceles *)
@@ -7406,7 +6772,7 @@ Proof.
     assert(HH:= or_lt_cong_gt B A B C).
     induction HH.
       apply l11_44_2_a in H4.
-        assert(HH:= not_lta_and_gta B A C B C A).
+        assert(HH:= not_and_lta B A C B C A).
         exfalso.
         apply HH.
         split; assumption.
@@ -7421,13 +6787,29 @@ Qed.
 
 Lemma l11_44_1 : forall A B C, ~ Col A B C -> (CongA B A C B C A <-> Cong B A B C).
 Proof.
-    intros;assert_diffs;split;intro; auto using l11_44_1_b, l11_44_1_a.
+    intros; assert_diffs; split; intro; auto using l11_44_1_b, l11_44_1_a.
 Qed.
 
 Lemma l11_44_2 : forall A B C, ~ Col A B C -> (LtA B A C B C A <-> Lt B C B A).
 Proof.
-    intros;split;intro;
-    auto using l11_44_2_b, l11_44_2_a with col. 
+    intros; split; intro; auto using l11_44_2_b, l11_44_2_a with col. 
+Qed.
+
+Lemma l11_44_2bis : forall A B C, ~ Col A B C -> (LeA B A C B C A <-> Le B C B A).
+Proof.
+    intros; split; intro.
+      apply nlt__le.
+      intro.
+      apply (lea__nlta B A C B C A).
+        assumption.
+      apply l11_44_2; Col.
+    induction (cong_dec B C B A).
+      apply conga__lea.
+      apply l11_44_1; Cong.
+    apply lta__lea.
+    apply l11_44_2.
+      assumption.
+    split; assumption.
 Qed.
 
 Lemma l11_46 : forall A B C, A <> B -> B <> C -> (Per A B C \/ Obtuse A B C) -> Lt B A A C /\ Lt B C A C.
@@ -7442,7 +6824,7 @@ Proof.
         intro.
         apply H0, between_cong with A; Cong.
       intro.
-      apply H, eq_sym, between_cong with C; finish.
+      apply H, eq_sym, between_cong with C; Between; Cong.
     assert_diffs.
     assert(HH:= H1).
     apply l11_43 in H1; auto.
@@ -7469,7 +6851,6 @@ Proof.
         ex_and H11 A''.
         ex_and H12 B''.
         ex_and H11 C''.
-        unfold GtA in H12.
         eapply lta_trans.
           apply lta_left_comm.
           apply H4.
@@ -7477,21 +6858,12 @@ Proof.
           assert (Hd := H12).
           apply lta_distincts in Hd.
           spliter.
-          apply l11_16.
-            apply H11.
-            assumption.
-            assumption.
-            assumption.
-            assumption.
-          assumption.
-          apply conga_refl.
-            assumption.
-          auto.
+          apply l11_16; auto.
+          apply conga_refl; auto.
         assumption.
       apply lt_left_comm.
       apply lt_right_comm.
-      eapply l11_44_2_b.
-        finish.
+      apply l11_44_2_b.
       unfold Acute in H1.
       ex_and H1 A'.
       ex_and H4 B'.
@@ -7501,40 +6873,29 @@ Proof.
       spliter.
       induction HH.
         eapply conga_preserves_lta.
-          apply conga_refl.
-            auto.
-          auto.
+          apply conga_refl; auto.
           apply l11_16.
             apply H1.
-            assumption.
-            assumption.
+            auto.
+            auto.
             apply l8_2.
             assumption.
             auto.
-          assumption.
+          auto.
         apply lta_left_comm.
         assumption.
       unfold Obtuse in H11.
       ex_and H11 A''.
       ex_and H12 B''.
       ex_and H11 C''.
-      unfold GtA in H12.
       eapply lta_trans.
         apply lta_left_comm.
         apply H4.
       eapply conga_preserves_lta.
         apply lta_distincts in H12.
         spliter.
-        apply l11_16.
-          apply H11.
-          assumption.
-          assumption.
-          assumption.
-          assumption.
-        assumption.
-        apply conga_refl.
-          auto.
-        assumption.
+        apply (l11_16 A'' B'' C''); auto.
+        apply conga_refl; auto.
       apply lta_right_comm.
       assumption.
 Qed.
@@ -7576,13 +6937,7 @@ Proof.
       eapply per_col_eq.
         apply l8_2.
         apply H6.
-        ColR.
-       (* eapply (col_transitivity_1 _ B).
-          assumption.
-          apply col_permutation_1.
-          assumption.
-        apply col_permutation_5.
-        assumption. *)
+        apply (col_transitivity_1 _ B); Col.
       auto.
     apply not_col_distincts in H8.
     spliter.
@@ -7599,10 +6954,7 @@ Proof.
       apply l8_2.
       assumption.
     assert(Per C H B).
-      eapply per_col.
-        2: apply H6.
-        auto.
-      assumption.
+      apply per_col with A; auto.
     assert(H <> B).
       intro.
       subst B.
@@ -7621,12 +6973,12 @@ Proof.
     assert(Lt H B B C /\ Lt H C B C).
       apply l11_46; auto.
       left.
-      finish.
+      Perp.
     split.
       unfold Lt in *.
       spliter.
       apply l5_12_b.
-        finish.
+        Col.
         eapply le_transitivity.
           apply le_left_comm.
           apply H15.
@@ -7684,10 +7036,7 @@ Proof.
         contradiction.
       repeat split; assumption.
     apply l11_3_bis.
-    exists B.
-    exists A.
-    exists B'.
-    exists A'.
+    exists B, A, B', A'.
     split.
       apply out_trivial.
       auto.
@@ -7774,9 +7123,7 @@ Proof.
         apply H0.
       assumption.
     assert(C' = C'').
-      assert(HCop : Coplanar B' A' C' C'') by Cop.
-      assert(HH:= conga_cop__or_out_ts B' A' C' C'' HCop H20).
-      induction HH.
+      apply conga_os__out in H20.
         eapply l6_21.
           apply not_col_permutation_5.
           apply H10.
@@ -7787,7 +7134,6 @@ Proof.
           apply out_col in H7.
           assumption.
           apply col_trivial_2.
-      assert(OS B' A' C' C'').
         apply out_one_side.
           left.
           intro.
@@ -7796,8 +7142,6 @@ Proof.
           assumption.
         apply l6_6.
         assumption.
-      apply l9_9 in H21.
-      contradiction.
     subst C''.
     clear H20.
     split.
@@ -7861,35 +7205,15 @@ Proof.
     spliter.
     assert(Cong A C A' C'').
       apply H16.
-      repeat split; try assumption.
-        left.
-        apply between_trivial.
-        left.
-        apply between_trivial.
-        left.
-        apply between_trivial.
-        auto.
-        unfold Out in  H7.
-        spliter.
-        assumption.
-        apply cong_commutativity.
-        assumption.
-      apply cong_symmetry.
-      assumption.
+      repeat (split; [Out|]); Cong.
     assert(Cong_3 B C A B' C'' A').
-      repeat split.
-        apply cong_symmetry.
-        assumption.
-        apply cong_commutativity.
-        assumption.
-      apply cong_commutativity.
-      assumption.
+      repeat split; Cong.
     assert(CongA B C A B' C'' A').
       apply cong3_conga.
         auto.
         apply not_col_distincts in H.
         spliter.
-        assumption.
+        auto.
       assumption.
     assert(CongA B' C' A' B' C'' A').
       eapply conga_trans.
@@ -7923,7 +7247,7 @@ Proof.
       apply False_ind.
       apply H27.
       assumption.
-    assert(~Col C'' C' A').
+    assert(~ Col C'' C' A').
       intro.
       apply H10.
       apply col_permutation_1.
@@ -7939,7 +7263,7 @@ Proof.
     unfold Out in H7.
     spliter.
     induction H32.
-      assert(HH:=l11_41 ).
+      assert(HH:=l11_41).
       assert(HH1:=l11_41 C'' C' A' B' H27 (between_symmetry _ _ _ H32) H7).
       spliter.
       assert(CongA B' C' A' C'' C' A').
@@ -7977,17 +7301,10 @@ Proof.
     assert(HH1:=l11_41 C' C'' A' B' H33 (between_symmetry _ _ _ H32) H15).
     spliter.
     assert(CongA B' C'' A' C' C'' A').
-      eapply (l11_10 B' C'' A' B' C'' A').
-        apply conga_refl.
-          auto.
-        auto.
-        apply out_trivial.
-        assumption.
-        apply out_trivial.
-        auto.
+      apply out2__conga.
         apply bet_out.
           auto.
-        apply  between_symmetry.
+        apply between_symmetry.
         assumption.
       apply out_trivial.
       auto.
@@ -8014,22 +7331,9 @@ Lemma l11_51 : forall A B C A' B' C',
 Proof.
     intros.
     assert(Cong_3 B A C B' A' C' /\ Cong_3 A B C A' B' C' /\ Cong_3 B C A B' C' A').
-      repeat split; cong.
+      repeat split; Cong.
     spliter.
-    split.
-      apply cong3_conga.
-        auto.
-        auto.
-      assumption.
-    split.
-      apply cong3_conga.
-        assumption.
-        auto.
-      assumption.
-    apply cong3_conga.
-      assumption.
-      assumption.
-    assumption.
+    split; [|split]; apply cong3_conga; auto.
 Qed.
 
 Lemma conga_distinct : forall A B C D E F, CongA A B C D E F -> CongA A B C D E F /\ A <> B /\ C <> B /\ D <> E /\ F <> E.
@@ -8092,7 +7396,7 @@ Proof.
             apply H7.
             apply H10.
             assumption.
-          cong.
+          Cong.
         assert(B = A).
           eapply bet_le_eq.
             apply between_symmetry.
@@ -8106,22 +7410,10 @@ Proof.
         auto.
       ex_and H8 A''.
       assert(CongA A' B' C' A'' B' C').
-        eapply (l11_10  A'' _ C' A'' _ C' ).
-          apply conga_refl.
-            unfold Out in H8.
-            spliter.
-            assumption.
-          assumption.
-          apply l6_6.
+        apply out2__conga.
           assumption.
           apply out_trivial.
           auto.
-          apply out_trivial.
-          unfold Out in H8.
-          spliter.
-          auto.
-        apply out_trivial.
-        auto.
       assert(CongA A B C A'' B' C').
         eapply l11_10.
           apply H.
@@ -8136,10 +7428,10 @@ Proof.
         eapply cong2_conga_cong.
           apply conga_sym.
           apply H11.
-          cong.
-        cong.
+          Cong.
+        Cong.
       assert(Cong_3 A'' B' C' A B C).
-        repeat split; cong.
+        repeat split; Cong.
       assert(Cong A'' C' A' C').
         eapply cong_transitivity.
           apply H12.
@@ -8158,84 +7450,58 @@ Proof.
           unfold Out in H8.
           spliter.
           absurde.
-          permut.
-        apply out_col in H8.
-        permut.
+          Col.
+        Col.
       induction(eq_dec_points A'' A').
         subst A''.
         unfold Cong_3 in H13.
         spliter.
-        cong.
+        Cong.
       unfold Out in H8.
       spliter.
       induction H19.
         assert(HH:= l11_41 A'' B' C' A' H16 H19 H17).
         spliter.
         assert(Cong A' C' A'' C').
-          eapply (cong_transitivity _ _ A C).
-            cong.
+          apply (cong_transitivity _ _ A C).
+            Cong.
           unfold Cong_3 in H13.
           spliter.
-          cong.
-        assert(~Col A'' C' A').
+          Cong.
+        assert(~ Col A'' C' A').
           intro.
           apply H15.
-          eapply (col_transitivity_1 _ A'' ).
-            auto.
-            apply bet_col in H19.
-            permut.
-          permut.
-        assert (HH:= l11_44_1 A'' C' A' H23 ).
+          apply (col_transitivity_1 _ A''); Col.
+        assert (HH:= l11_44_1 A'' C' A' H23).
         destruct HH.
         apply cong_commutativity in H22.
         apply cong_symmetry in H22.
         apply H25 in H22.
-        assert(~Col B' C' A'').
-          intro.
-          apply H16.
-          permut.
+        assert(~ Col B' C' A'').
+          Col.
         assert(CongA B' A' C' A'' A' C').
-          eapply l11_10.
-            apply conga_refl.
-              3:apply out_trivial.
-              auto.
-            3:apply out_trivial.
+          apply out2__conga.
+            apply bet_out; Between.
+            apply out_trivial.
             intro.
             subst C'.
             apply H15.
             apply col_trivial_3.
-            auto.
-            intro.
-            subst C'.
-            apply H15.
-            apply col_trivial_3.
-            apply between_symmetry in H19.
-            apply bet_out in H19.
-              assumption.
-              assumption.
-            auto.
-          apply out_trivial.
-          intro.
-          subst C'.
-          apply H15.
-          apply col_trivial_3.
         assert(~Col B' C' A').
-          intro.
-          apply H15.
-          permut.
+          Col.
         assert(HH:=l11_44_2 B' C' A' H28).
         destruct HH.
         assert(Lt C' A'  C' B').
           apply H29.
-          eapply conga_preserves_lta.
+          apply (conga_preserves_lta A'' B' C' C' A'' A').
             apply conga_right_comm.
             apply conga_sym.
             apply H10.
-            2:apply H21.
-          eapply conga_trans.
-            apply H22.
-          apply conga_comm.
-          apply conga_sym.
+            eapply conga_trans.
+              apply H22.
+            apply conga_comm.
+            apply conga_sym.
+            assumption.
           assumption.
         assert(Lt C' A'' C' B').
           unfold Lt in H31.
@@ -8244,9 +7510,8 @@ Proof.
           split.
             eapply l5_6.
               apply H31.
-              apply cong_commutativity.
-              cong.
-            cong.
+              Cong.
+            Cong.
           intro.
           apply H32.
           eapply cong_transitivity.
@@ -8262,8 +7527,7 @@ Proof.
             apply H32.
             apply cong_commutativity.
             assumption.
-          apply cong_commutativity.
-          cong.
+          Cong.
         assert(Cong C A C B).
           apply le_anti_symmetry.
             assumption.
@@ -8279,79 +7543,53 @@ Proof.
         eapply cong_transitivity.
           apply cong_symmetry.
           apply H35.
-        apply cong_commutativity.
-        cong.
+        Cong.
       assert(A' <> A'').
         auto.
       assert(HH:= l11_41 A' B' C' A'' H15 H19 H20).
       spliter.
       assert(Cong A' C' A'' C').
-        eapply (cong_transitivity _ _ A C).
-          cong.
+        apply (cong_transitivity _ _ A C).
+          Cong.
         unfold Cong_3 in H13.
         spliter.
-        cong.
-      assert(~Col A'' C' A').
+        Cong.
+      assert(~ Col A'' C' A').
         intro.
         apply H15.
-        eapply (col_transitivity_1 _ A'' ).
-          auto.
-          apply bet_col in H19.
-          permut.
-        permut.
+        eapply (col_transitivity_1 _ A'' ); Col.
       assert (HH:= l11_44_1 A'' C' A' H24 ).
       destruct HH.
       apply cong_commutativity in H23.
       apply cong_symmetry in H23.
       apply H26 in H23.
       assert(~Col B' C' A'').
-        intro.
-        apply H16.
-        permut.
+        Col.
       assert(CongA B' A'' C' A' A'' C').
-        eapply l11_10.
-          apply conga_refl.
-            3:apply out_trivial.
-            auto.
-          3:apply out_trivial.
+        apply out2__conga.
+          apply bet_out; Between.
+          apply out_trivial.
           intro.
           subst C'.
           apply H16.
           apply col_trivial_3.
-          auto.
-          intro.
-          subst C'.
-          apply H16.
-          apply col_trivial_3.
-          apply between_symmetry in H19.
-          apply bet_out in H19.
-            assumption.
-            assumption.
-          auto.
-        apply out_trivial.
-        intro.
-        subst C'.
-        apply H16.
-        apply col_trivial_3.
       assert(~Col B' C' A'').
-        intro.
-        apply H16.
-        permut.
+        Col.
       assert(HH:=l11_44_2 B' C' A'' H29).
       destruct HH.
       assert(Lt C' A''  C' B').
         apply H30.
-        eapply conga_preserves_lta.
+        apply (conga_preserves_lta A' B' C' C' A' A'').
           apply conga_right_comm.
           apply conga_sym.
           apply conga_sym.
           apply H10.
-          2:apply H22.
-        eapply conga_trans.
+          eapply conga_trans.
+            apply conga_sym.
+            apply H23.
+          apply conga_comm.
           apply conga_sym.
-          apply H23.
-        apply conga_comm.
-        apply conga_sym.
+          assumption.
         assumption.
       assert(Lt C' A' C' B').
         unfold Lt in H32.
@@ -8360,9 +7598,8 @@ Proof.
         split.
           eapply l5_6.
             apply H32.
-            apply cong_commutativity.
-            cong.
-          cong.
+            Cong.
+          Cong.
         intro.
         apply H33.
         eapply cong_transitivity.
@@ -8377,8 +7614,7 @@ Proof.
           apply H32.
           apply cong_commutativity.
           assumption.
-        apply cong_commutativity.
-        cong.
+        Cong.
       assert(Cong C A C B).
         apply le_anti_symmetry.
           assumption.
@@ -8394,10 +7630,9 @@ Proof.
       eapply cong_transitivity.
         apply cong_symmetry.
         apply H36.
-      apply cong_commutativity.
-      cong.
+      Cong.
     assert(Cong_3 A B C A' B' C').
-      repeat split; cong.
+      repeat split; Cong.
     split.
       assumption.
     split.
@@ -8424,20 +7659,16 @@ Lemma l11_53 : forall A B C D,
  LtA C A D C B D /\ Lt B D A D.
 Proof.
     intros.
-    assert(A<>C) by (intro; Between).
+    assert(A<>C) by (intro; treat_equalities; auto).
     spliter.
-    assert(~Col B A D).
+    assert(~ Col B A D).
       intro.
       assert(Col B C D).
-        eapply (col_transitivity_1 _ A).
-          auto.
-          apply bet_col in H3.
-          permut.
-        permut.
-      assert(~Col  B C D).
+        apply (col_transitivity_1 _ A); Col.
+      assert(~Col B C D).
         apply per_not_col.
-          assumption.
-          assumption.
+          auto.
+          auto.
         apply l8_2.
         assumption.
       contradiction.
@@ -8446,18 +7677,11 @@ Proof.
       subst D.
       apply H5.
       apply col_trivial_2.
-    assert( LtA C A D C B D).
+    assert(LtA C A D C B D).
       assert(HH:=l11_41 B A D C H5 H3 H2).
       spliter.
       assert(CongA C A D B A D).
-        eapply (l11_10  C A D C _ D).
-          apply conga_refl.
-            auto.
-          auto.
-          apply out_trivial.
-          auto.
-          apply out_trivial.
-          auto.
+        apply out2__conga.
           apply bet_out.
             auto.
           assumption.
@@ -8493,9 +7717,8 @@ Proof.
           assumption.
           apply bet_col.
           assumption.
-        apply bet_col in H3.
-        permut.
-      permut.
+        Col.
+      Col.
     destruct(l11_44_1 B D B').
       assumption.
     apply H12 in H8.
@@ -8503,29 +7726,26 @@ Proof.
       intro.
       apply H10.
       apply col_permutation_1.
-      eapply (col_transitivity_1 _ A).
+      apply (col_transitivity_1 _ A).
         intro.
         subst B'.
         apply between_symmetry in H3.
         assert(B = C).
-          eapply (between_equality _ _ A); assumption.
+          apply (between_equality _ _ A); assumption.
         contradiction.
         apply col_permutation_1.
         eapply (col_transitivity_1 _ C).
           assumption.
-          apply bet_col.
-          assumption.
-        apply bet_col in H3.
-        permut.
-      permut.
+          Col.
+        Col.
+      Col.
     assert(LtA C A D C B' D).
-      eapply conga_preserves_lta.
+      apply (conga_preserves_lta C A D C B D).
         apply conga_refl.
           auto.
         auto.
         apply conga_sym.
-        eapply l11_10.
-          3: apply out_trivial.
+        apply l11_10 with B D B' D.
           apply conga_sym in H8.
           apply conga_comm in H8.
           apply H8.
@@ -8536,13 +7756,12 @@ Proof.
             contradiction.
           apply between_symmetry.
           assumption.
+          apply out_trivial.
           intro.
           subst B'.
           apply H10.
           apply col_trivial_2.
-          apply bet_out.
-            2: apply H.
-            auto.
+          apply bet_out; auto.
         apply out_trivial.
         intro.
         subst D.
@@ -8561,53 +7780,34 @@ Proof.
     assert (Lt D B' D A).
       apply l11_44_2_b.
       apply (conga_preserves_lta D A C D B' C).
-        eapply (l11_10).
-          2: apply out_trivial.
-          4: apply out_trivial.
-          apply conga_refl.
-            auto.
-          5:apply out_trivial.
-          assumption.
+        apply out2__conga.
+          apply out_trivial.
           auto.
+          apply l6_6.
           apply bet_out.
             auto.
           eapply outer_transitivity_between2.
             apply H3.
             assumption.
-          assumption.
           auto.
-        auto.
-        eapply (l11_10).
-          2: apply out_trivial.
-          4: apply out_trivial.
-          apply conga_refl.
-            intro.
-            subst B'.
-            apply H10.
-            apply col_trivial_2.
-          5:apply out_trivial.
-          auto.
+        apply out2__conga.
+          apply out_trivial.
           intro.
           subst B'.
           apply H10.
           apply col_trivial_2.
+          apply l6_6.
           apply bet_out.
             intro.
             subst B'.
             apply cong_identity in H9.
             contradiction.
-            auto.
           eapply outer_transitivity_between.
             apply between_symmetry.
             apply H.
             apply between_symmetry.
             assumption.
           auto.
-          intro.
-          subst B'.
-          apply H10.
-          apply col_trivial_2.
-        auto.
       apply lta_comm.
       assumption.
     unfold Lt in H17.
@@ -8615,9 +7815,8 @@ Proof.
     unfold Lt.
     split.
       eapply l5_6.
-      repeat split.
         apply H17.
-        cong.
+        Cong.
       apply cong_pseudo_reflexivity.
     intro.
     apply H18.
@@ -8789,7 +7988,7 @@ forall A B C A' B' C',
 Proof.
 intros.
 destruct (cong_dec B C B' C').
-  apply le_comm, cong_le_per2__le with B B'; finish.
+  apply le_comm, cong_le_per2__le with B B'; Perp; Le; Cong.
 assert (Lt B C B' C') by (split; assumption).
 apply le_lt_per2__lt with B B'; assumption.
 Qed.
@@ -8805,7 +8004,7 @@ Proof.
 intros.
 apply nle__lt.
 intro.
-destruct (le_lt_per2__lt C B A C' B' A'); finish.
+destruct (le_lt_per2__lt C B A C' B' A'); Perp; Le; Cong.
 Qed.
 
 Lemma symmetry_preserves_conga :
@@ -8879,11 +8078,11 @@ Proof.
   intros A B C D E F U V X HNCol HD HE HF [HNCol1 [HUV [HX1 [HX2 HX3]]]].
   repeat split; trivial.
     apply coplanar_pseudo_trans with A B C; assumption.
-  assert (forall M, Coplanar A B C M -> Coplanar D E F M).
-    intro; apply coplanar_pseudo_trans; Cop.
-  assert (forall M, Coplanar D E F M -> Coplanar A B C M).
-    intro; apply coplanar_pseudo_trans; Cop.
-  intros; apply HX3; auto.
+  assert (HCop : forall M, Coplanar A B C M -> Coplanar D E F M);
+    [intro; apply coplanar_pseudo_trans; Cop|];
+  assert (forall M, Coplanar D E F M -> Coplanar A B C M);
+    [intro; apply coplanar_pseudo_trans; auto with cop cop_perm|
+  intros; apply HX3; auto].
 Qed.
 
 Lemma col2_orth_at__orth_at : forall A B C P Q U V X, U <> V ->
@@ -9405,6 +8604,19 @@ Proof.
     right; intro; apply HNTS; apply l9_41_2 with X; assumption.
 Qed.
 
+Lemma ts2__inangle : forall A B C P, TS A C B P -> TS B P A C ->
+  InAngle P A B C.
+Proof.
+  intros A B C P HTS1 HTS2.
+  destruct (ts2__ex_bet2 A B C P) as [X [HBet1 HBet2]]; trivial.
+  apply ts_distincts in HTS2; spliter.
+  repeat split; auto.
+  exists X; split; trivial.
+  right; apply bet_out; auto.
+  intro; subst X.
+  apply (two_sides_not_col A C B P HTS1); Col.
+Qed.
+
 Lemma os_ts__inangle : forall A B C P, TS B P A C -> OS B A C P -> InAngle P A B C.
 Proof.
   intros A B C P Hts Hos.
@@ -9452,7 +8664,7 @@ Qed.
 Lemma conga_obtuse__obtuse : forall A B C D E F, Obtuse A B C -> CongA A B C D E F -> Obtuse D E F.
 Proof.
   intros A B C D E F Hobtuse HConga.
-  apply (obtuse_gea_obtuse _ _ _ A B C); auto.
+  apply (lea_obtuse_obtuse _ _ _ A B C); auto.
   apply conga__lea; assumption.
 Qed.
 
@@ -9485,7 +8697,6 @@ Proof.
   apply l11_31_1; auto.
 Qed.
 
-
 Lemma bet2_lta__lta : forall A B C D E F A' D',
   LtA A B C D E F -> Bet A B A' -> A' <> B -> Bet D E D' -> D' <> E ->
   LtA D' E F A' B C.
@@ -9501,14 +8712,6 @@ Proof.
   intro.
   assert(CongA A B C D E F); auto.
   apply (l11_13 A' _ _ D'); try (apply conga_sym); Between.
-Qed.
-
-
-Lemma lta__lea : forall A B C D E F, LtA A B C D E F -> LeA A B C D E F.
-Proof.
-  intros.
-  destruct H.
-  assumption.
 Qed.
 
 Lemma lea123456_lta__lta : forall A B C D E F G H I, LeA A B C D E F -> LtA D E F G H I ->
@@ -9543,8 +8746,7 @@ Proof.
     apply HNConga.
     apply lea_asym.
     assumption.
-    apply (l11_30 D E F G H I); auto.
-    2: apply conga_sym; assumption.
+    apply (l11_30 D E F G H I); auto; [|apply conga_sym; assumption].
     apply lea_distincts in Hlea.
     spliter.
     apply conga_refl; assumption.
@@ -9567,8 +8769,8 @@ Lemma obtuse_per__lta : forall A B C D E F, Obtuse A B C -> D <> E -> E <> F -> 
 Proof.
   intros A B C D E F Hobtuse HDE HEF HPer.
   intros.
-  destruct Hobtuse as [G [H [I [HPer2 Hgta]]]].
-  assert(Hdiff := gta_distincts A B C G H I Hgta).
+  destruct Hobtuse as [G [H [I [HPer2 Hlta]]]].
+  assert(Hdiff := lta_distincts G H I A B C Hlta).
   spliter.
   apply (conga_preserves_lta G H I A B C); try (apply conga_refl); auto.
   apply l11_16; auto.
@@ -9597,14 +8799,11 @@ Proof.
     }
     unfold LeA in H.
     ex_and H T.
-    eapply conga_preserves_in_angle.
-      3: apply H.
+    apply (conga_preserves_in_angle A B C T).
       apply conga_refl.
-        assert(HH0:=H0).
-        unfold CongA in HH0.
+        unfold CongA in H0.
         spliter.
-        clear H6.
-        repeat split; auto.
+        auto.
       intro.
       subst C.
       unfold OS in H1.
@@ -9616,6 +8815,7 @@ Proof.
       eapply conga_trans; apply conga_sym.
         apply H2.
       apply H0.
+      apply H.
     apply one_side_symmetry.
     assumption.
 Qed.
@@ -9630,10 +8830,9 @@ Proof.
     elim(bet_dec A B C).
     - intro.
       exfalso.
-      assert(Hlta : LtA A B C A B C) by (apply acute_obtuse__lta; auto; apply bet__obtuse; auto).
-      destruct Hlta as [_ HNConga].
-      apply HNConga.
-      apply conga_refl; auto.
+      apply (nlta A B C).
+      apply acute_obtuse__lta; auto.
+      apply bet__obtuse; auto.
 
     - intro.
       apply bet__obtuse; auto.
@@ -9647,26 +8846,22 @@ Proof.
   assert_diffs.
   assert(HNCol2 : ~ Col C B D).
   { intro.
-    assert(Hlta : LtA A B C A B C).
-    2: destruct Hlta as [_ HNConga]; apply HNConga; apply conga_refl; auto.
+    apply (nlta A B C).
     apply acute_per__lta; auto.
     apply (per_col _ _ D); Perp; Col.
   }
   assert(OS B A' C D) by (apply (col_one_side _ A); Side; Col).
-  exists A.
-  exists B.
-  exists D.
+  exists A, B, D.
   split; Perp.
   split.
   - exists D.
-    split.
-    2: apply conga_comm; apply l11_18_1; Perp.
+    split; [|apply conga_comm, l11_18_1; Perp].
     apply os2__inangle; auto.
     exists A.
     split.
     { repeat split; Col.
       intro; apply HNCol1; ColR.
-      exists B; Col; Between.
+      exists B; split; [Col|Between].
     }
     apply invert_two_sides.
     apply in_angle_two_sides; Col.
@@ -9677,13 +8872,11 @@ Proof.
 
   - intro.
     apply HNCol2.
-    assert(HUn := conga_cop__or_out_ts A' B D C).
-    destruct HUn.
-      Cop.
+    assert (Out B D C).
+      apply (conga_os__out A'); Side.
       apply (conga_trans _ _ _ A B D); auto.
       apply l11_16; auto; apply (l8_3 A); Perp; Col.
-      assert_cols; Col.
-    exfalso; assert(~ TS A' B D C); auto; apply l9_9_bis; Side.
+    Col.
 Qed.
 
 Lemma bet_obtuse__acute : forall A B C A', Bet A B A' -> A' <> B -> Obtuse A B C -> Acute A' B C.
@@ -9700,8 +8893,7 @@ Proof.
 
     - intro.
       exfalso.
-      assert(Hlta : LtA A B C A B C).
-      2: destruct Hlta as [_ HNConga]; apply HNConga; apply conga_refl; auto.
+      apply (nlta A B C).
       apply acute_obtuse__lta; auto.
       apply out__acute.
       apply not_bet_out; auto.
@@ -9712,8 +8904,7 @@ Proof.
   assert_diffs.
   assert(HNCol2 : ~ Col C B D).
   { intro.
-    assert(Hlta : LtA A B C A B C).
-    2: destruct Hlta as [_ HNConga]; apply HNConga; apply conga_refl; auto.
+    apply (nlta A B C).
     apply obtuse_per__lta; auto.
     apply (per_col _ _ D); Perp; Col.
   }
@@ -9732,7 +8923,7 @@ Proof.
     split.
     { repeat split; auto.
       apply (one_side_not_col123 _ _ _ C); Side.
-      exists B; Col; Between.
+      exists B; split; [Col|Between].
     }
     apply invert_two_sides.
     apply in_angle_two_sides; Col.
@@ -9742,12 +8933,8 @@ Proof.
     apply obtuse_per__lta; Perp.
 
   - intro Habs.
-    apply HNCol2.
-    assert (HCop : Coplanar A' B C D) by Cop.
-    assert(HUn := conga_cop__or_out_ts A' B C D HCop Habs).
-    destruct HUn.
-    assert_cols; Col.
-    exfalso; assert(~ TS A' B C D); auto; apply l9_9_bis; Side.
+    assert (Out B C D) by (apply (conga_os__out A'); Side).
+    apply HNCol2; Col.
 Qed.
 
 
@@ -9797,21 +8984,20 @@ Proof.
     { intro.
       assert(HUn := two_sides_in_angle A B C P P').
       destruct HUn as [HInAngle|HInAngle]; Between.
-      - destruct HInAngle as [_ [_ [_ [X [HXBet HUn]]]]].
-        destruct HUn as [HXB|HBout].
-          left; repeat split; auto; exists X; split; auto.
-        right.
-        intro Habs.
-        destruct Habs as [_ [_ [_ [X' [HX'Bet HUn]]]]].
-        assert(Col B X' P) by (destruct HUn; subst; assert_cols; Col).
-        assert(X = X') by (apply (l6_21 A C B P); Col; ColR).
-        subst X'.
-        assert_diffs.
-        destruct HUn as [|HBout']; auto.
-        assert(Col P B P' /\ ~ Bet P B P'); spliter; Between.
-        apply l6_4_1.
-        apply (l6_7 _ _ X); auto.
-        apply l6_6; auto.
+      destruct HInAngle as [_ [_ [_ [X [HXBet HUn]]]]].
+      destruct HUn as [HXB|HBout].
+        left; repeat split; auto; exists X; split; auto.
+      right.
+      intro Habs.
+      destruct Habs as [_ [_ [_ [X' [HX'Bet HUn]]]]].
+      assert(Col B X' P) by (destruct HUn; subst; Col).
+      assert(X = X') by (apply (l6_21 A C B P); ColR).
+      subst X'.
+      assert_diffs.
+      destruct HUn; auto.
+      apply (l6_4_1 P P' B); Between.
+      apply (l6_7 _ _ X); auto.
+      apply l6_6; auto.
     }
     intro HNts.
     elim(col_dec B A P).
@@ -9826,8 +9012,8 @@ Proof.
       right.
       intro Habs.
       destruct Habs as [_ [_ [_ [X [HXBet HUn]]]]].
-      assert(Col B X P) by (destruct HUn; subst; assert_cols; Col).
-      assert(X = A) by (apply (l6_21 A C B P); Col; ColR).
+      assert(Col B X P) by (destruct HUn; subst; Col).
+      assert(X = A) by (apply (l6_21 A C B P); Col).
       subst X.
       destruct HUn; auto.
     }
@@ -9844,8 +9030,8 @@ Proof.
       right.
       intro Habs.
       destruct Habs as [_ [_ [_ [X [HXBet HUn]]]]].
-      assert(Col B X P) by (destruct HUn; subst; assert_cols; Col).
-      assert(X = C) by (apply (l6_21 A C B P); Col; ColR).
+      assert(Col B X P) by (destruct HUn; subst; Col).
+      assert(X = C) by (apply (l6_21 A C B P); Col).
       subst X.
       destruct HUn; auto.
     }
@@ -9918,13 +9104,6 @@ Proof.
   apply (l11_30 A B C D E F); auto; apply conga_refl; auto.
 Qed.
 
-Lemma gea_dec : forall A B C D E F, GeA A B C D E F \/ ~ GeA A B C D E F.
-Proof.
-  intros A B C D E F.
-  unfold GeA.
-  elim(lea_dec D E F A B C); auto.
-Qed.
-
 Lemma lta_dec : forall A B C D E F, LtA A B C D E F \/ ~ LtA A B C D E F.
 Proof.
   intros A B C D E F.
@@ -9948,13 +9127,6 @@ Proof.
   intro.
   spliter.
   auto.
-Qed.
-
-Lemma gta_dec : forall A B C D E F, GtA A B C D E F \/ ~ GtA A B C D E F.
-Proof.
-  intros A B C D E F.
-  unfold GtA.
-  elim(lta_dec D E F A B C); auto.
 Qed.
 
 Lemma lea_total : forall A B C D E F, A <> B -> B <> C -> D <> E -> E <> F ->
@@ -9984,11 +9156,11 @@ Proof.
   exists P.
   split; auto.
   apply os2__inangle; Side.
-  apply cop__not_two_sides_one_side; Col; Cop.
+  apply cop_nts__os; Col; Cop.
   - intro.
     apply HNlea.
     apply conga__lea.
-    apply (out_conga A B P D E F); try (apply out_trivial); try (apply conga_sym); auto.
+    apply (l11_10 A B P D E F); try (apply out_trivial); try (apply conga_sym); auto.
     apply (col_one_side_out _ A); Col; Side.
 
   - intro.
@@ -9999,16 +9171,9 @@ Proof.
     apply os_ts__inangle; Side.
 Qed.
 
-Lemma gea_total : forall A B C D E F, A <> B -> B <> C -> D <> E -> E <> F ->
-   GeA A B C D E F \/ GeA D E F A B C.
-Proof.
-  intros A B C D E F HAB HBC HDE HEF.
-  elim(lea_total A B C D E F); auto.
-Qed.
-
-Lemma or_lta_conga_gta : forall A B C D E F,
+Lemma or_lta2_conga : forall A B C D E F,
  A <> B -> C <> B -> D <> E -> F <> E ->
- LtA A B C D E F \/ GtA A B C D E F \/ CongA A B C D E F.
+ LtA A B C D E F \/ LtA D E F A B C \/ CongA A B C D E F.
 Proof.
     intros.
     assert(HH:=lea_total A B C D E F).
@@ -10017,14 +9182,11 @@ Proof.
         right; right.
         assumption.
       left.
-      unfold LtA.
       split; assumption.
     induction(conga_dec A B C D E F).
       right; right.
       assumption.
     right; left.
-    unfold GtA.
-    unfold LtA.
     split.
       assumption.
     intro.
@@ -10043,7 +9205,7 @@ Proof.
   assert(HC' := l10_15 A' B' B' D').
   destruct HC' as [C' [HC'Right _]]; Col.
   assert_diffs.
-  destruct (or_lta_conga_gta A B C A' B' C') as [|[|]]; auto.
+  destruct (or_lta2_conga A B C A' B' C') as [|[|]]; auto.
   - left.
     exists A', B', C'.
     repeat (split; Perp).
@@ -10147,33 +9309,6 @@ Proof.
   destruct (l11_51 A B C A C B) as [_ []]; Cong.
 Qed.
 
-
-Lemma nlta : forall A B C, ~ LtA A B C A B C.
-Proof.
-  intros A B C.
-  intro.
-  apply (not_and_lta A B C A B C).
-  split; assumption.
-Qed.
-
-Lemma lea__nlta : forall A B C D E F, LeA A B C D E F -> ~ LtA D E F A B C.
-Proof.
-  intros.
-  intro Hlta.
-  destruct Hlta as [Hlea HNConga].
-  apply HNConga.
-  apply lea_asym; assumption.
-Qed.
-
-Lemma lta__nlea : forall A B C D E F, LtA A B C D E F -> ~ LeA D E F A B C.
-Proof.
-  intros A B C D E F Hlta.
-  destruct Hlta as [Hlea HNConga].
-  intro.
-  apply HNConga.
-  apply lea_asym; assumption.
-Qed.
-
 Lemma nlta__lea : forall A B C D E F, ~ LtA A B C D E F -> A <> B -> B <> C -> D <> E -> E <> F ->
    LeA D E F A B C.
 Proof.
@@ -10215,8 +9350,7 @@ Proof.
   intros A B C D HBet HCong HNBet.
   elim(col_dec A B C).
   { intro.
-    assert(A <> B) by (intro; Between).
-    assert(B <> C) by (intro; Between).
+    assert_diffs.
     apply not_bet_out in HNBet; Col.
     destruct HNBet as [_ [_ [HBAC|HBCA]]].
     - split.
@@ -10248,8 +9382,7 @@ Proof.
   apply between_symmetry in HBet.
   apply l11_44_2; Col.
   assert(CongA C D A D C B).
-  { apply (out_conga C D B D C B); try (apply out_trivial); auto.
-    2: apply bet_out; auto.
+  { apply (l11_10 C D B D C B); try (apply out_trivial); auto; [|apply l6_6, bet_out; auto].
     apply conga_comm.
     apply l11_44_1; Cong.
     intro; apply HNCol; ColR.
@@ -10263,15 +9396,12 @@ Proof.
     right; apply out_trivial; auto.
 
   - intro.
-    assert(Habs := conga_cop__or_out_ts D C A B).
-    destruct Habs as [Hout|Hts].
-      exists D; left; split; Col.
-      apply (conga_trans _ _ _ C D A); auto; apply conga_sym; apply conga_comm; auto.
+    assert (Out C A B).
+    { apply (conga_os__out D).
+        apply (conga_trans _ _ _ C D A); auto; apply conga_sym, conga_comm; auto.
+      apply out_one_side; [Col|Out].
+    }
     apply HNCol; Col.
-    assert(~ TS D C A B); auto.
-    apply l9_9_bis.
-    apply out_one_side; Col.
-    apply l6_6; apply bet_out; auto.
 Qed.
 
 Lemma triangle_inequality : forall A B C D, Bet A B D -> Cong B C B D -> Le A C A D.
@@ -10331,16 +9461,19 @@ Proof.
     assert(Bet D A C) by (apply (l6_2 B); auto).
     assert(C <> D) by (intro; treat_equalities; auto).
     split.
-    2: intro; assert(A = B); auto; apply (l7_17 D C); split; Cong; apply l7_20_bis; auto; ColR.
-    destruct HABD as [_ [_ [HABD|HADB]]].
-    - apply (le_transitivity _ _ A D).
-        apply le_comm; exists B; split; Between; Cong.
-      apply (l5_6 C A C B); Cong.
-      exists A; split; Between; Cong.
-
-    - exists D.
-      split; Cong.
-      apply (outer_transitivity_between _ _ A); Between.
+    { destruct HABD as [_ [_ [HABD|HADB]]].
+      - apply (le_transitivity _ _ A D).
+          apply le_comm; exists B; split; Between; Cong.
+        apply (l5_6 C A C B); Cong.
+        exists A; split; Between; Cong.
+      - exists D.
+        split; Cong.
+        apply (outer_transitivity_between _ _ A); Between.
+    }
+    intro.
+    absurd (A = B); auto.
+    apply (l7_17 D C); split; Cong.
+    apply l7_20_bis; auto; ColR.
   }
   intro HNCol.
   assert_diffs.
@@ -10360,24 +9493,21 @@ Proof.
   - apply between_symmetry in HABD.
     apply (conga_preserves_lta D C B D C A).
       apply conga_pseudo_refl; auto.
-      apply (out_conga D C A A D C); try (apply out_trivial); try (apply conga_left_comm); auto; apply l6_6; apply bet_out; auto.
+      apply (l11_10 D C A A D C); [apply conga_left_comm|try (apply out_trivial)..]; auto.
+      apply bet_out; auto.
     split.
     { exists B.
-      split; try (apply conga_refl); auto.
+      split; [|apply conga_refl; auto].
       repeat split; auto.
       exists B.
       split; auto.
-      right; finish.
+      right; apply out_trivial; auto.
     }
     intro.
-    assert(~ TS D C B A).
-    { apply l9_9_bis.
-      apply out_one_side; Col.
-      apply bet_out; auto.
+    assert (Out C B A).
+    { apply (conga_os__out D); trivial.
+      apply out_one_side; [Col|Out].
     }
-    assert(Habs := conga_cop__or_out_ts D C B A).
-    destruct Habs as [Hout|Hts]; auto.
-      exists D; left; split; Col.
     apply HNCol; Col.
 
   - assert(HE := symmetric_point_construction B C).
@@ -10395,8 +9525,7 @@ Proof.
     split.
     { apply lea_comm.
       exists A.
-      split.
-      2: apply conga_refl; auto.
+      split; [|apply conga_refl; auto].
       apply os2__inangle; Side.
       apply (col_one_side _ B); Col.
       apply invert_one_side.
@@ -10404,17 +9533,15 @@ Proof.
       apply bet_out; Between.
     }
     intro.
-    assert(Habs := conga_cop__or_out_ts D C A E).
-    destruct Habs as [Hout|Hts]; try (apply conga_comm); Cop.
-      apply HNCol; ColR.
-      assert(~ TS D C A E); try (apply l9_9_bis); auto.
+    assert (Out C A E).
+      apply (conga_os__out D); [apply conga_comm|]; assumption.
+    apply HNCol; ColR.
 Qed.
 
 Lemma triangle_reverse_inequality : forall A B C D, Out A B D -> Cong A C A D -> Le B D B C.
 Proof.
   intros A B C D HABD HCong.
-  elim(out_dec A B C).
-  2: apply triangle_strict_reverse_inequality; auto.
+  elim(out_dec A B C); [|apply triangle_strict_reverse_inequality; auto].
   intro.
   assert_diffs.
   assert(C = D) by (apply (l6_11_uniqueness A A C B); Cong; apply l6_6; auto).
@@ -10435,15 +9562,16 @@ Proof.
   assert_ncols.
   destruct HUn as [|HBout].
     exfalso; subst; Col.
-  assert(A <> E) by (intro; subst; assert_cols; Col).
-  assert(C <> E) by (intro; subst; assert_cols; Col).
+  assert(A <> E) by (intro; subst; Col5).
+  assert(C <> E) by (intro; subst; Col5).
   assert_diffs.
   apply (lta_trans _ _ _ B E C).
   - destruct (l11_41 E A B C); auto.
       intro; apply HNCol; ColR.
     apply (conga_preserves_lta E A B B E C); try (apply conga_refl); auto.
-    apply (out_conga E A B B A E); try (apply out_trivial); try (apply conga_pseudo_refl); auto.
-    apply bet_out; auto.
+    apply conga_left_comm, out2__conga.
+      apply out_trivial; auto.
+      apply l6_6, bet_out; auto.
 
   - assert(Out E D B).
       apply (col_one_side_out _ A); Col; apply invert_one_side; apply (col_one_side _ C); Col; Side.
@@ -10452,7 +9580,9 @@ Proof.
       intro; apply HNCol; ColR.
       apply out2__bet; auto.
     apply (conga_preserves_lta D E C C D B); try (apply conga_pseudo_refl); auto.
-    apply (out_conga D E C D E C); try (apply out_trivial); try (apply conga_refl); auto.
+    apply out2__conga.
+      apply l6_6; assumption.
+      apply out_trivial; auto.
 Qed.
 
 (** This is Theorem 18.17 from Martin *)
@@ -10484,9 +9614,9 @@ Proof.
       apply (between_cong C); Between.
       apply le_anti_symmetry; Le.
     }
-    destruct Hout as [_ [_ [HACB|]]].
-    2: exfalso; auto.
     assert(B <> C) by (intro; subst; Between).
+    assert (Bet B C A).
+      apply out2__bet; [apply not_bet_out; Col; Between|apply l6_6; assumption].
     assert(HC' := symmetric_point_construction A C).
     destruct HC' as [C'].
     assert_diffs.
@@ -10495,10 +9625,9 @@ Proof.
       apply (l6_2 _ _ A); Between.
       apply (l5_6 A C B C); Cong.
     }
-    apply (le3456_lt__lt _ _ C A).
-    2: exists C'; split;auto with cong.
+    apply (le3456_lt__lt _ _ C A); [|exists C'; split; Cong].
     split.
-    exists D; auto with cong.
+    exists D; Cong.
     intro.
     apply HAD.
     symmetry.
@@ -10509,19 +9638,62 @@ Proof.
   apply l11_44_2.
     intro; apply HNCol; ColR.
   apply (lea123456_lta__lta _ _ _ C A B).
-  - apply (l11_30 C B A C A B); try apply (conga_refl); auto.
-    2: apply (out_conga C B D C B D); try apply (out_trivial); try (apply conga_refl); auto; apply bet_out; Between.
-    elim (cong_dec A C B C).
-      intro; apply conga__lea; apply l11_44_1; Col; Cong.
-      intro; apply lta__lea; apply l11_44_2; Col; apply lt_comm; split; auto.
+  - apply lea_out4__lea with C A C B; try apply out_trivial; auto; [|apply l6_6, bet_out; Between].
+    apply l11_44_2bis; Col; Le.
 
   - assert(~ Col D A C) by (intro; apply HNCol; ColR).
     assert_diffs.
     assert(HInter := l11_41 D A C B).
     destruct HInter; auto.
     apply (conga_preserves_lta D A C C D B); try (apply conga_refl); auto.
-    apply (out_conga D A C C A D); try (apply out_trivial); try (apply conga_pseudo_refl); auto.
-    apply bet_out; auto.
+    apply (l11_10 D A C C A D); try (apply out_trivial); try (apply conga_pseudo_refl); auto.
+    apply l6_6, bet_out; auto.
+Qed.
+
+Lemma cong2__ncol : forall P A B C, A <> B -> B <> C -> A <> C ->
+  Cong A P B P -> Cong A P C P -> ~ Col A B C.
+Proof.
+  assert (H : forall P A B C, A <> B -> B <> C -> Cong A P C P -> Cong B P C P -> ~ Bet A B C).
+  { intros P A B C HAB HBC HCong1 HCong2 HBet.
+    apply (bet_le__lt A C P B); Le.
+  }
+  intros P A B C; intros.
+  assert (Cong B P C P) by (apply cong_transitivity with A P; Cong).
+  intro HCol; elim HCol; [|intro Hd; elim Hd]; apply (H P); Cong.
+Qed.
+
+Lemma cong4_cop2__eq : forall A B C P Q, A <> B -> B <> C -> A <> C ->
+  Cong A P B P -> Cong A P C P -> Coplanar A B C P ->
+  Cong A Q B Q -> Cong A Q C Q -> Coplanar A B C Q ->
+  P = Q.
+Proof.
+    intros A B C P Q; intros.
+    assert (HNCol : ~ Col A B C) by (apply (cong2__ncol P); auto).
+    destruct (eq_dec_points P Q); [assumption|].
+    exfalso.
+    apply HNCol.
+    assert (Haux : forall R, Col P Q R -> Cong A R B R /\ Cong A R C R).
+      intros R HR; split; apply cong_commutativity, (l4_17 P Q); Cong.
+    destruct (midpoint_existence A B) as [D].
+    assert_diffs.
+    assert (HCol1 : Col P Q D).
+    { assert (Coplanar A B C D) by Cop.
+      apply cong3_cop2__col with A B; Cong; apply coplanar_pseudo_trans with A B C; Cop.
+    }
+    destruct (diff_col_ex3 P Q D HCol1) as [R1]; spliter.
+    destruct (segment_construction R1 D R1 D) as [R2 []].
+    assert_diffs.
+    assert (Col P Q R2) by ColR.
+    destruct (Haux R1); trivial.
+    destruct (Haux R2); trivial.
+    assert (Cong A R1 A R2).
+    { assert (Per A D R1) by (apply l8_2; exists B; split; Cong).
+      apply l10_12 with D D; Cong.
+      apply per_col with R1; ColR.
+    }
+    apply cong3_cop2__col with R1 R2; auto; [apply col_cop2__cop with P Q; auto..| |].
+      apply cong_transitivity with A R1; [|apply cong_transitivity with A R2]; Cong.
+      apply cong_transitivity with A R1; [|apply cong_transitivity with A R2]; Cong.
 Qed.
 
 Lemma t18_18_aux : forall A B C D E F,
@@ -10538,7 +9710,8 @@ Proof.
   assert_diffs.
   assert(HG := segment_construction_3 D G0 A B).
   destruct HG as [G []]; auto.
-  assert(CongA C A B F D G) by (apply (out_conga C A B F D G0); try (apply out_trivial); auto).
+  assert(CongA C A B F D G).
+    apply (l11_10 C A B F D G0); try (apply out_trivial); auto; apply l6_6; auto.
   assert(OS F D G E).
   { apply (one_side_transitivity _ _ _ G0); auto.
     apply invert_one_side.
@@ -10563,14 +9736,14 @@ Proof.
     apply HNConga.
     assert (HSSA := l11_52 E F D G F D).
     destruct HSSA as [_[]]; Cong; Le.
-    apply (out_conga G F D G F D); try (apply out_trivial); try (apply conga_refl); auto.
-    apply (col_one_side_out _ D); Col.
+    apply (l11_10 G F D G F D); try (apply out_trivial); try (apply conga_refl); auto.
+    apply l6_6, (col_one_side_out _ D); Col.
   }
   assert(~ Col D E G).
   { intro.
     destruct Hlta as [Hlea HNConga].
     apply HNConga.
-    apply (out_conga F D G F D G); try (apply out_trivial); try (apply conga_refl); auto.
+    apply (l11_10 F D G F D G); try (apply out_trivial); try (apply conga_refl); auto.
     apply (col_one_side_out _ F); Col; Side.
   }
   apply l11_44_2; Col.
@@ -10579,8 +9752,8 @@ Proof.
   destruct HInAngle as [_ [_ [_ [H [HH HUn]]]]].
   destruct HUn.
     exfalso; subst; Col.
-  assert(H <> F) by (intro; subst; assert_cols; Col).
-  assert(H <> G) by (intro; subst; assert_cols; Col).
+  assert(H <> F) by (intro; subst; apply HNCol2; Col).
+  assert(H <> G) by (intro; subst; Col5).
   assert(Hlt : Lt D H D E).
   { apply (cong2_lt__lt H D G D); Cong.
     apply (bet_le__lt F); auto.
@@ -10590,9 +9763,8 @@ Proof.
   assert(H <> E) by (intro; subst; Cong).
   assert(Bet D H E) by (apply l6_13_1; Le).
   assert_diffs.
-  assert(~ TS E G F D).
-  { apply l9_9_bis.
-    apply (one_side_transitivity _ _ _ H);
+  assert(OS E G F D).
+  { apply (one_side_transitivity _ _ _ H);
     [apply invert_one_side; apply one_side_symmetry|];
     apply out_one_side; Col;
     apply bet_out; Between.
@@ -10611,23 +9783,21 @@ Proof.
     }
     intro HConga.
     apply conga_comm in HConga.
-    assert (HCop : Coplanar E G F D) by Cop.
-    assert(Habs := conga_cop__or_out_ts E G F D HCop HConga).
-    destruct Habs as [Hout|Hts]; assert_cols; Col.
+    assert (Out G F D) by (apply (conga_os__out E); assumption).
+    apply HNCol3; Col.
 
   - apply lta_comm.
     split.
     { exists D.
-      split; try (apply conga_refl); auto.
+      split; [|apply conga_refl; auto].
       repeat split; auto.
       exists H.
       split; Between.
       right; apply bet_out; Between.
     }
     intro HConga.
-    assert (HCop : Coplanar G E D F) by Cop.
-    assert(Habs := conga_cop__or_out_ts G E D F HCop HConga).
-    destruct Habs as [Hout|Hts]; assert_cols; Col; Side.
+    assert (Out E D F) by (apply (conga_os__out G); Side).
+    apply HNCol2; Col.
 Qed.
 
 (** This is Euclid Book I, Proposition 24. *)
@@ -10644,8 +9814,7 @@ Proof.
     - intro.
       assert(HC' := segment_construction E D A C).
       destruct HC' as [C' []].
-      apply (cong2_lt__lt E F E C'); Cong.
-      2: apply (l2_11 _ D _ _ A); Cong.
+      apply (cong2_lt__lt E F E C'); Cong; [|apply (l2_11 _ D _ _ A); Cong].
       apply (triangle_strict_inequality _ D); auto.
       apply (cong_transitivity _ _ A C); Cong.
       intro.
@@ -10722,16 +9891,11 @@ Proof.
       apply(ex_per_cong A B B P A B H H); Col; exists A.
     ex_and H1 C.
     assert_diffs.
-    unfold Acute.
-    exists A.
-    exists B.
-    exists C.
+    exists A, B, C.
     split.
       apply l8_2.
       auto.
-    unfold LtA.
     split.
-      unfold LeA.
       exists A.
       split.
         apply inangle1123; auto.
@@ -10812,8 +9976,8 @@ Proof.
     repeat split; auto.
     exists P; split; Between.
     right; apply out_trivial; auto.
-  destruct (l11_51 B P A B P C0); auto with cong.
-  apply (out_conga P B A P B C0); try (apply out_trivial); auto.
+  destruct (l11_51 B P A B P C0); Cong.
+  apply (l11_10 P B A P B C0); try (apply out_trivial); auto; apply l6_6; assumption.
 Qed.
 
 Lemma reflectl__conga : forall A B P P', A <> B -> B <> P -> ReflectL P P' A B -> CongA A B P A B P'.
@@ -10834,7 +9998,9 @@ Proof.
   destruct (bet_dec A' B A) as [HBBet|HBOut].
     apply l11_13 with A' A'; assumption.
   apply not_bet_out in HBOut; Col.
-  apply out_conga with A' P A' P'; trivial; apply out_trivial; assert_diffs; auto.
+  assert_diffs.
+  apply l6_6 in HBOut.
+  apply l11_10 with A' P A' P'; trivial; apply out_trivial; auto.
 Qed.
 
 Lemma conga_cop_out_reflectl__out : forall A B C P T T',
@@ -10847,25 +10013,11 @@ Proof.
   assert (HConga1 : CongA P B T P B T') by (apply reflectl__conga; auto; apply is_image_spec_rev, HRefl).
   apply is_image_is_image_spec in HRefl; auto.
   apply conga_distinct in HConga1; spliter; clean.
-  destruct (conga_cop__or_out_ts P B C T'); trivial.
-  - apply coplanar_trans_1 with T; [..|Cop].
-    { intro.
-      apply HNOut.
-      assert (HCol : Col A B P) by ColR.
-      destruct (bet_dec A B P) as [HBet|HOut1].
-        apply l6_2 with P; auto.
-        apply (bet_conga__bet A B P); [|apply conga_comm]; assumption.
-      apply not_bet_out in HOut1; trivial.
-      apply l6_7 with P; trivial.
-      apply (l11_21_a P B A); [apply l6_6|]; assumption.
-    }
-    apply coplanar_perm_19, col_cop__cop with A; Col; Cop.
+  apply (conga_os__out P).
   - apply conga_trans with P B A.
     apply conga_sym; assumption.
-    apply l6_6 in HOut; apply out_conga with P T P T'; try (apply out_trivial); auto.
-  - exfalso.
-    apply (l9_9_bis P B C T'); trivial.
-    exists A; split; apply l9_2.
+    apply l11_10 with P T P T'; try (apply out_trivial); auto.
+  - exists A; split; apply l9_2.
       destruct (conga_cop__or_out_ts P B A C); Cop; contradiction.
     apply out_two_sides_two_sides with T B; Col.
     apply invert_two_sides, l10_14; auto.
@@ -10915,9 +10067,9 @@ Proof.
   apply conga_distinct in HP; apply conga_distinct in HP'; spliter; clean.
   destruct (l6_11_existence B B A C) as [C' [HC'1 HC'2]]; auto.
   destruct (l11_49 P B A P B C'); Cong.
-    apply out_conga with P A P C; try (apply out_trivial); try (apply l6_6); auto.
+    apply l11_10 with P A P C; try apply out_trivial; auto.
   destruct (l11_49 P' B A P' B C'); Cong.
-    apply out_conga with P' A P' C; try (apply out_trivial); try (apply l6_6); auto.
+    apply l11_10 with P' A P' C; try apply out_trivial; auto.
   apply cong3_cop2__col with A C'; Cong.
     Cop.
     apply coplanar_perm_12, col_cop__cop with C; Col; Cop.
@@ -10941,8 +10093,9 @@ Proof.
   destruct (bet_dec P B P') as [HBet|HNBet].
     apply l11_13 with P P; auto.
   apply not_bet_out in HNBet; Col.
+  apply l6_6 in HNBet.
   apply conga_distinct in HConga; spliter.
-  apply out_conga with P A P C; try (apply out_trivial); auto.
+  apply l11_10 with P A P C; try (apply out_trivial); auto.
 Qed.
 
 Lemma cop_inangle__ex_col_inangle : forall A B C P Q,
@@ -10985,7 +10138,7 @@ Proof.
     { destruct (col_dec B A Q0).
         exists Q0; split; Between; Col.
       assert_diffs.
-      destruct (cop__not_one_side_two_sides B A P Q0) as [_ [_ [R [HCol' HBet]]]]; Col; Cop.
+      destruct (cop_nos__ts B A P Q0) as [_ [_ [R [HCol' HBet]]]]; Col; Cop.
       exists R; split; trivial; split; ColR.
     }
     destruct HR as [R [HR1 [HR2 HR3]]].
@@ -11010,7 +10163,7 @@ Proof.
     { destruct (col_dec B C Q0).
         exists Q0; split; Between; Col.
       assert_diffs.
-      destruct (cop__not_one_side_two_sides B C P Q0) as [_ [_ [R [HCol' HBet]]]]; Col; Cop.
+      destruct (cop_nos__ts B C P Q0) as [_ [_ [R [HCol' HBet]]]]; Col; Cop.
       exists R; split; trivial; split; ColR.
     }
     destruct HR as [R [HR1 [HR2 HR3]]].
@@ -11034,7 +10187,7 @@ Proof.
   spliter; clean.
   destruct (col_dec A B C).
     assert (Out B A C) by (apply not_bet_out; assumption).
-    apply l6_7 with A; [apply l6_6|]; apply out_in_angle_out with C; auto.
+    apply l6_7 with A; [apply l6_6|]; apply in_angle_out with C; auto.
   destruct (col_dec B A P) as [HCol1|HNCol1].
     apply l6_7 with A; [apply l6_6|]; apply col_in_angle_out with C; ColR.
   apply col_one_side_out with A; trivial.
@@ -11057,7 +10210,7 @@ Proof.
       apply l11_31_2; auto.
     apply l11_31_1; auto.
     assert (Out B A C) by (apply not_bet_out; assumption).
-    apply l6_7 with A; [apply l6_6|]; apply out_in_angle_out with C; auto.
+    apply l6_7 with A; [apply l6_6|]; apply in_angle_out with C; auto.
   }
   destruct (col_dec B P Q) as [HCol1|HNCol1].
     apply l11_31_1; auto; apply col_inangle2__out with A C; auto.
@@ -11065,31 +10218,27 @@ Proof.
   destruct (col_dec B A P) as [HCol2|HNCol2].
   { assert (Out B A P) by (apply col_in_angle_out with C; auto; intro; apply HNCol; Col).
     exists Q; split; trivial.
-    apply out_conga with A Q A Q; try (apply out_trivial); auto.
-    apply conga_refl; auto.
+    apply out2__conga; [|apply out_trivial]; auto.
   }
   destruct (col_dec B C P) as [HCol3|HNCol3].
   { assert (Out B C P).
       apply col_in_angle_out with A; auto; intro; apply HNCol; Col.
     apply lea_right_comm.
     exists Q; split; trivial.
-    apply out_conga with C Q C Q; try (apply out_trivial); auto.
-    apply conga_refl; auto.
+    apply out2__conga; [|apply out_trivial]; auto.
   }
   destruct (col_dec B A Q) as [HCol4|HNCol4].
   { assert (Out B A Q) by (apply col_in_angle_out with C; auto; intro; apply HNCol; Col).
     apply lea_left_comm.
     exists P; split; trivial.
-    apply out_conga with A P A P; try (apply out_trivial); auto.
-    apply conga_refl; auto.
+    apply out2__conga; [|apply out_trivial]; auto.
   }
   destruct (col_dec B C Q) as [HCol5|HNCol5].
   { assert (Out B C Q).
       apply col_in_angle_out with A; auto; intro; apply HNCol; Col.
     apply lea_comm.
     exists P; split; trivial.
-    apply out_conga with C P C P; try (apply out_trivial); auto.
-    apply conga_refl; auto.
+    apply out2__conga; [|apply out_trivial]; auto.
   }
   destruct (cop__one_or_two_sides B P A Q) as [HOS|HTS]; Col.
     apply coplanar_perm_2, coplanar_trans_1 with C; Cop; Col.
@@ -11142,13 +10291,12 @@ Proof.
   destruct (col_dec B A Q).
     assert (Out B A Q) by (apply col_in_angle_out with C; Col).
     apply (acute_conga__acute A B P); trivial.
-    apply out_conga with A P P A; try (apply out_trivial); auto.
-    apply conga_pseudo_refl; auto.
+    apply conga_left_comm, out2__conga; [apply out_trivial|apply l6_6]; auto.
   destruct (col_dec B C Q).
     assert (Out B C Q) by (apply col_in_angle_out with A; Between; Col).
     apply (acute_conga__acute A B P); trivial.
-    apply out_conga with A P P C; try (apply out_trivial); auto.
-    apply conga_left_comm, HP2.
+    apply conga_left_comm, l11_10 with P A P C; try (apply out_trivial); auto.
+    apply l6_6; assumption.
   destruct (col_dec B P Q).
     apply out__acute, col_inangle2__out with A C; assumption.
   destruct (cop__one_or_two_sides B P A Q) as [HOS|HTS]; Col.
@@ -11197,9 +10345,8 @@ apply l9_9 in H6.
 contradiction.
 apply H2.
 assert_diffs.
-apply(out_conga A O B A O B A P A B);
-try(apply out_trivial; auto).
-apply conga_refl; auto.
+apply out2__conga.
+apply out_trivial; auto.
 repeat split; auto.
 induction H5.
 right; Between.
@@ -11254,34 +10401,30 @@ assert(OS A O B T).
 }
 assert(OS O A B P').
 {
-  apply (one_side_transitivity _ _ _  T); finish.
+  apply (one_side_transitivity _ _ _  T); Side.
 }
-assert(TS O A B P) by (apply(l9_8_2 _ _ P');finish).
+assert(TS O A B P) by (apply(l9_8_2 _ _ P'); Side).
 apply l9_9 in H14.
 contradiction.
 Qed.
 
-Lemma conga_os__out : forall O A B C, CongA A O B A O C -> OS O A B C -> Out O B C.
+
+Lemma bet__suppa : forall A B C A', A <> B -> B <> C -> B <> A' -> Bet A B A' -> SuppA A B C C B A'.
 Proof.
 intros.
-assert(HH:= conga_cop__or_out_ts A O B C).
-induction HH; Cop.
-apply invert_two_sides in H1.
-apply l9_9 in H1.
-contradiction.
+split; auto.
+exists A'.
+split; trivial.
+apply conga_refl; auto.
 Qed.
-
 
 Lemma ex_suppa : forall A B C, A <> B -> B <> C -> exists D E F, SuppA A B C D E F.
 Proof.
 intros.
 destruct (segment_construction A B A B) as [A' []].
 exists C, B, A'.
-split; auto.
-exists A'.
-split; trivial.
-assert_diffs.
-apply conga_refl; auto.
+apply bet__suppa; auto.
+intro; treat_equalities; auto.
 Qed.
 
 Lemma suppa_distincts : forall A B C D E F, SuppA A B C D E F ->
@@ -11694,23 +10837,30 @@ repeat
       assert (h := orth_distincts A B C U V H);decompose [and] h;clear h;clean_reap_hyps
  end.
 
+Ltac ColR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
+
 Hint Resolve conga_refl conga_sym cong3_conga conga_pseudo_refl conga_trivial_1
-             conga_right_comm conga_left_comm conga_comm : conga.
+             conga_right_comm conga_left_comm conga_comm conga_line l11_16 : conga.
 
-Ltac CongA := auto with conga.
+Ltac CongA := auto 3 with conga.
 
-Hint Resolve l11_31_1 l11_31_2 lta__lea lea_comm lea_right_comm lea_left_comm
-             lea_asym lea121345 inangle__lea conga__lea conga__lea456123 lea_refl
-             acute_per__lta obtuse_per__lta acute_obtuse__lta : lea.
+Hint Resolve l11_31_1 l11_31_2 lta__lea lea_comm lea_right_comm lea_left_comm lta_comm
+             lta_right_comm lta_left_comm lea_asym lea121345 inangle__lea inangle__lea_1
+             conga__lea conga__lea456123 lea_refl acute_per__lta obtuse_per__lta acute_obtuse__lta : lea.
 
-Ltac Lea := auto with lea.
+Ltac Lea := auto 3 with lea.
 
+Hint Resolve l11_24 out321__inangle out341__inangle inangle1123 inangle3123 in_angle_line
+             ts2__inangle os_ts__inangle os2__inangle : side.
 
 Section T11_3.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma acute_one_side_aux : forall P A O B, 
+Lemma acute_one_side_aux : forall P A O B,
  OS O A P B -> Acute A O P -> Perp O A B O ->
  OS O B A P.
 Proof.
@@ -11904,7 +11054,7 @@ assert(TS O A Bs B).
   apply H3.
   ColR.
   exists O.
-  split; Between.
+  split; [Col|Between].
 }
 assert(OS O A P Bs).
 {
@@ -11932,57 +11082,10 @@ apply H3; Col.
 apply(acute_one_side_aux P A O B); auto.
 Qed.
 
+Lemma acute__not_obtuse : forall A B C, Acute A B C -> ~ Obtuse A B C.
+Proof.
+intros A B C HA HO.
+apply (nlta A B C), acute_obtuse__lta; assumption.
+Qed.
+
 End T11_3.
-
-Section T11_2D.
-
-Context `{T2D:Tarski_2D}.
-
-Lemma conga__or_out_ts : forall A B C C',
- CongA A B C A B C' -> Out B C C' \/ TS A B C C'.
-Proof.
-  intros A B C C'.
-  apply conga_cop__or_out_ts, all_coplanar.
-Qed.
-
-Lemma conga_out_reflectl__out : forall A B C P T T',
-  ~ Out B A C -> CongA P B A P B C -> Out B A T -> ReflectL T T' B P -> Out B C T'.
-Proof.
-  intros A B C P T T' H.
-  assert (H1 := all_coplanar A B C P).
-  apply conga_cop_out_reflectl__out; assumption.
-Qed.
-
-Lemma col_conga_reflectl__col : forall A B C P T T',
-  ~ Out B A C -> CongA P B A P B C -> Col B A T -> ReflectL T T' B P -> Col B C T'.
-Proof.
-  intros A B C P T T' H.
-  assert (H1 := all_coplanar A B C P).
-  apply col_conga_cop_reflectl__col; assumption.
-Qed.
-
-Lemma conga2__col : forall A B C P P',
-  ~ Out B A C -> CongA P B A P B C -> CongA P' B A P' B C -> Col B P P'.
-Proof.
-  intros A B C P P' H H1 H2.
-  assert (H3 := all_coplanar A B P P').
-  assert (H4 := all_coplanar B C P P').
-  apply conga2_cop2__col with A C; assumption.
-Qed.
-
-Lemma inangle__ex_col_inangle : forall A B C P Q, ~ Out B A C -> InAngle P A B C ->
-  exists R, InAngle R A B C /\ P <> R /\ Col P Q R.
-Proof.
-  intros.
-  apply cop_inangle__ex_col_inangle; [assumption..|].
-  apply all_coplanar.
-Qed.
-
-Lemma acute_perp__one_side : forall P A O B, Acute A O P -> Perp O A B O -> OS O B A P.
-Proof.
-  intros.
-  apply acute_cop_perp__one_side; [assumption..|].
-  apply all_coplanar.
-Qed.
-
-End T11_2D.

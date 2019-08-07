@@ -60,7 +60,7 @@ repeat
 Ltac ColR :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in
-   treat_equalities; assert_cols; assert_diffs; try (solve [Col]); Col_refl tpoint col.
+   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
 
 Section T7_1.
 
@@ -100,7 +100,7 @@ Qed.
 Lemma l7_3 : forall M A, Midpoint M A A -> M=A.
 Proof.
     unfold Midpoint.
-    intros;spliter;repeat split;Between;Cong.
+    intros;spliter;treat_equalities;reflexivity.
 Qed.
 
 
@@ -165,7 +165,7 @@ Proof.
     assert (Bet X' P' A) by eBetween.
     assert(Bet X A X') by eBetween.
     assert(Bet Y A Y') by eBetween.
-    assert (Cong A X Y A) by (eapply l2_11;eCong).
+    assert (Cong A X Y A) by (apply l2_11 with P Q; Cong).
     assert (Cong A Y' X' A).
       apply l2_11 with Q' P'; Between.
         apply cong_transitivity with A Q; Cong.
@@ -445,9 +445,8 @@ Proof.
       induction (eq_dec_points A1 C).
         subst A1.
         apply between_trivial2.
-      eapply l6_13_1.
-        unfold Out.
-        2:assumption.
+      apply l6_13_1; [|assumption].
+      unfold Out.
       repeat split.
         assumption.
         intro.
@@ -475,9 +474,9 @@ Proof.
       eapply cong_transitivity.
         apply cong_symmetry.
         apply H16.
-      eapply cong_transitivity.
-        2:apply H15.
-      apply cong_commutativity.
+      apply cong_transitivity with B2 C.
+        apply cong_commutativity.
+        assumption.
       assumption.
     assert (Bet C B1 x0).
       induction (eq_dec_points B1 C).
@@ -508,13 +507,10 @@ Proof.
         repeat split.
           assumption.
           assumption.
-        eapply l5_2.
-          2:apply between_symmetry.
-          2:apply H0.
-          assumption.
-        2:assumption.
-      unfold Midpoint in H8.
-      spliter.
+        apply l5_2 with B2; Between.
+        unfold Midpoint in H8.
+        spliter.
+        assumption.
       assumption.
     assert (exists Q, Bet x1 Q C /\ Bet A1 Q B1).
       eapply l3_17.
@@ -606,16 +602,7 @@ Proof.
         assumption.
       assumption.
     apply between_symmetry.
-    eapply l7_22_aux.
-      7:apply H5.
-      apply between_symmetry.
-      apply H.
-      5:apply H3.
-      4:apply H4.
-      apply between_symmetry.
-      apply H0.
-      assumption.
-    assumption.
+    eapply l7_22_aux with A2 A1 B2 B1; finish.
 Qed.
 
 Lemma bet_col1 : forall A B C D, Bet A B D -> Bet A C D -> Col A B C.
@@ -753,11 +740,7 @@ Proof.
         assumption.
       assumption.
     assert (Col B R' P).
-      eapply l4_13.
-        2:apply H17.
-      unfold Col.
-      left.
-      assumption.
+      apply (l4_13 A R Q); Col.
     cut(R=R').
       intro.
       subst R'.
@@ -808,15 +791,7 @@ Proof.
         subst X.
         clean_duplicated_hyps.
         assert (Bet B A C \/ Bet B C A).
-          eapply l5_2.
-            2:apply between_symmetry.
-            2:apply H5.
-            intro.
-            apply H21.
-            rewrite H9.
-            reflexivity.
-          apply between_symmetry.
-          assumption.
+          apply l5_2 with Q; Between.
         apply H0.
         unfold Col.
         induction H9.
@@ -847,14 +822,7 @@ Proof.
         assumption.
       induction H23.
         assert(Bet B A C \/ Bet B C A).
-          eapply l5_2.
-            2:apply H23.
-            intro.
-            apply H21.
-            rewrite H24.
-            reflexivity.
-          apply between_symmetry.
-          assumption.
+          apply (l5_2 Q); Between.
         apply H0.
         unfold Col.
         induction H24.
@@ -992,6 +960,23 @@ Proof.
     elim H.
     intros.
     assumption.
+Qed.
+
+Lemma midpoint_out : forall A B C, A <> C -> Midpoint B A C -> Out A B C.
+Proof.
+    intros.
+    repeat split.
+      apply midpoint_distinct_1 in H0; spliter; auto.
+      auto.
+    left.
+    apply midpoint_bet.
+    assumption.
+Qed.
+
+Lemma midpoint_out_1 : forall A B C, A <> C -> Midpoint B A C -> Out C A B.
+Proof.
+    intros.
+    apply l6_6, midpoint_out; Midpoint.
 Qed.
 
 Lemma midpoint_not_midpoint : forall I A B,
@@ -1208,7 +1193,7 @@ subst D.
 Col.
 eapply (col3 A B); Col.
 
-eCong.
+CongR.
 
 induction H7.
 subst D1.
@@ -1534,3 +1519,4 @@ End T7_2.
 Hint Resolve midpoint_bet : between.
 Hint Resolve midpoint_col : col.
 Hint Resolve midpoint_cong : cong.
+Hint Resolve midpoint_out midpoint_out_1 : out.

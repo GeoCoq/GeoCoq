@@ -86,8 +86,7 @@ Col.
 induction(eq_dec_points A B').
 subst B'.
 assert(A'=B).
-eapply l7_9.
-2: apply H1.
+eapply l7_9; [|apply H1].
 apply l7_2.
 assumption.
 subst A'.
@@ -97,13 +96,17 @@ Qed.
 
 Lemma midpoint_par_strict :
  forall A B A' B' M,
- A <> B ->
  ~ Col A B B' ->
  Midpoint M A A' ->
  Midpoint M B B' ->
  Par_strict A B A' B'.
 Proof.
 intros.
+assert (A <> B).
+apply not_col_distincts in H.
+spliter.
+assumption.
+
 assert(Par A B A' B').
 eapply (l12_17 A B A' B' M); assumption.
 induction H3.
@@ -121,7 +124,7 @@ apply l7_2.
 assumption.
 Col.
 spliter.
-apply H0.
+apply H.
 Col.
 Qed.
 
@@ -179,12 +182,10 @@ eapply (bet2_le2__le1346 _ A _ _ C).
 eBetween.
 assumption.
 assumption.
-apply cong__le; eCong.
+apply cong__le; CongR.
 
-assert(Bet D B D').
-
+apply (between_exchange3 D); auto.
 apply l6_13_1; auto.
-eapply (between_exchange3 D); auto.
 Qed.
 
 Lemma bet_double_bet :
@@ -257,8 +258,8 @@ auto.
 assumption.
 
 assert(Bet A B C \/ Bet A C B).
-eapply l5_1.
-2: apply H11.
+apply l5_1 with C'.
+auto.
 assumption.
 assumption.
 induction H12.
@@ -390,11 +391,7 @@ Lemma symmetry_preseves_bet1 :
   Bet M A' B'.
 Proof.
 intros.
-eapply l7_15.
-2: apply H.
-2: apply H0.
-2: apply H1.
-apply l7_3_2.
+eapply l7_15; eauto with midpoint.
 Qed.
 
 Lemma symmetry_preseves_bet2 :
@@ -571,9 +568,9 @@ split.
 
 assert(Bet B M B').
 
-eapply between_exchange4.
-2: apply H4.
+apply between_exchange4 with A'.
 Between.
+assumption.
 
 assert(Bet A M B').
 eapply between_exchange2.
@@ -675,9 +672,9 @@ apply H10.
 assumption.
 
 assert(Bet M A' A).
-eapply between_exchange3.
-2:apply H11.
+apply (between_exchange3 B).
 Between.
+assumption.
 assert(Bet B' M A').
 eapply outer_transitivity_between2.
 apply H16.
@@ -1168,7 +1165,7 @@ assert(~Par_strict A B C D).
 intro.
 unfold Par_strict in H7.
 spliter.
-apply H10.
+apply H8.
 exists C.
 split; Col.
 
@@ -2105,7 +2102,7 @@ ColR.
 intro.
 unfold Par_strict in H6.
 spliter.
-apply H9.
+apply H7.
 exists A.
 split; Col.
 assumption.
@@ -2165,11 +2162,11 @@ contradiction.
 
 apply (col_cong_mid A B C D).
 right.
-repeat split; Col; ColR.
+repeat split; ColR.
 intro.
 unfold Par_strict in H6.
 spliter.
-apply H9.
+apply H7.
 exists C.
 split; Col.
 assumption.
@@ -2222,11 +2219,11 @@ contradiction.
 
 apply (col_cong_mid A B C D).
 right.
-repeat split; Col; ColR.
+repeat split; ColR.
 intro.
 unfold Par_strict in H6.
 spliter.
-apply H9.
+apply H7.
 exists C.
 split; Col.
 assumption.

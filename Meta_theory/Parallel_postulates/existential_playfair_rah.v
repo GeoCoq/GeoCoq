@@ -51,26 +51,19 @@ assert (HPar3 : Par A1 A2 P R').
     exists R'; left; split; Col.
 }
 destruct (HP P R P R') as [_ HCol4]; Col.
-assert (R = R') by (apply l6_21 with P R S R; assert_diffs; Col).
+assert (R = R') by (assert_diffs; apply l6_21 with P R S R; Col).
+assert (HPs : Par_strict P Q R S) by (apply par_not_col_strict with R; Col).
 treat_equalities; rewrite <- (lam_per__rah P Q S R).
 
   {
   apply perp_in_per_1 with S S; apply l8_14_2_1b_bis; Col.
-  apply perp_sym; apply perp_col0 with A1 A2; Col.
-  assert (HPs : Par_strict P Q R S) by (apply par_not_col_strict with R; Col).
-  apply par_strict_not_col_2 in HPs; assert_diffs; auto.
+  assert_diffs; apply perp_col2 with A1 A2; Col.
   }
 
   {
-  assert (HPs : Par_strict P Q R S) by (apply par_not_col_strict with R; Col).
-  apply par_strict_not_col_2 in HPs.
-  repeat try (split; [intro; treat_equalities; assert_diffs; intuition|]).
-  apply par__coplanar in HPar2.
-  repeat split; Cop.
-  - apply perp_in_per_1 with P P; apply l8_14_2_1b_bis; Col; Perp.
-  - apply perp_in_per_1 with R R; apply l8_14_2_1b_bis; Col; Perp.
-  - apply perp_in_per_1 with Q Q; apply l8_14_2_1b_bis; Col.
-    apply perp_col0 with A1 A2; assert_diffs; Col.
+  assert_diffs.
+  repeat split; auto; [Perp..| |Cop].
+  apply perp_per_1, perp_left_comm, perp_col0 with A1 A2; Col.
   }
 Qed.
 

@@ -6,79 +6,56 @@ Section SPP_tarski.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma impossible_case_5 : forall P Q R S T U I,
-  BetS P T Q ->
-  BetS R T S ->
+Lemma impossible_case_5 : forall P Q R S U I,
   BetS Q U R ->
   ~ Col P Q S ->
   ~ Col P R U ->
   Par P R Q S ->
-  Par P S Q R ->
   Bet S Q I ->
   Bet U I P ->
   False.
 Proof.
-intros P Q R S T U I HPTQ HRTS HQUR HNC HNC' HPar1 HPar2 HSQI HPUI.
-apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR.
-assert (HTS : TS Q S P U) by (assert_diffs; spliter; assert_cols; repeat split;
-                                     Col; try (exists I; Col; Between); intro; apply HNC'; ColR).
-apply l9_9 in HTS; apply HTS.
-apply one_side_transitivity with R.
-
+intros P Q R S U I HQUR HNC HNC' HPar HSQI HPUI.
+apply BetSEq in HQUR.
+apply par_symmetry in HPar.
+apply (par_not_col_strict Q S P R P) in HPar; Col.
+assert (HOS : OS Q S R U).
   {
-  apply l12_6; apply par_not_col_strict with P; Col; Par.
-  }
-
-  {
-  assert (HQS : Q <> S) by (assert_diffs; assumption).
+  assert (HQS : Q <> S) by (assert_diffs; auto).
   assert (HQSQ : Col Q S Q) by Col.
-  assert (HRUQ : Col R U Q) by (spliter; assert_cols; Col).
+  assert (HRUQ : Col R U Q) by (spliter; Col).
   rewrite (l9_19 Q S R U Q HQSQ HRUQ).
-  split; spliter; try (intro; apply HNC; assert_cols; ColR); repeat split; Between.
+  spliter.
+  split; [Out|apply par_strict_not_col_4 with P, HPar].
   }
+apply (l9_9 Q S P U); [|apply one_side_transitivity with R; Side].
+apply one_side_not_col124 in HOS.
+spliter; repeat split; Col.
+exists I; split; [Col|Between].
 Qed.
 
-Lemma impossible_case_6 : forall P Q R S T U I,
-  BetS P T Q ->
-  BetS R T S ->
+Lemma impossible_case_6 : forall P Q R S U I,
   BetS Q U R ->
   ~ Col P Q S ->
-  ~ Col P R U ->
-  Par P R Q S ->
   Par P S Q R ->
   Bet S Q I ->
   Bet I P U ->
   False.
 Proof.
-intros P Q R S T U I HPTQ HRTS HQUR HNC HNC' HPar1 HPar2 HSQI HPUI.
-apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR.
+intros P Q R S U I HQUR HNC HPar HSQI HPUI.
+apply BetSEq in HQUR.
 apply between_symmetry in HPUI.
 destruct (inner_pasch S U I Q P HSQI HPUI) as [J [HBet1 HBet2]].
 assert (HParS : Par_strict P S Q U).
   {
-  apply par_not_col_strict with R.
-
-    {
-    spliter; assert_cols.
-    apply par_col_par with R; Par.
-    ColR.
-    }
-
-    {
-    spliter; assert_cols; ColR.
-    }
-
-    {
-    intro; apply HNC.
-    spliter; assert_cols; ColR.
-    }
+  spliter.
+  apply par_strict_col_par_strict with R; Col.
+  apply par_not_col_strict with Q; Col.
   }
-apply HParS; exists J; assert_cols; Col.
+apply HParS; exists J; split; Col.
 Qed.
 
-Lemma impossible_case_7 : forall P Q R S T U I,
-  BetS P T Q ->
-  BetS R T S ->
+Lemma impossible_case_7 : forall P Q R S U I,
   BetS Q U R ->
   ~ Col P Q S ->
   ~ Col P R U ->
@@ -88,156 +65,123 @@ Lemma impossible_case_7 : forall P Q R S T U I,
   Bet Q I S ->
   False.
 Proof.
-intros P Q R S T U I HPTQ HRTS HQUR HNC HNC' HPar1 HPar2 HPUI HSQI.
-apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR.
-elim (eq_dec_points I S); intro HIS; treat_equalities.
-
+intros P Q R S U I HQUR HNC HNC' HPar1 HPar2 HPUI HSQI.
+apply BetSEq in HQUR.
+revert HPUI.
+apply one_side_not_col124 with Q.
+apply l9_17 with S; [|assumption].
+destruct HQUR as [HQUR HDiff].
+apply between_symmetry in HQUR.
+exists R; split.
+  spliter; apply l9_2, invert_two_sides, bet__ts; Col.
+apply l9_31.
   {
-  assert (HParS : Par_strict Q R P I) by (apply par_not_col_strict with P; Col; Par; unfold BetS in *;
-                                          spliter; assert_cols; intro; apply HNC'; ColR).
-  apply HParS; exists U; spliter; assert_cols; Col.
+  apply one_side_symmetry, l9_17 with Q; [|assumption].
+  apply l12_6, par_not_col_strict with Q; Par; Col.
   }
-
-  {
-  assert (HTS : TS P U Q S) by (assert_diffs; spliter; assert_cols; repeat split;
-                                       Col; try (exists I; Col; Between); intro; apply HNC; ColR).
-  apply l9_9 in HTS; apply HTS.
-  exists R; split.
-
-    {
-    spliter; assert_diffs; assert_cols.
-    split; try (intro; apply HNC; ColR).
-    split; try (intro; apply HNC; ColR).
-    exists U; Col; Between.
-    }
-
-    {
-    destruct HPTQ as [HPTQ HDiff1].
-    destruct HQUR as [HQUR HDiff2].
-    apply between_symmetry in HQUR.
-    destruct (inner_pasch R P Q U T HQUR HPTQ) as [J [HPJU HRJT]].
-    assert (HRJS : Bet R J S) by (spliter; eBetween).
-    spliter; assert_diffs; assert_cols.
-    split; try (intro; apply HNC; ColR).
-    split; try (intro; apply HNC; ColR).
-    exists J; split; Col; Between.
-    }
-  }
+apply one_side_transitivity with Q.
+  spliter; apply invert_one_side, out_one_side; [Col|Out].
+apply l12_6, par_strict_symmetry, par_not_col_strict with P; Par; Col.
 Qed.
 
-Lemma impossible_case_8 : forall P Q R S T U I,
-  BetS P T Q ->
-  BetS R T S ->
+Lemma impossible_case_8 : forall P Q R S U I,
   BetS Q U R ->
   ~ Col P Q S ->
-  ~ Col P R U ->
   Par P R Q S ->
   Par P S Q R ->
   Col P U I ->
   Bet I S Q ->
   False.
 Proof.
-intros P Q R S T U I HPTQ HRTS HQUR HNC HNC' HPar1 HPar2 HPUI HSQI.
-apply BetSEq in HPTQ; apply BetSEq in HRTS; apply BetSEq in HQUR.
+intros P Q R S U I HQUR HNC HPar1 HPar2 HPUI HSQI.
+apply BetSEq in HQUR.
+destruct HQUR as [HQUR [HQU [HQR HUR]]].
+assert (H : Par_strict P S Q U)
+  by (apply par_strict_col_par_strict with R; Col; apply par_not_col_strict with Q; Col; Par).
+apply between_symmetry in HSQI.
 elim HPUI; clear HPUI; intro HPUI.
 
   {
-  assert (H : Par_strict P S Q R) by (apply par_not_col_strict with Q; Col; Par; unfold BetS in *;
-                                      spliter; assert_cols; intro; apply HNC'; ColR); apply H.
-  apply between_symmetry in HSQI.
+  apply H.
   destruct (inner_pasch P Q I U S HPUI HSQI) as [J [HQJU HPJS]]; exists J.
-  spliter; assert_diffs; assert_cols; split; Col; ColR.
+  split; Col.
   }
 
   {
   elim HPUI; clear HPUI; intro HPUI.
 
     {
-    assert (H : Par_strict P S Q R) by (apply par_not_col_strict with Q; Col; Par; unfold BetS in *;
-                                        spliter; assert_cols; intro; apply HNC'; ColR); apply H.
-    apply between_symmetry in HSQI.
+    apply H.
     destruct (outer_pasch U Q I P S HPUI HSQI) as [J [HQJU HPSJ]]; exists J.
-    spliter; assert_diffs; assert_cols; split; Col; ColR.
+    split; Col.
     }
 
     {
-    assert (H : Par_strict P R Q S) by (apply par_not_col_strict with Q; Col; Par; unfold BetS in *;
-                                        spliter; assert_cols; intro; apply HNC'; ColR); apply H.
-    destruct HQUR as [HQUR HDiff].
+    assert (H1 : Par_strict P R Q I).
+      assert_diffs; apply par_strict_col_par_strict with S; Col.
+      apply par_strict_symmetry, par_not_col_strict with P; Col; Par.
+    apply H1.
     destruct (outer_pasch Q I U R P HQUR HPUI) as [J [HQJI HRPJ]]; exists J.
-    spliter; assert_diffs; assert_cols; split; Col.
-    elim (eq_dec_points Q I); intro HQI; treat_equalities; Col; ColR.
+    split; Col.
     }
   }
 Qed.
 
 Lemma strong_parallel_postulate_implies_tarski_s_euclid_aux :
   strong_parallel_postulate ->
-  (forall A B C D T,
+  (forall A B D T,
    A <> B ->
-   A <> C ->
    A <> D ->
    A <> T ->
-   B <> C ->
    B <> D ->
    B <> T ->
-   C <> D ->
-   C <> T ->
    D <> T ->
-   ~ Col A B C ->
+   ~ Col A B T ->
    Bet A D T ->
-   Bet B D C ->
-   exists B', exists B'', exists MB, exists X, Bet A B X /\ Par_strict B C T X /\
+   exists B', exists B'', exists MB, exists X, Bet A B X /\ Par_strict T X B D /\
    BetS B MB T /\ BetS B' MB B'' /\
    Cong B MB T MB /\ Cong B' MB B'' MB /\
    Col B B' D /\ Bet B'' T X /\
    B <> B' /\ B'' <> T).
 Proof.
-intros HSPP A B C D T HAB HAC HAD HAT HBC HBD HBT HCD HCT HDT HABC HADT HBDC.
+intros HSPP A B D T HAB HAD HAT HBD HBT HDT HABT HADT.
 destruct (symmetric_point_construction D B) as [B' HB'].
 destruct (midpoint_distinct_2 B D B' HBD HB') as [HB'D HBB'].
 destruct HB' as [HBDB' HCong1].
 apply between_symmetry in HADT.
 apply between_symmetry in HBDB'.
-destruct (outer_pasch T B' D A B HADT HBDB') as [B''' [HTB'''B' HABB''']].
 destruct (midpoint_existence B T) as [MB HMB].
 destruct (midpoint_distinct_1 MB B T HBT HMB) as [HBMB HMBT].
 destruct HMB as [HBMBT HCong2].
 destruct (symmetric_point_construction B' MB) as [B'' HB''].
 assert (HB'MB : MB <> B').
   {
-  assert (H : ~ Col B' D MB) by (intro; apply HABC; assert_cols; ColR).
-  intro; treat_equalities; apply H; Col.
+  intro; treat_equalities; apply HABT; ColR.
   }
 destruct (midpoint_distinct_2 MB B' B'' HB'MB HB'') as [HB'B'' HB''MB].
 destruct HB'' as [HB'MBB'' HCong3].
-assert (H1 : BetS B MB T) by (repeat split; Between).
-assert (H2 : BetS B' MB B'') by (repeat split; Between).
-assert (HB'T : B' <> T).
-  {
-  assert (H : ~ Col B B' T) by (intro; apply HABC; assert_cols; ColR).
-  intro; treat_equalities; apply H; Col.
-  }
+assert (H1 : ~ Col B T B'') by (intro; apply HABT; ColR).
+assert (H2 : BetS B MB T) by (repeat split; Between).
+assert (H3 : BetS B' MB B'') by (repeat split; Between).
+destruct (outer_pasch T B' D A B HADT HBDB') as [B''' [HTB'''B' HABB''']].
 assert (HB'B''' : B' <> B''').
   {
-  assert (H : ~ Col A B B') by (intro; apply HABC; assert_cols; ColR).
-  intro; treat_equalities; apply H; Col.
+  intro; treat_equalities; apply HABT; ColR.
   }
 assert (HB'''T : B''' <> T).
   {
-  assert (H : ~ Col A B T) by (intro; apply HABC; assert_cols; ColR).
-  intro; treat_equalities; apply H; Col.
+  intro; treat_equalities; Col.
   }
-assert (H3 : BetS T B''' B') by (repeat split; Between).
-assert (H4 : ~ Col B T B'') by (intro; apply HABC; assert_cols; ColR).
-assert (H5 : Cong B MB T MB) by Cong.
-assert (H6 : Cong B' MB B'' MB) by Cong.
-destruct (HSPP B T B' B'' MB B''') as [X [HBetS HX]];
-Col; Cop; try (intro; apply H4; assert_diffs; assert_cols; ColR).
-assert (HNC : ~ Col B B' B''') by (intro; assert_diffs; assert_cols; apply H4; ColR).
-assert (HPar1 : Par B B' T B'') by (unfold BetS in *; spliter; apply l12_17 with MB; try split; Col).
-assert (HPar2 : Par B B'' T B')
-  by (unfold BetS in *; spliter; assert_diffs; apply l12_17 with MB; try split; Between; Cong).
+assert (H4 : BetS T B''' B') by (repeat split; Between).
+assert (HNC : ~ Col B B' B''') by (intro; apply H1; ColR).
+destruct (HSPP B T B' B'' MB B''') as [X [HBetS HX]]; Cong; [Cop|].
+assert (HPar1 : Par B B' T B'')
+  by (unfold BetS in *; spliter; apply l12_17 with MB; [|split..]; auto).
+assert (HPar2 : Par B B'' T B').
+  {
+  apply not_col_distincts in H1; spliter.
+  unfold BetS in *; spliter; apply l12_17 with MB; [|split..]; Between; Cong.
+  }
 elim HBetS; clear HBetS; intro HBetS.
 
   {
@@ -246,67 +190,53 @@ elim HBetS; clear HBetS; intro HBetS.
     {
     assert (H : BetS B'' T X).
       {
-      repeat split; try (intro; treat_equalities); Col.
-      apply H4; assert_diffs; assert_cols; ColR.
+      repeat split; [|intro; treat_equalities..]; Col.
+      apply HABT; ColR.
       }
     clear HBetS; rename H into HBetS.
     assert (H : BetS B B''' X).
       {
-      repeat split; try (intro; treat_equalities); Col; unfold BetS in *; spliter;
-      apply H4; assert_diffs; assert_cols; ColR.
+      repeat split; [|intro; treat_equalities..]; Col.
+      unfold BetS in *; spliter; apply H1; ColR.
       }
     clear HX; rename H into HX.
     apply BetSEq in HBetS; destruct HBetS as [HB''TX [HB''T [HB''X HBTX]]].
-    exists B'; exists B''; exists MB; exists X.
-    split; unfold BetS in HX; spliter; eBetween.
-    assert (HPar : Par B' B B'' T) by (apply l12_17 with MB; try split; Between; Cong).
-    assert (HPar' : Par B C B'' T)
-      by (apply par_symmetry; apply par_col_par with B'; Par; assert_cols; ColR).
+    exists B', B'', MB, X.
     split.
-
-      {
-      apply par_not_col_strict with T; Col.
-
-        {
-        apply par_col_par with B''; Par.
-        assert_cols; ColR.
-        }
-
-        {
-        intro; apply HABC; assert_cols; ColR.
-        }
-      }
-
-      {
-      repeat (split; try assumption); unfold BetS in *; spliter; assert_cols; Col.
-      }
+      unfold BetS in HX; spliter; eBetween.
+    split.
+      apply par_strict_col_par_strict with B'; Col.
+      apply par_strict_symmetry, par_strict_col_par_strict with B''; Col.
+      apply par_strict_symmetry, par_not_col_strict with B; Par; Col.
+    repeat (split; [try assumption|]); Cong; Col.
     }
 
     {
+    exfalso.
     elim HX; clear HX; intro HX.
 
       {
-      exfalso; apply impossible_case_5 with B T B' B'' MB B''' X; spliter; assumption.
+      apply (impossible_case_5 B T B' B'' B''' X); assumption.
       }
 
       {
-      exfalso; apply impossible_case_6 with B T B' B'' MB B''' X; spliter; assumption.
+      apply (impossible_case_6 B T B' B'' B''' X); assumption.
       }
     }
   }
 
   {
+  exfalso.
   elim HBetS; clear HBetS; intro HBetS.
 
     {
-    exfalso; apply impossible_case_7 with B T B' B'' MB B''' X; spliter; assumption.
+    apply (impossible_case_7 B T B' B'' B''' X); assumption.
     }
 
     {
-    exfalso; apply impossible_case_8 with B T B' B'' MB B''' X; spliter; assumption.
+    apply (impossible_case_8 B T B' B'' B''' X); assumption.
     }
   }
-
 Qed.
 
 Lemma strong_parallel_postulate_implies_tarski_s_euclid :
@@ -315,67 +245,42 @@ Lemma strong_parallel_postulate_implies_tarski_s_euclid :
 Proof.
 unfold tarski_s_parallel_postulate.
 intro HSPP; apply tarski_s_euclid_remove_degenerated_cases.
-intros A B C D T HAB HAC HAD HAT HBC HBD HBT HCD HCT HDT HABC HADT HBDC.
-destruct (strong_parallel_postulate_implies_tarski_s_euclid_aux HSPP A B C D T)
+intros A B C D T HAB HAC HAD HAT HBC HBD HBT HCD HCT HDT HABC HADT HBDC HBCT.
+assert (~ Col A B T) by (intro; apply HABC; ColR).
+assert (~ Col A C T) by (intro; apply HABC; ColR).
+destruct (strong_parallel_postulate_implies_tarski_s_euclid_aux HSPP A B D T)
 as [B' [B'' [MB [X [HABX [HPar' [HBet1 [HBet2 [HCong1 [HCong2 [HBB'D [HB''TX [HBB' HB''T]]]]]]]]]]]]];
-destruct (strong_parallel_postulate_implies_tarski_s_euclid_aux HSPP A C B D T)
-as [C' [C'' [MC [Y [HACY [HPar [HBet3 [HBet4 [HCong3 [HCong4 [HCC'D [HC''TY [HCC' HC''T]]]]]]]]]]]]];
-Between; Col.
-clear HBet3; clear HBet4; clear HCong3; clear HCong4;
-clear MC; clear HC''TY; clear HC''T; clear HPar'.
-exists X; exists Y; repeat split; try assumption.
+[assumption..|].
+destruct (strong_parallel_postulate_implies_tarski_s_euclid_aux HSPP A C D T)
+as [_ [_ [_ [Y [HACY [HPar _]]]]]]; Between.
+exists X; exists Y; repeat (split; [assumption|]).
 elim (col_dec X T Y); intro HXTY.
 
   {
+  clear dependent MB; clear dependent B'; clear dependent B''.
+  assert (HAXY : ~ Col A X Y) by (intro; apply HABC; ColR).
   apply between_symmetry in HACY.
   assert (HU := outer_pasch Y B C A D HACY HBDC); destruct HU as [U [HYUB HADU]].
   apply between_symmetry in HABX.
   assert (HV := outer_pasch X Y B A U HABX HYUB); destruct HV as [V [HXVY HAUV]].
-  assert (HAX : A <> X) by (intro; treat_equalities; Col).
-  assert (HAY : A <> Y) by (intro; treat_equalities; Col).
-  assert (HAXY : ~ Col A X Y) by (intro; assert_cols; apply HABC; ColR).
-  assert (HAU : A <> U) by (intro; treat_equalities; Col).
-  assert (HEq : T = V) by (assert_cols; apply l6_21 with X Y A D; Col; ColR); subst; assumption.
+  assert (HEq : T = V) by (apply (l6_21 X Y A D); ColR).
+  subst; assumption.
   }
 
   {
-  assert (HNC : ~ Col T B'' Y) by (intro; apply HXTY; unfold BetS in *; spliter; assert_cols; ColR).
+  clear dependent A.
+  assert (HNC : ~ Col T B'' Y) by (intro; apply HXTY; ColR).
+  apply (par_strict_col_par_strict T Y C D B) in HPar; Col.
+  apply (par_strict_col_par_strict T X B D C) in HPar'; Col.
   assert (HCop : Coplanar T B B'' Y).
     {
-    apply coplanar_pseudo_trans with A B C; assert_cols; Cop.
-
-      {
-      exists D; assert_cols; Col5.
-      }
-
-      {
-      assert (HABD : ~ Col D A B) by (intro; assert_cols; apply HABC; ColR).
-      apply coplanar_trans_1 with D; [Cop..|].
-      apply ts__coplanar.
-      apply l9_8_2 with X.
-
-        {
-        assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
-        split; try (intro; assert_cols; apply HABC; ColR).
-        split; try (intro; assert_cols; apply HABC; ColR).
-        exists T; split; Col; Between.
-        }
-
-        {
-        apply invert_one_side.
-        assert (HADA : Col A D A) by Col.
-        assert (HXBA : Col X B A) by (assert_cols; Col).
-        rewrite (l9_19 A D X B A HADA HXBA).
-        assert (HAX : A <> X) by (intro; treat_equalities; apply HABC; Col).
-        split; try (intro; assert_cols; apply HABC; ColR); split; auto.
-        }
-      }
+    apply not_col_distincts in HXTY; spliter.
+    apply coplanar_perm_13, col_cop__cop with X; Col.
+    apply coplanar_perm_4, coplanar_trans_1 with C; Col; Cop.
     }
-  destruct (HSPP T B B'' B' MB Y) as [I [HCol1 HCol2]]; Cong;
-  try (unfold BetS in *; spliter; repeat (split; try Between)).
-  exfalso; apply HPar; exists I; split; Col.
-  elim (eq_dec_points I B); intro HBI; subst; Col.
-  unfold BetS in *; spliter; assert_cols; ColR.
+  unfold BetS in *; spliter.
+  destruct (HSPP T B B'' B' MB Y) as [I [HCol1 HCol2]]; Cong; [repeat split; Between..|].
+  exfalso; apply HPar; exists I; split; ColR.
   }
 Qed.
 

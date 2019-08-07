@@ -257,7 +257,7 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
   }
 Qed.
 
-Global Instance TG_to_T : Tarski_neutral_dimensionless.
+Global Instance GI_to_T : Tarski_neutral_dimensionless.
 Proof.
 exact
 (Build_Tarski_neutral_dimensionless TpointG BetG CongG
@@ -268,8 +268,8 @@ exact
    lower_dimG).
 Defined.
 
-Global Instance TG_to_TID :
-  Tarski_neutral_dimensionless_with_decidable_point_equality TG_to_T.
+Global Instance GI_to_T_PED :
+  Tarski_neutral_dimensionless_with_decidable_point_equality GI_to_T.
 Proof. split; exact point_equality_decidabilityG. Defined.
 
 End Gupta_inspired_variant_of_Tarski_neutral_dimensionless_to_Tarski_neutral_dimensionless.
@@ -320,7 +320,7 @@ elim (point_equality_decidabilityG B C); intro HBC; try (rewrite HBC in *; clear
   }
 Qed.
 
-Global Instance TG2D_to_T2D : Tarski_2D TG_to_TID.
+Global Instance GI2D_to_T2D : Tarski_2D GI_to_T_PED.
 Proof. split; exact upper_dimT. Defined.
 
 End Gupta_inspired_variant_of_Tarski_2D_to_Tarski_2D.
@@ -334,7 +334,7 @@ Lemma euclidT : forall A B C D T,
   Bet A D T -> Bet B D C -> A <> D ->
   exists X, exists Y, Bet A B X /\ Bet A C Y /\ Bet X T Y.
 Proof.
-assert (H := TG_to_TID).
+assert (H := GI_to_T_PED).
 intros A B C D T HBet1 HBet2 HDiff1.
 elim (eq_dec_points B D); intro HDiff2;
 [treat_equalities; exists T, C; Between|].
@@ -415,8 +415,8 @@ do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet3.
   }
 Qed.
 
-Global Instance TG_euclidean_to_T_euclidean :
-  Tarski_euclidean TG_to_TID.
+Global Instance GI_euclidean_to_T_euclidean :
+  Tarski_euclidean GI_to_T_PED.
 Proof. split; exact euclidT. Defined.
 
 End Gupta_inspired_variant_of_Tarski_euclidean_to_Tarski_euclidean.

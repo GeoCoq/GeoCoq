@@ -1,25 +1,133 @@
-Require Export GeoCoq.Meta_theory.Decidability.equivalence_between_decidability_properties_of_basic_relations.
+Require Export GeoCoq.Tarski_dev.Ch04_col.
 
 Section T5.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma l5_1 : forall A B C D,
-  A<>B -> Bet A B C -> Bet A B D -> Bet A C D \/ Bet A D C.
+  A <> B -> Bet A B C -> Bet A B D -> Bet A C D \/ Bet A D C.
 Proof.
-apply eq_dec_implies_l5_1; apply eq_dec_points.
+    intros.
+    prolong A D C' C D.
+    prolong A C D' C D.
+    prolong A C' B' C B.
+    prolong A D' B'' D B.
+    assert (Cong B C' B'' C).
+      apply (l2_11 B D C' B'' D' C).
+        apply between_exchange3 with A; Between.
+        apply between_inner_transitivity with A; Between.
+        Cong.
+      apply cong_transitivity with C D; Cong.
+    assert (Cong B B' B'' B).
+      {
+      apply (l2_11 B C' B' B'' C B); Cong.
+
+        {
+        assert (Bet A B C'); [|eBetween].
+        induction (eq_dec_points B D); [treat_equalities; auto|].
+        apply between_symmetry.
+        apply outer_transitivity_between2 with D; eBetween.
+        }
+
+        {
+        induction (eq_dec_points C D'); [treat_equalities; eBetween|].
+        apply outer_transitivity_between2 with D'; eBetween.
+        }
+      }
+    assert(B'' =  B').
+      apply (construction_uniqueness A B B B''); Cong.
+        apply between_exchange4 with D'; Between;
+        apply between_exchange4 with C; Between.
+      apply between_exchange4 with C'; Between;
+      apply between_exchange4 with D; Between.
+    subst B''.
+    assert (Bet B C D') by (apply between_exchange3 with A; assumption).
+    assert (FSC B C D' C' B' C' D C).
+      repeat split; Cong.
+        left; apply between_exchange3 with A; Between.
+        apply (l2_11 B C D' B' C' D); Cong.
+          apply between_symmetry.
+          apply between_exchange3 with A; assumption.
+        apply cong_transitivity with C D; Cong.
+      apply cong_transitivity with C D; Cong.
+    induction (eq_dec_points B C).
+      subst C; auto.
+    assert (Cong D' C' D C) by (eapply l4_16; try apply H13; assumption).
+    assert (exists E, Bet C E C' /\ Bet D E D') by (apply inner_pasch with A; Between).
+    ex_and H16 E.
+    assert (IFSC D E D' C D E D' C') by (unfold IFSC; repeat split; Cong; apply cong_transitivity with C D; Cong).
+    assert (IFSC C E C' D C E C' D') by (unfold IFSC; repeat split; Cong; apply cong_transitivity with C D; Cong).
+    assert (Cong E C E C') by (eapply l4_2; try apply H18; auto).
+    assert (Cong E D E D') by (eapply l4_2; try apply H19; auto).
+    induction (eq_dec_points C C').
+      subst C'; right; assumption.
+    show_distinct C D'.
+      auto.
+    prolong C' C P C D'.
+    prolong D' C R C E.
+    prolong P R Q R P.
+    assert (FSC D' C R P P C E D').
+      repeat split; Col; Cong.
+      apply l2_11 with C C; Cong.
+      apply between_inner_transitivity with C'; Between.
+    assert (Cong R P E D') by (eauto using l4_16).
+    assert (Cong R Q E D).
+      eapply cong_transitivity.
+        apply cong_transitivity with R P; Cong.
+      apply cong_transitivity with E D'; Cong.
+    assert (FSC D' E D C P R Q C).
+      repeat split; Col; Cong.
+      eapply (l2_11 D' E D P R Q); Between; Cong.
+    assert (Cong D C Q C).
+      induction (eq_dec_points D' E).
+        unfold IFSC, Cong_3 in *; spliter; treat_equalities; Cong.
+      apply l4_16 with D' E P R; assumption.
+    assert (Cong C P C Q).
+      unfold FSC, Cong_3 in *; spliter.
+      apply cong_transitivity with C D; Cong.
+      apply cong_transitivity with C D'; Cong.
+    show_distinct R C.
+      auto.
+    assert (Cong D' P D' Q) by (apply (l4_17 R C); unfold Col; Between; Cong).
+    assert (Cong B P B Q).
+      apply l4_17 with C D'; Col.
+    assert (Cong B' P B' Q).
+      apply (l4_17 C D'); Cong.
+      left.
+      apply between_exchange3 with A; assumption.
+    assert (Cong C' P C' Q).
+      assert (Bet B C' B').
+        apply between_exchange3 with A; try assumption.
+        apply between_exchange4 with D; try assumption.
+      eapply l4_17 with B B'; Cong; Col.
+      intro; treat_equalities; auto.
+    assert (Cong P P P Q).
+      apply l4_17 with C C'; Col.
+    treat_equalities.
+    left; assumption.
 Qed.
 
 Lemma l5_2 : forall A B C D,
-  A<>B -> Bet A B C -> Bet A B D -> Bet B C D \/ Bet B D C.
+  A <> B -> Bet A B C -> Bet A B D -> Bet B C D \/ Bet B D C.
 Proof.
-apply eq_dec_implies_l5_2; apply eq_dec_points.
+    intros.
+    assert (Bet A C D \/ Bet A D C) by (eapply l5_1; eauto).
+    induction H2.
+    left; eBetween.
+    right; eBetween.
 Qed.
 
 Lemma segment_construction_2 :
-  forall A Q B C, A<>Q -> exists X, (Bet Q A X \/ Bet Q X A) /\ Cong Q X B C.
+  forall A Q B C, A <> Q -> exists X, (Bet Q A X \/ Bet Q X A) /\ Cong Q X B C.
 Proof.
-apply eq_dec_implies_segment_construction_2; apply eq_dec_points.
+    intros.
+    prolong A Q A' A Q.
+    prolong A' Q X B C.
+    exists X.
+    show_distinct A' Q.
+    solve [intuition].
+    split; try assumption.
+    eapply (l5_2 A' Q); Between.
 Qed.
 
 Lemma l5_3 : forall A B C D,
@@ -89,7 +197,7 @@ Proof.
     split.
       assumption.
     unfold Cong_3 in *; spliter.
-    apply cong_transitivity with A B; try Cong.
+    apply cong_transitivity with A B; Cong.
     apply cong_transitivity with C y; assumption.
 Qed.
 
@@ -115,9 +223,12 @@ Proof.
     unfold Cong_3 in H4; spliter; apply cong_transitivity with C y; Cong.
 Qed.
 
-Lemma between_cong : forall A B C, Bet A C B -> Cong A C A B -> C=B.
+Lemma between_cong : forall A B C, Bet A C B -> Cong A C A B -> C = B.
 Proof.
-apply eq_dec_implies_between_cong; apply eq_dec_points.
+    intros.
+    assert (Bet A B C).
+    eapply l4_6 with A C B; unfold Cong_3; repeat split; Cong.
+    eapply between_equality; eBetween.
 Qed.
 
 Lemma cong3_symmetry : forall A B C A' B' C' : Tpoint , Cong_3 A B C A' B' C' -> Cong_3 A' B' C' A B C.
@@ -138,7 +249,11 @@ Qed.
 Lemma between_cong_3 :
   forall A B D E, A <> B -> Bet A B D -> Bet A B E -> Cong B D B E -> D = E.
 Proof.
-apply eq_dec_implies_between_cong_3; apply eq_dec_points.
+    intros.
+    assert (T:=l5_2 A B D E H H0 H1).
+    elim T; intro; clear T.
+    apply between_cong with B; Cong.
+    symmetry; apply between_cong with B; Cong.
 Qed.
 
 Lemma le_anti_symmetry : forall A B C D, Le A B C D -> Le C D A B -> Cong A B C D.
@@ -160,12 +275,36 @@ Qed.
 Lemma cong_dec : forall A B C D,
   Cong A B C D \/ ~ Cong A B C D.
 Proof.
-apply eq_dec_cong_dec; apply eq_dec_points.
+    intros.
+    elim (eq_dec_points A B); intro; subst; elim (eq_dec_points C D); intro; subst.
+    left; Cong.
+    right; intro; apply H; apply cong_identity with B; Cong.
+    right; intro; apply H; apply cong_identity with D; Cong.
+    elim (segment_construction_2 B A C D).
+    intros D' HD'.
+    spliter.
+    elim (eq_dec_points B D');intro.
+    subst; left; assumption.
+    right; intro.
+    assert (Cong A D' A B) by CongR.
+    elim H1; intro; clear H1.
+    assert (B = D') by (apply (between_cong A D' B); Cong).
+    subst;intuition.
+    assert (D'=B) by (apply (between_cong A B D');assumption).
+    subst;intuition.
+    intuition.
 Qed.
 
 Lemma bet_dec : forall A B C, Bet A B C  \/  ~ Bet A B C.
 Proof.
-apply eq_dec_bet_dec; apply eq_dec_points.
+    intros.
+    elim (segment_construction A B B C); intros C' HC'.
+    spliter.
+    elim (eq_dec_points C C'); intro.
+    subst; tauto.
+    elim (eq_dec_points A B);intro.
+    left; subst; Between.
+    right; intro; apply H1; apply between_cong_3 with A B; Cong.
 Qed.
 
 Lemma col_dec : forall A B C, Col A B C \/ ~ Col A B C.
@@ -629,9 +768,9 @@ Qed.
 
 Lemma lt__nle : forall A B C D, Lt A B C D -> ~ Le C D A B.
 Proof.
-  intros A B C D HLt HLe.
-  generalize HLt.
-  apply le__nlt; assumption.
+    intros A B C D HLt HLe.
+    revert HLt.
+    apply le__nlt; assumption.
 Qed.
 
 Lemma nle__lt : forall A B C D, ~ Le A B C D -> Lt C D A B.
@@ -720,6 +859,16 @@ assert(Le a' b' A B).
 apply(l5_6 a' b' A B a b A B); Cong.
 apply (l2_11 a' O b' a o b);
 eBetween; Cong.
+Qed.
+
+Lemma Le_cases : forall A B C D, Le A B C D \/ Le B A C D \/ Le A B D C \/ Le B A D C -> Le A B C D.
+Proof.
+    intros A B C D [|[|[|]]]; [|apply le_left_comm|apply le_right_comm|apply le_comm]; assumption.
+Qed.
+
+Lemma Lt_cases : forall A B C D, Lt A B C D \/ Lt B A C D \/ Lt A B D C \/ Lt B A D C -> Lt A B C D.
+Proof.
+    intros A B C D [|[|[|]]]; [|apply lt_left_comm|apply lt_right_comm|apply lt_comm]; assumption.
 Qed.
 
 End T5.

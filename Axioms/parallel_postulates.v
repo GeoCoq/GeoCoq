@@ -196,14 +196,12 @@ Definition postulate_of_existence_of_similar_triangles :=
     then the angle ACB is a right angle. *)
 
 Definition thales_postulate := forall A B C M,
-  ~ Col A B C -> Midpoint M A B -> Cong M A M C ->
-  Per A C B.
+  Midpoint M A B -> Cong M A M C -> Per A C B.
 
 (** The circumcenter of a right triangle is the midpoint of the hypotenuse. *)
 
 Definition thales_converse_postulate := forall A B C M,
-  ~ Col A B C -> Midpoint M A B -> Per A C B ->
-  Cong M A M C.
+  Midpoint M A B -> Per A C B -> Cong M A M C.
 
 (** There exists a right triangle whose circumcenter is the midpoint of the hypotenuse. *)
 

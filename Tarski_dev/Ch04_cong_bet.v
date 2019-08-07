@@ -1,4 +1,10 @@
 Require Export GeoCoq.Tarski_dev.Ch03_bet.
+Require Export GeoCoq.Tarski_dev.Tactics.CongR.
+
+Ltac CongR :=
+ let tpoint := constr:(Tpoint) in
+ let cong := constr:(Cong) in
+   treat_equalities; unfold Midpoint in *; spliter; Cong; Cong_refl tpoint cong.
 
 Section T3.
 
@@ -99,6 +105,7 @@ assert (IFSC A' x C' x  A' x C' B')
  by (unfold IFSC;repeat split;Cong).
 assert (Cong x x x B')
  by (eapply l4_2;apply H10).
+treat_equalities.
 Between.
 Qed.
 
@@ -112,6 +119,7 @@ assert (IFSC A B C B A B C X)
  by (unfold IFSC;intuition).
 assert (Cong B B B X)
  by (apply (l4_2 _ _ _ _ _ _ _ _ H3)).
+treat_equalities.
 Between.
 Qed.
 

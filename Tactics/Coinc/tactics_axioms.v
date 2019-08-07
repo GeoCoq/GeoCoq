@@ -46,3 +46,14 @@ Class Coinc_theory (Ar : Arity) (COP : Coinc_predicates Ar) :=
               app wd WD ->
               app coinc COINC
 }.
+
+(** Minimal set of lemmas needed to use the CongR tactic *)
+Class Cong_theory (CONGpoint : Type)
+  (CTCong: CONGpoint -> CONGpoint -> CONGpoint -> CONGpoint -> Prop) :=
+{
+  CTcong_refl : forall A B : CONGpoint, CTCong A B A B;
+  CTcong_left_comm : forall A B C D : CONGpoint, CTCong A B C D -> CTCong B A C D;
+  CTcong_sym : forall A B C D : CONGpoint, CTCong A B C D -> CTCong C D A B;
+  CTcong_trans : forall A B C D E F : CONGpoint,
+                          CTCong A B C D -> CTCong C D E F -> CTCong A B E F
+}.

@@ -5,52 +5,6 @@ Require Import GeoCoq.Tarski_dev.Ch08_orthogonality.
 
 (** This file contains the proof that Dedekind completeness implies Hilbert's line completeness. *)
 
-Section Line_extension.
-
-Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
-Lemma line_extension_symmetry : forall {Tm : Tarski_neutral_dimensionless}
-  (f : @Tpoint Tn -> @Tpoint Tm) P Q, line_extension f P Q -> line_extension f Q P.
-Proof.
-  intros Tm f P Q [HPQ [fInj [fBet fCong]]].
-  repeat split; auto; intro; intros; [apply fInj|apply fBet|apply fCong]; Col.
-Qed.
-
-Lemma line_extension_stability : forall {Tm: Tarski_neutral_dimensionless}
-  (f : @Tpoint Tn -> @Tpoint Tm) P Q R,
-  Col P Q R -> P <> R -> line_extension f P Q -> line_extension f P R.
-Proof.
-  intros Tm f P Q R HCol HPR [HPQ [fInj [fBet fCong]]].
-  repeat split; auto; intro; intros;
-    [apply fInj|apply fBet|apply fCong]; trivial; apply col_transitivity_1 with R; Col.
-Qed.
-
-Lemma line_extension_reverse_bet : forall {Tm: Tarski_neutral_dimensionless}
-  {Tm2: Tarski_neutral_dimensionless_with_decidable_point_equality Tm}
-  (f : @Tpoint Tn -> @Tpoint Tm) P Q, line_extension f P Q ->
-  forall A B C, Col P Q A -> Col P Q B -> Col P Q C -> Bet (f A) (f B) (f C) -> Bet A B C.
-Proof.
-  intros Tm Tm2 f P Q [HPQ [fInj [fBet fCong]]] A B C HA HB HC HBet.
-  destruct (eq_dec_points (f A) (f B)) as [Heq|Hdiff].
-    apply fInj in Heq; subst; Between.
-  assert (A <> B) by (intro; subst; auto).
-  destruct (segment_construction A B B C) as [D [HD1 HD2]].
-  assert (C = D); [|subst; auto].
-  assert (Col P Q D) by (apply (colx A B); Col).
-  apply fInj; trivial.
-  apply between_cong_3 with (f A) (f B); Cong.
-Qed.
-
-Lemma pres_bet_line__col : forall {Tm: Tarski_neutral_dimensionless}
-  f (P Q : @Tpoint Tn), P <> Q -> pres_bet_line f P Q ->
-  forall A B C, Col P Q A -> Col P Q B -> Col P Q C -> Col (f A) (f B) (f C).
-Proof.
-  intros Tm f P Q HPQ fBet A B C HA HB HC.
-  destruct (col3 P Q A B C) as [HBet|[HBet|HBet]]; trivial; apply fBet in HBet; Col.
-Qed.
-
-End Line_extension.
-
 Section Completeness.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
@@ -259,50 +213,68 @@ Proof.
     subst; apply HH; Between.
   destruct (eq_dec_points (f P) B).
     subst; apply HH'; Between.
-  exists P; repeat split; finish.
+  exists P; repeat split; Between; Col.
 Qed.
 
-Lemma dedekind__completeness : dedekind_s_axiom -> line_completeness.
+Lemma dedekind_variant__completeness : dedekind_variant -> line_completeness.
 Proof.
   intros dedekind Tm Tm2 P Q f archi fLineExt A HA.
   destruct (eq_dec_points (f P) A).
     subst; exists P; split; Col.
-  destruct (dedekind (fun X => Col P Q X /\ Bet (f P) (f X) A)
-    (fun X => Col P Q X /\ Bet (f P) A (f X))) as [B HB].
-  { exists P.
-    intros X Y [] [].
-    apply (line_extension_reverse_bet f P Q); Col.
-    eBetween.
-  }
-  exists B.
   assert (HR : exists R, Col P Q R /\ Bet (f P) A (f R)).
-  { destruct (segment_construction (f P) A (f P) A) as [A' []].
+  { destruct (segment_construction (f P) A (f P) A) as [A1 []].
     assert_diffs.
-    destruct (extension_image_density P Q f archi fLineExt A A') as [R [HR1 [HR2 []]]]; Col.
+    destruct (extension_image_density P Q f archi fLineExt A A1) as [R [HR1 [HR2 []]]]; Col.
       apply col_transitivity_1 with A; Col.
     exists R; split; eBetween.
   }
   destruct HR as [R []].
-  assert (HBet : Bet P B R).
-    apply HB; split; finish; eBetween.
-  assert (Col P Q B).
-    apply col_transitivity_1 with R; Col; intro; treat_equalities; auto.
-  destruct (eq_dec_points (f B) A); [split; assumption|].
-  exfalso.
-  assert (Hf := fLineExt).
-  destruct Hf as [HPQ [finj [fBet fCong]]].
-  destruct (extension_image_density P Q f archi fLineExt A (f B)) as [X [HX1 [HX2 [HX3 Habs]]]]; auto.
-    apply (pres_bet_line__col f P Q); Col.
-  destruct (l5_3 (f P) A (f B) (f R)); auto; [apply fBet; Col|apply Habs..].
-  - apply between_equality with (f P).
-      apply between_symmetry, fBet, HB; try split; Col; Between.
-      apply between_inner_transitivity with (f B); assumption.
-    clear dependent R; eBetween.
-  - apply between_equality with (f P).
+  destruct (dedekind (fun X => Col P Q X /\ Bet (f P) (f X) A /\ (f X) <> A)
+    (fun X => Col P Q X /\ Bet (f P) A (f X)) P R) as [B HB]; simpl.
+  - repeat split; finish.
+  - split; assumption.
+  - intros Z HZ.
+    assert (Col P Q Z) by (assert_diffs; apply col_transitivity_1 with R; Col).
+    destruct (eq_dec_points (f Z) A).
+      subst; right; split; Between.
+    assert (HOut : Out (f P) (f Z) A).
+    { apply l6_7 with (f R); [|Out].
+      destruct HZ as [HZP [HRP Hdij]].
+      destruct fLineExt as [HPQ [fInj [fBet fCong]]].
+      repeat split.
+        intro; apply HZP, fInj; Col.
+        intro; apply HRP, fInj; Col.
+      destruct Hdij; [left|right]; apply fBet; Col.
+    }
+    destruct HOut as [_ [_ [|]]]; [left|right]; split; auto.
+  - intros X Y [HX1 [HX2 HX3]] [HY1 HY2].
+    split.
+      apply (line_extension_reverse_bet f P Q); Col; eBetween.
+      intro; treat_equalities; contradiction.
+
+  - exists B.
+    assert (HBet : Bet P B R).
+      apply HB; split; Col; Between.
+    assert (Col P Q B).
+      apply col_transitivity_1 with R; Col; intro; treat_equalities; auto.
+    destruct (eq_dec_points (f B) A); [split; assumption|].
+    exfalso.
+    assert (Hf := fLineExt).
+    destruct Hf as [HPQ [finj [fBet fCong]]].
+    destruct (extension_image_density P Q f archi fLineExt A (f B)) as [X [HX1 [HX2 [HX3 Habs]]]]; auto.
+      apply (pres_bet_line__col f P Q); Col.
+    destruct (l5_3 (f P) A (f B) (f R)); auto; [apply fBet; Col|apply Habs..].
+    * apply between_equality with (f P).
+        apply between_symmetry, fBet, HB; try split; Col; Between.
+        apply between_inner_transitivity with (f B); assumption.
       clear dependent R; eBetween.
-    apply between_exchange3 with (f R).
-      apply between_symmetry, fBet; Col; apply HB; split; Col; eBetween.
-    apply bet3__bet with A (f B); finish.
+    * apply between_equality with (f P).
+        clear dependent R; eBetween.
+      apply between_exchange3 with (f R); [|apply bet3__bet with A (f B); eBetween].
+      apply between_symmetry, fBet; Col.
+      apply HB; split; Col.
+      split; trivial.
+      apply between_exchange2 with (f B); Between.
 Qed.
 
 End Completeness.

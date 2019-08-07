@@ -278,7 +278,7 @@ intro.
 rewrite H6 in *.
 apply H1;Col.
 apply not_out_bet in H2.
-apply(l5_2 C O C' E H3 H4); bet.
+apply(l5_2 C O C' E H3 H4); Between.
 Col.
 unfold uniqueness.
 intros.
@@ -1165,7 +1165,7 @@ intros; elim (eq_dec_points A B); intro HAB.
 
     {
     destruct HMid as [H HCong].
-    assert (HCol : Col A B I) by (assert_cols; Col); clear H.
+    assert (HCol : Col A B I) by Col; clear H.
     revert HCol; revert HCong; revert HAB.
     rewrite characterization_of_neq_F, characterization_of_congruence_F,
             characterization_of_collinearity_F.
@@ -1231,13 +1231,13 @@ intros; split; intro H; [do 2 (split; try solve [assert_diffs; auto])|
   destruct (symmetric_point_construction A C) as [P HP];
   exists P; split; [assumption|]; destruct (midpoint_existence B P) as [Q HQ].
   exists Q; split; [assumption|].
-  assert (Par B A Q C) by (apply triangle_mid_par with P; assert_diffs; Col).
-  destruct (parallel_uniqueness A B C D C Q C); finish.
+  assert (Par B A Q C) by (assert_diffs; apply triangle_mid_par with P; Col).
+  destruct (parallel_uniqueness A B C D C Q C); Col; Par.
   }
 
   {
-  assert (Par B A Q C) by (apply triangle_mid_par with P; assert_diffs; Col).
-  apply par_col_par with Q; finish.
+  assert (Par B A Q C) by (apply triangle_mid_par with P; Col).
+  apply par_col_par with Q; Col; Par.
   }
 Qed.
 

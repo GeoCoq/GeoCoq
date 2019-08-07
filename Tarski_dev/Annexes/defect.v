@@ -154,10 +154,9 @@ Proof.
   destruct HTri as [S [T [U [HSuma2 HSuma3]]]].
   assert (HInter : SumA S T U D E F B C1 C /\ SAMS S T U D E F).
   { suma.assert_diffs.
-    destruct (ex_suma S T U D E F) as [B' [C1' [C' HSuma']]]; auto.
-    assert (HSuma4 : SumA B C1 C A C1 B A C1 C) by (apply suma_sym, inangle__suma, in_angle_line; auto).
+    assert (HSuma4 : SumA B C1 C A C1 B A C1 C) by SumA.
     destruct (ex_suma A C1 B D E F) as [V [W [X HSuma5]]]; auto.
-    assert (HIsi : SAMS P Q R D E F) by (apply bet_suma__sams with A C1 C; trivial).
+    assert (HIsi : SAMS P Q R D E F) by (apply suppa__sams; trivial).
     assert (HIsi1 : SAMS S T U A C1 B) by (apply (t22_20 noah), HSuma2).
     assert (HIsi2 : SAMS A C1 B D E F).
     { apply sams_lea2__sams with P Q R D E F; Lea.
@@ -166,10 +165,13 @@ Proof.
     assert (HSuma6 : SumA S T U V W X A C1 C) by (apply suma_assoc_1 with A C1 B D E F P Q R; trivial).
     assert (HIsi3 : SAMS S T U D E F).
       apply sams_lea2__sams with P Q R D E F; Lea; apply sams_suma__lea123789 with A C1 B; SumA.
-    assert (HSuma7 : SumA B' C1' C' A C1 B A C1 C) by (apply suma_assoc_2 with S T U D E F V W X; SumA).
     split; trivial.
+    destruct (ex_suma S T U D E F) as [B' [C1' [C' HSuma']]]; auto.
+    assert (HSuma7 : SumA B' C1' C' A C1 B A C1 C) by (apply suma_assoc_2 with S T U D E F V W X; SumA).
     apply (conga3_suma__suma S T U D E F B' C1' C'); try (apply conga_refl); auto.
-    apply sams2_suma2__conga123 with A C1 B A C1 C; trivial; apply bet_suma__sams with A C1 C; trivial.
+    apply (suppa2__conga456 A C1 B).
+      apply suppa_sym, bet_suma__suppa with A C1 C; assumption.
+      apply bet__suppa; auto.
   }
   clear dependent P; clear Q R.
 
@@ -211,18 +213,16 @@ Proof.
   }
   suma.assert_diffs.
   apply trisuma_perm_132.
-  exists D; exists E; exists F.
+  exists D, E, F.
   split.
   - assert (HConga : CongA C1 C B A C B).
-    { apply (out_conga C1 C B C1 C B); try (apply out_trivial); CongA.
-      apply bet_out; Between.
-    }
+      apply out2__conga; [apply l6_6, bet_out|apply out_trivial]; Between.
     apply (conga3_suma__suma C1 C B C B A D E F); CongA.
     assert (HInAngle : InAngle C1 C B A).
       repeat split; auto; exists C1; split; Between; right; apply out_trivial; auto.
     apply suma_assoc_1 with C B C1 C1 B A V W X; SumA.
   - assert (HConga : CongA B A C B A C1).
-      apply (out_conga B A C1 B A C1); try (apply out_trivial); CongA; apply bet_out; auto.
+      apply out2__conga; [apply out_trivial|apply bet_out]; auto.
     apply (conga3_suma__suma D E F B A C1 A' B' C'); CongA.
     apply suma_assoc_2 with V W X C1 B A S T U; SumA.
 Qed.

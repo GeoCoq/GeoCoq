@@ -14,3 +14,4 @@ sed -i.bak '/Elements\/Statements\/Book_3\.v/d'                _CoqProject
 sed -i.bak '/main.v/d'                                         _CoqProject
 
 coq_makefile -f _CoqProject -o Makefile
+rm -f .coqdeps.d

@@ -24,7 +24,7 @@ Proof.
   apply (cong2_lt__lt _ _ _ _ A G A B) in Hlt; Cong.
   assert(Bet A G B) by (apply (l6_13_1); Le; apply l6_6; auto).
   assert(B <> G) by (intro; subst; destruct Hlt; Cong).
-  assert(HCongaA' : CongA C A B H A G) by (apply (out_conga C A B C A B); try (apply out_trivial); CongA).
+  assert(HCongaA' : CongA C A B H A G) by (apply out2__conga; apply l6_6; auto).
   destruct(l11_49 F D E H A G) as [_ [HConga1 HConga2]]; Cong.
     apply (conga_trans _ _ _ C A B); CongA.
   apply (conga_trans _ _ _ _ _ _ A G H) in HCongaB; auto.
@@ -55,39 +55,14 @@ Proof.
   assert(SAMS B G H H C B).
   { apply (sams_chara _ _ _ _ _ _ A); Between.
     apply (l11_30 B C A A B C); auto; apply conga_right_comm; auto.
-    apply (out_conga B C H B C H); try (apply out_trivial); CongA.
+    apply out2__conga; [apply out_trivial|]; auto.
   }
   assert(CongA A G H G B C).
-    apply (out_conga A G H A B C); try (apply out_trivial); CongA; apply l6_6; apply bet_out; Between.
+    apply (l11_10 A G H A B C); try (apply out_trivial); CongA; apply bet_out; Between.
   assert(CongA G H A B C H).
-    apply (out_conga G H A B C A); try (apply out_trivial); CongA; apply l6_6; auto.
-  assert(TS G H A B) by (repeat split; auto; exists G; Col).
-  assert(TS G H A C) by (repeat split; Col; exists H; Col).
-  assert(TS C G B H).
-  { apply l9_31; eauto with side.
-    apply (col_one_side _ A); Col.
-    apply invert_one_side; apply out_one_side; try (apply l6_6); Col.
-  }
-  assert(SAMS B G H C B G).
-  { apply (conga2_sams__sams B G H H G A); CongA.
-    repeat split; auto.
-    right; intro; Col.
-    exists A; split; CongA.
-    split; Side.
-    split; Cop.
-    intro Hts.
-    destruct Hts as [_ []]; Col.
-  }
-  assert(SAMS C H G B C H).
-  { apply (conga2_sams__sams C H G G H A); CongA.
-    repeat split; auto.
-    right; intro; apply HNCol3; Col.
-    exists A; split; CongA.
-    split; Side.
-    split; Cop.
-    intro Hts.
-    destruct Hts as [_ []]; Col.
-  }
+    apply (l11_10 G H A B C A); try (apply out_trivial); CongA.
+  assert(SAMS B G H C B G) by (apply (conga2_sams__sams B G H H G A); CongA; SumA).
+  assert(SAMS C H G B C H) by (apply (conga2_sams__sams C H G G H A); CongA; SumA).
   destruct(ex_suma B C G C G B) as [I [J [K]]]; auto.
   destruct(ex_suma H C G C G H) as [L [M [N]]]; auto.
   suma.assert_diffs.
@@ -96,28 +71,27 @@ Proof.
   destruct(ex_suma I J K L M N) as [U [V [W]]]; auto.
   suma.assert_diffs.
   assert(HInter : SAMS I J K L M N /\ SumA H G B B C H U V W).
-  { assert(SAMS H G B B C G).
+  { assert(TS G C B H).
+    { apply invert_two_sides, l9_31; Side.
+      apply (col_one_side _ A); Col.
+      apply invert_one_side; apply out_one_side; try (apply l6_6); Col.
+    }
+    assert(SAMS H G B B C G).
     { apply (sams_lea2__sams _ _ _ _ _ _ H G B B C H); try (apply lea_refl); SumA.
-      exists G; split; CongA.
-      apply os_ts__inangle; SumA; eauto with side.
+      apply inangle__lea.
+      apply os_ts__inangle; Side.
     }
     destruct(ex_suma B C G H G B) as [X [Y [Z]]]; auto.
-    assert(SumA B G C C G H H G B) by (exists H; repeat (split; CongA); Side; Cop).
+    assert(SumA B G C C G H H G B) by SumA.
     assert(SAMS B G C C G H).
-    { repeat split; auto.
-        right; intro; apply HNCol4; Col.
-      exists H; split; CongA.
-      split; Side.
-      split; Cop.
-      apply l9_9_bis.
+    { apply os_ts__sams; trivial.
       apply (col_one_side _ A); Col.
       apply invert_one_side, out_one_side; Col.
     }
     assert(SAMS I J K C G H) by (apply (sams_assoc B C G C G B _ _ _ _ _ _ H G B); SumA).
     assert(SumA I J K C G H X Y Z) by (apply (suma_assoc B C G C G B _ _ _ _ _ _ _ _ _ H G B); SumA).
-    assert(SAMS B C G H C G).
-      repeat split; auto; [right; intro; Col|exists H; split; CongA; repeat split; Side; Cop].
-    assert(SumA B C G H C G H C B) by (exists H; repeat (split; CongA); Side; Cop).
+    assert(SAMS B C G H C G) by (apply sams_right_comm, os_ts__sams; Side).
+    assert(SumA B C G H C G H C B) by SumA.
     split.
     - assert(SAMS X Y Z H C G) by (apply (sams_assoc H G B B C G _ _ _ _ _ _ H C B); SumA).
       apply (sams_assoc _ _ _ C G H H C G X Y Z); SumA.
@@ -133,13 +107,13 @@ Proof.
     apply (sams_lta2_suma2__lta I J K L M N _ _ _ H G B B C H); SumA.
     { destruct (t22_14__sams_nbet aah C G B I J K O P Q) as [HIsi HNBet]; Col.
       apply (sams_lea_lta789_suma2__lta123 _ _ _ G B C O P Q _ _ _ G B C A G B); Lea.
-        split; eauto with lea; intro; apply HNBet; apply (bet_conga__bet A G B); CongA.
-        apply (conga3_suma__suma B G H H G A A G B); CongA; exists A; repeat (split; CongA); Side; Cop.
+        split; Lea; intro; apply HNBet; apply (bet_conga__bet A G B); CongA.
+        apply (conga3_suma__suma B G H H G A A G B); CongA; SumA.
     }
     destruct (t22_14__sams_nbet aah C G H L M N R S T) as [HIsi HNBet]; Col.
     apply (sams_lea_lta789_suma2__lta123 _ _ _ G H C R S T _ _ _ G H C A H C); Lea.
-      split; eauto with lea; intro; apply HNBet; apply (bet_conga__bet A H C); CongA.
-      apply (conga3_suma__suma A H G G H C A H C); CongA; exists C; repeat (split; CongA); Side; Cop.
+      split; Lea; intro; apply HNBet; apply (bet_conga__bet A H C); CongA.
+      apply (conga3_suma__suma A H G G H C A H C); CongA; SumA.
 
   - intro HUn.
     destruct HUn as [|oah]; auto.

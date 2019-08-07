@@ -26,9 +26,7 @@ Proof.
       unfold Parallelogram_flat in H7.
       spliter.
       assert(O = C \/ Midpoint A O C).
-        apply(l7_20 A O C).
-          ColR.
-        Cong.
+        apply(l7_20 A O C); Cong.
       induction H13.
         subst C.
         apply False_ind.
@@ -115,8 +113,7 @@ Proof.
     assert(HG:=grid_not_par O E E' H).
     spliter.
     assert(A = MA \/ Midpoint O A MA).
-      apply(l7_20 O A MA); try ColR.
-      Cong.
+      apply(l7_20 O A MA); Col.
     induction H16.
       subst MA.
       tauto.
@@ -741,7 +738,7 @@ assert (HColA : Col O E A)
   by (destruct HLt as [D [H H']]; apply diff_ar2 in H; unfold Ar2 in *; spliter; Col).
 assert (HColB : Col O E B)
   by (destruct HLt as [D [H H']]; apply diff_ar2 in H; unfold Ar2 in *; spliter; Col).
-assert (HColC : Col O E C) by (assert_diffs; assert_cols; ColR).
+assert (HColC : Col O E C) by ColR.
 destruct (diff_exists O E E' C B) as [CMB HCMB]; Col.
 elim (eq_dec_points O A); intro HDiff4; elim (eq_dec_points O B); intro HDiff5;
 elim (eq_dec_points O C); intro HDiff6; treat_equalities;
@@ -1802,7 +1799,7 @@ assert (HColA : Col O E A)
   by (destruct HLt as [D [H H']]; apply diff_ar2 in H; unfold Ar2 in *; spliter; Col).
 assert (HColB : Col O E B)
   by (destruct HLt as [D [H H']]; apply diff_ar2 in H; unfold Ar2 in *; spliter; Col).
-assert (HColC : Col O E C) by (assert_diffs; assert_cols; ColR).
+assert (HColC : Col O E C) by ColR.
 destruct (diff_exists O E E' B C) as [BMC HBMC]; Col.
 destruct (opp_exists O E E' HNC A) as [MA HMA]; Col.
 destruct (opp_exists O E E' HNC B) as [MB HMB]; Col.

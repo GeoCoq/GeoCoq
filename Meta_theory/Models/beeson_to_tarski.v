@@ -373,7 +373,7 @@ exact
    bet_id pasch beeson_s_axioms.PA beeson_s_axioms.PB beeson_s_axioms.PC lower_dim).
 Defined.
 
-Instance IT_to_TID :
+Instance IT_to_T_PED :
   Tarski_neutral_dimensionless_with_decidable_point_equality IT_to_T.
 Proof. split; apply eq_dec_points_from_classic. Defined.
 

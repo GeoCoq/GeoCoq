@@ -5,8 +5,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.project.
 
 Section Pappus_Pascal.
 
-Context `{T2D:Tarski_2D}.
-Context `{TE:@Tarski_euclidean Tn TnEQD}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
  Col O A B -> Col O P Q -> Perp O P P A -> Perp O Q Q B ->
@@ -15,7 +14,7 @@ Lemma l13_10_aux1 : forall O A B P Q la lb lp lq,
 Proof.
     intros.
     assert(Acute A O P).
-      apply (perp_acute _ _ P);finish.
+      apply (perp_acute _ _ P); Col; Perp.
     assert(P <> O).
       intro.
       subst P.
@@ -47,7 +46,7 @@ Proof.
         induction H18.
           unfold Par_strict in H18.
           spliter.
-          apply H21.
+          apply H19.
           exists P.
           split; Col.
         spliter.
@@ -91,14 +90,9 @@ Perp.
 
    (*       apply(project_preserves_bet O P A P O A B O P Q); auto. *)
         assert(CongA A O P B O Q).
-          eapply (out_conga B _ Q B _ Q).
-            apply conga_refl; auto.
-            unfold Out.
+          apply out2__conga.
             repeat split; auto.
-            unfold Out.
             repeat split; auto.
-            apply out_trivial; auto.
-          apply out_trivial; auto.
         apply (anga_conga_anga _ A O P); auto.
       induction H.
         assert(Bet P Q O).
@@ -117,18 +111,13 @@ Perp.
 
  (*         apply(project_preserves_bet O P A P A B O P Q O); auto.*)
         assert(CongA A O P B O Q).
-          eapply (out_conga B _ Q B _ Q).
-            apply conga_refl; auto.
-            unfold Out.
+          apply out2__conga.
             repeat split; auto.
             left.
             Between.
-            unfold Out.
             repeat split; auto.
             left.
             Between.
-            apply out_trivial; auto.
-          apply out_trivial; auto.
         apply (anga_conga_anga _ A O P); auto.
       assert(Bet Q O P).
 
@@ -649,16 +638,17 @@ Proof.
         auto.
 
       assert(Bet B' O C').
-        apply(perp2_preserves_bet13 O B C B' C'); eBetween.
+        apply(perp2_preserves_bet13 O B C B' C'); auto.
+          apply outer_transitivity_between with A; Between.
           intro.
           apply H.
           ColR.
-          eBetween.
+        apply between_symmetry, outer_transitivity_between with C'; auto.
 
     (***************)
     induction H15.
       assert(Bet C O B).
-        eBetween.
+        apply (between_exchange3 A); assumption.
       assert(Bet O A' C').
         apply(perp2_preserves_bet23 O C A A' C'); Between.
         intro.
@@ -670,10 +660,10 @@ ColR.
           intro.
           apply H.
 ColR.
-eBetween.
+apply (between_exchange3 C'); Between.
     induction H15.
       assert(Bet A O C).
-        eBetween.
+        apply between_inner_transitivity with B; assumption.
       assert(Bet O B' C').
         apply(perp2_preserves_bet23 O C B B' C'); Between.
           intro.
@@ -687,9 +677,9 @@ Between.
           intro.
           apply H.
 ColR.
-eBetween.
+apply between_inner_transitivity with C'; Between.
     assert(Bet A O C).
-      eBetween.
+      apply outer_transitivity_between with B; auto.
     assert(Bet O C' B').
       apply(perp2_preserves_bet23 O B C C' B'); Col.
       intro.
@@ -701,7 +691,7 @@ Between.
         intro.
         apply H.
 ColR.
-    eBetween.
+    apply outer_transitivity_between with C'; Between.
 Qed.
 
 Lemma l13_10_aux4 : forall A B C A' B' C' O,
@@ -768,7 +758,7 @@ ColR.
     induction H15.
       assert(Bet B' O C').
         assert(Bet C O B).
-        eBetween.
+        apply outer_transitivity_between with A; auto.
         apply(perp2_preserves_bet13 O B C B' C'); Between.
           intro.
           apply H.
@@ -789,7 +779,7 @@ apply(l5_2 C' O A' B'); Between.
 
     induction H15.
       assert(Bet O C B).
-eBetween.
+apply between_exchange4 with A; assumption.
       assert(Bet O B' C').
         apply(perp2_preserves_bet23 O C B B' C'); Col.
           intro.
@@ -808,7 +798,7 @@ apply(l5_3 O A' B' C'); auto.
 
     induction H15.
       assert(Bet O A C).
-eBetween.
+apply between_inner_transitivity with B; assumption.
       assert(Bet O C' A').
         apply(perp2_preserves_bet23 O A C C' A'); auto.
 ColR.
@@ -818,7 +808,7 @@ ColR.
         apply perp2_sym.
         auto.
       assert(Bet O C B).
-eBetween.
+apply between_exchange2 with A; assumption.
       assert(Bet O B' C').
         apply(perp2_preserves_bet23 O C B B' C'); auto.
           intro.
@@ -828,15 +818,12 @@ ColR.
         auto.
 repeat split; auto.
 right.
-eBetween.
+apply between_exchange4 with C'; assumption.
 
-(*      assert(Bet O B' A').
-eBetween.
-*)
     assert(Bet O A C).
-eBetween.
+apply outer_transitivity_between with B; auto.
     assert( Bet O B C).
-eBetween.
+apply between_exchange2 with A; assumption.
 
     assert(Bet O C' B').
       apply(perp2_preserves_bet23  O B C C' B'); Col.
@@ -1523,11 +1510,7 @@ Proof.
           assert(Per O N' B).
             apply(lcos_per O N' B ln' lb n'); auto.
             assert(CongA A O N B O N').
-              apply(out_conga A O N A O N A N B N').
-                apply conga_refl ; auto.
-                apply out_trivial; auto.
-                apply out_trivial; auto.
-                auto.
+              apply out2__conga; auto.
               apply l6_6.
               auto.
             apply (anga_conga_anga n' A O N); auto.
@@ -1537,23 +1520,8 @@ Proof.
           assert(Per O N' A').
             apply(lcos_per O N' A' ln' la' n); auto.
             assert(CongA B' O N A' O N').
-              apply(out_conga B' O N B' O N B' N A' N').
-                apply conga_refl; auto.
-                apply out_trivial; auto.
-                apply out_trivial; auto.
-                eapply (l13_10_aux5 B A C B' A' C'); Col.
-                  intro.
-                  subst A'.
-                  apply H.
-                  Col.
-                  apply perp2_sym.
-                  auto.
-                  apply perp2_sym.
-                  auto.
-                apply l6_6.
-                auto.
-              apply l6_6.
-              auto.
+              apply out2__conga; auto.
+                apply (l13_10_aux5 A B C A' B' C'); Col.
             apply (anga_conga_anga n B' O N); auto.
             apply conga_right_comm.
             auto.
@@ -1597,18 +1565,19 @@ End Pappus_Pascal.
 (** lcos_lcos_col -> lcos2_cop__col
     per_per_perp -> cop_per2__perp *)
 
+(* Lemma par__perp2 : forall A B C D P, Par A B C D -> Perp2 A B C D P. *)
+
 Section Pappus_Pascal_2.
 
-Context `{T2D:Tarski_2D}.
-Context `{TE:@Tarski_euclidean Tn TnEQD}.
+Context `{TE:Tarski_euclidean}.
 
-Lemma par__perp2 : forall A B C D P, Par A B C D -> Perp2 A B C D P.
+Lemma cop_par__perp2 : forall A B C D P, Coplanar A B C P -> Par A B C D -> Perp2 A B C D P.
 Proof.
     intros.
-    apply par_distincts in H.
+    apply par_distincts in H0.
     spliter.
     unfold Perp2.
-    assert(HH:= perp_exists P A B H0).
+    assert(HH:= ex_perp_cop A B P C H1).
     ex_and HH Q.
     exists P.
     exists Q.
@@ -1616,8 +1585,14 @@ Proof.
       Col.
       Perp.
     apply perp_sym.
-    apply (par_perp__perp A B); auto.
-    apply perp_sym; auto.
+    apply (cop_par_perp__perp A B); Perp.
+    apply par_symmetry in H0.
+    induction H0.
+      apply coplanar_pseudo_trans with A B C; Cop.
+      apply par_strict_not_col_3 with D.
+      assumption.
+    spliter.
+    apply coplanar_perm_16, col2_cop__cop with A B; Col; Cop.
 Qed.
 
 Lemma l13_11 : forall A B C A' B' C' O,
@@ -1629,11 +1604,22 @@ Lemma l13_11 : forall A B C A' B' C' O,
   Par A B' B A'.
 Proof.
     intros.
-    assert(HH:=par__perp2 B C' C B' O H8).
-    assert(HP:=par__perp2 C A' A C' O H9).
-    assert(HQ:=perp2_par A B' B A' O).
-    apply HQ.
-    apply(l13_10 A B C A' B' C' O); auto.
+    assert (Coplanar B C' C O) by Cop.
+    assert (Coplanar C A' A O) by (apply coplanar_perm_1, col_cop__cop with B; Col; Cop).
+    assert(HH:=cop_par__perp2 B C' C B' O H10 H8).
+    assert(HP:=cop_par__perp2 C A' A C' O H11 H9).
+    assert(HQ : Perp2 A B' B A' O).
+      apply(l13_10 A B C A' B' C' O); assumption.
+    ex_and HQ X.
+    ex_and H12 Y.
+    assert_diffs.
+    assert (Coplanar O A A' X).
+      apply coplanar_perm_13, col_cop__cop with B'; Col.
+      apply coplanar_perm_3, col_cop__cop with Y; Col; Cop.
+    assert (Coplanar O A A' Y).
+      apply coplanar_perm_13, col_cop__cop with B'; Col.
+      apply coplanar_perm_3, col_cop__cop with X; Col; Cop.
+    apply l12_9 with X Y; Perp; apply coplanar_pseudo_trans with O A A'; Cop.
 Qed.
 
 
@@ -1646,9 +1632,11 @@ Proof.
     assert(HP:= H).
     unfold Par_strict in HP.
     spliter.
+    assert (O <> A) by (apply par_strict_distinct in H; spliter; auto).
+    assert (O' <> A') by (apply par_strict_distinct in H; spliter; auto).
     assert(~Col O A A').
       intro.
-      apply H11.
+      apply H9.
       exists A'.
       split; Col.
     induction(eq_dec_points A C).
@@ -1662,14 +1650,14 @@ Proof.
       assert(A' =  C').
         eapply (l6_21 A C' O' A'); Col.
         intro.
-        apply H11.
+        apply H9.
         exists A.
         split.
           Col.
         eapply (col_transitivity_1 _ C').
           intro.
           subst C'.
-          apply H11.
+          apply H9.
           exists A.
           Col.
           Col.
@@ -1687,10 +1675,10 @@ Proof.
       apply H13.
       eapply (l6_21 A A' O A); Col.
     assert(Par_strict A C A' C').
-      unfold Par_strict.
-      repeat split; auto; try apply all_coplanar.
+      split.
+        Cop.
       intro.
-      apply H11.
+      apply H9.
       ex_and H15 X.
       exists X.
       split.
@@ -1706,7 +1694,7 @@ Proof.
       assert(B' = C').
         eapply (l6_21 B C' A' C').
           intro.
-          apply H11.
+          apply H9.
           exists B.
           split.
             Col.
@@ -1749,10 +1737,10 @@ Proof.
         Col.
         Col.
     assert(Par_strict B C B' C').
-      unfold Par_strict.
-      repeat split; auto; try apply all_coplanar.
+      split.
+        Cop.
       intro.
-      apply H11.
+      apply H9.
       ex_and H19 X.
       exists X.
       split.
@@ -1809,7 +1797,7 @@ Proof.
     apply plg_par; auto.
     intro.
     subst A'.
-    apply H11.
+    apply H9.
     exists B.
     split; Col.
 Qed.

@@ -48,7 +48,7 @@ Theorem legendre_s_second_theorem :
   postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights ->
   triangle_postulate.
 Proof.
-  assert (H:=existential_triangle__rah); assert (I:=rah__triangle); tauto.
+  intro H; exact (rah__triangle (existential_triangle__rah H)).
 Qed.
 
 Lemma legendre_s_third_theorem_aux :
@@ -56,22 +56,20 @@ Lemma legendre_s_third_theorem_aux :
   triangle_postulate ->
   euclid_s_parallel_postulate.
 Proof.
-  assert (I:=aristotle__greenberg).
-  assert (J:playfair_s_postulate->greenberg_s_axiom->decidability_of_intersection).
-  { intro HP; assert (J:=playfair__alternate_interior HP).
-    assert(K:=alternate_interior__proclus).
-    assert(L:proclus_postulate->decidability_of_intersection); [|tauto].
-    assert(M:=proclus_s_postulate_implies_strong_parallel_postulate).
-    assert(N:=strong_parallel_postulate_implies_inter_dec); tauto.
+  intros HA HT.
+  apply aristotle__greenberg in HA.
+  apply triangle__playfair_bis in HT; trivial.
+  apply playfair_bis__playfair in HT.
+  apply euclid_5__original_euclid, tarski_s_euclid_implies_euclid_5.
+  apply triangle_circumscription_implies_tarski_s_euclid.
+  apply inter_dec_plus_par_perp_perp_imply_triangle_circumscription.
+  { apply strong_parallel_postulate_implies_inter_dec.
+    apply proclus_s_postulate_implies_strong_parallel_postulate.
+    apply alternate_interior__proclus; trivial.
+    apply playfair__alternate_interior, HT.
   }
-  assert (K:=triangle__playfair_bis).
-  assert (L:=playfair_bis__playfair).
-  assert (M:=playfair__universal_posidonius_postulate).
-  assert (N:=universal_posidonius_postulate__perpendicular_transversal_postulate).
-  assert (O:=inter_dec_plus_par_perp_perp_imply_triangle_circumscription).
-  assert (P:=triangle_circumscription_implies_tarski_s_euclid).
-  assert (Q:=tarski_s_euclid_implies_euclid_5).
-  assert (R:=euclid_5__original_euclid); tauto.
+  apply universal_posidonius_postulate__perpendicular_transversal_postulate.
+  apply playfair__universal_posidonius_postulate, HT.
 Qed.
 
 Theorem legendre_s_third_theorem :
@@ -79,7 +77,7 @@ Theorem legendre_s_third_theorem :
   triangle_postulate ->
   euclid_s_parallel_postulate.
 Proof.
-  assert (H:=t22_24); assert (I:=legendre_s_third_theorem_aux); tauto.
+  intros; apply legendre_s_third_theorem_aux; [apply t22_24|]; assumption.
 Qed.
 
 Lemma legendre_aux :
@@ -133,7 +131,7 @@ Proof.
     apply l9_8_2 with C1; Side; apply one_side_symmetry, l12_6, par_strict_col_par_strict with A; Col; Par.
     { apply l9_31.
         apply l9_17 with C1; trivial.
-        exists A; assert_diffs; repeat split; Col; try (intro; apply HNCol; ColR);
+        exists A; repeat split; Col; try (intro; apply HNCol; ColR);
         [exists B|exists C]; split; Col; Between.
       apply one_side_symmetry, l12_6, par_strict_col_par_strict with A; Col; Par.
     }
@@ -205,7 +203,7 @@ Proof.
   destruct (l11_49 A M C' D' M B') as [HCong1 [HConga1 HConga2]]; Cong.
     apply l11_14; Between.
   split.
-    apply (out_conga A C' M M B' D'); try (apply out_trivial); try (apply bet_out); Between; CongA.
+    apply (l11_10 A C' M M B' D'); Out; CongA.
   split; Cong.
   repeat split; Col.
   exists M; split; Col.
@@ -227,7 +225,7 @@ Proof.
   intros noah A B C HNCol HAcute legendre P Q R S T U HDef.
   induction 1; rename A0 into P; rename B0 into Q; rename C0 into R.
     exists B; exists C; exists P; exists Q; exists R; assert_diffs.
-    repeat split; (try apply out_trivial); Lea.
+    repeat (split; [Out|]); Lea.
   rename D into S; rename E into T; rename F into U.
   destruct IHGradAExp as [B' [C' [P' [Q' [R' [HOutB [HOutC [HDef' HLea]]]]]]]]; trivial.
   destruct (legendre_aux1 A B C B' C') as [D' [HInangle [HConga [HCong HTS]]]]; trivial.
@@ -240,8 +238,8 @@ Proof.
   repeat (split; trivial).
   destruct (ex_suma P' Q' R' P' Q' R') as [V [W [X HSuma1]]]; auto.
   destruct (legendre_aux noah A B' C' D' B'' C'' P' Q' R' P'' Q'' R'' V W X) as [HIsi1 HLea1]; trivial.
-    apply l6_7 with B; trivial; apply l6_6; trivial.
-    apply l6_7 with C; trivial; apply l6_6; trivial.
+    apply l6_7 with B; Out.
+    apply l6_7 with C; Out.
   apply lea_trans with V W X; trivial.
   apply sams_lea2_suma2__lea with S T U S T U P' Q' R' P' Q' R'; trivial.
 Qed.
@@ -272,7 +270,7 @@ Proof.
     apply not_col_permutation_4 in HNCol.
     destruct (legendre_aux2 archi A B C HNCol HAcute legendre P Q R S T U HDef HGAE) as [B' [C' HInter]].
     destruct HInter as [P' [Q' [R' [HOutB [HOutC [HDef' HLea]]]]]].
-    apply (obtuse_gea_obtuse P' Q' R'), obtuse__nsams in HObtuse; auto.
+    apply (lea_obtuse_obtuse P' Q' R'), obtuse__nsams in HObtuse; auto.
     exfalso.
     apply HObtuse.
     destruct (legendre_aux1 A B C B' C') as [D' [HInangle [HConga [HCong HTS]]]]; trivial.
@@ -283,7 +281,7 @@ Proof.
       intro; subst; apply HNCol; ColR.
     destruct (ex_suma P' Q' R' P' Q' R') as [V [W [X HSuma]]]; auto.
     destruct (legendre_aux archi A B' C' D' B'' C'' P' Q' R' S' T' U' V W X); trivial;
-    [apply l6_7 with B|apply l6_7 with C]; trivial; apply l6_6; trivial.
+    [apply l6_7 with B|apply l6_7 with C]; Out.
 Qed.
 
 Theorem legendre_s_fourth_theorem :
@@ -291,9 +289,7 @@ Theorem legendre_s_fourth_theorem :
   legendre_s_parallel_postulate ->
   postulate_of_existence_of_a_triangle_whose_angles_sum_to_two_rights.
 Proof.
-  assert (H:=legendre_s_fourth_theorem_aux).
-  assert (I:=rah__triangle).
-  assert (J:=triangle__existential_triangle); tauto.
+  intros; apply triangle__existential_triangle, rah__triangle, legendre_s_fourth_theorem_aux; assumption.
 Qed.
 
 End Legendre.

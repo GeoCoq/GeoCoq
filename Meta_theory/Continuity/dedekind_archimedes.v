@@ -19,6 +19,96 @@ Proof.
   apply le_transitivity with A E; Le.
 Qed.
 
+Lemma dedekind_variant__archimedes : (forall A B C D, Reach A B C D \/ ~ Reach A B C D) ->
+  dedekind_variant -> archimedes_axiom.
+Proof.
+  intros Hdec dedekind.
+  apply archimedes_aux.
+  intros A B C HOut.
+  destruct (Hdec A B A C) as [|HNReach]; trivial.
+  exfalso.
+  assert (HX : exists X, forall P Q, (P = A \/ Out A B P /\ Reach A B A P) ->
+                                       (Out A B Q /\ ~ Reach A B A Q) -> Bet P X Q).
+  { apply dedekind with A C.
+    - left; split.
+    - split; assumption.
+    - intros P HP.
+      assert (Out A B P); [|destruct (Hdec A B A P); auto].
+      apply l6_7 with C; Out.
+    - intros P Q [HP|[HP1 HP2]] [HQ1 HQ2].
+        subst; destruct HQ1 as [_ []]; split; Between.
+      split; [|intro; subst; apply HQ2, HP2].
+      assert (HOut' : Out A P Q) by (apply l6_7 with B; Out).
+      destruct (HOut') as [_ [_ [|Habs]]]; trivial.
+      exfalso.
+      apply HQ2.
+      destruct HP2 as [B' [HGrad HLe]].
+      exists B'; split; trivial.
+      apply le_transitivity with A P; Le.
+  }
+  destruct HX as [X HX].
+  assert_diffs.
+  assert (HGrad := grad_init A B).
+  assert (HBet : Bet B X C) by (apply HX; [right|]; split; Out; exists B; split; Le).
+  assert (Out A B X) by (apply out_bet_out_1 with C; auto).
+  destruct HOut as [_ [_ [HBet2|HBet2]]]; [|exfalso; apply HNReach; exists B; split; Le].
+  absurd (~ Reach A B A X).
+
+  - intro HAbs.
+    assert (X <> B) by (intro; apply HAbs; exists B; subst; split; Le).
+    destruct (le_cases X A A B) as [HLe|HLe].
+      apply HAbs; exists B; split; Le.
+    assert (Bet A B X) by (apply l6_13_1; Le).
+    destruct HLe as [X0 [HBet1 HCong]].
+    absurd (~ Reach A B A X0).
+    { intro HNReach0.
+      assert (HXOut : Out X X0 B).
+        apply l6_7 with A; [|apply l6_6]; apply bet_out; Between.
+        intro; treat_equalities; auto.
+      destruct (le_cases X B X X0) as [HLe|HLe].
+      - apply HNReach0; exists B; split; trivial.
+        exists X0; split; Cong.
+        apply between_inner_transitivity with X; Between.
+        apply between_symmetry, l6_13_1; trivial.
+        apply l6_6; trivial.
+      - absurd (X = X0).
+          assert_diffs; auto.
+        apply between_equality with B.
+          apply l6_13_1; trivial.
+        apply between_symmetry, HX; [right|]; split; trivial.
+          apply out_trivial; auto.
+          exists B; split; Le.
+        apply l6_7 with X; trivial.
+        apply l6_6, bet_out; Between.
+        intro; subst X0; apply HNReach0.
+        exists B; split; Le.
+    }
+    intro HReach.
+    destruct HReach as [B' [HGrad' HLe]].
+    destruct (segment_construction A B' A B) as [B1' [HBet' HCong']].
+    apply HAbs; exists B1'; split.
+      apply grad_stab with B'; Cong.
+    apply bet2_le2__le1346 with X0 B'; Le; Between.
+    apply cong__le, cong_transitivity with A B; Cong.
+
+  - intro HReach.
+    destruct (segment_construction_3 X C A B) as [X1 [HOut' HCong]]; auto.
+      intro; subst; contradiction.
+    assert (HBet1 : Bet A X X1).
+      apply between_symmetry, bet_out__bet with C; eBetween.
+    apply (not_bet_and_out X1 X C).
+    split; [|apply l6_6; trivial].
+    apply HX; [right|]; split; trivial; [| |apply bet_out; auto].
+      assert_diffs; apply l6_7 with X; Out.
+    destruct HReach as [B' [HGrad' HLe]].
+    destruct (segment_construction A B' A B) as [B1' [HBet' HCong']].
+    exists B1'; split.
+      apply grad_stab with B'; Cong.
+    apply bet2_le2__le1346 with X B'; Le.
+    apply cong__le, cong_transitivity with A B; Cong.
+Qed.
+
+(*
 Lemma dedekind__archimedes : (forall A B C D, ~ ~ Reach A B C D -> Reach A B C D) ->
   dedekind_s_axiom -> archimedes_axiom.
 Proof.
@@ -112,5 +202,6 @@ Proof.
     apply bet2_le2__le1346 with X B'; Le.
     apply cong__le, cong_transitivity with A B; Cong.
 Qed.
+*)
 
 End Dedekind_archimedes.

@@ -7,12 +7,17 @@ Context `{TE:Tarski_euclidean}.
 
 Definition is_circumcenter G A B C := Cong A G B G /\ Cong B G C G /\ Coplanar G A B C.
 
+Lemma is_circumcenter_coplanar : forall A B C G, is_circumcenter G A B C -> Coplanar G A B C.
+Proof.
+unfold is_circumcenter; intros; spliter; assumption.
+Qed.
+
 Lemma circumcenter_cong : forall G A B C,
  is_circumcenter G A B C ->
  Cong A G B G /\ Cong B G C G /\ Cong C G A G.
 Proof.
+unfold is_circumcenter.
 intros.
-unfold is_circumcenter in *.
 intuition eCong.
 Qed.
 
@@ -78,17 +83,8 @@ intros.
 apply is_circumcenter_perm in H;intuition.
 Qed.
 
-Lemma is_circumcenter_cop : forall A B C G,
- is_circumcenter G A B C -> Coplanar G A B C.
-Proof.
-unfold is_circumcenter.
-intros; spliter; assumption.
-Qed.
-
 End Circumcenter.
 
-
-(* TODO investigate bug Hint Resolve/Section *)
 Hint Resolve
      is_circumcenter_perm_1
      is_circumcenter_perm_2
@@ -96,7 +92,70 @@ Hint Resolve
      is_circumcenter_perm_4
      is_circumcenter_perm_5 : Circumcenter.
 
-Hint Resolve is_circumcenter_cop : cop.
+Hint Resolve is_circumcenter_coplanar : cop.
+
+Ltac assert_cops :=
+ repeat match goal with
+      | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
+      | H:TS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply ts__coplanar, H)
+      | H:OS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply os__coplanar, H)
+      | H:ReflectL ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflectl__coplanar, H)
+      | H:Reflect ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflect__coplanar, H)
+      | H:InAngle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply inangle__coplanar, H)
+      | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply pars__coplanar, H)
+      | H:Par ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply par__coplanar, H)
+      | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plg__coplanar, H)
+      | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgs__coplanar, H)
+      | H:Parallelogram_flat ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgf__coplanar, H)
+      | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply parallelogram__coplanar, H)
+      | H:Rhombus ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rhombus__coplanar, H)
+      | H:Rectangle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rectangle__coplanar, H)
+      | H:Square ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply square__coplanar, H)
+      | H:Saccheri ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply sac__coplanar, H)
+      | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
+      | H:is_circumcenter ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply is_circumcenter_coplanar, H)
+ end.
+
+Ltac Cop := auto; try (intros; solve [apply col__coplanar; Col
+     |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
+     |apply coplanar_perm_18, col__coplanar; Col
+     |assert_cops; auto 2 with cop_perm]).
+
+Ltac copr_aux :=
+ repeat match goal with
+      | H: ~ Col ?X1 ?X2 ?X3, X4 : Tpoint |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4;
+     first[exist_hyp_perm_col X1 X2 X4; assert (Coplanar X1 X2 X4 X3) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X2 X3 X4; assert (Coplanar X2 X3 X4 X1) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X1 X3 X4; assert (Coplanar X1 X3 X4 X2) by (apply col__coplanar; Col)]
+ end.
+
+Ltac CopR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+ let cop := constr:(Coplanar) in
+   treat_equalities; assert_cols; clean; assert_ncols; assert_cops; auto 2 with cop_perm;
+   solve[apply col__coplanar; Col|apply coplanar_perm_1, col__coplanar; Col
+        |apply coplanar_perm_4, col__coplanar; Col|apply coplanar_perm_18, col__coplanar; Col
+        |copr_aux; Cop_refl tpoint col cop] || fail "Can not be deduced".
 
 Section Circumcenter2 .
 
@@ -118,8 +177,7 @@ Lemma circumcenter_perp : forall A B C A' G,
 Proof.
 intros.
 apply cong_cop_perp_bisect; try assumption;
-unfold Midpoint, is_circumcenter in *;
-intuition eCong; Cop.
+unfold Midpoint, is_circumcenter in *; spliter; Cong; Cop.
 Qed.
 
 
@@ -137,7 +195,7 @@ destruct (H0 A B C H) as [G HG].
 exists G.
 unfold is_circumcenter.
 spliter.
-repeat split;eCong; Cop.
+repeat split;Cop;CongR.
 Qed.
 
 Lemma circumcenter_perp_all : forall A B C A' B' C' G,
@@ -149,10 +207,8 @@ Lemma circumcenter_perp_all : forall A B C A' B' C' G,
   Perp_bisect G A' B C /\ Perp_bisect G B' A C /\ Perp_bisect G C' A B.
 Proof.
 intros.
-split; try apply cong_cop_perp_bisect; try (split; try apply cong_cop_perp_bisect);
-try assumption;
-unfold is_circumcenter in *;
-intuition eCong; Cop.
+unfold is_circumcenter in *; spliter.
+split; [|split]; apply cong_mid_perp_bisect; trivial; CongR.
 Qed.
 
 Lemma circumcenter_intersect : forall A B C A' B' C' G,
@@ -172,7 +228,7 @@ assert (Cong A G B G).
  assert (Cong A G C G).
   apply (perp_bisect_cong2 G B' A C).
   assumption.
- eCong.
+ CongR.
 apply perp_col1 with C'; Col.
 apply perp_right_comm.
 apply per_perp; auto.
@@ -195,17 +251,20 @@ elim (col_dec A B C); intro HABC.
   Name C' the midpoint of A and B.
   assert (HPer1 : Perp_bisect O C' A B).
     {
-    apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-    intro; treat_equalities; assert (HFalse := l7_20 O B C); elim HFalse; clear HFalse;
-    try intro HFalse; Cong; assert_cols; ColR.
+    unfold is_circumcenter in *; spliter; apply cong_mid_perp_bisect; Cong.
+    intro; treat_equalities; assert (HFalse := l7_20 O B C).
+    destruct HFalse; Cong.
+      ColR.
+    treat_equalities; auto.
     }
   Name A' the midpoint of B and C.
   assert (HPer2 : Perp_bisect O A' B C).
     {
-    apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-    intro; treat_equalities; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse;
-    try intro HFalse; Cong; assert_cols; ColR.
-
+    unfold is_circumcenter in *; spliter; apply cong_mid_perp_bisect; Cong.
+    intro; treat_equalities; assert (HFalse := l7_20 O A B).
+    destruct HFalse; Cong.
+      ColR.
+    treat_equalities; auto.
     }
   assert (HPar : Par_strict O A' O C').
     {
@@ -214,7 +273,7 @@ elim (col_dec A B C); intro HABC.
       {
       apply l12_9 with A B; [Cop..| |Cop| |apply perp_bisect_perp; assumption].
         apply col__coplanar; ColR.
-      apply perp_col0 with B C; Col; apply perp_sym; apply perp_bisect_perp; Col.
+      apply perp_col0 with B C; Perp; Col.
       }
 
       {
@@ -243,8 +302,8 @@ elim (col_dec A B C); intro HABC.
     {
     assert (HPer : Per A C B).
       {
-      apply midpoint_thales with O; unfold is_circumcenter in *;
-      spliter; Col; try split; eCong.
+      apply midpoint_thales with O; Col.
+      apply circumcenter_cong in HIC1; spliter; Cong.
       }
     Name B' the midpoint of A and C.
     assert (HO'B' : O' <> B').
@@ -252,8 +311,8 @@ elim (col_dec A B C); intro HABC.
       intro; treat_equalities.
       assert (HPer2 : Per A B C).
         {
-        apply midpoint_thales with O'; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O'; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       assert (HPar : Par_strict A B A C).
         {
@@ -268,8 +327,8 @@ elim (col_dec A B C); intro HABC.
       intro; treat_equalities.
       assert (HPer2 : Per B A C).
         {
-        apply midpoint_thales with O'; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O'; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       assert (HPar : Par_strict B A B C).
         {
@@ -285,15 +344,15 @@ elim (col_dec A B C); intro HABC.
     destruct H as [HPer3 [HPer4 Hc]]; clear Hc.
     assert (HPer1 : Perp_bisect O A' B C).
       {
-      apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-      show_distinct O B; Col.
-      intro; treat_equalities; apply HABC; assert_cols; ColR.
+      unfold is_circumcenter in *; spliter.
+      apply cong_mid_perp_bisect; Cong.
+      intro; treat_equalities; apply HABC; Col.
       }
     assert (HPer2 : Perp_bisect O B' A C).
       {
-      apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
-      show_distinct O A; Col.
-      intro; treat_equalities; apply HABC; assert_cols; ColR.
+      apply circumcenter_cong in HIC1; spliter.
+      apply cong_mid_perp_bisect; Cong.
+      intro; treat_equalities; apply HABC; Col.
       }
     apply l6_21 with O A' B' O'; Col.
 
@@ -312,23 +371,19 @@ elim (col_dec A B C); intro HABC.
       }
 
       {
-      apply col_permutation_2; apply cop_perp2__col with B C;
-        [|apply perp_bisect_perp;apply perp_bisect_sym_1; auto..].
-      apply coplanar_trans_1 with A; Col; Cop.
+      apply col_permutation_2, cop_perp2__col with B C; Perp; CopR.
       }
 
       {
-      apply col_permutation_5; apply cop_perp2__col with A C;
-        [|apply perp_bisect_perp;apply perp_bisect_sym_1; auto..].
-      apply coplanar_trans_1 with B; Col; Cop.
+      apply col_permutation_5, cop_perp2__col with A C; Perp; CopR.
       }
     }
 
     {
     assert (HPer : Per A C B).
       {
-      apply midpoint_thales with O'; unfold is_circumcenter in *;
-      spliter; Col; try split; eCong.
+      apply midpoint_thales with O'; Col.
+      apply circumcenter_cong in HIC2; spliter; Cong.
       }
     Name B' the midpoint of A and C.
     assert (HOB' : O <> B').
@@ -336,8 +391,8 @@ elim (col_dec A B C); intro HABC.
       intro; treat_equalities.
       assert (HPer2 : Per A B C).
         {
-        apply midpoint_thales with O; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       assert (HPar : Par_strict A B A C).
         {
@@ -352,8 +407,8 @@ elim (col_dec A B C); intro HABC.
       intro; treat_equalities.
       assert (HPer2 : Per B A C).
         {
-        apply midpoint_thales with O; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       assert (HPar : Par_strict B A B C).
         {
@@ -369,15 +424,15 @@ elim (col_dec A B C); intro HABC.
     destruct H as [HPer3 [HPer4 Hc]]; clear Hc.
     assert (HPer1 : Perp_bisect O' A' B C).
       {
-      apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-      show_distinct O' B; Col.
-      intro; treat_equalities; apply HABC; assert_cols; ColR.
+      unfold is_circumcenter in *; spliter.
+      apply cong_mid_perp_bisect; Cong.
+      intro; treat_equalities; apply HABC; Col.
       }
     assert (HPer2 : Perp_bisect O' B' A C).
       {
-      apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
-      show_distinct O' A; Col.
-      intro; treat_equalities; apply HABC; assert_cols; ColR.
+      apply circumcenter_cong in HIC2; spliter.
+      apply cong_mid_perp_bisect; Cong.
+      intro; treat_equalities; apply HABC; Col.
       }
     apply l6_21 with O' A' B' O; Col.
 
@@ -395,15 +450,11 @@ elim (col_dec A B C); intro HABC.
       }
 
       {
-      apply col_permutation_2; apply cop_perp2__col with B C;
-        [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-      apply coplanar_trans_1 with A; Cop.
+      apply col_permutation_2, cop_perp2__col with B C; Perp; CopR.
       }
 
       {
-      apply col_permutation_5; apply cop_perp2__col with A C;
-        [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-      apply coplanar_trans_1 with B; Col; Cop.
+      apply col_permutation_5, cop_perp2__col with A C; Perp; CopR.
       }
     }
 
@@ -415,8 +466,8 @@ elim (col_dec A B C); intro HABC.
       {
       assert (HPer : Per A B C).
         {
-        apply midpoint_thales with O; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       Name A' the midpoint of B and C.
       assert (HO'A' : O' <> A').
@@ -424,8 +475,8 @@ elim (col_dec A B C); intro HABC.
         intro; treat_equalities.
         assert (HPer2 : Per B A C).
           {
-          apply midpoint_thales with O'; unfold is_circumcenter in *;
-          spliter; Col; try split; eCong.
+          apply midpoint_thales with O'; Col.
+          unfold is_circumcenter in *; spliter; Cong.
           }
         assert (HPar : Par_strict A C B C).
           {
@@ -441,13 +492,14 @@ elim (col_dec A B C); intro HABC.
       destruct H as [HPer3 [Hc HPer4]]; clear Hc.
       assert (HPer1 : Perp_bisect O A' B C).
         {
-        apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-        show_distinct O C; Col.
-        intro; treat_equalities; apply HABC; assert_cols; ColR.
+        unfold is_circumcenter in *; spliter.
+        apply cong_mid_perp_bisect; Cong.
+        intro; treat_equalities; apply HABC; Col.
         }
       assert (HPer2 : Perp_bisect O C' A B).
         {
-        apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+        unfold is_circumcenter in *; spliter.
+        apply cong_mid_perp_bisect; Cong.
         }
       apply l6_21 with O A' C' O'; Col.
 
@@ -465,23 +517,19 @@ elim (col_dec A B C); intro HABC.
         }
 
         {
-        apply col_permutation_2; apply cop_perp2__col with B C;
-          [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-        apply coplanar_trans_1 with A; Cop.
+        apply col_permutation_2, cop_perp2__col with B C; Perp; CopR.
         }
 
         {
-        apply col_permutation_5; apply cop_perp2__col with A B;
-          [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-        apply coplanar_trans_1 with C; Col; Cop.
+        apply col_permutation_5, cop_perp2__col with A B; Perp; CopR.
         }
       }
 
       {
       assert (HPer : Per A B C).
         {
-        apply midpoint_thales with O'; unfold is_circumcenter in *;
-        spliter; Col; try split; eCong.
+        apply midpoint_thales with O'; Col.
+        unfold is_circumcenter in *; spliter; Cong.
         }
       Name A' the midpoint of B and C.
       assert (HOA' : O <> A').
@@ -489,8 +537,8 @@ elim (col_dec A B C); intro HABC.
         intro; treat_equalities.
         assert (HPer2 : Per B A C).
           {
-          apply midpoint_thales with O; unfold is_circumcenter in *;
-          spliter; Col; try split; eCong.
+          apply midpoint_thales with O; Col.
+          unfold is_circumcenter in *; spliter; Cong.
           }
         assert (HPar : Par_strict A C B C).
           {
@@ -506,13 +554,14 @@ elim (col_dec A B C); intro HABC.
       destruct H as [HPer3 [Hc HPer4]]; clear Hc.
       assert (HPer1 : Perp_bisect O' A' B C).
         {
-        apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; Cong; Cop.
-        show_distinct O' C; Col.
-        intro; treat_equalities; apply HABC; assert_cols; ColR.
+        unfold is_circumcenter in *; spliter.
+        apply cong_mid_perp_bisect; Cong.
+        intro; treat_equalities; apply HABC; Col.
         }
       assert (HPer2 : Perp_bisect O' C' A B).
         {
-        apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+        unfold is_circumcenter in *; spliter.
+        apply cong_mid_perp_bisect; Cong.
         }
       apply l6_21 with O' A' C' O; Col.
 
@@ -530,15 +579,11 @@ elim (col_dec A B C); intro HABC.
         }
 
         {
-        apply col_permutation_2; apply cop_perp2__col with B C;
-          [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-        apply coplanar_trans_1 with A; Cop.
+        apply col_permutation_2, cop_perp2__col with B C; Perp; CopR.
         }
 
         {
-        apply col_permutation_5; apply cop_perp2__col with A B;
-          [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-        apply coplanar_trans_1 with C; Col; Cop.
+        apply col_permutation_5, cop_perp2__col with A B; Perp; CopR.
         }
       }
 
@@ -546,12 +591,11 @@ elim (col_dec A B C); intro HABC.
       Name A' the midpoint of B and C.
       elim (eq_dec_points O A'); intro HOA'; elim (eq_dec_points O' A'); intro HO'A';
       treat_equalities; Col.
-
         {
         assert (HPer : Per C A B).
           {
-          apply midpoint_thales with O; unfold is_circumcenter in *;
-          spliter; Col; try split; eCong; Between.
+          unfold is_circumcenter in *; spliter.
+          apply l8_2, midpoint_thales with O; Col; Cong.
           }
         assert (H : Perp_bisect O' O B C /\ Perp_bisect O' B' A C /\ Perp_bisect O' C' A B).
           {
@@ -560,11 +604,13 @@ elim (col_dec A B C); intro HABC.
         destruct H as [Hc [HPer3 HPer4]]; clear Hc.
         assert (HPer1 : Perp_bisect O B' A C).
           {
-          apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+          apply circumcenter_cong in HIC1; spliter.
+          apply cong_mid_perp_bisect; Cong.
           }
         assert (HPer2 : Perp_bisect O C' A B).
           {
-          apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+          unfold is_circumcenter in *; spliter.
+          apply cong_mid_perp_bisect; Cong.
           }
         apply l6_21 with O B' C' O'; Col.
 
@@ -582,36 +628,32 @@ elim (col_dec A B C); intro HABC.
           }
 
           {
-          apply col_permutation_2; apply cop_perp2__col with A C;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with B; Col; Cop.
+          apply col_permutation_2, cop_perp2__col with A C; Perp; CopR.
           }
 
           {
-          apply col_permutation_5; apply cop_perp2__col with A B;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with C; Col; Cop.
+          apply col_permutation_5, cop_perp2__col with A B; Perp; CopR.
           }
         }
 
         {
         assert (HPer : Per C A B).
           {
-          apply midpoint_thales with O'; unfold is_circumcenter in *;
-          spliter; Col; try split; eCong; Between.
+          unfold is_circumcenter in *; spliter.
+          apply l8_2, midpoint_thales with O'; Col; Cong.
           }
         assert (H : Perp_bisect O O' B C /\ Perp_bisect O B' A C /\ Perp_bisect O C' A B).
           {
-          apply circumcenter_perp_all; Col.
+          apply circumcenter_perp_all; auto.
           }
         destruct H as [Hc [HPer3 HPer4]]; clear Hc.
         assert (HPer1 : Perp_bisect O' B' A C).
           {
-          apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+          apply circumcenter_cong in HIC2; spliter; apply cong_mid_perp_bisect; Cong.
           }
         assert (HPer2 : Perp_bisect O' C' A B).
           {
-          apply cong_cop_perp_bisect; unfold is_circumcenter in *; spliter; eCong; Cop.
+          unfold is_circumcenter in *; spliter; apply cong_mid_perp_bisect; Cong.
           }
         apply l6_21 with O' B' C' O; Col.
 
@@ -629,27 +671,23 @@ elim (col_dec A B C); intro HABC.
           }
 
           {
-          apply col_permutation_2; apply cop_perp2__col with A C;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with B; Col; Cop.
+          apply col_permutation_2, cop_perp2__col with A C; Perp; CopR.
           }
 
           {
-          apply col_permutation_5; apply cop_perp2__col with A B;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with C; Col; Cop.
+          apply col_permutation_5, cop_perp2__col with A B; Perp; CopR.
           }
         }
 
         {
         assert (H : Perp_bisect O A' B C /\ Perp_bisect O B' A C /\ Perp_bisect O C' A B).
           {
-          apply circumcenter_perp_all; Col.
+          apply circumcenter_perp_all; auto.
           }
         destruct H as [HPer1 [HPer2 Hc]]; clear Hc.
         assert (H : Perp_bisect O' A' B C /\ Perp_bisect O' B' A C /\ Perp_bisect O' C' A B).
           {
-          apply circumcenter_perp_all; Col.
+          apply circumcenter_perp_all; auto.
           }
         destruct H as [HPer3 [HPer4 Hc]]; clear Hc.
         apply l6_21 with O A' B' O; Col.
@@ -658,25 +696,19 @@ elim (col_dec A B C); intro HABC.
           intro HOA'B'; assert (HPar : Par_strict A C C B).
             {
             apply par_not_col_strict with B; Col.
-            apply l12_9 with O A'; [| |Cop..| |].
-              apply coplanar_perm_4, col_cop__cop with B; Col; Cop.
-              apply coplanar_perm_4, col_cop__cop with C; Col; Cop.
-              apply perp_col0 with O B'; Col; apply perp_bisect_perp; assumption.
-            apply perp_sym; apply perp_right_comm; apply perp_bisect_perp; Col.
+            apply l12_9 with O A'; try CopR.
+              apply perp_col0 with O B'; Col; Perp.
+            Perp.
             }
           assert (HFalse := not_par_strict_id C A B); apply HFalse; Par.
           }
 
           {
-          apply col_permutation_2; apply cop_perp2__col with B C;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with A; Cop.
+          apply col_permutation_2, cop_perp2__col with B C; Perp; CopR.
           }
 
           {
-          apply col_permutation_5; apply cop_perp2__col with A C;
-            [|apply perp_bisect_perp, perp_bisect_sym_1; auto..].
-          apply coplanar_trans_1 with B; Col; Cop.
+          apply col_permutation_5, cop_perp2__col with A C; Perp; CopR.
           }
         }
       }

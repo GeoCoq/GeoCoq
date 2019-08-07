@@ -21,8 +21,7 @@ Proof.
     assert(HY := oe A B C D P Q R).
     destruct HY as [Y []]; auto.
       apply (sams_chara _ _ _ _ _ _ A'); Between.
-    assert_cols.
-    exists Y; auto.
+    exists Y; split; Col.
   }
 
   intro.
@@ -33,76 +32,23 @@ Proof.
   apply suma_distincts in Hdiff.
   spliter.
   assert(HY := oe A' B C D' P' Q' R').
-  destruct HY as [Y []]; SumA.
-  3: exists Y; split; ColR.
+  destruct HY as [Y []]; SumA; [..|exists Y; split; ColR].
   { assert(HNCol1 : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
     assert(HNCol2 : ~ Col B C D) by (apply (one_side_not_col123 _ _ _ A); Side).
     exists D.
     split.
-    apply l9_2; apply (l9_8_2 _ _ A); auto.
-    - repeat split; Col.
-      intro; apply HNCol1; ColR.
-      exists B; Col; Between.
-    - repeat split; Col.
-      intro; apply HNCol2; ColR.
-      exists C.
-      split; Col; Between.
+    - apply l9_2; apply (l9_8_2 _ _ A); auto.
+      apply bet__ts; Between; Col.
+    - apply l9_2, invert_two_sides, bet__ts; Between; Col.
   }
   intro.
   apply HNBet.
-  apply (bet_conga__bet P' Q' R'); auto.
-  apply (suma2__conga A B C B C D); auto.
-  apply suma_sym.
-  apply (conga3_suma__suma A' B C B C D' P' Q' R'); auto.
-  3: apply conga_refl; auto.
-  - assert(HNCol : ~ Col B C D) by (apply (one_side_not_col123 _ _ _ A); Side).
-    assert(TS C B D D').
-    { repeat split; Col.
-      intro; apply HNCol; ColR.
-      exists C; Col; Between.
-    }
-    apply (sams2_suma2__conga123 _ _ _ _ _ _ B C D' P' Q' R'); auto.
-      SumA.
-    { apply sams_left_comm.
-      repeat split; Col.
-        right; intro; assert_cols; Col.
-      exists D'.
-      split; CongA; split.
-        apply l9_9; auto.
-      split; Cop.
-      intro Hts; destruct Hts as [_ []]; assert_cols; Col.
-    }
-    apply suma_left_comm.
-    exists D'.
-    split; CongA; split.
-      apply l9_9; auto.
-    split; Cop.
-    apply conga_line; Between.
-
-  - assert(HNCol : ~ Col B C A) by (apply (one_side_not_col123 _ _ _ D); auto).
-    assert(TS B C A A').
-    { repeat split; Col.
-      intro; apply HNCol; ColR.
-      exists B; Col; Between.
-    }
-    apply (sams2_suma2__conga456 A' B C _ _ _ _ _ _ P' Q' R'); auto.
-      SumA.
-    { apply sams_left_comm.
-      apply sams_sym.
-      repeat split; Col.
-        right; intro; assert_cols; Col.
-      exists A'.
-      split; CongA; split.
-        apply l9_9; auto.
-      split; Cop.
-      intro Hts; destruct Hts as [_ []]; assert_cols; Col.
-    }
-    apply suma_sym.
-    exists A'.
-    split; CongA; split.
-      apply l9_9; auto.
-    split; Cop.
-    apply conga_line; Between.
+  apply (suma_suppa__bet A B C B C D); trivial.
+  assert (SuppA A' B C B C D') by (apply bet_suma__suppa with P' Q' R'; assumption).
+  apply (conga2_suppa__suppa B C D' A' B C).
+    apply (suppa2__conga456 A' B C); trivial; apply suppa_right_comm, bet__suppa; Between.
+    apply suppa2__conga123 with B C D'; trivial; apply suppa_left_comm, bet__suppa; Between.
+    apply suppa_sym; assumption.
 Qed.
 
 End original_euclid_original_spp.

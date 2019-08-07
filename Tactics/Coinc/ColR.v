@@ -879,8 +879,7 @@ Qed.
 Lemma proper_5 : forall p, Proper (S.Equal ==> eq) (fun s : SS.elt => negb (S.mem p s)).
 Proof.
 intros p x y Hxy.
-apply negb_sym.
-rewrite negb_involutive.
+f_equal.
 apply SWP.Dec.F.mem_m; intuition.
 Qed.
 
@@ -928,13 +927,13 @@ elim Hs; intro HIn; clear Hs.
       clear HIn; clear s; assert (HEq := HIn2); clear HIn2; assert (HIn := HIn1); clear HIn1.
       elim (Pos.eq_dec pb p1); intro Hp1; elim (Pos.eq_dec pb p2); intro Hp2; elim (Pos.eq_dec pb p3); intro Hp3.
 
-        do 2 subst.
+        subst.
         apply CTcol_trivial_1.
 
-        do 2 subst.
+        subst.
         apply CTcol_trivial_1.
 
-        do 2 subst.
+        subst.
         apply CTcol_permutation_4; apply CTcol_trivial_2.
 
         subst.
@@ -973,7 +972,7 @@ elim Hs; intro HIn; clear Hs.
 
               do 2 (rewrite andb_true_iff); repeat split; assumption.
 
-        do 2 subst.
+        subst.
         apply CTcol_trivial_2.
 
         subst.
@@ -1055,11 +1054,11 @@ elim Hs; intro HIn; clear Hs.
         elim (Pos.eq_dec pa p2); intro Hpap2;
         elim (Pos.eq_dec pa p3); intro Hpap3.
 
-          do 2 subst; apply CTcol_trivial_1.
+          subst; apply CTcol_trivial_1.
 
-          do 2 subst; apply CTcol_trivial_1.
+          subst; apply CTcol_trivial_1.
 
-          do 2 subst; apply CTcol_permutation_4; apply CTcol_trivial_2.
+          subst; apply CTcol_permutation_4; apply CTcol_trivial_2.
 
           subst.
           assert (Hmem1 : S.mem pb x = true).
@@ -1088,7 +1087,7 @@ elim Hs; intro HIn; clear Hs.
 
             do 2 (rewrite andb_true_iff); repeat split; assumption.
 
-          do 2 subst; apply CTcol_trivial_2.
+          subst; apply CTcol_trivial_2.
 
           subst.
           assert (Hmem2 : S.mem pb x = true).

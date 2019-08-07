@@ -54,7 +54,37 @@ Lemma grad__le : forall A B C, Grad A B C -> Le A B A C.
 Proof.
   intros.
   apply grad__bet in H.
-  apply l5_12_a in H; spliter; auto.
+  exists B; split; Cong.
+Qed.
+
+Lemma bet_cong2_grad__grad2 : forall A B C D E F,
+  Grad A B C -> Bet D E F -> Cong A B D E -> Cong B C E F -> Grad2 A B C D E F.
+Proof.
+  intros A B C D E F HGrad.
+  destruct (eq_dec_points D E).
+  { intros; treat_equalities.
+    apply grad112__eq in HGrad.
+    treat_equalities; apply grad2_init.
+  }
+  revert F.
+  induction HGrad.
+    intros; treat_equalities; apply grad2_init.
+  intros F' HBet HCong1 HCong2.
+  destruct (segment_construction D E B C) as [F []].
+  destruct (eq_dec_points E F).
+    treat_equalities; apply grad2_stab with B E; trivial; [apply grad2_init|CongR].
+  assert (Bet B C C').
+    apply grad__bet in HGrad; apply between_exchange3 with A; assumption.
+  assert (Bet E F F').
+  { apply cong_preserves_bet with B C C'; Cong.
+    assert_diffs.
+    apply l6_2 with D; Between.
+  }
+  apply grad2_stab with C F; Cong.
+    apply outer_transitivity_between2 with E; trivial.
+  apply cong_transitivity with A B; Cong.
+  apply cong_transitivity with C C'; trivial.
+  apply l4_3_1 with B E; Cong.
 Qed.
 
 Lemma grad2__grad123 : forall A B C D E F, Grad2 A B C D E F -> Grad A B C.
@@ -175,21 +205,17 @@ Inductive GradExpInv : Tpoint -> Tpoint -> Tpoint -> Prop :=
 Lemma gradexp_clos_trans : forall A B C, GradExp A B C <->
   clos_refl_trans_n1 Tpoint (fun X Y => Midpoint X A Y) B C.
 Proof.
-  intros; split; induction 1.
-  - constructor.
-  - apply Relation_Operators.rtn1_trans with C; [split|]; assumption.
-  - constructor.
-  - apply gradexp_stab with y; finish.
+  intros; split; induction 1; try constructor.
+    apply Relation_Operators.rtn1_trans with C; [split|]; assumption.
+    apply gradexp_stab with y; Between; Cong.
 Qed.
 
 Lemma gradexpinv_clos_trans : forall A B C, GradExpInv A B C <->
   clos_refl_trans_1n Tpoint (fun X Y => Midpoint X A Y) B C.
 Proof.
-  intros; split; induction 1.
-  - constructor.
-  - apply Relation_Operators.rt1n_trans with B; [split|]; assumption.
-  - constructor.
-  - apply gradexpinv_stab with y; finish.
+  intros; split; induction 1; try constructor.
+    apply Relation_Operators.rt1n_trans with B; [split|]; assumption.
+    apply gradexpinv_stab with y; Between; Cong.
 Qed.
 
 Lemma gradexp__gradexpinv : forall A B C, GradExp A B C <-> GradExpInv A B C.
@@ -213,7 +239,7 @@ Proof.
     intros; assert (B = C) by (apply between_equality with A; Between); subst C.
     destruct (segment_construction A B A B) as [C []].
     assert_diffs.
-    exists B, C; repeat split; finish; constructor.
+    exists B, C; repeat split; Between; Cong; constructor.
   intros; destruct (l5_3 A C0 C C'); trivial.
     apply IHHD1; assumption.
   destruct (eq_dec_points C' C0).
@@ -256,3 +282,4 @@ End Grad.
 
 Hint Resolve grad__bet : between.
 Hint Resolve grad__col : col.
+Hint Resolve grad__le : le.

@@ -245,7 +245,7 @@ eapply (perp_col A B O R R); auto.
 unfold Midpoint in *.
 spliter.
 apply bet_col in H8.
-eCol.
+ColR.
 assert(Perp_at R T R R O).
 apply perp_in_comm.
 apply perp_perp_in.
@@ -695,17 +695,15 @@ assert(Cong O U O V) by (apply cong_transitivity with O P; Cong).
 assert(CongA X O V Y O U).
 {
   unfold OnCircle in *.
-  apply(out_conga U O Y Y O U X V Y U).
+  apply(l11_10 U O Y Y O U X V Y U).
   apply conga_left_comm.
   apply conga_refl; intro;treat_equalities; tauto.
-  unfold Out.
-  repeat split; try(intro;treat_equalities; tauto).
-  left; auto.
-  unfold Out.
   repeat split; try(intro;treat_equalities; tauto).
   right; auto.
-  apply out_trivial;  intro;treat_equalities; tauto.
-  apply out_trivial;  intro;treat_equalities; tauto.
+  repeat split; try(intro;treat_equalities; tauto).
+  left; auto.
+  apply out_trivial; intro;treat_equalities; tauto.
+  apply out_trivial; intro;treat_equalities; tauto.
 }
 
 assert(Cong V X U Y).
@@ -724,12 +722,8 @@ assert(CongA O U Y O V X).
   unfold OutCircleS in *.
   unfold Lt in *.
   spliter.
-  (assert (Cong O P O V) by finish;intuition) ||
-  (assert (Cong O P O Y) by finish;intuition ).
-  unfold Cong_3.
-  split.
-  finish.
-  split;finish.
+  Cong.
+  repeat split; Cong.
 }
 
 assert(Per O V X).
@@ -901,7 +895,7 @@ induction HH.
 unfold Par_strict in H22.
 spliter.
 apply False_ind.
-apply H25.
+apply H23.
 exists Q.
 split; ColR.
 spliter.

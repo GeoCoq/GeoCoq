@@ -13,21 +13,26 @@ intros HT A1 A2 B1 B2 C1 C2 P HPar1 HCol1 HPar2 HCol2.
 elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
 
   {
-  assert (HDiff : P <> A1) by (intro; treat_equalities; apply HPar1; exists P; Col).
+  assert (HDiff : P <> A1) by (intro; apply HPar1; exists P; subst; Col).
   assert (HX := symmetric_point_construction A1 P); destruct HX as [X HMid1].
-  assert (HB3 : exists B3, Col B1 B2 B3 /\ BetS A2 B3 X).
+  revert B1 B2 C1 C2 HCol1 HCol2 HPar1 HPar2.
+  assert (Haux : forall B1 B2, Col P B1 B2 -> Par_strict A1 A2 B1 B2 ->
+            exists B3, Col B1 B2 B3 /\ BetS A2 B3 X /\ Par_strict A1 A2 P B3).
     {
-    assert (H : P <> B1 \/ P <> B2).
+    cut (forall B1 B2, Col P B1 B2 -> Par_strict A1 A2 B1 B2 -> P <> B1 ->
+            exists B3, Col B1 B2 B3 /\ BetS A2 B3 X /\ Par_strict A1 A2 P B3).
       {
-      elim (par_strict_distinct A1 A2 B1 B2 HPar1); intros.
-      elim (eq_dec_points P B1); intro; elim (eq_dec_points P B2); intro; treat_equalities; intuition.
+      intros Haux B1 B2 HCol1 HPar1.
+      elim (eq_dec_points P B1); auto.
+      intro.
+      assert (P <> B2) by (intro; subst; assert_diffs; auto).
+      destruct (Haux B2 B1) as [B3 []]; Par; Col.
+      exists B3; split; Col.
       }
-    elim H; clear H; intro H.
-
-      {
-      destruct (hilbert_s_version_of_pasch X A1 A2 B1 P) as [B3 [HCol HBet]];
-      assert_diffs; unfold Midpoint in *; spliter;
-      try (exists B3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
+    intros B1 B2 HCol1 HPar1 HPB1.
+    assert_diffs.
+    destruct (hilbert_s_version_of_pasch X A1 A2 B1 P) as [B3 [HCol HBet]];
+    [..|repeat split; Between|].
 
         {
         apply coplanar_perm_22, col_cop__cop with P; Col.
@@ -36,175 +41,49 @@ elim HPar1; clear HPar1; intro HPar1; elim HPar2; clear HPar2; intro HPar2.
         }
 
         {
-        intro; apply HPar1; exists A2; split; Col; ColR.
+        apply par_strict_not_col_2 with A1.
+        apply par_strict_right_comm, par_strict_col_par_strict with B2; Col.
         }
 
         {
-        intro; apply H; apply l6_21 with A1 P B1 P; Col.
-
-          {
-          intro; apply par_strict_not_col_3 in HPar1; apply HPar1; ColR.
-          }
-
-          {
-          assert_diffs; assert_cols; ColR.
-          }
+        intro; apply HPB1, l6_21 with A1 P B1 P; Col; [|ColR].
+        apply par_strict_not_col_2 with A2.
+        apply par_strict_comm, par_strict_col_par_strict with B2; Col.
         }
 
         {
-        induction HBet; spliter; Between.
-        assert (Hc : ~ Bet A2 B3 A1) by (intro; apply HPar1; exists B3; assert_cols; split; ColR).
-        exfalso; apply Hc; Between.
+        assert (Col B1 B2 B3) by ColR.
+        exists B3; split; trivial.
+        unfold BetS in *.
+        induction HBet; spliter; [|exfalso; apply HPar1; exists B3; split; Col].
+        split; [repeat split; Between|].
+        apply par_strict_col2_par_strict with B1 B2; Col.
+        intro; treat_equalities; apply HPar1; exists P; split; ColR.
         }
       }
-
-      {
-      destruct (hilbert_s_version_of_pasch X A1 A2 B2 P) as [B3 [HCol HBet]];
-      assert_diffs; unfold Midpoint in *; spliter;
-      try (exists B3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
-
-        {
-        apply coplanar_perm_22, col_cop__cop with P; Col.
-        apply coplanar_perm_2, col_cop__cop with B1; Col.
-        apply par__coplanar; Par.
-        }
-
-        {
-        intro; apply HPar1; exists A2; split; Col; ColR.
-        }
-
-        {
-        intro; apply H; apply l6_21 with A1 P B2 P; Col.
-
-          {
-          intro; apply par_strict_not_col_3 in HPar1; apply HPar1; ColR.
-          }
-
-          {
-          assert_diffs; assert_cols; ColR.
-          }
-        }
-
-        {
-        induction HBet; spliter; Between.
-        assert (Hc : ~ Bet A2 B3 A1) by (intro; apply HPar1; exists B3; assert_cols; split; ColR).
-        exfalso; apply Hc; Between.
-        }
-      }
-    }
-  destruct HB3 as [B3 [HCol3 HBet1]].
-  assert (HPB3 : P <> B3).
-    {
-    intro; treat_equalities; apply HPar1.
-    exists P; unfold BetS in *; spliter; assert_diffs; assert_cols; split; ColR.
-    }
-  assert (HPar3 : Par A1 A2 P B3) by (apply par_col2_par with B1 B2; try ColR; try left; Par).
-  assert (HC3 : exists C3, Col C1 C2 C3 /\ BetS A2 C3 X).
-    {
-    assert (H : P <> C1 \/ P <> C2).
-      {
-      elim (par_strict_distinct A1 A2 C1 C2 HPar2); intros.
-      elim (eq_dec_points P C1); intro; elim (eq_dec_points P C2); intro; treat_equalities; intuition.
-      }
-    elim H; clear H; intro H.
-
-      {
-      destruct (hilbert_s_version_of_pasch X A1 A2 C1 P) as [C3 [HCol HBet]];
-      assert_diffs; unfold Midpoint in *; spliter;
-      try (exists C3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
-
-        {
-        apply coplanar_perm_22, col_cop__cop with P; Col.
-        apply coplanar_perm_2, col_cop__cop with C2; Col.
-        apply par__coplanar; Par.
-        }
-
-        {
-        intro; apply HPar2; exists A2; split; Col; ColR.
-        }
-
-        {
-        intro; apply H; apply l6_21 with A1 P C1 P; Col.
-
-          {
-          intro; apply par_strict_not_col_3 in HPar2; apply HPar2; ColR.
-          }
-
-          {
-          assert_diffs; assert_cols; ColR.
-          }
-        }
-
-        {
-        induction HBet; spliter; Between.
-        assert (Hc : ~ Bet A2 C3 A1) by (intro; apply HPar2; exists C3; assert_cols; split; ColR).
-        exfalso; apply Hc; Between.
-        }
-      }
-
-      {
-      destruct (hilbert_s_version_of_pasch X A1 A2 C2 P) as [C3 [HCol HBet]];
-      assert_diffs; unfold Midpoint in *; spliter;
-      try (exists C3; split); Col; unfold BetS in *; try ColR; [..|repeat split; Between|].
-
-        {
-        apply coplanar_perm_22, col_cop__cop with P; Col.
-        apply coplanar_perm_2, col_cop__cop with C1; Col.
-        apply par__coplanar; Par.
-        }
-
-        {
-        intro; apply HPar2; exists A2; split; Col; ColR.
-        }
-
-        {
-        intro; apply H; apply l6_21 with A1 P C2 P; Col.
-
-          {
-          intro; apply par_strict_not_col_3 in HPar2; apply HPar2; ColR.
-          }
-
-          {
-          assert_diffs; assert_cols; ColR.
-          }
-        }
-
-        {
-        induction HBet; spliter; Between.
-        assert (Hc : ~ Bet A2 C3 A1) by (intro; apply HPar2; exists C3; assert_cols; split; ColR).
-        exfalso; apply Hc; Between.
-        }
-      }
-    }
-  destruct HC3 as [C3 [HCol4 HBet2]].
-  assert (HPC3 : P <> C3).
-    {
-    intro; treat_equalities; apply HPar1.
-    exists P; unfold BetS in *; spliter; assert_diffs; assert_cols; split; ColR.
-    }
-  assert (HPar4 : Par A1 A2 P C3) by (apply par_col2_par with C1 C2; try ColR; try left; Par).
-  assert (HCol5 : Col A2 X B3) by (unfold BetS in *; spliter; assert_cols; Col).
-  assert (HCol6 : Col A2 X C3) by (unfold BetS in *; spliter; assert_cols; Col).
+  intros B1 B2 C1 C2 HCol1 HCol2 HPar1 HPar2.
+  destruct (Haux B1 B2 HCol1 HPar1) as [B3 [HCol3 [HBet1 HPar3]]].
+  destruct (Haux C1 C2 HCol2 HPar2) as [C3 [HCol4 [HBet2 HPar4]]].
+  assert (HCol5 : Col A2 X B3) by (unfold BetS in *; spliter; Col).
+  assert (HCol6 : Col A2 X C3) by (unfold BetS in *; spliter; Col).
   assert (HNC' : ~ Col A1 A2 X)
-    by (intro; apply HPar1; exists P; assert_diffs; assert_cols; split; ColR).
+    by (intro; apply HPar1; exists P; split; ColR).
   assert (B3 = C3) by (apply l7_17 with A2 X; apply HT with A1 P; Col; Par).
-  elim (par_strict_distinct A1 A2 B1 B2 HPar1); intros.
-  elim (par_strict_distinct A1 A2 C1 C2 HPar2); intros.
-  spliter; treat_equalities; split; ColR.
+  subst; split; ColR.
   }
 
   {
-  elim (par_strict_distinct A1 A2 B1 B2 HPar1); intros; spliter; exfalso; apply HPar1.
-  exists P; split; Col; ColR.
+  spliter; exfalso; apply HPar1.
+  exists P; split; ColR.
   }
 
   {
-  elim (par_strict_distinct A1 A2 C1 C2 HPar2); intros; spliter; exfalso; apply HPar2.
-  exists P; split; Col; ColR.
+  spliter; exfalso; apply HPar2.
+  exists P; split; ColR.
   }
 
   {
-  spliter; spliter; split; Col; ColR.
+  spliter; split; ColR.
   }
 Qed.
 

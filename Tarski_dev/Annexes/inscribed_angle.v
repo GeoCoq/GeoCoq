@@ -47,31 +47,36 @@ Lemma bet_suma__suma : forall A B C D E F G H I, G <> H -> H <> I ->
   Bet G H I -> SumA A B C B C A D E F -> SumA D E F C A B G H I.
 Proof.
   intros A B C D E F G H I HGH HHI HBet HSuma.
-  suma.assert_diffs.
+  assert_diffs.
   destruct (bet__trisuma A B C G H I) as [D' [E' [F' []]]]; auto.
   apply (conga3_suma__suma D' E' F' C A B G H I); try apply conga_refl; auto.
   apply (suma2__conga A B C B C A); assumption.
+Qed.
+
+Lemma suma__suppa : forall A B C D E F, SumA A B C B C A D E F -> SuppA D E F C A B.
+Proof.
+  intros A B C D E F HSuma.
+  assert_diffs.
+  destruct (point_construction_different A B) as [A' []].
+  apply bet_suma__suppa with A B A'; trivial.
+  apply bet_suma__suma; auto.
 Qed.
 
 Lemma high_school_exterior_angle_theorem : forall A B C B', A <> B -> B <> C -> A <> C -> A <> B' ->
   Bet B A B' -> SumA A B C B C A C A B'.
 Proof.
   intros A B C B'; intros.
-  assert (SumA C A B' C A B B A B').
-    apply suma_sym, suma_left_comm, bet__suma; auto.
-  destruct (ex_suma A B C B C A) as [D [E [F]]]; auto.
+  destruct (ex_suma A B C B C A) as [D [E [F HSuma]]]; auto.
   apply (conga3_suma__suma A B C B C A D E F); try apply conga_refl; auto.
-  apply sams2_suma2__conga123 with C A B B A B'.
-    apply suma123231__sams; assumption.
-    apply bet_suma__sams with B A B'; assumption.
-    apply bet_suma__suma; auto.
-    assumption.
+  apply suppa2__conga123 with C A B.
+    apply suma__suppa; assumption.
+    apply suppa_sym, suppa_left_comm, bet__suppa; auto.
 Qed.
 
 (** If A, B and C are points on a circle where the line AB is a diameter of the circle,
     then the angle ACB is a right angle. *)
 
-Lemma thales_theorem : forall A B C M, ~ Col A B C ->
+Lemma thales_theorem : forall A B C M,
   Midpoint M A B -> Cong M A M C -> Per A C B.
 Proof.
   apply rah__thales_postulate.
@@ -80,13 +85,22 @@ Qed.
 
 (** In a right triangle, the midpoint of the hypotenuse is the circumcenter. *)
 
-Lemma thales_converse_theorem : forall A B C M, A <> C -> B <> C ->
+Lemma thales_converse_theorem : forall A B C M,
   Midpoint M A B -> Per A C B -> Cong M A M C.
 Proof.
-  intros A B C M HAC HBC HM HPer.
-  apply thales_postulate__thales_converse_postulate with B; [| |assumption..].
-    unfold thales_postulate; apply thales_theorem.
-  apply not_col_permutation_5, per_not_col; auto.
+  apply thales_postulate__thales_converse_postulate.
+  unfold thales_postulate; apply thales_theorem.
+Qed.
+
+Lemma thales_converse_theorem_1 : forall A B C O, A <> C -> B <> C ->
+  Per A C B -> Cong O A O B -> Cong O A O C -> Coplanar A B C O -> Midpoint O A B.
+Proof.
+  intros A B C O HAC HBC HPer HCong1 HCong2 HCop.
+  destruct (midpoint_existence A B) as [M HM].
+  assert (M = O); [|subst; apply HM].
+  assert_diffs.
+  apply (cong4_cop2__eq A C B); Cong; [|Cop..].
+  apply cong_commutativity, thales_converse_theorem with B; assumption.
 Qed.
 
 Lemma bet_cong__ghalfa : forall A B C B', A <> B -> B <> C -> A <> B' ->
@@ -155,7 +169,7 @@ Proof.
   }
   destruct HLt as [[C' [HBet HCong]] HNCong].
   exists A, C', B; split.
-    apply thales_theorem with M; trivial; intro; apply HNCol; ColR.
+    apply thales_theorem with M; trivial.
   assert_diffs.
   assert (C <> C') by (intro; subst; apply HNCong, HCong).
   apply os3__lta.
@@ -424,7 +438,7 @@ Proof.
   { assert_diffs.
     assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
     destruct HTS as [_ []].
-    apply per2__suppa; auto; apply thales_theorem with O; Col; apply cong_transitivity with O P; Cong.
+    apply per2__suppa; auto; apply thales_theorem with O; trivial; apply onc2__cong with P; assumption.
   }
   destruct (cop__one_or_two_sides A B O C); Col; Cop.
   apply suppa_sym, Haux; [..|exists C; split]; Side.
@@ -441,7 +455,7 @@ Proof.
   assert_diffs.
   assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
   apply coplanar_perm_1 in HCop.
-  apply cop__not_two_sides_one_side; Col; intro Habs; apply (nlta A C B).
+  apply cop_nts__os; Col; intro Habs; apply (nlta A C B).
   - apply acute_per__lta; auto.
     apply thales_theorem with O; trivial.
       apply col_onc2__mid with P; Col.
@@ -461,7 +475,7 @@ Proof.
   assert_diffs.
   assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
   apply coplanar_perm_1 in HCop.
-  apply cop__not_one_side_two_sides; Col; intro Habs; apply (nlta A C B).
+  apply cop_nos__ts; Col; intro Habs; apply (nlta A C B).
   - apply obtuse_per__lta; auto.
     apply thales_theorem with O; trivial.
       apply col_onc2__mid with P; Col.
@@ -486,12 +500,8 @@ Proof.
     apply (acute_conga__acute A C B); assumption.
   - exfalso.
     apply HNCol, col_permutation_1, midpoint_col.
-    destruct (midpoint_existence A B) as [M HM].
-    assert (M = O); [|subst; apply HM].
     assert (HCong := onc2__cong O P).
-    apply (cong4_cop2__eq A C B); Cong; [..|Cop|Cop].
-      apply per_not_col; auto.
-      apply cong_commutativity, thales_converse_theorem with B; auto.
+    apply thales_converse_theorem_1 with C; Cop.
   - exists O; split; apply l9_2; apply cop_obtuse_onc3__ts with P; Cop.
     apply (conga_obtuse__obtuse A C B); assumption.
 Qed.
@@ -512,12 +522,8 @@ Proof.
       apply acute_cop_onc3__os with P; Cop.
   - exfalso.
     apply HNCol, col_permutation_1, midpoint_col.
-    destruct (midpoint_existence A B) as [M HM].
-    assert (M = O); [|subst; apply HM].
     assert (HCong := onc2__cong O P).
-    apply (cong4_cop2__eq A C B); Cong; [..|Cop|Cop].
-      apply per_not_col; auto.
-      apply cong_commutativity, thales_converse_theorem with B; auto.
+    apply thales_converse_theorem_1 with C; Cop.
   - apply l9_2, l9_8_2 with O.
       apply cop_obtuse_onc3__ts with P; Cop.
     apply acute_cop_onc3__os with P; Cop; apply (obtuse_suppa__acute A C B); assumption.
@@ -535,26 +541,27 @@ Qed.
     On the same straight line there cannot be constructed
     two similar and unequal segments of circles on the same side. *)
 
-Lemma conga_cop_onc6_os__eq : forall A B C D O P O' P',
+Lemma conga_cop_onc6_os__eqc : forall A B C D O P O' P',
   OnCircle A O P -> OnCircle B O P -> OnCircle C O P -> Coplanar A B C O ->
   OnCircle A O' P' -> OnCircle B O' P' -> OnCircle D O' P' -> Coplanar A B D O' ->
   OS A B C D -> CongA A C B A D B ->
-  (O = O' /\ Cong O P O' P').
+  EqC O P O' P'.
 Proof.
   intros A B C D O P O' P' HA HB HC HCop HA' HB' HD' HCop' HOS HConga.
+  apply eqc_chara.
   assert (O = O'); [|split; trivial; subst O'; apply cong_transitivity with O A; Cong].
   assert (HNCol : ~ Col A B C) by (apply one_side_not_col123 with D, HOS).
   assert (HCong := onc2__cong O P).
+  assert (HCong' := onc2__cong O' P').
   destruct (col_dec A B O) as [|HNCol1].
   { assert_diffs.
-    apply cong2_cop2_onc3__eq with P' A B D; auto; [|apply coplanar_trans_1 with C; Col; Cop].
     assert (Midpoint O A B) by (apply col_onc2__mid with P; assumption).
-    apply thales_converse_theorem with B; auto.
+    apply (l7_17 A B); trivial.
+    apply thales_converse_theorem_1 with D; auto.
     apply (l11_17 A C B); trivial.
-    apply thales_theorem with O; Cong.
+    apply thales_theorem with O; auto.
   }
   assert (HNCol' : ~ Col A B D) by (apply one_side_not_col124 with C, HOS).
-  assert (HCong' := onc2__cong O' P').
   destruct (midpoint_existence A B) as [M HM].
   assert (HOS1 : OS A B O O').
   { assert_diffs; destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
@@ -564,10 +571,8 @@ Proof.
       apply acute_cop_onc3__os with P'; auto.
       apply (acute_conga__acute A C B); assumption.
     - exfalso.
-      apply HNCol1.
-      assert (O = M); [|subst; Col].
-      apply (cong4_cop2__eq A B C); Cong; [|Cop].
-      apply cong_commutativity, thales_converse_theorem with B; auto.
+      apply HNCol1, col_permutation_1, midpoint_col.
+      apply thales_converse_theorem_1 with C; auto.
     - exists C; split; [|apply l9_2, l9_8_2 with D; [apply l9_2|Side]].
         apply cop_obtuse_onc3__ts with P; auto.
       apply cop_obtuse_onc3__ts with P'; auto.
@@ -592,6 +597,7 @@ Proof.
   }
   destruct (eq_dec_points C1 D1).
   { subst D1.
+    assert_diffs.
     apply (cong4_cop2__eq A B C1); Cong; exists M; left; split; Col.
   }
   assert (HNCol2' : ~ Col A B D1) by (apply one_side_not_col124 with D; assumption).
@@ -633,18 +639,18 @@ Proof.
   assert (OnCircle A O' A /\ OnCircle B O' A /\ OnCircle D O' A).
     unfold OnCircle; repeat split; Cong.
   spliter.
-  destruct (conga_cop_onc6_os__eq A B C D O P O' A); trivial.
-  subst O'; apply cong_transitivity with O A; Cong.
+  apply (conga_cop_onc6_os__eqc A B C D O P O' A); trivial.
 Qed.
 
 (** If the angles ACB and ADB are congruent and C, D lie on the same side of AB,
     then A, B, C and D are concyclic. *)
 
-Lemma conga_os__ex_circle : forall A B C D,
-  OS A B C D -> CongA A C B A D B -> exists O P,
-  OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O.
+Lemma conga_os__concyclic : forall A B C D,
+  OS A B C D -> CongA A C B A D B -> Concyclic A B C D.
 Proof.
   intros A B C D HOS HConga.
+  split.
+    apply os__coplanar, HOS.
   destruct (triangle_circumscription A B C) as [O]; spliter.
     apply one_side_not_col123 with D, HOS.
   assert (OnCircle A O A /\ OnCircle B O A /\ OnCircle C O A).
@@ -657,14 +663,14 @@ Qed.
 (** If the angles ACB and ADB are supplementary and C, D lie on opposite sides of AB,
     then A, B, C and D are concyclic. *)
 
-Lemma suppa_ts__ex_circle : forall A B C D,
-  TS A B C D -> SuppA A C B A D B -> exists O P,
-  OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O.
+Lemma suppa_ts__concyclic : forall A B C D,
+  TS A B C D -> SuppA A C B A D B -> Concyclic A B C D.
 Proof.
   intros A B.
-  assert (Haux : forall C D, TS A B C D -> Obtuse A C B -> SuppA A C B A D B -> exists O P,
-    OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P /\ Coplanar A B C O).
+  assert (Haux : forall C D, TS A B C D -> Obtuse A C B -> SuppA A C B A D B -> Concyclic A B C D).
   { intros C D HTS HObtuse HSuppa.
+    split.
+      apply ts__coplanar, HTS.
     assert (HNCol : ~ Col A B C) by (destruct HTS; Col).
     destruct (triangle_circumscription A B C HNCol) as [O]; spliter.
     assert (OnCircle A O A /\ OnCircle B O A /\ OnCircle C O A).
@@ -680,19 +686,19 @@ Proof.
       apply (suppa2__conga456 A C B); [apply (cop_onc4_ts__suppa O A)|]; assumption.
   }
   intros C D HTS HSuppa.
-  assert_diffs; destruct (angle_partition A C B) as [|[|]]; auto.
-  { destruct (Haux D C) as [O [P]].
+  assert (HCop : Coplanar A B C D) by (apply ts__coplanar, HTS).
+  assert_diffs; destruct (angle_partition A C B) as [|[|]]; auto; split; trivial.
+  { destruct (Haux D C) as [_ [O [P]]].
       Side.
       apply (acute_suppa__obtuse A C B); trivial.
       apply suppa_sym, HSuppa.
     exists O, P.
     spliter; repeat split; trivial.
-    apply coplanar_trans_1 with D; [destruct HTS as [_ []]; Col|Cop..].
   }
   destruct (midpoint_existence A B) as [M].
   exists M, A.
   destruct HTS as [HNCol1 [HNCol2 _]].
-  unfold OnCircle; repeat split; [Cong..| | |Cop];
+  unfold OnCircle; repeat split; [Cong..| |];
     apply cong_symmetry, thales_converse_theorem with B; auto.
   apply (per_suppa__per A C B); assumption.
 Qed.
@@ -704,8 +710,9 @@ Lemma suppa_ts2__suppa : forall A B C D,
   TS A C B D -> TS B D A C -> SuppA A B C A D C -> SuppA B A D B C D.
 Proof.
   intros A B C D HTS1 HTS2 HSuppa.
-  destruct (suppa_ts__ex_circle A C B D) as [O [P]]; trivial.
-  spliter.
+  assert (HCon : Concyclic A C B D) by (apply suppa_ts__concyclic; trivial).
+  apply concyclic_aux in HCon.
+  destruct HCon as [O [P]]; spliter.
   apply (cop_onc4_ts__suppa O P); trivial.
   apply coplanar_perm_2, coplanar_trans_1 with C; [destruct HTS1; Col|Cop..].
 Qed.
@@ -780,9 +787,8 @@ assert(Col O O' A').
 
 induction(eq_dec_points O O').
 treat_equalities.
-eapply(symmetric_point_uniqueness C' O); Midpoint.
-split; eCong.
-Between.
+apply(symmetric_point_uniqueness C' O); Midpoint.
+split; [Between|CongR].
 
 assert(HQ:= mid_onc2__perp O P B C' O' H23  H10 H4 H17 H20).
 apply(perp_col O A' A C' O') in HH; Col.

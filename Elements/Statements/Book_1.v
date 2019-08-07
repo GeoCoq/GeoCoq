@@ -278,12 +278,9 @@ Proof.
   assert (HNCol := one_side_not_col123 A B C C' HOS).
   assert_diffs.
   destruct (l11_51 A B C A B C') as [HCongAA [HCongAB HCongAC]]; Cong.
-  assert (HCop := os__coplanar A B C C' HOS).
-  apply l9_9_bis in HOS.
-  destruct (conga_cop__or_out_ts B A C C') as [HOutA|Habs]; Cop; [|exfalso; apply HOS; Side].
-  destruct (conga_cop__or_out_ts A B C C' HCop HCongAB) as [HOutB|Habs].
-    apply (l6_21 A C B C); Col.
-  exfalso; apply HOS, Habs.
+  apply (l6_21 A C B C); Col; apply out_col.
+    apply (conga_os__out B); Side.
+    apply (conga_os__out A); assumption.
 Qed.
 
 
@@ -789,11 +786,11 @@ Lemma prop_33 : forall A B C D,
  Cong A C B D /\ Par A C B D.
 Proof.
   intros A B C D HTS HPAR HC.
-  assert (HPara:Parallelogram B A C D) by (unfold Parallelogram;left;unfold Parallelogram_strict;finish).
+  assert (HPara:Parallelogram B A C D) by (left;split;finish).
   destruct (plg_cong B A C D HPara).
   assert_diffs.
   destruct (plg_par B A C D); auto.
-  split; finish.
+  split; [Cong|Par].
 Qed.
 
 	    (** * Proposition 34

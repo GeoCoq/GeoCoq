@@ -64,17 +64,7 @@ elim HInter; clear HInter; intro HInter.
   assert (HPar : Par B1 B2 C1 C2).
 
     unfold Par; left.
-    repeat split.
-
-      apply perp_bisect_equiv_def in HAC.
-      destruct HAC as [I [HPerp HMid]].
-      apply perp_in_distinct in HPerp.
-      spliter; assumption.
-
-      apply perp_bisect_equiv_def in HAB.
-      destruct HAB as [I [HPerp HMid]].
-      apply perp_in_distinct in HPerp.
-      spliter; assumption.
+    split.
 
       spliter; CopR.
 

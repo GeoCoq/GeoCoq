@@ -14,6 +14,12 @@ Proof.
     intro; treat_equalities; auto.
 Qed.
 
+Lemma bet_out_1 : forall A B C, B <> A -> Bet C B A -> Out A B C.
+Proof.
+    intros.
+    apply bet_out; Between.
+Qed.
+
 Lemma out_dec : forall P A B, Out P A B \/ ~ Out P A B.
 Proof.
     intros.
@@ -206,7 +212,6 @@ Proof.
 Qed.
 
 Lemma l6_11_uniqueness : forall A B C R X Y,
-  R<>A -> B<>C ->
   Out A X R -> Cong A X B C ->
   Out A Y R -> Cong A Y B C ->
   X=Y.
@@ -214,8 +219,8 @@ Proof.
     unfold Out.
     intros.
     spliter.
-    assert (Cong A X A Y) by eCong.
-    induction H8; induction H6.
+    assert (Cong A X A Y) by CongR.
+    induction H6; induction H4.
       apply l4_19 with A R; try assumption.
       apply l4_3 with A A; Between; Cong.
       assert (Bet A X Y) by eBetween.
@@ -223,7 +228,7 @@ Proof.
       assert (Bet A Y X) by eBetween.
       apply sym_equal; apply between_cong with A; Cong.
     assert (Bet A X Y \/ Bet A Y X) by (eapply l5_1; eauto).
-    induction H10.
+    induction H8.
       apply between_cong with A; assumption.
     apply sym_equal; apply between_cong with A; Cong.
 Qed.
@@ -323,14 +328,23 @@ Proof.
     assert (Col Q B C).
       induction (eq_dec_points Q A).
         subst; apply col_transitivity_1 with P; Col.
-      apply col_transitivity_1 with P; try Col; apply col_permutation_1; apply col_transitivity_1 with A; Col.
+      apply col_transitivity_1 with P; Col; apply col_permutation_1, col_transitivity_1 with A; Col.
     assert (Col A B C).
       induction (eq_dec_points Q A).
         subst Q; assumption.
       induction (eq_dec_points Q B).
-        subst; apply col_permutation_2; apply col_transitivity_1 with P; try Col.
-      apply col_permutation_2; apply col_transitivity_1 with Q; try Col.
+        subst; apply col_permutation_2; apply col_transitivity_1 with P; Col.
+      apply col_permutation_2; apply col_transitivity_1 with Q; Col.
     contradiction.
+Qed.
+
+Lemma col2__eq : forall A B X Y,
+  Col A X Y -> Col B X Y -> ~ Col A X B ->
+  X = Y.
+Proof.
+    intros.
+    apply l6_21 with A X B X; Col.
+    intro; subst; Col.
 Qed.
 
 End T6_1.
@@ -341,7 +355,7 @@ Section T6_2.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-(* This is l6_25 of Tarski *)
+(** This is l6_25 of Tarski *)
 Lemma not_col_exists : forall A B,
  A<>B -> exists C, ~ Col A B C.
 Proof.
@@ -452,8 +466,7 @@ Proof.
   destruct HC0 as [C0 []].
   assert(B0 <> C0) by (intro; subst C0; assert(B = C); auto; apply (cong_reverse_identity B0); auto).
   exists C0.
-  split.
-  2: apply (l2_11 _ B _ _ B0); Cong.
+  split; [|apply (l2_11 _ B _ _ B0); Cong].
   apply (outer_transitivity_between2 _ B0); auto.
   assert(Bet B0 B' C') by (apply between_symmetry; apply (between_inner_transitivity _ _ _ A'); Between).
   apply l6_13_1.
@@ -526,11 +539,8 @@ Proof.
       Cong.
     assert(Le
  E D' E D0).
-      eapply l5_6.
-      repeat split.
-        2:apply H0.
-        2:apply H1.
-      eapply l5_5_2.
+      apply (l5_6 B A' B A0); trivial.
+      apply l5_5_2.
       exists A0.
       split.
         assumption.
@@ -557,11 +567,7 @@ Proof.
     spliter.
     induction H4.
       assert (Bet E D D0).
-        eapply cong_preserves_bet.
-          2:apply H1.
-          2:apply H2.
-          assumption.
-        assumption.
+        apply (cong_preserves_bet B A A0); assumption.
       apply cong_commutativity.
       eapply l4_3.
         apply between_symmetry.
@@ -571,10 +577,7 @@ Proof.
         Cong.
       Cong.
     assert (Bet E D0 D).
-      eapply cong_preserves_bet.
-        2:apply H2.
-        2:apply H1.
-        assumption.
+      apply (cong_preserves_bet B A0 A); trivial.
       apply l6_6.
       assumption.
     eapply l4_3;eBetween;Cong.
@@ -779,44 +782,6 @@ Proof.
     apply out_trivial; auto.
 Qed.
 
-Lemma out2_out_1 : forall B C D X,
- Out B X C -> Out B X D -> Out B C D.
-Proof.
-    intros.
-    unfold Out in *.
-    spliter.
-    repeat split.
-      assumption.
-      assumption.
-    induction H2; induction H4.
-      eapply l5_1.
-        2: apply H4.
-        auto.
-      assumption.
-      left.
-      eapply between_exchange4.
-        apply H4.
-      assumption.
-      right.
-      eapply between_exchange4.
-        apply H2.
-      assumption.
-    eapply l5_3.
-      apply H4.
-    apply H2.
-Qed.
-
-Lemma out2_out_2 : forall B C D X,
- Out B C X -> Out B D X -> Out B C D.
-Proof.
-    intros.
-    eapply out2_out_1.
-      apply l6_6.
-      apply H.
-    apply l6_6.
-    assumption.
-Qed.
-
 Lemma out_bet_out_1 : forall A B C P,
  Out P A C -> Bet A B C -> Out P A B.
 Proof.
@@ -860,8 +825,7 @@ Lemma out_bet__out : forall A B P Q,
 Proof.
     intros A B P Q HBet Hout.
     destruct Hout as [HAQ [HBQ [HQAB|HQBA]]]; [|apply l6_6];
-      apply bet_out; eBetween; intro; treat_equalities; auto.
-    apply HBQ; apply (between_equality _ _ A); Between.
+    apply bet_out; eBetween; intro; treat_equalities; auto.
 Qed.
 
 Lemma segment_reverse : forall A B C, Bet A B C -> exists B', Bet A B' C /\ Cong C B' A B.
@@ -889,8 +853,8 @@ Proof.
         subst B.
         subst C.
         intuition.
-      subst C.
-      Between.
+      treat_equalities.
+      auto.
     assert_cols.
     auto.
 Qed.
@@ -1040,6 +1004,17 @@ Proof.
     assumption.
 Qed.
 
+Lemma Out_cases : forall A B C, Out A B C \/ Out A C B -> Out A B C.
+Proof.
+    intros.
+    induction H.
+      assumption.
+    apply l6_6.
+    assumption.
+Qed.
+
 End T6_2.
 
-Hint Resolve bet_out out_trivial l6_6 : out.
+Hint Resolve bet_out bet_out_1 out_trivial l6_6 : out.
+
+Ltac Out := auto 4 with out.

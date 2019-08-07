@@ -32,48 +32,44 @@ destruct (segment_construction_2 B3 A3 A1' B1) as [B3' [HC4 HCong]];
     assert_diffs; apply col_cop__cop with B2; Col.
     apply par__coplanar, HPar.
   assert (B1 = B3); treat_equalities; Cong.
-  apply l6_21 with B1 B2 A1' B1; assert_diffs; Col.
-  elim (eq_dec_points A1' A1); intro HD1; treat_equalities;
-  [elim (eq_dec_points A1' A2); intro HD2; [intuition|];
-   apply par_strict_not_col_1 with A2;
-   apply par_strict_col2_par_strict with A1' A2; Col; Par|
+  assert_diffs; apply l6_21 with B1 B2 A1' B1; Col.
+  elim (eq_dec_points A1' A1); intro HD1.
+   treat_equalities; apply par_strict_not_col_1 with A2;
+   apply par_strict_col2_par_strict with A1' A2; Col; Par.
    apply par_strict_not_col_1 with A1;
-   apply par_strict_col2_par_strict with A1 A2; Col; Par].
+   apply par_strict_col2_par_strict with A1 A2; Col; Par.
   }
 
   {
   assert (HParS' : Par_strict A1' A3 B1 B3').
     {
-    apply sac__par_strict1423; split;
-    [apply perp_per_1; assert_diffs; try apply perp_col0 with A1 A2; Perp|
-     split; [apply perp_per_1; assert_diffs;
-             try (apply perp_col0 with A3 B3; try apply perp_col0 with A1 A2);
-             Perp; induction HC4; assert_cols; Col|split; Cong]].
+    apply sac__pars1423; repeat split; [apply perp_per_1..|Cong|].
+      apply perp_col0 with A1 A2; Perp.
+      assert_diffs.
+      apply perp_col0 with A3 B3; [apply perp_col0 with A1 A2| |induction HC4|]; Col.
     apply one_side_transitivity with B3.
 
       {
-      elim (eq_dec_points B1 B3); intro HD'; treat_equalities;
-      [try apply one_side_reflexivity; apply par_strict_not_col_1 in HParS;
-       intro; apply HParS; assert_diffs; ColR|].
-      apply l12_6; apply par_strict_col2_par_strict with B1 B2; Col.
-      apply par_strict_symmetry;
-      apply par_strict_col2_par_strict with A1 A2; Col; Par.
+      elim (eq_dec_points B1 B3); intro HD';
+      [treat_equalities; apply one_side_reflexivity; apply par_strict_not_col_1 in HParS;
+       intro; apply HParS; ColR|].
+      apply (col2_os__os A1 A2); Col.
+      apply par_strict_one_side with B2; Col.
       }
 
       {
-      rewrite (l9_19 _ _ _ _ A3); Col; [|induction HC4; assert_cols; Col].
-      elim (perp_not_col2 _ _ _ _ HPerp1); intro HNC; [intuition|].
-      split; [|intro; apply HNC; assert_diffs; ColR].
-      split; [assert_diffs; auto|].
-      split; [intro; treat_equalities; assert_diffs; intuition|auto].
+      assert_diffs.
+      apply invert_one_side, out_one_side; [|repeat split; auto].
+      elim (perp_not_col2 _ _ _ _ HPerp1); intro HNC; [contradiction|].
+      left; intro; apply HNC; ColR.
       }
     }
+  assert_diffs.
   destruct (HP A1 A2 B1 B2 B1 B3' B1) as [_ HC5]; Col;
-  [apply par_symmetry; apply par_col2_par with A1' A3;
-   assert_diffs; try ColR; try apply par_strict_par; Par|].
-  assert (B3 = B3'); treat_equalities; Cong.
-  apply l6_21 with B1 B3' A3 B3; try apply par_strict_not_col_1 with A1'; Par;
-  assert_diffs; Col; [ColR|induction HC4; assert_cols; Col].
+  [apply par_symmetry; apply par_col2_par with A1' A3; Par; ColR|].
+  assert (B3 = B3'); [|subst; Cong].
+  apply l6_21 with B1 B3' A3 B3; Col;
+  [apply par_strict_not_col_1 with A1'; Par|ColR|induction HC4; Col].
   }
 Qed.
 

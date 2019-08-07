@@ -139,6 +139,11 @@ repeat
        decompose [and] T;clear T;clean_reap_hyps
  end.
 
+Ltac ColR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
+
 Ltac clean_trivial_hyps :=
   repeat
   match goal with
@@ -176,14 +181,14 @@ Proof.
     unfold TS.
     intros.
     spliter.
-    repeat split; try Col.
+    repeat split; Col.
     destruct H1 as [T [HCol1 HCol2]].
     exists T; Col; Between.
 Qed.
 
 Lemma invert_two_sides : forall A B P Q,
  TS A B P Q -> TS B A P Q.
-Proof with finish.
+Proof with Col.
     unfold TS.
     intros.
     spliter.
@@ -197,7 +202,7 @@ Lemma l9_3 : forall P Q A C M R B,
  TS P Q A C -> Col M P Q ->
  Midpoint M A C -> Col R P Q ->
  Out R A B -> TS P Q B C.
-Proof with finish.
+Proof with Col.
     intros.
     unfold TS in *.
     assert (~ Col A P Q).
@@ -373,14 +378,14 @@ Proof.
     induction H.
       assert (Bet A' B' C').
         eapply l7_15 with A B C M;auto.
-      assert_cols;Col.
+      Col.
     induction H.
       assert (Bet B' C' A').
         eapply l7_15 with B C A M;auto.
-      assert_cols;Col.
+      Col.
     assert (Bet C' A' B').
       eapply l7_15 with C A B M;auto.
-    assert_cols;Col.
+    Col.
 Qed.
 
 Lemma per_mid_per : forall A B X Y M,
@@ -571,9 +576,9 @@ Proof.
       eapply perp_in_per in H12.
       assert (M = T).
         apply (l8_6 C M T A).
-          3:Between.
           apply l8_2;auto.
-        apply l8_2;auto.
+          apply l8_2;auto.
+        Between.
       subst T.
       split.
         intro.
@@ -665,10 +670,7 @@ Proof.
       unfold Out.
       repeat split.
         assumption.
-        eapply sym_preserve_diff.
-          2:apply H6.
-          apply H14.
-        assumption.
+        apply (sym_preserve_diff U R M); auto.
       induction H16.
         assert(Bet R U D \/ Bet R D U).
           eapply l5_3.
@@ -810,8 +812,8 @@ Proof.
     intros A B M X Y HM1 HNCol HM2.
     repeat split; Col.
       assert_diffs.
-      assert (X<>Y) by (intro; treat_equalities; assert_cols; Col).
-      intro Col; apply HNCol; ColR.
+      assert (X<>Y) by (intro; treat_equalities; apply HNCol; Col).
+      intro; apply HNCol; ColR.
     exists M; split; Col; Between.
 Qed.
 
@@ -893,10 +895,7 @@ Proof.
     exists T.
     split.
       assumption.
-    unfold Out in *.
-    spliter.
-    induction H12; induction H10;
-    eauto using outer_transitivity_between2, between_symmetry, between_inner_transitivity, between_exchange3, outer_transitivity_between.
+    apply bet_out_out_bet with X Y; assumption.
 Qed.
 
 Lemma l9_4_2_aux : forall P Q A C R S U V, Le S C R A -> TS P Q A C -> Col R P Q -> Perp P Q A R -> Col S P Q ->
@@ -931,9 +930,9 @@ Proof.
       eapply perp_in_per in H13.
       assert (R = T).
         apply (l8_6 C R T A).
-          3:Between.
           apply l8_2;auto.
-        apply l8_2;auto.
+          apply l8_2;auto.
+        Between.
       subst.
       intuition.
     (********* R <> S ***************)
@@ -1196,11 +1195,7 @@ Proof.
         apply between_trivial.
       assumption.
     assert (TS P Q B D).
-      eapply l9_3.
-        apply H14.
-        2:apply H9.
-        2: apply H0.
-        2:assumption.
+      apply l9_3 with A M R; trivial.
       induction (eq_dec_points A' C').
         subst C'.
         apply l7_3 in H10.
@@ -1208,14 +1203,7 @@ Proof.
         apply col_permutation_2.
         assumption.
       ColR.
-    try assumption.
-    eapply l9_4_2.
-      apply H15.
-      2: apply H8.
-      apply col_permutation_2.
-      assumption.
-      apply col_permutation_2.
-      apply H4.
+    apply l9_4_2 with B D B' C'; Col.
       apply perp_sym.
       apply perp_left_comm.
       eapply perp_col.
@@ -1230,7 +1218,7 @@ Proof.
       apply col_permutation_5.
       apply out_col.
       assumption.
-      eapply out_trivial.
+      apply out_trivial.
       intro.
       subst B.
       apply perp_distinct in H8.
@@ -1291,16 +1279,16 @@ Proof.
     show_distinct B C.
       intuition.
     assert (T = Q).
-      apply l6_21 with X P B C; assert_cols;Col.
+      apply l6_21 with X P B C; Col.
       intro.
       apply H10.
       eapply col_permutation_2.
-      eapply col_transitivity_1 with X.
-        2:Col.
+      apply col_transitivity_1 with X.
         intro.
         treat_equalities.
         apply H10.
         ColR.
+        Col.
       Col.
     subst T;Between.
 Qed.
@@ -1401,7 +1389,7 @@ Proof.
       induction (eq_dec_points M Y).
         subst M.
         assert (X = Y).
-          apply l6_21 with P Q A D; assert_cols; Col; ColR.
+          apply l6_21 with P Q A D; Col; ColR.
         subst Y.
         eapply l9_5.
           apply H.
@@ -1461,7 +1449,7 @@ Proof.
       induction (eq_dec_points M X).
         subst M.
         assert (X = Y).
-          apply l6_21 with P Q A D; assert_cols; Col; ColR.
+          apply l6_21 with P Q A D; Col; ColR.
         subst Y.
         absurde.
       eapply (l9_5 _ _ M _ X).
@@ -1725,16 +1713,6 @@ Proof.
     assumption.
 Qed.
 
-Lemma col_eq : forall A B X Y,
-  A <> X -> Col A X Y -> Col B X Y ->
- ~ Col A X B ->
- X = Y.
-Proof.
-    intros.
-    apply eq_sym.
-    apply l6_21 with A X B X; assert_diffs; Col.
-Qed.
-
 Lemma l9_17 : forall A B C P Q, OS P Q A C -> Bet A B C -> OS P Q A B.
 Proof.
     intros.
@@ -1801,14 +1779,14 @@ Proof.
           apply l9_9_bis in H14.
           contradiction.
           apply col_permutation_2.
-          eapply (col_transitivity_1 _ C).
+          apply (col_transitivity_1 _ C).
             intro.
             subst D.
             apply between_identity in H10.
             subst Y.
             apply H4.
             assumption.
-            assert_cols; Col.
+            Col.
             Col.
       subst Y.
       apply between_identity in H12.
@@ -2151,7 +2129,7 @@ Proof.
         apply col_permutation_1.
         assumption.
       assert(HH:=one_side_reflexivity A B X H1).
-      eapply (out_out_one_side _ _ _ _ _ HH H0).
+      apply (out_out_one_side _ _ _ _ _ HH H0).
     assert(~ Col Y A B).
       intro.
       apply H.
@@ -2159,9 +2137,17 @@ Proof.
       assumption.
     assert(HH:=one_side_reflexivity A B Y H1).
     apply one_side_symmetry.
-    eapply (out_out_one_side _ _ _ _ _ HH).
+    apply (out_out_one_side _ _ _ _ _ HH).
     apply l6_6.
     assumption.
+Qed.
+
+Lemma bet__ts : forall A B X Y, A <> Y -> ~ Col A B X -> Bet X A Y -> TS A B X Y.
+Proof.
+  intros A B X Y HAY HNCol HBet.
+  repeat split; Col.
+    intro; apply HNCol, col_transitivity_1 with Y; Col.
+  exists A; split; Col.
 Qed.
 
 Lemma bet_ts__ts : forall A B X Y Z, TS A B X Y -> Bet X Y Z -> TS A B X Z.
@@ -2708,19 +2694,6 @@ Proof.
   intro; subst X; auto.
 Qed.
 
-Lemma ts2__inangle : forall A B C P, TS A C B P -> TS B P A C ->
-  InAngle P A B C.
-Proof.
-  intros A B C P HTS1 HTS2.
-  destruct (ts2__ex_bet2 A B C P) as [X [HBet1 HBet2]]; trivial.
-  apply ts_distincts in HTS2; spliter.
-  repeat split; auto.
-  exists X; split; trivial.
-  right; apply bet_out; auto.
-  intro; subst X.
-  apply (two_sides_not_col A C B P HTS1); Col.
-Qed.
-
 Lemma out_one_side_1 :
  forall A B C D X,
  ~ Col A B C -> Col A B X -> Out X C D ->
@@ -2954,8 +2927,8 @@ Proof.
       apply bet_out; Between.
     - right.
       exists X; repeat split; Col.
-        exists A; split; finish.
-      exists B; split; finish.
+        exists A; split; [Col|Between].
+      exists B; split; [Col|Between].
 Qed.
 
 Lemma cop__one_or_two_sides :
@@ -3028,84 +3001,12 @@ Proof.
   destruct HDij; [apply ts__coplanar|apply os__coplanar]; assumption.
 Qed.
 
-Lemma coplanar_pseudo_trans : forall A B C D P Q R,
-  ~ Col P Q R ->
-  Coplanar P Q R A ->
-  Coplanar P Q R B ->
-  Coplanar P Q R C ->
-  Coplanar P Q R D ->
-  Coplanar A B C D.
-Proof.
-intros A B C D P Q R HNC HCop1 HCop2 HCop3 HCop4.
-elim (col_dec R A B); intro HRAB.
-
-  {
-  elim (col_dec R C D); intro HRCD.
-
-    {
-    exists R; Col5.
-    }
-
-    {
-    elim (col_dec Q R C); intro HQRC.
-
-      {
-      assert (HQRD : ~ Col Q R D) by (intro; assert_diffs; apply HRCD; ColR).
-      assert (HCop5 := coplanar_trans_1 P Q R D A HNC HCop4 HCop1).
-      assert (HCop6 := coplanar_trans_1 P Q R D B HNC HCop4 HCop2).
-      assert (HCop7 := coplanar_trans_1 P Q R D C HNC HCop4 HCop3).
-      assert (HCop8 := coplanar_trans_1 Q R D C A HQRD HCop7 HCop5).
-      assert (HCop9 := coplanar_trans_1 Q R D C B HQRD HCop7 HCop6).
-      assert (HRDC : ~ Col R D C) by Col.
-      assert (HCop := coplanar_trans_1 R D C A B HRDC HCop8 HCop9).
-      Cop.
-      }
-
-      {
-      assert (HCop5 := coplanar_trans_1 P Q R C A HNC HCop3 HCop1).
-      assert (HCop6 := coplanar_trans_1 P Q R C B HNC HCop3 HCop2).
-      assert (HCop7 := coplanar_trans_1 P Q R C D HNC HCop3 HCop4).
-      assert (HCop8 := coplanar_trans_1 Q R C D A HQRC HCop7 HCop5).
-      assert (HCop9 := coplanar_trans_1 Q R C D B HQRC HCop7 HCop6).
-      assert (HCop := coplanar_trans_1 R C D A B HRCD HCop8 HCop9).
-      Cop.
-      }
-    }
-  }
-
-  {
-  elim (col_dec Q R A); intro HQRA.
-
-    {
-    assert (HQRB : ~ Col Q R B) by (intro; assert_diffs; apply HRAB; ColR).
-    assert (HCop5 := coplanar_trans_1 P Q R B A HNC HCop2 HCop1).
-    assert (HCop6 := coplanar_trans_1 P Q R B C HNC HCop2 HCop3).
-    assert (HCop7 := coplanar_trans_1 P Q R B D HNC HCop2 HCop4).
-    assert (HCop8 := coplanar_trans_1 Q R B A C HQRB HCop5 HCop6).
-    assert (HCop9 := coplanar_trans_1 Q R B A D HQRB HCop5 HCop7).
-    assert (HRBA : ~ Col R B A) by Col.
-    assert (HCop := coplanar_trans_1 R B A C D HRBA HCop8 HCop9).
-    Cop.
-    }
-
-    {
-    assert (HCop5 := coplanar_trans_1 P Q R A B HNC HCop1 HCop2).
-    assert (HCop6 := coplanar_trans_1 P Q R A C HNC HCop1 HCop3).
-    assert (HCop7 := coplanar_trans_1 P Q R A D HNC HCop1 HCop4).
-    assert (HCop8 := coplanar_trans_1 Q R A B C HQRA HCop5 HCop6).
-    assert (HCop9 := coplanar_trans_1 Q R A B D HQRA HCop5 HCop7).
-    assert (HCop := coplanar_trans_1 R A B C D HRAB HCop8 HCop9).
-    Cop.
-    }
-  }
-Qed.
-
 Lemma col_cop__cop : forall A B C D E, Coplanar A B C D -> C <> D -> Col C D E -> Coplanar A B C E.
 Proof.
   intros A B C D E HCop HCD HCol.
   destruct (col_dec D A C).
     assert (Col A C E) by (apply l6_16_1 with D; Col); Cop.
-  apply coplanar_perm_2, coplanar_trans_1 with D; Cop.
+  apply coplanar_perm_2, (coplanar_trans_1 D); Cop.
 Qed.
 
 Lemma bet_cop__cop : forall A B C D E, Coplanar A B C E -> Bet C D E -> Coplanar A B C D.
@@ -3120,9 +3021,67 @@ Lemma col2_cop__cop : forall A B C D E F, Coplanar A B C D -> C <> D -> Col C D 
   Coplanar A B E F.
 Proof.
   intros A B C D E F HCop HCD HE HF.
-  destruct (col_dec C D A).
-    exists A; left; split; Col; apply (col3 C D); assumption.
-  apply coplanar_pseudo_trans with C D A; Cop.
+  destruct (eq_dec_points E C).
+    subst; apply col_cop__cop with D; Col; Cop.
+  apply col_cop__cop with C; [apply coplanar_perm_1, col_cop__cop with D| |apply l6_16_1 with D]; Col.
+Qed.
+
+Lemma col_cop2__cop : forall A B C U V P, U <> V ->
+  Coplanar A B C U -> Coplanar A B C V -> Col U V P ->
+  Coplanar A B C P.
+Proof.
+  intros A B C U V P HUV HU HV HCol.
+  destruct (col_dec A B C) as [HCol1|HNCol].
+    apply col__coplanar, HCol1.
+  revert dependent C.
+  revert A B.
+  assert (Haux : forall A B C, ~ Col A B C -> ~ Col U A B ->
+  Coplanar A B C U -> Coplanar A B C V -> Coplanar A B C P).
+  { intros A B C HNCol HNCol' HU HV.
+    apply (coplanar_trans_1 U); [Cop..|].
+    apply coplanar_perm_12, col_cop__cop with V; auto.
+    apply (coplanar_trans_1 C); Col; Cop.
+  }
+  intros A B C HU HV HNCol.
+  destruct (col_dec U A B); [destruct (col_dec U A C)|].
+  - apply coplanar_perm_12, Haux; Col; Cop.
+    intro; apply HNCol; destruct (eq_dec_points U A); ColR.
+  - apply coplanar_perm_2, Haux; Col; Cop.
+  - apply Haux; assumption.
+Qed.
+
+Lemma bet_cop2__cop : forall A B C U V W,
+  Coplanar A B C U -> Coplanar A B C W -> Bet U V W -> Coplanar A B C V.
+Proof.
+  intros A B C U V W HU HW HBet.
+  destruct (eq_dec_points U W).
+    treat_equalities; assumption.
+    apply col_cop2__cop with U W; Col.
+Qed.
+
+Lemma coplanar_pseudo_trans : forall A B C D P Q R,
+  ~ Col P Q R ->
+  Coplanar P Q R A ->
+  Coplanar P Q R B ->
+  Coplanar P Q R C ->
+  Coplanar P Q R D ->
+  Coplanar A B C D.
+Proof.
+assert (Haux : forall P Q R A B C,
+  ~ Col P Q R -> Coplanar P Q R A -> Coplanar P Q R B -> Coplanar P Q R C ->
+  Coplanar A B C R).
+  {
+  intros P Q R A B C HNC HCop1 HCop2 HCop3.
+  assert_diffs.
+  elim (col_dec R Q A); intro HQRA.
+    apply coplanar_perm_18, col_cop__cop with Q; auto.
+    apply coplanar_perm_17, (coplanar_trans_1 P); assumption.
+  apply coplanar_perm_9, (coplanar_trans_1 Q); [Col|apply (coplanar_trans_1 P); assumption..].
+  }
+intros A B C D P Q R HNC HCop1 HCop2 HCop3 HCop4.
+elim (col_dec P Q D); intro HPQD.
+  apply col_cop2__cop with P Q; [assert_diffs|apply (Haux Q R)|apply (Haux P R)|]; Col; Cop.
+apply (Haux P Q); [assumption|apply (coplanar_trans_1 R); Col; Cop..].
 Qed.
 
 Lemma l9_30 : forall A B C D E F P X Y Z,
@@ -3136,7 +3095,7 @@ Proof.
   assert (~ Col A B C) by (apply ncop__ncol with P, HNCop).
   exfalso.
   apply HNCop.
-  apply coplanar_pseudo_trans with X Y Z; [assumption|apply coplanar_pseudo_trans with A B C; Cop..|].
+  apply coplanar_pseudo_trans with X Y Z; [assumption|apply coplanar_pseudo_trans with A B C; Cop..|];
   apply coplanar_pseudo_trans with D E F; assumption.
 Qed.
 
@@ -3279,8 +3238,10 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
   {
   elim (eq_dec_points Z I); intro HZI; treat_equalities; Col.
   assert (HCong3 : Cong I A I B) by (apply l4_17 with X Y; unfold Midpoint in *; spliter; Cong).
-  assert (H := l7_20 I A B). elim H; clear H; try intro H;
-  treat_equalities; assert_diffs; assert_cols; try ColR; Cong; intuition.
+  assert (H := l7_20 I A B).
+  elim H; try ColR; intro.
+    treat_equalities; exfalso; auto.
+  ColR.
   }
 Qed.
 
@@ -3423,7 +3384,7 @@ Proof.
     apply (l7_17 C0 D0); assumption.
 Qed.
 
-Lemma cop__not_two_sides_one_side :
+Lemma cop_nts__os :
  forall A B C D,
   Coplanar A B C D ->
   ~ Col C A B ->
@@ -3436,7 +3397,7 @@ Proof.
     contradiction.
 Qed.
 
-Lemma cop__not_one_side_two_sides :
+Lemma cop_nos__ts :
  forall A B C D,
   Coplanar A B C D ->
   ~ Col C A B ->
@@ -3509,54 +3470,6 @@ Proof.
   destruct (ex_diff_cop A B C D) as [E [HE HDE]].
   destruct (ex_ncol_cop A B C D E HDE) as [F []].
   exists E, F; repeat split; assumption.
-Qed.
-
-Lemma cop4__col : forall A1 A2 A3 B1 B2 B3 P Q R, ~ Coplanar A1 A2 A3 B1 -> ~ Col B1 B2 B3 ->
-  Coplanar A1 A2 A3 P -> Coplanar B1 B2 B3 P ->
-  Coplanar A1 A2 A3 Q -> Coplanar B1 B2 B3 Q ->
-  Coplanar A1 A2 A3 R -> Coplanar B1 B2 B3 R ->
-  Col P Q R.
-Proof.
-  intros A1 A2 A3 B1 B2 B3 P Q R HNCop HNCol; intros.
-  assert (~ Col A1 A2 A3) by (apply ncop__ncol with B1, HNCop).
-  destruct (col_dec P Q R); trivial.
-  exfalso; apply HNCop.
-  apply coplanar_pseudo_trans with P Q R;
-  [assumption|apply coplanar_pseudo_trans with A1 A2 A3; Cop..|].
-  apply coplanar_pseudo_trans with B1 B2 B3; Cop.
-Qed.
-
-Lemma col_cop2__cop : forall A B C U V P, U <> V ->
-  Coplanar A B C U -> Coplanar A B C V -> Col U V P ->
-  Coplanar A B C P.
-Proof.
-  intros A B C U V P HUV HU HV HCol.
-  destruct (col_dec A B C) as [HCol1|HNCol].
-    apply col__coplanar, HCol1.
-  revert dependent C.
-  revert A B.
-  assert (Haux : forall A B C, ~ Col A B C -> ~ Col U A B ->
-  Coplanar A B C U -> Coplanar A B C V -> Coplanar A B C P).
-  { intros A B C HNCol HNCol' HU HV.
-    apply coplanar_trans_1 with U; [Cop..|].
-    apply coplanar_perm_12, col_cop__cop with V; auto.
-    apply coplanar_pseudo_trans with A B C; Cop.
-  }
-  intros A B C HU HV HNCol.
-  destruct (col_dec U A B); [destruct (col_dec U A C)|].
-  - apply coplanar_perm_12, Haux; Cop; Col.
-    intro; apply HNCol; destruct (eq_dec_points U A); [subst|]; ColR.
-  - apply coplanar_perm_2, Haux; Cop; Col.
-  - apply Haux; assumption.
-Qed.
-
-Lemma bet_cop2__cop : forall A B C U V W,
-  Coplanar A B C U -> Coplanar A B C W -> Bet U V W -> Coplanar A B C V.
-Proof.
-  intros A B C U V W HU HW HBet.
-  destruct (eq_dec_points U W).
-    treat_equalities; assumption.
-    apply col_cop2__cop with U W; Col.
 Qed.
 
 Lemma col2_cop2__eq : forall A B C U V P Q, ~ Coplanar A B C U -> U <> V ->
@@ -3635,7 +3548,7 @@ Proof.
   intros A B C P Q R HPR [S [[HP [_ [X []]]] [HQ [HS [Y []]]]]].
   assert (P <> X /\ S <> X /\ Q <> Y /\ S <> Y) by (repeat split; intro; subst; auto); spliter.
   destruct (col_dec P Q S) as [|HNCol].
-  { assert (X = Y) by (apply (col2_cop2__eq A B C Q S); ColR).
+  { assert (X = Y) by (assert_diffs; apply (col2_cop2__eq A B C Q S); ColR).
     subst Y.
     apply l9_39 with X P; trivial.
     apply l6_2 with S; auto.
@@ -3881,7 +3794,7 @@ Proof.
   intros A B C D E X Y HDE HD HE HCop HTSP.
   assert (HX : ~ Coplanar A B C X) by (apply tsp__ncop1 with Y, HTSP).
   assert (HY : ~ Coplanar A B C Y) by (apply tsp__ncop2 with X, HTSP).
-  apply cop__not_one_side_two_sides.
+  apply cop_nos__ts.
     assumption.
     intro; apply HX, col_cop2__cop with D E; Col.
     intro; apply HY, col_cop2__cop with D E; Col.
@@ -3897,7 +3810,7 @@ Proof.
   intros A B C D E X Y HDE HD HE HCop HOSP.
   assert (HX : ~ Coplanar A B C X) by (apply osp__ncop1 with Y, HOSP).
   assert (HY : ~ Coplanar A B C Y) by (apply osp__ncop2 with X, HOSP).
-  apply cop__not_two_sides_one_side.
+  apply cop_nts__os.
     assumption.
     intro; apply HX, col_cop2__cop with D E; Col.
     intro; apply HY, col_cop2__cop with D E; Col.
@@ -3933,45 +3846,52 @@ Proof.
       subst; exists B; repeat split; Cop.
       exists A; repeat split; Cop.
   }
-  
-    destruct (segment_construction E P P E) as [E' []].
-    assert (~ Col D E' P) by (intro; apply HNCol; ColR).
-    destruct (cop_tsp__ex_cop2 A B C D E' P) as [Q [HQ1 [HQ2 HPQ]]]; [assumption|..].
-    { apply l9_41_2 with E.
-        assert_diffs; destruct HOSP as [F [_ [HE]]]; apply bet_cop__tsp with P; Cop.
-        apply osp_symmetry, HOSP.
-    }
-    exists Q; repeat split; auto.
-    apply coplanar_perm_2, coplanar_trans_1 with E'; Col; Cop.
+  destruct (segment_construction E P P E) as [E' []].
+  assert (~ Col D E' P) by (intro; apply HNCol; ColR).
+  destruct (cop_tsp__ex_cop2 A B C D E' P) as [Q [HQ1 [HQ2 HPQ]]]; [assumption|..].
+  { apply l9_41_2 with E.
+      assert_diffs; destruct HOSP as [F [_ [HE]]]; apply bet_cop__tsp with P; Cop.
+      apply osp_symmetry, HOSP.
+  }
+  exists Q; repeat split; auto.
+  apply coplanar_perm_2, coplanar_trans_1 with E'; Col; Cop.
+Qed.
+
+Lemma sac__coplanar : forall A B C D, Saccheri A B C D -> Coplanar A B C D.
+Proof.
+  intros A B C D [_ [_ [_ HOS]]].
+  apply os__coplanar in HOS; Cop.
 Qed.
 
 End T9.
 
 Hint Resolve l9_2 invert_two_sides invert_one_side one_side_symmetry l9_9 l9_9_bis
-             l9_38 osp_symmetry osp__ntsp tsp__nosp : side.
-Hint Resolve os__coplanar : cop.
+             l9_31 l9_38 osp_symmetry osp__ntsp tsp__nosp : side.
+Hint Resolve os__coplanar sac__coplanar : cop.
 
-Ltac Side := eauto with side.
+Ltac Side := auto 4 with side.
 
-Ltac not_exist_hyp_perm4 A B C D := first [not_exist_hyp_perm_ncol A B C|not_exist_hyp_perm_ncol A B D|not_exist_hyp_perm_ncol A C D|not_exist_hyp_perm_ncol B C D].
+Ltac not_exist_hyp_perm_ncol4 A B C D := first
+  [not_exist_hyp_perm_ncol A B C|not_exist_hyp_perm_ncol A B D|
+   not_exist_hyp_perm_ncol A C D|not_exist_hyp_perm_ncol B C D].
 
 Ltac assert_ncols :=
 repeat
   match goal with
       | H:OS ?A ?B ?X ?Y |- _ =>
-     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(one_side_not_col123 A B X Y);finish)
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(one_side_not_col123 A B X Y H))
 
       | H:OS ?A ?B ?X ?Y |- _ =>
-     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(one_side_not_col124 A B X Y);finish)
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(one_side_not_col124 A B X Y H))
 
       | H:TS ?A ?B ?X ?Y |- _ =>
-     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(two_sides_not_col A B X Y);finish)
+     not_exist_hyp_perm_ncol A B X;assert (~ Col A B X) by (apply(two_sides_not_col A B X Y H))
 
       | H:TS ?A ?B ?X ?Y |- _ =>
-     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(two_sides_not_col A B Y X);finish)
+     not_exist_hyp_perm_ncol A B Y;assert (~ Col A B Y) by (apply(two_sides_not_col A B Y X);Side)
 
       | H:~ Coplanar ?A ?B ?C ?D |- _ =>
       let h := fresh in
-      not_exist_hyp_perm4 A B C D;
+      not_exist_hyp_perm_ncol4 A B C D;
       assert (h := ncop__ncols A B C D H);decompose [and] h;clear h;clean_reap_hyps
   end.

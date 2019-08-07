@@ -1,5 +1,5 @@
 Require Import GeoCoq.Axioms.parallel_postulates.
-Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
+Require Import GeoCoq.Tarski_dev.Ch11_angles.
 
 Section thales_postulate_thales_converse_postulate.
 
@@ -9,7 +9,9 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma thales_postulate__thales_converse_postulate : thales_postulate -> thales_converse_postulate.
 Proof.
-  intros thales A B C M HNCol HM HPer.
+  intros thales A B C M HM HPer.
+  destruct (col_dec A B C) as [|HNCol].
+    destruct (l8_9 A C B); Col; subst; Cong.
   assert_diffs.
   assert(M <> C) by (intro; subst; apply HNCol; Col).
   destruct (segment_construction_3 M C M A) as [C' [HC' HCong]]; auto.
@@ -27,8 +29,7 @@ Proof.
     apply l11_16; auto; apply (thales _ _ _ M); assumption.
   assert(OS A B C C') by (apply (out_one_side_1 _ _ _ _ M); Col).
   destruct HC' as [_ [_ [HMCC'|HMC'C]]].
-  - assert(Hlta : LtA A C' B A C B).
-    2: destruct Hlta; CongA.
+  - assert(Hlta : LtA A C' B A C B); [|destruct Hlta; CongA].
     apply os3__lta; Side;
     apply (one_side_transitivity _ _ _ M).
       apply invert_one_side; apply out_one_side; Col; apply l6_6; apply bet_out; Between.
@@ -36,8 +37,7 @@ Proof.
       apply invert_one_side; apply out_one_side; Col; apply l6_6; apply bet_out; Between.
       apply out_one_side; Col; apply l6_6; apply bet_out; Between.
 
-  - assert(Hlta : LtA A C B A C' B).
-    2: destruct Hlta; CongA.
+  - assert(Hlta : LtA A C B A C' B); [|destruct Hlta; CongA].
     apply os3__lta; Side;
     apply (one_side_transitivity _ _ _ M).
       apply invert_one_side; apply out_one_side; Col; apply l6_6; apply bet_out; Between.

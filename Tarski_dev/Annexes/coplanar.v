@@ -1,6 +1,6 @@
-Require Import GeoCoq.Tarski_dev.Ch06_out_lines.
+Require Import GeoCoq.Tarski_dev.Ch08_orthogonality.
 
-Section Coplanar_perm.
+Section Coplanar.
 
 Context `{Tn:Tarski_neutral_dimensionless}.
 
@@ -515,8 +515,7 @@ Proof.
   intros; spliter; assumption.
 Qed.
 
-
-End Coplanar_perm.
+End Coplanar.
 
 Hint Resolve coplanar_perm_1 coplanar_perm_2 coplanar_perm_3 coplanar_perm_4 coplanar_perm_5
 coplanar_perm_6 coplanar_perm_7 coplanar_perm_8 coplanar_perm_9 coplanar_perm_10 coplanar_perm_11
@@ -526,9 +525,73 @@ ncoplanar_perm_1 ncoplanar_perm_2 ncoplanar_perm_3 ncoplanar_perm_4 ncoplanar_pe
 ncoplanar_perm_7 ncoplanar_perm_8 ncoplanar_perm_9 ncoplanar_perm_10 ncoplanar_perm_11
 ncoplanar_perm_12 ncoplanar_perm_13 ncoplanar_perm_14 ncoplanar_perm_15 ncoplanar_perm_16
 ncoplanar_perm_17 ncoplanar_perm_18 ncoplanar_perm_19 ncoplanar_perm_20 ncoplanar_perm_21
-ncoplanar_perm_22 ncoplanar_perm_23 coplanar_trivial col__coplanar bet__coplanar out__coplanar
-midpoint__coplanar perp__coplanar ts__coplanar reflectl__coplanar reflect__coplanar inangle__coplanar
-pars__coplanar par__coplanar plg__coplanar plgs__coplanar plgf__coplanar parallelogram__coplanar
-rhombus__coplanar rectangle__coplanar square__coplanar lambert__coplanar : cop.
+ncoplanar_perm_22 ncoplanar_perm_23 : cop_perm.
 
-Ltac Cop := auto 3 with cop.
+Hint Resolve coplanar_trivial col__coplanar bet__coplanar out__coplanar midpoint__coplanar
+perp__coplanar ts__coplanar reflectl__coplanar reflect__coplanar inangle__coplanar pars__coplanar
+par__coplanar plg__coplanar plgs__coplanar plgf__coplanar parallelogram__coplanar rhombus__coplanar
+rectangle__coplanar square__coplanar lambert__coplanar : cop.
+
+Ltac not_exist_hyp_perm_cop_aux A B C D :=
+  not_exist_hyp (Coplanar A B C D); not_exist_hyp (Coplanar A B D C); not_exist_hyp (Coplanar A C B D);
+  not_exist_hyp (Coplanar A C D B); not_exist_hyp (Coplanar A D B C); not_exist_hyp (Coplanar A D C B).
+
+Ltac not_exist_hyp_perm_cop A B C D := not_exist_hyp_perm_cop_aux A B C D;
+                                       not_exist_hyp_perm_cop_aux B A C D;
+                                       not_exist_hyp_perm_cop_aux C A B D;
+                                       not_exist_hyp_perm_cop_aux D A B C.
+
+Ltac assert_cops :=
+ repeat match goal with
+      | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
+      | H:TS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply ts__coplanar, H)
+      | H:ReflectL ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflectl__coplanar, H)
+      | H:Reflect ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflect__coplanar, H)
+      | H:InAngle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply inangle__coplanar, H)
+      | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply pars__coplanar, H)
+      | H:Par ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply par__coplanar, H)
+      | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plg__coplanar, H)
+      | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgs__coplanar, H)
+      | H:Parallelogram_flat ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgf__coplanar, H)
+      | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply parallelogram__coplanar, H)
+      | H:Rhombus ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rhombus__coplanar, H)
+      | H:Rectangle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rectangle__coplanar, H)
+      | H:Square ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply square__coplanar, H)
+      | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
+ end.
+
+Ltac exist_hyp_perm_cop_aux A B C D := first
+  [exist_hyp (Coplanar A B C D)|exist_hyp (Coplanar A B D C)|exist_hyp (Coplanar A C B D)
+  |exist_hyp (Coplanar A C D B)|exist_hyp (Coplanar A D B C)|exist_hyp (Coplanar A D C B)].
+
+Ltac exist_hyp_perm_cop A B C D := first
+  [exist_hyp_perm_cop_aux A B C D|exist_hyp_perm_cop_aux B A C D
+  |exist_hyp_perm_cop_aux C A B D|exist_hyp_perm_cop_aux D A B C].
+
+Ltac exist_hyp_perm_ncop_aux A B C D := first
+  [exist_hyp (~ Coplanar A B C D)|exist_hyp (~ Coplanar A B D C)|exist_hyp (~ Coplanar A C B D)
+  |exist_hyp (~ Coplanar A C D B)|exist_hyp (~ Coplanar A D B C)|exist_hyp (~ Coplanar A D C B)].
+
+Ltac exist_hyp_perm_ncop A B C D := first
+  [exist_hyp_perm_ncop_aux A B C D|exist_hyp_perm_ncop_aux B A C D
+  |exist_hyp_perm_ncop_aux C A B D|exist_hyp_perm_ncop_aux D A B C].
+
+Ltac Cop := auto; try (intros; solve [apply col__coplanar; Col
+     |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
+     |apply coplanar_perm_18, col__coplanar; Col
+     |assert_cops; auto 2 with cop_perm]).

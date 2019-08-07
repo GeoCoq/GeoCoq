@@ -40,24 +40,30 @@ Definition is_orthocenter H A B C :=
 Definition is_orthocenter H A B C :=
  ~ Col A B C /\ Perp A H B C /\ Perp B H A C /\ Perp C H A B.
 
+Lemma is_orthocenter_coplanar : forall A B C H, is_orthocenter H A B C -> Coplanar H A B C.
+Proof.
+intros A B C H [HNCol [HPerp]].
+apply coplanar_perm_6, perp__coplanar, HPerp.
+Qed.
+
 Lemma construct_intersection : forall A B C X1 X2 X3,
  ~ Col A B C ->
  Par A C B X1 -> Par A B C X2 ->  Par B C A X3 ->
  exists E, Col E A X3 /\ Col E B X1.
-Proof with finish.
+Proof.
 intros A B C X1 X2 X3 HNC HPar1 HPar2 HPar3.
 apply cop_npar__inter_exists.
-  apply coplanar_perm_2, coplanar_trans_1 with C; Col; Cop.
+  CopR.
 intro HNPar; apply HNC.
 assert (HFalsePar : Par B C A C)
   by (apply (par_trans B C B X1 A C); finish; apply (par_trans B C A X3 B); finish).
-apply par_id_2...
+perm_apply (par_id C B A).
 Qed.
 
-Lemma not_col_par_col2_diff : forall A B C D E F,
-  ~ Col A B C -> Par A B C D -> Col C D E -> Col A E F -> A <> E.
+Lemma not_col_par_col_diff : forall A B C D E,
+  ~ Col A B C -> Par A B C D -> Col C D E -> A <> E.
 Proof.
-intros A B C D E F HNC HPar HC1 HC2.
+intros A B C D E HNC HPar HC.
 intro; subst.
 apply HNC; apply not_strict_par1 with D E; finish.
 Qed.
@@ -80,12 +86,12 @@ assert (T : exists D, Col D B X2 /\ Col D C X1) by (apply construct_intersection
 assert (T : exists E, Col E A X3 /\ Col E C X1) by (apply construct_intersection with B X2; finish); DecompExAnd T E.
 assert (T : exists F, Col F A X3 /\ Col F B X2) by (apply construct_intersection with C X1; finish); DecompExAnd T F.
 
-assert (A <> E) by (apply not_col_par_col2_diff with B C X1 X3; finish).
-assert (A <> F) by (apply not_col_par_col2_diff with C B X2 X3; finish).
-assert (B <> D) by (apply not_col_par_col2_diff with A C X1 X2; finish).
-assert (B <> F) by (apply not_col_par_col2_diff with C A X3 X2; finish).
-assert (C <> D) by (apply not_col_par_col2_diff with A B X2 X1; finish).
-assert (C <> E) by (apply not_col_par_col2_diff with B A X3 X1; finish).
+assert (A <> E) by (apply not_col_par_col_diff with B C X1; finish).
+assert (A <> F) by (apply not_col_par_col_diff with C B X2; finish).
+assert (B <> D) by (apply not_col_par_col_diff with A C X1; finish).
+assert (B <> F) by (apply not_col_par_col_diff with C A X3; finish).
+assert (C <> D) by (apply not_col_par_col_diff with A B X2; finish).
+assert (C <> E) by (apply not_col_par_col_diff with B A X3; finish).
 
 assert (Par A B C D) by (apply par_col_par with X1; finish).
 assert (Par A C B D) by (apply par_col_par with X2; finish).
@@ -108,7 +114,7 @@ assert_diffs.
 deduce_cols.
 repeat split; try cols; finish; clear_cols; untag_hyps.
 *)
-repeat split; finish; try ColR.
+repeat split; try ColR; finish.
 
 intro; subst.
 assert (E <> F) by (intro; subst; intuition).
@@ -131,7 +137,7 @@ intros A B C D E HD HNC HC HPar1 HPar2 HPar3 HPar4.
 assert (HPara1 : Parallelogram_strict A B C E) by (apply parallel_2_plg; finish).
 assert (HPara2 : Parallelogram_strict C A B D) by (apply parallel_2_plg; finish).
 assert_congs_perm.
-apply cong_col_mid; Col; eCong.
+apply cong_col_mid; Col; CongR.
 Qed.
 
 Lemma altitude_is_perp_bisect : forall A B C O A1 E F,
@@ -193,13 +199,8 @@ assert (Perp C1 C D E).
   apply par_symmetry; apply par_col_par_2 with C...
 
 apply col_permutation_2; apply cop_perp2__col with D E; Perp.
-apply coplanar_pseudo_trans with A B C.
-
-  assumption.
-  Cop.
-  apply col_cop__cop with D; Col; Cop.
-  Cop.
-  apply coplanar_perm_2, col_cop__cop with B1; Col; Cop.
+apply coplanar_pseudo_trans with A B C; Cop.
+apply coplanar_perm_2, col_cop__cop with B1; Col; Cop.
 
 Qed.
 
@@ -322,3 +323,5 @@ Hint Resolve
      is_orthocenter_perm_3
      is_orthocenter_perm_4
      is_orthocenter_perm_5 : Orthocenter.
+
+Hint Resolve is_orthocenter_coplanar : cop.

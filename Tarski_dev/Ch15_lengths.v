@@ -717,18 +717,6 @@ apply cong_transitivity with O BC; Cong.
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
 apply(l6_11_uniqueness O A C E AC AC').
-intro.
-subst E.
-tauto.
-intro.
-subst C.
-apply between_identity in H0.
-subst B.
-apply cong_identity in H6.
-subst AC.
-unfold Ps in H15.
-unfold Out in H15.
-tauto.
 unfold Ps in H15.
 assumption.
 Cong.
@@ -811,18 +799,6 @@ assumption.
 subst Y.
 assert(AB = AC).
 apply(l6_11_uniqueness O A B E AB AC).
-intro.
-subst E.
-unfold Ps in H13.
-unfold Out in H13.
-tauto.
-intro.
-subst B.
-apply cong_identity in H6.
-subst AC.
-unfold Ps in H13.
-unfold Out in H13.
-tauto.
 unfold Ps in H11.
 assumption.
 Cong.
@@ -869,31 +845,6 @@ subst B.
 
 assert(BC = AC).
 apply(l6_11_uniqueness O A C E BC AC).
-intro.
-subst E.
-tauto.
-intro.
-subst C.
-apply cong_identity in H9.
-subst BC.
-unfold LtP in H8.
-ex_and H8 X.
-apply diff_sum in H8.
-assert(X = O).
-apply (sum_uniqueness O E E' O X).
-apply sum_O_B.
-unfold Sum in H8.
-unfold Ar2 in H8.
-tauto;
-unfold Ps in H13.
-unfold Ps in H9.
-apply out_col in H9.
-Col.
-assumption.
-subst X.
-unfold Ps in H9.
-unfold Out in H9.
-tauto.
 unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
@@ -1089,20 +1040,6 @@ apply cong_transitivity with O BC; Cong.
 assert(HP:= sum_pos_pos O E E' AB BC AC' H13 H14 H17).
 assert(AC = AC').
 apply(l6_11_uniqueness O A C E AC AC').
-intro.
-subst E.
-unfold Ps in H15.
-unfold Out in H15.
-tauto.
-intro.
-subst C.
-apply between_identity in H0.
-subst B.
-apply cong_identity in H6.
-subst AC.
-unfold Ps in H15.
-unfold Out in H15.
-tauto.
 unfold Ps in H15.
 assumption.
 Cong.
@@ -1184,18 +1121,6 @@ assumption.
 subst Y.
 assert(AB = AC).
 apply(l6_11_uniqueness O A B E AB AC).
-intro.
-subst E.
-unfold Ps in H13.
-unfold Out in H13.
-tauto.
-intro.
-subst B.
-apply cong_identity in H6.
-subst AC.
-unfold Ps in H13.
-unfold Out in H13.
-tauto.
 unfold Ps in H11.
 assumption.
 Cong.
@@ -1240,31 +1165,6 @@ subst B.
 
 assert(BC = AC).
 apply(l6_11_uniqueness O A C E BC AC).
-intro.
-subst E.
-tauto.
-intro.
-subst C.
-apply cong_identity in H9.
-subst BC.
-unfold LtP in H8.
-ex_and H8 X.
-apply diff_sum in H8.
-assert(X = O).
-apply (sum_uniqueness O E E' O X).
-apply sum_O_B.
-unfold Sum in H8.
-unfold Ar2 in H8.
-tauto;
-unfold Ps in H13.
-unfold Ps in H9.
-apply out_col in H9.
-Col.
-assumption.
-subst X.
-unfold Ps in H9.
-unfold Out in H9.
-tauto.
 unfold LtP in H8.
 ex_and H8 X.
 apply diff_sum in H8.
@@ -1917,7 +1817,7 @@ split; auto.
 unfold ReflectL.
 split.
 exists O.
-split; finish.
+split; Midpoint; Col.
 right.
 auto.
 
@@ -1927,7 +1827,7 @@ split; auto.
 unfold ReflectL.
 split.
 exists M.
-split; finish.
+split; Midpoint; Col.
 left.
 induction H30.
 apply perp_sym.
@@ -1938,10 +1838,10 @@ subst C1'.
 
 apply l7_3 in H7.
 contradiction.
-finish.
+Perp.
 unfold Midpoint in H7.
 spliter.
-finish.
+Col.
 apply perp_distinct in H30.
 tauto.
 unfold Reflect.
@@ -1950,7 +1850,7 @@ split; auto.
 unfold ReflectL.
 split.
 exists N.
-split; finish.
+split; Midpoint; Col.
 left.
 induction H25.
 apply perp_right_comm.
@@ -2058,7 +1958,7 @@ tauto.
 Col.
 Col.
 induction H25.
-finish.
+Perp.
 subst D1'.
 apply l7_3 in H24.
 subst N.
@@ -2099,8 +1999,7 @@ apply perp_in_per in H32.
 unfold Per in H32.
 ex_and H32 D2.
 assert(D2 = D1').
-eapply (l7_9 _ _ N D1);
-finish.
+apply (l7_9 _ _ N D1); Midpoint.
 subst D2.
 assumption.
 }
@@ -2116,11 +2015,11 @@ intro.
 subst C1'.
 apply HN.
 Col.
-finish.
+Perp.
 unfold Midpoint in H7.
 spliter.
-finish.
-finish.
+Col.
+Perp.
 apply perp_distinct in H30.
 tauto.
 subst D1'.
@@ -2288,7 +2187,7 @@ destruct H44.
 induction H3.
 assert(HH3:=H3).
 apply H45 in HH3.
-apply(out_conga C A B D B A C P D P).
+apply(l11_10 C A B D B A C P D P).
 assumption.
 apply out_trivial.
 intro.
@@ -2297,13 +2196,13 @@ apply H2.
 Col.
 repeat split.
 intro.
-subst B.
-tauto.
-intro.
 subst A.
 apply H2.
 Col.
-right.
+intro.
+subst B.
+tauto.
+left.
 assumption.
 apply out_trivial.
 intro.
@@ -2311,12 +2210,12 @@ subst D.
 apply H2.
 ColR.
 repeat split.
-assumption.
 intro.
 subst B.
 apply H2.
 tauto.
-right; Between.
+auto.
+left; Between.
 subst D.
 apply False_ind.
 apply H2.
@@ -2480,7 +2379,7 @@ repeat split; Col.
 unfold Pj in H3.
 induction H3.
 left.
-finish.
+Par.
 right.
 auto.
 apply(l11_14 C P A D B); auto.
@@ -2537,23 +2436,14 @@ repeat split; Col.
 left.
 unfold Pj in H3.
 induction H3.
-finish.
+Par.
 subst D.
 apply False_ind.
 unfold CongA in H42.
 tauto.
 
 apply conga_sym.
-apply(out_conga C P A C P A D B C A); finish.
-apply conga_refl.
-apply out_trivial.
-unfold Out in H47.
-tauto.
-unfold Out in H48.
-tauto.
-apply out_trivial.
-unfold Out in H47.
-tauto.
+apply out2__conga; auto.
 }
 
 assert(C1 <> C1').
@@ -2612,7 +2502,7 @@ apply(project_preserves_out O C1 D1 O C1' D1' O C1' C1 C1'); auto.
 repeat split; Col.
 repeat split; Col.
 left.
-finish.
+Par.
 repeat split; Col.
 left.
 apply(l12_9_2D D1 D1' C1 C1' O M).
@@ -2624,7 +2514,7 @@ apply l7_3 in H24.
 subst N.
 apply perp_distinct in H32.
 tauto.
-finish.
+Perp.
 unfold Midpoint in H24.
 spliter.
 apply bet_col in H24.
@@ -2632,10 +2522,10 @@ Col.
 apply perp_sym.
 apply(perp_col O N D1 D1' M).
 assumption.
-finish.
+Perp.
 Col.
 induction H30.
-apply (perp_col C1 M O M C1'); finish.
+apply (perp_col C1 M O M C1'); Col; Perp.
 unfold Midpoint in H7.
 spliter.
 apply bet_col in H7.
@@ -2645,21 +2535,10 @@ tauto.
 }
 assert(CongA C1' O A1 D1' O B1).
 {
-apply(out_conga C1' O A1 C1' O A1 C1' A1 D1' B1); auto.
-apply conga_refl.
-auto.
-intro.
-subst A1.
-unfold Out in H28.
-tauto.
-apply out_trivial.
-auto.
-apply out_trivial.
-intro.
-subst A1.
-unfold Out in H28.
-tauto.
-apply(length_out O E E' P A  P B A1 B1); auto.
+apply out2__conga.
+apply l6_6.
+assumption.
+apply(length_out O E E' P B  P A B1 A1); auto.
 }
 assert(CongA D1' O B1 D P B).
 {
@@ -2747,7 +2626,7 @@ assumption.
 apply out_col in H31.
 ColR.
 left.
-finish.
+Par.
 }
 
 assert(exists Y : Tpoint, Prod O E C1' A1 D1 Y /\ Prod O E C1' C1 B1 Y).
@@ -2878,8 +2757,7 @@ assumption.
 subst AH.
 apply perp_in_per in H2.
 assert(A = C).
-apply (l8_7 B);
-finish.
+apply (l8_7 B); Perp.
 subst C.
 assert(AC = O).
 apply (length_uniqueness O E E' A A); auto.
@@ -2935,11 +2813,8 @@ tauto.
 
 assert(Cong H C H' C' /\ (H <> C -> CongA A H C A H' C' /\ CongA A C H A C' H')).
 apply(l11_49 H A C H' A C').
-apply (l11_10 H A C C A H).
-apply conga_right_comm.
-apply conga_refl; auto.
-apply out_trivial; auto.
-apply out_trivial; auto.
+apply conga_left_comm.
+apply out2__conga.
 apply l6_6.
 assumption.
 apply l6_6.
@@ -2975,7 +2850,7 @@ apply per_perp_in in H1.
 apply perp_in_comm in H1.
 apply perp_in_perp_bis in H1.
 induction H1.
-finish.
+Perp.
 apply perp_distinct in H1.
 tauto.
 auto.
@@ -2991,7 +2866,7 @@ apply perp_right_comm.
 apply(perp_col A H' C' H' C).
 auto.
 induction HH.
-finish.
+Perp.
 apply perp_distinct in H22.
 tauto.
 apply out_col in H16.
@@ -3042,7 +2917,7 @@ intro.
 subst H.
 apply conga_distinct in H19.
 tauto.
-finish.
+Perp.
 apply perp_in_col in H2.
 tauto.
 apply perp_not_col in H28.
@@ -3062,7 +2937,7 @@ tauto.
 ColR.
 
 left.
-finish.
+Par.
 left.
 assumption.
 
@@ -3218,7 +3093,7 @@ assert(Perp_at P A B C P).
 apply(l8_14_2_1b_bis A B C P P H13); Col.
 assert(Bet A P B /\ A <> P /\ B <> P).
 apply(l11_47 A B C P H0).
-finish.
+Perp.
 spliter.
 
 assert(HL1:= length_existence O E E' A P H7).
@@ -3232,10 +3107,10 @@ apply length_sym.
 assumption.
 
 assert(Prod O E E' AB AP AC2).
-apply(l15_7_1 O E E' A B C P AB AC AP AC2 H H0); finish.
+apply(l15_7_1 O E E' A B C P AB AC AP AC2 H H0); Perp.
 
 assert(Prod O E E' AB BP BC2).
-eapply(l15_7_1 O E E' B A C P AB BC); finish.
+eapply(l15_7_1 O E E' B A C P AB BC); Perp.
 apply length_sym;auto.
 
 assert(HD:=distr_l O E E' AB AP BP AB AC2 BC2 AB2 H20 H21 H22 H6).
@@ -3266,7 +3141,7 @@ induction(eq_dec_points L M).
   unfold Lt in H1.
   spliter.
   apply False_ind.
-  apply H2; eCong.
+  apply H2; CongR.
 }
 {
   assert(Le A B C D).
@@ -3455,9 +3330,7 @@ assert(Bet B' O E').
   unfold Par in H10.
   induction H10.
   {
-    unfold Par_strict in H10.
-    spliter.
-    apply H13.
+    apply H10.
     exists E'.
     split; Col.
   }
@@ -3471,9 +3344,7 @@ assert(Bet B' O E').
   unfold Par in H10.
   induction H10.
   {
-    unfold Par_strict in H10.
-    spliter.
-    apply H13.
+    apply H10.
     exists E'.
     split; Col.
   }
@@ -3504,9 +3375,7 @@ assert(Bet A O C).
   unfold Par in H11.
   induction H11.
   {
-    unfold Par_strict in H11.
-    spliter.
-    apply H14.
+    apply H11.
     exists A;
     split; Col.
   }
@@ -3528,9 +3397,7 @@ assert(Bet A O C).
   unfold Par in H11.
   induction H11.
   {
-    unfold Par_strict in H11.
-    spliter.
-    apply H14.
+    apply H11.
     exists A.
     split; Col.
   }
@@ -3581,9 +3448,7 @@ assert(Bet B' O E').
   unfold Par in H6.
   induction H6.
   {
-    unfold Par_strict in H6.
-  spliter.
-    apply H12.
+    apply H6.
     exists E'.
     split; Col.
   }
@@ -3597,9 +3462,7 @@ assert(Bet B' O E').
   unfold Par in H6.
   induction H6.
   {
-    unfold Par_strict in H6.
-    spliter.
-    apply H12.
+    apply H6.
     exists E'.
     split; Col.
   }
@@ -3630,9 +3493,7 @@ assert(Bet A O C).
   unfold Par in H10.
   induction H10.
   {
-    unfold Par_strict in H10.
-    spliter.
-    apply H13.
+    apply H10.
     exists A;
     split; Col.
   }
@@ -3654,9 +3515,7 @@ assert(Bet A O C).
   unfold Par in H10.
   induction H10.
   {
-    unfold Par_strict in H10.
-    spliter.
-    apply H13.
+    apply H10.
     exists A.
     split; Col.
   }
@@ -4219,11 +4078,11 @@ ex_and H3 P.
 exists P.
 split.
 apply (l11_25 P D E F D' F' P);
-try(apply l6_6); auto.
+try apply l6_6; auto.
 apply out_trivial.
 unfold CongA in H4.
 tauto.
-apply (out_conga A B C D E P); auto.
+apply (l11_10 A B C D E P); try apply l6_6; auto.
 apply out_trivial.
 unfold CongA in H4.
 tauto.
@@ -4239,8 +4098,7 @@ split.
 apply(lea_out_lea A B C D E F A' C' D' F');auto.
 intro.
 apply H4.
-apply (out_conga A' B C' D' E F');
-try(apply l6_6); auto.
+apply (l11_10 A' B C' D' E F'); auto.
 Qed.
 
 
@@ -4256,7 +4114,6 @@ ex_and H8 B'.
 ex_and H0 C'.
 assert(A' <> B' /\ C' <> B' /\ C <> A /\ C' <> B' /\ C <> B).
 {
-  unfold GtA in H8.
   unfold LtA in H8.
   spliter.
   unfold LeA in H8.
@@ -4278,7 +4135,6 @@ ex_and HH CC.
 assert(Lt AA CC A B).
 {
   apply(t18_18 C A B B' AA CC);Cong.
-  unfold GtA in H8.
   apply lta_comm.
   apply(lta_out_lta A' B' C' A C B);
   try(apply l6_6; auto).
@@ -4955,14 +4811,8 @@ spliter.
 subst A.
 subst B.
 clean_trivial_hyps.
-assert(Cong Q M O P); eCong.
-assert(Cong Q M P M); eCong.
-assert(O = M).
-{
-  apply(l4_18 P Q O M); Col;
-  induction(eq_dec_points M O); Cong.
-}
-auto.
+apply eq_sym.
+apply (l4_18 P Q O M); Cong; Col.
 Qed.
 
 Lemma inter_circle_per : forall P Q A T M, Cong P A Q A 
@@ -4996,7 +4846,7 @@ induction(eq_dec_points P T).
 
   assert(HX:O<>E).
   {
-    ColR.
+    assert_diffs; auto.
   }
   assert(Per P T A).
   {
@@ -5228,7 +5078,7 @@ induction(eq_dec_points P T).
 
   assert(HX:O<>E).
   {
-    ColR.
+    assert_diffs; auto.
   }
   assert(Per P T A).
   {
@@ -5367,7 +5217,7 @@ induction(eq_dec_points P T).
       apply sum_comm; auto.
       apply sum_comm; auto.
     }
-    
+
     assert(Ps O E  TM).
     {
       apply length_pos_or_null in H28.
