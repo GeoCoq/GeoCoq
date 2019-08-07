@@ -1,15 +1,55 @@
 Require Import GeoCoq.Axioms.continuity_axioms.
 Require Import GeoCoq.Meta_theory.Dimension_axioms.upper_dim_2.
 Require Import GeoCoq.Meta_theory.Dimension_axioms.upper_dim_3.
-Require Import GeoCoq.Tarski_dev.Ch10_line_reflexivity_2.
+Require Import GeoCoq.Meta_theory.Continuity.grad.
 
-(** This development is inspired by Theorem 32 of Hilbert's Foundations of Geometry (10th edition).
-    It deduces completeness of a 2 or 3-dimensional space from completeness of lines.
-    The original proof is due to Paul Bernays. *)
-
-Section Completeness.
+Section Extension.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+Lemma line_extension_symmetry : forall {Tm : Tarski_neutral_dimensionless}
+  (f : @Tpoint Tn -> @Tpoint Tm) P Q, line_extension f P Q -> line_extension f Q P.
+Proof.
+  intros Tm f P Q [HPQ [fInj [fBet fCong]]].
+  repeat split; auto; intro; intros; [apply fInj|apply fBet|apply fCong]; Col.
+Qed.
+
+Lemma line_extension_stability : forall {Tm: Tarski_neutral_dimensionless}
+  (f : @Tpoint Tn -> @Tpoint Tm) P Q R,
+  Col P Q R -> P <> R -> line_extension f P Q -> line_extension f P R.
+Proof.
+  intros Tm f P Q R HCol HPR [HPQ [fInj [fBet fCong]]].
+  repeat split; auto; intro; intros;
+    [apply fInj|apply fBet|apply fCong]; trivial; apply col_transitivity_1 with R; Col.
+Qed.
+
+Lemma line_extension_reverse_bet : forall {Tm: Tarski_neutral_dimensionless}
+  (f : @Tpoint Tn -> @Tpoint Tm) P Q, line_extension f P Q ->
+  forall A B C, Col P Q A -> Col P Q B -> Col P Q C -> Bet (f A) (f B) (f C) -> Bet A B C.
+Proof.
+  intros Tm f P Q [HPQ [fInj [fBet fCong]]] A B C HA HB HC HBet.
+  assert (HCol : Col A B C) by (apply (col3 P Q); assumption).
+  destruct HCol as [|[HBet'|HBet']]; trivial;
+  [assert (B = C)|assert (A = B)]; try (subst B; Between);
+  apply fInj; trivial;
+  [apply between_equality with (f A)|apply between_equality with (f C)]; Between.
+Qed.
+
+Lemma pres_bet_line__col : forall {Tm: Tarski_neutral_dimensionless}
+  (f : @Tpoint Tn -> @Tpoint Tm) P Q, P <> Q -> pres_bet_line f P Q ->
+  forall A B C, Col P Q A -> Col P Q B -> Col P Q C -> Col (f A) (f B) (f C).
+Proof.
+  intros Tm f P Q HPQ fBet A B C HA HB HC.
+  destruct (col3 P Q A B C) as [HBet|[HBet|HBet]]; trivial; apply fBet in HBet; Col.
+Qed.
+
+Lemma col2_diff_inj_line__diff : forall {Tm: Tarski_neutral_dimensionless}
+  (f : @Tpoint Tn -> @Tpoint Tm) P Q, inj_line f P Q ->
+  forall A B, Col P Q A -> Col P Q B -> A <> B -> f A <> f B.
+Proof.
+  intros Tm f P Q finj A B HA HB HAB Habs.
+  apply HAB, finj; assumption.
+Qed.
 
 Lemma extension__line_extension : forall {Tm: Tarski_neutral_dimensionless}
   (f : @Tpoint Tn -> @Tpoint Tm) P Q,
@@ -47,6 +87,15 @@ Proof.
   destruct HCol as [|[|]]; auto.
 Qed.
 
+End Extension.
+
+(** The following section is inspired by Theorem 32 of Hilbert's Foundations of Geometry (10th edition).
+    It deduces completeness of a 2 or 3-dimensional space from completeness of lines.
+    The original proof is due to Paul Bernays. *)
+
+Section Completeness.
+
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma line_completeness_aux : line_completeness ->
   forall (Tm: Tarski_neutral_dimensionless)
@@ -110,22 +159,16 @@ Proof.
   exists B; assumption.
 Qed.
 
-Lemma completeness_aux : forall {Tm: Tarski_neutral_dimensionless}
-  P Q R (f : @Tpoint Tn -> @Tpoint Tm) A,
-  (exists B, Coplanar P Q R B /\ f B = A) -> exists B, f B = A.
-Proof.
-  intros Tm P Q R f A [B []].
-  exists B; assumption.
-Qed.
-
 Lemma line_completeness__completeness_for_3d_spaces :
   (exists P Q R S, ~ Coplanar P Q R S) ->
   line_completeness -> completeness_for_3d_spaces.
 Proof.
   intros [P [Q [R [S HNCop]]]] lc Tm Tm2 M f archi fext A.
-  assert (~ Col P Q R) . apply ncop__ncol with S, HNCop.
+  assert (~ Col P Q R) by (apply ncop__ncol with S, HNCop).
+  assert (Haux : forall X, (exists B, Coplanar P Q X B /\ f B = A) -> exists B, f B = A).
+    intros X [B []]; exists B; assumption.
   destruct (col_dec (f P) (f Q) A).
-    apply (completeness_aux P Q R), line_completeness_aux; Cop.
+    apply (Haux R), line_completeness_aux; Cop.
   assert (pi : plane_intersection_axiom).
   { cut upper_dim_3_axiom.
       apply upper_dim_3_equivalent_axioms; simpl; tauto.
@@ -135,7 +178,7 @@ Proof.
   assert (HY : exists Y, Coplanar P R S Y /\ f Y = X).
     apply line_completeness_aux; trivial; apply ncop__ncol with Q; Cop.
   destruct HY as [Y []]; subst.
-  apply completeness_aux with P Q Y, line_completeness_aux; Cop.
+  apply (Haux Y), line_completeness_aux; Cop.
   intro.
   apply HNCop.
   apply coplanar_perm_16, col_cop__cop with Y; Col; Cop.
@@ -144,8 +187,10 @@ Qed.
 
 End Completeness.
 
-(** In the following sections, we prove that our formalizations of Hilbert's axiom of completeness
-    are always true in spaces with dimension respectively greater than 2 and 3. *)
+(** In the following section, we prove that our formalizations of
+    Hilbert's axiom of completeness
+    are always true in spaces with dimension respectively greater than 2 and 3.
+    The next one states the contrapositive lemmas. *)
 
 Section Dimension.
 
@@ -193,7 +238,6 @@ Qed.
 
 End Dimension.
 
-
 Section Dimension'.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
@@ -215,3 +259,110 @@ Proof.
 Qed.
 
 End Dimension'.
+
+(** In the following section, we prove that Hilbert's axiom of line completeness
+    is always true in non-archimedean spaces. *)
+
+Section Archimedes.
+
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+Lemma archimedes_aux : forall P Q,
+  (forall R S, Bet P Q R -> Bet P Q S -> Q <> R -> Reach Q R Q S) -> archimedes_axiom.
+Proof.
+  intros P Q Haux A B C D HAB.
+  destruct (segment_construction P Q A B) as [R []].
+  destruct (segment_construction P Q C D) as [S []].
+  destruct (Haux R S) as [R' [HGrad HLe]]; Col.
+    intro; treat_equalities; auto.
+  assert (Bet Q R R') by (apply grad__bet, HGrad).
+  assert (HB' : Le A B Q R') by (apply le_transitivity with Q R; Le).
+  apply l5_5_1 in HB'.
+  destruct HB' as [B' []].
+  exists B'; split.
+    apply (grad2__grad456 Q R R'), bet_cong2_grad__grad2; trivial.
+    apply l4_3_1 with Q A; Cong.
+  apply (l5_6 Q S Q R'); Cong.
+Qed.
+
+Lemma not_archimedes__line_completeness : ~ archimedes_axiom -> line_completeness.
+Proof.
+  intros narchi Tm Tm2 P Q f archi Hf.
+  assert (Hf' := Hf).
+  destruct Hf' as [HPQ [finj [fBet fCong]]].
+  assert (Haux := col2_diff_inj_line__diff f P Q finj).
+  exfalso.
+  apply narchi, (archimedes_aux P Q).
+  intros R S HR HS HQR.
+  remember (f Q) as Q'.
+  remember (f R) as R'.
+  remember (f S) as S'.
+  destruct (archi Q' R' Q' S') as [R0' [HGrad HLe]].
+    subst; intro; apply HQR, finj; Col.
+  assert (HBet : Bet Q' S' R0').
+  { destruct (eq_dec_points Q S); [subst; Between|].
+    apply l6_13_1; trivial.
+    apply l6_7 with R'; subst.
+      apply l6_2 with (f P); Col; apply fBet; Between; Col.
+    apply bet_out; Col; apply grad__bet, HGrad.
+  }
+  clear HLe.
+  revert S S' HeqS' HS HBet.
+  induction HGrad; intros; subst.
+  { exists R; split; [apply grad_init|].
+    apply bet__le1213, (line_extension_reverse_bet f P Q); Col.
+  }
+  rename C into C0'.
+  destruct (eq_dec_points Q S).
+    subst; exists R; split; [apply grad_init|apply le_trivial].
+  assert (Hd : Bet (f Q) (f S) C0' \/ Bet (f Q) C0' (f S)).
+  { destruct (eq_dec_points C0' (f Q)); [subst; Between|].
+    apply l6_7 with C'.
+      apply bet_out; Col.
+    apply l6_6, bet_out; Col.
+  }
+  destruct Hd; [apply IHHGrad with (f S); trivial|].
+  assert (HS0 : exists S0, Bet Q S0 S /\ Cong S S0 Q R).
+  { apply segment_reverse, (line_extension_reverse_bet f P Q); Col.
+    apply between_exchange4 with C0'; Between.
+  }
+  destruct HS0 as [S0 []].
+  assert (S <> S0) by (intro; treat_equalities; auto).
+  assert (HC0 : Reach Q R Q S0).
+  { assert (Bet P Q S0) by (apply between_inner_transitivity with S; assumption).
+    apply IHHGrad with (f S0); trivial.
+    apply between_inner_transitivity with (f S); Col.
+    destruct (eq_dec_points C0' (f S)); [subst; Between|].
+    apply between_symmetry, l6_13_1.
+      apply bet2__out with (f Q); try apply between_symmetry; Col.
+    apply (l5_6 (f S) C0' C0' C').
+      apply le_left_comm, bet__le1213, (between_exchange3 (f Q)); assumption.
+      Cong.
+      apply cong_symmetry, cong_transitivity with (f Q) (f R); Col.
+  }
+  clear IHHGrad.
+  destruct HC0 as [C0 []].
+  destruct (segment_construction Q C0 Q R) as [C []].
+  exists C; split; [apply grad_stab with C0; Cong|].
+  apply bet__le1213.
+  destruct (eq_dec_points Q S0).
+  { subst S0; assert (R = S) by (apply (between_cong_3 P Q); Cong).
+    treat_equalities; apply between_exchange4 with C0; Between.
+  }
+  assert (Bet Q S0 C0).
+  { apply l6_13_1; trivial.
+    apply l6_7 with S; [Out|].
+    apply l6_7 with R.
+      apply l6_2 with P; Between.
+      apply bet_out; Between.
+  }
+  apply outer_transitivity_between2 with S0; auto.
+  assert (Bet Q S0 C) by (apply between_exchange4 with C0; assumption).
+  apply l6_13_1.
+    apply l6_2 with Q; Between; intro; treat_equalities; auto.
+  apply le_right_comm; exists C0; split.
+    apply between_inner_transitivity with Q; Between.
+    apply cong_transitivity with  Q R; Cong.
+Qed.
+
+End Archimedes.

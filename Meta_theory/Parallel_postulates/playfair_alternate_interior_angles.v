@@ -14,7 +14,7 @@ destruct HD' as [D' []]; Col.
 apply (conga_trans _ _ _ D' C A).
 CongA.
 assert_diffs.
-apply (out_conga D C A D C A); try (apply out_trivial); CongA.
+apply out2__conga; [|apply out_trivial; auto].
 apply (col_one_side_out _ A).
 assert (HP := playfair A B C D C D' C).
 destruct HP; Col.

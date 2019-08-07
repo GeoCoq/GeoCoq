@@ -316,29 +316,7 @@ intro HUD; unfold all_coplanar_axiom; intros.
 elim (col_dec A B C); Cop; intro HABC.
 elim (col_dec A B D); Cop; intro HABD.
 elim (col_dec A C D); Cop; intro HACD.
-elim (upper_dim_implies_one_or_two_sides HUD A B C D); Col;
-elim (upper_dim_implies_one_or_two_sides HUD A C B D); Col.
-
-  {
-  intros HTS1 HTS2; destruct HTS1 as [Hc1 [Hc2 [I [HCol HBet]]]].
-  clear Hc1; clear Hc2; exists I; right; left; assert_cols; Col.
-  }
-
-  {
-  intros HOS HTS; destruct HTS as [Hc1 [Hc2 [I [HCol HBet]]]].
-  clear Hc1; clear Hc2; exists I; left; assert_cols; Col.
-  }
-
-  {
-  intros HTS HOS; destruct HTS as [Hc1 [Hc2 [I [HCol HBet]]]].
-  clear Hc1; clear Hc2; exists I; right; left; assert_cols; Col.
-  }
-
-  {
-  intros HOS1 HOS2; destruct (l9_31 A B D C) as [Hc1 [Hc2 [I [HCol HBet]]]];
-  try (apply one_side_symmetry; auto); clear Hc1; clear Hc2;
-  exists I; right; right; assert_cols; Col.
-  }
+elim (upper_dim_implies_one_or_two_sides HUD A B C D); Col; [apply ts__coplanar|apply os__coplanar].
 Qed.
 
 Lemma all_coplanar_implies_upper_dim : all_coplanar_axiom -> upper_dim_axiom.
@@ -349,9 +327,7 @@ Qed.
 
 Lemma all_coplanar_upper_dim : all_coplanar_axiom <-> upper_dim_axiom.
 Proof.
-split;
-try apply all_coplanar_implies_upper_dim;
-apply upper_dim_implies_all_coplanar.
+split; [apply all_coplanar_implies_upper_dim|apply upper_dim_implies_all_coplanar].
 Qed.
 
 Lemma upper_dim_stab : ~ ~ upper_dim_axiom -> upper_dim_axiom.

@@ -12,8 +12,8 @@ intros; unfold Perp_bisect; unfold Perp_bisect_bis; unfold ReflectL; split.
   {
   intro H; destruct H as [[[X [HMid HCol]] HPerp] HDiff].
   exists X; split; Midpoint.
-  elim HPerp; clear HPerp; intro HPerp; intuition.
-  apply l8_14_2_1b_bis; assert_cols; Col; Perp.
+  elim HPerp; clear HPerp; intro HPerp; [|exfalso;auto].
+  apply l8_14_2_1b_bis; Col; Perp.
   }
 
   {
@@ -163,7 +163,7 @@ intros I HI.
 exists I.
 split;try assumption.
 assert (Per P I A)
- by (unfold Per;exists B;eCong).
+ by (exists B; split; Cong).
 
 show_distinct A I.
 unfold Midpoint in *.
@@ -206,6 +206,17 @@ exists A.
 repeat split;Col.
 Qed.
 
+Lemma cong_mid_perp_bisect :
+ forall P Q A B,
+ P <> Q -> A <> B ->
+ Cong A P B P ->
+ Midpoint Q A B ->
+ Perp_bisect P Q A B.
+Proof.
+intros.
+apply cong_cop_perp_bisect; Cong; Cop.
+Qed.
+
 Lemma perp_bisect_is_on_perp_bisect :
  forall A B C P,
   Is_on_perp_bisect P A B ->
@@ -214,19 +225,19 @@ Lemma perp_bisect_is_on_perp_bisect :
 Proof.
 intros.
 unfold Is_on_perp_bisect in *.
-eCong.
+CongR.
 Qed.
 
 Lemma perp_mid_perp_bisect : forall A B C D,
  Midpoint C A B -> Perp C D A B ->
  Perp_bisect C D A B.
-Proof with finish.
+Proof.
 intros.
 apply perp_bisect_equiv_def.
 unfold Perp_bisect_bis in *.
-exists C...
-split...
-assert_cols; apply l8_14_2_1b_bis...
+exists C.
+split; auto.
+apply l8_14_2_1b_bis; Col.
 Qed.
 
 Lemma cong_cop2_perp_bisect_col : forall A B C D E,
@@ -276,48 +287,8 @@ intros A B C HDiff.
 destruct (midpoint_existence A B) as [M HM].
 destruct (ex_perp_cop A B M C) as [Q [HQ HCop]]; auto.
 exists M; exists Q; unfold Perp_bisect.
-split.
-
-  {
-  split; Col.
-  split; Perp.
-  exists M; split; Col; Midpoint.
-  }
-
-  {
-  split; auto.
-  assert (Coplanar A B Q M) by Cop.
-  apply perp_not_col2 in HQ.
-  elim HQ; clear HQ; intro; [CopR|].
-  assert_cols; exfalso; Col.
-  }
+repeat split; Perp; [|Cop].
+exists M; split; [Midpoint|Col].
 Qed.
 
 End PerpBisect_3.
-
-Section PerpBisect_2D.
-
-Context `{T2D:Tarski_2D}.
-
-Lemma cong_perp_bisect :
- forall P Q A B,
- P <> Q -> A <> B ->
- Cong A P B P ->
- Cong A Q B Q ->
- Perp_bisect P Q A B.
-Proof.
-intros P Q A B HPQ HAB.
-assert (HCop := all_coplanar P Q A B).
-apply cong_cop_perp_bisect; assumption.
-Qed.
-
-Lemma cong_perp_bisect_col : forall A B C D E,
-  Cong C D C E ->
-  Perp_bisect A B D E ->
-  Col A B C.
-Proof.
-intros A B C D E.
-apply cong_cop2_perp_bisect_col; apply all_coplanar.
-Qed.
-
-End PerpBisect_2D.

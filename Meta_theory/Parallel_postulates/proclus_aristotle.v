@@ -29,47 +29,34 @@ Proof.
     apply (l12_9 _ _ _ _ D B); Perp; Cop.
     }
   assert(HY := proclus B A Y0 D B C).
-  destruct HY as [Y []]; Col.
-  assert (Coplanar B A C D0) by Cop.
-  assert (Coplanar A C B D)
-    by (assert_diffs; assert_cols; apply col2_cop__cop with B D0; Col; Cop).
-  assert (Coplanar D B A Y0) by Cop.
-  CopR.
+  destruct HY as [Y []]; Col; [CopR|].
   apply (par_not_col_strict _ _ _ _ D) in HPar; Col.
   assert(~ Col Y B A) by (apply (par_not_col Y0 D); Col; Par).
   assert(HX := l8_18_existence A B Y).
   destruct HX as [X []]; Col.
-  exists X.
-  exists Y.
+  exists X, Y.
 
   assert(OS B A C D).
   { apply (one_side_transitivity _ _ _ D0); auto.
-    apply out_one_side; Col.
-    apply bet_out; Between.
+    apply out_one_side; [Col|Out].
   }
   assert(Hlta : LtA A B C A B D).
-  { destruct Hacute as [A' [B' [C' [HPer Hlta]]]].
-    apply (conga_preserves_lta A B C A' B' C'); try (apply conga_refl); auto.
-    destruct Hlta.
-    assert_diffs.
-    apply l11_16; auto.
+  { apply acute_per__lta; auto.
     apply perp_per_2; auto.
   }
   assert(HNCol2 : ~ Col B C D).
   { intro.
     elim(bet_dec C B D).
     { intro.
-      assert(~ OS B A C D); auto.
-      apply l9_9.
+      apply (l9_9 B A C D); auto.
       repeat split; Col.
       exists B.
-      repeat split; Col.
+      split; Col.
     }
     intro.
     destruct Hlta as [_ HNConga].
     apply HNConga.
-    apply (out_conga A B C A B C); try (apply out_trivial); CongA.
-    apply not_bet_out; Col.
+    apply out2__conga; [apply out_trivial|apply l6_6, not_bet_out]; Col.
   }
   assert_diffs.
   assert(Y<>D) by (intro; subst Y; Col).
@@ -78,59 +65,51 @@ Proof.
   assert(Par_strict B D X Y).
   { apply (par_not_col_strict _ _ _ _ Y); Col.
     apply (l12_9 _ _ _ _ B A); Perp; Cop.
-  assert (Coplanar B A C D0) by Cop.
-  assert (Coplanar A C B D)
-    by (assert_diffs; assert_cols; apply col2_cop__cop with B D0; Col; Cop).
-  apply coplanar_perm_12, col2_cop__cop with B C; Col; Cop.
-    intro; assert(Col B C D); Col; ColR.
+      apply coplanar_perm_12, col_cop__cop with C; Col; Cop.
+    intro; apply HNCol2; ColR.
   }
-  assert(InAngle C A B D) by (apply lea_in_angle; Lea; CongA; Side).
+  assert(InAngle C A B D) by (apply lea_in_angle; [Lea|Side]).
   assert(Out B C Y).
   { apply (col_one_side_out _ A); Col.
     apply (one_side_transitivity _ _ _ D); auto.
-    apply l12_6.
-    apply (par_strict_col_par_strict _ _ _ Y0); Par; Col.
+    apply l12_6, (par_strict_col_par_strict _ _ _ Y0); Par; Col.
   }
 
   assert(Out B A X).
   { apply (col_one_side_out _ D); Col.
     apply one_side_symmetry.
     apply (one_side_transitivity _ _ _ Y).
-    apply l12_6; auto.
+      apply l12_6; auto.
     apply (one_side_transitivity _ _ _ C).
-    apply out_one_side; try (apply l6_6); Col.
+      apply out_one_side; [Col|Out].
     apply invert_one_side.
-    apply in_angle_one_side; try (apply l11_24); Col.
+    apply in_angle_one_side; [..|apply l11_24]; Col.
   }
 
   assert(Per B X Y).
   { assert (~ Col B D X) by (apply (par_strict_not_col_1 _ _ _ Y); auto).
     assert_diffs.
-    apply perp_per_1; auto.
-    apply perp_left_comm.
-    apply (perp_col _ A); Col; Perp.
+    apply perp_per_1, perp_left_comm, (perp_col _ A); Col; Perp.
   }
 
   assert(Cong B D X Y).
   { assert_diffs.
     assert(HAAS := l11_50_2 B Y D Y B X).
     destruct HAAS; Cong.
-      apply not_col_permutation_5; apply (par_strict_not_col_4 _ _ X); auto.
-      apply l11_16; Perp; apply perp_per_2; auto; apply (perp_col _ Y0); Col; Perp.
+      apply not_col_permutation_5, (par_strict_not_col_4 _ _ X); auto.
+      apply l11_16; Perp; apply perp_per_2, (perp_col _ Y0); Col; Perp.
     apply conga_comm.
-
-(* proclus -> alternate_interior *)
-apply proclus_s_postulate_implies_strong_parallel_postulate in proclus.
-apply strong_parallel_postulate_implies_tarski_s_euclid in proclus.
-apply tarski_s_euclid_implies_playfair in proclus.
-apply playfair__alternate_interior in proclus.
-rename proclus into aia.
+    assert (aia : alternate_interior_angles_postulate).
+    { apply playfair__alternate_interior, tarski_s_euclid_implies_playfair.
+      apply strong_parallel_postulate_implies_tarski_s_euclid.
+      apply (proclus_s_postulate_implies_strong_parallel_postulate proclus).
+    }
 
     apply aia.
     - apply l9_2.
       apply (l9_8_2 _ _ A).
       apply (col_preserves_two_sides C B); Col; apply in_angle_two_sides; Col.
-      apply invert_one_side; apply out_one_side; Col.
+      apply invert_one_side, out_one_side; Col.
 
     - apply par_left_comm.
       apply (par_col_par _ _ _ A); Col.
@@ -138,17 +117,18 @@ rename proclus into aia.
       apply par_strict_par; Par.
    }
 
-  repeat (split; auto).
+  repeat (split; [assumption|]).
+  split.
   - apply (l5_6 P Q B D); Cong.
     apply le_right_comm.
     exists D0.
     split; Between; Cong.
 
   - intro.
-    assert(D0=B); auto.
+    absurd(D0=B); auto.
     apply (between_cong D B D0); Between.
     apply (cong_transitivity _ _ P Q).
-    Cong.
+      Cong.
     apply (cong_transitivity _ _ X Y); Cong.
 Qed.
 

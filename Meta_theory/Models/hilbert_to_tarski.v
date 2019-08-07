@@ -3086,7 +3086,7 @@ rewrite H18.
 assumption.
 Qed.
 
-(* Theorem 11 of Hilbert: the angles at the base of an isosceles triangle are congruent *)
+(** Theorem 11 of Hilbert: the angles at the base of an isosceles triangle are congruent *)
 
 Lemma isosceles_congaH : forall A B C, ~ColH A B C -> CongH A B A C -> CongaH A B C A C B.
 Proof.
@@ -5032,7 +5032,7 @@ unfold Bet.
 decompose [or] H;auto using between_comm.
 Qed.
 
-Global Instance independent_Tarski_neutral_dimensionless_follows_from_Hilbert :
+Global Instance Gupta_inspired_variant_neutral_dimensionless_follows_from_Hilbert :
   Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
@@ -5043,7 +5043,7 @@ Defined.
 
 Global Instance H_to_T : Tarski_neutral_dimensionless.
 Proof.
-apply TG_to_T.
+apply GI_to_T.
 Defined.
 
 Global Instance H_to_T_PED :
@@ -5163,7 +5163,9 @@ Qed.
 Lemma pars__para : forall A B C D l m,
   IncidL A l -> IncidL B l -> IncidL C m -> IncidL D m -> Par_strict A B C D -> Para l m.
 Proof.
-intros A B C D l m HA HB HC HD [HAB [HCD [HCop HNI]]].
+intros A B C D l m HA HB HC HD [HCop HNI].
+assert (A <> B) by (intro; subst; apply HNI; exists C; split; Col).
+assert (C <> D) by (intro; subst; apply HNI; exists A; split; Col).
 split.
 intros [X []].
 apply HNI; exists X.
@@ -5723,21 +5725,19 @@ Proof. intros A B C HCol; apply ColH_bets in HCol; auto. Qed.
 Lemma playfair_s_postulateH : playfair_s_postulate.
 Proof.
 intros A1 A2 B1 B2 C1 C2 P HPar1 HCol1 HPar2 HCol2.
-destruct (line_existence A1 A2) as [l [Hl1 Hl2]];
-[unfold Par, Par_strict in *; destruct HPar1 as [[HDiff _]|[HDiff _]]; auto|].
-destruct (line_existence B1 B2) as [m1 [Hm11 Hm12]];
-[unfold Par, Par_strict in *; destruct HPar1 as [[_ [HDiff _]]|[_ [HDiff _]]]; auto|].
-destruct (line_existence C1 C2) as [m2 [Hm21 Hm22]];
-[unfold Par, Par_strict in *; destruct HPar2 as [[_ [HDiff _]]|[_ [HDiff _]]]; auto|].
+assert_diffs.
+destruct (line_existence A1 A2) as [l [Hl1 Hl2]]; auto.
+destruct (line_existence B1 B2) as [m1 [Hm11 Hm12]]; auto.
+destruct (line_existence C1 C2) as [m2 [Hm21 Hm22]]; auto.
 elim (IncidL_dec P l); intro HInc.
 
   {
   assert (Col A1 A2 P) by (apply ColH__Col; exists l; auto).
   elim HPar1; [unfold Par_strict in *|];
-  [intros [_ [_ [_ HFalse]]]; exfalso; apply HFalse; exists P; Col|];
+  [intros [_ HFalse]; exfalso; apply HFalse; exists P; Col|];
   intros [? [? [? ?]]].
   elim HPar2; [unfold Par_strict in *|];
-  [intros [_ [_ [_ HFalse]]]; exfalso; apply HFalse; exists P; Col|];
+  [intros [_ HFalse]; exfalso; apply HFalse; exists P; Col|];
   intros [? [? [? ?]]]; split; ColR.
   }
 
@@ -5747,14 +5747,13 @@ elim (IncidL_dec P l); intro HInc.
     assert (HNC : ~ ColH A1 A2 P).
       {
       apply IncidL_not_IncidL__not_colH with l; auto.
-      unfold Par, Par_strict in *; destruct HPar1 as [[HDiff _]|[HDiff _]]; auto.
       }
     intro; apply HNC; apply Col__ColH; auto.
     }
   assert (HPara1 : Para l m1).
     {
     elim HPar1; [|intros [? [? [? ?]]]; exfalso; apply HNC; ColR].
-    intros [_ [_ [HCop HFalse]]]; split.
+    intros [HCop HFalse]; split.
 
       {
       intros [I [HInc1 HInc2]]; apply HFalse; exists I.
@@ -5773,7 +5772,7 @@ elim (IncidL_dec P l); intro HInc.
   assert (HPara2 : Para l m2).
     {
     elim HPar2; [|intros [? [? [? ?]]]; exfalso; apply HNC; ColR].
-    intros [_ [_ [HCop HFalse]]]; split.
+    intros [HCop HFalse]; split.
 
       {
       intros [I [HInc1 HInc2]]; apply HFalse; exists I.
@@ -5785,7 +5784,7 @@ elim (IncidL_dec P l); intro HInc.
       [|exfalso; apply HNC; ColR].
       apply coplanar_plane in HCop.
       destruct HCop as [p [Hp1 [Hp2 [Hp3 Hp4]]]]; exists p.
-      split; assert_diffs;
+      split;
       [apply line_on_plane with A1 A2|apply line_on_plane with C1 C2]; auto.
       }
     }
@@ -5794,14 +5793,12 @@ elim (IncidL_dec P l); intro HInc.
     apply Col__ColH in HCol1; destruct HCol1 as [m1' [? [? ?]]].
     apply IncidL_morphism with m1'; auto.
     apply line_uniqueness with B1 B2; Col.
-    unfold Par, Par_strict in *; destruct HPar1 as [[_ [HDiff _]]|[_ [HDiff _]]]; auto.
     }
   assert (HInc2 : IncidL P m2).
     {
     apply Col__ColH in HCol2; destruct HCol2 as [m2' [? [? ?]]].
     apply IncidL_morphism with m2'; auto.
     apply line_uniqueness with C1 C2; Col.
-    unfold Par, Par_strict in *; destruct HPar2 as [[_ [HDiff _]]|[_ [HDiff _]]]; auto.
     }
   assert (HEq := euclid_uniqueness l P m1 m2 HInc HPara1 HInc1 HPara2 HInc2).
   split; apply ColH__Col; exists m1; split; auto;

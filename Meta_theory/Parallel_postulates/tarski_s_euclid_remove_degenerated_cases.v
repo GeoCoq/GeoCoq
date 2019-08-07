@@ -1,5 +1,5 @@
 Require Import GeoCoq.Axioms.parallel_postulates.
-Require Import GeoCoq.Tarski_dev.Ch05_bet_le.
+Require Import GeoCoq.Tarski_dev.Ch06_out_lines.
 
 Section tarski_s_euclid_remove_degenerated_cases.
 
@@ -20,6 +20,7 @@ Lemma tarski_s_euclid_remove_degenerated_cases :
    ~ Col A B C ->
    Bet A D T ->
    Bet B D C ->
+   ~ Col B C T ->
    exists x y : Tpoint, Bet A B x /\ Bet A C y /\ Bet x T y) ->
   forall A B C D T,
   Bet A D T ->
@@ -34,7 +35,7 @@ subst; exists B; exists T; Between.
 elim (eq_dec_points A T); intro HAT.
 exfalso; apply HAD; treat_equalities; reflexivity.
 elim (eq_dec_points B C); intro HBC.
-subst; exists T; exists T; Between.
+treat_equalities; exists T; exists T; Between.
 elim (eq_dec_points B D); intro HBD.
 subst; exists T; exists C; Between.
 elim (eq_dec_points B T); intro HBT.
@@ -76,9 +77,7 @@ elim (col_dec A B C); intro HABC.
           }
 
           {
-          exists B; exists C; split ; try Between.
-          split; try Between.
-          eBetween.
+          exists B; exists C; repeat split; Between; eBetween.
           }
         }
         {
@@ -90,15 +89,14 @@ elim (col_dec A B C); intro HABC.
           }
 
           {
-          exists B; exists C; split ; try Between.
-          split; try Between.
-          eBetween.
+          exists B; exists C; repeat split; Between; eBetween.
           }
         }
       }
     }
   }
   {
+  assert (~ Col B C T) by (intro; apply HABC, col_permutation_2, (colx D T); Col).
   apply HGC with D; assumption.
   }
 Qed.

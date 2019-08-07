@@ -163,7 +163,7 @@ Definition Acute A B C :=
 (** Definition 11.39. *)
 
 Definition Obtuse A B C :=
-  exists A' B' C', Per A' B' C' /\ GtA A B C A' B' C'.
+  exists A' B' C', Per A' B' C' /\ LtA A' B' C' A B C.
 
 (** Definition 11.59. *)
 
@@ -176,7 +176,7 @@ Definition Orth A B C U V := exists X, Orth_at X A B C U V.
 (** Definition 12.2. *)
 
 Definition Par_strict A B C D :=
-  A <> B /\ C <> D /\ Coplanar A B C D /\ ~ exists X, Col X A B /\ Col X C D.
+  Coplanar A B C D /\ ~ exists X, Col X A B /\ Col X C D.
 
 (** Definition 12.3. *)
 
@@ -478,6 +478,11 @@ Definition TangentAt A B O P T :=
 
 Definition Concyclic A B C D := Coplanar A B C D /\
   exists O P, OnCircle A O P /\ OnCircle B O P /\ OnCircle C O P /\ OnCircle D O P.
+
+(** The points A, B, C and D are concyclic or lined up *)
+
+Definition Concyclic_gen A B C D :=
+  Concyclic A B C D \/ (Col A B C /\ Col A B D /\ Col A C D /\ Col B C D).
 
 (** C is on the graduation based on [AB] *)
 Inductive Grad : Tpoint -> Tpoint -> Tpoint -> Prop :=

@@ -265,5 +265,3 @@ Proof.
 Qed.
 
 End Rhombus_Existence_Unicity.
-
-

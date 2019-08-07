@@ -19,7 +19,7 @@ Proof.
   intros A B C P Q; intros; apply inner_pasch with C; assumption.
 Qed.
 
-Instance T_to_TG : Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
+Instance T_to_GI : Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
   Tpoint Bet Cong eq_dec_points
@@ -34,7 +34,7 @@ Section Tarski_2D_to_Gupta_inspired_variant_of_Tarski_2D.
 
 Context `{T2D:Tarski_2D}.
 
-Instance T2D_to_TG2D : Gupta_inspired_variant_of_Tarski_2D T_to_TG.
+Instance T2D_to_TG2D : Gupta_inspired_variant_of_Tarski_2D T_to_GI.
 Proof.
   split; intros A B C P Q HPQ HAB HAC HBC; apply upper_dim, HPQ.
 Defined.
@@ -45,7 +45,7 @@ Section Tarski_euclidean_to_Gupta_inspired_variant_of_Tarski_euclidean.
 
 Context `{TE:Tarski_euclidean}.
 
-Instance T_euclidean_to_TG_euclidean : Gupta_inspired_variant_of_Tarski_euclidean T_to_TG.
+Instance T_euclidean_to_TG_euclidean : Gupta_inspired_variant_of_Tarski_euclidean T_to_GI.
 Proof.
   split; intros A B C D T H1 H2 HBD HDC HNCol.
   assert (A <> D) by (intro; subst; apply HNCol; right; right; apply between_symmetry, H2).

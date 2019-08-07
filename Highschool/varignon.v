@@ -7,7 +7,7 @@ Context `{TE:Tarski_euclidean}.
 (** This is the usual proof presented in classroom based on
 the midpoint theorem but this proof suffers from two problems.
 It needs the fact that IJK are not collinear, 
-which is not always the case when the quadrilateral is not convex. 
+which is not always the case when the quadrilateral is not convex.
 It also needs the fact that A is different from C, and B is different from D.
 The original proof by Varignon suffer from the same problem.
 The original proof can be found page 138, Corollary IV:
@@ -215,8 +215,8 @@ induction (eq_dec_points I K).
   assert (Parallelogram A D B C) by (apply mid_plg with I;Midpoint).
   assert (Parallelogram A B D C) by (apply mid_plg with L;Midpoint).
   exfalso.
+  apply Plg_perm in H35.
   apply Plg_perm in H39.
-  apply Plg_perm in H40.
   spliter.
   apply (plg_not_comm_1 B D A C);auto.
 
@@ -224,17 +224,15 @@ apply cong_col_mid.
  auto.
  assert (Par I L K L).
   apply par_trans with B D;Par.
- apply par_id_5;Par.
- eCong.
-assert_congs_perm.
-assert_cols.
+ apply col_permutation_2, par_id; Par.
+CongR.
 repeat split;Col;Cong.
 left.
 intro.
-subst.
 treat_equalities.
 intuition.
-eapply varignon_aux;eauto.
+
+apply (varignon_aux A B C D);auto.
 Qed.
 
 

@@ -1,16 +1,82 @@
 Require Export GeoCoq.Tarski_dev.Ch09_plane.
 Require Export GeoCoq.Tarski_dev.Tactics.CoincR_for_cop.
 
+Ltac assert_cops :=
+ repeat match goal with
+      | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
+      | H:TS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply ts__coplanar, H)
+      | H:OS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply os__coplanar, H)
+      | H:ReflectL ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflectl__coplanar, H)
+      | H:Reflect ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflect__coplanar, H)
+      | H:InAngle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply inangle__coplanar, H)
+      | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply pars__coplanar, H)
+      | H:Par ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply par__coplanar, H)
+      | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plg__coplanar, H)
+      | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgs__coplanar, H)
+      | H:Parallelogram_flat ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgf__coplanar, H)
+      | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply parallelogram__coplanar, H)
+      | H:Rhombus ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rhombus__coplanar, H)
+      | H:Rectangle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rectangle__coplanar, H)
+      | H:Square ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply square__coplanar, H)
+      | H:Saccheri ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply sac__coplanar, H)
+      | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
+ end.
+
+Ltac Cop := auto; try (intros; solve [apply col__coplanar; Col
+     |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
+     |apply coplanar_perm_18, col__coplanar; Col
+     |assert_cops; auto 2 with cop_perm]).
+
+Ltac exist_hyp_perm_col A B C := first [exist_hyp (Col A B C)|exist_hyp (Col A C B)
+                                       |exist_hyp (Col B A C)|exist_hyp (Col B C A)
+                                       |exist_hyp (Col C A B)|exist_hyp (Col C B A)].
+
+Ltac copr_aux :=
+ repeat match goal with
+      | H: ~ Col ?X1 ?X2 ?X3, X4 : Tpoint |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4;
+     first[exist_hyp_perm_col X1 X2 X4; assert (Coplanar X1 X2 X4 X3) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X2 X3 X4; assert (Coplanar X2 X3 X4 X1) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X1 X3 X4; assert (Coplanar X1 X3 X4 X2) by (apply col__coplanar; Col)]
+ end.
+
 Ltac CopR :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in
  let cop := constr:(Coplanar) in
-   assert_ncols; Cop_refl tpoint col cop.
+   treat_equalities; assert_cols; clean; assert_ncols; assert_cops; auto 2 with cop_perm;
+   solve[apply col__coplanar; Col|apply coplanar_perm_1, col__coplanar; Col
+        |apply coplanar_perm_4, col__coplanar; Col|apply coplanar_perm_18, col__coplanar; Col
+        |copr_aux; Cop_refl tpoint col cop] || fail "Can not be deduced".
 
 Section T10.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
-
+Goal forall A B C D, ~ Coplanar D C B A -> ~ Coplanar A B C D.
+Proof.
+intros.
+match goal with
+       | |- Coplanar ?A ?B ?C ?D => exist_hyp_perm_cop A B C D; auto with cop_perm
+       | |- ~ Coplanar ?A ?B ?C ?D => exist_hyp_perm_ncop A B C D; auto with cop_perm
+      end.
+Qed.
 Lemma ex_sym : forall A B X, exists Y, (Perp A B X Y \/ X = Y) /\
    (exists M, Col A B M /\ Midpoint M X Y).
 Proof.
@@ -558,7 +624,7 @@ Lemma col__refl : forall A B P, Col P A B -> ReflectL P P A B.
 Proof.
     intros A B P HCol.
     split.
-      exists P; repeat split; finish; Between.
+      exists P; split; [Midpoint|Col].
     right; reflexivity.
 Qed.
 
@@ -711,7 +777,7 @@ Proof.
           apply perp_sym.
           assumption.
         assert (A = T).
-          apply l6_21 with A T' B T; assert_cols; Col.
+          apply l6_21 with A T' B T; Col.
           intro; treat_equalities; Col.
         subst A.
         apply l7_2 in H1.
@@ -906,12 +972,10 @@ Proof.
         apply l7_3 in H6.
         subst X.
         apply perp_sym.
-        eapply perp_col.
+        eapply perp_col with P'.
           auto.
           apply perp_left_comm.
-          eapply perp_col.
-            2:apply perp_sym.
-            2:apply H4.
+          apply perp_col with P.
             intro.
             subst Q'.
             apply l7_3 in H3.
@@ -919,6 +983,8 @@ Proof.
             apply is_midpoint_id in H1.
             subst P.
             absurde.
+            apply perp_sym.
+            apply H4.
           eapply (col_transitivity_2 M).
             intro.
             subst P'.
@@ -1150,9 +1216,7 @@ Proof.
             apply midpoint_bet.
             assumption.
           assert (M'=M).
-            eapply l6_21.
-              2: apply H.
-              2: apply H4.
+            apply (l6_21 A B P P'); Col.
               induction (eq_dec_points A M').
                 subst M'.
                 assert (~ Col A B P /\ Per P A B).
@@ -1178,13 +1242,6 @@ Proof.
               intro.
               apply H7.
               assumption.
-              assumption.
-              unfold Col.
-              right; left.
-              apply midpoint_bet.
-              apply H0.
-              apply col_permutation_5.
-              assumption.
             apply perp_distinct in H3.
             spliter.
             auto.
@@ -1203,7 +1260,7 @@ Proof.
     assumption.
 Qed.
 
-Lemma image_in_col0 : forall A B P P' Y : Tpoint,
+Lemma image_in_col : forall A B P P' Y : Tpoint,
  ReflectL_at Y P P' A B -> Col P P' Y.
 Proof.
     intros.
@@ -1501,10 +1558,7 @@ Proof.
             apply midpoint_bet.
             apply l7_2.
             assumption.
-          eapply (per_not_col ).
-            3: apply H8.
-            assumption.
-            auto.
+          apply (per_not_col A M0 P); auto.
           apply col_permutation_4.
           assumption.
         exists M0.
@@ -1695,13 +1749,13 @@ intros.
 destruct (eq_dec_points A B).
 subst.
 destruct (segment_construction X B X Y).
-exists x;split;spliter;finish.
+exists x;split;spliter;Perp.
 destruct (not_col_exists A B H) as [P HP].
 destruct (eq_dec_points X Y).
-exists B;split;subst;finish.
-destruct (ex_per_cong A B B P X Y);finish.
+subst;exists B;split;[Perp|Cong].
+destruct (ex_per_cong A B B P X Y); Col.
 spliter.
-exists x;split;finish.
+exists x;split;[Perp|Cong].
 Qed.
 
 End T10.

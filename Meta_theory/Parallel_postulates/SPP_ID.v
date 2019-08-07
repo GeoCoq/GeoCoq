@@ -21,9 +21,9 @@ elim (col_dec P R U); intro HPRU.
     {
     apply par_strict_col_par_strict with R; Col.
     apply par_not_col_strict with P; Col.
-    apply l12_17 with T; assert_diffs; Col; split; Between; Cong.
+    apply l12_17 with T; [assert_diffs; auto|split; Between; Cong..].
     }
-  destruct HPar as [H1 [H2 [H3 H]]].
+  destruct HPar as [H1 H].
   right; intro HI; apply H.
   destruct HI as [I [HCol1 HCol2]]; exists I; Col.
   }
@@ -32,18 +32,19 @@ elim (col_dec P R U); intro HPRU.
   elim (cop_dec P Q S U); intro HCop.
 
     {
-    assert (H : BetS R T S); try (clear HRTS; rename H into HRTS).
+    assert (H : BetS R T S); [|clear HRTS; rename H into HRTS].
       {
       split; Between.
-      split; try (intro; treat_equalities; assert_cols; Col).
+      assert_cols.
+      split; intro; treat_equalities; Col.
       }
-     assert (H : BetS P T Q); try (clear HPTQ; rename H into HPTQ).
+     assert (H : BetS P T Q); [|clear HPTQ; rename H into HPTQ].
       {
-      split; Col.
-      split; try (intro; treat_equalities; Col).
+      split; auto.
+      split; intro; treat_equalities; Col.
       }
     assert (HI := HSPP P Q R S T U); destruct HI as [I [HCol1 HCol2]]; Cong;
-    try (left; exists I; Col).
+    [|left; exists I; Col].
     unfold BetS in *; spliter.
     apply coplanar_trans_1 with S; [Col|exists T; right; right; split; Col|Cop].
     }

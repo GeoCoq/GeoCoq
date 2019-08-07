@@ -105,7 +105,7 @@ Definition weak_cantor_s_axiom := forall (A B:nat -> Tpoint),
  of nested non-degenerate segments *)
 
 Definition Nested (A B:nat -> Tpoint -> Prop) :=
-  (forall n, exists An, A n An) /\ (forall n, exists Bn, B n Bn) /\
+  (forall n, exists An Bn, A n An /\ B n Bn) /\
   forall n An Am Bm Bn,
     A n An -> A (S n) Am -> B (S n) Bm -> B n Bn -> Bet An Am Bm /\ Bet Am Bm Bn /\ Am <> Bm.
 
@@ -114,6 +114,11 @@ Definition cantor_s_axiom := forall A B, Nested A B ->
 
 Definition dedekind_s_axiom := forall (Alpha Beta : Tpoint -> Prop),
   (exists A, forall X Y, Alpha X -> Beta Y -> Bet A X Y) ->
+  (exists B, forall X Y, Alpha X -> Beta Y -> Bet X B Y).
+
+Definition dedekind_variant := forall (Alpha Beta : Tpoint -> Prop) A C,
+  Alpha A -> Beta C -> (forall P, Out A P C -> Alpha P \/ Beta P) ->
+  (forall X Y, Alpha X -> Beta Y -> Bet A X Y /\ X <> Y) ->
   (exists B, forall X Y, Alpha X -> Beta Y -> Bet X B Y).
 
 (** First-order formula *)

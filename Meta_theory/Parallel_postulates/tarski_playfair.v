@@ -65,44 +65,30 @@ elim (line_dec B1 B2 C1 C2); intro HLine.
     intro.
     treat_equalities.
     absurde.
-  assert(Col B P B1) by ColR.
-  assert(Col B P B2) by ColR.
-  assert(Col C' P C1) by ColR.
-  assert(Col C P C1) by (assert_cols;ColR).
-  assert(Col C' P C2) by ColR.
-  assert(Col C P C2) by (assert_cols;ColR).
 
-  assert(~Col B P C)
-    by (intro;apply H11;assert_cols;ColR).
+  assert(P <> D) by (intro; subst D; apply H11; ColR).
 
-  assert(P <> D) by (intro; subst D; apply bet_col in H16; contradiction).
-  assert(HE := HTE P B C D A1 H17 H16 H29).
-  ex_and HE X; ex_and H30 Y.
+  assert(HE := HTE P B C D A1 H17 H16 H22).
+  ex_and HE X; ex_and H23 Y.
   assert(Hx := l12_6 A1 A2 P X).
 
   assert (P<>X)
     by (intro;treat_equalities;intuition).
 
-  assert(Par_strict A1 A2 P X) by (apply (par_strict_col2_par_strict _ _ B1 B2); Col; apply col3 with B P; Col).
-  apply Hx in H34.
+  assert(Par_strict A1 A2 P X) by (apply (par_strict_col2_par_strict _ _ B1 B2); trivial; ColR).
+  apply Hx in H27.
   assert(Hy := l12_6 A1 A2 P Y).
 
   assert (P<>Y)
     by (intro;treat_equalities;intuition).
 
-  assert(HPar4 : Par_strict A1 A2 P Y) by (apply (par_strict_col2_par_strict _ _ C1 C2); Col; apply (col3 C P); Col).
+  assert(HPar4 : Par_strict A1 A2 P Y) by (apply (par_strict_col2_par_strict _ _ C1 C2); trivial; ColR).
   apply Hy in HPar4.
   assert(HOS : OS A1 A2 X Y)
-     by (apply one_side_transitivity with P; try assumption; unfold OS in *; ex_and H34 Z; exists Z; split; assumption).
-  assert(Ho := HOS).
-  unfold OS in HOS.
-  ex_and HOS Z.
-  unfold TS in H36.
-  unfold TS in H37.
-  spliter.
-  assert(HTS : TS A1 A2 X Y) by (unfold TS; repeat split; try assumption; exists A1; split; Col).
-  apply l9_9 in HTS.
-  contradiction.
+     by (apply one_side_transitivity with P; Side).
+  apply col_one_side_out in HOS; Col.
+  exfalso.
+  apply (not_bet_and_out X A1 Y); split; assumption.
   }
 intros HTE A1; intros.
 assert( A1 <> A2 /\ B1 <> B2) by (apply par_distinct;auto).

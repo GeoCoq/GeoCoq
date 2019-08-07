@@ -174,7 +174,7 @@ Lemma project_col_project : forall A B C P P' X Y,
   A <> C -> Col A B C ->
   Proj P P' A B X Y ->
   Proj P P' A C X Y.
-Proof with finish.
+Proof.
     intros.
     unfold Proj in *.
     spliter.
@@ -409,11 +409,11 @@ Proof.
           subst A'.
           apply H14.
           right.
-          repeat split; try finish; ColR.
+          repeat split; ColR.
         subst A'.
         apply H14.
         right.
-        repeat split; try finish; ColR.
+        repeat split; ColR.
         assumption.
       ColR.
       induction H20.
@@ -935,13 +935,8 @@ Proof.
     intros.
     unfold Par_strict.
     assert(HH:=grid_ok).
-    repeat split; try apply all_coplanar.
-      intro.
-      subst E.
-      apply HH.
-      Col.
-      apply par_distincts in H1.
-      tauto.
+    split.
+      apply all_coplanar.
     intro.
     ex_and H3 X.
     unfold Proj in H2.
@@ -1774,7 +1769,7 @@ Proof.
     induction H19.
       assert(Par O B C' A').
         apply par_symmetry.
-        apply (par_col_par _ _ _ E); finish.
+        apply (par_col_par _ _ _ E); Par.
       assert(Par_strict O B C' A').
         induction H20.
           auto.
@@ -2542,7 +2537,7 @@ Proof.
       induction H1.
         apply H13.
         apply par_symmetry.
-        apply (par_col_par _ _ _ A);finish.
+        apply (par_col_par _ _ _ A); Par; Col.
       contradiction.
     assert(B' <> O).
       intro.
@@ -2569,10 +2564,10 @@ Proof.
         apply pj_comm; auto.
         left.
         apply par_symmetry.
-        apply(par_col_par _ _ _ B'); finish.
+        apply(par_col_par _ _ _ B'); Col.
         left.
         apply par_symmetry.
-        apply(par_col_par _ _ _ A); finish.
+        apply(par_col_par _ _ _ A); Par; Col.
       assert(Parallelogram_flat O A C B).
         apply(sum_cong O E E' H4 A B C H).
         left; auto.
@@ -2610,7 +2605,7 @@ Proof.
                 split; ColR.
               spliter.
               apply H25.
-              apply(l6_21 O E E' O);sfinish.
+              apply(l6_21 O E E' O); ColR.
             subst C'.
             left.
             apply (par_trans _ _ B B'); Par.
@@ -3986,9 +3981,10 @@ Proof.
       unfold Midpoint in H7.
       spliter.
       unfold Parallelogram_flat.
-      repeat split; try ColR.
+      repeat split; Col.
         Cong.
         Cong.
+        assert_diffs; auto.
     apply sum_cong in H0; auto.
 Qed.
 

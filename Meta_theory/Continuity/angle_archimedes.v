@@ -3,6 +3,8 @@ Require Import GeoCoq.Meta_theory.Continuity.archimedes.
 Require Import GeoCoq.Tarski_dev.Annexes.suma.
 Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
+(** This development is inspired by the proof of Lemma 35.1 in Geometry: Euclid and Beyond, by Robin Hartshorne *)
+
 Section Archimedes_for_angles.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
@@ -94,7 +96,7 @@ Proof.
   assert_diffs.
   assert (HNCol1 : ~ Col O A B) by (apply per_not_col; auto).
   assert (HNCol2 : ~ Col O A D).
-    intro; elim (eq_dec_points A C); intro; assert_cols; treat_equalities; apply HNCol1; ColR.
+    assert_cols; intro; elim (eq_dec_points A C); intro; [treat_equalities|]; apply HNCol1; ColR.
   destruct (angle_construction_1 A D O O D E) as [P [HP1 HP2]]; Col.
     intro; apply HNCol2; ColR.
   assert (HAcute : Acute A D O).
@@ -108,19 +110,16 @@ Proof.
   destruct HF as [_ [_ [HDP [F [HBet4 [Heq|HOut]]]]]].
     exfalso; subst F; apply HNCol2; ColR.
   assert_diffs.
-  apply l6_6 in HOut.
   assert (HCongA1 : CongA A D O O D F).
-    apply (out_conga A D O O D P); trivial; apply out_trivial; auto.
+    apply (l11_10 A D O O D P); try apply out_trivial; auto.
   assert (HCongA2 : CongA O D C A D O).
-    elim (eq_dec_points A C); intro.
-      treat_equalities; CongA.
-    apply (out_conga O D C C D O); CongA; try (apply out_trivial; auto); apply bet_out; eBetween.
+    apply conga_left_comm, out2__conga; [apply l6_6, bet_out|apply out_trivial]; Between.
   clear dependent P.
   assert (HNCol3 : ~ Col O D F) by (apply (ncol_conga_ncol A D O); Col).
   assert_diffs.
   destruct (l11_50_1 O D C O D F) as [HCong1 [HCong2 HCongA3]]; Cong.
     intro; apply HNCol2; ColR.
-    apply (out_conga D O C D O E); CongA; try (apply out_trivial; auto); apply l6_6, bet_out; auto.
+    apply (l11_10 D O C D O E); CongA; try (apply out_trivial; auto); apply bet_out; auto.
     apply conga_trans with A D O; trivial.
   apply (cong2_lt__lt D F D E); Cong.
   assert (HNCol4 : ~ Col E D F).
@@ -136,10 +135,8 @@ Proof.
   - destruct (l11_41 D E O C) as [Hlta1 Hlta2]; Between.
       intro; apply HNCol3; ColR.
     apply (conga_preserves_lta D E O O D C); trivial;
-    [apply (out_conga D E F D E F)|apply (out_conga O D A F D O)]; CongA;
-    try (apply out_trivial; auto).
-      apply bet_out; Between.
-    apply l6_6, bet_out; eBetween.
+      [apply out2__conga|apply (l11_10 O D A F D O)]; CongA;
+      try (apply out_trivial; auto); apply bet_out; Between.
   - destruct (l11_41 F O D E); Col.
 Qed.
 
@@ -160,8 +157,8 @@ Proof.
       apply not_out_bet; trivial.
       intro HOut; assert (Out O A0 A1) by (apply grada_out__out with P Q R; trivial).
       apply HNCol; ColR.
-    assert (Bet A0 O B); assert_cols; Col.
-    apply bet_lea__bet with P Q R; trivial.
+    assert (Bet A0 O B) by (apply bet_lea__bet with P Q R; trivial).
+    apply HNCol; Col.
   }
   destruct (angle_construction_1 P Q R A0 O B) as [C [Hconga HOS]]; Col.
   assert (HA : InAngle C A0 O B).
@@ -170,7 +167,8 @@ Proof.
   destruct HUn as [Heq|Hout].
     exfalso; treat_equalities; apply HNCol; Col.
   exists A.
-  apply (out_conga P Q R A0 O C P R A0 A) in Hconga; try (apply out_trivial; auto); [|apply l6_6; trivial].
+  assert (Hconga1 : CongA P Q R A0 O A).
+    apply l11_10 with P R A0 C; trivial; apply out_trivial; auto.
   repeat (split; trivial).
   elim (eq_dec_points A1 A).
     intro; subst A; Between.
@@ -188,7 +186,7 @@ Proof.
     subst X; exfalso; Col.
   elim (eq_dec_points X A1); intro.
     subst X; trivial.
-  exfalso; apply HNCol2; assert_diffs; ColR.
+  exfalso; apply HNCol2; ColR.
 Qed.
 
 Lemma acute_archi_aux2 : forall O A0 A1 B C,
@@ -295,22 +293,22 @@ Proof.
   destruct (l8_18_existence D E F) as [D0 [HD0 HD0']]; trivial.
   assert (HOut : Out E D0 D) by (apply acute_col_perp__out with F; Col; Perp; apply acute_sym; trivial).
   assert_diffs.
-  assert (HConga : CongA D E F D0 E F) by (apply (out_conga D0 E F D0 E F); CongA; apply out_trivial; auto).
+  assert (HConga : CongA D E F D0 E F) by (apply out2__conga; [|apply out_trivial]; auto).
   apply (acute_conga__acute D E F D0 E F) in HAcute; trivial.
   apply (l11_30 A B C D E F A B C D0 E F) in HLea; CongA.
   apply (ncol_conga_ncol D E F D0 E F) in HNCol1; trivial.
-  assert (HPer : Per E D0 F) by (apply perp_per_1; auto; apply perp_left_comm, perp_col with D; Perp; Col).
+  assert (HPer : Per E D0 F) by (apply perp_per_1, perp_left_comm, perp_col with D; Perp; Col).
   clear H0 HD0 HD0' HOut H9.
   destruct (angle_construction_1 A B C D0 E F) as [D1' [HConga1 HOS]]; trivial.
   destruct (lea_in_angle D0 E F D1') as [_ [_ [_ [D1 [HBet HUn]]]]]; Side.
     apply (l11_30 A B C D0 E F); CongA.
   destruct HUn as [Heq|HOut].
     exfalso; subst D1; Col.
-  apply l6_6 in HOut.
-  apply (out_conga A B C D0 E D1' A C D0 D1) in HConga1; trivial; try (apply out_trivial; auto).
+  assert (HConga2 : CongA A B C D0 E D1).
+    apply (l11_10 A B C D0 E D1'); trivial; apply out_trivial; auto.
   apply one_side_not_col123 in HOS.
   assert_diffs.
-  assert (D0 <> D1) by (intro; subst D1; assert_cols; Col).
+  assert (D0 <> D1) by (intro; subst D1; apply HOS; Col).
   clear dependent D1'.
   destruct (segment_construction D0 F D0 F) as [F' [HF'1 HF'2]].
   destruct (archi D0 D1 D0 F') as [G [HG1 HG2]]; auto.
@@ -321,7 +319,7 @@ Proof.
   destruct HUn as [HLea2|Habs].
     assert_diffs; apply (l11_30 D0 E F P Q R); CongA.
   exfalso.
-  destruct Habs as [A' [HBet2 [HBet3 [HConga2 [HLe HA]]]]].
+  destruct Habs as [A' [HBet2 [HBet3 [HConga3 [HLe HA]]]]].
   apply (le__nlt D0 F' D0 G); trivial.
   apply le1234_lt__lt with D0 F.
     apply le_transitivity with D0 A'; Le.
@@ -407,6 +405,7 @@ Proof.
   assert_diffs.
   assert (HNCol1 : ~ Col A0 B C) by (intro; apply HNCol; ColR).
   destruct (angles_archi_aux1 archi A B C C B A0) as [P1 [Q1 [R1 [HGA HUn]]]]; Between.
+    intro; apply HNCol1; Col.
   elim (sams_dec P1 Q1 R1 A B C); [|intro; exists P1; exists Q1; exists R1; auto].
   intro HIsi.
   destruct HUn as [HLea|HNIsi]; [|exfalso; auto].

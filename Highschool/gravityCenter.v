@@ -120,7 +120,7 @@ Name D the symmetric of C wrt G.
 assert_all.
 show_distinct' A D.
 permutation_intro_in_hyps.
-assert (Par A D J G) by (apply (triangle_mid_par A D C G J H13 H14 H1)).
+assert (Par A D J G) by (apply (triangle_mid_par A D C G J H3 H14 H1)).
 show_distinct' B G.
 assert (Par G B A D)
      by (perm_apply (par_col_par A D G J B)).
@@ -247,13 +247,14 @@ assert (HPar : Parallelogram  C' A' G'' G').
 apply (varignon' A B C G C' A' G'' G'); finish.
 apply parallelogram_to_plg in HPar.
 destruct HPar as [HDiff [I [HCol1 HCol2]]].
-assert (G = I); try (treat_equalities; unfold Midpoint in *; spliter; eCong).
-show_distinct G A; assert_diffs; try (apply H; assert_cols; ColR).
-assert_diffs; assert_cols.
-assert (~ Col A C G) by (intro; apply H; ColR).
-elim HDiff; clear HDiff; intro; show_distinct A' G'; show_distinct C' G''; Col;
-assert_diffs; assert_cols; try (apply H; ColR);
-apply l6_21 with A G C G; assert_diffs; Col; ColR.
+assert (G = I); [|subst; Cong].
+show_distinct G A; [apply H; ColR|].
+assert (~ Col A G C) by (intro; apply H; ColR).
+assert (C' <> G'' /\ A' <> G')
+  by (elim HDiff; clear HDiff; intro; split; trivial; intro; apply H; ColR).
+spliter.
+assert_diffs.
+apply l6_21 with A G C G; trivial; ColR.
 Qed.
 
 Lemma is_gravity_center_third_reci :
@@ -313,11 +314,10 @@ assert (HCol : Col A' B' B''').
   assert (H := parallel_uniqueness A B A' B' A' B''' A'); destruct H as [HCol1 HCol2]; Col; Par.
   apply par_trans with A'' B''; Par.
   }
-assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Col; eCong.
+assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Col; try CongR.
 
   {
-  treat_equalities; assert_diffs; assert_cols.
-  assert (G <> B'') by (intro; treat_equalities; Col); ColR.
+  assert (G <> B'') by (intro; treat_equalities; assert_cols; Col); ColR.
   }
 
   {
@@ -564,9 +564,9 @@ Ltac finish := repeat match goal with
 end.
 *)
 
-Ltac sfinish := repeat match goal with
+Ltac sfinish := spliter; repeat match goal with
  | |- Bet ?A ?B ?C => Between; eBetween
- | |- Col ?A ?B ?C => Col;ColR
+ | |- Col ?A ?B ?C => ColR
  | |- ~ Col ?A ?B ?C => Col
  | |- ~ Col ?A ?B ?C => intro;search_contradiction
  | |- Par ?A ?B ?C ?D => Par
@@ -574,9 +574,10 @@ Ltac sfinish := repeat match goal with
  | |- Perp ?A ?B ?C ?D => Perp
  | |- Perp_at ?A ?B ?C ?D ?E => Perp
  | |- Per ?A ?B ?C => Perp
- | |- Cong ?A ?B ?C ?D => Cong;eCong
+ | |- Cong ?A ?B ?C ?D => Cong;CongR
  | |- is_gravity_center ?G ?A ?B ?C => Gravitycenter
  | |- Midpoint ?A ?B ?C => Midpoint
+ | |- ?A<>?B => assumption
  | |- ?A<>?B => apply swap_diff;assumption
  | |- ?A<>?B => intro;treat_equalities; solve [search_contradiction]
  | |- ?G1 /\ ?G2 => split

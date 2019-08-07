@@ -65,7 +65,7 @@ assert (~ Col A B C).
  }
 assert_diffs. 
 assert (A<>H).
- { (* these point are distinct 
+ { (** these point are distinct
       because otherwise the hypothenuse is not larger than the side *)
  intro.
  treat_equalities.

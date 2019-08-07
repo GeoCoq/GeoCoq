@@ -233,9 +233,7 @@ Proof.
     exists Z2.
     assert (Cong Z1 C Z2 C) by (apply (is_image_col_cong A C Z1 Z2 C); Col).
     assert (Cong Z1 A Z2 A) by (apply (is_image_col_cong A C Z1 Z2 A); Col).
-    repeat split; trivial.
-      unfold OnCircle in *; eCong.
-      unfold OnCircle in *; eCong.
+    repeat split; trivial; [CongR..|].
     intros.
     intro; subst Z2.
     clean.
@@ -372,7 +370,7 @@ Proof.
     assert_diffs.
     destruct (segment_construction_3 A Z' X Z) as [Z0 []]; auto.
     exists Z0; split; Cong.
-    apply out_conga with Y Z C Z'; [|apply out_trivial..|]; auto.
+    apply l11_10 with Y Z C Z'; [|apply out_trivial..|apply l6_6]; auto.
   }
   destruct HZ0 as [Z0 []].
   exists Z0.

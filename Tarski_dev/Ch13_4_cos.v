@@ -263,7 +263,6 @@ Proof.
     ex_and H2 B1.
     ex_and H0 C1.
     assert(A0 <> B0 /\ C0 <> B0 /\ A1 <> B1 /\ C1 <> B1 /\ A <> B /\ C <> B).
-      unfold GtA in H1.
       unfold LtA in *.
       unfold LeA in *.
       spliter.
@@ -277,12 +276,12 @@ Proof.
     spliter.
     assert(CongA A0 B0 C0 A1 B1 C1).
       apply l11_16; auto.
-    assert(GtA A B C A1 B1 C1).
-      apply (conga_preserves_gta A B C A0 B0 C0).
-        apply conga_refl; auto.
+    assert(LtA A1 B1 C1 A B C).
+      apply (conga_preserves_lta A0 B0 C0 A B C).
         auto.
+        apply conga_refl; auto.
       assumption.
-    assert(HH:=not_lta_and_gta A B C A1 B1 C1).
+    assert(HH:=not_and_lta A B C A1 B1 C1).
     apply HH.
     split; auto.
 Qed.
@@ -304,7 +303,6 @@ Proof.
     ex_and H2 B0.
     ex_and H3 C0.
     assert(A0 <> B0 /\ C0 <> B0 /\ A <> B /\ C <> B).
-      unfold GtA in H3.
       unfold LtA in H3.
       spliter.
       unfold LeA in H3.
@@ -329,7 +327,6 @@ Proof.
         Perp.
       assert(CongA A0 B0 C0 A B C).
         apply l11_16; auto.
-      unfold GtA in H3.
       unfold LtA in H3.
       spliter.
       unfold LeA in H3.
@@ -712,13 +709,7 @@ Proof.
       apply H2.
       apply conga_line; auto.
     assert(CongA A B C A' B' X).
-      apply (out_conga A B C A' B' P').
-        auto.
-        apply out_trivial; auto.
-        apply out_trivial; auto.
-        apply out_trivial; auto.
-      apply l6_6.
-      auto.
+      apply (l11_10 A B C A' B' P'); auto; apply out_trivial; auto.
     apply H2.
     assert(Bet A' B' X).
       apply (bet_conga__bet A B C); auto.
@@ -1280,8 +1271,7 @@ Proof.
     apply (anga_out_anga _ A _ C); auto.
       apply l6_6.
       auto.
-    apply (out2_out_2 _ _ _ A).
-      apply l6_6.
+    apply (l6_7 _ _ A); apply l6_6.
       auto.
     auto.
 Qed.
@@ -1318,11 +1308,9 @@ Proof.
           unfold LeA.
           exists C'.
           split.
-            apply inangle3123.
-              apply conga_distinct in HP.
-              tauto.
             apply conga_distinct in HP.
-            tauto.
+            spliter.
+            apply inangle3123; auto.
           apply conga_sym.
           auto.
         unfold Lcos.

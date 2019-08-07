@@ -114,6 +114,12 @@ End T2_1.
 
 (** Some tactics *)
 
+Hint Resolve between_symmetry : between.
+Hint Resolve between_trivial between_trivial2 : between_no_eauto.
+
+Ltac eBetween := eauto with between.
+Ltac Between := auto with between between_no_eauto.
+
 Ltac not_exist_hyp_perm_col A B C := not_exist_hyp (Col A B C); not_exist_hyp (Col A C B);
                                  not_exist_hyp (Col B A C); not_exist_hyp (Col B C A);
                                  not_exist_hyp (Col C A B); not_exist_hyp (Col C B A).
@@ -169,23 +175,29 @@ Ltac treat_equalities_aux :=
 end.
 
 Ltac treat_equalities :=
-try treat_equalities_aux;
+treat_equalities_aux;
 repeat
   match goal with
-   | H:(Cong ?X3 ?X3 ?X1 ?X2) |- _ =>
+   | H : Cong ?X3 ?X3 ?X1 ?X2 |- _ =>
       apply cong_symmetry in H; apply cong_identity in H;smart_subst X2
-   | H:(Cong ?X1 ?X2 ?X3 ?X3) |- _ =>
+   | H : Cong ?X1 ?X2 ?X3 ?X3 |- _ =>
       apply cong_identity in H;smart_subst X2
-   | H:(Bet ?X1 ?X2 ?X1) |- _ => apply  between_identity in H;smart_subst X2
+   | H : Bet ?X1 ?X2 ?X1 |- _ => apply between_identity in H;smart_subst X2
+   | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
+     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
+                       smart_subst A
+   | H : Bet ?A ?B ?C, H2 : Bet ?A ?C ?B |- _ =>
+     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
+                       smart_subst B
+   | H : Bet ?A ?B ?C, H2 : Bet ?C ?A ?B |- _ =>
+     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
+                       smart_subst A
+   | H : Bet ?A ?B ?C, H2 : Bet ?B ?C ?A |- _ =>
+     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
+                       smart_subst A
 end.
 
-Ltac show_distinct X Y := assert (X<>Y);[unfold not;intro;treat_equalities|idtac].
-
-Hint Resolve between_symmetry bet_col : between.
-Hint Resolve between_trivial between_trivial2 : between_no_eauto.
-
-Ltac eBetween := treat_equalities;eauto with between.
-Ltac Between := treat_equalities;auto with between between_no_eauto.
+Ltac show_distinct X Y := assert (X<>Y);[intro;treat_equalities|idtac].
 
 Section T2_2.
 
@@ -196,6 +208,7 @@ Proof.
     intros.
     assert (exists x, Bet B x B /\ Bet C x A) by (apply inner_pasch with D;auto).
     ex_and H1 x.
+    treat_equalities.
     Between.
 Qed.
 
@@ -218,7 +231,7 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 Lemma between_exchange2 : forall A B C D, Bet A B D -> Bet B C D -> Bet A C D.
 Proof.
     intros.
-    induction (eq_dec_points B C);eBetween.
+    induction (eq_dec_points B C);subst;eBetween.
 Qed.
 
 Lemma outer_transitivity_between : forall A B C D, Bet A B C -> Bet B C D -> B<>C -> Bet A B D.
@@ -295,7 +308,7 @@ Proof.
     intuition.
 Qed.
 
-Lemma another_point : forall A: Tpoint, exists B, A<>B.
+Lemma another_point : forall A: Tpoint, exists B, A <> B.
 Proof.
     intros.
     assert (pcd := point_construction_different A A).

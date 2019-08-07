@@ -467,6 +467,12 @@ assert_ncols.
 repeat split; assumption.
 Qed.
 
+Goal forall A B C D, Col A B C \/ Col A B D \/ Col A C D \/ Col B C D -> Coplanar A B C D.
+Proof.
+intros A B C D [|[|[|]]];
+Cop.
+Qed.
+
 End UnitTests.
 
 Section UnitTestsEucl.

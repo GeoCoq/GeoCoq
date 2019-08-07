@@ -29,7 +29,7 @@ split; intros Hdec A B C D; destruct (cop_dec A B C D) as [|HNCop].
   {
     destruct (col_dec B C D).
       left; right; repeat split; assumption.
-    right; intros [[_ [_ [_ Habs]]]|].
+    right; intros [[_ Habs]|].
       apply Habs; exists A; split; Col.
     spliter; auto.
   }
@@ -50,15 +50,16 @@ Lemma par_trans__par_dec :
 Proof.
 intros HTP A B C D.
 elim (eq_dec_points A B); intro HAB;
-[treat_equalities; right; intro; assert_diffs; intuition|].
+[treat_equalities; right; intro; assert_diffs; auto|].
 elim (eq_dec_points C D); intro HCD;
-[treat_equalities; right; intro; assert_diffs; intuition|].
+[treat_equalities; right; intro; assert_diffs; auto|].
 destruct (parallel_existence1 A B C HAB) as [D' HPar].
 elim (col_dec C D D'); intro HCol;
 [left; apply par_col_par with D'; Par; Col|
- right; intro; apply HCol; apply par_id_3; apply HTP with A B; Par].
+ right; intro; apply HCol, par_id, HTP with A B; Par].
 Qed.
 
+(*
 Lemma col_int : forall A B C,
   Col A B C <-> ~ (~ Bet A B C /\ ~ Bet B C A /\ ~ Bet C A B).
 Proof.
@@ -66,6 +67,7 @@ intros A B C; unfold Col.
 induction (bet_dec A B C); induction (bet_dec B C A); induction (bet_dec C A B);
 intuition.
 Qed.
+*)
 
 Definition playfair_ter := forall A1 A2 B1 B2 C1 C2 P,
   A1 <> A2 -> B1 <> B2 -> C1 <> C2 ->
@@ -100,6 +102,14 @@ Definition playfair_quater_qf A1 A2 B1 B2 C1 C2 P :=
 Definition playfair_quater := ~ exists A1 A2 B1 B2 C1 C2 P,
   playfair_quater_qf A1 A2 B1 B2 C1 C2 P.
 
+Lemma col2_dec : forall A B C D E F,
+  (Col A B C /\ Col D E F) \/ ~ (Col A B C /\ Col D E F).
+Proof.
+intros A B C D E F.
+induction (col_dec A B C); induction (col_dec D E F);
+[left; split; assumption|right; intro Hc; induction Hc; auto..].
+Qed.
+
 Lemma playfair__playfair_ter :
   playfair_s_postulate -> playfair_ter.
 Proof.
@@ -111,25 +121,25 @@ repeat (split; Col).
   {
   destruct HIAB as [IAB HIAB]; exists IAB.
   clear HA HB HC HP1 HP2 HNC1 HNC2 HNC3 HIAC HAB HAC P C1 C2.
-  induction (col_dec A1 A2 IAB); induction (col_dec B1 B2 IAB);
-  try solve [left; Col];
-  induction (col_dec A1 B1 IAB); induction (col_dec A2 B2 IAB);
-  try solve [right; left; Col];
-  induction (col_dec A1 B2 IAB); induction (col_dec A2 B1 IAB);
-  try solve [right; right; Col];
-  exfalso; apply HIAB; intuition.
+  induction (col2_dec A1 A2 IAB B1 B2 IAB).
+    left; assumption.
+  induction (col2_dec A1 B1 IAB A2 B2 IAB).
+    right; left; assumption.
+  induction (col2_dec A1 B2 IAB A2 B1 IAB).
+    right; right; assumption.
+  exfalso; apply HIAB; repeat split; assumption.
   }
 
   {
   destruct HIAC as [IAC HIAC]; exists IAC.
   clear HA HB HC HP1 HP2 HNC1 HNC2 HNC3 HIAB HAB HAC P B1 B2.
-  induction (col_dec A1 A2 IAC); induction (col_dec C1 C2 IAC);
-  try solve [left; Col];
-  induction (col_dec A1 C1 IAC); induction (col_dec A2 C2 IAC);
-  try solve [right; left; Col];
-  induction (col_dec A1 C2 IAC); induction (col_dec A2 C1 IAC);
-  try solve [right; right; Col];
-  exfalso; apply HIAC; intuition.
+  induction (col2_dec A1 A2 IAC C1 C2 IAC).
+    left; assumption.
+  induction (col2_dec A1 C1 IAC A2 C2 IAC).
+    right; left; assumption.
+  induction (col2_dec A1 C2 IAC A2 C1 IAC).
+    right; right; assumption.
+  exfalso; apply HIAC; repeat split; assumption.
   }
 Qed.
 
@@ -147,25 +157,25 @@ repeat (split; try assumption); auto.
   {
   destruct HIAB as [IAB HIAB]; exists IAB.
   clear HD1 HD2 HD3 HC1 HC2 HNC1 HNC2 HNC3 HIAC HNI1 HNI2 P C1 C2.
-  induction (col_dec A1 A2 IAB); induction (col_dec B1 B2 IAB);
-  try solve [left; Col];
-  induction (col_dec A1 B1 IAB); induction (col_dec A2 B2 IAB);
-  try solve [right; left; Col];
-  induction (col_dec A1 B2 IAB); induction (col_dec A2 B1 IAB);
-  try solve [right; right; Col];
-  exfalso; apply HIAB; intuition.
+  induction (col2_dec A1 A2 IAB B1 B2 IAB).
+    left; assumption.
+  induction (col2_dec A1 B1 IAB A2 B2 IAB).
+    right; left; assumption.
+  induction (col2_dec A1 B2 IAB A2 B1 IAB).
+    right; right; assumption.
+  exfalso; apply HIAB; repeat split; assumption.
   }
 
   {
   destruct HIAC as [IAC HIAC]; exists IAC.
   clear HD1 HD2 HD3 HC1 HC2 HNC1 HNC2 HNC3 HIAB HNI1 HNI2 P B1 B2.
-  induction (col_dec A1 A2 IAC); induction (col_dec C1 C2 IAC);
-  try solve [left; Col];
-  induction (col_dec A1 C1 IAC); induction (col_dec A2 C2 IAC);
-  try solve [right; left; Col];
-  induction (col_dec A1 C2 IAC); induction (col_dec A2 C1 IAC);
-  try solve [right; right; Col];
-  exfalso; apply HIAC; intuition.
+  induction (col2_dec A1 A2 IAC C1 C2 IAC).
+    left; assumption.
+  induction (col2_dec A1 C1 IAC A2 C2 IAC).
+    right; left; assumption.
+  induction (col2_dec A1 C2 IAC A2 C1 IAC).
+    right; right; assumption.
+  exfalso; apply HIAC; repeat split; assumption.
   }
 Qed.
 
@@ -181,7 +191,7 @@ elim (col_dec A1 B1 B2); intro HNC1.
   assert (HC : C1 <> C2) by (assert_diffs; auto).
   apply (not_strict_par _ _ _ _ A1) in HPar1; Col.
   destruct HPar1 as [HC1 HC2]; clear HNC1.
-  apply (not_strict_par _ _ _ _ P) in HPar2; spliter; try split; ColR.
+  apply (not_strict_par _ _ _ _ P) in HPar2; spliter; [split|..]; ColR.
   }
 
   {
@@ -193,23 +203,24 @@ elim (col_dec A1 B1 B2); intro HNC1.
     assert (HC : C1 <> C2) by (assert_diffs; auto).
     apply (not_strict_par _ _ _ _ A1) in HPar2; Col.
     destruct HPar2 as [HC1 HC2]; clear HNC2.
-    apply (not_strict_par _ _ _ _ P) in HPar1; spliter; try split; ColR.
+    apply (not_strict_par _ _ _ _ P) in HPar1; spliter; [split|..]; ColR.
     }
 
     {
     assert (H : ~ ~ (Col C1 B1 B2 /\ Col C2 B1 B2) ->
-                Col C1 B1 B2 /\ Col C2 B1 B2);
-    [induction (col_dec C1 B1 B2); induction (col_dec C2 B1 B2); intuition|
-     apply H; clear H; intro HNC3; apply (HP A1 A2 B1 B2 C1 C2 P);
-     try solve [assert_diffs; Col]; try (intros [HC1 HC2]; intuition)].
+                Col C1 B1 B2 /\ Col C2 B1 B2)
+      by (induction (col_dec C1 B1 B2); induction (col_dec C2 B1 B2); intuition).
+
+    assert_diffs; apply H; clear H; intro HNC3; apply (HP A1 A2 B1 B2 C1 C2 P); Col;
+     try (intros [HC1 HC2]; auto).
 
       {
       apply par_symmetry in HPar1.
       apply (par_not_col_strict _ _ _ _ A1) in HPar1; Col.
-      destruct HPar1 as [_ [_ [[IAB HIAB] _]]].
+      destruct HPar1 as [[IAB HIAB] _].
       exists IAB; intros [HIAB1 [HIAB2 HIAB3]].
-      elim HIAB; clear HIAB; intro HIAB; [apply HIAB1|];
-      try solve [spliter; split; Col].
+      elim HIAB; clear HIAB; intro HIAB; [apply HIAB1|].
+        spliter; split; Col.
       elim HIAB; clear HIAB; intro HIAB; [apply HIAB2|apply HIAB3];
       spliter; split; Col.
       }
@@ -217,10 +228,10 @@ elim (col_dec A1 B1 B2); intro HNC1.
       {
       apply par_symmetry in HPar2.
       apply (par_not_col_strict _ _ _ _ A1) in HPar2; Col.
-      destruct HPar2 as [_ [_ [[IAC HIAC] _]]].
+      destruct HPar2 as [[IAC HIAC] _].
       exists IAC; intros [HIAC1 [HIAC2 HIAC3]].
-      elim HIAC; clear HIAC; intro HIAC; [apply HIAC1|];
-      try solve [spliter; split; Col].
+      elim HIAC; clear HIAC; intro HIAC; [apply HIAC1|].
+        spliter; split; Col.
       elim HIAC; clear HIAC; intro HIAC; [apply HIAC2|apply HIAC3];
       spliter; split; Col.
       }
@@ -229,8 +240,8 @@ elim (col_dec A1 B1 B2); intro HNC1.
       apply par_symmetry in HPar1; apply par_symmetry in HPar2.
       apply (par_not_col_strict _ _ _ _ A1) in HPar1; Col.
       apply (par_not_col_strict _ _ _ _ A1) in HPar2; Col.
-      destruct HPar1 as [_ [_ [_ HI1]]]; destruct HPar2 as [_ [_ [_ HI2]]].
-      split; intros [I [HC1 HC2]]; [apply HI1| apply HI2]; exists I; Col.
+      destruct HPar1 as [_ HI1]; destruct HPar2 as [_ HI2].
+      split; intros [I [HC1 HC2]]; [apply HI1|apply HI2]; exists I; Col.
       }
     }
   }
@@ -262,58 +273,31 @@ assert (H : playfair_quater <->
 assert (H : Col C1 B1 B2 /\ Col C2 B1 B2 <-> ~ ~ (Col C1 B1 B2 /\ Col C2 B1 B2))
   by (induction (col_dec C1 B1 B2); induction (col_dec C2 B1 B2); tauto).
 apply H; clear H; intro HNC; apply (HP A1 A2 B1 B2 C1 C2 P).
-repeat try (split; [assert_diffs; assumption|]).
+assert_diffs.
+repeat (split; [assumption|]).
 assert (HNC1 : ~ Col A1 B1 B2).
   {
   intro.
-  assert (HA : A1 <> A2) by (assert_diffs; auto).
-  assert (HB : B1 <> B2) by (assert_diffs; auto).
-  assert (HC : C1 <> C2) by (assert_diffs; auto).
   apply (not_strict_par _ _ _ _ A1) in HPar1; Col; spliter.
-  apply (not_strict_par _ _ _ _ P) in HPar2; spliter; try ColR.
-  apply HNC; split; ColR.
+  apply (not_strict_par _ _ _ _ P) in HPar2; spliter; [apply HNC; split|..]; ColR.
   }
-assert (HNC2 : ~ Col A2 B1 B2).
+assert (HNC2 : ~ Col A1 C1 C2).
   {
   intro.
-  assert (HA : A1 <> A2) by (assert_diffs; auto).
-  assert (HB : B1 <> B2) by (assert_diffs; auto).
-  assert (HC : C1 <> C2) by (assert_diffs; auto).
-  apply (not_strict_par _ _ _ _ A2) in HPar1; Col; spliter.
-  apply (not_strict_par _ _ _ _ P) in HPar2; spliter; try ColR.
-  apply HNC; split; ColR.
-  }
-assert (HNC3 : ~ Col A1 C1 C2).
-  {
-  intro.
-  assert (HA : A1 <> A2) by (assert_diffs; auto).
-  assert (HB : B1 <> B2) by (assert_diffs; auto).
-  assert (HC : C1 <> C2) by (assert_diffs; auto).
   apply (not_strict_par _ _ _ _ A1) in HPar2; Col; spliter.
-  apply (not_strict_par _ _ _ _ P) in HPar1; spliter; try ColR.
-  apply HNC; split; ColR.
-  }
-assert (HNC4 : ~ Col A2 C1 C2).
-  {
-  intro.
-  assert (HA : A1 <> A2) by (assert_diffs; auto).
-  assert (HB : B1 <> B2) by (assert_diffs; auto).
-  assert (HC : C1 <> C2) by (assert_diffs; auto).
-  apply (not_strict_par _ _ _ _ A2) in HPar2; Col; spliter.
-  apply (not_strict_par _ _ _ _ P) in HPar1; spliter; try ColR.
-  apply HNC; split; ColR.
+  apply (not_strict_par _ _ _ _ P) in HPar1; spliter; [apply HNC; split|..]; ColR.
   }
 apply par_symmetry in HPar1; apply (par_not_col_strict _ _ _ _ A1) in HPar1;
-Col; apply par_strict_symmetry in HPar1; destruct HPar1 as [_ [_ [HCop1 HPar1]]].
+Col; apply par_strict_symmetry in HPar1; destruct HPar1 as [HCop1 HPar1].
 apply par_symmetry in HPar2; apply (par_not_col_strict _ _ _ _ A1) in HPar2;
-Col; apply par_strict_symmetry in HPar2; destruct HPar2 as [_ [_ [HCop2 HPar2]]].
-repeat (split; try tauto).
+Col; apply par_strict_symmetry in HPar2; destruct HPar2 as [HCop2 HPar2].
+repeat (split; [tauto|]); intuition.
 
   {
   destruct HCop1 as [IAB HIAB].
   exists IAB; intros [HIAB1 [HIAB2 HIAB3]].
-  elim HIAB; clear HIAB; intro HIAB; [apply HIAB1|];
-  try solve [spliter; split; Col].
+  elim HIAB; clear HIAB; intro HIAB.
+    apply HIAB1; spliter; split; Col.
   elim HIAB; clear HIAB; intro HIAB; [apply HIAB2|apply HIAB3];
   spliter; split; Col.
   }
@@ -321,8 +305,8 @@ repeat (split; try tauto).
   {
   destruct HCop2 as [IAC HIAC].
   exists IAC; intros [HIAC1 [HIAC2 HIAC3]].
-  elim HIAC; clear HIAC; intro HIAC; [apply HIAC1|];
-  try solve [spliter; split; Col].
+  elim HIAC; clear HIAC; intro HIAC.
+    apply HIAC1; spliter; split; Col.
   elim HIAC; clear HIAC; intro HIAC; [apply HIAC2|apply HIAC3];
   spliter; split; Col.
   }

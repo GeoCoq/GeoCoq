@@ -329,7 +329,7 @@ subst B'.
 apply perp_distinct in H3.
 tauto.
 apply not_out_bet in H13.
-bet.
+assumption.
 Col.
 
 assert(Ps O E OB).
@@ -421,7 +421,7 @@ subst B'.
 apply perp_distinct in H3.
 tauto.
 apply not_out_bet in H13.
-bet.
+assumption.
 Col.
 
 assert(Ps O E OB).
@@ -681,7 +681,7 @@ subst B'.
 apply perp_distinct in H3.
 tauto.
 apply not_out_bet in H13.
-bet.
+assumption.
 Col.
 
 assert(Ps O E OB).
@@ -825,7 +825,7 @@ subst B'.
 apply perp_distinct in H3.
 tauto.
 apply not_out_bet in H13.
-bet.
+assumption.
 Col.
 
 assert(Ps O E OB).
@@ -1001,9 +1001,7 @@ unfold Ps in H1.
 unfold Ps in H2.
 spliter.
 assert(Out O C1 C2).
-apply (out2_out_1 _ _ _ E);
-apply l6_6;
-auto.
+apply (l6_7 _ _ E); Out.
 unfold Midpoint in H5.
 spliter.
 apply l6_4_1 in H5; auto.
@@ -1033,9 +1031,7 @@ unfold Ps in H1.
 unfold Ps in H2.
 spliter.
 assert(Out O C1 C2).
-apply (out2_out_1 _ _ _ E);
-apply l6_6;
-auto.
+apply (l6_7 _ _ E); Out.
 unfold Midpoint in H15.
 spliter.
 apply l6_4_1 in H15; auto.
@@ -1080,9 +1076,7 @@ spliter.
 unfold Ps in H1.
 unfold Ps in H19.
 assert(Out O C1 C2).
-apply (out2_out_1 _ _ _ E);
-apply l6_6;
-auto.
+apply (l6_7 _ _ E); Out.
 unfold Midpoint in H18.
 spliter.
 apply l6_4_1 in H18; auto.

@@ -7,6 +7,73 @@ Require Export GeoCoq.Highschool.gravityCenter.
 
 Import concyclic.
 
+Ltac assert_cops :=
+ repeat match goal with
+      | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
+      | H:TS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply ts__coplanar, H)
+      | H:OS ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply os__coplanar, H)
+      | H:ReflectL ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflectl__coplanar, H)
+      | H:Reflect ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflect__coplanar, H)
+      | H:InAngle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply inangle__coplanar, H)
+      | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply pars__coplanar, H)
+      | H:Par ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply par__coplanar, H)
+      | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plg__coplanar, H)
+      | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgs__coplanar, H)
+      | H:Parallelogram_flat ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgf__coplanar, H)
+      | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply parallelogram__coplanar, H)
+      | H:Rhombus ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rhombus__coplanar, H)
+      | H:Rectangle ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rectangle__coplanar, H)
+      | H:Square ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply square__coplanar, H)
+      | H:Saccheri ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply sac__coplanar, H)
+      | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
+      | H:is_circumcenter ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply is_circumcenter_coplanar, H)
+      | H:is_orthocenter ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply is_orthocenter_coplanar, H)
+      | H:is_gravity_center ?X1 ?X2 ?X3 ?X4 |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply is_gravity_center_coplanar, H)
+ end.
+
+Ltac Cop := auto; try (intros; solve [apply col__coplanar; Col
+     |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
+     |apply coplanar_perm_18, col__coplanar; Col
+     |assert_cops; auto 2 with cop_perm]).
+
+Ltac copr_aux :=
+ repeat match goal with
+      | H: ~ Col ?X1 ?X2 ?X3, X4 : Tpoint |- _ =>
+     not_exist_hyp_perm_cop X1 X2 X3 X4;
+     first[exist_hyp_perm_col X1 X2 X4; assert (Coplanar X1 X2 X4 X3) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X2 X3 X4; assert (Coplanar X2 X3 X4 X1) by (apply col__coplanar; Col)
+          |exist_hyp_perm_col X1 X3 X4; assert (Coplanar X1 X3 X4 X2) by (apply col__coplanar; Col)]
+ end.
+
+Ltac CopR :=
+ let tpoint := constr:(Tpoint) in
+ let col := constr:(Col) in
+ let cop := constr:(Coplanar) in
+   treat_equalities; assert_cols; clean; assert_ncols; assert_cops; auto 2 with cop_perm;
+   solve[apply col__coplanar; Col|apply coplanar_perm_1, col__coplanar; Col
+        |apply coplanar_perm_4, col__coplanar; Col|apply coplanar_perm_18, col__coplanar; Col
+        |copr_aux; Cop_refl tpoint col cop] || fail "Can not be deduced".
+
 Section Euler_line.
 
 Context `{TE:Tarski_euclidean}.
@@ -64,9 +131,9 @@ assert (HOM2 : O <> M2).
   }
 assert (HM1M2 : M1 <> M2) by (intro; treat_equalities; Col).
 assert (HPerp1 : Perp_bisect O M1 A B)
-  by (apply cong_cop_perp_bisect; spliter; Cong; Cop).
+  by (apply cong_mid_perp_bisect; spliter; Cong).
 assert (HPerp2 : Perp_bisect O M2 A C)
-  by (apply cong_cop_perp_bisect; spliter; Cong; Cop).
+  by (apply cong_mid_perp_bisect; spliter; Cong).
 assert (HOM1M2 : ~ Col O M1 M2).
   {
   intro HOM1M2; assert (H := l7_20 O A B); elim H; clear H; try intro H; Cong;
@@ -75,7 +142,7 @@ assert (HOM1M2 : ~ Col O M1 M2).
 assert (HPar_strict : Par_strict O M1 O M2).
   {
   apply par_not_col_strict with M2; Col.
-  apply l12_9 with A B; [Cop| |Cop..| |].
+  apply l12_9 with A B; try CopR.
     apply coplanar_perm_16, col_cop__cop with C; Col; Cop.
     apply perp_bisect_perp; Col.
   apply perp_col0 with A C; Col; perm_apply perp_bisect_perp.
@@ -136,29 +203,6 @@ assert (Midpoint G I G')
 apply (is_gravity_center_third_reci A B' C' G I G');finish.
 Qed.
 
-(* Could be removed. See gravityCenter.v. *)
-Hint Resolve
-     is_gravity_center_perm_1
-     is_gravity_center_perm_2
-     is_gravity_center_perm_3
-     is_gravity_center_perm_4
-     is_gravity_center_perm_5 : gravitycenter.
-
-Hint Resolve
-     is_orthocenter_perm_1
-     is_orthocenter_perm_2
-     is_orthocenter_perm_3
-     is_orthocenter_perm_4
-     is_orthocenter_perm_5 : Orthocenter.
-
-Hint Resolve
-     is_circumcenter_perm_1
-     is_circumcenter_perm_2
-     is_circumcenter_perm_3
-     is_circumcenter_perm_4
-     is_circumcenter_perm_5 : Circumcenter.
-
-
 Lemma Euler_line :
  forall A B C G H O,
   ~ Col A B C ->
@@ -175,7 +219,7 @@ Name B' the midpoint of A and C.
 Name C' the midpoint of A and B.
 
 assert (Perp_bisect A A' B C)
-  by (apply cong_cop_perp_bisect; assert_diffs; Cong; Cop; intro; treat_equalities; apply H0; Col).
+  by (apply cong_mid_perp_bisect; Cong; intro; treat_equalities; apply H0; Col).
 
 assert (Col G A' A)
   by (apply is_gravity_center_perm in H1; apply is_gravity_center_col with B C; spliter; Col).
@@ -188,17 +232,20 @@ elim (eq_dec_points O H); intro; treat_equalities; Col.
 elim (eq_dec_points O A'); intro; treat_equalities.
 
 assert (Col A H O) by (apply cop_perp2__col with B C; Col; Cop; apply perp_bisect_perp; Col).
+apply is_gravity_center_coplanar in H1.
 apply col_permutation_1; apply cop_perp2__col with B C.
 
-apply coplanar_trans_1 with A; Cop.
+CopR.
 apply perp_sym; apply perp_col0 with A O; try apply perp_bisect_perp; Col.
 apply perp_sym; apply perp_col0 with A H; Col.
 
 assert (Col A A' H) by (apply cop_perp2__col with B C; Cop; apply perp_bisect_perp; auto).
-assert (Perp_bisect O A' B C) by (apply circumcenter_perp with A; assert_diffs; Col).
+assert (Perp_bisect O A' B C) by (assert_diffs; apply circumcenter_perp with A; auto).
 assert (Col A' A O)
-  by (apply cop_perp2__col with B C; Cop; apply perp_left_comm; apply perp_bisect_perp; auto).
-show_distinct A A'; assert_cols; Col; ColR.
+  by (apply cop_perp2__col with B C; Perp; Cop).
+show_distinct A A'.
+  apply H0; Col.
+ColR.
 
 Name A' the symmetric of A wrt O.
 
@@ -230,8 +277,7 @@ decompose [or] T;clear T;try contradiction.
     apply cong_transitivity with O B;finish.
 
    apply (Euler_line_special_case A C B G H O);finish.
-(* For 8.5  bug *)
-   try (apply is_gravity_center_perm_1; assumption). 
+   apply is_gravity_center_perm_1; assumption.
    auto with Orthocenter.
    auto with Circumcenter.
 
@@ -254,8 +300,8 @@ assert (Perp A' B B A)
 
 assert (Par C H A' B).
  unfold Concyclic in *; spliter.
- apply l12_9 with A B; [Cop|Cop| |Cop|Perp..].
- apply coplanar_trans_1 with C; Col; Cop.
+ apply is_orthocenter_coplanar in H2.
+ apply l12_9 with A B; try CopR; Perp.
 
 assert (Perp B H A C)
  by (unfold is_orthocenter in *;spliter;finish).
@@ -271,8 +317,7 @@ assert (Perp A' C C A) by (apply per_perp;finish).
 
 assert (Par B H C A').
  unfold Concyclic in *; spliter.
- apply l12_9 with A C; [Cop..| |Perp|Perp].
- apply coplanar_trans_1 with B; Col; Cop.
+ apply l12_9 with A C; try CopR; Perp.
 
 induction (col_dec B H C).
  * assert (H=B \/ H=C) by (apply (orthocenter_col A B C H);finish).
@@ -306,7 +351,6 @@ induction (col_dec B H C).
      apply gravity_center_change_triangle with B C I;finish.
      show_distinct A' H; treat_equalities.
      apply plg_par in H26; spliter; assert_diffs; Col.
-     apply H25; apply par_id_5; Par.
      intro.
      Name A'' the midpoint of B and C.
      show_distinct A'' O; treat_equalities.

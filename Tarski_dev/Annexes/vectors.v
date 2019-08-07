@@ -4,8 +4,7 @@ Require Export GeoCoq.Tarski_dev.Annexes.quadrilaterals_inter_dec.
 
 Section Vectors.
 
-Context `{T2D:Tarski_2D}.
-Context `{TE:@Tarski_euclidean Tn TnEQD}.
+Context `{TE:Tarski_euclidean}.
 
 Lemma eqv_refl : forall A B, EqV A B A B.
 Proof.
@@ -1009,13 +1008,12 @@ right.
 assert(HH:=vector_construction A B C).
 ex_and HH D'.
 exists D'.
-split.
-2: auto.
+split; trivial.
 
 assert(A <> B /\ C <> D).
-unfold Par in H.
-unfold Par_strict in H.
-tauto.
+apply par_strict_distinct in H.
+spliter.
+split; auto.
 spliter.
 
 assert(A <> M).
@@ -1054,9 +1052,9 @@ apply col_permutation_1.
 apply (parallel_uniqueness A B _ _ C _ C).
 left.
 apply H.
-2: apply par_right_comm.
-2: apply H7.
 Col.
+apply par_right_comm.
+apply H7.
 Col.
 
 induction H2.
@@ -1543,8 +1541,7 @@ contradiction.
 assert(HH:=vector_construction A B' Q).
 ex_and HH P'.
 
-induction H8.
-2 : tauto.
+induction H8; [|tauto].
 
 assert(B <> P).
 intro.
@@ -1893,7 +1890,7 @@ apply(plgs_plgs_bet A B' P' Q B P); auto.
 
 apply plg_cong in H11.
 spliter.
-eCong.
+CongR.
 
 assert(Parallelogram A B' C' D).
 apply (plgs_pseudo_trans _ _ P' Q).
@@ -2054,9 +2051,8 @@ tauto.
 assert(HH:=vector_construction A B E).
 ex_and HH F''.
 exists F''.
-split.
+split; trivial.
 
-2: auto.
 assert(C <> D /\ C <> D' /\ E <> F /\ E <> F').
 unfold Out in *.
 spliter.
@@ -2097,8 +2093,8 @@ auto.
 apply plg_comm2.
 auto.
 induction H13.
-2:tauto.
 assumption.
+tauto.
 apply (between_exchange4 _ _ F').
 apply H10.
 auto.
@@ -2115,9 +2111,7 @@ apply plgf_trivial_neq in H4.
 tauto.
 
 assert(Bet E F'' F').
-apply (plg_plg_bet C D' _ _ D).
-3: apply H2.
-2:apply H12.
+apply (plg_plg_bet C D' _ _ D); trivial.
 
 assert(Parallelogram C D' F'' E \/ C = D' /\ B = A /\ E = F'' /\ C = E).
 apply plg_pseudo_trans.
@@ -2177,9 +2171,7 @@ apply plgf_trivial_neq in H4.
 tauto.
 
 assert(Bet E F'' F').
-apply (plg_plg_bet C D' _ _ D).
-3: apply H2.
-2: apply H12.
+apply (plg_plg_bet C D' _ _ D); trivial.
 
 assert(Parallelogram C D' F'' E \/ C = D' /\ B = A /\ E = F'' /\ C = E).
 apply plg_pseudo_trans.
@@ -2228,8 +2220,7 @@ auto.
 assert(HH:=vector_construction B A D).
 ex_and HH C'.
 exists C'.
-split.
-2: auto.
+split; trivial.
 
 unfold Out in *.
 spliter.
@@ -2273,8 +2264,8 @@ unfold Parallelogram_flat in H6.
 spliter.
 
 apply (col_cong2_bet1 D').
-2:Between.
 Col.
+Between.
 Cong.
 Cong.
 spliter.
@@ -2395,11 +2386,9 @@ right.
 assert(HH:=vector_construction A B B).
 ex_and HH C'.
 exists C'.
-split.
-2: auto.
+split; trivial.
 unfold EqV in H2.
-induction H2.
-2:tauto.
+induction H2; [|tauto].
 
 induction H2.
 apply plgs_par_strict in H2.
@@ -2546,7 +2535,7 @@ elim (eq_dec_points C D); intro HCD; try tauto.
     apply out_diff1 in HFalse; intuition.
 
   assert (H := plg_existence B A C).
-  assert (HPar : B <> A) by finish.
+  assert (HPar : B <> A) by auto.
   apply H in HPar; clear H.
   destruct HPar as [E HPar].
   elim (out_dec C D E); intro Hout.
@@ -2588,8 +2577,7 @@ right.
 assert(HH:= vector_construction A B D).
 ex_and HH C'.
 exists C'.
-split.
-2:auto.
+split; trivial.
 unfold EqV in H1.
 
 induction (eq_dec_points B C').

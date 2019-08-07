@@ -411,6 +411,43 @@ Module SP := MSetList.Make SetOfPairsOfPositiveOrderedType.
 Module SP := MSetAVL.Make SetOfPairsOfPositiveOrderedType.
 *)
 
+Module SPWP := WPropertiesOn SetOfPairsOfPositiveOrderedType SP.
+
+Module SetOfSetsOfPairsOfPositiveOrderedType <: OrderedType.
+
+  Definition t := SP.t.
+
+  Definition eq := SP.Equal.
+
+  Definition eq_equiv := SP.eq_equiv.
+
+  Definition eqb := SP.equal.
+
+  Definition eqb_eq := SP.equal_spec.
+
+  Definition lt := SP.lt.
+
+  Instance lt_compat : Proper (eq==>eq==>iff) lt.
+  Proof.
+  apply SP.lt_compat.
+ Qed.
+
+  Instance lt_strorder : StrictOrder lt.
+  Proof.
+  apply SP.lt_strorder.
+ Qed.
+
+  Definition compare := SP.compare.
+
+  Definition compare_spec := SP.compare_spec.
+
+  Definition eq_dec := SP.eq_dec.
+
+End SetOfSetsOfPairsOfPositiveOrderedType.
+
+Module SSP := MSetList.Make SetOfSetsOfPairsOfPositiveOrderedType.
+
+
 Module PosOrder <: TotalLeBool.
 
   Definition t := positive.

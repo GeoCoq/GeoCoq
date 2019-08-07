@@ -1,6 +1,5 @@
 Require Import GeoCoq.Axioms.parallel_postulates.
 Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
-Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 
 Section rah_posidonius.
 
@@ -13,7 +12,7 @@ Lemma rah__posidonius_aux : postulate_of_right_saccheri_quadrilaterals ->
   Cong A3 B3 A1 B1.
 Proof.
   intros rah A1 A2 A3 B1 B2 B3 HPer1 HPer2 HCong HOS HA HB HPerp.
-  assert (HSac : Saccheri A1 B1 B2 A2) by repeat (split; finish).
+  assert (HSac : Saccheri A1 B1 B2 A2) by (repeat split; Perp; Cong).
   assert(Hdiff := sac_distincts A1 B1 B2 A2 HSac).
   spliter.
   assert_diffs.
@@ -22,7 +21,7 @@ Proof.
     subst A3.
     assert(B1 = B3); [|subst; Cong].
     apply (l6_21 B1 B2 A1 B1); Col.
-      apply not_col_permutation_1; apply (sac__ncol123 _ _ _ A2); assumption.
+      apply not_col_permutation_1, par_strict_not_col_1 with A2, sac__pars1234, HSac.
       unfold Saccheri in HSac; spliter; apply (cop_perp2__col _ _ _ A1 A2); Perp.
       apply col_cop__cop with B2; Cop.
   }
@@ -33,7 +32,7 @@ Proof.
   assert(Par_strict B1 B2 A1 A3).
   { apply (par_strict_col_par_strict _ _ _ A2); auto.
     apply par_strict_symmetry.
-    apply sac__par_strict1423; assumption.
+    apply sac__pars1423; assumption.
   }
   apply (l6_21 B1 B2 A3 B3); Col.
     apply (par_strict_not_col_4 _ _ A1); auto.
@@ -57,8 +56,7 @@ Proof.
     apply not_col_permutation_1; apply per_not_col; auto.
   }
   assert(Per A1 A3 B'3).
-  { apply perp_per_1; auto.
-    apply perp_comm; apply (perp_col _ A2); Col.
+  { apply perp_per_1, perp_comm, (perp_col _ A2); Col.
     apply (perp_col1 _ _ _ B3); Col.
   }
   repeat split; Cong.

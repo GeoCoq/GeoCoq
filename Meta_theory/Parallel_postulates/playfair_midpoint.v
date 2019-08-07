@@ -20,8 +20,7 @@ assert (X = Q).
   intro.
   assert (Col A B C) by ColR.
   contradiction.
-  assert (Par A B Q P /\ A <> B /\ Q <> P) by (apply par_distincts; finish).
-  spliter; intuition.
+  auto.
   Col.
   Col.
   destruct (HP A B Q P X P P) as [HCol1 HCol2]; Col; apply par_strict_par; Par.

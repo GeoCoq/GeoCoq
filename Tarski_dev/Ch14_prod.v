@@ -639,14 +639,11 @@ Proof.
         intro.
         subst B''.
         apply H27.
-        apply(l6_21 O E' B B'); try ColR.
-          intro.
-          apply H.
-          ColR.
+        assert_diffs.
+        apply(l6_21 O E' B B'); [|ColR..].
         intro.
-        subst B'.
-        apply par_distinct in H21.
-        tauto.
+        apply H.
+        ColR.
       assert(Par E' E'' B' B'').
         apply par_comm.
         apply (par_col_par _ _ _ B); Col.
@@ -682,11 +679,13 @@ Proof.
         apply(l6_21 O E' E E');Col.
         ColR.
       left.
-      apply(l13_15 E' E'' A B' B'' C O H29 H33 H24); Col.
+      apply(l13_15 E' E'' A B' B'' C O H29); Col.
+        apply all_coplanar.
       ColR.
     assert(Par E'' E' B'' B').
       apply(l13_15 E E'' E' B B'' B' O ); Par.
-      Col.
+        Col.
+      apply all_coplanar.
     induction(col_dec A E' E'').
       assert(Par B' C E' E'').
         apply (par_col_par _ _ _ A); Par.
@@ -732,6 +731,7 @@ Proof.
         intro.
         apply H30.
         Col.
+        apply all_coplanar.
       ColR.
     spliter.
     induction(col_dec O E' E'').
@@ -1004,7 +1004,7 @@ Proof.
       induction H14.
         apply H15.
         apply par_symmetry.
-        apply(par_col_par _ _ _ B); finish.
+        apply(par_col_par _ _ _ B); Par; Col.
       contradiction.
     assert(BC <> O).
       intro.
@@ -1021,13 +1021,13 @@ Proof.
       induction H6.
         apply H15.
         apply par_symmetry.
-        apply (par_col_par _ _ _ BC); finish.
+        apply (par_col_par _ _ _ BC); Par; Col.
       contradiction.
       intro.
       subst C'.
       apply H15.
       apply par_symmetry.
-      apply (par_col_par _ _ _ C); finish.
+      apply (par_col_par _ _ _ C); Par; Col.
       intro.
       subst AB.
       assert(HH:=prod_null O E E' A B P1).
@@ -1172,7 +1172,6 @@ Proof.
     assert(C' = C'').
       apply(pj_uniqueness O E E' C); Col.
     left.
-    Par.
     subst C''.
     assert(B' <> O).
       intro.
@@ -1180,7 +1179,7 @@ Proof.
       induction H14.
         apply H15.
         apply par_symmetry.
-        apply(par_col_par _ _ _ B); finish.
+        apply(par_col_par _ _ _ B); Par; Col.
       contradiction.
     apply(par_trans _ _ B' AB).
       induction H24.
@@ -1345,13 +1344,13 @@ Proof.
       subst A'.
       apply H10.
       apply par_symmetry.
-      apply(par_col_par _ _ _ A); finish.
+      apply(par_col_par _ _ _ A); Par; Col.
       induction H7.
         intro.
         subst B'.
         apply H10.
         apply par_symmetry.
-        apply(par_col_par _ _ _ B); finish.
+        apply(par_col_par _ _ _ B); Par; Col.
       subst B'.
       intro.
       contradiction.

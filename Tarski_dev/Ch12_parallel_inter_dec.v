@@ -5,24 +5,37 @@ Section T13.
 
 Context `{TE:Tarski_euclidean}.
 
+Lemma cop_npars__inter_exists :
+ forall A1 B1 A2 B2,
+  Coplanar A1 B1 A2 B2 -> ~ Par_strict A1 B1 A2 B2 ->
+  exists X, Col X A1 B1 /\ Col X A2 B2.
+Proof.
+intros.
+induction (eq_dec_points A1 B1).
+  subst.
+  exists A2.
+  Col.
+induction (eq_dec_points A2 B2).
+  subst.
+  exists A1.
+  Col.
+induction (inter_dec A1 B1 A2 B2).
+  assumption.
+exfalso.
+apply H0.
+split; assumption.
+Qed.
+
 Lemma cop_npar__inter_exists : forall A1 B1 A2 B2,
   Coplanar A1 B1 A2 B2 -> ~ Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
 Proof.
 intros.
-induction (eq_dec_points A1 B1).
-subst; exists A2; Col.
-induction (eq_dec_points A2 B2).
-subst; exists A1; Col.
-induction (inter_dec A1 B1 A2 B2).
-
+apply cop_npars__inter_exists.
   assumption.
-
-  exfalso.
-  apply H0.
-  unfold Par.
-  left.
-  unfold Par_strict.
-  repeat split; assumption.
+intro.
+apply H0.
+left.
+assumption.
 Qed.
 
 Lemma cop_npar__inter : forall A1 B1 A2 B2, A1 <> B1 -> A2 <> B2 ->
@@ -162,14 +175,14 @@ Proof.
         assert(Col P A D').
           apply (col_transitivity_1 _ C); Col.
         apply (col3 P D'); Col.
-        intro; treat_equalities; assert_cols; Col.
+        intro; treat_equalities; Col5.
     subst D'.
     split.
       Cong.
     split.
       Cong.
     assert(B <> D).
-      intro; treat_equalities; assert_cols; Col.
+      intro; treat_equalities; Col5.
     split.
       apply l12_18_c with P; Cong; Col.
     apply l12_18_d with P; Cong; Col.
@@ -373,12 +386,12 @@ Proof.
         intro.
         treat_equalities.
         assert(C0 = B0).
-          eapply l7_17.
-            2: apply H2.
-          split.
-            apply between_symmetry.
-            assumption.
-          Cong.
+          apply (l7_17 A B).
+              split.
+              apply between_symmetry.
+              assumption.
+              Cong.
+          assumption.
         treat_equalities.
         Col.
         apply H0.
@@ -434,9 +447,9 @@ Proof.
         apply col_trivial_3.
       assert_diffs; apply bet_out; Between.
     assert(OS A C B C').
-      eapply one_side_transitivity.
-        2:apply H11.
-      apply one_side_symmetry.
+      apply one_side_transitivity with B0.
+        apply one_side_symmetry.
+        assumption.
       assumption.
     assert(TS A C B' C').
       apply l9_2.
@@ -451,27 +464,6 @@ Proof.
     apply par_symmetry in H8.
     apply invert_two_sides in H6.
     assert(HH:= l12_21_a C B A B' H6 H8); CongA.
-Qed.
-
-Lemma cop_npars__inter_exists :
- forall A1 B1 A2 B2,
-  Coplanar A1 B1 A2 B2 -> ~ Par_strict A1 B1 A2 B2 ->
-  exists X, Col X A1 B1 /\ Col X A2 B2.
-Proof.
-    intros.
-    induction (eq_dec_points A1 B1).
-      subst.
-      exists A2.
-      Col.
-    induction (eq_dec_points A2 B2).
-      subst.
-      exists A1.
-      Col.
-    induction (inter_dec A1 B1 A2 B2).
-      assumption.
-    exfalso.
-    apply H0.
-    repeat split; assumption.
 Qed.
 
 Lemma cop2_npar__inter : forall A B A' B' X Y,
@@ -564,13 +556,22 @@ Section T13_2D.
 Context `{T2D:Tarski_2D}.
 Context `{TE:@Tarski_euclidean Tn TnEQD}.
 
+Lemma not_par_strict_inter_exists :
+ forall A1 B1 A2 B2,
+  ~Par_strict A1 B1 A2 B2 ->
+  exists X, Col X A1 B1 /\ Col X A2 B2.
+Proof.
+    intros A1 B1 A2 B2.
+    apply (cop_npars__inter_exists).
+    apply all_coplanar.
+Qed.
+
 Lemma not_par_inter_exists : forall A1 B1 A2 B2,
   ~ Par A1 B1 A2 B2 -> exists X, Col X A1 B1 /\ Col X A2 B2.
 Proof.
-intros.
-apply cop_npar__inter_exists.
-apply all_coplanar.
-assumption.
+    intros A1 B1 A2 B2.
+    apply cop_npar__inter_exists.
+    apply all_coplanar.
 Qed.
 
 Lemma l12_16_2D : forall A1 A2 B1 B2 C1 C2 X,
@@ -590,17 +591,6 @@ Proof.
     apply (cop_par__inter A B); assumption.
 Qed.
 
-Lemma not_par_strict_inter_exists :
- forall A1 B1 A2 B2,
-  ~Par_strict A1 B1 A2 B2 ->
-  exists X, Col X A1 B1 /\ Col X A2 B2.
-Proof.
-    intros.
-    apply (cop_npars__inter_exists).
-    apply all_coplanar.
-    assumption.
-Qed.
-
 Lemma not_par_inter : forall A B A' B' X Y, ~Par A B A' B' -> (exists P, Col P X Y /\ (Col P A B \/ Col P A' B')).
 Proof.
     intros.
@@ -611,17 +601,17 @@ Qed.
 Lemma par_perp__perp : forall A B C D P Q, Par A B C D -> Perp A B P Q ->
   Perp C D P Q.
 Proof.
-intros A B C D P Q HPar HPer.
-assert (HCop := all_coplanar C D P Q).
-apply (cop_par_perp__perp A B); assumption.
+    intros A B C D P Q HPar HPer.
+    assert (HCop := all_coplanar C D P Q).
+    apply (cop_par_perp__perp A B); assumption.
 Qed.
 
 Lemma par_perp2__par : forall A B C D E F G H,
   Par A B C D -> Perp A B E F -> Perp C D G H ->
   Par E F G H.
 Proof.
-intros A B C D; intros.
-apply (cop4_par_perp2__par A B C D); try (apply all_coplanar); assumption.
+    intros A B C D; intros.
+    apply (cop4_par_perp2__par A B C D); try (apply all_coplanar); assumption.
 Qed.
 
 End T13_2D.

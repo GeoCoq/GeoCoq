@@ -26,27 +26,26 @@ Proof.
   assert(HNCol5 : ~ Col D' C B) by (intro; apply HNCol4; ColR).
   assert(HNCol6 : ~ Col M C E) by (intro; apply HNCol4; ColR).
   assert(HSAS := l11_49 C M D' B M E).
-  destruct HSAS as [HCong HSAS]; eCong.
+  destruct HSAS as [HCong HSAS]; Cong.
     apply l11_14; Between.
   destruct HSAS as [HConga1 HConga2]; auto.
   assert_diffs.
+  assert (Hts : TS C B D D') by (apply bet__ts; Between; Col).
   assert(HA' : InAngle A C B E).
   { apply lea_in_angle; auto.
     - apply (l11_30 A B C B C D').
         apply (sams_chara D); Between; SumA.
         apply conga_pseudo_refl; auto.
-      apply (out_conga M C D' M B E); try (apply bet_out); Between.
+      apply (l11_10 M C D' M B E); Out.
 
     - exists D'.
       split.
-      { repeat split; auto; try (intro; apply HNCol4; ColR).
+      { repeat split; auto.
+          intro; apply HNCol4; ColR.
         exists M.
-        split; Col; Between.
+        split; [Col|Between].
       }
       apply (l9_8_2 _ _ D); Side.
-      { repeat split; Col.
-        exists C; Col; Between.
-      }
   }
   destruct HA' as [_ [_ [_ [A' [HBet [Habs|Hout]]]]]].
   { subst.
@@ -55,26 +54,22 @@ Proof.
   }
 
   assert(HY := eucl B C E D' M A').
-  destruct HY as [Y HY]; Col; eCong; repeat split; Between.
+  destruct HY as [Y HY]; Col; Cong; repeat split; Between.
     intro; subst; apply HNCol1; ColR.
   { intro.
     subst.
     apply HNBet.
     apply (bet_conga__bet D' C D); Between.
     apply (suma2__conga A B C B C D); auto.
-    apply (conga3_suma__suma D' C B B C D D' C D); try (apply conga_refl); auto.
-    2: apply (out_conga D' C M E B M); try (apply out_trivial); CongA; try (apply bet_out); Between.
-    exists D.
-    repeat (split; CongA); Cop.
-    apply l9_9.
-    repeat split; Col.
-    exists C; Col; Between.
+    apply l6_6 in Hout.
+    apply (conga3_suma__suma D' C B B C D D' C D); try (apply conga_refl); SumA.
+    apply (l11_10 D' C M E B M); Out; CongA.
   }
   unfold BetS in HY.
   spliter.
   exists Y.
   split.
-    apply (l6_7 _ _ A'); try solve [apply l6_6; auto]; apply (bet_out); auto.
+    apply (l6_7 _ _ A'); Out.
   apply (l6_2 _ _ D'); Between.
 Qed.
 

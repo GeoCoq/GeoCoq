@@ -207,8 +207,8 @@ split; intro; spliter; treat_equalities.
     by (destruct H as [H' H]; induction H; spliter; treat_equalities; Col).
   clear H; assert (HCol2 : Col O E Y1) by (apply l4_13 with S U2 PY; Col; Cong).
   clear H'; destruct HPY2 as [H HCong4]; clear H.
+  unfold Cs in HCs; spliter.
   split; apply l4_18 with O E; Col;
-  try (intro; treat_equalities; unfold Cs in HCs; spliter; intuition);
   unfold Cong_3 in *; spliter; eapply cong_transitivity; eCong.
   }
 
@@ -671,7 +671,7 @@ try clear HPX; try clear HPY; try clear HQX; try clear HQY.
   assert (HPerp2 : Perp Q R S U2) by (apply projp_projp_perp with QY'; auto);
   assert (HPerp3 : Perp U1 S S U2)
     by (unfold Cs in HCs; spliter; assert_diffs; apply per_perp; Perp).
-  apply perp_per_2; auto; apply perp_sym; apply par_perp__perp with S U1; Perp.
+  apply perp_per_2; apply perp_sym; apply par_perp__perp with S U1; Perp.
   apply l12_9_2D with S U2; Perp.
   }
 
@@ -752,7 +752,7 @@ split; [intro HCong|intro; treat_equalities].
     apply cong_transitivity with C D; Cong.
     }
   clear HLengthAB; clear HLengthCD; clear HCong; rename H into HCong.
-  assert (H : Col O AB CD) by (assert_diffs; ColR).
+  assert (H : Col O AB CD) by ColR.
   elim (l7_20 O AB CD); Col; clear H; clear HCong; intro HMid; treat_equalities.
 
     {
@@ -1509,11 +1509,11 @@ split; [intro HBet|intro HT].
     assert (Le O AB A C).
       {
       apply length_leP_le_1 with O E E' AB AC; auto.
-      assert_diffs; do 2 (split; Cong).
+      assert_diffs; repeat split; Cong.
       apply le_pos_prod_le with T E AC; auto; apply prod_1_l; Col.
       }
     destruct (le_bet A C O AB) as [B [HBet HCong]]; auto; exists B; split; auto.
-    assert_diffs; do 3 (split; Cong).
+    assert_diffs; repeat split; Cong.
     }
   destruct HB as [B [HBet HAB]].
   elim (eq_dec_points A C); intro HDiff2; treat_equalities.
@@ -1785,7 +1785,7 @@ split; intro HCol; treat_equalities.
     }
 
     {
-    do 2 (try (elim HCol; clear HCol; intro HCol)); rename HCol into HBet1.
+    destruct HCol as [HBet1|[HBet1|HBet1]].
 
       {
       assert (HBet2 : Bet AX BX CX /\ Bet AY BY CY)
@@ -2077,21 +2077,18 @@ split; intro HCol; treat_equalities.
       elim H3; clear H3; intro HLe3; auto.
 
         {
-        apply leP_asym in HLe2; treat_equalities; [left; split; auto; right; auto|].
-        apply leP_trans with L2; auto.
+        left; split; [apply leP_trans with L2|]; assumption.
         }
 
         {
-        apply leP_asym in HLe2; treat_equalities; [left; split; auto; right; auto|].
-        apply leP_trans with L2; auto.
+        left; split; [|apply leP_trans with L1]; assumption.
         }
       }
-    do 2 (try (elim HElim; clear HElim; intro HElim;
-               try destruct HElim as [HLe1 HLe2])); [right; right|left|right; left].
+    destruct HElim as [Hc|[Hc|Hc]]; destruct Hc as [HLe1 HLe2]; [right; right|left|right; left].
       {
       assert (HBetX : Bet CX AX BX).
         {
-        apply l5_12_b; [assert_diffs; ColR|
+        apply l5_12_b; [ColR|
                 apply length_leP_le_1 with O E E' L2 L3|
                 apply length_leP_le_1 with O E E' L1 L3];
         auto; apply length_sym; auto.
@@ -2247,7 +2244,7 @@ split; intro HCol; treat_equalities.
       {
       assert (HBetX : Bet AX BX CX).
         {
-        apply l5_12_b; [assert_diffs; ColR|
+        apply l5_12_b; [ColR|
                 apply length_leP_le_1 with O E E' L1 L2|
                 apply length_leP_le_1 with O E E' L3 L2];
         auto; apply length_sym; auto.
@@ -2378,7 +2375,7 @@ split; intro HCol; treat_equalities.
       {
       assert (HBetX : Bet BX CX AX).
         {
-        apply l5_12_b; [assert_diffs; ColR|
+        apply l5_12_b; [ColR|
                 apply length_leP_le_1 with O E E' L3 L1|
                 apply length_leP_le_1 with O E E' L2 L1];
         auto; apply length_sym; auto.

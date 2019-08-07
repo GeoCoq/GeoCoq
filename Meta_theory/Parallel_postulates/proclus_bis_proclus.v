@@ -32,34 +32,20 @@ Proof.
   assert(HA' := l10_15 C0 P P A0).
   destruct HA' as [A' []]; Col.
   assert_diffs.
+  assert (Coplanar C D P A0) by (apply col2_cop__cop with A B; Col; Cop).
   elim(col_dec A0 P A').
   - intro.
-    apply (proclus_bis A0 P); Col; [| |intro; apply HNCol; ColR].
-
-      {
-      exists C0.
-      exists P.
-      split; Col.
-      split; [|Perp].
-      apply perp_right_comm.
-      apply (perp_col1 _ _ _ A'); Perp; Col.
-      }
-
-      {
-      apply pars__coplanar in HPar.
-      assert (Coplanar C D P A0) by (apply col2_cop__cop with A B; Col; Cop).
-      CopR.
-      }
+    apply (proclus_bis A0 P); Col; [|CopR|intro; apply HNCol; ColR].
+    exists C0.
+    exists P.
+    split; Col.
+    split; [|Perp].
+    apply perp_right_comm.
+    apply (perp_col1 _ _ _ A'); Perp; Col.
 
   - intro.
     exfalso.
     assert(HY := proclus_bis A' P C D P A0).
-    assert (Coplanar C D P A0).
-      {
-      apply pars__coplanar in HPar.
-      assert (Coplanar C D P A0) by (apply col2_cop__cop with A B; Col; Cop).
-      CopR.
-      }
     destruct HY as [Y []]; Col.
 
       {
@@ -67,17 +53,11 @@ Proof.
       }
 
       {
-      assert (Coplanar P A0 A' C0) by Cop.
-      elim (eq_dec_points C0 C); intro; treat_equalities;
-      elim (eq_dec_points C0 D); intro; treat_equalities; auto; try CopR.
-      assert (Coplanar P A0 C C0) by (apply col2_cop__cop with C D; Col; Cop).
-      assert (Coplanar P A0 D C0); [|CopR].
-      apply col2_cop__cop with C D; Col; Cop.
+      CopR.
       }
 
       {
-      assert(Habs : ~ Col Y A B) by (apply (par_not_col C D); Col).
-      apply Habs; ColR.
+      apply (par_not_col C D A B Y); ColR.
       }
 Qed.
 

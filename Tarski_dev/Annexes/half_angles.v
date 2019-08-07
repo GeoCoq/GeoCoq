@@ -630,24 +630,3 @@ Proof.
 Qed.
 
 End HalfAngle.
-
-Section HalfAngle_2D.
-
-Context `{T2D:Tarski_2D}.
-
-Lemma halfa_perp__os : forall P A O B T, HalfA P A O B -> Perp O P T O -> OS O T P A.
-Proof.
-  intros P A O B T HP HT.
-  assert (HCop := all_coplanar A O P T).
-  apply cop_halfa_perp__os with B; assumption.
-Qed.
-
-Lemma halfa_perp__os2 : forall P A O B T, HalfA P A O B -> Perp O P T O ->
-  OS O T P A /\ OS O T P B.
-Proof.
-  intros P A O B T HP HT.
-  assert (HCop := all_coplanar A O P T).
-  apply cop_halfa_perp__os2; assumption.
-Qed.
-
-End HalfAngle_2D.

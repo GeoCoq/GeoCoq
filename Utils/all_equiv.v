@@ -7,12 +7,14 @@ Lemma all_equiv_chara : forall l,
   all_equiv l <-> forall x y, In x l -> In y l -> x -> y.
 Proof.
   unfold all_equiv.
-  intro l; split; [intros He x y Hx Hy; rewrite (He x y); auto|].
+  intro l; split.
+    intros He x y Hx Hy; rewrite (He x y); auto.
   intros Himp x y Hxl Hyl.
   split; apply Himp; assumption.
 Qed.
 
 Definition all_equiv'_aux (l: list Prop) : Prop.
+Proof.
 induction l; [exact True|].
 induction l; [exact True|].
 exact ((a -> a0) /\ IHl).
@@ -59,6 +61,7 @@ elim l; [intro a|clear l; intros b l IHl a]; intros n1 n2 d1 d2 _ H Hn1 Hn2 Hn.
 Qed.
 
 Definition all_equiv' (l: list Prop) : Prop.
+Proof.
 induction l; [exact True|].
 exact ((last l a -> a) /\ all_equiv'_aux (a::l)).
 Defined.

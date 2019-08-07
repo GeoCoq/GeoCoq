@@ -38,11 +38,11 @@ Proof.
 intros.
 Name x the symmetric of P wrt Q.
 assert_all.
-assert (~ Col A P C) by (intro; search_contradiction).
+assert (~ Col A P C) by (intro; apply H; ColR).
 assert_diffs.
-assert (Parallelogram_strict A P C x) by (apply mid_plgs with Q;finish).
-assert (Cong A x B P) by (assert_paras_perm; assert_pars_perm; assert_all; eCong).
-assert (Par A x B P) by (assert_paras_perm; assert_pars_perm; apply par_col2_par with P C; finish).
+assert (Parallelogram_strict A P C x) by (apply mid_plgs with Q;auto).
+assert (Cong A x B P) by CongR.
+assert (Par A x B P) by (assert_pars_perm; apply par_col2_par with P C; Col).
 assert (HElim : Parallelogram A x B P \/ Parallelogram A x P B) by (apply par_cong_plg_2; assumption).
 
 induction HElim.
@@ -52,18 +52,17 @@ induction HElim.
  treat_equalities.
  search_contradiction.
 
-apply par_strict_col2_par_strict with x P;
-try solve[assert_paras_perm; assert_pars_perm; assert_all; Col].
+apply par_strict_col2_par_strict with x P; Col.
+assert_diffs; auto.
 (*
-apply ncol134_plg__pars1423; auto; intro; apply H; assert_diffs; ColR.
+apply ncol134_plg__pars1423; auto; intro; apply H; ColR.
 *)
 apply ncol123_plg__pars1423; auto; intro; apply H.
 assert (P <> x) by (intro; treat_equalities; Col).
 apply col_permut231; apply col123_124__col234 with P;
-[| |apply col_permut231]; auto.
-apply col_permut231; apply col123_124__col134 with Q; auto.
-apply col_permut231; apply col123_124__col134 with x;
-[|apply col_permut321|apply col_permut132]; auto.
+[| |apply col_permut231]; Col.
+apply col_permut231; apply col123_124__col134 with Q; Col.
+apply col_permut231; apply col123_124__col134 with x; Col.
 Qed.
 
 Lemma triangle_mid_par_strict_cong_aux : forall A B C P Q R,
@@ -71,39 +70,36 @@ Lemma triangle_mid_par_strict_cong_aux : forall A B C P Q R,
  Midpoint P B C ->
  Midpoint Q A C ->
  Midpoint R A B ->
- Par_strict A B Q P  /\ Cong A R P Q /\ Cong B R P Q .
-Proof with finish.
+ Par_strict A B Q P  /\ Cong A R P Q /\ Cong B R P Q.
+Proof.
 intros.
 Name x the symmetric of P wrt Q.
 assert_all.
 assert (~ Col A P C) by (intro; search_contradiction).
 assert_diffs.
-assert (Parallelogram_strict A P C x) by (apply mid_plgs with Q;finish).
+assert (Parallelogram_strict A P C x) by (apply mid_plgs with Q;auto).
 assert_all.
-assert_paras_perm.
 assert_pars_perm.
-assert (Cong A x B P) by eCong.
-assert (Par A x B P) by (apply par_col2_par with P C; finish).
+assert (Cong A x B P) by (apply cong_transitivity with P C; Cong).
+assert (Par A x B P) by (apply par_col2_par with P C; Col).
 assert (HElim : Parallelogram A x B P \/ Parallelogram A x P B) by (apply par_cong_plg_2; assumption).
 
 induction HElim.
 
- Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H23.
+ Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H22.
  treat_equalities.
  search_contradiction.
 
-assert_paras_perm.
 assert_pars_perm.
-assert (Par P Q A B) by (assert_diffs; apply par_col_par_2 with x; finish).
+assert (Par P Q A B) by (assert_diffs; apply par_col_par_2 with x; Col; Par).
 split.
 
-apply par_not_col_strict with x...
+apply par_not_col_strict with x; Col; Par.
  intro.
  assert_cols_perm.
  apply H.
  ColR.
-
-assert_congs_perm;split;eCong.
+assert_congs_perm;split;CongR.
 Qed.
 
 Lemma triangle_par_mid : forall A B C P Q,
@@ -164,7 +160,7 @@ Lemma triangle_mid_par_strict_cong : forall A B C P Q R,
  Midpoint R A B ->
  Par_strict A B Q P /\ Par_strict A C P R /\ Par_strict B C Q R /\
  Cong A R P Q /\ Cong B R P Q /\ Cong A Q P R /\ Cong C Q P R /\ Cong B P Q R /\ Cong C P Q R.
-Proof with finish.
+Proof.
 intros.
 permutation_intro_in_hyps.
 assert (Par_strict A B Q P /\ Cong A R P Q /\ Cong B R P Q)
@@ -175,10 +171,10 @@ assert (Par_strict C B Q R /\ Cong C P R Q /\ Cong B P R Q)
   by (apply triangle_mid_par_strict_cong_aux with A; Col).
 spliter.
 
-split...
-split...
-split...
-repeat split...
+split; trivial.
+split; Par.
+split; Par.
+repeat split; Cong.
 Qed.
 
 Lemma triangle_mid_par_flat_cong_aux : forall A B C P Q R,
@@ -188,27 +184,27 @@ Lemma triangle_mid_par_flat_cong_aux : forall A B C P Q R,
  Midpoint Q A C ->
  Midpoint R A B ->
  Par A B Q P /\ Cong A R P Q /\ Cong B R P Q.
-Proof with finish.
+Proof.
 intros.
 
 elim (eq_dec_points A C); intro.
 
   assert_all.
-  split; try eCong.
-  perm_apply (col_par)...
+  split; Cong.
+  perm_apply col_par.
 
 elim (eq_dec_points B C); intro.
   assert_all.
-  split; try eCong.
-  perm_apply (col_par)...
+  split; Cong.
+  perm_apply col_par.
 
 elim (eq_dec_points A P); intro.
   assert_all.
   assert (Col A B Q) by ColR.
   split.
-  perm_apply (col_par).
+  perm_apply col_par.
   assert_congs_perm.
-  split; eCong.
+  split; Cong.
 
 Name x the symmetric of P wrt Q.
 
@@ -216,25 +212,25 @@ elim (eq_dec_points P x); intro.
   treat_equalities; intuition.
 
 assert_cols.
-assert (Parallelogram A P C x) by (apply mid_plg_1 with Q;finish).
+assert (Parallelogram A P C x) by (apply mid_plg_1 with Q;auto).
 assert_all.
 assert_pars_perm.
-assert (Cong A x B P) by eCong.
-assert (Par A x B P) by (apply par_col2_par with P C; finish).
+assert (Cong A x B P) by (apply cong_transitivity with P C; Cong).
+assert (Par A x B P) by (apply par_col2_par with P C; Col; Par).
 
 assert (HElim : Parallelogram A x B P \/ Parallelogram A x P B) by (apply par_cong_plg_2; assumption).
 
 induction HElim.
 
- Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H19.
+ Name M the intersection of the diagonals (A B) and (x P) of the parallelogram H11.
  treat_equalities.
  search_contradiction.
 
  assert_paras_perm.
  assert_pars_perm.
- assert (Par P Q A B) by (apply par_col_par_2 with x; finish).
+ assert (Par P Q A B) by (apply par_col_par_2 with x; Col; Par).
  assert_congs_perm.
- repeat split; try eCong...
+ repeat split; Par; Cong.
 Qed.
 
 Lemma triangle_mid_par_flat_cong_1 : forall A B C P Q R,
@@ -277,7 +273,7 @@ Lemma triangle_mid_par_flat_cong : forall A B C P Q R,
  Midpoint R A B ->
  Par A B Q P /\ Par A C P R /\ Par B C Q R /\
  Cong A R P Q /\ Cong B R P Q /\ Cong A Q P R /\ Cong C Q P R /\ Cong B P Q R /\ Cong C P Q R.
-Proof with finish.
+Proof.
 intros.
 permutation_intro_in_hyps.
 assert (Par A B Q P /\ Cong A R P Q /\ Cong B R P Q) by (apply triangle_mid_par_flat_cong_aux with C; assumption).
@@ -285,7 +281,8 @@ assert (Par A C R P /\ Cong A Q P R /\ Cong C Q P R) by (apply triangle_mid_par_
 assert (Par C B Q R /\ Cong C P R Q /\ Cong B P R Q) by (apply triangle_mid_par_flat_cong_aux with A; Col).
 spliter.
 
-repeat split...
+repeat split; Cong; Par.
+
 Qed.
 
 Lemma triangle_mid_par_flat : forall A B C P Q,
@@ -310,7 +307,7 @@ Proof.
 intros.
 
 elim (col_dec A B C); intro.
-  apply triangle_mid_par_flat with C; finish.
+  apply triangle_mid_par_flat with C; auto.
 
   apply par_strict_par; apply triangle_mid_par_strict with C; assumption.
 Qed.
@@ -344,14 +341,14 @@ Lemma triangle_mid_par_cong_1 : forall A B C P Q R,
 Proof.
 intros.
 split.
-perm_apply (triangle_mid_par B C A Q R);finish.
+perm_apply (triangle_mid_par B C A Q R).
 induction (col_dec A B C).
  assert (Par C B Q R /\ Cong B P R Q).
-  apply (triangle_mid_par_flat_cong_2 C B A R Q P);finish.
+  apply (triangle_mid_par_flat_cong_2 C B A R Q P); Midpoint; Col.
   spliter.
-  finish.
+  Cong.
  assert (HTMT := triangle_mid_par_strict_cong A B C P Q R H3 H0 H1 H2); spliter.
- finish.
+ assumption.
 Qed.
 
 End TriangleMidpointsTheorems.

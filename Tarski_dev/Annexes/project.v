@@ -257,6 +257,7 @@ unfold Proj.
 repeat split.
 assumption.
 assumption.
+intro.
 Par.
 Col.
 induction (eq_dec_points P P').
@@ -427,8 +428,7 @@ exists Q.
 split; Col.
 
 assert(TS Q Q' P' R').
-eapply l9_8_2.
-2: apply H22.
+eapply l9_8_2; [|apply H22].
 apply l9_2.
 eapply l9_8_2.
 apply l9_2.
@@ -458,25 +458,16 @@ subst R'.
 
 assert(TS Q Q' P' R).
 
-eapply l9_8_2.
-2:apply H22.
+eapply l9_8_2; [|apply H22].
 repeat split; Col.
 intro.
 assert(Q'=P').
-eapply project_col_eq.
-apply H19.
-2: apply H1.
-2:apply H0.
-Col.
+apply project_col_eq with Q P A B X Y; Col.
 subst Q'.
 tauto.
 intro.
 assert(Q' = R).
-eapply project_col_eq.
-apply H19.
-2:apply H1.
-2:apply H2.
-Col.
+apply project_col_eq with Q R A B X Y; Col.
 subst Q'.
 tauto.
 exists Q.
@@ -581,8 +572,7 @@ exists Q.
 split; Col.
 
 assert(TS Qx Qy P' R').
-eapply l9_8_2.
-2:apply H23.
+eapply l9_8_2; [|apply H23].
 apply l9_2.
 eapply l9_8_2.
 eapply l9_2.
@@ -650,8 +640,7 @@ eapply (par_strict_one_side _ _ _ R'); Col.
 
 assert(TS Q Q' P R').
 apply l9_2.
-eapply l9_8_2.
-2:apply H22.
+eapply l9_8_2; [|apply H22].
 repeat split; Col.
 intro.
 assert(Q'=R').
@@ -791,9 +780,7 @@ clear H15.
 assert(CongA A' B' C' A'' B C'').
 
 apply (symmetry_preserves_conga _ _ _ _ _ _ M); Midpoint.
-eapply conga_trans.
-2: apply conga_sym.
-2:apply H13.
+eapply conga_trans; [|apply conga_sym, H13].
 
 show_distinct B A''.
 assert_diffs;intuition.
@@ -933,8 +920,8 @@ intro.
 subst.
 unfold Par_strict in H24.
 spliter.
-apply H29.
-exists C''; Col.
+apply H27.
+exists C''; split; Col.
 
 assert(TS A'' C'' A C).
 apply l9_2.
@@ -1019,32 +1006,14 @@ induction H16.
 
 
 
-eapply (out_conga A B C A B C).
-apply conga_refl.
-auto.
-auto.
-apply out_trivial.
-auto.
-apply out_trivial.
-auto.
-unfold Out.
+apply out2__conga.
 repeat split; auto.
-unfold Out.
 repeat split; auto.
 
-eapply (out_conga A B C A B C).
-apply conga_refl.
-auto.
-auto.
-apply out_trivial.
-auto.
-apply out_trivial.
-auto.
-unfold Out.
+apply out2__conga.
 repeat split; auto.
-right.
+left.
 Between.
-unfold Out.
 repeat split; auto.
 
 induction H16.
@@ -1118,9 +1087,9 @@ intro.
 subst.
 unfold Par_strict in H24.
 spliter.
-apply H29.
+apply H27.
 exists A''.
-Col.
+split; Col.
 
 assert(TS A'' C'' A C).
 eapply l9_8_2.
@@ -1137,36 +1106,18 @@ split; Col.
 
 induction H16.
 
-eapply (out_conga A B C A B C).
-apply conga_refl.
-auto.
-auto.
-apply out_trivial.
-auto.
-apply out_trivial.
-auto.
-unfold Out.
+apply out2__conga.
 repeat split; auto.
-unfold Out.
 repeat split; auto.
-right.
+left.
 Between.
 
-eapply (out_conga A B C A B C).
-apply conga_refl.
-auto.
-auto.
-apply out_trivial.
-auto.
-apply out_trivial.
-auto.
-unfold Out.
+apply out2__conga.
 repeat split; auto.
-right.
+left.
 Between.
-unfold Out.
 repeat split; auto.
-right.
+left.
 Between.
 Qed.
 
@@ -1446,8 +1397,7 @@ induction H7.
 assert(Col Q Q Q' /\ Col S Q Q').
 apply(parallel_uniqueness X Y Q Q' Q S Q); Col.
 Par.
-eapply par_trans.
-2: apply H.
+eapply par_trans; [|apply H].
 Par.
 spliter.
 apply par_left_comm.
@@ -1791,9 +1741,7 @@ apply null_vector in  HP3.
 subst S''.
 
 assert(Q' = S').
-eapply eqv_project_eq_eq.
-apply H13.
-2:apply H16.
+eapply eqv_project_eq_eq; [apply H13| |apply H16|..].
 eapply project_idem.
 apply H0.
 eapply project_idem.

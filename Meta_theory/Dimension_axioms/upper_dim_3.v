@@ -115,15 +115,17 @@ Proof.
     assert (HCong : Cong Q P Q P') by (apply per_double_cong with X; [|split]; Cong).
     apply (up X P' P Q A B); repeat split; [Cong..| | | | |];
       (apply cong_transitivity with P Q; [|Cong]);
-      apply l10_12 with X X; Perp; eCong.
+      apply l10_12 with X X; Perp;
+      apply cong_transitivity with P' X; Cong.
   - intros p4col S U1' U1 U2 U3 U4 H; spliter.
     assert (HMid : Midpoint S U1 U1') by (split; Cong).
     assert (HPer21 : Per U2 S U1) by (exists U1'; split; Cong).
+    assert_diffs.
     absurd (Col U2 U1 S).
-      assert_diffs; apply not_col_permutation_5, per_not_col; auto.
+      apply not_col_permutation_5, per_not_col; auto.
     apply p4col with U3 U4;
-      [assert_diffs; apply not_col_permutation_2, per_not_col; auto|..];
-      apply (l8_10 U2 S U1); trivial; repeat split; eCong.
+      [apply not_col_permutation_2, per_not_col; auto|..];
+      apply (l8_10 U2 S U1); trivial; repeat split; CongR.
 Qed.
 
 Lemma upper_dim_implies_orthonormal_family_axiom : upper_dim_3_axiom -> orthonormal_family_axiom.
@@ -248,7 +250,9 @@ Proof.
     intro.
     apply (not_bet_and_out P M Q); split; [Between|].
     assert (~ Coplanar M A B P) by (intro HP; apply HCong in HP; treat_equalities; auto).
-    assert_all_diffs_by_contradiction.
+    assert_diffs.
+    assert (forall Z, ~ Coplanar M A B Z -> Z <> T) by (intros Z HZ He; subst; apply HZ, HT).
+    assert (X <> T) by auto.
     replace M with T.
       apply l6_2 with X; Between.
     apply (col2_cop2__eq M A B P Q); Cop; ColR.

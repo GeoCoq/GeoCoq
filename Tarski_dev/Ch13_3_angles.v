@@ -964,7 +964,7 @@ Proof.
     intro.
     apply conga_distinct in H2.
     spliter.
-    assert(A<>C) by (intro; Between).
+    assert(A<>C) by (intro; treat_equalities; auto).
     induction H6.
       subst X.
       apply H1.
@@ -1162,12 +1162,7 @@ Proof.
     assert(HP:= anga_distincts a A B C H H0).
     spliter.
     assert(CongA A B C A' B C').
-      apply (out_conga A B C A B C).
-        apply conga_refl; auto.
-        apply out_trivial; auto.
-        apply out_trivial; auto.
-        auto.
-      auto.
+      apply out2__conga; apply l6_6; assumption.
     assert(HH:= H4 A' B C').
     destruct HH.
     apply H11.
@@ -1331,13 +1326,10 @@ Proof.
       unfold LeA.
       exists C'.
       split.
-        assert (HH:= is_ang_distinct A' B' C' a).
-        assert( A' <> B' /\ C' <> B').
-          apply HH.
-          split; auto.
+        assert (HH:= acute_distincts A' B' C' H).
         spliter.
         apply inangle3123; auto.
-      eapply (is_ang_conga _ _ _ _ _ _ a).
+      apply (is_ang_conga _ _ _ _ _ _ a).
         split; auto.
       split; auto.
     intros.
@@ -1357,7 +1349,7 @@ Proof.
     destruct HH.
     assert(a X Y Z).
       auto.
-    eapply (is_ang_conga _ _ _ _ _ _ a).
+    apply (is_ang_conga _ _ _ _ _ _ a).
       split; auto.
     split; auto.
 Qed.

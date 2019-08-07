@@ -86,8 +86,8 @@ assumption.
 intuition.
 Qed.
 
-Lemma lemma_congruenceflip : 
-   forall A B C D, 
+Lemma lemma_congruenceflip :
+   forall A B C D,
    Cong A B C D ->
    Cong B A D C.
 Proof.

@@ -6,6 +6,61 @@ Section alternate_interior_angles_proclus.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
+Lemma alternate_interior__proclus_aux :
+  greenberg_s_axiom ->
+  alternate_interior_angles_postulate -> forall A C D P Q,
+  Par_strict P A C D -> Perp C D P C -> OS P A C Q -> OS P C Q A -> OS P C Q D ->
+  exists Y, Col P Q Y /\ Col C D Y.
+Proof.
+  intros greenberg aia.
+  intros A C D P Q HParS HPerp HOS1 HOS2 HOS3.
+  destruct (symmetric_point_construction D C) as [D' []].
+  assert_diffs.
+  assert (~ Col P A Q) by (apply one_side_not_col124 with C, HOS1).
+  assert (~ Col P C Q) by (apply one_side_not_col123 with D, HOS3).
+  assert (~ Col P C D) by (apply one_side_not_col124 with Q, HOS3).
+  assert (LtA A P Q A P C) by (apply inangle__lta; [Col|Side]).
+  assert (OS P C D A) by (apply one_side_transitivity with Q; Side).
+  assert (Acute A P Q).
+  { exists A, P, C; split; auto.
+    apply (l11_17 P C D').
+      apply per_col with D; Col; Perp.
+    apply conga_sym, conga_right_comm, aia; [|apply par_col_par with D; Par; Col].
+    apply l9_8_2 with D; trivial.
+    apply invert_two_sides, bet__ts; Col.
+  }
+  destruct (greenberg P C D A P Q) as [S [HS1 HS2]]; Perp; Col.
+  assert (OS P C S D) by (apply invert_one_side, out_one_side; Col).
+  assert (HY : InAngle Q C P S).
+  { apply os2__inangle.
+      apply one_side_transitivity with D; Side.
+    exists A.
+    assert (OS P C S A).
+      apply one_side_transitivity with D; Side.
+    assert (Par_strict P A S C).
+    { apply lta_distincts in HS1; spliter.
+      apply par_strict_right_comm, par_strict_col_par_strict with D; Col.
+    }
+    assert (HTS : TS P S C A) by (apply l9_31; Side).
+    split; trivial.
+    assert (CongA A P S C S P) by (apply aia; [Side|Par]).
+    assert (HLta : LtA A P S A P Q) by (apply (conga_preserves_lta P S C A P Q); CongA).
+    destruct HLta as [HLea HNConga].
+    apply invert_two_sides, in_angle_two_sides; [|destruct HTS as [_ []]; Col|].
+    { intro.
+      assert (Out P Q S).
+        apply col_one_side_out with C; [|apply one_side_transitivity with A]; Side.
+      apply HNConga, out2__conga; Out.
+    }
+    apply l11_24, lea_in_angle; trivial.
+    apply one_side_transitivity with C; Side.
+  }
+  clear dependent A.
+  destruct HY as [_ [_ [_ [Y [HY1 HY2]]]]].
+  exists Y; split; [|ColR].
+  destruct HY2; [subst|]; Col.
+Qed.
+
 Lemma alternate_interior__proclus :
   greenberg_s_axiom ->
   alternate_interior_angles_postulate ->
@@ -17,192 +72,49 @@ Proof.
     intro HConf; exists P; split; Col.
   intro HStrict.
   assert(HParS : Par_strict A B C D).
-  { apply par_strict_symmetry.
-    apply (par_not_col_strict _ _ _ _ P); auto.
-    apply par_symmetry; auto.
+  { apply par_strict_symmetry, par_not_col_strict with P; auto.
+    apply par_symmetry, HPar.
   }
-  assert (HC0 := l8_18_existence C D P).
-  destruct HC0 as [C0 []]; auto.
-  elim(col_dec P Q C0).
-    intro; exists C0; split; auto.
-  intro HNCol1.
+  destruct (l8_18_existence C D P) as [C0 []]; auto.
+  destruct (col_dec P Q C0) as [|HNCol1].
+    exists C0; split; auto.
   assert_diffs.
   assert(HQ1 : exists Q1, Col Q P Q1 /\ OS A B C0 Q1).
-  { apply (cop_not_par_same_side _ _ _ _ P); Col.
-    apply not_col_permutation_1.
-    apply (par_not_col C D); Col; Par.
-    assert (Coplanar C D P A).
-      {
-      elim (eq_dec_points P A); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P B).
-      {
-      elim (eq_dec_points P B); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P C0) by Cop.
-    CopR.
+  { apply cop_not_par_same_side with P; Col.
+      apply not_col_permutation_1, (par_not_col C D); Col; Par.
+    apply coplanar_pseudo_trans with C D P; trivial; apply coplanar_perm_1;
+      [apply col_cop__cop with B|apply col_cop__cop with A; Col|]; Cop.
   }
-  destruct HQ1 as [Q1 []].
-  assert(~Col A B Q1) by (apply (one_side_not_col123 _ _ _ C0); Side).
-  assert(P<>Q1) by (intro; subst Q1; auto).
+  destruct HQ1 as [Q1 [HCol1 HOS1]].
+  assert(P<>Q1) by (intro; subst; apply one_side_not_col124 in HOS1; apply HOS1, HP).
   assert(~ Col P C0 Q1) by (intro; apply HNCol1; ColR).
-
-  assert(HNCol2 : ~Col C0 A B) by (apply (par_not_col C D); Par; Col).
   assert(HA1 : exists A1, Col A B A1 /\ OS P C0 Q1 A1).
-  { assert (Coplanar C D P A).
-      {
-      elim (eq_dec_points P A); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P B).
-      {
-      elim (eq_dec_points P B); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P C0) by Cop.
-    assert (Coplanar A B C0 Q1) by Cop.
-    elim(col_dec P C0 A).
-    2: intro; apply (cop_not_par_same_side _ _ _ _ P); Col.
-    intro.
-    assert(HA1 := cop_not_par_same_side P C0 B A P Q1).
-    destruct HA1 as [A1 []]; Col.
-    intro; apply HNCol2; ColR.
-    CopR.
-    exists A1; split; Col.
-    CopR.
+  { destruct (col_dec P C0 A).
+    - destruct (cop_not_par_same_side P C0 B A P Q1) as [A1 []]; Col.
+        intro; apply HParS; exists C0; split; ColR.
+       apply coplanar_perm_19, col_cop__cop with A; Col; Cop.
+      exists A1; split; Col.
+    - apply (cop_not_par_same_side _ _ _ _ P); Col.
+      apply coplanar_perm_19, col_cop__cop with B; Cop.
   }
   destruct HA1 as [A1 []].
-  assert(~Col P C0 A1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
-  assert(HNCol3 : ~Col P C D) by (apply (par_not_col A B); Col).
   assert(HC1 : exists C1, Col C D C1 /\ OS P C0 Q1 C1).
-  { assert (Coplanar C D P A).
-      {
-      elim (eq_dec_points P A); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P B).
-      {
-      elim (eq_dec_points P B); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P C0) by Cop.
-    assert (Coplanar A B C0 Q1) by Cop.
-    elim(col_dec P C0 C).
-    2: intro; apply (cop_not_par_same_side _ _ _ _ C0); Col.
-    intro.
-    assert(HC1 := cop_not_par_same_side P C0 D C C0 Q1).
-    destruct HC1 as [C1 []]; Col.
-    intro; apply HNCol3; ColR.
-    CopR.
+  { assert (Coplanar C D P Q1) by (apply col_cop__cop with Q; Col).
+    destruct (perp_not_col2 P C0 C D); Perp.
+      apply (cop_not_par_same_side _ _ _ _ C0); Col.
+      apply coplanar_perm_5, col_cop__cop with D; Cop.
+    destruct (cop_not_par_same_side P C0 D C C0 Q1) as [C1 []]; Col.
+      apply coplanar_perm_5, col_cop__cop with C; Col; Cop.
     exists C1; split; Col.
-    CopR.
   }
   destruct HC1 as [C1 []].
-  assert(HNCol4 : ~Col P C0 C1) by (apply (one_side_not_col123 _ _ _ Q1); Side).
-  assert(HC2 := symmetric_point_construction C1 C0).
-  destruct HC2 as [C2].
-  assert_cols.
   assert_diffs.
-  assert(~ Col C2 P C0) by (intro; apply HNCol4; ColR).
-  assert(Col C D C2) by ColR.
-  assert(InAngle Q1 C0 P A1) by (apply os2__inangle; Side; apply (col2_os__os A B); Col).
-  assert(LtA A1 P Q1 A1 P C0).
-  { split.
-    exists Q1; split; CongA; apply l11_24; auto.
-    intro HConga.
-    apply conga_cop__or_out_ts in HConga.
-    destruct HConga as [Habs|Habs].
-    assert_cols; Col.
-    apply l9_9 in Habs.
-    apply Habs.
-    apply one_side_symmetry.
+  destruct (alternate_interior__proclus_aux greenberg aia A1 C0 C1 P Q1) as [Y []]; auto.
+    apply (par_strict_col4__par_strict A B C D); auto.
+    apply (perp_col2 C D); auto.
     apply (col2_os__os A B); auto.
-    assert (Coplanar C D P A).
-      {
-      elim (eq_dec_points P A); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P B).
-      {
-      elim (eq_dec_points P B); intro; treat_equalities; Cop.
-      apply col2_cop__cop with A B; Col; apply par__coplanar; Par.
-      }
-    assert (Coplanar C D P C0) by Cop.
-    assert (Coplanar A B C0 Q1) by Cop.
-    assert (Coplanar P C0 Q1 A1) by Cop.
-    CopR.
-  }
-  assert(Acute A1 P Q1).
-  { exists A1.
-    exists P.
-    exists C0.
-    split; auto.
-    apply (l11_17 P C0 C2).
-    - apply perp_per_1; auto.
-      apply perp_sym.
-      apply (perp_col2 C D); Perp.
-
-    - apply conga_sym.
-      apply conga_right_comm.
-      apply aia.
-      2: apply (par_col4__par A B C D); Col.
-      apply (l9_8_2 _ _ C1).
-      repeat split; Col; exists C0; split; Col; Between.
-      apply (one_side_transitivity _ _ _ Q1); Side.
-   }
-   assert (HS := greenberg P C0 C1 A1 P Q1).
-   destruct HS as [S []]; auto.
-     intro; apply HQ; ColR.
-     apply perp_per_1; auto; apply perp_sym; apply (perp_col2 C D); Perp.
-   assert(Col C D S) by ColR.
-   assert_diffs.
-   assert(OS P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
-   assert(HY : InAngle Q1 C0 P S).
-   { assert(OS P C0 S C1) by (apply invert_one_side; apply out_one_side; Col).
-     assert(~ Col P C0 S) by (apply (one_side_not_col123 _ _ _ C1); auto).
-     apply os2__inangle.
-     apply (one_side_transitivity _ _ _ C1); Side.
-     exists A1.
-     assert(OS P C0 S A1).
-     { apply (one_side_transitivity _ _ _ C1); auto.
-       apply (one_side_transitivity _ _ _ Q1); Side.
-     }
-     assert(TS P S C0 A1) by (apply l9_31; auto; apply l12_6; apply (par_strict_col4__par_strict A B C D); auto).
-     split; auto.
-     assert(CongA A1 P S C0 S P) by (apply aia; Side; apply (par_col4__par A B C D); auto).
-     assert(Hlta : LtA A1 P S A1 P Q1) by (apply (conga_preserves_lta P S C0 A1 P Q1); CongA).
-     destruct Hlta as [Hlea HNConga].
-     assert_diffs.
-     apply invert_two_sides.
-     apply in_angle_two_sides; auto.
-     2: apply not_col_permutation_1; apply (par_not_col C D); Col; apply (par_strict_col2_par_strict _ _ A B); Par.
-     - intro.
-       elim (out_dec P S Q1); intro Habs.
-       apply HNConga; apply (out_conga A1 P S A1 P S); try (apply out_trivial); CongA.
-       apply not_out_bet in Habs; Col.
-       assert(~ OS P C0 S A1); auto.
-       apply l9_9.
-       apply l9_2.
-       apply (l9_8_2 _ _ Q1); auto.
-       repeat split; Col.
-       exists P.
-       split; Col; Between.
-
-     - apply l11_24.
-       apply lea_in_angle; Lea; CongA.
-       apply (one_side_transitivity _ _ _ C0).
-       apply one_side_symmetry; apply (col2_os__os A B); auto.
-       apply l12_6; apply (par_strict_col4__par_strict A B C D); auto.
-   }
-   destruct HY as [_ [_ [_ [Y [HY1 HY2]]]]].
-   exists Y.
-   split.
-   2: ColR.
-   destruct HY2.
-   subst Y; Col.
-   ColR.
+  clear dependent A.
+  exists Y; split; ColR.
 Qed.
 
 End alternate_interior_angles_proclus.

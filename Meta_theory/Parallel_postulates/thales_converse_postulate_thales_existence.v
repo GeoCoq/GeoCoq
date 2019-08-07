@@ -1,5 +1,5 @@
 Require Import GeoCoq.Axioms.parallel_postulates.
-Require Import GeoCoq.Tarski_dev.Annexes.saccheri.
+Require Import GeoCoq.Tarski_dev.Ch10_line_reflexivity.
 
 Section thales_converse_postulate_thales_existence.
 
@@ -14,9 +14,9 @@ Proof.
   assert(~ Col C A B) by (apply (one_side_not_col123 _ _ _ B0); Side).
   assert(Per A C B) by Perp.
   destruct (midpoint_existence A B) as [M].
-  exists A; exists B; exists C; exists M.
+  exists A, B, C, M.
   repeat (split; Col).
-  apply (thales _ B); Col.
+  apply (thales _ B); assumption.
 Qed.
 
 End thales_converse_postulate_thales_existence.

@@ -1,8 +1,8 @@
 Require Import GeoCoq.Tarski_dev.Ch12_parallel.
 Require Import GeoCoq.Axioms.euclidean_axioms.
-Require Export GeoCoq.Axioms.continuity_axioms.
-Require Export GeoCoq.Meta_theory.Continuity.elementary_continuity_props.
-Require Export GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
+Require Import GeoCoq.Axioms.continuity_axioms.
+Require Import GeoCoq.Meta_theory.Continuity.elementary_continuity_props.
+Require Import GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 
 Import euclidean_axioms.
 
@@ -13,8 +13,8 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Definition Tcircle : Type := Tpoint*Tpoint*Tpoint %type.
 
-Definition OnCirc P (C:Tcircle) := 
-  match C with 
+Definition OnCirc P (C:Tcircle) :=
+  match C with
   (X,A,B) => tarski_axioms.Cong X P A B
   end.
 
@@ -22,18 +22,18 @@ Definition CI (J:Tcircle) A C D := J=(A,C,D) /\ C<>D.
 
 Definition InCirc P (J:Tcircle) :=
    match J with
-  (C,A,B) => 
+  (C,A,B) =>
    exists X Y, Definitions.BetS X C Y /\ tarski_axioms.Cong C Y A B /\
                tarski_axioms.Cong C X A B /\ Definitions.BetS X P Y
   end.
 
 Definition OutCirc P (J:Tcircle) :=
    match J with
-  (C,A,B) => 
+  (C,A,B) =>
       exists X, Definitions.BetS C X P /\ tarski_axioms.Cong C X A B
  end.
 
-Lemma on : 
+Lemma on :
  forall A B C D J, CI J A C D /\ OnCirc B J ->
                    tarski_axioms.Cong A B C D.
 Proof.
@@ -46,11 +46,11 @@ congruence.
 Qed.
 
 Lemma inside : forall A B C J P,
-  CI J C A B /\ InCirc P J <-> 
-  exists X Y, CI J C A B /\ 
-   Definitions.BetS X C Y /\ 
-   tarski_axioms.Cong C Y A B /\ 
-   tarski_axioms.Cong C X A B /\ 
+  CI J C A B /\ InCirc P J <->
+  exists X Y, CI J C A B /\
+   Definitions.BetS X C Y /\
+   tarski_axioms.Cong C Y A B /\
+   tarski_axioms.Cong C X A B /\
    Definitions.BetS X P Y.
 Proof.
 intros.
@@ -103,7 +103,7 @@ Lemma bet_cases : forall B C D1 D2,
 Proof.
 intros.
 assert (T:Bet D1 C B \/ Bet D1 B C).
-  apply (l5_3 D1 C B D2);unfold Definitions.BetS in *;spliter;finish.
+  apply (l5_3 D1 C B D2);unfold Definitions.BetS in *;spliter;Between.
  destruct T.
  right.
  unfold Definitions.BetS in *;spliter.
@@ -144,25 +144,18 @@ assert (HColD: Definitions.Col A C C)
 assert (HBet: Bet C C D2) by Between.
 destruct (H C D2 A C C HColD H2 HBet) as [Z1 [Z2 HZ]].
 spliter.
-exists Z1. exists Z2.
-repeat split;try assumption.
-unfold OnCircle, OnCirc in *;eCong.
-unfold OnCircle, OnCirc in *;eCong.
+exists Z1, Z2.
 assert (C<>D2)
  by (unfold Definitions.BetS in *;spliter;auto).
-assert (Z1<>Z2) by auto.
-unfold OnCircle in *.
-intro;treat_equalities;intuition.
-unfold OnCircle in *.
-intro;treat_equalities.
-unfold Definitions.BetS in *;intuition.
+repeat split;try assumption; try (intro; treat_equalities; auto); unfold OnCirc;CongR.
+
 assert (TwoCases:Definitions.BetS D1 B C \/ Definitions.BetS C B D2)
  by (apply bet_cases;auto).
 destruct TwoCases.
 - assert (HColD: Definitions.Col A B B)
    by (unfold Definitions.Col;Between).
 assert (HBet:Bet C B D1)
- by (unfold Definitions.BetS in *;spliter;finish).
+ by (unfold Definitions.BetS in *;spliter;Between).
 destruct (H C D1 A B B HColD H2 HBet)
  as [Z1 [Z2 HZ]].
 exists Z1.
@@ -175,29 +168,28 @@ assert (Z1<>B).
 {
  intro. subst.
  unfold OnCircle in *.
- assert (B=D1) by (apply between_cong with C;finish).
+ assert (B=D1) by (apply between_cong with C;auto).
  subst. intuition.
 }
 assert_diffs.
 assert (B<>Z2).
 {
  intro. subst.
- assert (Bet C Z2 D1) 
-  by (unfold BetS in *;spliter;finish).
+ assert (Bet C Z2 D1)
+  by (unfold BetS in *;spliter;auto).
  unfold OnCircle in *.
  assert (Z2=D1)
-  by (apply between_cong with C;finish).
+  by (apply between_cong with C;auto).
  intuition.
 }
 assert (Definitions.BetS Z1 B Z2)
  by (unfold Definitions.BetS;auto).
-unfold OnCirc;simpl.
-unfold OnCircle in *.
-repeat split; eCong.
+unfold OnCirc.
+repeat split; CongR.
 - assert (HColD: Definitions.Col A B B)
    by (unfold Definitions.Col;Between).
 assert (HBet:Bet C B D2)
- by (unfold Definitions.BetS in *;spliter;finish).
+ by (unfold Definitions.BetS in *;spliter;auto).
 destruct (H C D2 A B B HColD H2 HBet)
  as [Z1 [Z2 HZ]].
 exists Z1.
@@ -210,25 +202,24 @@ assert (Z1<>B).
 {
  intro. subst.
  unfold OnCircle in *.
- assert (B=D2) by (apply between_cong with C;finish).
+ assert (B=D2) by (apply between_cong with C;auto).
  subst. intuition.
 }
 assert_diffs.
 assert (B<>Z2).
 {
  intro. subst.
- assert (Bet C Z2 D2) 
-  by (unfold BetS in *;spliter;finish).
+ assert (Bet C Z2 D2)
+  by (unfold BetS in *;spliter;auto).
  unfold OnCircle in *.
  assert (Z2=D2)
-  by (apply between_cong with C;finish).
+  by (apply between_cong with C;auto).
  intuition.
 }
 assert (Definitions.BetS Z1 B Z2)
  by (unfold Definitions.BetS;auto).
-unfold OnCirc;simpl.
-unfold OnCircle in *.
-repeat split; eCong.
+unfold OnCirc.
+repeat split; CongR.
 Qed.
 
 Lemma circle_circle' :
@@ -257,10 +248,8 @@ spliter.
 unfold OutCirc in *.
 destruct H2 as [X HX].
 spliter.
-assert (OnCircle P D Q)
- by (unfold OnCircle;eCong).
-assert (OnCircle Q D Q)
- by (unfold OnCircle;eCong).
+assert (OnCircle P D Q) by CongR.
+assert (OnCircle Q D Q) by CongR.
 assert (InCircle P C D1).
 {
  unfold InCircle.
@@ -270,23 +259,23 @@ assert (InCircle P C D1).
   by (apply bet_cases;auto).
  destruct TwoCases.
  exists P.
- split; unfold Definitions.BetS in *;spliter; finish.
+ split; Cong; unfold Definitions.BetS in *;spliter; Between.
  apply l5_6 with C P C D2.
  exists P.
- split; unfold Definitions.BetS in *;spliter; finish.
- finish.
- eCong.
+ split; Cong; unfold Definitions.BetS in *;spliter; auto.
+ Cong.
+ apply cong_transitivity with R S; Cong.
 }
 assert (OutCircle Q C D1).
 {
  unfold OutCircle.
  exists X.
- split; unfold Definitions.BetS in *;spliter; eCong.
+ split; [unfold Definitions.BetS in *;spliter; auto|CongR].
 }
 assert (Hex: exists Z : Tpoint, OnCircle Z C D1 /\ OnCircle Z D Q) by eauto.
-destruct Hex as [Z HZ].
+destruct Hex as [Z []].
 exists Z.
-unfold OnCircle in *;spliter;split;eCong.
+split; CongR.
 Qed.
 
 End circle_continuity.
@@ -298,9 +287,9 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 Global Instance Euclid_neutral_follows_from_Tarski_neutral : euclidean_neutral.
 Proof.
 eapply (Build_euclidean_neutral Tpoint Tcircle tarski_axioms.Cong Tarski_dev.Definitions.BetS (* InCirc OnCirc OutCirc*) tarski_axioms.PA tarski_axioms.PB tarski_axioms.PC CI).
-- intros;apply cong_transitivity with P Q;finish.
-- intro;finish.
-- intro;finish.
+- intros;apply cong_transitivity with P Q;Cong.
+- intro;Cong.
+- intro;Cong.
 - intros;apply (l2_11 A B C a b c); unfold Definitions.BetS in *;intuition.
 - intros.
   destruct (eq_dec_points A B);intuition.
@@ -322,7 +311,7 @@ eapply (Build_euclidean_neutral Tpoint Tcircle tarski_axioms.Cong Tarski_dev.Def
 - intros; unfold Definitions.BetS;
 intro;spliter;treat_equalities;intuition.
 - intros;unfold Definitions.BetS in *;
-intros;spliter;finish.
+intros;spliter;Between.
 - intros;unfold Definitions.BetS in *;
 intros;spliter;try assumption;eBetween.
 - intros;unfold Definitions.BetS in *;
@@ -333,14 +322,14 @@ assert (T3:=eq_dec_points A B).
 assert (T4:=eq_dec_points A C).
 assert (T5:=eq_dec_points B C).
 tauto.
-- intros;intro;treat_equalities;finish.
+- intros;intro;treat_equalities;auto.
 - intros.
 assert (tarski_axioms.Cong C D c d)
  by (apply (five_segment A a B b C c D d);
 unfold Definitions.BetS in *;spliter;auto).
-finish.
+Cong.
 - intros;unfold Definitions.BetS in *;spliter.
-  destruct (inner_pasch A B C P Q H H0) as [X [HXa HXb]]. 
+  destruct (inner_pasch A B C P Q H H0) as [X [HXa HXb]].
   exists X.
   assert_diffs.
   assert (~ Bet A C B) by tauto.
@@ -362,8 +351,8 @@ finish.
   assert (B<>A) by auto.
   assert (Q<>B) by auto.
   assert (~ Bet Q B A) by tauto.
- assert (~ Bet A Q B) by finish.
-  assert (Bet Q C B) by finish.
+ assert (~ Bet A Q B) by Between.
+  assert (Bet Q C B) by Between.
   destruct (outer_pasch Q A C B P H18 H) as [X [HXa HXb]].
   exists X.
    assert_diffs.
@@ -418,10 +407,10 @@ destruct (eq_dec_points B C).
 right;right;left;auto.
 decompose [or] H.
 right;right;right;right;left;auto.
-right;right;right;right;right;finish.
-right;right;right;left;finish.
+right;right;right;right;right;Between.
+right;right;right;left;Between.
 intros.
-decompose [or] H;subst;spliter;finish.
+decompose [or] H;subst;spliter;Between.
 Qed.
 
 Lemma nCol_not_Col : forall A B C,
@@ -442,13 +431,13 @@ intros.
 destruct H as [U [V HUV]];spliter.
 intro.
 unfold Definitions.BetS in *;spliter.
-assert (tarski_axioms.Cong X U X V) by eCong.
-assert (Midpoint X U V) by (split;finish).
+assert (tarski_axioms.Cong X U X V) by CongR.
+assert (Midpoint X U V) by (split;Cong).
 assert (Midpoint X A V).
 apply (cong_col_mid A X V).
 assumption.
 ColR.
-eCong.
+CongR.
 treat_equalities;intuition.
 Qed.
 
@@ -472,23 +461,23 @@ exists X0.
 exists W.
 assert_bets.
 assert_diffs.
-split;finish.
-unfold Definitions.BetS;finish.
-split;finish.
-split;finish.
-unfold Definitions.BetS;finish.
+split.
+unfold Definitions.BetS;Between.
+split;Cong.
+split;Cong.
+unfold Definitions.BetS;Between.
 destruct (segment_construction_3 C0 V V W H1 H0) as [X0 [HX0 HX1]].
 destruct (symmetric_point_construction X0 C0) as [Y0 HY0].
 exists X0.
 exists Y0.
 assert_bets.
 assert_diffs.
-unfold Definitions.BetS;split;finish.
+unfold Definitions.BetS;split;auto.
 split.
-eCong.
+apply cong_transitivity with C0 X0; Cong.
 split.
-eCong.
-split;finish.
+auto.
+split;auto.
 - spliter.
 unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *;spliter.
 inversion H2;subst.
@@ -499,51 +488,48 @@ assert (C0 <> A).
  }
 
 destruct (segment_construction_3 C0 A V W H4 H3) as [X0 [HX0 HX1]].
-destruct (eq_dec_points A X0).
+assert (A <> X0).
  {
-  treat_equalities.
-  assert_diffs.
-  assert (HCong: tarski_axioms.Cong C0 Y C0 X) by eCong.
+  intro.
+  subst.
+  assert (HCong: tarski_axioms.Cong C0 Y C0 X) by CongR.
   unfold Definitions.BetS in *;spliter.
   assert (eq:= between_cong C0 X Y H HCong).
-  subst;intuition.
+  contradiction.
  }
 
 destruct (symmetric_point_construction X0 C0) as [Y0 HY0].
-destruct (eq_dec_points A Y0).
+assert (A <> Y0).
  {
-  treat_equalities.
+  intro.
+  subst.
   unfold Definitions.BetS in *;spliter.
-  assert_diffs.
-  unfold Midpoint in *;spliter.
-  assert (HCong: tarski_axioms.Cong C0 X0 C0 X) by eCong.
-  assert (HCong2: tarski_axioms.Cong C0 Y C0 X) by eCong.
-  assert (eq:= between_cong C0 X Y H HCong2).
-  subst;intuition.  
+  assert (HCong: tarski_axioms.Cong C0 Y C0 X) by CongR.
+  assert (eq:= between_cong C0 X Y H HCong).
+  contradiction.
  }
 destruct HX0 as [HA [ HB [HC | HC]]].
 exists X0.
 exists Y0.
 assert_diffs.
-split;unfold Definitions.BetS;finish.
+split;unfold Definitions.BetS;Between.
 split.
-eCong.
+apply cong_transitivity with C0 X0; Cong.
 split.
-eCong.
-assert_bets;finish.
-split;finish.
-eBetween.
+Cong.
+split;auto.
+assert_bets; eBetween.
 
 assert (Lt C0 Y C0 X)
  by (unfold Definitions.BetS in *;spliter;apply (bet__lt1213);auto).
-assert (Le C0 X0 C0 A) 
+assert (Le C0 X0 C0 A)
  by (apply (bet__le1213);auto).
-assert (HCong: tarski_axioms.Cong C0 X0 C0 X) by eCong.
+assert (HCong: tarski_axioms.Cong C0 X0 C0 X) by CongR.
 assert (Lt C0 X C0 A)
  by (apply (cong2_lt__lt C0 X0 C0 A);finish).
 assert (Lt C0 Y C0 A)
  by (apply (le3456_lt__lt) with C0 X;auto using lt__le).
-assert (Hc : tarski_axioms.Cong C0 Y C0 A) by finish.
+assert (Hc : tarski_axioms.Cong C0 Y C0 A) by Cong.
 apply cong__nlt in Hc.
 intuition.
 Qed.
@@ -557,7 +543,7 @@ exists Q.
 exists R.
 exists P.
 unfold euclidean_axioms.CI;simpl;unfold CI.
-finish.
+auto.
 Qed.
 
 Lemma eOnCirc_OnCirc : forall A K, euclidean_axioms.OnCirc A K -> OnCirc A K.
@@ -571,7 +557,7 @@ destruct H as [X [Y [U HXY]]].
 spliter.
 unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *.
 spliter.
-inversion H;subst;finish.
+inversion H;subst; auto.
 Qed.
 
 Lemma eOutCirc_OutCirc : forall A K, euclidean_axioms.OutCirc A K -> OutCirc A K.
@@ -585,7 +571,7 @@ spliter.
 unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *.
 spliter.
 inversion H;subst.
-exists X;finish.
+exists X;auto.
 Qed.
 
 
@@ -601,7 +587,7 @@ destruct (symmetric_point_construction W V) as [Y HY].
 exists Y.
 assert_diffs.
 unfold Definitions.BetS.
-split;finish.
+repeat split;Between;Cong.
 destruct (segment_construction_3 U V V W H0 H) as [X HX].
 destruct (symmetric_point_construction X U) as [Y HY].
 spliter.
@@ -609,12 +595,12 @@ assert_diffs.
 assert_bets.
 exists X. exists Y.
 split.
-unfold Definitions.BetS;finish.
+unfold Definitions.BetS;auto.
 split.
-eCong.
+apply cong_transitivity with U X; Cong.
 split.
-eCong.
-unfold Definitions.BetS;finish.
+Cong.
+unfold Definitions.BetS;auto.
 Qed.
 
 Global Instance Euclid_neutral_ruler_compass_follows_from_Tarski_ruler_and_compass :
@@ -642,14 +628,14 @@ split.
   assumption.
   split.
   assumption.
-  unfold Definitions.BetS in *;spliter;finish.
+  unfold Definitions.BetS in *;spliter;auto.
 
-  
+
   split.
   destruct K as [p q].
   destruct p.
   apply OnCirc_OnCirc.
-  { 
+  {
    unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *.
    spliter.
    inversion H;subst;auto.
@@ -665,7 +651,7 @@ split.
    inversion H;subst;auto.
   }
   assumption.
-  
+
   unfold BetS;simpl;auto.
 
  exists Y.
@@ -677,18 +663,17 @@ split.
  unfold Definitions.Col in H2.
  destruct H2.
  unfold BetS;simpl;unfold Definitions.BetS.
- split;finish.
+ split;auto.
  destruct H2.
  exfalso;apply H7.
- eBetween.
- unfold  BetS;simpl;unfold Definitions.BetS.
- split;finish.
-  exfalso;apply H7;eBetween.
+ apply outer_transitivity_between2 with X; Between.
+ exfalso;apply H7.
+ apply (between_exchange3 X); auto.
  split.
   destruct K as [p q].
   destruct p.
   apply OnCirc_OnCirc.
-  { 
+  {
    unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *.
    spliter.
    inversion H;subst;auto.
@@ -698,13 +683,13 @@ split.
     destruct K as [p q].
   destruct p.
   apply OnCirc_OnCirc.
-  { 
+  {
    unfold euclidean_axioms.CI in *;simpl in *;unfold CI in *.
    spliter.
    inversion H;subst;auto.
   }
   assumption.
-  unfold BetS;simpl;unfold Definitions.BetS in *;spliter;finish.
+  unfold BetS;simpl;unfold Definitions.BetS in *;spliter;Between.
 
 - simpl.
   intros.
@@ -744,7 +729,7 @@ Lemma Euclid5 :
     exists X, BetS p a X /\ BetS s q X.
 Proof.
 intros.
-assert (T:tarski_s_parallel_postulate -> 
+assert (T:tarski_s_parallel_postulate ->
         euclid_5).
 {
  assert (T:=equivalent_postulates_without_decidability_of_intersection_of_lines_bis).
@@ -760,11 +745,11 @@ assert (T3:exists I : Tpoint, Definitions.BetS s q I /\ Definitions.BetS p a I).
 apply (T2 p q r s t a);
 auto using BetS_BetS.
 unfold BetS in *;simpl in *;
-unfold Definitions.BetS in *;spliter;finish.
+unfold Definitions.BetS in *;spliter;Between.
 intro HnCol.
 apply Col_Col in HnCol.
 apply nCol_not_Col in H4;intuition.
-finish.
+Cong.
 destruct T3 as [X HX].
 exists X;spliter;auto.
 Qed.

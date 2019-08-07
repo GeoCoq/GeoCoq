@@ -14,7 +14,7 @@ Proof.
     exists O1; repeat split; Cop.
   destruct (l11_62_existence A B C O1) as [O []].
   exists O.
-  repeat split; try apply cong2_per2__cong with O1 O1; Cong; Cop.
+  repeat split; try apply cong2_per2__cong with O1 O1; finish.
 Qed.
 
 Lemma concyclic_trans : forall A B C D E,
@@ -23,8 +23,7 @@ Lemma concyclic_trans : forall A B C D E,
 Proof.
 intros.
 split.
-unfold Concyclic in *; spliter.
-apply coplanar_trans_1 with C; Col; Cop.
+unfold Concyclic in *; spliter; CopR.
 apply concyclic_aux in H0.
 apply concyclic_aux in H1.
 decompose [ex and] H0;clear H0.
@@ -34,8 +33,8 @@ repeat split;Cong.
 assert (x=x0).
 assert_diffs.
 apply is_circumcenter_uniqueness with A B C;try assumption.
-unfold is_circumcenter;repeat split;[eCong..|Cop].
-unfold is_circumcenter;repeat split;[eCong..|Cop].
+repeat split; [CongR..|Cop].
+repeat split; [CongR..|Cop].
 subst.
 Cong.
 Qed.
@@ -45,7 +44,7 @@ Lemma concyclic_perm_1: forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_2 : forall A B C D,
@@ -53,7 +52,7 @@ Lemma concyclic_perm_2 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_3 : forall A B C D,
@@ -61,7 +60,7 @@ Lemma concyclic_perm_3 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_4 : forall A B C D,
@@ -69,7 +68,7 @@ Lemma concyclic_perm_4 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_5 : forall A B C D,
@@ -77,7 +76,7 @@ Lemma concyclic_perm_5 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_6 : forall A B C D,
@@ -85,7 +84,7 @@ Lemma concyclic_perm_6 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_7 : forall A B C D,
@@ -93,7 +92,7 @@ Lemma concyclic_perm_7 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_8 : forall A B C D,
@@ -101,7 +100,7 @@ Lemma concyclic_perm_8 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_9 : forall A B C D,
@@ -109,7 +108,7 @@ Lemma concyclic_perm_9 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_10 : forall A B C D,
@@ -117,7 +116,7 @@ Lemma concyclic_perm_10 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_11 : forall A B C D,
@@ -125,7 +124,7 @@ Lemma concyclic_perm_11 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_12 : forall A B C D,
@@ -133,7 +132,7 @@ Lemma concyclic_perm_12 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_13 : forall A B C D,
@@ -141,7 +140,7 @@ Lemma concyclic_perm_13 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_14 : forall A B C D,
@@ -149,7 +148,7 @@ Lemma concyclic_perm_14 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_15 : forall A B C D,
@@ -157,7 +156,7 @@ Lemma concyclic_perm_15 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_16 : forall A B C D,
@@ -165,7 +164,7 @@ Lemma concyclic_perm_16 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_17 : forall A B C D,
@@ -173,7 +172,7 @@ Lemma concyclic_perm_17 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_18 : forall A B C D,
@@ -181,7 +180,7 @@ Lemma concyclic_perm_18 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_19 : forall A B C D,
@@ -189,7 +188,7 @@ Lemma concyclic_perm_19 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_20 : forall A B C D,
@@ -197,7 +196,7 @@ Lemma concyclic_perm_20 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_21 : forall A B C D,
@@ -205,7 +204,7 @@ Lemma concyclic_perm_21 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_22 : forall A B C D,
@@ -213,7 +212,7 @@ Lemma concyclic_perm_22 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_perm_23 : forall A B C D,
@@ -221,7 +220,7 @@ Lemma concyclic_perm_23 : forall A B C D,
 Proof.
 intros A B C D H.
 destruct H as [H1 [X H2]].
-split; [Cop|spliter; exists X; repeat split; eCong..].
+split; [Cop|spliter; exists X; repeat split; CongR..].
 Qed.
 
 Lemma concyclic_1123 : forall A B C,
