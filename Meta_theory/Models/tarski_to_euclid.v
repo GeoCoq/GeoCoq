@@ -4,6 +4,7 @@ Require Import GeoCoq.Axioms.continuity_axioms.
 Require Import GeoCoq.Meta_theory.Continuity.elementary_continuity_props.
 Require Import GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 
+Import circles.
 Import euclidean_axioms.
 
 Section Tarski_neutral_to_Euclid_neutral.

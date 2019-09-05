@@ -47,7 +47,7 @@ Lemma bet_suma__suma : forall A B C D E F G H I, G <> H -> H <> I ->
   Bet G H I -> SumA A B C B C A D E F -> SumA D E F C A B G H I.
 Proof.
   intros A B C D E F G H I HGH HHI HBet HSuma.
-  assert_diffs.
+  suma.assert_diffs.
   destruct (bet__trisuma A B C G H I) as [D' [E' [F' []]]]; auto.
   apply (conga3_suma__suma D' E' F' C A B G H I); try apply conga_refl; auto.
   apply (suma2__conga A B C B C A); assumption.
@@ -56,7 +56,7 @@ Qed.
 Lemma suma__suppa : forall A B C D E F, SumA A B C B C A D E F -> SuppA D E F C A B.
 Proof.
   intros A B C D E F HSuma.
-  assert_diffs.
+  suma.assert_diffs.
   destruct (point_construction_different A B) as [A' []].
   apply bet_suma__suppa with A B A'; trivial.
   apply bet_suma__suma; auto.
@@ -98,7 +98,7 @@ Proof.
   intros A B C O HAC HBC HPer HCong1 HCong2 HCop.
   destruct (midpoint_existence A B) as [M HM].
   assert (M = O); [|subst; apply HM].
-  assert_diffs.
+  suma.assert_diffs.
   apply (cong4_cop2__eq A C B); Cong; [|Cop..].
   apply cong_commutativity, thales_converse_theorem with B; assumption.
 Qed.
@@ -109,7 +109,7 @@ Proof.
   intros A B C B' HAB HBC HAB' HBet HCong.
   apply ghalfa_chara; split.
     apply cong__acute; auto.
-  assert_diffs.
+  suma.assert_diffs.
   apply (conga3_suma__suma A B C B C A C A B'); try apply conga_refl; auto.
     apply high_school_exterior_angle_theorem; auto.
   apply conga_left_comm, l11_44_1_a; Cong.
@@ -129,7 +129,7 @@ Proof.
   { assert (HNCol1 : ~ Col A B O) by (eapply one_side_not_col123, HOS).
     assert (M <> O) by (intro; treat_equalities; apply HNCol1; Col).
     assert (O <> C) by (intro; treat_equalities; auto).
-    assert_diffs.
+    suma.assert_diffs.
     assert (Cong O A O C) by (apply (onc2__cong O P); assumption).
     destruct (angle_partition M O C); auto.
     - assert (HMO := H).
@@ -154,7 +154,7 @@ Proof.
       }
       assert (M <> H) by (intro; subst; apply one_side_not_col124 in HOS1; apply HOS1; Col).
       assert (Per M H C) by (apply perp_per_1, perp_left_comm, perp_col with O; Col).
-      apply lt_transitivity with H C; [|assert_diffs; apply l11_46; auto].
+      apply lt_transitivity with H C; [|suma.assert_diffs; apply l11_46; auto].
       apply cong_lt_per2__lt_1 with O O; Cong.
         apply l8_2, per_col with M; Col; Perp.
         apply perp_per_1, perp_left_comm, perp_col1 with B; Col.
@@ -170,7 +170,7 @@ Proof.
   destruct HLt as [[C' [HBet HCong]] HNCong].
   exists A, C', B; split.
     apply thales_theorem with M; trivial.
-  assert_diffs.
+  suma.assert_diffs.
   assert (C <> C') by (intro; subst; apply HNCong, HCong).
   apply os3__lta.
   - apply one_side_transitivity with M.
@@ -189,7 +189,7 @@ Lemma inscribed_angle_aux : forall O P A B C,
 Proof.
   intros O P A B C HA HB HC HOS HTS.
   destruct (segment_construction C O O P) as [C' []].
-  assert_diffs.
+  suma.assert_diffs.
   assert (O <> C') by (intro; treat_equalities; auto).
   assert (HCong := (onc2__cong O P)).
   apply suma_preserves_ghalfa with A C C' C' C B A O C' C' O B.
@@ -211,7 +211,7 @@ Proof.
   OS A B O C -> OS O C A B -> OS O B A C -> gHalfA A C B A O B).
   { intros O P A B C HA HB HC HOS1 HOS2 HOS3.
     destruct (chord_completion O P C O) as [C' [HC' HBet ]]; Circle.
-    assert_diffs.
+    suma.assert_diffs.
     assert (C' <> O) by (intro; treat_equalities; auto).
     assert (TS O B A C').
     { apply l9_8_2 with C; [|Side].
@@ -257,7 +257,7 @@ Proof.
   intros O P A B C HA HB HC HOS.
   assert (HCong := (onc2__cong O P)).
   destruct (col_dec A O C).
-  { assert_diffs.
+  { suma.assert_diffs.
     assert (Bet C O A) by (apply col_inc_onc2__bet with O P; Col; Circle).
     assert (O <> C) by (intro; treat_equalities; auto).
     apply ghalfa_right_comm, ghalfa_out4__ghalfa with O B B A; try apply out_trivial; auto.
@@ -265,7 +265,7 @@ Proof.
     apply bet_cong__ghalfa; auto.
   }
   destruct (col_dec B O C).
-  { assert_diffs.
+  { suma.assert_diffs.
     assert (Bet C O B) by (apply col_inc_onc2__bet with O P; Col; Circle).
     assert (O <> C) by (intro; treat_equalities; auto).
     apply ghalfa_left_comm, ghalfa_out4__ghalfa with O A A B; try apply out_trivial; auto.
@@ -282,7 +282,7 @@ Lemma diam_onc2_ts__suppa : forall O P A B C C',
   SuppA A C B A C' B.
 Proof.
   intros O P A B C C' HA HB [HBet [HC HC']] HTS.
-  assert_diffs.
+  suma.assert_diffs.
   assert (HCong := onc2__cong O P).
   assert (HMid : Midpoint O C C') by (split; Cong).
   assert (C <> C') by (intro; treat_equalities; auto).
@@ -292,31 +292,31 @@ Proof.
   assert (HSumaB : SumA B C C' C C' B C B C') by (apply cong_mid__suma with O; auto).
   assert (Per C A C') by (apply thales_theorem with O; auto).
   assert (Per C B C') by (apply thales_theorem with O; auto).
-  assert (HSuma : SumA C A C' C B C' C O C') by (assert_diffs; apply bet_per2__suma; auto).
+  assert (HSuma : SumA C A C' C B C' C O C') by (suma.assert_diffs; apply bet_per2__suma; auto).
   apply bet_suma__suppa with C O C'; trivial.
   destruct (ex_suma C A C' C' C B) as [D [E [F HSuma1]]]; auto.
   assert (HTS2 : TS C C' A B) by (apply (chord_intersection O P); assumption).
   assert (HTS3 : TS C' C A B) by (apply invert_two_sides, HTS2).
   assert (Acute C' C A).
-  { assert_diffs; apply acute_out2__acute with O A.
+  { suma.assert_diffs; apply acute_out2__acute with O A.
       apply l6_6, bet_out; auto.
       apply out_trivial; auto.
       apply cong__acute; auto.
   }
   assert (Acute C' C B).
-  { assert_diffs; apply acute_out2__acute with O B.
+  { suma.assert_diffs; apply acute_out2__acute with O B.
       apply l6_6, bet_out; auto.
       apply out_trivial; auto.
       apply cong__acute; auto.
   }
   assert (Acute C C' A).
-  { assert_diffs; apply acute_out2__acute with O A.
+  { suma.assert_diffs; apply acute_out2__acute with O A.
       apply l6_6, bet_out; Between.
       apply out_trivial; auto.
       apply cong__acute; auto.
   }
   assert (Acute C C' B).
-  { assert_diffs; apply acute_out2__acute with O B.
+  { suma.assert_diffs; apply acute_out2__acute with O B.
       apply l6_6, bet_out; Between.
       apply out_trivial; auto.
       apply cong__acute; auto.
@@ -340,7 +340,7 @@ Proof.
   destruct (col_dec A B O).
   { assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
     assert (Per A C B) by (apply thales_theorem with O; auto; apply cong_transitivity with O P; Cong).
-    assert_diffs; apply bet_per2__suma; Between.
+    suma.assert_diffs; apply bet_per2__suma; Between.
   }
   destruct (cop__one_or_two_sides A B O C); Col; Cop.
   - destruct (chord_completion O P C O) as [C' []]; Circle.
@@ -393,12 +393,12 @@ Proof.
   intros O P A B C C' HA HB HC HC' HOS HCop.
   assert_ncols.
   destruct (col_dec A B O).
-  { assert_diffs.
+  { suma.assert_diffs.
     assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
     apply l11_16; auto; apply thales_theorem with O; Col; apply cong_transitivity with O P; Cong.
   }
   destruct (cop__one_or_two_sides A B O C); Col; Cop.
-  - assert_diffs; destruct (cop2_onc4__or_conga_suppa O P A B C C') as [|Habs]; auto.
+  - suma.assert_diffs; destruct (cop2_onc4__or_conga_suppa O P A B C C') as [|Habs]; auto.
       apply coplanar_trans_1 with C; Col; Cop.
     exfalso.
     apply (nlta A C' B), acute_obtuse__lta.
@@ -421,7 +421,7 @@ Proof.
   assert (Haux : forall C C', OnCircle C O P -> OnCircle C' O P -> TS A B C C' -> OS A B O C ->
     SuppA A C B A C' B).
   { intros C C' HC HC' HTS HOS.
-    assert_diffs.
+    suma.assert_diffs.
     assert (~ Col C A B) by (destruct HTS; assumption).
     assert (Coplanar A B C' O) by (apply coplanar_trans_1 with C; Cop).
     destruct (cop2_onc4__or_conga_suppa O P A B C C') as [Habs|]; Cop.
@@ -435,7 +435,7 @@ Proof.
   intros C C' HC HC' HTS HCop.
   assert (~ Col C A B) by (destruct HTS; assumption).
   destruct (col_dec A B O).
-  { assert_diffs.
+  { suma.assert_diffs.
     assert (Midpoint O A B) by (apply col_onc2__mid with P; auto).
     destruct HTS as [_ []].
     apply per2__suppa; auto; apply thales_theorem with O; trivial; apply onc2__cong with P; assumption.
@@ -452,7 +452,7 @@ Lemma acute_cop_onc3__os : forall O P A B C, A <> B ->
   OS A B O C.
 Proof.
   intros O P A B C HAB HA HB HC HCop HAcute.
-  assert_diffs.
+  suma.assert_diffs.
   assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
   apply coplanar_perm_1 in HCop.
   apply cop_nts__os; Col; intro Habs; apply (nlta A C B).
@@ -472,7 +472,7 @@ Lemma cop_obtuse_onc3__ts : forall O P A B C,
   TS A B O C.
 Proof.
   intros O P A B C HA HB HC HCop HObtuse.
-  assert_diffs.
+  suma.assert_diffs.
   assert (~ Col A B C) by (apply (onc3__ncol O P); auto).
   apply coplanar_perm_1 in HCop.
   apply cop_nos__ts; Col; intro Habs; apply (nlta A C B).
@@ -493,7 +493,7 @@ Lemma conga_cop2_onc4__os : forall O P A B C D, ~ Col A B O ->
   OS A B C D.
 Proof.
   intros O P A B C D HNCol HA HB HC HD HCopC HCopD HConga.
-  assert_diffs.
+  suma.assert_diffs.
   destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
   - apply one_side_transitivity with O; [apply one_side_symmetry|];
       apply acute_cop_onc3__os with P; Cop.
@@ -515,7 +515,7 @@ Lemma cop2_onc4_suppa__ts : forall O P A B C D, ~ Col A B O ->
   TS A B C D.
 Proof.
   intros O P A B C D HNCol HA HB HC HD HCopC HCopD HSuppa.
-  assert_diffs.
+  suma.assert_diffs.
   destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
   - apply l9_8_2 with O.
       apply cop_obtuse_onc3__ts with P; Cop; apply (acute_suppa__obtuse A C B); assumption.
@@ -554,7 +554,7 @@ Proof.
   assert (HCong := onc2__cong O P).
   assert (HCong' := onc2__cong O' P').
   destruct (col_dec A B O) as [|HNCol1].
-  { assert_diffs.
+  { suma.assert_diffs.
     assert (Midpoint O A B) by (apply col_onc2__mid with P; assumption).
     apply (l7_17 A B); trivial.
     apply thales_converse_theorem_1 with D; auto.
@@ -564,7 +564,7 @@ Proof.
   assert (HNCol' : ~ Col A B D) by (apply one_side_not_col124 with C, HOS).
   destruct (midpoint_existence A B) as [M HM].
   assert (HOS1 : OS A B O O').
-  { assert_diffs; destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
+  { suma.assert_diffs; destruct (angle_partition A C B) as [HAcute|[HPer|HObtuse]]; auto.
     - apply one_side_transitivity with C;
         [|apply one_side_transitivity with D; trivial; apply one_side_symmetry].
         apply acute_cop_onc3__os with P; auto.
@@ -579,8 +579,8 @@ Proof.
       apply (conga_obtuse__obtuse A C B); assumption.
   }
   assert (HNCol1' : ~ Col A B O') by (apply one_side_not_col124 with O, HOS1).
-  destruct (bet_cop_onc2__ex_onc_os_out O P A B C M) as [C1]; Between; Col; [assert_diffs; auto..|].
-  destruct (bet_cop_onc2__ex_onc_os_out O' P' A B D M) as [D1]; Between; Col; [assert_diffs; auto..|].
+  destruct (bet_cop_onc2__ex_onc_os_out O P A B C M) as [C1]; Between; Col; [suma.assert_diffs; auto..|].
+  destruct (bet_cop_onc2__ex_onc_os_out O' P' A B D M) as [D1]; Between; Col; [suma.assert_diffs; auto..|].
   spliter.
   assert (HNCol2 : ~ Col A B C1) by (apply one_side_not_col124 with C; assumption).
   assert (HOut : Out M C1 D1).
@@ -589,7 +589,7 @@ Proof.
     assert (O <> M) by (intro; subst; apply HNCol1; Col).
     assert (O' <> M) by (intro; subst; apply HNCol1'; Col).
     assert (Col O O' M); [|ColR].
-    assert_diffs; apply (cop_per2__col A); auto;
+    suma.assert_diffs; apply (cop_per2__col A); auto;
       [|apply mid_onc2__per with P B; auto|apply mid_onc2__per with P' B; auto].
     apply coplanar_trans_1 with B; Col; [|Cop].
     apply coplanar_trans_1 with C; Col; [Cop|].
@@ -597,14 +597,14 @@ Proof.
   }
   destruct (eq_dec_points C1 D1).
   { subst D1.
-    assert_diffs.
+    suma.assert_diffs.
     apply (cong4_cop2__eq A B C1); Cong; exists M; left; split; Col.
   }
   assert (HNCol2' : ~ Col A B D1) by (apply one_side_not_col124 with D; assumption).
   assert (CongA A C1 B A C B) by (apply (cop_onc4_os__conga O P); Side; exists M; left; split; Col).
   assert (CongA A D1 B A D B) by (apply (cop_onc4_os__conga O' P'); Side; exists M; left; split; Col).
-  assert (Out A B M) by (assert_diffs; apply l6_6, bet_out; Between).
-  assert (Out B A M) by (assert_diffs; apply l6_6, bet_out; Between).
+  assert (Out A B M) by (suma.assert_diffs; apply l6_6, bet_out; Between).
+  assert (Out B A M) by (suma.assert_diffs; apply l6_6, bet_out; Between).
   assert (HH := HOut).
   destruct HH as [HMC1 [HMD1 [HBet|HBet]]]; exfalso.
   - apply (lta_not_conga A D B A C B); CongA.
@@ -687,7 +687,7 @@ Proof.
   }
   intros C D HTS HSuppa.
   assert (HCop : Coplanar A B C D) by (apply ts__coplanar, HTS).
-  assert_diffs; destruct (angle_partition A C B) as [|[|]]; auto; split; trivial.
+  suma.assert_diffs; destruct (angle_partition A C B) as [|[|]]; auto; split; trivial.
   { destruct (Haux D C) as [_ [O [P]]].
       Side.
       apply (acute_suppa__obtuse A C B); trivial.
@@ -729,7 +729,7 @@ Lemma chord_par_diam : forall O P A B C C' A' U,
  Col A B U -> Perp O U A B -> Par A C' O U -> B = C.
 Proof.
 intros.
-assert_diffs.
+suma.assert_diffs.
 assert(Midpoint U A B).
 {
   apply(col_onc2_perp__mid O P A B U); Col.
