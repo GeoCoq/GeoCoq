@@ -1,5 +1,5 @@
-Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity.
 Require Import GeoCoq.Meta_theory.Dimension_axioms.upper_dim_2.
+Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity.
 
 Section T10_1.
 
@@ -870,7 +870,6 @@ destruct (hilbert_s_version_of_pasch_aux C A B Q P) as [X [HPQX HBetS]]; Cop.
 exists X; split; Col; unfold BetS.
 induction HBetS; spliter; repeat split; Between.
 Qed.
-
 
 Lemma two_sides_cases : forall O P A B,
  ~ Col O A B -> OS O P A B -> TS O A P B \/ TS O B P A.
