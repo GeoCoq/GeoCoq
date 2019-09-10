@@ -1,4 +1,5 @@
 Require Export GeoCoq.Tarski_dev.Ch10_line_reflexivity_2.
+Import Ch10_line_reflexivity.
 
 Section T11_1.
 
