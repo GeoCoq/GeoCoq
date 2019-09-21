@@ -95,49 +95,53 @@ Context `{TE:@Tarski_euclidean Tn TnEQD}.
 (* Preliminaries *)
 (*****************)
 
-Lemma STl6_16_1b: 
+(*Lemma STl6_16_1b:
 forall A B C D, 
 A <> B -> Col A B C -> Col A B D -> Col A C D.
 Proof.
-  intros.
+intros.
+ColR.
+(*  intros.
   apply colx with A B.
   auto.
   apply col_trivial_3.
   Col.
-  assumption.
+  assumption.*)
 Qed.
-
-Lemma par_abbc: 
+*)
+(*Lemma Rollpar_abbc: 
 forall A B C, 
 Par A B B C -> Col A B C.
 Proof.
-  intros.
+intros.
+ColR.
+(*  intros.
   assert (Par B A B C). apply par_left_comm;auto.
   assert(Col B A C).
-  eapply par_id;auto. Col.
+  eapply par_id;auto. Col.*)
 Qed.
-
-Lemma triangle_par_mid2:
+*)
+(*Lemma triangle_par_mid2:
 forall A B C P Q, 
 ~ Col B A C -> Midpoint Q A C -> Par B A P Q -> Col P B C -> Midpoint P B C.
 Proof.
-  intros. assert(~Col C A B). Col. eapply triangle_par_mid with A Q;auto.
+  intros.
+  apply triangle_par_mid with A Q; ColR.
 Qed.
-
-Lemma Bet4Equal:
+*)
+(*Lemma Bet4Equal:
 forall A B C,
 Bet_4 A B C A -> A = B /\ A = C.
 Proof.
-  intros.
-  unfold Bet_4 in H. spliter.
-  assert_all. auto.
-Qed.
+  intros.  
+  unfold Bet_4 in H. spliter. treat_equalities. split; reflexivity.
+Qed.*)
 
 (*********)
 (* Steps *)
 (*********)
 
-Lemma SegmTrisect01: 
+(*Lemma ROLLSegmTrisect01: 
 forall A B,
 A <> B -> exists C, ~ Col A B C.
 Proof.
@@ -146,7 +150,7 @@ Proof.
   assumption.
 Qed.
 
-Lemma SegmTrisect02: 
+Lemma RollSegmTrisect02: 
 forall A B C, 
 ~ Col A B C -> exists D, Midpoint C A D /\ A <> D.
 Proof.
@@ -157,9 +161,9 @@ Proof.
   assert(A <> D). intro. subst. assert(C = D). apply l7_3;auto. subst. assert(Col D B D). ColR. auto.
   exists D.
   auto.
-Qed.
+Qed.*)
 
-Lemma SegmTrisect03: 
+(*Lemma SegmTrisect03: 
 forall A B C D, 
 ~ Col A B C -> Midpoint C A D -> A <> D.
 Proof.
@@ -167,102 +171,77 @@ Proof.
   intro.
   assert_all.
   auto.
-Qed.
+Qed.*)
 
-Lemma SegmTrisect04: 
+(*Lemma SegmTrisect04: 
 forall A B C D, 
 ~ Col A B C -> Midpoint C A D -> exists E, Midpoint D C E.
 Proof.
   intros.
   apply symmetric_point_construction.
-Qed.
+Qed.*)
 
 
-Lemma SegmTrisect05: 
+(*Lemma RollSegmTrisect05: 
 forall A B C D E,
 ~ Col A B C -> Midpoint C A D -> Midpoint D C E -> B <> E.
 Proof.
-  intros.
-  assert_diffs.
-  assert(Col A C E). apply l6_16_1 with D;finish.
-  intro.
-  subst.
-  assert(Col A E C); finish.
-Qed.
+  intros. 
+  intro. subst. 
+  assert(Col A C E) by (apply l6_16_1 with D; finish;intro; ColR).
+  ColR.
+Qed.*)
 
-Lemma SegmTrisect06: 
+(*Lemma RollSegmTrisect06: 
 forall A B C D E,
 ~ Col A B C -> Midpoint C A D -> Midpoint D C E -> A <> E.
 Proof.
-  intros.
-  intro.
-  subst.
-  assert(Midpoint D E C). apply l7_2;auto.
-  assert_all. assert(Cong C D D E). Cong.
-  assert(Cong C E D E). eapply cong_transitivity with C D;finish.
-  assert(C=D). eapply between_cong with E;finish.
-  subst. assert_all. auto.
-Qed.
+  intros.   
+  intro. subst.
+    assert(Cong C E D E). CongR.
+    assert(C = D) by (apply between_cong with E;finish). 
+    subst. 
+  ColR.
+Qed.*)
 
-Lemma SegmTrisect07: 
+(*Lemma SegmTrisect07: 
 forall A B C D E, 
 ~ Col A B C -> Midpoint C A D -> Midpoint D C E -> Col A C E.
 Proof.
   intros.
-  assert_diffs.
-  apply l6_16_1 with D;finish.
-Qed.
+  apply l6_16_1 with D;finish. intro. subst. ColR.
+Qed.*)
 
-Lemma SegmTrisect08:
+(*Lemma SegmTrisect08:
 forall A B C D E,
 ~ Col A B C -> Midpoint C A D -> Midpoint D C E -> ~ Col E C B.
 Proof.
   intros.
-  assert_all.
-  assert (B <> E). apply SegmTrisect05 with A C D;finish.
-  intro. 
-  assert(Col C D A); Col.
-  assert(Col C D E); Col.
-  assert(Col C E A).
-  apply STl6_16_1b with D; finish.
-  assert(Col C E B);Col.
-  assert(Col C A B).
-  apply STl6_16_1b with E;finish.
-  Col.
-Qed.
+  intro.
+  assert(Col A B C);ColR.
+Qed.*)
 
-Lemma SegmTrisect09: 
-forall B D E, E <> B ->
+(*Lemma SegmTrisect09: 
+forall B D E,E <> B ->
 exists F, exists G, Col D F G /\ Par F G E B.
 Proof.
-  intros.
-  assert(exists F, exists G, F<>G /\ Par E B F G /\ Col D F G).
-  apply parallel_existence. assumption.
-  destruct H0.
-  destruct H0.
-  destruct H0.
-  destruct H1.
-  exists x.
-  exists x0.
-  split.
-  auto.
-  apply par_symmetry.
-  auto.
-Qed.
+  intros. 
+  assert(exists F, exists G, F<>G /\ Par E B F G /\ Col D F G) by (apply parallel_existence; assumption).
+  destruct H0 as[F [G]]. spliter.  
+  exists F. exists G. Par.
+Qed.*)
 
 Lemma SegmTrisect10: 
 forall A B D E F G, E <> B -> ~ Col B A E -> Col D F G -> Par F G E B ->
 ~ Par F G A B.
 Proof.
-  intros.
-  intro.
+  intros. 
+  intro. 
   assert_all.
-  assert(Par E B A B). 
-    assert(Par E B G F). apply par_symmetry. auto. eapply par_trans with G F; auto.
+  assert(Par E B G F). Par. 
+  assert(Par E B A B) by (apply par_trans with G F; auto).
   assert(Par B A B E);finish.
-  assert(Col B A E).
-  apply par_id; auto.
-  auto.
+  assert(Col B A E). ColR. ColR.
 Qed.
 
 Lemma SegmTrisect11: 
@@ -315,10 +294,10 @@ Proof.
   subst.
   assert_all.
   assert(I = H).
-    assert(Col E D H).
-      assert(Col E C D);Col.
+    assert(Col E D H). ColR.
+(*      assert(Col E C D);Col.
       assert(Col E C H). assert(Col H C E). eapply SegmTrisect07 with B D;finish. Col.
-      eapply STl6_16_1b with C;finish.
+      eapply STl6_16_1b with C;finish.*)
   assert(Inter H D B E E). unfold Inter.
   split;auto.
   split.
@@ -329,8 +308,8 @@ Proof.
   intro.
   assert(Col H D B);Col.
   assert(Col H D C);Col.
-  assert(Col H B C).
-  eapply STl6_16_1b with D;auto.
+  assert(Col H B C); ColR.
+(*  eapply STl6_16_1b with D;auto.*)
   Col.
   auto.
   split. Col. Col.
@@ -359,16 +338,16 @@ Proof.
   assert(~ Col A D B).
     intro. 
     assert(Col A D C);Col.
-    assert(A <> D). apply SegmTrisect03 with B C;auto.
-    assert(Col A B C). apply STl6_16_1b with D;auto.
+    assert(A <> D). intro. treat_equalities;ColR. (*apply SegmTrisect03 with B C;auto.*)
+    assert(Col A B C). ColR. (*apply STl6_16_1b with D;auto.*)
     auto.
   assert(Col A D C);Col.
   assert(A <> D). intro. subst. assert(Col D D B);Col.
   assert(~ Col A D H).
     intro.
-    assert(Col A C H). eapply STl6_16_1b with D;finish.
+    assert(Col A C H). ColR. (*eapply STl6_16_1b with D;finish.*)
     assert(Col A H C);Col.
-    assert(Col A B C). eapply STl6_16_1b with H;finish.
+    assert(Col A B C). ColR. (*eapply STl6_16_1b with H;finish.*)
   tauto.
   assert_all.
   assert(~ Col H D A);Col.
@@ -394,9 +373,9 @@ Proof.
   assert_all.
   assert(Col D C H);finish.
   assert(Col D C E);Col.
-  assert(Col D H E). eapply STl6_16_1b with C;finish.
+  assert(Col D H E). ColR. (* eapply STl6_16_1b with C;finish.*)
   assert(~ Col B H D). intro. assert(Col H D B);Col. assert(Col H D C);Col.
-  assert(Col H B C). apply STl6_16_1b with D;auto. auto.
+  assert(Col H B C). ColR. (*apply STl6_16_1b with D;auto.*) auto.
   assert(Inter H D B E E). unfold Inter.
   split;auto.
   split.
@@ -419,27 +398,36 @@ Proof.
   assert(Par D H B E). apply par_left_comm;auto.
   assert(Col H A B);Col.
   assert(A <> H). eapply SegmTrisect17 with B C D E I;auto.
-  assert(B <> I). intro. subst. assert(Col C I E). apply par_abbc;auto.
+  assert(B <> I). intro. subst. assert(Col C I E). ColR. (*apply par_abbc;auto.*)
                   assert(Col C D A);Col.
     assert(Col C D E);Col.
-    assert(Col C A E). eapply STl6_16_1b with D;auto.
+    assert(Col C A E). ColR. (*eapply STl6_16_1b with D;auto.*)
     assert(Col C E A);Col.
     assert(Col C E I);Col.
-    assert(Col C A I). eapply STl6_16_1b with E;auto.
+    assert(Col C A I). ColR. (*eapply STl6_16_1b with E;auto.*)
     assert(Col A I C);Col. auto.
   eapply sesamath_4ieme_G2_ex47 with C D E.
-  + assert(~ Col E C B). apply SegmTrisect08 with A D;finish. Col.
+(*Lemma SegmTrisect08:
+forall A B C D E,
+~ Col A B C -> Midpoint C A D -> Midpoint D C E -> ~ Col E C B.
+Proof.
+  intros.
+  intro.
+  assert(Col A B C);ColR.
+Qed.*)
+  + assert(~ Col E C B). intro. assert(Col A B C); ColR. ColR. (*apply RollSegmTrisect08 with A D;finish. Col.*)
   + intro.
   assert(Col A H I);auto.
   assert(Col A H B);Col.
-  assert(Col A I B).
-  eapply STl6_16_1b with H;auto. Col.
+  assert(Col A I B). ColR.
+(*  eapply STl6_16_1b with H;auto.*)
+ Col.
   assert(Col B I A);Col.
   assert(Col B I C);Col.
-  assert(Col B A C). eapply STl6_16_1b with I;auto.
+  assert(Col B A C). ColR. (* eapply STl6_16_1b with I;auto.*)
   Col.
-  + assert(Col H A I);Col. assert(Col H A B);Col.
-  eapply STl6_16_1b with A;auto.
+  + assert(Col H A I);Col. assert(Col H A B);Col. ColR.
+(*  eapply STl6_16_1b with A;auto.*)
   + auto.
   + assert(Par B E D H). apply par_symmetry;auto. apply par_trans with B E;auto.
   + apply par_right_comm;auto.
@@ -450,24 +438,96 @@ forall A B,
 A <> B -> exists C, exists D, A <> D /\ Midpoint C A D /\ Midpoint D C B.
 Proof.
   intros.
-  assert(exists C, ~ Col A B C). apply SegmTrisect01;auto. destruct H0 as [C].
-  assert(exists D, Midpoint C A D /\ A <> D). apply SegmTrisect02 with B;auto. destruct H1 as [D]. spliter.
-  assert(exists E, Midpoint D C E). eapply SegmTrisect04 with A B;auto. destruct H3 as [E].
-  assert(B <> E). eapply SegmTrisect05 with A C D;auto.
-  assert(exists F, exists G, Col D F G /\ Par F G E B). eapply SegmTrisect09;auto. destruct H5 as [F H5]. destruct H5 as [G].
+
+  assert(exists C, ~ Col A B C). apply not_col_exists. assumption.
+  destruct H0 as [C].
+
+ (* assert(exists D, Midpoint C A D /\ A <> D). apply SegmTrisect02 with B;auto. destruct H1 as [D]. spliter.*)
+  Name D the symmetric of A wrt C.
+
+(*  assert(exists E, Midpoint D C E). eapply SegmTrisect04 with A B;auto. destruct H1 as [E].*)
+  Name E the symmetric of C wrt D.
+  assert(B <> E). intro. subst. assert(Col A C E). ColR. ColR. 
+
+(*Lemma RollSegmTrisect05: 
+forall A B C D E,
+~ Col A B C -> Midpoint C A D -> Midpoint D C E -> B <> E.
+Proof.
+  intros. 
+  intro. subst. 
+  assert(Col A C E) by (apply l6_16_1 with D; finish;intro; ColR).
+  ColR.
+Qed.*)
+(*eapply SegmTrisect05 with A C D;auto.*)
+
+
+
+
+  assert(exists F, exists G, Col D F G /\ Par F G E B). 
+  intros. 
+  assert(exists F, exists G, F<>G /\ Par E B F G /\ Col D F G). apply parallel_existence. auto.
+  destruct H4 as[F [G]]. spliter.  
+  exists F. exists G. Par.
+
+
+
+
+
+destruct H4 as [F H5]. destruct H5 as [G].
+
+
+
   assert_all.
     assert(~ Col B A E).
   intro.
-  assert(Col A C E). eapply SegmTrisect07 with B D;auto. assert(Col A E C);Col.
-  assert(Col A E B);auto. 
-  assert(Col A B C). eapply STl6_16_1b with E;finish.
-  apply SegmTrisect06 with B C D;auto.
+  assert(Col A C E).   apply l6_16_1 with D;finish. 
+
+(*eapply SegmTrisect07 with B D;auto.*) assert(Col A E C);Col.
+  assert(Col A E B). 
+
+
+(*
+Lemma STl6_16_1b:
+forall A B C D, 
+A <> B -> Col A B C -> Col A B D -> Col A C D.
+Proof.
+intros.
+ColR.
+(*  intros.
+  apply colx with A B.
+  auto.
+  apply col_trivial_3.
   Col.
-  assert(Col A C B). eapply STl6_16_1b with E;finish. eapply SegmTrisect06 with B C D;auto. Col.
+  assumption.*)
+Qed.
+*)
+
+
+(*Lemma RollSegmTrisect06: 
+forall A B C D E,
+~ Col A B C -> Midpoint C A D -> Midpoint D C E -> A <> E.
+Proof.
+  intros.   
+  intro. subst.
+    assert(Cong C E D E). CongR.
+    assert(C = D) by (apply between_cong with E;finish). 
+    subst. 
+  ColR.
+Qed.*)
+assert(A <> E). intro. subst. assert(Cong C E D E). CongR. assert(C = D). eapply between_cong with E;finish. CongR.
+(*assert(A <> E) by (apply SegmTrisect06 with B C D;auto).*)
+
+  assert(Col A B C). ColR. (*eapply STl6_16_1b with E; finish.*)
+(*  apply SegmTrisect06 with B C D;auto.*)
+  Col.
+assert(A <> E). intro. subst. assert(Cong C E D E). CongR. assert(C = D). eapply between_cong with E;finish. CongR.
+
+(*assert(A <> E) by (apply SegmTrisect06 with B C D;Col). *)
+  assert(Col A C B). ColR. Col. (* eapply STl6_16_1b with E;finish.eapply SegmTrisect06 with B C D;auto. Col.*)
   assert(~ Par F G A B).
   apply SegmTrisect10 with D E; finish.
   assert(exists H, Col H F G /\ Col H A B). eapply not_par_inter_exists; auto.
-  destruct H8 as [HH]. spliter.
+  destruct H7 as [HH]. spliter.
   assert(D <> HH). apply SegmTrisect11 with A B C; finish.
   assert(Par D HH E B). apply SegmTrisect12 with F G;auto.
   assert(exists I, Midpoint I A HH). eapply midpoint_existence.
@@ -531,15 +591,14 @@ forall A B,
 exists C, exists D, Bet_4 A C D B /\ Cong A C C D /\ Cong C D D B.
 Proof.
   intros.
-    induction (eq_dec_points A B).
-    exists A. exists B. assert_all. split. 
-    unfold Bet_4. split;finish.
-    split;finish.
-    assert(exists C, exists D, A <> D /\ Midpoint C A D /\ Midpoint D C B).
-  apply SegmTrisect19;auto.
-  destruct H0 as [C [D]]. spliter.
-  exists C.
-  exists D.
+  induction (eq_dec_points A B).
+  - exists A. exists B. assert_all. split;finish. unfold Bet_4. split;finish.
+  - assert(exists C, exists D, A <> D /\ Midpoint C A D /\ Midpoint D C B).
+    + apply SegmTrisect19. assumption.
+    + destruct H0 as [C [D]].
+      exists C. exists D.
+      spliter.
+
   split.
   unfold Bet_4. split;finish.
   split;finish.
@@ -574,12 +633,14 @@ Proof.
   assert(D = B). apply is_midpoint_id;auto. tauto.
   assert(Col C D A). Col.
   assert(Col C D B). Col.
-  assert(Col C A B).
-  apply STl6_16_1b with D;auto.
+  assert(C <> D). intro. treat_equalities. auto.
+  assert(Col C A B). ColR. 
+  Col. 
+(*  apply STl6_16_1b with D;auto.
   + intro. subst. assert(D = B). apply is_midpoint_id;auto. 
   assert(D = A). apply is_midpoint_id_2;auto. 
   assert(A = B). subst. tauto. tauto.
-  + Col.
+  + Col.*)
 Qed.
 
 Lemma SegmTrisect23:
@@ -594,24 +655,25 @@ Proof.
     intro.
     assert(Col A F E);finish.
     assert(Col A F B);finish.
-    assert(Col A E B). eapply STl6_16_1b with F;auto. Col.
+    assert(Col A E B). ColR. Col. (*eapply STl6_16_1b with F;auto. Col.*)
   }
   assert(~ Col D F A).
   {
     intro.
-    assert(Col A F D);Col.
-    assert(Col A F E);Col.
-    assert(Col A D E). eapply STl6_16_1b with F;auto. Col.
-    assert(Col D C B);finish.
-    assert(Col D C A);finish.
-    assert(Col D A B). eapply STl6_16_1b with C;auto. 
-    intro. subst.
+  (*  assert(Col A F D);Col.
+    assert(Col A F E);Col.*)
+    assert(Col A D E). ColR. Col. (*eapply STl6_16_1b with F;auto. Col.*)
+(*    assert(Col D C B);finish.
+    assert(Col D C A);finish.*)
+assert(A <> D).  eapply SegmTrisect22 with B C;auto. Col.
+    assert(Col D A B). ColR.  (*eapply STl6_16_1b with C;auto. *)
+  (*  intro. subst.
     assert(C = A). apply is_midpoint_id_2;auto.
     assert(C = B). eapply is_midpoint_id;auto.
     subst. auto.
     assert(Col A D B);Col.
-    assert(Col A B E). eapply STl6_16_1b with D;auto.
-    eapply SegmTrisect22 with B C;auto. Col.
+    assert(A <> D). eapply SegmTrisect22 with B C;auto. Col.*)
+    assert(Col A B E). ColR. Col.
   }
   assert(F <> D). intro. subst. finish. 
   assert(Midpoint C D A);finish.
@@ -637,9 +699,11 @@ Proof.
        intro. subst. assert(D = C). eapply is_midpoint_id_2;auto. subst. assert(C = A). eapply is_midpoint_id_2;auto. auto.
   assert_all.
   assert(Col D A B).
-     assert(Col D C A). Col.
-     assert(Col D C B). Col.
-     eapply STl6_16_1b with C;finish. 
+ (*    assert(Col D C A). Col.
+     assert(Col D C B). Col. 
+*)
+  ColR.
+ (*    eapply STl6_16_1b with C;finish. *)
   assert(Col B D A). Col.
   assert(Col C' D' A);finish.
   exists A. auto.
@@ -649,12 +713,12 @@ Proof.
   assert(Col C' B C). apply par_id;auto.
   assert_all. 
   assert(Col B C C');Col.
-  assert(Col C A B).
-  assert(Col C D A);Col.
+  assert(Col C A B). ColR.
+(*  assert(Col C D A);Col.
   assert(Col C D B);Col.
-  apply STl6_16_1b with D;finish. Col.
+  apply STl6_16_1b with D;finish. Col.*)
   assert(Col B C A);Col.
-  assert(Col B C' A). eapply STl6_16_1b with C;auto.
+  assert(Col B C' A). ColR. (*eapply STl6_16_1b with C;auto.*)
   Col.
 Qed.
 
@@ -668,10 +732,11 @@ Proof.
   assert(C <> A). 
     intro. subst. assert(A = D). eapply is_midpoint_id;auto. subst. assert(D = B). apply is_midpoint_id. auto. auto. 
   assert_all.
-    assert(Col C A B). 
-    assert(Col C D A);Col.
+    assert(Col C A B). ColR.
+(*    assert(Col C D A);Col.
     assert(Col C D B);Col.
-    eapply STl6_16_1b with D; finish. 
+  ColR.*)
+(*    eapply STl6_16_1b with D; finish.*) 
   assert(Par D' D C' C).
   apply SegmTrisect23 with A B;finish.
   assert_all.
@@ -681,10 +746,10 @@ Proof.
     assert(B <> D).
      intro. subst. assert(D = C). eapply is_midpoint_id_2;auto. subst. assert(C = A). eapply is_midpoint_id_2;auto. auto.
   assert_all.
-  assert(Col D A B).
-     assert(Col D C A). Col.
+  assert(Col D A B). ColR.
+(*     assert(Col D C A). Col.
      assert(Col D C B). Col.
-     eapply STl6_16_1b with C;finish. 
+     eapply STl6_16_1b with C;finish. *)
   assert(Col B D A). Col.
   assert(Col C' D' A);finish.
   exists A. auto.
@@ -705,14 +770,14 @@ Proof.
       assert(Col B X A).
         assert(Col X C A);Col.
         assert(Col X C B);Col.
-        assert(Col X A B). apply STl6_16_1b with C;finish. Col.
-        assert(Col B C' A). apply STl6_16_1b with X;auto.
+        assert(Col X A B). ColR. Col. (*apply STl6_16_1b with C;finish. Col.*)
+        assert(Col B C' A). ColR. (*apply STl6_16_1b with X;auto.*)
         assert(Col A B C');Col. 
   assert(~ Col C' B C). 
   intro. 
   assert(Col B C A). Col.
   assert(Col B C C'). Col.
-  assert(Col B A C'). apply STl6_16_1b with C;finish. Col.
+  assert(Col B A C'). ColR. Col. (* apply STl6_16_1b with C;finish. Col.*)
   assert(~ Col C C' B). Col.
   assert(Midpoint D B C);finish.
   assert(Par C C' D D'). apply par_symmetry. apply par_left_comm. apply par_symmetry. apply par_left_comm. auto.
@@ -722,21 +787,27 @@ Proof.
   assert(~ Col C' C B). Col.
   assert(Midpoint D C B). auto.
   assert(Par C' C X D). apply par_symmetry. auto.
-  assert(Midpoint X C' B).
-  apply triangle_par_mid2 with C D; auto. apply l7_2;auto.
+  assert(Midpoint X C' B) by (apply triangle_par_mid with C D; ColR).
+apply l7_2;auto.
+
+
+
+
+
+
   assert(Midpoint D' B' C'). apply l7_2;auto.
   assert(~ Col B' B C'). 
   intro. 
-  assert(Col C' B' A).
-      assert(C' <> D'). intro. subst.
+  assert(Col C' B' A). ColR.
+(*      assert(C' <> D'). intro. subst.
         assert(D' = B'). apply is_midpoint_id;auto.
         assert(D' = A). apply is_midpoint_id_2;auto.
         subst. subst. auto.
     assert(Col C' D' A);finish.
     assert(Col C' D' B');finish.
-    eapply STl6_16_1b with D';auto. Col.
+    eapply STl6_16_1b with D';auto. Col.*)
   assert(Col C' B' B). Col.
-  assert(Col C' A B). apply STl6_16_1b with B';auto. Col.
+  assert(Col C' A B). ColR. Col. (*apply STl6_16_1b with B';auto. Col.*)
   assert(Midpoint X B C');auto.
   assert(Midpoint D' B' C');auto.
   assert(Par_strict B' B D' X).
@@ -761,10 +832,12 @@ A <> B -> Midpoint C A D -> Midpoint D C B ->
 Midpoint C' A D' -> Midpoint D' C' B -> C = C'.
 Proof.
   intros.
-  assert(exists E, ~ Col A B E). apply SegmTrisect01;auto.
+  assert(exists E, ~ Col A B E). apply not_col_exists. assumption.
   destruct H4 as [E].
-  assert(exists F, Midpoint E A F /\ A <> F). apply SegmTrisect02 with B;auto.
-  destruct H5 as [F]. spliter.
+
+(*  assert(exists F, Midpoint E A F /\ A <> F). apply SegmTrisect02 with B;auto.*)
+Name F the symmetric of A wrt E.
+  (*destruct H4 as [F]. spliter.*)
   assert_all.
   assert(Par F D E C). apply SegmTrisect23 with A B;auto.
   assert(Par F D' E C'). apply SegmTrisect23 with A B;auto.
@@ -772,9 +845,10 @@ Proof.
     intro. 
     assert(Col E F B); Col.
     assert(Col E F A); finish.
-    assert(Col E B A). apply STl6_16_1b with F;finish. Col.
-  assert(exists G, Midpoint F E G /\ E <> G). apply SegmTrisect02 with B;auto.
-  destruct H10 as [G]. spliter.
+    assert(Col E B A). ColR. (*apply STl6_16_1b with F;finish.*) Col.
+Name G the symmetric of E wrt F.
+(*  assert(exists G, Midpoint F E G /\ E <> G). apply SegmTrisect02 with B;auto.*)
+(*  destruct H10 as [G]. spliter.*)
   assert(Par F D G B /\ Par E C G B). apply SegmTrisect25 with A;finish.
   assert(Par F D' G B /\ Par E C' G B). apply SegmTrisect25 with A;finish.
   spliter.
@@ -786,12 +860,14 @@ Proof.
         assert(C <> D). intro. subst. assert(D = B). apply is_midpoint_id;auto. assert(D = A). apply is_midpoint_id_2;auto. subst. Col.
         assert(Col C D A);finish.
         assert(Col C D B);finish.
-        apply STl6_16_1b with D;auto.
+ColR.
+(*        apply STl6_16_1b with D;auto.*)
       assert(Col C' A B).
         assert(C' <> D'). intro. subst. assert(D' = B). apply is_midpoint_id;auto. assert(D' = A). apply is_midpoint_id_2;auto. subst. Col.
         assert(Col C' D' A);finish.
         assert(Col C' D' B);finish.
-        apply STl6_16_1b with D';auto.
+ColR.
+(*        apply STl6_16_1b with D';auto.*)
   ColR.
   Col.
   induction(eq_dec_points C C').
@@ -829,17 +905,16 @@ Bet_4 A C' D' B /\ Cong A C' C' D' /\ Cong C' D' D' B ->
 Proof.
   intros. spliter.
   induction(eq_dec_points A B).
-  subst. split.
-  assert(B = C /\ B = D).
-  eapply Bet4Equal. auto. 
-  assert(B = C' /\ B = D').
-  eapply Bet4Equal. auto. 
+  subst. split. unfold Bet_4 in *. spliter.
+  assert(B = C /\ B = D). treat_equalities;finish. (*unfold Bet_4 in H. spliter. treat_equalities. split; reflexivity.*)
+  assert(B = C' /\ B = D'). treat_equalities;finish.
+(*  eapply Bet4Equal. auto. *)
   spliter.
-  eapply eq_trans with B;auto.
-  assert(B = C /\ B = D).
-  apply Bet4Equal. auto. 
-  assert(B = C' /\ B = D').
-  eapply Bet4Equal. auto. 
+  apply eq_trans with B;auto. unfold Bet_4 in *. spliter.
+  assert(B = C /\ B = D). treat_equalities;finish.
+(*  apply Bet4Equal. auto. *)
+  assert(B = C' /\ B = D'). treat_equalities;finish.
+(*  eapply Bet4Equal. auto. *)
   spliter.
   apply eq_trans with B;auto.
   eapply SegmTrisect28 with A B;finish.
@@ -1004,6 +1079,7 @@ ex_and T MM.
 
 Tactic Notation "Name" ident(T) "the" "twothirds" "of" ident(A) "and" ident(B) :=
  twothirds T A B.
+        
 
 Definition DoubleTwoThirds D A B := Col A B D /\ (forall TT, TwoThirds TT A B -> Midpoint TT A D).
 
@@ -1055,7 +1131,8 @@ Proof.
   unfold TwoThirds in H1. spliter.
   assert(Col A X TT). Col.
   assert(Col A X B). Col.
-  apply STl6_16_1b with X;finish.
+ColR.
+(*  apply STl6_16_1b with X;finish.*)
   auto.
   intros.
   assert(X = TT0). apply SegmTrisectTwoThirdsUniqueness with A B; auto. 
