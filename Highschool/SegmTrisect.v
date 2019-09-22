@@ -714,5 +714,3 @@ Tactic Notation "Name" ident(T) "the" "second_third" "of" ident(A) "and" ident(B
  secondthird T A B.
 
 end
-
-
