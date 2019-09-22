@@ -713,4 +713,4 @@ ex_and F T.
 Tactic Notation "Name" ident(T) "the" "second_third" "of" ident(A) "and" ident(B) :=
  secondthird T A B.
 
-End.
+End Segment_Trisection.
