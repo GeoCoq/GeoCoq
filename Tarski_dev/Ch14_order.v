@@ -553,11 +553,7 @@ Qed.
 
 Lemma col_pos_or_neg : forall O E X,
   O <> E -> O <> X -> Col O E X -> Ps O E X \/ Ng O E X.
-Proof.
-intros O E X HOE HOX HCol.
-unfold Ps, Ng, Out.
-unfold Col in HCol; intuition.
-Qed.
+Proof. intros O E X HOE HOX [|[|]]; [left|left|right]; split; Between. Qed.
 
 Lemma ltP_neg : forall O E E' A, LtP O E E' A O -> Ng O E A.
 Proof.

@@ -2399,7 +2399,9 @@ Qed.
 
 End Grid.
 
-Lemma pj_uniqueness : forall O E E' A A' A'', ~Col O E E' -> Col O E A -> Col O E' A' -> Col O E' A'' -> Pj E E' A A' -> Pj E E' A A'' -> A' = A''.
+Lemma pj_uniqueness : forall O E E' A A' A'',
+  ~ Col O E E' -> Col O E A -> Col O E' A' -> Col O E' A'' ->
+  Pj E E' A A' -> Pj E E' A A'' -> A' = A''.
 Proof.
     intros.
     unfold Pj in *.
@@ -2478,162 +2480,28 @@ Qed.
 (** Lemma 14.13 *)
 (** Parallel projection on the second axis preserves sums. *)
 
-Lemma proj_preserves_sum :
- forall O E E' A B C A' B' C',
- Sum O E E' A B C ->
- Ar1 O E' A' B' C' ->
- Pj E E' A A' ->
- Pj E E' B B' ->
- Pj E E' C C' ->
- Sum O E' E A' B' C'.
+Lemma proj_preserves_sum : forall O E E' A B C A' B' C',
+  Sum O E E' A B C ->
+  Ar1 O E' A' B' C' ->
+  Pj E E' A A' ->
+  Pj E E' B B' ->
+  Pj E E' C C' ->
+  Sum O E' E A' B' C'.
 Proof.
-    intros.
-    assert(HH:= H).
-    unfold Sum in HH.
-    spliter.
-    ex_and H5 A0.
-    ex_and H6 C0.
-    unfold Ar2 in H4.
-    spliter.
-    assert(HH:= grid_not_par O E E' H4).
-    unfold Ar1 in H0.
-    spliter.
-    induction(eq_dec_points A O).
-      subst A.
-      unfold Pj in H1.
-      induction H1.
-        apply False_ind.
-        apply H15.
-        apply par_symmetry. (* TODO ameliorier perm apply pour gerer les _ *)
-        apply (par_col_par _ _ _ A');Col.
-      subst A'.
-      assert(B = C).
-        apply (sum_O_B_eq O E E'); auto.
-      subst C.
-      assert(B' = C').
-        apply (pj_uniqueness O E E' B); Col.
-      subst C'.
-      apply sum_O_B; Col.
-    induction(eq_dec_points B O).
-      subst B.
-      unfold Pj in H2.
-      induction H2.
-        apply False_ind.
-        apply H15.
-        apply par_symmetry.
-        apply (par_col_par _ _ _ B'); Col.
-      subst B'.
-      assert(A = C).
-        apply (sum_A_O_eq O E E'); auto.
-      subst C.
-      assert(A' = C').
-        apply (pj_uniqueness O E E' A); Col.
-      subst C'.
-      apply sum_A_O; Col.
-    assert(A' <> O).
-      intro.
-      subst A'.
-      unfold Pj in H1.
-      induction H1.
-        apply H13.
-        apply par_symmetry.
-        apply (par_col_par _ _ _ A); Par; Col.
-      contradiction.
-    assert(B' <> O).
-      intro.
-      subst B'.
-      unfold Pj in H2.
-      induction H2.
-        apply H13.
-        apply par_symmetry.
-        apply (par_col_par _ _ _ B); Par.
-        Col.
-      contradiction.
-    unfold Sum.
-    spliter.
-    split.
-      repeat split; Col.
-    assert(HH:=plg_existence A O B' H22).
-    ex_and HH D.
-    exists A.
-    exists D.
-    assert(HP:= H26).
-    apply plg_par in H26.
-      spliter.
-      repeat split; Col.
-        apply pj_comm; auto.
-        left.
-        apply par_symmetry.
-        apply(par_col_par _ _ _ B'); Col.
-        left.
-        apply par_symmetry.
-        apply(par_col_par _ _ _ A); Par; Col.
-      assert(Parallelogram_flat O A C B).
-        apply(sum_cong O E E' H4 A B C H).
-        left; auto.
-      assert(Parallelogram B' D C B \/ B' = D /\ A = O /\ B = C /\ B' = B).
-        apply(plg_pseudo_trans B' D A O B C).
-          apply plg_permut.
-          apply plg_permut.
-          auto.
-        apply plg_comm2.
-        right.
-        auto.
-      induction H29.
-        apply plg_par in H29.
-          spliter.
-          induction H2.
-            induction H3.
-              assert(Par B B' C C').
-                apply (par_trans _ _ E E'); Par.
-              assert(Par C D C C').
-                apply(par_trans _ _ B B'); Par.
-              induction H32.
-                apply False_ind.
-                apply H32.
-                exists C.
-                split; Col.
-              spliter.
-              left.
-              apply par_right_comm.
-              apply (par_col_par _ _ _ C); Col; Par.
-              intro.
-              subst D.
-              induction H29.
-                apply H29.
-                exists O.
-                split; ColR.
-              spliter.
-              apply H25.
-              apply(l6_21 O E E' O); ColR.
-            subst C'.
-            left.
-            apply (par_trans _ _ B B'); Par.
-          subst B'.
-          apply par_distincts in H30.
-          tauto.
-          intro.
-          subst D.
-          apply par_distincts in H26.
-          tauto.
-        intro.
-        subst D.
-        induction H27.
-          apply H27.
-          exists O.
-          split; ColR.
-        spliter.
-        apply H4.
-        apply (col_transitivity_1 _ A).
-          auto.
-          Col.
-        apply (col_transitivity_1 _ B'); Col.
-      spliter.
-      contradiction.
-      intro.
-      subst.
-      intuition.
-    intuition.
+intros O E E' A B C A' B' C' HS ? ? ? HP1.
+apply sum_comm in HS; [|unfold Sum, Ar2 in *; spliter; Col].
+destruct HS as [? [B'' [C'' [? [? [? [? HP2]]]]]]].
+split; [unfold Ar1, Ar2 in *; spliter; split; Col|].
+exists A, C''; split; [apply pj_comm; auto|].
+split; [unfold Sum, Ar2 in *; spliter; Col|].
+assert (B' = B'')
+  by (unfold Ar2, Ar1 in *; spliter; apply pj_uniqueness with O E E' B; Col).
+treat_equalities; split; [auto|split; [auto|]].
+destruct HP1 as [HP1|]; [|treat_equalities; apply pj_left_comm; auto].
+destruct HP2 as [HP2|]; [|treat_equalities; left; auto].
+destruct (eq_dec_points C' C'') as [?|HD]; [right; auto|].
+left; apply par_col_par with C; [finish..|].
+destruct (parallel_uniqueness E E' C C' C C'' C); finish.
 Qed.
 
 (** Lemma 14.14 *)

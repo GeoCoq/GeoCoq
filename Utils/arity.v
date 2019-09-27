@@ -124,6 +124,7 @@ intro cp.
 apply CP_ind; simpl; reflexivity.
 Qed.
 
+(*
 Definition tailCPbis {T:Type} {n:nat} m1 m2 (cp : cartesianPower T m1) :
   (S (S n)) = m1 -> (S n) = m2 -> (cartesianPower T m2).
 Proof.
@@ -131,6 +132,7 @@ intros Hm1 Hm2.
 subst.
 exact (tailCP cp).
 Defined.
+*)
 
 Definition consHeadCP {T:Type} {n:nat} (t : T) (cp : cartesianPower T n) : (cartesianPower T (S n)).
 Proof.
@@ -779,40 +781,9 @@ simpl; reflexivity.
 simpl; reflexivity.
 Qed.
 
-Lemma ListToCPTl {T : Type} :
-  forall (a a0 : T) l (Ha0l : (S (length l)) = length (a0  :: l)) Haa0l Default,
-  tailCPbis (length (a :: a0 :: l)) (length (a :: l)) (ListToCP (a :: a0 :: l) Default) Haa0l Ha0l =
-  ListToCP (a0 :: l) Default.
-Proof.
-intros a a0 l Ha0l Haa0l Default.
-simpl in *.
-unfold tailCPbis.
-unfold tailCP.
-repeat (elim_eq_rect; simpl).
-induction l; simpl; reflexivity.
-Qed.
-
-Lemma CPToListTl1 {T : Type} :
-  forall (a a0 : T) l (cp : cartesianPower T (length (a :: a0 :: l))), tl (CPToList cp) = CPToList (tailCP cp).
-Proof.
-simpl; reflexivity.
-Qed.
-
-Lemma CPToListTl2 {T : Type} {n : nat} :
+Lemma CPToListTl {T : Type} {n : nat} :
   forall (cp : cartesianPower T (S (S n))), tl (CPToList cp) = CPToList (tailCP cp).
-Proof.
-intro cp.
-induction n.
-simpl; reflexivity.
-apply listInd with (S n) (fst cp).
-apply eq_add_S.
-assert (H := lengthOfCPToList cp); rewrite H.
-simpl; reflexivity.
-assert (H := lengthOfCPToList (tailCP cp)); rewrite H.
-reflexivity.
-simpl; reflexivity.
-simpl; reflexivity.
-Qed.
+Proof. intros; reflexivity. Qed.
 
 Lemma CPCPL {T : Type} :
   forall (a : T) l (cp1 : cartesianPower T (length (a :: l)))
@@ -841,41 +812,21 @@ induction n; intros cp1 cp2 HCPL.
     injection HCPL; auto.
 Qed.
 
-Lemma CPLRec {T : Type} :
-  forall (a : T) l Default,
-  (a :: (CPToList (ListToCP l Default))) = CPToList (ListToCP (a :: l) Default).
-Proof.
-intros a l Default.
-assert (HlAux := lengthOfCPToList (ListToCP l Default)).
-assert (Hl : S (length l) = length (a :: CPToList (ListToCP l Default))) by (simpl; apply eq_S; assumption);
-clear HlAux; apply eq_sym in Hl.
-assert (Hal := lengthOfCPToList (ListToCP (a :: l) Default)); apply eq_sym in Hal.
-apply listInd with (length l) Default; try assumption.
-rewrite CPLHd; simpl; reflexivity.
-assert (H : tl (a :: CPToList (ListToCP l Default)) = CPToList (ListToCP l Default)) by (simpl; reflexivity);
-rewrite H; clear H.
-induction l.
-simpl; reflexivity.
-clear IHl.
-assert (H := CPToListTl1 a a0 l (ListToCP (a :: a0 :: l) Default)); rewrite H; clear H.
-assert (H := CPCPL a0 l (ListToCP (a0 :: l) Default) (tailCP (ListToCP (a :: a0 :: l) Default)));
-apply H; clear H.
-assert (Ha0l : (S (length l)) = length (a0  :: l)) by (simpl; reflexivity).
-assert (Haa0l : (S (S (length l))) = length (a :: a0  :: l)) by (simpl; reflexivity).
-assert (H := ListToCPTl a a0 l Ha0l Haa0l Default); rewrite <- H; clear H.
-unfold tailCPbis.
-repeat (elim_eq_rect; simpl); reflexivity.
-Qed.
-
 Lemma CPLOK {T : Type} : forall (l : list T) Default,
   CPToList (ListToCP l Default) = l.
 Proof.
-intros l Default.
-induction l.
-simpl; reflexivity.
-rewrite <- CPLRec.
-rewrite IHl.
-reflexivity.
+intros l Default; induction l; [reflexivity|].
+transitivity (a :: CPToList (ListToCP l Default)); [|rewrite IHl; reflexivity].
+clear IHl; apply listInd with (length l) Default;
+[rewrite <- lengthOfCPToList; simpl; reflexivity|
+ simpl; rewrite <- lengthOfCPToList; reflexivity|rewrite CPLHd; simpl; auto|].
+induction l; [reflexivity|clear IHl].
+transitivity (CPToList (tailCP (ListToCP (a :: a0 :: l) Default)));
+[apply CPToListTl|transitivity (CPToList (ListToCP (a0 :: l) Default))];
+[cut (tailCP (ListToCP (a :: a0 :: l) Default) = ListToCP (a0 :: l) Default)|];
+[intro H; rewrite H; auto| |reflexivity].
+transitivity (tailCP (consHeadCP a (ListToCP (a0 :: l) Default)));
+[|induction l]; reflexivity.
 Qed.
 
 Definition fixLastCP {T:Type} {n:nat} (appPred : cartesianPower T (S (S n)) -> Prop) (t : T) : cartesianPower T (S n) -> Prop.

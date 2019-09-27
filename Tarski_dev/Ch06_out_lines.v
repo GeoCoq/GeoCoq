@@ -120,17 +120,11 @@ Qed.
 
 Lemma l6_4_2 : forall A B P, Col A P B /\ ~ Bet A P B -> Out P A B.
 Proof.
-    unfold Col.
-    intros.
-    spliter.
-    unfold Out.
-    induction H.
-      contradiction.
-    induction (eq_dec_points A P).
-      subst P; intuition.
-    induction (eq_dec_points B P).
-      subst P; intuition.
-    induction H; repeat split; Between.
+intros A B P [HC HNBet].
+induction (eq_dec_points A P); [subst P; exfalso; apply HNBet; Between|].
+induction (eq_dec_points B P); [subst P; exfalso; apply HNBet; Between|].
+unfold Col in HC; destruct HC as [HC|HC]; [exfalso; apply HNBet; auto|].
+destruct HC as [HC|HC]; repeat split; Between.
 Qed.
 
 (** out reflexivity. l6_5 *)
@@ -585,23 +579,10 @@ Qed.
 
 Lemma not_out_bet : forall A B C, Col A B C -> ~ Out B A C -> Bet A B C.
 Proof.
-    intros.
-    unfold Out in H0.
-    induction (eq_dec_points A B).
-      subst.
-      Between.
-    induction (eq_dec_points B C).
-      subst.
-      Between.
-    unfold Col in *.
-    decompose [or] H;clear H.
-      assumption.
-      exfalso.
-      apply H0.
-      intuition.
-    exfalso.
-    apply H0.
-    intuition.
+intros A B C.
+destruct (eq_dec_points A B) as [|HAB]; [subst; Between|].
+destruct (eq_dec_points B C) as [|HBC]; [subst; Between|].
+intros [|[|]] HOut; [auto|..]; exfalso; apply HOut; unfold Out; Between.
 Qed.
 
 Lemma or_bet_out : forall A B C, Bet A B C \/ Out B A C \/ ~Col A B C.

@@ -2,9 +2,9 @@ Require Import mathcomp.ssreflect.ssreflect.
 From mathcomp
 Require Import ssrbool ssrfun ssrnat eqtype choice seq.
 From mathcomp
-Require Import fintype finset finfun bigop.
+Require Import fintype bigop.
 From mathcomp
-Require Import ssralg ssrnum path generic_quotient matrix mxalgebra.
+Require Import ssralg ssrnum matrix.
 From mathcomp
 Require Import zmodp.
 

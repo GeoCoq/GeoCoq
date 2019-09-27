@@ -1,7 +1,10 @@
 Require Import NArith.
+(*
 Require Import GeoCoq.Utils.sets.
+*)
 Require Import GeoCoq.Meta_theory.Models.tarski_to_col_theory.
 Require Import GeoCoq.Tactics.Coinc.ColR.
+Require Import List.
 
 Ltac add_to_distinct_list x xs :=
   match xs with
@@ -67,6 +70,7 @@ Ltac assert_sp_ok Tpoint Col lvar :=
           apply (collect_diffs A B HDiff pa pb SP Interp) in HOK; try reflexivity
   end.
 
+(*
 Ltac subst_in_cols Tpoint Col :=
   repeat
   match goal with
@@ -101,6 +105,7 @@ Ltac show_all' :=
   end.
 
 Ltac clear_cols_gen Tpoint Col := show_all'; clear_cols_aux Tpoint Col.
+*)
 
 Ltac Col_refl Tpoint Col :=
   match goal with
@@ -113,7 +118,7 @@ Ltac Col_refl Tpoint Col :=
         let HSS := fresh in
           assert (HSS := @ss_ok_empty Tpoint Col (interp lvar Default)); assert_ss_ok Tpoint Col lvar;
         let HSP := fresh in
-          assert (HSP := @sp_ok_empty Tpoint (interp lvar Default)); assert_sp_ok Tpoint Col lvar; 
+          assert (HSP := @sp_ok_empty Tpoint (interp lvar Default)); assert_sp_ok Tpoint Col lvar;
           match goal with
             | HOKSS : ss_ok ?SS ?Interp, HOKSP : sp_ok ?SP ?Interp |- _ =>
               apply (test_col_ok SS SP Interp pa pb pc HOKSS HOKSP); c
@@ -135,7 +140,6 @@ Ltac deduce_cols_aux Tpoint Col :=
   end.
 
 Ltac deduce_cols Tpoint Col := deduce_cols_aux Tpoint Col.
-*)
 
 Ltac deduce_cols_hide_aux Tpoint Col :=
   match goal with
@@ -175,3 +179,22 @@ Ltac cols_aux Tpoint Col :=
 Ltac cols_gen Tpoint Col := show_all'; cols_aux Tpoint Col.
 
 Ltac Col_refl_test Tpoint Col := deduce_cols_hide_gen Tpoint Col; cols_gen Tpoint Col.
+*)
+
+(*
+Section Test.
+
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+Goal forall A B C D,
+  A <> B ->
+  Col A B C -> Col A B D ->
+  Col B C D.
+Proof.
+intros.
+Time Col_refl Tpoint Col.
+simpl.
+Qed.
+
+End Test.
+*)

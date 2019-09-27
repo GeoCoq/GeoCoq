@@ -3388,348 +3388,64 @@ Qed.
 Lemma l11_29_a : forall A B C D E F, LeA A B C D E F ->
   exists Q, InAngle C A B Q /\ CongA A B Q D E F.
 Proof.
-    intros.
-    unfold LeA in H.
-    ex_and H P.
-    assert(E <> D /\ B <> A /\ E <> F /\ E <> P /\ B <> C).
-      unfold CongA in *.
-      unfold InAngle in H.
-      spliter.
-      repeat split.
-        auto.
-        auto.
-        auto.
-        auto.
-      auto.
-    spliter.
-    assert(A <> B /\ C <> B).
-      intuition.
-    spliter.
-    assert(HH:=or_bet_out A B C).
-    induction HH.
-      assert(Bet D E P).
-        eapply bet_conga__bet.
-          apply H8.
-        assumption.
-      exists C.
-      split.
-        apply inangle3123; assumption.
-      assert(HH:=H).
-      unfold InAngle in HH.
-      spliter.
-      ex_and H13 X.
-      induction H14.
-        subst X.
-        assert(Bet E F P \/ Bet E P F).
-          eapply (l5_2 D).
-            auto.
-            assumption.
-          assumption.
-        eapply l11_10.
-          apply H0.
-          apply out_trivial.
-          auto.
-          apply out_trivial.
-          auto.
-          apply out_trivial.
-          assumption.
-        repeat split.
-          auto.
-          auto.
-        assumption.
-      assert(Out E P F).
-        unfold Out in H14.
-        spliter.
-        induction H16.
-          assert( Bet D X P).
-            eapply between_exchange2.
-              apply H9.
-            assumption.
-          assert(Bet D E X).
-            eapply between_inner_transitivity.
-              apply H9.
-            assumption.
-          assert(Bet D E F).
-            eapply between_exchange4.
-              apply H18.
-            assumption.
-          unfold Out.
-          repeat split.
-            auto.
-            auto.
-          apply (l5_2 D); auto.
-        assert(Bet D P X).
-          eapply outer_transitivity_between2.
-            apply H9.
-            assumption.
-          assumption.
-        assert(Bet D P F).
-          eapply between_exchange4.
-            apply H17.
-          assumption.
-        assert(Bet E P F).
-          eapply between_exchange3.
-            apply H9.
-          assumption.
-        repeat split.
-          auto.
-          auto.
-        left.
-        assumption.
-      eapply l11_10.
-        apply H0.
-        apply out_trivial.
-        auto.
-        apply out_trivial.
-        auto.
-        apply out_trivial.
-        assumption.
-      eapply l6_6.
-      assumption.
-    induction H8.
-      assert(exists Q, CongA D E F A B Q).
-        apply angle_construction_3.
-          auto.
-          auto.
-        assumption.
-      ex_and H9 Q.
-      exists Q.
-      split.
-        repeat split.
-          assumption.
-          intro.
-          subst Q.
-          unfold CongA in H10.
-          spliter.
-          intuition.
-          auto.
-        exists A.
-        split.
-          apply between_trivial2.
-        right.
-        assumption.
-      apply conga_sym.
-      assumption.
-    assert(D <> E /\ F <> E).
-      intuition.
-    spliter.
-    assert(HH:=or_bet_out D E F).
-    induction HH.
-      prolong A B Q E F.
-      exists Q.
-      split.
-        repeat split.
-          assumption.
-          intro.
-          treat_equalities.
-          auto.
-          assumption.
-        exists B.
-        split.
-          assumption.
-        left.
-        reflexivity.
-      eapply conga_line; try assumption.
-        intro.
-        treat_equalities.
-        auto.
-    induction H11.
-      assert(Out E D P).
-        eapply in_angle_out.
-          apply H11.
-        assumption.
-      assert (Out B A C).
-        eapply l11_21_a.
-          apply H12.
-        apply conga_sym.
-        assumption.
-      apply False_ind.
-      apply H8.
-      apply out_col in H13.
-      Col.
-    (************)
-    assert(exists Q, CongA D E F A B Q /\ OS A B Q C).
-      apply angle_construction_1; assumption.
-    ex_and H12 Q.
-    exists Q.
-    assert(exists DD, Out E D DD /\ Cong E DD B A).
-      eapply segment_construction_3; auto.
-    ex_and H14 DD.
-    assert(exists FF, Out E F FF /\ Cong E FF B Q).
-      eapply segment_construction_3.
-        auto.
-      unfold CongA in H12.
-      spliter.
-      auto.
-    ex_and H16 FF.
-    assert(InAngle P DD E FF).
-      eapply l11_25.
-        apply H.
-        apply l6_6.
-        assumption.
-        apply l6_6.
-        assumption.
-      apply out_trivial.
-      auto.
-    assert(HH18:=H18).
-    unfold InAngle in H18.
-    spliter.
-    ex_and H21 X.
-    induction H22.
-      subst X.
-      assert (Bet D E F).
-        eapply bet_out_out_bet.
-          apply H21.
-          apply l6_6.
-          assumption.
-        apply l6_6.
-        assumption.
-      apply False_ind.
-      apply H11.
-      unfold Col.
-      left.
-      assumption.
-    assert(exists CC, Out B C CC /\ Cong B CC E X).
-      apply segment_construction_3.
-        auto.
-      unfold Out in H22.
-      spliter.
-      auto.
-    ex_and H23 CC.
-    assert (CongA A B CC DD E X).
-      eapply l11_10.
-        apply H0.
-        apply out_trivial.
-        auto.
-        apply l6_6.
-        assumption.
-        apply l6_6.
-        assumption.
-      assumption.
-    assert(Cong A CC DD X).
-      eapply cong2_conga_cong.
-        apply H25.
-        apply cong_symmetry.
-        apply cong_commutativity.
-        assumption.
-      assumption.
-    assert(CongA A B Q DD E FF).
-      eapply l11_10.
-        apply conga_sym.
-        apply H12.
-        apply out_trivial.
-        auto.
-        apply out_trivial.
-        intro.
-        subst Q.
-        apply cong_identity in H17.
-        subst FF.
-        absurde.
-        apply l6_6.
-        assumption.
-      apply l6_6.
-      assumption.
-    assert(Cong A Q DD FF).
-      eapply cong2_conga_cong.
-        apply H27.
-        apply cong_symmetry.
-        apply cong_commutativity.
-        assumption.
-      apply cong_symmetry.
-      assumption.
-    assert(CongA CC B Q X E FF).
-      apply l11_22b with A DD.
-      split.
-        apply one_side_symmetry.
-        eapply out_out_one_side.
-          apply invert_one_side.
-          apply H13.
-        assumption.
-      split.
-        assert(InAngle X DD E FF).
-          eapply l11_25.
-            apply HH18.
-            apply out_trivial.
-            auto.
-            apply out_trivial.
-            auto.
-          assumption.
-        apply in_angle_one_side in H29.
-          apply invert_one_side in H29.
-          apply H29.
-          intro.
-          apply H11.
-          eapply col_out2_col.
-            apply H30.
-            apply l6_6.
-            assumption.
-          apply l6_6.
-          assumption.
-        intro.
-        apply H8.
-        eapply (col_conga_col D E P); [|apply conga_sym, H0].
-        eapply col_out2_col.
-          apply col_permutation_4.
-          apply H30.
-          apply l6_6.
-          assumption.
-        assumption.
-      split.
-        apply conga_sym.
-        eapply l11_10.
-          apply conga_sym.
-          apply conga_comm.
-          apply H0.
-          assumption.
-          apply l6_6.
-          assumption.
-          apply l6_6.
-          assumption.
-        apply out_trivial.
-        auto.
-      assumption.
-    assert(Cong CC Q X FF).
-      eapply cong2_conga_cong.
-        apply H29.
-        apply cong_commutativity.
-        assumption.
-      apply cong_symmetry.
-      assumption.
-    split.
-      assert(InAngle CC A B Q).
-        repeat split.
-          assumption.
-          intro.
-          subst Q.
-          unfold CongA in H12.
-          spliter.
-          absurde.
-          intro.
-          subst CC.
-          unfold CongA in H25.
-          spliter.
-          auto.
-        exists CC.
-        split.
-          eapply l4_6.
-            apply H21.
-          repeat split; Cong.
-        right.
-        apply out_trivial.
-        unfold Out in H23.
-        spliter.
-        auto.
-      eapply l11_25.
-        apply H31.
-        apply out_trivial.
-        auto.
-        apply out_trivial.
-        unfold CongA in H27.
-        spliter.
-        auto.
-      assumption.
-    apply conga_sym.
-    assumption.
+intros A B C D E F HL; destruct (or_bet_out D E F) as [|[HO|HNC1]].
+
+  {
+  destruct HL as [P [[HDE [HEF _]] [HAB [HBC _]]]].
+  destruct (point_construction_different A B) as [Q [HB' HD]]; exists Q.
+  split; [|apply conga_line; Between]; repeat (split; auto); exists B; Between.
+  }
+
+  {
+  assert (H := HO); destruct HL as [P [HI HCong]].
+  apply (in_angle_out _ _ _ P) in H ; [|auto].
+  apply (l11_21_a _ _ _ A B C) in H; [|apply conga_sym; auto].
+  destruct HI as [HDE [HEF _]]; destruct HCong as [HAB [HBC _]].
+  exists C; split; [apply inangle3123|apply l11_21_b]; Between.
+  }
+
+  {
+  destruct (or_bet_out A B C) as [|[HO|HNC2]].
+
+    {
+    destruct HL as [P [HI HCong]]; apply bet_conga__bet in HCong; [|auto].
+    apply col_in_angle_out in HI; [|Col|intro; apply HNC1; Col].
+    apply l6_4_1 in HI; destruct HI as [_ HF]; exfalso; apply HF; auto.
+    }
+
+    {
+    destruct (angle_construction_3 D E F A B) as [Q ?];
+    [assert_diffs; auto..|exists Q; split; [|apply conga_sym; auto]].
+    apply out321__inangle; [unfold CongA in *; spliter|]; auto.
+    }
+
+    {
+    destruct (angle_construction_1 D E F A B C) as [Q []]; [Col..|].
+    exists Q; split; [|apply conga_sym; auto].
+    destruct HL as [P [? HCongA]].
+    show_distinct A B; [|show_distinct D E]; [..|show_distinct E F]; [Col..|].
+    show_distinct B Q; [unfold CongA in *; spliter; auto|].
+    show_distinct E P; [unfold CongA in *; spliter; auto|].
+    destruct (segment_construction_3 E D B A) as [DD [HO1 HCong1]];
+    destruct (segment_construction_3 E F B Q) as [FF [HO2 HCong2]]; finish.
+    assert (HX : InAngle P DD E FF) by (apply l11_25 with P D F; finish).
+    assert (HI := HX); destruct HX as [_ [_ [_ [X [HB HE]]]]].
+    destruct HE as [?|HO3]; [treat_equalities; exfalso; apply HNC1; ColR|].
+    destruct (segment_construction_3 B C E X) as [CC [HO4 HCong3]];
+    [intro; subst; Col|assert_diffs; auto|repeat split];
+    [unfold CongA in *; spliter; assert_diffs; auto..|exists CC].
+    split; [apply l4_6 with DD X FF; [auto|]|right; finish].
+    assert (CongA A B CC DD E X) by (apply l11_10 with A C D P; finish).
+    assert(CongA A B Q DD E FF)
+      by (apply l11_10 with A Q D F; finish; apply conga_sym; auto).
+    repeat split; apply cong2_conga_cong with E B; finish; apply conga_sym;
+    auto; apply l11_22b with A DD; split; [apply os_out_os with C B; finish|].
+    split; [|split; [apply conga_comm|]; auto].
+    apply invert_one_side, os_out_os with P E; finish.
+    apply in_angle_one_side; [intro; apply HNC1; ColR| |auto].
+    apply ncol_conga_ncol in HCongA; [intro; apply HCongA; ColR|auto].
+    }
+  }
 Qed.
 
 Lemma in_angle_line : forall A B C P, P <> B -> A <> B -> C <> B -> Bet A B C -> InAngle P A B C.

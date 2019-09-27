@@ -947,12 +947,7 @@ Qed.
 
 Lemma perp_right_comm : forall A B C D, Perp A B C D -> Perp A B D C.
 Proof.
-    unfold Perp.
-    intros.
-    ex_and H X.
-    exists X.
-    unfold Perp_at in *.
-    intuition.
+intros A B C D [X [HAB [HCD [HC1 [HC2 HPer]]]]]; exists X; repeat (split; Col).
 Qed.
 
 Lemma perp_comm : forall A B C D, Perp A B C D -> Perp B A D C.

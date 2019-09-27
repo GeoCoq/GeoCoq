@@ -1235,62 +1235,21 @@ Qed.
 Lemma outer_pasch : forall A B C P Q,
  Bet A C P -> Bet B Q C -> exists X, Bet A X B /\ Bet P Q X.
 Proof.
-    intros.
-    induction(col_dec P Q C).
-      induction(bet_dec P Q C).
-        exists A.
-        split.
-          Between.
-        eapply between_exchange4 with C;Between.
-      assert (Out Q P C) by (apply l6_4_2;auto).
-      exists B.
-      split.
-        Between.
-      unfold Out in H3.
-      spliter.
-      induction H5.
-        apply between_exchange3 with C;Between.
-      apply outer_transitivity_between2 with C;Between.
-    induction (eq_dec_points B Q).
-      subst Q;exists B;Between.
-    show_distinct A P.
-      intuition.
-    show_distinct P Q.
-      intuition.
-    show_distinct P B.
-      intuition.
-    assert(TS P Q C B).
-      unfold TS.
-      repeat split.
-        Col.
-        assert_cols.
-        intro;apply H1; ColR.
-      exists Q; split;Col;Between.
-    assert_diffs.
-    assert (TS P Q A B) by (apply l9_5 with C P;unfold Out;intuition).
-    unfold TS in H8.
-    spliter.
-    ex_and H11 X.
-    exists X.
-    split.
-      assumption.
-    assert (exists T, Bet X T P /\ Bet C T B) by (apply inner_pasch with A;Between).
-    ex_and H14 T.
-    show_distinct B C.
-      intuition.
-    assert (T = Q).
-      apply l6_21 with X P B C; Col.
-      intro.
-      apply H10.
-      eapply col_permutation_2.
-      apply col_transitivity_1 with X.
-        intro.
-        treat_equalities.
-        apply H10.
-        ColR.
-        Col.
-      Col.
-    subst T;Between.
+intros A B C P Q HB1 HB2.
+destruct (or_bet_out P Q C) as [HB3|[HO|HNC1]]; [exists A|exists B|]; [split..|];
+[|eBetween| |apply bet_out__bet with C|]; Between; [apply l6_6; auto|].
+elim (eq_dec_points B Q); intro HBQ; [subst; exists Q; Between|].
+assert (HX : TS P Q A B).
+  {
+  apply l9_5 with C P; repeat split; finish;
+  [intro; apply HNC1; ColR|exists Q; split; finish|..];
+  intro; treat_equalities; apply HNC1; Col.
+  }
+destruct HX as [_ [HNC2 [X [HC HB3]]]].
+destruct (inner_pasch B P A X C) as [T [HB4 HB5]]; [Between..|].
+exists X; split; [auto|assert (T = Q); [|subst; Between]].
+apply l6_21 with X P B C; Col; [|intro; treat_equalities; apply HNC2; Col].
+show_distinct P X; [apply HNC1|intro; apply HNC1]; ColR.
 Qed.
 
 Lemma os_distincts : forall A B X Y, OS A B X Y ->
