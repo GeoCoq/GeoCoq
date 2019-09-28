@@ -371,7 +371,7 @@ Proof.
         subst P.
         apply H22.
         apply (col_transitivity_1 _ A); Col.
-      apply(l13_11 O A' A L N B' P); Par; try ColR.
+      apply(l13_11 O A' A L N B' P); Par; [|ColR..].
       intro.
       apply H47.
       exists L.
@@ -456,7 +456,7 @@ Proof.
         spliter.
         apply H14.
         Col.
-      apply(l13_11 N B A C M O P); Par; try ColR.
+      apply(l13_11 N B A C M O P); Par; [|ColR..].
       intro.
       assert(Col N A C) by ColR.
       apply H.
@@ -2126,7 +2126,7 @@ Proof.
     apply par_distincts in H14.
     spliter.
     apply par_symmetry.
-    eapply (l13_19_par_aux A' B' C' D' A B C D X Y); sfinish.
+    eapply (l13_19_par_aux A' B' C' D' A B C D X Y); finish; [ColR..| | | |].
       intro.
       subst C'.
       apply H17.

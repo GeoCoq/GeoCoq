@@ -272,16 +272,18 @@ case_eq (exists_witness (fun s : SS.elt => match pick_lines_aux s
   discriminate.
 Qed.
 
-Function identify_lines (ss : SS.t) (sp : SP.t) {measure SS.cardinal ss}
+Fixpoint identify_lines (ss : SS.t) (sp : SP.t) (n : nat)
                         : SS.t :=
   let lines := pick_lines ss sp in
-    match lines with
-      |None => ss
-      |Some (s1,s2) => let auxsetofsets := SS.remove s2 (SS.remove s1 ss) in
-                       let auxset := S.union s1 s2 in
-                       let newss := SS.add auxset auxsetofsets in
-                         identify_lines newss sp
+    match n, lines with
+      | Datatypes.S k, Some (s1,s2) =>
+         let auxsetofsets := SS.remove s2 (SS.remove s1 ss) in
+         let auxset := S.union s1 s2 in
+         let newss := SS.add auxset auxsetofsets in
+         identify_lines newss sp k
+      | _            , _            => ss
     end.
+(*
 Proof.
 intros.
 assert (S(SS.cardinal (SS.remove s1 ss)) = SS.cardinal ss).
@@ -309,9 +311,10 @@ elim (SSWP.In_dec (S.union s1 s2) (SS.remove s2 (SS.remove s1 ss))); intro HDec.
   rewrite <- HR1.
   apply le_n.
 Defined.
+*)
 
 Definition test_col (ss : SS.t) (sp : SP.t) p1 p2 p3 : bool :=
-  let newss := identify_lines ss sp  in
+  let newss := identify_lines ss sp (SS.cardinal ss) in
     SS.exists_ (fun s => S.mem p1 s && S.mem p2 s && S.mem p3 s) newss.
 
 Section Col_refl.
@@ -367,122 +370,128 @@ Definition ss_ok (ss : SS.t) (interp: positive -> COLTpoint) :=
 Definition sp_ok (sp : SP.t) (interp: positive -> COLTpoint) :=
   forall p, SP.mem p sp = true -> interp (fstpp p) <> interp (sndpp p).
 
+(*
+Lemma cardinal_newss1 : forall s1 s2 ss sp,
+  pick_lines ss sp = Some (s1,s2) ->
+  (@In SS) (union s1 s2) (@remove SS s2 (@remove SS s1 ss)) ->
+   Datatypes.S (Datatypes.S (cardinal
+                               (@add SS (union s1 s2)
+                                     (@remove SS s2 (@remove SS s1 ss))))) =
+   cardinal ss.
+Proof.
+intros s1 s2 ss sp Hs1s2 HIn; rewrite add_cardinal_1; [|auto].
+transitivity (Datatypes.S (cardinal (@remove SS s1 ss)));
+[apply eq_S|]; apply remove_cardinal_1;
+[apply pick_lines_ok_2 with sp|apply pick_lines_ok_1 with s2 sp]; auto.
+Qed.
+
+Lemma cardinal_newss2 : forall s1 s2 ss sp,
+  pick_lines ss sp = Some (s1,s2) ->
+  ~ (@In SS) (union s1 s2) (@remove SS s2 (@remove SS s1 ss)) ->
+   Datatypes.S (cardinal
+                  (@add SS (union s1 s2)
+                        (@remove SS s2 (@remove SS s1 ss)))) =
+   cardinal ss.
+Proof.
+intros s1 s2 ss sp Hs1s2 HIn; rewrite add_cardinal_2; [|auto].
+transitivity (Datatypes.S (cardinal (@remove SS s1 ss)));
+[apply eq_S|]; apply remove_cardinal_1;
+[apply pick_lines_ok_2 with sp|apply pick_lines_ok_1 with s2 sp]; auto.
+Qed.
+*)
+
+Lemma strong_induction : forall (P: nat -> Prop),
+  (forall m, (forall n, n < m -> P n) -> P m) ->
+  forall n, P n.
+Proof.
+intros P IH.
+assert (P0 : P 0) by (apply IH; intros m H; exfalso; inversion H).
+intros n; destruct n as [|n]; [auto|].
+cut (forall n, (forall m, m <= n -> P m)); [eauto|clear n].
+intro n; induction n; intros m Hm; inversion Hm; [auto| |eauto].
+subst; apply IH; intros; apply IHn; apply Gt.gt_S_le; auto.
+Qed.
+
 Lemma identify_lines_ok : forall ss sp interp,
   ss_ok ss interp -> sp_ok sp interp ->
-  ss_ok (identify_lines ss sp) interp.
+  ss_ok (identify_lines ss sp (SS.cardinal ss)) interp.
 Proof.
-intros ss sp interp HSS HSP.
-apply (let P interp ss sp newss :=
-       ss_ok ss interp -> sp_ok sp interp -> ss_ok newss interp in
-         identify_lines_ind (P interp)); try assumption.
+intros ss.
+assert (Hn : exists n, SS.cardinal ss = n) by (exists (SS.cardinal ss); auto).
+destruct Hn as [n Hn]; rewrite Hn; clear Hn; revert ss.
+induction n  as [n IHn] using strong_induction.
+intros ss sp interp HSS HSP; simpl; destruct n; simpl; [auto|].
+assert (Hs1s2 : exists s1s2, pick_lines ss sp = s1s2);
+[exists (pick_lines ss sp); auto|destruct Hs1s2 as [p Hs1s2]].
+revert Hs1s2; elim p; [intros [s1 s2] Hs1s2|intro H; rewrite H; auto].
+rewrite Hs1s2; assert (Hs1 := Hs1s2); assert (Hs2 := Hs1s2).
+apply pick_lines_ok_1 in Hs1; apply pick_lines_ok_2 in Hs2.
+apply IHn; [auto|clear IHn p|auto].
+apply SSWP.FM.remove_3 in Hs2; intros s Hmem p1 p2 p3 Hmemp.
+do 2 (rewrite andb_true_iff in Hmemp).
+destruct Hmemp as [[Hmemp1 Hmemp2] Hmemp3].
+assert (HEq : S.Equal (S.union s1 s2) s \/ ~ S.Equal (S.union s1 s2) s)
+  by (rewrite <- S.equal_spec; elim (S.equal (S.union s1 s2) s); auto).
+destruct HEq as [HEq|HEq];
+[|rewrite SSWP.FM.add_neq_b in Hmem; [|auto]; apply HSS with s;
+  [apply SSWP.FM.mem_2, SSWP.FM.remove_3, SSWP.FM.remove_3, SSWP.FM.mem_1 in Hmem; auto|];
+  do 2 (rewrite andb_true_iff); repeat split; auto].
+rewrite <- (SWP.FM.mem_m (eq_refl p1) HEq) in Hmemp1.
+rewrite <- (SWP.FM.mem_m (eq_refl p2) HEq) in Hmemp2.
+rewrite <- (SWP.FM.mem_m (eq_refl p3) HEq) in Hmemp3.
+unfold pick_lines in Hs1s2.
+case_eq (exists_witness
+              (fun s : SS.elt =>
+               match pick_lines_aux s (SS.remove s ss) sp with
+               | Some _ => true
+               | None => false
+               end) ss); [|intro HEW; rewrite HEW in *; discriminate].
+intros e1 HEW; rewrite HEW in *; clear HEW.
+unfold pick_lines_aux in *.
+case_eq (exists_witness (fun s2 : SS.elt => pick_line (S.inter e1 s2) sp)
+                        (SS.remove e1 ss)); try (intro HEW; rewrite HEW in *; discriminate).
+intros e2 HEW; rewrite HEW in *.
+injection Hs1s2; intros He2s2 He1s1.
+rewrite He2s2 in *; rewrite He1s1 in *.
+clear He2s2; clear He1s1; clear Hs1s2; clear e2; clear e1.
+case_eq (pick_line (S.inter s1 s2) sp);
+[|intro HEW2; unfold exists_witness in *; apply SS.choose_spec1 in HEW;
+ apply SSWP.FM.filter_2 in HEW; try apply proper_1;
+ rewrite HEW2 in *; discriminate].
+clear HEW; intro HEW; unfold pick_line in HEW.
+apply SPWEqP.exists_mem_4 in HEW; try (apply proper_00).
+destruct HEW as [x [HmemSP HmemS]].
+rewrite andb_true_iff in HmemS; destruct HmemS as [Hmemfsts Hmemsnds].
+apply HSP in HmemSP.
+apply SWP.FM.mem_2 in Hmemfsts; apply SWP.FM.mem_2 in Hmemsnds.
+apply S.inter_spec in Hmemfsts; destruct Hmemfsts as [Hfss1 Hfss2].
+apply S.inter_spec in Hmemsnds; destruct Hmemsnds as [Hsss1 Hsss2].
+apply SWP.FM.mem_2, SWP.FM.union_1 in Hmemp1.
+apply SWP.FM.mem_2, SWP.FM.union_1 in Hmemp2.
+apply SWP.FM.mem_2, SWP.FM.union_1 in Hmemp3.
+apply CTcol3 with (interp (fstpp(x))) (interp (sndpp(x))); [auto|..].
 
-  intros.
-  assumption.
+  {
+  elim (Hmemp1); intro HInp1; [apply HSS with s1|apply HSS with s2];
+  try (apply SSWP.FM.mem_1; assumption);
+  do 2 (rewrite andb_true_iff);
+  repeat split; apply SWP.FM.mem_1; assumption.
+  }
 
-  clear HSS; clear HSP; clear ss; clear sp.
-  intros ss sp suitablepairofsets s1 s2 Hs1s2 auxsetofsets auxset newss H HSS HSP.
-  assert (Hs1 := Hs1s2).
-  assert (Hs2 := Hs1s2).
-  apply pick_lines_ok_1 in Hs1.
-  apply pick_lines_ok_2 in Hs2.
-  apply SSWEqP.MP.Dec.F.remove_3 in Hs2.
-  apply H; try assumption; clear H.
-  intros s Hmem p1 p2 p3 Hmemp.
-  do 2 (rewrite andb_true_iff in Hmemp).
-  destruct Hmemp as [[Hmemp1 Hmemp2] Hmemp3].
-  unfold newss in Hmem; clear newss.
-  elim (SS.E.eq_dec auxset s); intro HEq.
+  {
+  elim (Hmemp2); intro HInp2; [apply HSS with s1|apply HSS with s2];
+  try (apply SSWP.FM.mem_1; assumption);
+  do 2 (rewrite andb_true_iff);
+  repeat split; apply SWP.FM.mem_1; assumption.
+  }
 
-    rewrite <- HEq in *; clear HEq; clear s.
-    unfold suitablepairofsets in Hs1s2; clear suitablepairofsets.
-    unfold pick_lines in Hs1s2.
-    case_eq (exists_witness
-            (fun s : SS.elt =>
-             match pick_lines_aux s (SS.remove s ss) sp with
-             | Some _ => true
-             | None => false
-             end) ss); try (intro HEW; rewrite HEW in *; discriminate).
-    intros e1 HEW; rewrite HEW in *; clear HEW.
-    unfold pick_lines_aux in *.
-    case_eq (exists_witness
-            (fun s2 : SS.elt => pick_line (S.inter e1 s2) sp)
-            (SS.remove e1 ss)); try (intro HEW; rewrite HEW in *; discriminate).
-    intros e2 HEW; rewrite HEW in *.
-    injection Hs1s2; intros He2s2 He1s1.
-    rewrite He2s2 in *; rewrite He1s1 in *; clear He2s2; clear He1s1; clear Hs1s2; clear e2; clear e1.
-    case_eq (pick_line (S.inter s1 s2) sp).
-
-      clear HEW; intro HEW.
-      unfold pick_line in HEW.
-      apply SPWEqP.exists_mem_4 in HEW; try (apply proper_00).
-      destruct HEW as [x [HmemSP HmemS]].
-      rewrite andb_true_iff in HmemS; destruct HmemS as [Hmemfsts Hmemsnds].
-      apply HSP in HmemSP.
-      apply SWP.Dec.F.mem_2 in Hmemfsts.
-      apply S.inter_spec in Hmemfsts.
-      destruct Hmemfsts as [Hfss1 Hfss2].
-      apply SWP.Dec.F.mem_2 in Hmemsnds.
-      apply S.inter_spec in Hmemsnds.
-      destruct Hmemsnds as [Hsss1 Hsss2].
-      unfold auxset in *.
-      apply CTcol3 with (interp (fstpp(x))) (interp (sndpp(x))); try assumption.
-
-        apply SWP.Dec.F.mem_2 in Hmemp1.
-        apply SWP.Dec.F.union_1 in Hmemp1.
-        elim (Hmemp1); intro HInp1.
-
-          apply HSS with s1.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-          apply HSS with s2.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-        apply SWP.Dec.F.mem_2 in Hmemp2.
-        apply SWP.Dec.F.union_1 in Hmemp2.
-        elim (Hmemp2); intro HInp2.
-
-          apply HSS with s1.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-          apply HSS with s2.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-        apply SWP.Dec.F.mem_2 in Hmemp3.
-        apply SWP.Dec.F.union_1 in Hmemp3.
-        elim (Hmemp3); intro HInp3.
-
-          apply HSS with s1.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-          apply HSS with s2.
-          apply SSWP.Dec.F.mem_1; assumption.
-          do 2 (rewrite andb_true_iff).
-          repeat split; apply SWP.Dec.F.mem_1; assumption.
-
-      intro HEW2; unfold exists_witness in *; apply SS.choose_spec1 in HEW.
-      apply SSWEqP.MP.Dec.F.filter_2 in HEW; try apply proper_1.
-      rewrite HEW2 in *; discriminate.
-
-    rewrite SSWP.Dec.F.add_neq_b in Hmem; try assumption.
-    apply HSS with s.
-    unfold auxsetofsets in *.
-    apply SSWEqP.MP.Dec.F.mem_2 in Hmem.
-    do 2 (apply SSWEqP.MP.Dec.F.remove_3 in Hmem).
-    apply SSWEqP.MP.Dec.F.mem_1.
-    assumption.
-    do 2 (rewrite andb_true_iff).
-    repeat split; assumption.
-Qed.
+  {
+  elim (Hmemp3); intro HInp3; [apply HSS with s1|apply HSS with s2];
+  try (apply SSWP.FM.mem_1; assumption);
+  do 2 (rewrite andb_true_iff);
+  repeat split; apply SWP.FM.mem_1; assumption.
+  }
+Defined.
 
 Lemma test_col_ok : forall ss sp interp p1 p2 p3,
   ss_ok ss interp -> sp_ok sp interp ->
@@ -491,7 +500,7 @@ Lemma test_col_ok : forall ss sp interp p1 p2 p3,
 Proof.
 intros ss sp interp p1 p2 p3 HSS HSP HTC.
 unfold test_col in *.
-assert (HSS2 : ss_ok (identify_lines ss sp) interp)
+assert (HSS2 : ss_ok (identify_lines ss sp (SS.cardinal ss)) interp)
   by (apply identify_lines_ok; assumption).
 
 unfold ss_ok in HSS2.
@@ -507,7 +516,7 @@ intros x y Hxy.
 assert (HmemEq : forall p, S.mem p x = S.mem p y)
   by (intro; apply SWP.Dec.F.mem_m; auto).
 do 3 (rewrite HmemEq); reflexivity.
-Qed.
+Defined.
 
 Lemma ss_ok_empty : forall interp,
   ss_ok SS.empty interp.
@@ -836,7 +845,7 @@ Proof.
 decide equality.
 Defined.
 
-Definition interp (lvar : list (COLTpoint * positive)) (Default : COLTpoint) : positive -> COLTpoint := 
+Definition interp (lvar : list (COLTpoint * positive)) (Default : COLTpoint) : positive -> COLTpoint :=
   fun p => list_assoc_inv COLTpoint positive positive_dec lvar p Default.
 
 Definition eq_tagged (lvar : list (COLTpoint * positive)) := lvar = lvar.

@@ -1,4 +1,7 @@
 # Library name
 -R . GeoCoq
 
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -notation-overridden
+
 # Coq files (filled by the configure)

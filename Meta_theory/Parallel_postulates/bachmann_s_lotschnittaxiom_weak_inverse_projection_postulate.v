@@ -21,10 +21,10 @@ assert (HNCol : ~ Col A B C).
   apply (col2_suma__col A B C A B C); assumption.
 }
 assert (HNCol1 : ~ Col B C P) by (intro; apply HNCol; ColR).
-destruct (l10_6_existence_spec B C P) as [P' HP']; trivial.
+destruct (l10_6_existence_spec B C P) as [P' HP']; auto.
 assert (HP'1 : Reflect P P' B C) by (apply is_image_is_image_spec; auto).
 assert (HNCol2 : ~ Col B C P') by (apply osym_not_col with P; trivial).
-destruct (l10_6_existence_spec B C Q) as [Q' HQ']; trivial.
+destruct (l10_6_existence_spec B C Q) as [Q' HQ']; auto.
 assert (HQ'1 : Reflect Q Q' B C) by (apply is_image_is_image_spec; auto).
 assert_diffs.
 assert (P' <> Q').
