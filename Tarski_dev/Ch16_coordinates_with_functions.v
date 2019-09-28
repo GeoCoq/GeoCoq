@@ -1,7 +1,7 @@
 Require Import Description.
 Require Import Ring.
 Require Import Field.
-Require Import Nsatz.
+Require Import Msatz.
 Require Import Rtauto.
 Require Export GeoCoq.Tarski_dev.Ch16_coordinates.
 Require Import GeoCoq.Tarski_dev.Ch15_pyth_rel.
@@ -762,6 +762,8 @@ Defined.
 Global Instance Fcri: (Cring (Rr:=FRing)).
 Proof. exact (Rmul_comm ringF). Defined.
 
+Delimit Scope FScope with FS. 
+
 Notation "0" := OF : FScope.
 Notation "1" := OneF : FScope.
 Notation "2" := TwoF : FScope.
@@ -815,12 +817,12 @@ apply (prod_uniqueness O E E' C C C2' C2);auto.
 Qed.
 
 Lemma subF__eq0 : forall x y:F, x - y =F= 0 <-> x =F= y.
-Proof. intros; split; intro; nsatz. Qed.
+Proof. intros; split; intro; msatz. Qed.
 
 Lemma mulF__eq0 : forall x y z t:F,
   (x - y) * (z - t) =F= 0 <-> x =F= y \/ z =F= t.
 Proof.
-intros x y z t; split; intro H; [|destruct H; nsatz].
+intros x y z t; split; intro H; [|destruct H; msatz].
 setoid_replace (x =F= y) with (x-y =F= 0); [|symmetry; apply subF__eq0].
 setoid_replace (z =F= t) with (z-t =F= 0); [|symmetry; apply subF__eq0].
 apply Fmult_integral; assumption.
@@ -830,7 +832,7 @@ Lemma neqO_mul_neqO : forall x y:F,  ~ x =F= 0 -> ~ y =F= 0 -> ~ x * y =F= 0.
 Proof. intros x y Hx Hy Hxy; apply Fmult_integral in Hxy; intuition. Qed.
 
 Lemma oppF_neq0 : forall f, ~ f =F= 0 <-> ~ - f =F= 0.
-Proof. intro; split; intro HF; intro H; apply HF; clear HF; nsatz. Qed.
+Proof. intro; split; intro HF; intro H; apply HF; clear HF; msatz. Qed.
 
 Lemma Ps_One : Ps O E E.
 Proof.
@@ -858,7 +860,7 @@ Proof.
 unfold sqrt3.
 rewrite PythFOk.
 rewrite PythFOk.
-nsatz.
+msatz.
 Qed.
 
 Lemma characterization_of_congruence_F : forall A B C D,
@@ -1146,7 +1148,7 @@ intros; elim (eq_dec_points A B); intro HAB.
 
     {
     elim (coordinates_of_point_F I); intros Ic HIc.
-    destruct Ic as [[Ix HIx] [Iy HIy]]; split; nsatz.
+    destruct Ic as [[Ix HIx] [Iy HIy]]; split; msatz.
     }
 
     {
@@ -1156,7 +1158,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F I); intros Ic HIc.
     destruct Ac as [[Ax HAx] [Ay HAy]].
     destruct Ic as [[Ix HIx] [Iy HIy]].
-    intro; spliter; split; nsatz; apply neq20.
+    intro; spliter; split; assert (NU := neq20); msatz.
     }
   }
 
@@ -1175,7 +1177,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     intros HAB HCong HCol.
     cut ((Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0) \/
          (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0); [intuition|].
-    clear HAB; scnf; repeat rewrite <- mulF__eq0; try nsatz; rtauto.
+    clear HAB; scnf; repeat rewrite <- mulF__eq0; try msatz; rtauto.
     }
 
     {
@@ -1187,7 +1189,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F A); intros [Ax Ay] _.
     elim (coordinates_of_point_F B); intros [Bx By] _.
     elim (coordinates_of_point_F I); intros [Ix Iy] _.
-    intro; spliter; split; nsatz; apply neq20.
+    intro; spliter; split; assert (NU := neq20); msatz.
     }
   }
 Qed.
@@ -1215,8 +1217,9 @@ split; [clear H; clear D;
         intro H1; exists D; split;
         [assumption|revert H1; revert H]];
 elim (coordinates_of_point_F D); intros Dc _;
-destruct Dc as [Dx Dy]; intros; spliter; nsatz.
-simpl; apply neqO_mul_neqO; apply neq20.
+destruct Dc as [Dx Dy]; intros; spliter; 
+assert (NU := neqO_mul_neqO _ _ neq20 neq20);
+msatz.
 Qed.
 
 Lemma characterization_of_parallelism_F_aux : forall A B C D,
@@ -1241,6 +1244,21 @@ intros; split; intro H; [do 2 (split; try solve [assert_diffs; auto])|
   }
 Qed.
 
+Lemma put_neg_in_goal : forall A B, A \/ B -> (~ A -> B).
+Proof. tauto. Qed.
+
+Ltac put_negs_in_goal :=
+  repeat
+  match goal with
+    H: ~ ?X |- _ => revert H; apply put_neg_in_goal
+  end.
+
+(** We only need to prove discrimination results
+as so far the only constant different from 0 or 1 which occurs is 2. *)
+Ltac prove_discr_for_powers_of_2 :=
+  simpl; try rewrite <- oppF_neq0; repeat apply neqO_mul_neqO; apply neq20.
+
+
 Lemma characterization_of_parallelism_F_bis : forall A B C D,
   Par A B C D <->
   let (Ac, _) := coordinates_of_point_F A in
@@ -1254,6 +1272,14 @@ Lemma characterization_of_parallelism_F_bis : forall A B C D,
   (Ax - Bx) * (Cy - Dy) - (Ay - By) * (Cx - Dx) =F= 0 /\
   (~ (Ax =F= Bx) \/ ~ (Ay =F= By)) /\ (~ (Cx =F= Dx) \/ ~ (Cy =F= Dy)).
 Proof.
+assert (Nsat2 : ~ (-(2) =F= 0)).
+  now prove_discr_for_powers_of_2.
+assert (Nsat4 : ~ (2 * (1 + 1) =F= 0)).
+  now prove_discr_for_powers_of_2.
+assert (Nsatm4 : ~ (-(2 * (1 + 1)) =F= 0)).
+  now prove_discr_for_powers_of_2.
+assert (Nsat8 : ~ (2 * (2 * (1 + 1)) =F= 0)).
+  now prove_discr_for_powers_of_2.
 intros; rewrite characterization_of_parallelism_F_aux.
 split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
 
@@ -1273,9 +1299,7 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
   cut ((Ax - Bx) * (Cy - Dy) - (Ay - By) * (Cx - Dx) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; try solve[clear HAB; clear HCD; repeat rewrite <- mulF__eq0; nsatz;
-                  simpl; try rewrite <- oppF_neq0;
-                  apply neqO_mul_neqO; apply neq20].
+  scnf; try (clear HAB; clear HCD; repeat rewrite <- mulF__eq0; msatz).
   clear HPx; clear HPy; clear HQx; clear HQy; clear HCol.
   destruct H as [[H1 H2] [H3 H4]];
   elim H1; clear H1; [auto|intro H1];
@@ -1305,7 +1329,7 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
   scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0;
-  try solve [nsatz;simpl; repeat try apply neqO_mul_neqO;try apply neq20;try ( apply  (oppF_neq0 (_+_ one one)));  apply neq20].
+  try (msatz;simpl).
   clear HPx; clear HPy; clear HQx; clear HQy; clear HPar.
   decompose [and or] H;clear H;auto.
   }
@@ -1364,7 +1388,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
   elim (coordinates_of_point_F C); intros [Cx Cy] _.
   elim (coordinates_of_point_F D); intros [Dx Dy] _.
   elim (coordinates_of_point_F X); intros [Xx Xy] _.
-  intros; split; [nsatz|split; assumption].
+  intros; split; [msatz|split; assumption].
   }
 
   {
@@ -1390,7 +1414,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
     cut ((Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0 \/
          ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
     rewrite <- neg_and_eqF in HCD; scnf; [| |exfalso; rtauto];
-    clear HCD; repeat rewrite <- mulF__eq0; nsatz.
+    clear HCD; repeat rewrite <- mulF__eq0; msatz.
     }
   setoid_rewrite characterization_of_neq_F_bis.
   setoid_rewrite characterization_of_collinearity_F.
@@ -1410,7 +1434,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
   cut ((Ux - Xx) * (Xx - Vx) + (Uy - Xy) * (Xy - Vy) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; try solve [clear HAB; clear HCD; repeat rewrite <- mulF__eq0; nsatz].
+  scnf; try solve [clear HAB; clear HCD; repeat rewrite <- mulF__eq0; msatz].
   clear HPerp; clear H1; clear H2; clear H3; clear H4.
   destruct H as [[H1 H2] [H3 H4]];
   elim H1; clear H1; [auto|intro H1];
@@ -1510,23 +1534,8 @@ Lemma centroid_theorem : forall A B C A1 B1 C1 G,
   Col C C1 G \/ Col A B C.
 Proof.
 intros A B C A1 B1 C1 G; convert_to_algebra; decompose_coordinates.
-intros; spliter. express_disj_as_a_single_poly; nsatz.
+intros; spliter. express_disj_as_a_single_poly; msatz.
 Qed.
-
-Lemma put_neg_in_goal : forall A B, A \/ B -> (~ A -> B).
-Proof. tauto. Qed.
-
-Ltac put_negs_in_goal :=
-  repeat
-  match goal with
-    H: ~ ?X |- _ => revert H; apply put_neg_in_goal
-  end.
-
-(** We only need to prove discrimination results
-as so far the only constant different from 0 or 1 which occurs is 2. *)
-Ltac prove_discr_for_powers_of_2 :=
-  simpl; try rewrite <- oppF_neq0; repeat apply neqO_mul_neqO; apply neq20.
-
 
 Lemma nine_point_circle : forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
   ~ Col A B C ->
@@ -1544,8 +1553,12 @@ decompose_coordinates; intros; spliter.
 clear H24; clear H25; clear H26; clear H27; clear H28; clear H29;
 clear H30; clear H31; clear H32; clear H33; clear H34; clear H35;
 put_negs_in_goal.
-scnf; [| | | | | |spliter; rtauto]; express_disj_as_a_single_poly;
-nsatz; prove_discr_for_powers_of_2.
+scnf; [ .. |spliter; rtauto]; express_disj_as_a_single_poly;
+ (assert (Nsat2 : ~ ((2) =F= 0)) by
+  prove_discr_for_powers_of_2;
+ assert (Nsatm2 : ~ (-(2) =F= 0)) by 
+   prove_discr_for_powers_of_2;
+ msatz).
 Qed.
 
 (** We deduce the axioms of the area method. *)
@@ -1645,7 +1658,10 @@ assert ( ((Bx - Ax) * (Cx - Ax) + (By - Ay) * (Cy - Ay)) * ((Ax - Px) * (Cy - Py
  =F= ((Ax - Px) * (By - Py) - (Ay - Py) * (Bx - Px)) * ((Cx - Ax) * (Cx - Ax) + (Cy - Ay) * (Cy - Ay))).  
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-nsatz.
+assert (H2 : - Bx * Cy =F= - Bx * Ay - Ax * Cy +
+     Ax * By + Ay * Cx - By * Cx)
+  by msatz.
+now ring [H2].
 
 apply field_prop.
 intro.
@@ -1683,8 +1699,8 @@ rewrite characterization_of_congruence_F.
 unfold AM_Cong, Py, square_dist.
 decompose_coordinates.
 split;intro;
-nsatz;
-prove_discr_for_powers_of_2.
+assert (NU := neq20);
+msatz.
 Qed.
 
 Lemma Col_AM_Col : forall A B C, AM_Col A B C <-> Col A B C.
@@ -1708,8 +1724,8 @@ rewrite (characterization_of_right_triangle_F);
 unfold AM_Per, Py, square_dist;
 decompose_coordinates;
 intro;
-nsatz.
-prove_discr_for_powers_of_2.
+assert (NU : ~ (- (2) =F= 0)) by prove_discr_for_powers_of_2;
+msatz.
 Qed.
 
 Lemma Perp_AM_Perp : forall A B C D,
@@ -1721,14 +1737,11 @@ repeat (rewrite characterization_of_neq_F).
 unfold AM_Perp, Py4, Py, square_dist.
 decompose_coordinates.
 split;intro.
-use H.
-repeat split.
-nsatz.
-prove_discr_for_powers_of_2.
-assumption.
-assumption.
+use H; repeat split; try assumption.
+assert (NU : ~ (- (2) =F= 0)) by prove_discr_for_powers_of_2.
+msatz.
 use H;repeat split;try assumption.
-nsatz.
+msatz.
 Qed.
 
 Lemma AM_Par_ratio_AM_Par :
@@ -1755,7 +1768,7 @@ put_negs_in_goal.
 express_disj_as_a_single_poly.
 
 clear H2.
-nsatz.
+msatz.
 Qed.
 
 Lemma Par_AM_Par : forall A B C D,
@@ -1772,12 +1785,12 @@ split.
 intros.
 use H.
 split;auto.
-nsatz.
+msatz.
 intros.
 use H.
 split;auto.
 split;auto.
-nsatz.
+msatz.
 Qed.
 
 Lemma AM_lower_dim :
@@ -1939,7 +1952,7 @@ decompose_coordinates;simpl.
 intros.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-nsatz.
+msatz.
 Qed.
 
 Lemma triangle_area : forall A B C H,
@@ -1954,8 +1967,8 @@ intros.
 use H0.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-nsatz.
-prove_discr_for_powers_of_2.
+assert (NU := neq20).
+msatz.
 Qed.
 
 (* We do not need that Col A B C. *)
@@ -1987,10 +2000,10 @@ apply (field_prop_zero) in H1.
 split.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-nsatz.
+msatz.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-nsatz.
+msatz.
 intro.
 apply H.
 rewrite <- H2.
@@ -2018,7 +2031,7 @@ apply field_prop_1 in H1;
 apply field_prop_1 in H3.
 put_negs_in_goal;
 express_disj_as_a_single_poly.
-nsatz.
+msatz.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
@@ -2026,7 +2039,7 @@ apply field_prop_1 in H1;
 apply field_prop_1 in H3.
 put_negs_in_goal;
 express_disj_as_a_single_poly.
-nsatz.
+msatz.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
@@ -2099,8 +2112,8 @@ decompose_coordinates.
 unfold cross_product.
 simpl.
 intros;spliter.
-nsatz.
-prove_discr_for_powers_of_2.
+assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2.
+msatz.
 Qed.
 
 Lemma exists_equilateral_triangle : forall A B,
@@ -2119,8 +2132,9 @@ intro A.
 convert_to_algebra.
 decompose_coordinates; intros; spliter;
 split;
-nsatz;
-prove_discr_for_powers_of_2.
+assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2;
+assert (NUm : ~(-(2 * 2) =F= 0)) by prove_discr_for_powers_of_2;
+msatz.
 Qed.
 
 (*
@@ -2173,7 +2187,7 @@ right.
 right.
 right.
 right.
-nsatz.
+msatz.
 
 setoid_rewrite characterization_of_parallelism_F.
 *)
@@ -2192,7 +2206,7 @@ decompose_coordinates;simpl.
 unfold cross_product;simpl.
 intros.
 spliter.
-nsatz.
+msatz.
 Qed.
 
 (*
