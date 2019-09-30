@@ -3,7 +3,7 @@ cp -f _CoqProject.in _CoqProject
 find . -name "*.v" | grep -v Sandbox | grep -v POF >> _CoqProject
 
 # We lack a few minutes to be able to build the whole library.
-sed -i.bak '/Ch16_coordinates_with_functions\.v/d'             _CoqProject
+#sed -i.bak '/Ch16_coordinates_with_functions\.v/d'             _CoqProject
 #sed -i.bak '/Elements\/OriginalProofs\/proposition_30\.v/d'    _CoqProject
 #sed -i.bak '/Elements\/OriginalProofs\/proposition_44A\.v/d'   _CoqProject
 #sed -i.bak '/Elements\/OriginalProofs\/proposition_44\.v/d'    _CoqProject
