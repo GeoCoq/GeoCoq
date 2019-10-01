@@ -1,7 +1,7 @@
 Require Import Description.
 Require Import Ring.
 Require Import Field.
-Require Import Msatz.
+Require Import GeoCoq.Tarski_dev.Msatz.
 Require Import Rtauto.
 Require Export GeoCoq.Tarski_dev.Ch16_coordinates.
 Require Import GeoCoq.Tarski_dev.Ch15_pyth_rel.
@@ -1328,10 +1328,9 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
   cut ((Cx - Dx) * (Dy - Qy) - (Cy - Dy) * (Dx - Qx) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0;
-  try (msatz;simpl).
-  clear HPx; clear HPy; clear HQx; clear HQy; clear HPar.
-  decompose [and or] H;clear H;auto.
+  assert (Nsatm2 : ~ (2 =F= 0)) by prove_discr_for_powers_of_2.
+  scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0; try msatz.
+  decompose [and or] H; clear H; auto.
   }
 Qed.
 
@@ -2134,6 +2133,7 @@ decompose_coordinates; intros; spliter;
 split;
 assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2;
 assert (NUm : ~(-(2 * 2) =F= 0)) by prove_discr_for_powers_of_2;
+assert (NUm' : ~(-(2 * (2 * 2)) =F= 0)) by prove_discr_for_powers_of_2;
 msatz.
 Qed.
 
