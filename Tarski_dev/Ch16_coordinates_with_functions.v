@@ -471,7 +471,7 @@ intros; destruct (coordinates_of_point_f P) as [C HC].
 assert (T:=HC); apply Cd_Col in HC; destruct HC as [HCol1 HCol2].
 exists (exist (fun P => Col O E P) (fst C) HCol1,
         exist (fun P => Col O E P) (snd C) HCol2); simpl; assumption.
-Defined.
+Qed.
 
 Definition OF : F.
 Proof. exists O; Col. Defined.
@@ -497,7 +497,7 @@ destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (sum_f x x' Hx Hx').
 destruct (sum_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using sum_uniqueness.
-Defined.
+Qed.
 
 Lemma neq20 : ~ EqF (AddF OneF OneF) OF.
 Proof.
@@ -526,7 +526,7 @@ destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (prod_f x x' Hx Hx').
 destruct (prod_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using prod_uniqueness.
-Defined.
+Qed.
 
 Definition SubF (x y : F) : F.
 Proof.
@@ -544,7 +544,7 @@ destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (diff_f x x' Hx Hx').
 destruct (diff_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using diff_uniqueness.
-Defined.
+Qed.
 
 Definition OppF (x : F) : F.
 Proof.
@@ -560,7 +560,7 @@ destruct (opp_f x Hx).
 destruct (opp_f y Hy); simpl.
 rewrite Hxy in *.
 eauto using (opp_uniqueness O E E' ncolOEE').
-Defined.
+Qed.
 
 Definition InvF (x : F) : F.
 Proof.
@@ -575,7 +575,7 @@ destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
 destruct (inv_f x Hx).
 destruct (inv_f y Hy); simpl.
 treat_equalities; eauto using inv_uniqueness.
-Defined.
+Qed.
 
 Definition DivF (x y : F) : F.
 Proof.
@@ -592,7 +592,7 @@ destruct y as [y Hy]; destruct y' as [y' Hy']; simpl in *.
 destruct (div_f x x' Hx Hx').
 destruct (div_f y y' Hy Hy'); simpl.
 treat_equalities; eauto using div_uniqueness.
-Defined.
+Qed.
 
 Definition PythF (x y : F) : F.
 Proof.
@@ -757,12 +757,12 @@ split; [exact eqF_Equivalence|exact addF_morphism|exact mulF_morphism|
   rewrite (Rmul_comm ringF); rewrite (Radd_comm ringF);
   rewrite (Rmul_comm ringF); rewrite (Radd_comm ringF); reflexivity.
   }
-Defined.
+Qed.
 
 Global Instance Fcri: (Cring (Rr:=FRing)).
-Proof. exact (Rmul_comm ringF). Defined.
+Proof. exact (Rmul_comm ringF). Qed.
 
-Delimit Scope FScope with FS. 
+Delimit Scope FScope with FS.
 
 Notation "0" := OF : FScope.
 Notation "1" := OneF : FScope.
@@ -792,7 +792,9 @@ simpl in *; subst; assumption.
 Qed.
 
 Global Instance Fintegral : (Integral_domain (Rcr:=Fcri)).
-Proof. split; [exact Fmult_integral|assert (T:=ncolOEE');assert_diffs; auto]. Defined.
+Proof.
+split; [exact Fmult_integral|assert (T:=ncolOEE'); assert_diffs; auto].
+Qed.
 
 Lemma PythFOk : forall A B, (PythF A B) * (PythF A B) =F= A*A + B*B.
 Proof.
@@ -1536,6 +1538,8 @@ intros A B C A1 B1 C1 G; convert_to_algebra; decompose_coordinates.
 intros; spliter. express_disj_as_a_single_poly; msatz.
 Qed.
 
+Opaque OF OneF AddF MulF SubF OppF InvF DivF PythF.
+
 Lemma nine_point_circle : forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
   ~ Col A B C ->
   Col A B C2 -> Col B C A2 -> Col A C B2 ->
@@ -1555,7 +1559,7 @@ put_negs_in_goal.
 scnf; [ .. |spliter; rtauto]; express_disj_as_a_single_poly;
  (assert (Nsat2 : ~ ((2) =F= 0)) by
   prove_discr_for_powers_of_2;
- assert (Nsatm2 : ~ (-(2) =F= 0)) by 
+ assert (Nsatm2 : ~ (-(2) =F= 0)) by
    prove_discr_for_powers_of_2;
  msatz).
 Qed.
