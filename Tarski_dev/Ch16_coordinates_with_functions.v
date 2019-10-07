@@ -1,7 +1,7 @@
 Require Import Description.
 Require Import Ring.
 Require Import Field.
-Require Import GeoCoq.Tarski_dev.Msatz.
+Require Import Nsatz.
 Require Import Rtauto.
 Require Export GeoCoq.Tarski_dev.Ch16_coordinates.
 Require Import GeoCoq.Tarski_dev.Ch15_pyth_rel.
@@ -819,12 +819,12 @@ apply (prod_uniqueness O E E' C C C2' C2);auto.
 Qed.
 
 Lemma subF__eq0 : forall x y:F, x - y =F= 0 <-> x =F= y.
-Proof. intros; split; intro; msatz. Qed.
+Proof. intros; split; intro; nsatz. Qed.
 
 Lemma mulF__eq0 : forall x y z t:F,
   (x - y) * (z - t) =F= 0 <-> x =F= y \/ z =F= t.
 Proof.
-intros x y z t; split; intro H; [|destruct H; msatz].
+intros x y z t; split; intro H; [|destruct H; nsatz].
 setoid_replace (x =F= y) with (x-y =F= 0); [|symmetry; apply subF__eq0].
 setoid_replace (z =F= t) with (z-t =F= 0); [|symmetry; apply subF__eq0].
 apply Fmult_integral; assumption.
@@ -834,7 +834,7 @@ Lemma neqO_mul_neqO : forall x y:F,  ~ x =F= 0 -> ~ y =F= 0 -> ~ x * y =F= 0.
 Proof. intros x y Hx Hy Hxy; apply Fmult_integral in Hxy; intuition. Qed.
 
 Lemma oppF_neq0 : forall f, ~ f =F= 0 <-> ~ - f =F= 0.
-Proof. intro; split; intro HF; intro H; apply HF; clear HF; msatz. Qed.
+Proof. intro; split; intro HF; intro H; apply HF; clear HF; nsatz. Qed.
 
 Lemma Ps_One : Ps O E E.
 Proof.
@@ -862,7 +862,7 @@ Proof.
 unfold sqrt3.
 rewrite PythFOk.
 rewrite PythFOk.
-msatz.
+nsatz.
 Qed.
 
 Lemma characterization_of_congruence_F : forall A B C D,
@@ -1150,7 +1150,7 @@ intros; elim (eq_dec_points A B); intro HAB.
 
     {
     elim (coordinates_of_point_F I); intros Ic HIc.
-    destruct Ic as [[Ix HIx] [Iy HIy]]; split; msatz.
+    destruct Ic as [[Ix HIx] [Iy HIy]]; split; nsatz.
     }
 
     {
@@ -1160,7 +1160,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F I); intros Ic HIc.
     destruct Ac as [[Ax HAx] [Ay HAy]].
     destruct Ic as [[Ix HIx] [Iy HIy]].
-    intro; spliter; split; assert (NU := neq20); msatz.
+    intro; spliter; split; assert (NU := neq20); nsatz.
     }
   }
 
@@ -1179,7 +1179,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     intros HAB HCong HCol.
     cut ((Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0) \/
          (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0); [intuition|].
-    clear HAB; scnf; repeat rewrite <- mulF__eq0; try msatz; rtauto.
+    clear HAB; scnf; repeat rewrite <- mulF__eq0; try nsatz; rtauto.
     }
 
     {
@@ -1191,7 +1191,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F A); intros [Ax Ay] _.
     elim (coordinates_of_point_F B); intros [Bx By] _.
     elim (coordinates_of_point_F I); intros [Ix Iy] _.
-    intro; spliter; split; assert (NU := neq20); msatz.
+    intro; spliter; split; assert (NU := neq20); nsatz.
     }
   }
 Qed.
@@ -1219,9 +1219,9 @@ split; [clear H; clear D;
         intro H1; exists D; split;
         [assumption|revert H1; revert H]];
 elim (coordinates_of_point_F D); intros Dc _;
-destruct Dc as [Dx Dy]; intros; spliter; 
+destruct Dc as [Dx Dy]; intros; spliter;
 assert (NU := neqO_mul_neqO _ _ neq20 neq20);
-msatz.
+nsatz.
 Qed.
 
 Lemma characterization_of_parallelism_F_aux : forall A B C D,
@@ -1301,7 +1301,7 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
   cut ((Ax - Bx) * (Cy - Dy) - (Ay - By) * (Cx - Dx) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; try (clear HAB; clear HCD; repeat rewrite <- mulF__eq0; msatz).
+  scnf; try (clear HAB; clear HCD; repeat rewrite <- mulF__eq0; nsatz).
   clear HPx; clear HPy; clear HQx; clear HQy; clear HCol.
   destruct H as [[H1 H2] [H3 H4]];
   elim H1; clear H1; [auto|intro H1];
@@ -1331,7 +1331,7 @@ split; [intro H; destruct H as [HAB [HCD [P [HP [Q [HQ HCol]]]]]]|].
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
   assert (Nsatm2 : ~ (2 =F= 0)) by prove_discr_for_powers_of_2.
-  scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0; try msatz.
+  scnf; clear HAB; clear HCD; repeat rewrite <- mulF__eq0; try nsatz.
   decompose [and or] H; clear H; auto.
   }
 Qed.
@@ -1389,7 +1389,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
   elim (coordinates_of_point_F C); intros [Cx Cy] _.
   elim (coordinates_of_point_F D); intros [Dx Dy] _.
   elim (coordinates_of_point_F X); intros [Xx Xy] _.
-  intros; split; [msatz|split; assumption].
+  intros; split; [nsatz|split; assumption].
   }
 
   {
@@ -1415,7 +1415,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
     cut ((Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0 \/
          ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
     rewrite <- neg_and_eqF in HCD; scnf; [| |exfalso; rtauto];
-    clear HCD; repeat rewrite <- mulF__eq0; msatz.
+    clear HCD; repeat rewrite <- mulF__eq0; nsatz.
     }
   setoid_rewrite characterization_of_neq_F_bis.
   setoid_rewrite characterization_of_collinearity_F.
@@ -1435,7 +1435,7 @@ intros; split; [intro H; destruct H as [X [HAB [HCD [HC1 [HC2 HPer]]]]]|].
   cut ((Ux - Xx) * (Xx - Vx) + (Uy - Xy) * (Xy - Vy) =F= 0 \/
        ((Ax =F= Bx) /\ (Ay =F= By)) \/
        ((Cx =F= Dx) /\ (Cy =F= Dy))); [intuition|].
-  scnf; try solve [clear HAB; clear HCD; repeat rewrite <- mulF__eq0; msatz].
+  scnf; try solve [clear HAB; clear HCD; repeat rewrite <- mulF__eq0; nsatz].
   clear HPerp; clear H1; clear H2; clear H3; clear H4.
   destruct H as [[H1 H2] [H3 H4]];
   elim H1; clear H1; [auto|intro H1];
@@ -1535,7 +1535,7 @@ Lemma centroid_theorem : forall A B C A1 B1 C1 G,
   Col C C1 G \/ Col A B C.
 Proof.
 intros A B C A1 B1 C1 G; convert_to_algebra; decompose_coordinates.
-intros; spliter. express_disj_as_a_single_poly; msatz.
+intros; spliter. express_disj_as_a_single_poly; nsatz.
 Qed.
 
 Opaque OF OneF AddF MulF SubF OppF InvF DivF PythF.
@@ -1561,7 +1561,7 @@ scnf; [ .. |spliter; rtauto]; express_disj_as_a_single_poly;
   prove_discr_for_powers_of_2;
  assert (Nsatm2 : ~ (-(2) =F= 0)) by
    prove_discr_for_powers_of_2;
- msatz).
+ nsatz).
 Qed.
 
 (** We deduce the axioms of the area method. *)
@@ -1663,7 +1663,7 @@ put_negs_in_goal.
 express_disj_as_a_single_poly.
 assert (H2 : - Bx * Cy =F= - Bx * Ay - Ax * Cy +
      Ax * By + Ay * Cx - By * Cx)
-  by msatz.
+  by nsatz.
 now ring [H2].
 
 apply field_prop.
@@ -1703,7 +1703,7 @@ unfold AM_Cong, Py, square_dist.
 decompose_coordinates.
 split;intro;
 assert (NU := neq20);
-msatz.
+nsatz.
 Qed.
 
 Lemma Col_AM_Col : forall A B C, AM_Col A B C <-> Col A B C.
@@ -1728,7 +1728,7 @@ unfold AM_Per, Py, square_dist;
 decompose_coordinates;
 intro;
 assert (NU : ~ (- (2) =F= 0)) by prove_discr_for_powers_of_2;
-msatz.
+nsatz.
 Qed.
 
 Lemma Perp_AM_Perp : forall A B C D,
@@ -1742,9 +1742,9 @@ decompose_coordinates.
 split;intro.
 use H; repeat split; try assumption.
 assert (NU : ~ (- (2) =F= 0)) by prove_discr_for_powers_of_2.
-msatz.
+nsatz.
 use H;repeat split;try assumption.
-msatz.
+nsatz.
 Qed.
 
 Lemma AM_Par_ratio_AM_Par :
@@ -1771,7 +1771,7 @@ put_negs_in_goal.
 express_disj_as_a_single_poly.
 
 clear H2.
-msatz.
+nsatz.
 Qed.
 
 Lemma Par_AM_Par : forall A B C D,
@@ -1788,12 +1788,12 @@ split.
 intros.
 use H.
 split;auto.
-msatz.
+nsatz.
 intros.
 use H.
 split;auto.
 split;auto.
-msatz.
+nsatz.
 Qed.
 
 Lemma AM_lower_dim :
@@ -1955,7 +1955,7 @@ decompose_coordinates;simpl.
 intros.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-msatz.
+nsatz.
 Qed.
 
 Lemma triangle_area : forall A B C H,
@@ -1971,7 +1971,7 @@ use H0.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
 assert (NU := neq20).
-msatz.
+nsatz.
 Qed.
 
 (* We do not need that Col A B C. *)
@@ -2003,10 +2003,10 @@ apply (field_prop_zero) in H1.
 split.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-msatz.
+nsatz.
 put_negs_in_goal.
 express_disj_as_a_single_poly.
-msatz.
+nsatz.
 intro.
 apply H.
 rewrite <- H2.
@@ -2034,7 +2034,7 @@ apply field_prop_1 in H1;
 apply field_prop_1 in H3.
 put_negs_in_goal;
 express_disj_as_a_single_poly.
-msatz.
+nsatz.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
@@ -2042,7 +2042,7 @@ apply field_prop_1 in H1;
 apply field_prop_1 in H3.
 put_negs_in_goal;
 express_disj_as_a_single_poly.
-msatz.
+nsatz.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
 intro;apply H;rewrite <- H4;ring.
@@ -2116,7 +2116,7 @@ unfold cross_product.
 simpl.
 intros;spliter.
 assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2.
-msatz.
+nsatz.
 Qed.
 
 Lemma exists_equilateral_triangle : forall A B,
@@ -2138,7 +2138,7 @@ split;
 assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2;
 assert (NUm : ~(-(2 * 2) =F= 0)) by prove_discr_for_powers_of_2;
 assert (NUm' : ~(-(2 * (2 * 2)) =F= 0)) by prove_discr_for_powers_of_2;
-msatz.
+nsatz.
 Qed.
 
 (*
@@ -2191,7 +2191,7 @@ right.
 right.
 right.
 right.
-msatz.
+nsatz.
 
 setoid_rewrite characterization_of_parallelism_F.
 *)
@@ -2210,7 +2210,7 @@ decompose_coordinates;simpl.
 unfold cross_product;simpl.
 intros.
 spliter.
-msatz.
+nsatz.
 Qed.
 
 (*
