@@ -75,72 +75,83 @@ Qed.
 
 End CoincR_for_concyclic.
 
-Ltac assert_ss_ok Tpoint Concyclic_gen lvar :=
-  repeat
+Ltac assert_ss_ok Tpoint Concyclic_gen lvar int ss t HSS :=
   match goal with
-    | HConcy : Concyclic_gen ?A ?B ?C ?D, HOK : ss_ok_for_concy ?SS ?Interp |- _ =>
+    | HC : Concyclic_gen ?A ?B ?C ?D |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
-      apply PropToTagged in HConcy;
-      apply (collect_coincs_for_concy A B C D pa pb pc pd SS Interp HConcy) in HOK;
-      try reflexivity
+      let ss' := fresh in
+      set (ss' := add (@CPToSS 4 (pa, (pb, (pc, pd)))) ss);
+      apply PropToTagged in HC;
+      let t' := apply (collect_coincs_for_concy A B C D pa pb pc pd ss int HC);
+                [reflexivity..|t] in
+      assert_ss_ok Tpoint Concyclic_gen lvar int ss' t' HSS
+    | _                                   =>
+      assert (HSS : ss_ok_for_concy ss int) by t
   end.
 
-Ltac assert_st_ok Tpoint Col lvar :=
-  repeat
+Ltac assert_st_ok Tpoint Col lvar int st t HST :=
   match goal with
-    | HNCol : ~ Col ?A ?B ?C, HOK : st_ok_for_concy ?ST ?Interp |- _ =>
+    | HNCol : ~ Col ?A ?B ?C |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
+      let st' := fresh in
+      set (st' := (@add (@ST Tarski_is_a_Arity_for_concy)) (pa, (pb, pc)) st);
       apply PropToTagged in HNCol;
-      apply (collect_wds_for_concy A B C pa pb pc ST Interp HNCol) in HOK;
-      try reflexivity
+      let t' := apply (collect_wds_for_concy A B C pa pb pc st int HNCol);
+                [reflexivity..|t] in
+      assert_st_ok Tpoint Col lvar int st' t' HST
+    | _                           =>
+      assert (HST : st_ok_for_concy st int) by t
   end.
+
 
 Ltac Concy_refl Tpoint Col Concyclic_gen :=
   match goal with
     | Default : Tpoint |- Concyclic_gen ?A ?B ?C ?D =>
       let lvar := build_numbered_points_list Tpoint in
+      let xlvar := fresh in
+      set (xlvar := lvar);
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
-      let c := ((vm_compute;reflexivity) || fail 2 "Can not be deduced") in
+      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+      let int := fresh in
+      set (int := (@interp Tarski_is_a_Arity_for_concy) xlvar Default);
+      let tss := exact (ss_ok_empty_for_concy int) in
       let HSS := fresh in
-      assert (HSS := ss_ok_empty_for_concy (interp lvar Default));
-      assert_ss_ok Tpoint Concyclic_gen lvar;
+      assert_ss_ok Tpoint Concyclic_gen lvar int (@empty SS) tss HSS;
+      let emptyST := constr:(@empty (@ST Tarski_is_a_Arity_for_concy)) in
+      let tst := exact (st_ok_empty_for_concy int) in
       let HST := fresh in
-      assert (HST := st_ok_empty_for_concy (interp lvar Default));
-      assert_st_ok Tpoint Concyclic_gen lvar;
-      match goal with
-        | HOKSS : ss_ok_for_concy ?SS ?Interp, HOKST : st_ok_for_concy ?ST ?Interp |- _ =>
-          apply (test_coinc_ok_for_concy pa pb pc pd SS ST
-                                       Interp HOKSS HOKST); c
-      end
+      assert_st_ok Tpoint Col lvar int emptyST tst HST;
+      apply (test_coinc_ok_for_concy pa pb pc pd _ _ int HSS HST); c
   end.
+
 (*
 Section Test.
 
-Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+Context `{TE:Tarski_euclidean}.
 
 Goal forall P24 P23 P22 P21 P20 P19 P18 P17 P16 P15 P14 P13 P12 P11 P10 P9 P8 P7 P6 P5 P4 P3 P2 P1 P0,
-  Coplanar P1 P0 P2 P12 -> Coplanar P8 P2 P0 P1 -> ~ Col P18 P20 P19 ->
-  Coplanar P19 P2 P1 P0 -> Coplanar P1 P15 P2 P0 -> Coplanar P23 P13 P12 P14 ->
-  ~ Col P10 P9 P11 -> Coplanar P1 P2 P18 P0 -> Coplanar P11 P2 P1 P0 ->
-  ~ Col P2 P1 P0 -> Coplanar P0 P1 P2 P6 -> Coplanar P16 P2 P1 P0 ->
-  Coplanar P15 P22 P16 P17 -> Coplanar P2 P1 P0 P17 -> Coplanar P20 P0 P2 P1 ->
-  Coplanar P1 P2 P0 P4 -> Coplanar P13 P1 P2 P0 -> ~ Col P7 P8 P6 ->
-  Coplanar P2 P9 P1 P0 -> Coplanar P2 P10 P0 P1 -> Coplanar P1 P0 P14 P2 ->
-  Coplanar P1 P7 P0 P2 -> ~ Col P4 P5 P3 -> Coplanar P0 P3 P1 P2 ->
-  Coplanar P24 P11 P9 P10 -> ~ Col P14 P13 P12 -> ~ Col P15 P17 P16 ->
-  Coplanar P18 P21 P20 P19 -> Coplanar P0 P5 P2 P1 ->
-  Coplanar P21 P22 P23 P24.
+  Concyclic_gen P1 P0 P2 P12 -> Concyclic_gen P8 P2 P0 P1 -> ~ Col P18 P20 P19 ->
+  Concyclic_gen P19 P2 P1 P0 -> Concyclic_gen P1 P15 P2 P0 -> Concyclic_gen P23 P13 P12 P14 ->
+  ~ Col P10 P9 P11 -> Concyclic_gen P1 P2 P18 P0 -> Concyclic_gen P11 P2 P1 P0 ->
+  ~ Col P2 P1 P0 -> Concyclic_gen P0 P1 P2 P6 -> Concyclic_gen P16 P2 P1 P0 ->
+  Concyclic_gen P15 P22 P16 P17 -> Concyclic_gen P2 P1 P0 P17 -> Concyclic_gen P20 P0 P2 P1 ->
+  Concyclic_gen P1 P2 P0 P4 -> Concyclic_gen P13 P1 P2 P0 -> ~ Col P7 P8 P6 ->
+  Concyclic_gen P2 P9 P1 P0 -> Concyclic_gen P2 P10 P0 P1 -> Concyclic_gen P1 P0 P14 P2 ->
+  Concyclic_gen P1 P7 P0 P2 -> ~ Col P4 P5 P3 -> Concyclic_gen P0 P3 P1 P2 ->
+  Concyclic_gen P24 P11 P9 P10 -> ~ Col P14 P13 P12 -> ~ Col P15 P17 P16 ->
+  Concyclic_gen P18 P21 P20 P19 -> Concyclic_gen P0 P5 P2 P1 ->
+  Concyclic_gen P21 P22 P23 P24.
 Proof.
 intros.
-Time Cop_refl Tpoint Col Coplanar.
+Time Concy_refl Tpoint Col Concyclic_gen.
 Qed.
 
 End Test.

@@ -75,52 +75,62 @@ Qed.
 
 End CoincR_for_cop.
 
-Ltac assert_ss_ok Tpoint Cop lvar :=
-  repeat
+Ltac assert_ss_ok Tpoint Cop lvar int ss t HSS :=
   match goal with
-    | HCop : Cop ?A ?B ?C ?D, HOK : ss_ok_for_cop ?SS ?Interp |- _ =>
+    | HCop : Cop ?A ?B ?C ?D |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
+      let ss' := fresh in
+      set (ss' := add (@CPToSS 4 (pa, (pb, (pc, pd)))) ss);
       apply PropToTagged in HCop;
-      apply (collect_coincs_for_cop A B C D pa pb pc pd SS Interp HCop) in HOK;
-      try reflexivity
+      let t' := apply (collect_coincs_for_cop A B C D pa pb pc pd ss int HCop);
+                [reflexivity..|t] in
+      assert_ss_ok Tpoint Cop lvar int ss' t' HSS
+    | _                           =>
+      assert (HSS : ss_ok_for_cop ss int) by t
   end.
 
-Ltac assert_st_ok Tpoint Col lvar :=
-  repeat
+Ltac assert_st_ok Tpoint Col lvar int st t HST :=
   match goal with
-    | HNCol : ~ Col ?A ?B ?C, HOK : st_ok_for_cop ?ST ?Interp |- _ =>
+    | HNCol : ~ Col ?A ?B ?C |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
+      let st' := fresh in
+      set (st' := (@add (@ST Tarski_is_a_Arity_for_cop)) (pa, (pb, pc)) st);
       apply PropToTagged in HNCol;
-      apply (collect_wds_for_cop A B C pa pb pc ST Interp HNCol) in HOK;
-      try reflexivity
+      let t' := apply (collect_wds_for_cop A B C pa pb pc st int HNCol);
+                [reflexivity..|t] in
+      assert_st_ok Tpoint Col lvar int st' t' HST
+    | _                           =>
+      assert (HST : st_ok_for_cop st int) by t
   end.
 
 Ltac Cop_refl Tpoint Col Cop :=
   match goal with
     | Default : Tpoint |- Cop ?A ?B ?C ?D =>
       let lvar := build_numbered_points_list Tpoint in
+      let xlvar := fresh in
+      set (xlvar := lvar);
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
-      let c := ((vm_compute;reflexivity) || fail 2 "Can not be deduced") in
+      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+      let int := fresh in
+      set (int := (@interp Tarski_is_a_Arity_for_cop) xlvar Default);
+      let tss := exact (ss_ok_empty_for_cop int) in
       let HSS := fresh in
-      assert (HSS := ss_ok_empty_for_cop (interp lvar Default));
-      assert_ss_ok Tpoint Cop lvar;
+      assert_ss_ok Tpoint Cop lvar int (@empty SS) tss HSS;
+      let emptyST := constr:(@empty (@ST Tarski_is_a_Arity_for_cop)) in
+      let tst := exact (st_ok_empty_for_cop int) in
       let HST := fresh in
-      assert (HST := st_ok_empty_for_cop (interp lvar Default));
-      assert_st_ok Tpoint Col lvar;
-      match goal with
-        | HOKSS : ss_ok_for_cop ?SS ?Interp, HOKST : st_ok_for_cop ?ST ?Interp |- _ =>
-          apply (test_coinc_ok_for_cop pa pb pc pd SS ST
-                                       Interp HOKSS HOKST); c
-      end
+      assert_st_ok Tpoint Col lvar int emptyST tst HST;
+      apply (test_coinc_ok_for_cop pa pb pc pd _ _ int HSS HST); c
   end.
+
 (*
 Section Test.
 
