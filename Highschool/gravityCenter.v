@@ -269,9 +269,9 @@ intros A B C G A' A'' HMid1 HMid2 HMid3 HNC.
 split; Col.
 Name B' the midpoint of A and C.
 Name C' the midpoint of A and B.
-exists A'; exists B'; split; Col; try split; Col; split;
-try (assert (A <> G) by (intro; treat_equalities; assert_cols; Col);
-     assert_diffs; assert_cols; ColR).
+exists A'; exists B'; split; [auto|]; split; [auto|]; split;
+[assert (A <> G) by (intro; treat_equalities; assert_cols; Col);
+ assert_diffs; assert_cols; ColR|].
 Name B'' the midpoint of B and G.
 assert (HB' := symmetric_point_construction B'' G).
 destruct HB' as [B''' HB'].

@@ -4139,8 +4139,8 @@ assert (th15_aux : forall H K O L H' K' O' L',
         by (apply soustraction_betH with L'' L;
             try apply between_comm; auto using congH_sym, cong_permr, congH_perml).
       apply th12; auto using congH_sym, cong_permr, congH_perml;
-      try apply conga_out_conga with O L O' L''; try (intro; apply HNC3; ColHR);
-      try (intro; apply HNC4; ColHR); try apply outH_trivial; try (right; left); auto.
+      try apply conga_out_conga with O L O' L''; [intro; apply HNC3; ColHR|..];
+      [intro; apply HNC4; ColHR|..]; try apply outH_trivial; try (right; left); auto.
       }
     destruct HT as [HConga6 _]; apply conga_permlr.
     apply outH_expand in Hout1; apply outH_expand in Hout3;
@@ -4170,8 +4170,8 @@ assert (HConga4 : CongaH SH O K SH' O' K').
   assert (HC1 := between_col _ _ _ HSH).
   assert (HC2 := between_col _ _ _ HSH').
   apply th15_aux with L L'; auto;
-  try (intro; apply HNC1; ColHR); try (intro; apply HNC2; ColHR);
-  try (intro; apply HNC5; ColHR); try (intro; apply HNC6; ColHR).
+  [intro; apply HNC1; ColHR|intro; apply HNC2; ColHR|
+   intro; apply HNC5; ColHR|intro; apply HNC6; ColHR|..].
 
     {
     split; [intro; subst; Col|intro l; intros; exists H; split];
@@ -4194,7 +4194,7 @@ assert (HD2 := betH_distincts _ _ _ HSH'); spliter.
 assert (HC1 := between_col _ _ _ HSH).
 assert (HC2 := between_col _ _ _ HSH').
 apply conga_permlr; apply th14 with SH SH'; try apply between_comm; auto;
-intro; try (apply HNC5; ColHR); try (apply HNC6; ColHR).
+intro; [apply HNC5|apply HNC6]; ColHR.
 Qed.
 
 Lemma th17:
