@@ -108,7 +108,7 @@ Ltac assert_st_ok Tpoint Col lvar int st t HST :=
       assert (HST : st_ok_for_cop st int) by t
   end.
 
-Ltac Cop_refl Tpoint Col Cop :=
+Ltac Cop_refl_build Tpoint Col Cop :=
   match goal with
     | Default : Tpoint |- Cop ?A ?B ?C ?D =>
       let lvar := build_numbered_points_list Tpoint in
@@ -118,7 +118,6 @@ Ltac Cop_refl Tpoint Col Cop :=
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
-      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
       let int := fresh in
       set (int := (@interp Tarski_is_a_Arity_for_cop) xlvar Default);
       let tss := exact (ss_ok_empty_for_cop int) in
@@ -128,8 +127,15 @@ Ltac Cop_refl Tpoint Col Cop :=
       let tst := exact (st_ok_empty_for_cop int) in
       let HST := fresh in
       assert_st_ok Tpoint Col lvar int emptyST tst HST;
-      apply (test_coinc_ok_for_cop pa pb pc pd _ _ int HSS HST); c
+      apply (test_coinc_ok_for_cop pa pb pc pd _ _ int HSS HST)
   end.
+
+Ltac Cop_refl_compute :=
+  let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+  c.
+
+Ltac Cop_refl Tpoint Col Cop :=
+  Cop_refl_build Tpoint Col Cop; time Cop_refl_compute.
 
 (*
 Section Test.

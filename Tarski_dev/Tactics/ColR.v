@@ -128,7 +128,7 @@ Ltac show_all' :=
 Ltac clear_cols_gen Tpoint Col := show_all'; clear_cols_aux Tpoint Col.
 *)
 
-Ltac Col_refl Tpoint Col :=
+Ltac Col_refl_build Tpoint Col :=
   match goal with
     | Default : Tpoint |- Col ?A ?B ?C =>
       let lvar := build_numbered_points_list Tpoint in
@@ -137,7 +137,6 @@ Ltac Col_refl Tpoint Col :=
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
-      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
       let int := fresh in
       set (int := interp xlvar Default);
       let tss := exact (@ss_ok_empty Tpoint Col int) in
@@ -146,8 +145,14 @@ Ltac Col_refl Tpoint Col :=
       let tsp := exact (@sp_ok_empty Tpoint int) in
       let HSP := fresh in
       assert_sp_ok Tpoint lvar int (@empty SP) tsp HSP;
-      apply (test_col_ok _ _ int pa pb pc HSS HSP); c
+      apply (test_col_ok _ _ int pa pb pc HSS HSP)
   end.
+
+Ltac Col_refl_compute :=
+  let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+  c.
+
+Ltac Col_refl Tpoint Col := Col_refl_build Tpoint Col; time Col_refl_compute.
 
 (*
 Ltac deduce_cols_aux Tpoint Col :=

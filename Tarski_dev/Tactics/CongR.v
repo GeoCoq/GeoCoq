@@ -22,7 +22,7 @@ Ltac assert_ss_ok Tpoint Cong lvar int ss t HSS :=
       assert (HSS : @ss_ok Tpoint Cong ss int) by t
   end.
 
-Ltac Cong_refl Tpoint Cong :=
+Ltac Cong_refl_build Tpoint Cong :=
   match goal with
     | Default : Tpoint |- Cong ?A ?B ?C ?D =>
       let lvar := build_numbered_points_list Tpoint in
@@ -32,14 +32,19 @@ Ltac Cong_refl Tpoint Cong :=
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
-      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
       let int := fresh in
       set (int := interp xlvar Default);
       let tss := exact (@ss_ok_empty Tpoint Cong int) in
       let HSS := fresh in
       assert_ss_ok Tpoint Cong lvar int (@empty SSP) tss HSS;
-      apply (test_cong_ok _ int pa pb pc pd HSS); c
+      apply (test_cong_ok _ int pa pb pc pd HSS)
   end.
+
+Ltac Cong_refl_compute :=
+  let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+  c.
+
+Ltac Cong_refl Tpoint Cong := Cong_refl_build Tpoint Cong; time Cong_refl_compute.
 
 (*
 Section Test.
