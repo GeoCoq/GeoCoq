@@ -128,7 +128,7 @@ Ltac Col_refl_compute :=
   let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
   c.
 
-Ltac Col_refl Tpoint Col := Col_refl_build Tpoint Col; time Col_refl_compute.
+Ltac Col_refl Tpoint Col := Col_refl_build Tpoint Col; Col_refl_compute.
 
 (*
 Section Test.

@@ -135,7 +135,7 @@ Ltac Cop_refl_compute :=
   c.
 
 Ltac Cop_refl Tpoint Col Cop :=
-  Cop_refl_build Tpoint Col Cop; time Cop_refl_compute.
+  Cop_refl_build Tpoint Col Cop; Cop_refl_compute.
 
 (*
 Section Test.

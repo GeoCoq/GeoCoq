@@ -44,7 +44,7 @@ Ltac Cong_refl_compute :=
   let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
   c.
 
-Ltac Cong_refl Tpoint Cong := Cong_refl_build Tpoint Cong; time Cong_refl_compute.
+Ltac Cong_refl Tpoint Cong := Cong_refl_build Tpoint Cong; Cong_refl_compute.
 
 (*
 Section Test.

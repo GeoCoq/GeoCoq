@@ -136,7 +136,7 @@ Ltac Concy_refl_compute :=
   c.
 
 Ltac Concy_refl Tpoint Col Concyclic_gen :=
-  Concy_refl_build Tpoint Col Concyclic_gen; time Concy_refl_compute.
+  Concy_refl_build Tpoint Col Concyclic_gen; Concy_refl_compute.
 
 (*
 Section Test.
