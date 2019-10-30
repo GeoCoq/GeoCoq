@@ -429,7 +429,7 @@ move=> k_neq0; rewrite /extension /contraction.
 suffices: (k*:(k^-1 *: (y - x) + x) == k*:z) = (k^-1 *: (y - x) + x == z).
   move<-; rewrite scalerDr scalerA divff // scale1r eq_sym -subr_eq.
   by rewrite -subr_eq opprK -scalerBr.
-rewrite -subr_eq0 -[X in _ = X]subr_eq0 -scalerBr scaler_eq0.
+rewrite -[k *: _ == _]subr_eq0 -[X in _ = X]subr_eq0 -scalerBr scaler_eq0.
 by move/negPf: k_neq0 ->; rewrite orFb.
 Qed.
 
