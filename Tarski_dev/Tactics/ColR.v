@@ -1,8 +1,30 @@
 Require Import NArith.
-Require Import GeoCoq.Utils.sets.
 Require Import GeoCoq.Meta_theory.Models.tarski_to_col_theory.
 Require Import GeoCoq.Tactics.Coinc.ColR.
 Require Import List.
+
+(*
+Class Reify_nat (A : Type) (a : A) (l : list A) (n : nat) := {}.
+
+Instance Reify_hd (A : Type) (a : A) (l : list A) : Reify_nat A a (a :: l) 0.
+Qed.
+
+Instance Reify_tl (A : Type) (a1 a2 : A) (l : list A) (n : nat)
+         `{Reify_nat A a1 l n} : Reify_nat A a1 (a2 :: l) (S n) | 1.
+Qed.
+
+Class Reify_pos (A : Type) (a : A) (l : list A) (p : positive) := {}.
+
+Instance Reify (A : Type) (a : A) (l : list A) (n : nat) `{Reify_nat A a l n} :
+  Reify_pos A a l (BinPos.Pos.of_succ_nat n).
+Qed.
+
+Ltac reify A a lvar :=
+let c := constr:(_ : @Reify_pos A a lvar _) in
+lazymatch type of c with Reify_pos _ _ _ ?p => p end.
+*)
+
+Require Import GeoCoq.Utils.sets.
 
 Ltac List_assoc Tpoint elt lst :=
   match constr:(lst) with
@@ -197,15 +219,18 @@ Ltac Col_refl_compute Tpoint Col lvar int HSS HSP :=
     apply (test_col_ok _ _ int pa pb pc HSS HSP); c
   end.
 
-Ltac Col_refl_aux Tpoint Col CT Ps cpt :=
+Ltac Col_refl_aux Tpoint Col CT Ps (*Is*) cpt :=
   match goal with
     | |- (forall (P : Tpoint), _) =>
       intro P;
+(*
+      let Ps' := uconstr:(@cons Tpoint P Ps) in
+*)
       let Ps' := uconstr:(@cons (prod Tpoint positive)
                                 (@pairT Tpoint positive P cpt)
                                 Ps) in
       let scpt := eval compute in (Pos.succ cpt) in
-          Col_refl_aux Tpoint Col CT Ps' scpt
+          Col_refl_aux Tpoint Col CT Ps' (*Is'*) scpt
     | Default : Tpoint |- _       =>
       let HPs := fresh in
       set (HPs := Ps);
@@ -220,11 +245,30 @@ Ltac Col_refl_aux Tpoint Col CT Ps cpt :=
       Col_refl_compute Tpoint Col Ps int HSS HSP
   end.
 
+(*
+Notation "A => B" := (A -> B) (at level 99, no associativity, only printing) : tptp_fol_scope.
+Notation "A & B" := (and A B) (at level 80, right associativity, only printing) : tptp_fol_scope.
+Notation "wd( A , B )" := (A <> B) (only printing) : tptp_fol_scope.
+Notation "col( A , B , C )" := (Definitions.Col A B C) (only printing) : tptp_fol_scope.
+
+Set Printing Depth 1000.
+
+Global Open Scope tptp_fol_scope.
+*)
+
+Ltac Print_Goal :=
+  match goal with
+  | |- ?G => idtac "fof(pipo,conjecture," G ")"
+  end.
+
 Ltac Col_refl Tpoint Col :=
-  let Pnil := constr:(@nil (prodT Tpoint positive)) in
+(*
+  let Pnil := constr:(@nil Tpoint) in
+*)
+  let Pnil := constr:(@nil (@prod Tpoint positive)) in
   let CT := fresh in
   assert (CT : Col_theory Tpoint Col) by (typeclasses eauto);
-  revert_all Tpoint Col CT; Col_refl_aux Tpoint Col CT Pnil (1%positive).
+  revert_all Tpoint Col CT;(* Print_Goal;*) Col_refl_aux Tpoint Col CT Pnil (*Inil*) (1%positive).
 
 (*
 Ltac deduce_cols_aux Tpoint Col :=

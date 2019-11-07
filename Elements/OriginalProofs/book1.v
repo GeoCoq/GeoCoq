@@ -1,4 +1,4 @@
-Require Export Elements.OriginalProofs.proposition_01. 
+Require Export Elements.OriginalProofs.proposition_01.
 Require Export Elements.OriginalProofs.proposition_03.
 Require Export Elements.OriginalProofs.proposition_04.
 Require Export Elements.OriginalProofs.proposition_05.
