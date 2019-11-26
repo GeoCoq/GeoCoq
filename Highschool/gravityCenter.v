@@ -314,7 +314,7 @@ assert (HCol : Col A' B' B''').
   assert (H := parallel_uniqueness A B A' B' A' B''' A'); destruct H as [HCol1 HCol2]; Col; Par.
   apply par_trans with A'' B''; Par.
   }
-assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Col; try CongR.
+assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Col; [..|CongR].
 
   {
   assert (G <> B'') by (intro; treat_equalities; assert_cols; Col); ColR.

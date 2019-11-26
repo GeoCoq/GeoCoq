@@ -3198,7 +3198,7 @@ try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
   elim (eq_dec_points Z I); intro HZI; treat_equalities; Col.
   assert (HCong3 : Cong I A I B) by (apply l4_17 with X Y; unfold Midpoint in *; spliter; Cong).
   assert (H := l7_20 I A B).
-  elim H; try ColR; intro.
+  elim H; [| |ColR..]; intro.
     treat_equalities; exfalso; auto.
   ColR.
   }

@@ -280,7 +280,7 @@ elim (col_dec A B C); intro HABC.
       show_distinct A' C'; try (apply HAC; apply symmetric_point_uniqueness with B A';
       unfold Midpoint in *; spliter; split; Cong; Between).
       intro; assert (HFalse := l7_20 O A B); elim HFalse; clear HFalse; try intro HFalse;
-      unfold is_circumcenter in *; spliter; Cong; assert_diffs; assert_cols; try ColR.
+      unfold is_circumcenter in *; spliter; Cong; assert_diffs; assert_cols; [|ColR].
       assert (HOC' : O <> C').
         {
         apply perp_bisect_equiv_def in HPer1.

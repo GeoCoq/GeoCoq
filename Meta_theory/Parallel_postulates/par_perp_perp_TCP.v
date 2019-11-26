@@ -77,7 +77,7 @@ elim HInter; clear HInter; intro HInter.
   assert (HPerp := HPTP B1 B2 C1 C2 A C HPar HAC).
   apply par_id.
   spliter.
-  apply l12_9 with C1 C2; Perp; Cop; try CopR.
+  apply l12_9 with C1 C2; Perp; Cop; [CopR..|].
   apply perp_sym, HPerp; CopR.
 Qed.
 

@@ -2487,7 +2487,7 @@ Proof.
       ColR.
     clear H20.
     unfold Prod.
-    repeat split; try ColR.
+    repeat split; [|ColR..|].
       intro.
       apply H.
       ColR.
@@ -3032,7 +3032,7 @@ Proof.
     exists Xu.
     split.
       unfold Prod.
-      repeat split; try ColR.
+      repeat split; [|ColR..|].
         intro.
         apply H.
         ColR.
@@ -3074,7 +3074,7 @@ Proof.
       ColR.
     clear H32.
     unfold Prod.
-    repeat split; try ColR.
+    repeat split; [|ColR..|].
       intro.
       apply H.
       ColR.

@@ -114,7 +114,7 @@ assert_diffs.
 deduce_cols.
 repeat split; try cols; finish; clear_cols; untag_hyps.
 *)
-repeat split; try ColR; finish.
+repeat split; finish; [ColR..| | |].
 
 intro; subst.
 assert (E <> F) by (intro; subst; intuition).
