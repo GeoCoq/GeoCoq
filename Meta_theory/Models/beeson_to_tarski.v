@@ -53,7 +53,7 @@ right; intro HF; apply HB; clear HB; split; [auto|split; intro HB1].
   }
 Qed.
 
-Lemma col_dec : forall A B C, ICol A B C \/ ~ ICol A B C.
+Lemma ICol_dec : forall A B C, ICol A B C \/ ~ ICol A B C.
 Proof.
 intros A B C; elim (IT_dec A B C); intro HB1;
 elim (IT_dec A C B); intro HB2; elim (IT_dec C A B); intro HB3;
@@ -178,7 +178,7 @@ Lemma pasch : forall A B C P Q : ITpoint,
   exists x, BetT P x B /\ BetT Q x A.
 Proof.
 intros A B C P Q HB1 HB2.
-elim (col_dec A B C); [apply pasch_col_case; auto|intro HNC].
+elim (ICol_dec A B C); [apply pasch_col_case; auto|intro HNC].
 destruct HB1 as [HB1|[|]]; subst; [|exists P; unfold BetT; auto|];
 [|exists Q; split; [apply BetT_symmetry|unfold BetT]; auto].
 destruct HB2 as [HB2|[|]]; subst; [|exists Q; unfold BetT; auto|];
