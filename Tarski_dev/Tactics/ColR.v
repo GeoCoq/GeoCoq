@@ -340,6 +340,14 @@ intros.
 Time Col_refl Tpoint Col.
 Qed.
 
+Set Debug Cbv.
+
+Goal True.
+Proof.
+let c := (eval lazy in Unnamed_thm) in
+assert (c = c); auto.
+Qed.
+
 End Test.
 *)
 
