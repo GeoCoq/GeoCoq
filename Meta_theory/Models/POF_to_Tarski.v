@@ -19,6 +19,7 @@ Require Import GeoCoq.Axioms.tarski_axioms.
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Meta_theory.Models.gupta_inspired_to_tarski.
 Require Import GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
+Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
 Section Aux.
 
@@ -1286,12 +1287,13 @@ Definition par_strict a b c d :=
 Definition par a b c d :=
   par_strict a b c d \/ (a <> b /\ c <> d /\ col a c d /\ col b c d).
 
-Lemma proclus a b c d p q :
-  par a b c d -> col a b p -> ~ col a b q -> coplanar c d p q ->
+Lemma proclus' a b c d p q :
+  ~ ~ par a b c d -> col a b p -> ~ col a b q -> coplanar c d p q ->
   exists y, col p q y /\ col c d y.
 Proof.
-cut (proclus_postulate); [intros; assert_diffs; apply H with a b; tauto|].
-have: tarski_s_parallel_postulate.
+cut (proclus_postulate); [move=> H HP ? ? ?|have: tarski_s_parallel_postulate].
+    elim (@par_dec Rcf_to_T Rcf_to_T_PED Rcf_to_T_euclidean a b c d);
+    [intro; assert_diffs; apply H with a b; auto|move=> HF; exfalso; auto].
   by unfold tarski_s_parallel_postulate; apply euclidT.
 apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
 simpl; tauto.
