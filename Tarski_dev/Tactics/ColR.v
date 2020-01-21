@@ -338,14 +338,16 @@ Goal forall A B C D,
 Proof.
 intros.
 Time Col_refl Tpoint Col.
-Qed.
+Defined.
 
+(*
 Set Debug Cbv.
+*)
 
 Goal True.
 Proof.
-let c := (eval lazy in Unnamed_thm) in
-assert (c = c); auto.
+time let c := (eval compute in Unnamed_thm) in
+assert (c = c).
 Qed.
 
 End Test.

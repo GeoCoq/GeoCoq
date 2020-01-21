@@ -395,11 +395,20 @@ rewrite /bet /betS /betR subrr ratiop0 ltr_def eqxx andbF orbF /betE.
 by rewrite [a == x]eq_sym Bool.andb_diag !Bool.orb_diag.
 Qed.
 
+(*
+Lemma betS_ratio a b k1 :
+  a != b -> 0 < k1 -> k1 < 1 -> betS a b (k1^-1 *: (b - a) + a).
+Proof.
+move=> neq_ab L G; rewrite /bet /betS /betR -addrA subrr addr0 -ratio_bet' //.
+by rewrite scalerA mulfV ?lt0r_neq0 // scale1r L G eqxx !andbb.
+Qed.
+*)
+
 Lemma bet_ratio a b k1 : 0 < k1 -> k1 < 1 -> bet a b (k1^-1 *: (b - a) + a).
 Proof.
-case: (a =P b)=> [->|/eqP ?]; rewrite ?bet_xxa //.
-move=> L G; rewrite /bet /betS /betR -addrA subrr addr0 -ratio_bet' // scalerA.
-by rewrite mulfV ?lt0r_neq0 // scale1r L G eqxx !andbb orbT.
+case: (a =P b)=> [->|/eqP neq_ab L G]; rewrite ?bet_xxa // /bet /betS /betR.
+apply /orP; right; rewrite -addrA subrr addr0 -ratio_bet' //.
+by rewrite scalerA mulfV ?lt0r_neq0 // scale1r L G eqxx !andbb.
 Qed.
 
 Definition extension a b k := k^-1 *: (b - a) + a.
@@ -501,15 +510,27 @@ suffices: (bet b c a) by auto. set k' := k^-1; have: (c == contraction a b k').
 by move=> /eqP ->; rewrite bet_sym contraction_bet ?/k' ?invr_gt0 ?invf_lt1.
 Qed.
 
+Lemma ratio_betS a b c k1 k2 k3 :
+  a != b -> 0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1+k2-k1*k2 ->
+  b - a == ((k1+k2-k1*k2)/k3)^-1 *: (c - a) -> betS a b c.
+Proof.
+move=> H ? ? ? ? ?; rewrite /betS/ betR; move: H. case: (a =P c)=> [->|];
+rewrite ?subrr ?scaler0 ?subr_eq0; [by move=> /eqP HF /eqP H; rewrite H in HF|].
+move=> ? /eqP ? k3_eq. suff: (ratio (b-a) (c-a) = ((k1+k2-k1*k2)/k3)^-1).
+  by move=> ->; rewrite bet_gt0' ?bet_lt1 // k3_eq.
+by apply ratio_eq => //; rewrite subr_eq0 eq_sym; apply /eqP.
+Qed.
+
 Lemma ratio_bet a b c k1 k2 k3 :
   0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1+k2-k1*k2 ->
   b - a == ((k1+k2-k1*k2)/k3)^-1 *: (c - a) -> bet a b c.
 Proof.
-move=> ? ? ? ? ?. rewrite /bet /betE /betS/ betR. case: (a =P c)=> [->|].
-  by rewrite subrr scaler0 subr_eq0=> ->; rewrite !orbT orTb.
-move/eqP=> ? k3_eq. suff: (ratio (b-a) (c-a) = ((k1+k2-k1*k2)/k3)^-1)=> [->|].
-  by rewrite bet_gt0' ?bet_lt1 // k3_eq orbT.
-by apply ratio_eq => //; rewrite subr_eq0 eq_sym.
+move=> L1 L2 L3 L4 L5; rewrite /bet /betE. case: (a =P b)=> [->|/eqP ab_neq].
+  have: (0 < k1 + k2 - k1 * k2)=> [|L6]; first by rewrite (ltr_trans L4).
+  rewrite subrr eq_sym scalemx_eq0 subr_eq0 [c == b]eq_sym => /orP[HF|-> //].
+  rewrite lt0r in L4; rewrite lt0r in L6; move: HF L4 L6.
+  by rewrite invr_eq0 mulf_eq0 invr_eq0 => /orP[/eqP->|/eqP->]; rewrite eqxx.
+by move=> ?; apply /orP; right; apply (ratio_betS ab_neq L1 L2 L3 L4).
 Qed.
 
 Lemma betS_inner_transitivity a b c d (k1 := betR a b d) (k2 := betR b c d) :
@@ -539,16 +560,26 @@ case: (b =P c)=> [-> /eqP|? ?]; by rewrite ?eqxx andFb !orFb.
 Qed.
 
 Lemma inner_pasch' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
-  a <> p -> p <> c -> b <> q -> q <> c ->
-  bet a p c -> bet b q c ->
-  exists x, bet p x b /\ bet q x a.
+  betS a p c -> betS b q c ->
+  ~ (bet a b c \/ bet b c a \/ bet c a b) ->
+  exists x, betS p x b /\ betS q x a.
 Proof.
-move=> ? ? ? ?; rewrite 2?bet_betS // => /betSP[P1 G1 L1] /betSP[P2 G2 L2].
-exists (((k1+k2-k1*k2)/(k1-k1*k2))^-1*:(b-p)+p); apply/andP.
-rewrite (ratio_bet G1 G2 _ (bet_gt0 G1 L2))?(ratio_bet G2 G1 _ (bet_gt0 G2 L1));
-rewrite ?bet_lt -?addrA ?subrr ?addr0 // [k2*_]mulrC !invf_div !addrA -addrA.
-rewrite [k2+k1]addrC eq_div_scale ?bet_neq0' // scalerDr scalerA mulrCA mulfV;
-rewrite ?bet_neq0' // mulr1 -subr_eq0 -[a-q]opprB scalerN !scalerBl !opprB.
+rewrite /bet; case: (b =P p) => [-> ->|/eqP bp_neq]; [rewrite orbT; intuition|].
+case: (a =P q)=> [-> _|/eqP aq_neq].
+  by rewrite [betS c q b]betS_sym=> ->; rewrite orbT; intuition.
+move => /betSP[P1 G1 L1] /betSP[P2 G2 L2] HNC.
+suff: (((k2 + k1 - k2 * k1) / (k2 - k2 * k1))^-1 *: (a - q) + q ==
+       ((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1 *: (b - p) + p)=> [/eqP E|].
+  exists (((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1 *: (b - p) + p); apply/andP.
+  rewrite (ratio_betS _ G1 G2 _ (bet_gt0 G1 L2)) ?bet_lt //;
+  rewrite -?[X in betS _ X _]E ?(ratio_betS _ G2 G1 _ (bet_gt0 G2 L1)) ? bet_lt;
+  rewrite // -?addrA ?subrr ?addr0 // 1?eq_sym -1?subr_eq0 -?addrA ?subrr;
+  rewrite ?addr0 ?scaler_eq0 ?subr_eq0 ?negb_or ?invr_eq0 ?addrA ?bet_neq0 //;
+  rewrite 1?subr_gt0 1?mulrC ?gtr_pmull //.
+rewrite [X in X - _]addrC eq_sym [X in X - _]addrC -!addrA !invf_div.
+rewrite -subr_eq [k2*_]mulrC !addrA -addrA [k2 + k1]addrC.
+rewrite eq_div_scale ?bet_neq0' // scalerDr scalerA mulrCA mulfV ?bet_neq0' //.
+rewrite  mulr1 -subr_eq0 -[a-q]opprB scalerN !scalerBl !opprB.
 rewrite addrACA -[X in _+X]addrA -!scaleNr -scalerDr addrBDB -addrCA addrAC.
 rewrite -[X in _+(X+_)]addrA -scalerDr addrBDB -addrCA scalerDl -!addrA.
 rewrite  -scalerDr addrBDB addrCA addr_eq0 addrA -scalerDr addrBDB -[b-q]opprB.
@@ -560,7 +591,10 @@ Lemma inner_pasch a b c p q :
   a <> p -> p <> c -> b <> q -> q <> c ->
   ~ (bet a b c \/ bet b c a \/ bet c a b) ->
   exists x, bet p x b /\ bet q x a.
-Proof. by move=> ? ? ? ? ? ? ? ; apply inner_pasch' with c. Qed.
+Proof.
+move=> ? ? ? ? ? ? ? . destruct (@inner_pasch' a b c p q) as [x [Hb1 Hb2]];
+by rewrite -?bet_betS // /bet; exists x; rewrite Hb1 Hb2 !orbT.
+Qed.
 
 Lemma bet_col a b c:
     bet a b c -> (bet a b c \/ bet b c a \/ bet c a b).
