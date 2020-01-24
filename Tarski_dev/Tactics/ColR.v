@@ -251,15 +251,15 @@ Notation "A & B" := (and A B) (at level 80, right associativity, only printing) 
 Notation "wd( A , B )" := (A <> B) (only printing) : tptp_fol_scope.
 Notation "col( A , B , C )" := (Definitions.Col A B C) (only printing) : tptp_fol_scope.
 
-Set Printing Depth 1000.
+Global Set Printing Depth 1000.
 
 Global Open Scope tptp_fol_scope.
-*)
 
 Ltac Print_Goal :=
   match goal with
   | |- ?G => idtac "fof(pipo,conjecture," G ")"
   end.
+*)
 
 Ltac Col_refl Tpoint Col :=
 (*
@@ -268,7 +268,7 @@ Ltac Col_refl Tpoint Col :=
   let Pnil := constr:(@nil (@prod Tpoint positive)) in
   let CT := fresh in
   assert (CT : Col_theory Tpoint Col) by (typeclasses eauto);
-  revert_all Tpoint Col CT;(* Print_Goal;*) Col_refl_aux Tpoint Col CT Pnil (*Inil*) (1%positive).
+  revert_all Tpoint Col CT; (*Print_Goal;*) Col_refl_aux Tpoint Col CT Pnil (*Inil*) (1%positive).
 
 (*
 Ltac deduce_cols_aux Tpoint Col :=

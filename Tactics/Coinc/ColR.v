@@ -423,7 +423,7 @@ apply CTcol3 with (interp (fstpp(x))) (interp (sndpp(x))); [auto|..].
   do 2 (rewrite andb_true_iff);
   repeat split; apply mem_1; assumption.
   }
-Qed.
+Defined.
 
 Lemma test_col_ok : forall ss sp interp p1 p2 p3,
   ss_ok ss interp -> sp_ok sp interp ->
@@ -442,7 +442,7 @@ intros x y Hxy.
 assert (HmemEq : forall p, mem p x = mem p y)
   by (intro; apply mem_m; auto; apply TCSets.eq_refl).
 do 3 (rewrite HmemEq); reflexivity.
-Qed.
+Defined.
 
 Lemma ss_ok_empty : forall interp,
   ss_ok empty interp.

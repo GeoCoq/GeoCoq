@@ -28,9 +28,7 @@ Definition andb_assoc := Bool.andb_assoc.
 Variable R : realFieldType.
 Variable n : nat.
 
-Definition Vector := 'rV[R]_(n.+1).
-
-Implicit Types (v : Vector).
+Implicit Types (v : 'rV[R]_(n.+1)).
 
 Lemma eq_pick_neq0 v : (fun k => v 0 k != 0) =1 (fun k => (- v) 0 k != 0).
 Proof.
@@ -175,7 +173,7 @@ Section Ratio.
 Variable R : realFieldType.
 Variable n : nat.
 
-Implicit Types (v : (@Vector R n)).
+Implicit Types (v : 'rV[R]_(n.+1)).
 
 Definition ratio v1 v2 :=
   if [pick k : 'I_(n.+1) | v2 0 k != 0] is Some k
@@ -288,7 +286,7 @@ Section TarskiGe1.
 Variable R : realFieldType.
 Variable n : nat.
 
-Implicit Types (a b c d : (@ Vector R n)).
+Implicit Types (a b c d : 'rV[R]_(n.+1)).
 
 Definition cong a b c d := (b - a) *m (b - a)^T == (d - c) *m (d - c)^T.
 
@@ -439,7 +437,7 @@ move=> k_neq0; rewrite /extension /contraction.
 suffices: (k*:(k^-1 *: (y - x) + x) == k*:z) = (k^-1 *: (y - x) + x == z).
   move<-; rewrite scalerDr scalerA divff // scale1r eq_sym -subr_eq.
   by rewrite -subr_eq opprK -scalerBr.
-rewrite -subr_eq0 -[X in _ = X]subr_eq0 -scalerBr scaler_eq0.
+rewrite -[X in X = _]subr_eq0 -[X in _ = X]subr_eq0 -scalerBr scaler_eq0.
 by move/negPf: k_neq0 ->; rewrite orFb.
 Qed.
 
@@ -535,10 +533,11 @@ by move=> ?; apply /orP; right; apply (ratio_betS ab_neq L1 L2 L3 L4).
 Qed.
 
 Lemma betS_inner_transitivity a b c d (k1 := betR a b d) (k2 := betR b c d) :
-  betS a b d -> betS b c d -> bet a b c.
+  betS a b d -> betS b c d -> betS a b c.
 Proof.
-move=> /betSP[k1P ? ?] /betSP[k2P ? ?]; apply ratio_bet with k1 k2 k1;
-try solve [rewrite /k1 /k2 /betR // -addrA mulrC ltr_spaddr ?lerr ?bet_gt0 //].
+rewrite betS_neq12=> /andP[/betSP[k1P ? ?] ?] /betSP[k2P ? ?].
+apply ratio_betS with k1 k2 k1=> //.
+  by rewrite -addrA -ltr_subl_addl subrr subr_gt0 gtr_pmull.
 rewrite eq_inv_scale ?bet_neq0 // -addrA addrC -addf_divrr ?divff ?lt0r_neq0 //.
 rewrite scalerDl scale1r eq_sym -subr_eq opprB eq_div_scale ?lt0r_neq0 //.
 rewrite addrBDB k2P scalerA scalerBl eq_sym subr_eq.
@@ -551,7 +550,7 @@ rewrite {2}/bet /betE. case: (c =P d)=> [-> //|?]. rewrite {1}/bet bet_betE.
 rewrite /betE; case: (b =P c)=> [->|?]; rewrite ?orbT ?orTb // andbF !orFb.
 case: (a =P b)=> [->|?]; rewrite ?orTb ?orbT // andFb !orFb.
 case: (b =P d)=> [->|?]; rewrite ?subrr ?betS_id // orFb.
-by move=> bet1 bet2; apply betS_inner_transitivity with d.
+by move=> bet1 bet2; rewrite /bet (@betS_inner_transitivity a b c d) ?orbT.
 Qed.
 
 Lemma bet_betS a b c : a <> b -> b <> c -> bet a b c = betS a b c.
@@ -560,23 +559,22 @@ rewrite /bet /betE. case: (a =P b)=>[-> /eqP|? ?]; first by rewrite eqxx.
 case: (b =P c)=> [-> /eqP|? ?]; by rewrite ?eqxx andFb !orFb.
 Qed.
 
-Lemma inner_pasch' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
-  betS a p c -> betS b q c ->
-  ~ (bet a b c \/ bet b c a \/ bet c a b) ->
+Lemma inner_pasch_aux a b c p q (k1 := betR a p c) (k2 := betR b q c) :
+  a <> q -> b <> p -> betS a p c -> betS b q c ->
   exists x, betS p x b /\ betS q x a.
 Proof.
-rewrite /bet; case: (b =P p) => [-> ->|/eqP bp_neq]; [rewrite orbT; intuition|].
-case: (a =P q)=> [-> _|/eqP aq_neq].
-  by rewrite [betS c q b]betS_sym=> ->; rewrite orbT; intuition.
-move => /betSP[P1 G1 L1] /betSP[P2 G2 L2] HNC.
+move=> ? ? /betSP[P1 G1 L1] /betSP[P2 G2 L2].
 suff: (((k2 + k1 - k2 * k1) / (k2 - k2 * k1))^-1 *: (a - q) + q ==
        ((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1 *: (b - p) + p)=> [/eqP E|].
-  exists (((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1 *: (b - p) + p); apply/andP.
-  rewrite (ratio_betS _ G1 G2 _ (bet_gt0 G1 L2)) ?bet_lt //;
-  rewrite -?[X in betS _ X _]E ?(ratio_betS _ G2 G1 _ (bet_gt0 G2 L1)) ? bet_lt;
-  rewrite // -?addrA ?subrr ?addr0 // 1?eq_sym -1?subr_eq0 -?addrA ?subrr;
-  rewrite ?addr0 ?scaler_eq0 ?subr_eq0 ?negb_or ?invr_eq0 ?addrA ?bet_neq0 //;
-  rewrite 1?subr_gt0 1?mulrC ?gtr_pmull //.
+  exists (((k1+k2-k1*k2)/(k1-k1*k2))^-1*:(b-p)+p); apply/andP;
+  rewrite -!bet_betS ?[bet p _ _](ratio_bet G1 G2 _ (bet_gt0 G1 L2)) ?bet_lt //;
+  rewrite ?(ratio_bet G2 G1 _ (bet_gt0 G2 L1)) ?bet_lt //;
+  [rewrite -E| |rewrite -E..| |]; [| |apply /eqP..]; rewrite -!addrA ?subrr;
+  rewrite ?addr0 // eq_sym -?subr_eq -1?subr_eq0 -1?[X in X - _]scale1r;
+  rewrite -?scalerBl ?scale1r -?addrA ?subrr ?addr0 scaler_eq0 negb_or;
+  rewrite ?lt0r_neq0 ?subr_gt0 ?addrA ?bet_gt0' ?bet_lt1 //= ?subr_eq0;
+  rewrite ?[k1+k2]addrC ?bet_lt ?[k2+k1]addrC ?bet_lt ?subr_gt0;
+  rewrite 1?mulrC ?gtr_pmull //; by apply /eqP.
 rewrite [X in X - _]addrC eq_sym [X in X - _]addrC -!addrA !invf_div.
 rewrite -subr_eq [k2*_]mulrC !addrA -addrA [k2 + k1]addrC.
 rewrite eq_div_scale ?bet_neq0' // scalerDr scalerA mulrCA mulfV ?bet_neq0' //.
@@ -585,6 +583,17 @@ rewrite addrACA -[X in _+X]addrA -!scaleNr -scalerDr addrBDB -addrCA addrAC.
 rewrite -[X in _+(X+_)]addrA -scalerDr addrBDB -addrCA scalerDl -!addrA.
 rewrite  -scalerDr addrBDB addrCA addr_eq0 addrA -scalerDr addrBDB -[b-q]opprB.
 by rewrite P1 P2 -scalerN opprB !scalerA [k2*_]mulrC -scalerDr addrBDB scaleNr.
+Qed.
+
+Lemma inner_pasch' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
+  betS a p c -> betS b q c ->
+  ~ (bet a b c \/ bet b c a \/ bet c a b) ->
+  exists x, betS p x b /\ betS q x a.
+Proof.
+rewrite /bet; case: (b =P p) => [-> ->|bp_neq]; [rewrite orbT; intuition|].
+case: (a =P q)=> [-> _|aq_neq ? ? _].
+  by rewrite [betS c q b]betS_sym=> ->; rewrite orbT; intuition.
+by destruct (@inner_pasch_aux a b c p q) as [x []]=> //; exists x.
 Qed.
 
 Lemma inner_pasch a b c p q :
@@ -711,7 +720,7 @@ Section Tarski2D.
 
 Variable R : realFieldType.
 
-Implicit Types (a b c d : (@Vector R 1)).
+Implicit Types (a b c d : 'rV[R]_2).
 
 Lemma vector2_eq a b : a == b = (a 0 0 == b 0 0) && (a 0 1 == b 0 1).
 Proof.
@@ -721,7 +730,7 @@ apply /rowP=> j; case: j => [] [|[|//]] p.
 by rewrite (@ord_inj _ (Ordinal p) 1).
 Qed.
 
-Lemma vector2_eq0 (v :(@Vector R 1)) : (v == 0) = (v 0 0 == 0) && (v 0 1 == 0).
+Lemma vector2_eq0 (v : 'rV[R]_2) : (v == 0) = (v 0 0 == 0) && (v 0 1 == 0).
 Proof.
 apply /eqP; case: (v 0 0 =P 0); case: (v 0 1 =P 0)=> V01 V00 /=;
 try (by apply /rowP=> H; try apply V01; try apply V00; rewrite H mxE).
@@ -730,7 +739,7 @@ apply /rowP=> j;  case: j => [] [|[|//]] p.
 by rewrite (@ord_inj _ (Ordinal p) 1) // V01 mxE.
 Qed.
 
-Lemma vector2_neq0 (v : 'rV[R]_(2)) : (v != 0) = (v 0 0 != 0) || (v 0 1 != 0).
+Lemma vector2_neq0 (v : 'rV[R]_2) : (v != 0) = (v 0 0 != 0) || (v 0 1 != 0).
 Proof.
 apply /eqP; case: (v 0 0 =P 0)=> Hv0; case: (v 0 1 =P 0)=> Hv1 /=;
 try (by apply /rowP=> H; try apply Hv0; try apply Hv1; rewrite H mxE).
@@ -805,7 +814,7 @@ move=> H; apply Decidable.not_and in H; first by move: H=> [H|H].
 case: (a 0 0 =P b 0 0)=> ?; case: (a 0 1 =P b 0 1)=> ?; intuition.
 Qed.
 
-Lemma ratioP_aux (v1 v2 : 'rV[R]_(2)) :
+Lemma ratioP_aux (v1 v2 : 'rV[R]_2) :
   v1 0 0 != 0 -> v1 0 1 != 0 -> v2 0 0 != 0 -> v2 0 1 != 0 ->
   v1 0 0 * v2 0 1 == v1 0 1 * v2 0 0 -> ratio v1 v2 = v1 0 0 / v2 0 0.
 Proof.
@@ -815,7 +824,7 @@ apply /eqP/rowP=> j; rewrite !mxE; case: j => [] [|[|//]] p.
 by rewrite (@ord_inj _ (Ordinal p) 1) // -mulrAC E -mulrA divff // mulr1.
 Qed.
 
-Lemma ratioP (v1 v2 : 'rV[R]_(2)) :
+Lemma ratioP (v1 v2 : 'rV[R]_2) :
   v1 0 0 != 0 -> v1 0 1 != 0 -> v2 0 0 != 0 -> v2 0 1 != 0 ->
   v1 0 0 * v2 0 1 == v1 0 1 * v2 0 0 -> v1 = ratio v1 v2 *: v2.
 Proof.
@@ -825,7 +834,7 @@ apply/rowP=> j; rewrite !mxE; case: j => [] [|[| //]] //= p.
 by rewrite (@ord_inj _ (Ordinal p) 1) // -mulrAC E -mulrA divff // mulr1.
 Qed.
 
-Lemma ratio_e0_n1 (v1 v2 : 'rV[R]_(2)) :
+Lemma ratio_e0_n1 (v1 v2 : 'rV[R]_2) :
   v2 0 0 = 0 -> v2 0 1 != 0 -> ratio v1 v2 = v1 0 1 / v2 0 1.
 Proof.
 move=> E NE; rewrite /ratio; case: pickP=> [x|/all_v_neq0 H]; [elim x=> m i|];
@@ -836,7 +845,7 @@ move=> /orP[/eqP E'|/eqP E']; move: i; rewrite E'=> i.
 by rewrite (@ord_inj _ (Ordinal i) 0) // E=> /eqP NE'.
 Qed.
 
-Lemma ratio_e1_n0 (v1 v2 : 'rV[R]_(2)) :
+Lemma ratio_e1_n0 (v1 v2 : 'rV[R]_2) :
   v2 0 0 != 0 -> v2 0 1 = 0 -> ratio v1 v2 = v1 0 0 / v2 0 0.
 Proof.
 move=> NE E; rewrite /ratio; case: pickP=> [x|/all_v_neq0 H]; [elim x=> m i|];
@@ -1012,18 +1021,18 @@ rewrite E0 E1 -[c 0 0 - b 0 0]opprB -[c 0 1 - b 0 1]opprB -[X in _ - X]mul1r.
 by rewrite eq_sym -[X in _ - X]mul1r -!mulrBl mulrAC.
 Qed.
 
-Lemma cong_perp_aux1 (a p m : 'rV[R]_(2)) i :
+Lemma cong_perp_aux1 (a p m : 'rV[R]_2) i :
   (m 0 i - a 0 i) - (m 0 i - p 0 i) = p 0 i - a 0 i.
 Proof. by apply /eqP; rewrite opprB addrC addrBDB eqxx. Qed.
 
-Lemma cong_perp_aux2 (a p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) i :
+Lemma cong_perp_aux2 (a p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) i :
   (m 0 i - a 0 i) + (m 0 i - p 0 i) = q 0 i - a 0 i.
 Proof.
 rewrite addrAC addrA /m !mxE -mulrDl addf_divrr ?divff ?add11_neq0 //.
 by rewrite mul1r -addrA addrACA subrr add0r.
 Qed.
 
-Lemma cong_perp (a p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma cong_perp (a p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   cong a p a q ->
   (p 0 0 - m 0 0) * (m 0 0 - a 0 0) + (p 0 1 - m 0 1) * (m 0 1 - a 0 1) = 0.
 Proof.
@@ -1038,7 +1047,7 @@ rewrite !addrBDD !mulrnAl !mulrnAr -!mulrnA -mulrnDl mulrn_eq0 muln_eq0 /=.
 by rewrite addr_eq0=> /eqP E; rewrite -E addrC subrr.
 Qed.
 
-Lemma upper_dim_dgc_aux0 (p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc_aux0 (p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   p 0 0 - m 0 0 == 0 -> p <> q ->
   (m 0 0 - p 0 0 == 0) && (m 0 1 - p 0 1 != 0).
 Proof.
@@ -1050,7 +1059,7 @@ rewrite E1 E2 subrr eqxx /= -NE -opprB -(cong_perp_aux2 _ p) -/m NE subrr addr0.
 by rewrite oppr_eq0 eqxx.
 Qed.
 
-Lemma upper_dim_dgc_aux1 (p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc_aux1 (p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   p 0 1 - m 0 1 == 0 -> p <> q ->
   (m 0 1 - p 0 1 == 0) && (m 0 0 - p 0 0 != 0).
 Proof.
@@ -1062,7 +1071,7 @@ rewrite E1 E2 subrr eqxx /= -NE -opprB -(cong_perp_aux2 _ p) -/m NE subrr addr0.
 by rewrite oppr_eq0 eqxx.
 Qed.
 
-Lemma upper_dim_dgc1_aux (a p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc1_aux (a p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   m 0 0 - p 0 0 = 0 -> m 0 1 - p 0 1 != 0 ->
   cong a p a q ->
   m 0 1 = a 0 1.
@@ -1076,7 +1085,7 @@ rewrite -mulNrn -mulNr opprB -mulNrn -mulNr opprB -mulrnDr  mulrn_eq0 mulf_eq0.
 by rewrite /= subr_eq0 => /orP [/eqP->//|/eqP H]; move: NE; rewrite H eqxx.
 Qed.
 
-Lemma upper_dim_dgc1 (a b c p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc1 (a b c p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   p 0 0 - m 0 0 == 0 -> p <> q ->
   cong a p a q -> cong b p b q -> cong c p c q ->
   (a 0 0 - b 0 0) * (b 0 1 - c 0 1) == (a 0 1 - b 0 1) * (b 0 0 - c 0 0).
@@ -1087,7 +1096,7 @@ apply upper_dim_dgc1_aux in C2=> //; apply upper_dim_dgc1_aux in C3=> //.
 by rewrite -C1 -C2 -C3 subrr mulr0 mul0r.
 Qed.
 
-Lemma upper_dim_dgc2_aux (a p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc2_aux (a p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   m 0 1 - p 0 1 = 0 -> m 0 0 - p 0 0 != 0 ->
   cong a p a q ->
   m 0 0 = a 0 0.
@@ -1102,7 +1111,7 @@ rewrite mulf_eq0 /= subr_eq0 => /orP [/eqP->//|/eqP H].
 by move: NE; rewrite H eqxx.
 Qed.
 
-Lemma upper_dim_dgc2 (a b c p q : 'rV[R]_(2)) (m := (1 / (1 + 1)) *: (p + q)) :
+Lemma upper_dim_dgc2 (a b c p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) :
   m 0 1 - p 0 1 == 0 -> p <> q ->
   cong a p a q -> cong b p b q -> cong c p c q ->
   (a 0 0 - b 0 0) * (b 0 1 - c 0 1) == (a 0 1 - b 0 1) * (b 0 0 - c 0 0).
@@ -1113,7 +1122,7 @@ apply upper_dim_dgc2_aux in C2=> //; apply upper_dim_dgc2_aux in C3=> //.
 by rewrite -C1 -C2 -C3 subrr mul0r mulr0.
 Qed.
 
-Lemma upper_dim_aux (a b m : 'rV[R]_(2)) (c0 c1: R) :
+Lemma upper_dim_aux (a b m : 'rV[R]_2) (c0 c1: R) :
   c0 * (m 0 0 - a 0 0) + c1 * (m 0 1 - a 0 1) = 0 ->
   c0 * (m 0 0 - b 0 0) + c1 * (m 0 1 - b 0 1) = 0 ->
   c0 * (b 0 0 - a 0 0) = - c1 * (b 0 1 - a 0 1).
@@ -1143,9 +1152,9 @@ Qed.
 Definition row2 {R : ringType} (a b : R) : 'rV[R]_2 :=
   \row_p [eta \0 with 0 |-> a, 1 |-> b] p.
 
-Definition a : (@Vector R 1) := row2 0 0.
-Definition b : (@Vector R 1) := row2 0 1.
-Definition c : (@Vector R 1) := row2 1 0.
+Definition a : 'rV[R]_2 := row2 0 0.
+Definition b : 'rV[R]_2 := row2 0 1.
+Definition c : 'rV[R]_2 := row2 1 0.
 
 Lemma row2_eq (a b c d : R) : row2 a b == row2 c d = ((a == c) && (b == d)).
 Proof.
@@ -1237,7 +1246,7 @@ Section Rcf_to_independent_Tarski_2D_euclidean.
 
 Variable R : rcfType.
 
-Definition point := (@Vector R 1).
+Definition point := 'rV[R]_2.
 
 Global Instance Rcf_to_GI_PED :
   Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
@@ -1281,19 +1290,11 @@ Definition coplanar a b c d :=
             (col a c x /\ col b d x) \/
             (col a d x /\ col b c x).
 
-Definition par_strict a b c d :=
-  coplanar a b c d /\ ~ exists x, col x a b /\ col x c d.
-
-Definition par a b c d :=
-  par_strict a b c d \/ (a <> b /\ c <> d /\ col a c d /\ col b c d).
-
-Lemma proclus' a b c d p q :
-  ~ ~ par a b c d -> col a b p -> ~ col a b q -> coplanar c d p q ->
-  exists y, col p q y /\ col c d y.
+Lemma tcp a b c :
+  ~ col a b c -> exists x, cong a x b x /\ cong a x c x /\ coplanar a b c x.
 Proof.
-cut (proclus_postulate); [move=> H HP ? ? ?|have: tarski_s_parallel_postulate].
-    elim (@par_dec Rcf_to_T Rcf_to_T_PED Rcf_to_T_euclidean a b c d);
-    [intro; assert_diffs; apply H with a b; auto|move=> HF; exfalso; auto].
+cut (triangle_circumscription_principle); [|have: tarski_s_parallel_postulate].
+    by move=> HP ?; destruct (HP a b c) as [x [? []]]; [|exists x].
   by unfold tarski_s_parallel_postulate; apply euclidT.
 apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
 simpl; tauto.
