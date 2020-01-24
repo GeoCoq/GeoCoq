@@ -28,7 +28,7 @@ Definition andb_assoc := Bool.andb_assoc.
 Variable R : realFieldType.
 Variable n : nat.
 
-Implicit Types (v : 'rV[R]_(n.+1)).
+Implicit Types (v : 'rV[R]_n).
 
 Lemma eq_pick_neq0 v : (fun k => v 0 k != 0) =1 (fun k => (- v) 0 k != 0).
 Proof.
@@ -66,7 +66,7 @@ Lemma quad_ge0 v : 0 <= (v *m v^T) 0 0.
 Proof. by rewrite !mxE sumr_ge0 // => i _; rewrite mxE sqr_ge0. Qed.
 
 Lemma all_v_neq0 v : v != 0 ->
-  ~ (fun k : 'I_(n.+1) => v 0 k != 0) =1 xpred0.
+  ~ (fun k : 'I_n => v 0 k != 0) =1 xpred0.
 Proof.
 move=> v_neq0 all_v_neq0; have := v_neq0; suff -> : v = 0 by rewrite eqxx.
 by apply/rowP => k; rewrite !mxE; have/negPn/eqP := all_v_neq0 k.
@@ -173,10 +173,10 @@ Section Ratio.
 Variable R : realFieldType.
 Variable n : nat.
 
-Implicit Types (v : 'rV[R]_(n.+1)).
+Implicit Types (v : 'rV[R]_n).
 
 Definition ratio v1 v2 :=
-  if [pick k : 'I_(n.+1) | v2 0 k != 0] is Some k
+  if [pick k : 'I_n | v2 0 k != 0] is Some k
   then v1 0 k / v2 0 k else 0.
 
 Lemma ratio0p p : ratio 0 p = 0.
@@ -286,7 +286,7 @@ Section TarskiGe1.
 Variable R : realFieldType.
 Variable n : nat.
 
-Implicit Types (a b c d : 'rV[R]_(n.+1)).
+Implicit Types (a b c d : 'rV[R]_n).
 
 Definition cong a b c d := (b - a) *m (b - a)^T == (d - c) *m (d - c)^T.
 
@@ -1217,9 +1217,9 @@ Section RcfTarski.
 Variable R : rcfType.
 Variable n : nat.
 
-Implicit Types (a b c d : 'rV[R]_(n.+1)).
+Implicit Types (a b c d : 'rV[R]_n).
 
-Definition normv (x : 'rV[R]_(n.+1)) : R := Num.sqrt ((x *m x^T) 0 0).
+Definition normv (x : 'rV[R]_n) : R := Num.sqrt ((x *m x^T) 0 0).
 
 Lemma segment_construction a b c d :
     exists e, bet a b e /\ cong b e c d.
@@ -1253,11 +1253,11 @@ Global Instance Rcf_to_GI_PED :
 Proof.
 exact
 (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
-   point (@bet R 1) (@cong R 1) (@point_equality_decidability R 1)
-   (@cong_pseudo_reflexivity R 1) (@cong_inner_transitivity R 1)
-   (@cong_identity R 1)
-   (@segment_construction R 1) (@five_segment R 1)
-   (@bet_symmetry R 1) (@bet_inner_transitivity R 1) (@inner_pasch R 1)
+   point (@bet R 2) (@cong R 2) (@point_equality_decidability R 2)
+   (@cong_pseudo_reflexivity R 2) (@cong_inner_transitivity R 2)
+   (@cong_identity R 2)
+   (@segment_construction R 2) (@five_segment R 2)
+   (@bet_symmetry R 2) (@bet_inner_transitivity R 2) (@inner_pasch R 2)
    (@a R) (@b R) (@c R)
    (@lower_dim R)).
 Defined.
@@ -1267,7 +1267,7 @@ Proof. apply GI_to_T. Defined.
 
 Global Instance Rcf_to_T_PED :
   Tarski_neutral_dimensionless_with_decidable_point_equality Rcf_to_T.
-Proof. split; exact (@point_equality_decidability R 1). Defined.
+Proof. split; exact (@point_equality_decidability R 2). Defined.
 
 Global Instance Rcf_to_GI2D : Gupta_inspired_variant_of_Tarski_2D Rcf_to_GI_PED.
 Proof. split; exact (@upper_dim R). Defined.
@@ -1276,7 +1276,7 @@ Global Instance Rcf_to_T2D : Tarski_2D Rcf_to_T_PED.
 Proof. split; exact upper_dimT. Defined.
 
 Global Instance Rcf_to_GI_euclidean : Gupta_inspired_variant_of_Tarski_euclidean Rcf_to_GI_PED.
-Proof. split; exact (@euclid R 1). Defined.
+Proof. split; exact (@euclid R 2). Defined.
 
 Global Instance Rcf_to_T_euclidean : Tarski_euclidean Rcf_to_T_PED.
 Proof. split; exact euclidT. Defined.
