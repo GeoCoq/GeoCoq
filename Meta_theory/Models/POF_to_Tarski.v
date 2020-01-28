@@ -394,15 +394,6 @@ rewrite /bet /betS /betR subrr ratiop0 ltr_def eqxx andbF orbF /betE.
 by rewrite [a == x]eq_sym Bool.andb_diag !Bool.orb_diag.
 Qed.
 
-(*
-Lemma betS_ratio a b k1 :
-  a != b -> 0 < k1 -> k1 < 1 -> betS a b (k1^-1 *: (b - a) + a).
-Proof.
-move=> neq_ab L G; rewrite /bet /betS /betR -addrA subrr addr0 -ratio_bet' //.
-by rewrite scalerA mulfV ?lt0r_neq0 // scale1r L G eqxx !andbb.
-Qed.
-*)
-
 Lemma bet_ratio a b k1 : 0 < k1 -> k1 < 1 -> bet a b (k1^-1 *: (b - a) + a).
 Proof.
 case: (a =P b)=> [->|/eqP neq_ab L G]; rewrite ?bet_xxa // /bet /betS /betR.
@@ -1152,14 +1143,30 @@ Qed.
 Definition row2 {R : ringType} (a b : R) : 'rV[R]_2 :=
   \row_p [eta \0 with 0 |-> a, 1 |-> b] p.
 
-Definition a : 'rV[R]_2 := row2 0 0.
-Definition b : 'rV[R]_2 := row2 0 1.
-Definition c : 'rV[R]_2 := row2 1 0.
+Definition a2D : 'rV[R]_2 := row2 0 0.
+Definition b2D : 'rV[R]_2 := row2 0 1.
+Definition c2D : 'rV[R]_2 := row2 1 0.
+
+Variable n : nat.
+
+Definition to_nD (v : 'rV[R]_2) : 'rV[R]_(2+n) := row_mx v (@const_mx R 1 n 0).
+
+Definition a := to_nD a2D.
+Definition b := to_nD b2D.
+Definition c := to_nD c2D.
 
 Lemma row2_eq (a b c d : R) : row2 a b == row2 c d = ((a == c) && (b == d)).
 Proof.
 apply /eqP; case: (a =P c)=> [->|/eqP Hv0]; case: (b =P d)=> [->|/eqP Hv1] //=;
 by apply/eqP; rewrite vector2_eq !mxE ?eqxx //= andbC //= negb_and Hv0 Hv1.
+Qed.
+
+Lemma row2_eq_nD (a b c d : R) :
+  (row_mx (row2 a b) (@const_mx R 1 n 0) ==
+   row_mx (row2 c d) (@const_mx R 1 n 0)) = ((a == c) && (b == d)).
+Proof.
+rewrite -subr_eq0 opp_row_mx add_row_mx subrr.
+by rewrite row_mx_eq0 eqxx andbT subr_eq0 row2_eq.
 Qed.
 
 Lemma row2_eq0 (a b : R) : row2 a b == 0 = ((a == 0) && (b == 0)).
@@ -1168,39 +1175,75 @@ apply /eqP; case: (a =P 0)=> [->|/eqP Hv0]; case: (b =P 0)=> [->|/eqP Hv1] //=;
 by apply/eqP; rewrite vector2_eq !mxE ?eqxx //= andbC //= negb_and Hv0 Hv1.
 Qed.
 
-Lemma a_eq0 : a = 0.
-Proof. by rewrite /a; apply /eqP; rewrite vector2_eq !mxE /= eqxx. Qed.
+Lemma row2_eq0_nD (a b : R) :
+  (row_mx (row2 a b) (@const_mx R 1 (n.+2) 0) == 0) = ((a == 0) && (b == 0)).
+Proof. by rewrite row_mx_eq0 eqxx andbT row2_eq0. Qed.
 
-Lemma ab_neq : a == b = false.
+Lemma a2D_eq0 : a2D = 0.
+Proof. by rewrite /a2D; apply /eqP; rewrite vector2_eq !mxE /= eqxx. Qed.
+
+Lemma a_eq0 : a = 0.
+Proof. by rewrite /a /to_nD a2D_eq0 row_mx_const. Qed.
+
+Lemma b2D_neq0 : b2D != 0.
+Proof. by rewrite /b2D vector2_eq !mxE /= eqxx oner_eq0. Qed.
+
+Lemma b_neq0 : b != 0.
+Proof. by rewrite /b /to_nD row_mx_eq0 negb_and b2D_neq0. Qed.
+
+Lemma c2D_neq0 : c2D != 0.
+Proof. by rewrite /c2D vector2_eq !mxE /= eqxx oner_eq0. Qed.
+
+Lemma c_neq0 : c != 0.
+Proof. by rewrite /c /to_nD row_mx_eq0 negb_and c2D_neq0. Qed.
+
+Lemma ab_neq_2D : a2D == b2D = false.
 Proof. by rewrite row2_eq eqxx /= eq_sym oner_eq0. Qed.
 
-Lemma bc_neq : b == c = false.
+Lemma ab_neq : a == b = false.
+Proof.
+by rewrite /a /b -subr_eq0 opp_row_mx add_row_mx row_mx_eq0 subr_eq0 ab_neq_2D.
+Qed.
+
+Lemma bc_neq_2D : b2D == c2D = false.
 Proof. by rewrite row2_eq oner_eq0 andbC. Qed.
 
-Lemma ca_neq : c == a = false.
+Lemma bc_neq : b == c = false.
+Proof.
+by rewrite /b /c -subr_eq0 opp_row_mx add_row_mx row_mx_eq0 subr_eq0 bc_neq_2D.
+Qed.
+
+Lemma ca_neq_2D : c2D == a2D = false.
 Proof. by rewrite row2_eq oner_eq0. Qed.
+
+Lemma ca_neq : c == a = false.
+Proof.
+by rewrite /c /a -subr_eq0 opp_row_mx add_row_mx row_mx_eq0 subr_eq0 ca_neq_2D.
+Qed.
 
 Lemma betR_abc : betR a b c = 0.
 Proof.
-rewrite /betR /ratio; case: pickP => /= [x|all_v_neq0 //].
-rewrite /a /b /c !mxE /=; case: x => [] [|[| //]] //= p;
-by rewrite !subr0 ?divr1 ?eqxx.
+rewrite a_eq0 /b /c /betR /ratio; case: pickP => /= [x|all_v_neq0 //].
+rewrite !subr0 /b /c /to_nD /row_mx !mxE; case: (split x)=> [x0|x1];
+by rewrite ?mxE ?eqxx //; case: x0 => [] [|[|//]] p /=; rewrite ?divr1 ?eqxx.
 Qed.
 
 Lemma betR_bca : betR b c a = 1.
 Proof.
-rewrite /betR /ratio a_eq0 sub0r; case: pickP => /= [x|/all_v_neq0 H].
-  rewrite /b /c !mxE /=; case: x => [] [|[| //]] //= p;
-  by rewrite oppr_eq0 ?eqxx // sub0r divff // oppr_eq0 oner_eq0.
-by exfalso; apply H; rewrite oppr_eq0 -a_eq0 /a /b row2_eq oner_eq0 eqxx.
+rewrite /b /c a_eq0 /betR /ratio add0r; case: pickP => /= [x|/all_v_neq0 H];
+last by exfalso; apply H; rewrite oppr_eq0 b_neq0.
+rewrite /to_nD /row_mx !mxE; case: (split x)=> [x0|x1]; rewrite ?mxE ?oppr_eq0;
+rewrite ?eqxx //; case: x0 => [] [|[|//]] p /=; rewrite ?eqxx //.
+by rewrite sub0r divff ?eqxx // oppr_eq0 oner_eq0.
 Qed.
 
 Lemma betR_cab : betR c a b = 0 \/ betR c a b = 1.
 Proof.
-rewrite /betR /ratio a_eq0 sub0r; case: pickP => /= [x|/all_v_neq0 H].
-  rewrite /b /c !mxE /=; case: x => [] [|[| //]] //= p;
-  by rewrite ?subr0 ?divr1 ?oppr0 ?sub0r ?divff ?oppr_eq0 ?oner_eq0; tauto.
-by exfalso; apply H; rewrite /b /c vector2_eq !mxE subr0 oner_eq0 andbC.
+rewrite /c a_eq0 /b /betR /ratio add0r; case: pickP => /= [x|/all_v_neq0 H];
+last by exfalso; apply H; rewrite subr_eq0 bc_neq.
+rewrite /to_nD /row_mx !mxE; case: (split x)=> [x0|x1]; rewrite ?mxE ?subrr;
+rewrite ?eqxx //; case: x0 => [] [|[|//]] p /=; rewrite ?add0r ?subr0 ?divr1;
+by rewrite ?oppr0 ?divff ?oppr_eq0 ?oner_eq0; tauto.
 Qed.
 
 Lemma lower_dim : ~ (bet a b c \/ bet b c a \/ bet c a b).
@@ -1242,24 +1285,25 @@ Qed.
 
 End RcfTarski.
 
-Section Rcf_to_independent_Tarski_2D_euclidean.
+Section Rcf_to_independent_Tarski_nD_euclidean.
 
 Variable R : rcfType.
+Variable n : nat.
 
-Definition point := 'rV[R]_2.
+Definition point := 'rV[R]_(n.+2).
 
 Global Instance Rcf_to_GI_PED :
   Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact
 (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
-   point (@bet R 2) (@cong R 2) (@point_equality_decidability R 2)
-   (@cong_pseudo_reflexivity R 2) (@cong_inner_transitivity R 2)
-   (@cong_identity R 2)
-   (@segment_construction R 2) (@five_segment R 2)
-   (@bet_symmetry R 2) (@bet_inner_transitivity R 2) (@inner_pasch R 2)
-   (@a R) (@b R) (@c R)
-   (@lower_dim R)).
+   point (@bet R (n.+2)) (@cong R (n.+2)) (@point_equality_decidability R (n.+2))
+   (@cong_pseudo_reflexivity R (n.+2)) (@cong_inner_transitivity R (n.+2))
+   (@cong_identity R (n.+2))
+   (@segment_construction R (n.+2)) (@five_segment R (n.+2))
+   (@bet_symmetry R (n.+2)) (@bet_inner_transitivity R (n.+2)) (@inner_pasch R (n.+2))
+   (@a R n) (@b R n) (@c R n)
+   (@lower_dim R n)).
 Defined.
 
 Global Instance Rcf_to_T : Tarski_neutral_dimensionless.
@@ -1267,16 +1311,11 @@ Proof. apply GI_to_T. Defined.
 
 Global Instance Rcf_to_T_PED :
   Tarski_neutral_dimensionless_with_decidable_point_equality Rcf_to_T.
-Proof. split; exact (@point_equality_decidability R 2). Defined.
+Proof. split; exact (@point_equality_decidability R (n.+2)). Defined.
 
-Global Instance Rcf_to_GI2D : Gupta_inspired_variant_of_Tarski_2D Rcf_to_GI_PED.
-Proof. split; exact (@upper_dim R). Defined.
-
-Global Instance Rcf_to_T2D : Tarski_2D Rcf_to_T_PED.
-Proof. split; exact upper_dimT. Defined.
-
-Global Instance Rcf_to_GI_euclidean : Gupta_inspired_variant_of_Tarski_euclidean Rcf_to_GI_PED.
-Proof. split; exact (@euclid R 2). Defined.
+Global Instance Rcf_to_GI_euclidean :
+  Gupta_inspired_variant_of_Tarski_euclidean Rcf_to_GI_PED.
+Proof. split; exact (@euclid R (n.+2)). Defined.
 
 Global Instance Rcf_to_T_euclidean : Tarski_euclidean Rcf_to_T_PED.
 Proof. split; exact euclidT. Defined.
@@ -1300,4 +1339,17 @@ apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
 simpl; tauto.
 Qed.
 
-End Rcf_to_independent_Tarski_2D_euclidean.
+End Rcf_to_independent_Tarski_nD_euclidean.
+
+Section Rcf_to_independent_Tarski_2D.
+
+Variable R : rcfType.
+
+Global Instance Rcf_to_GI2D :
+  Gupta_inspired_variant_of_Tarski_2D (@Rcf_to_GI_PED R 0).
+Proof. split; exact (@upper_dim R). Defined.
+
+Global Instance Rcf_to_T2D : Tarski_2D (@Rcf_to_T_PED R 0).
+Proof. split; exact upper_dimT. Defined.
+
+End Rcf_to_independent_Tarski_2D.
