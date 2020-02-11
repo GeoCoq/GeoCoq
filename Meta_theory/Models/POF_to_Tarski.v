@@ -388,10 +388,12 @@ suffices: betR a b c = betR (a+d) (b+d) (c+d) by  move ->.
 by rewrite /betR !addrDBD.
 Qed.
 
+Lemma betE_xax x a : betE x a x = (x == a).
+Proof. by rewrite /betE [a == x]eq_sym; case: (x =P a). Qed.
+
 Lemma bet_xax x a : bet x a x = (x == a).
 Proof.
-rewrite /bet /betS /betR subrr ratiop0 ltr_def eqxx andbF orbF /betE.
-by rewrite [a == x]eq_sym Bool.andb_diag !Bool.orb_diag.
+by rewrite /bet /betS /betR subrr ratiop0 ltr_def eqxx andbF orbF betE_xax.
 Qed.
 
 Lemma bet_ratio a b k1 : 0 < k1 -> k1 < 1 -> bet a b (k1^-1 *: (b - a) + a).
@@ -550,7 +552,7 @@ rewrite /bet /betE. case: (a =P b)=>[-> /eqP|? ?]; first by rewrite eqxx.
 case: (b =P c)=> [-> /eqP|? ?]; by rewrite ?eqxx andFb !orFb.
 Qed.
 
-Lemma inner_pasch_aux a b c p q (k1 := betR a p c) (k2 := betR b q c) :
+Lemma inner_pasch'' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
   a <> q -> b <> p -> betS a p c -> betS b q c ->
   exists x, betS p x b /\ betS q x a.
 Proof.
@@ -584,7 +586,7 @@ Proof.
 rewrite /bet; case: (b =P p) => [-> ->|bp_neq]; [rewrite orbT; intuition|].
 case: (a =P q)=> [-> _|aq_neq ? ? _].
   by rewrite [betS c q b]betS_sym=> ->; rewrite orbT; intuition.
-by destruct (@inner_pasch_aux a b c p q) as [x []]=> //; exists x.
+by destruct (@inner_pasch'' a b c p q) as [x []]=> //; exists x.
 Qed.
 
 Lemma inner_pasch a b c p q :
@@ -597,17 +599,48 @@ move=> ? ? ? ? ? ? ? . destruct (@inner_pasch' a b c p q) as [x [Hb1 Hb2]];
 by rewrite -?bet_betS // /bet; exists x; rewrite Hb1 Hb2 !orbT.
 Qed.
 
+Lemma inner_pasch_gen a b c p q :
+  bet a p c -> bet b q c ->
+  exists x, bet p x b /\ bet q x a.
+Proof.
+case: (a =P p)=> [->|?]; first by exists p; rewrite bet_xxa bet_axx.
+case: (p =P c)=> [->|?]; first by exists q; rewrite bet_xxa bet_sym.
+case: (b =P q)=> [->|?]; first by exists q; rewrite bet_xxa bet_axx.
+case: (q =P c)=> [->|?]; first by exists p; rewrite bet_xxa bet_sym.
+have: (  (bet a b c \/ bet b c a \/ bet c a b) \/
+       ~ (bet a b c \/ bet b c a \/ bet c a b)).
+  by case: (bet a b c); case: (bet b c a); case: (bet c a b); intuition.
+suff: (forall a b c p q, bet a b c -> a <> p -> p <> c -> b <> q -> q <> c ->
+                         bet a p c -> bet b q c ->
+                         exists x, bet p x b /\ bet q x a).
+  move=> H [[?|[?|?]]|?] ? ?; [..|by apply inner_pasch with c];
+  [apply (H a b c p q)|exists c|destruct (H b a c q p) as [x []]]=> //;
+  [split| |by exists x; split]; rewrite bet_sym //;
+  [apply bet_inner_transitivity with a|apply bet_inner_transitivity with b];
+  by rewrite // bet_sym.
+clear dependent p; clear dependent q; clear a b c=> a b c p q Hb1 Hc1 Hc2.
+rewrite bet_betS //; clear Hc1 Hc2 => Hc1 Hc2 Hb2; rewrite bet_betS //.
+clear Hc1 Hc2; move: Hb1 Hb2; case: (a =P q)=> [-> ? Hb1 Hb2|?].
+  exists q; rewrite bet_axx; split; rewrite // bet_sym.
+  by apply bet_inner_transitivity with c; rewrite /bet ?Hb1 ?Hb2 orbT.
+case: (b =P p)=> [-> ? ? Hb|? _ ? ?];
+last by destruct (@inner_pasch'' a b c p q) as [x [Hb1 Hb2]];
+[..|exists x; split]; rewrite // /bet ?Hb1 ?Hb2 orbT.
+exists p; split; rewrite ?bet_axx // bet_sym.
+by apply bet_inner_transitivity with c; rewrite // /bet Hb orbT.
+Qed.
+
 Lemma bet_col a b c:
-    bet a b c -> (bet a b c \/ bet b c a \/ bet c a b).
+  bet a b c -> (bet a b c \/ bet b c a \/ bet c a b).
 Proof. by auto. Qed.
 
 Lemma bet_colF a b c :
   bet a b c -> ~ (bet b a c \/ bet a c b \/ bet c b a) -> False.
 Proof.
-by move=>/bet_symmetry bet nbet; exfalso; apply nbet; rewrite bet; right; right.
+by move=> /bet_symmetry Hb Hnb; exfalso; apply Hnb; rewrite Hb; right; right.
 Qed.
 
-Lemma euclid'_aux a b c d k1 (k2 := betR b d c) :
+Lemma euclid'' a b c d k1 (k2 := betR b d c) :
   0 < k1 -> k1 < 1 -> bet b d c -> b != c ->
   bet (extension a b k1) (extension a d k1) (extension a c k1).
 Proof.
@@ -633,7 +666,7 @@ set x:=extension a b k1; set y:=extension a c k1; exists x, y.
 have: (t == extension a d k1); [|move/betSP: betS_adt =>[_ k1_gt0 k1_lt1]].
   move: betS_adt; rewrite betS_neq12 /betS /betR=> /andP[/andP[/eqP ? _] ?].
   by apply /eqP; rewrite /k1 /betR extensionP.
-by move=> /eqP t_def; rewrite !extension_bet // t_def /x /y euclid'_aux.
+by move=> /eqP t_def; rewrite !extension_bet // t_def /x /y euclid''.
 Qed.
 
 Lemma euclid a b c d t (k1 := betR a d t) (k2 := betR b d c) :
@@ -1290,14 +1323,12 @@ Section Rcf_to_independent_Tarski_nD_euclidean.
 Variable R : rcfType.
 Variable n : nat.
 
-Definition point := 'rV[R]_(n.+2).
-
 Global Instance Rcf_to_GI_PED :
   Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality.
 Proof.
 exact
 (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
-   point (@bet R (n.+2)) (@cong R (n.+2)) (@point_equality_decidability R (n.+2))
+   'rV[R]_(n.+2) (@bet R (n.+2)) (@cong R (n.+2)) (@point_equality_decidability R (n.+2))
    (@cong_pseudo_reflexivity R (n.+2)) (@cong_inner_transitivity R (n.+2))
    (@cong_identity R (n.+2))
    (@segment_construction R (n.+2)) (@five_segment R (n.+2))
@@ -1320,7 +1351,7 @@ Proof. split; exact (@euclid R (n.+2)). Defined.
 Global Instance Rcf_to_T_euclidean : Tarski_euclidean Rcf_to_T_PED.
 Proof. split; exact euclidT. Defined.
 
-Implicit Types (a b c d p q : point).
+Implicit Types (a b c d p q : 'rV[R]_(n.+2)).
 
 Definition col a b c := bet a b c \/ bet b c a \/ bet c a b.
 
