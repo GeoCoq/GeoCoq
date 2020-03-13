@@ -174,20 +174,20 @@ Lemma addf_divrr (F : fieldType) (x1 x2 y : F) :
    y != 0 (*useless*) -> x1 / y + x2 / y = (x1 + x2) / y.
 Proof. by rewrite mulrDl. Qed.
 
-(* this is the real dotC *)
-Lemma dotC' : commutative (dot R n).
+(* this is the real dotC' *)
+Lemma dotC : commutative (dot R n).
 Proof.
 move=> v1 v2; rewrite dotE; congr (_ _ 0 0).
 by rewrite [LHS]mx11_scalar -tr_scalar_mx -mx11_scalar trmx_mul trmxK.
 Qed.
 
-Lemma dotC v1 v2 : v1 *m v2^T = v2 *m v1^T.
-Proof. by rewrite !mulmx_tr dotC'. Qed.
+Lemma dotC' v1 v2 : v1 *m v2^T = v2 *m v1^T.
+Proof. by rewrite !mulmx_tr dotC. Qed.
 
 Lemma dot2D v1 v2 : '[v1 + v2] = '[v1] + '[v2] + '[v1, v2] *+ 2.
 Proof.
 rewrite !dotE !mulmxDl raddfD/= !mulmxDr [X in _ (_ + X) _ _]addrC addrACA.
-by rewrite !mulmx_tr dotC' -mulr2n !mxE.
+by rewrite !mulmx_tr dotC -mulr2n !mxE.
 Qed.
 
 Lemma dotvN v1 v2 : '[v1, - v2] = - '[v1, v2].
@@ -207,7 +207,7 @@ Lemma cosine_rule v1 v2 v3 :
                              - 2%:R * ((v2 - v1) *m (v3 - v1)^T).
 Proof.
 have -> : v3 - v2 = v3 - v1 - (v2 - v1) by rewrite opprB subrKA.
-by rewrite !mulmx_tr dot2B !rmorphD rmorphN rmorphMn/= mulr_natl dotC'.
+by rewrite !mulmx_tr dot2B !rmorphD rmorphN rmorphMn/= mulr_natl dotC.
 Qed.
 
 (* is this necessary? if so reuse dot *)
@@ -230,9 +230,27 @@ Variable n : nat.
 Implicit Types (v : 'rV[R]_n).
 
 Definition ratio v1 v2 :=
-  if [pick k : 'I_n | v2 0 k != 0] is Some k
-  then v1 0 k / v2 0 k else 0.
+  let r := if [pick k : 'I_n | v2 0 k != 0] is Some k then v1 0 k / v2 0 k else 0
+  in if v1 == r *: v2 then r else 0.
 
+Variant ratio_spec v1 v2 : R -> Type :=
+| RatioDefault of (forall r, v1 != r *: v2) : ratio_spec v1 v2 0
+| RatioProportional r of (v1 != 0) ==> (r != 0) & v1 = r *: v2 : ratio_spec v1 v2 r.
+
+Lemma ratioP v1 v2 : ratio_spec v1 v2 (ratio v1 v2).
+Proof.
+rewrite /ratio; case: pickP => /= [x v2x_neq0|].
+  have v2_neq0 : v2 != 0 by apply: contra_neq v2x_neq0 => ->; rewrite mxE.
+  have [->|v1_neq] := altP eqP; first rewrite mxE mulfK//.
+    by constructor; rewrite // scaler_eq0 (negPf v2_neq0) orbF implybb.
+  by constructor => r; apply: contra_neq v1_neq => ->; rewrite !mxE mulfK.
+move=> /all_v_neq0 - /negP; rewrite negbK if_same => /eqP->.
+have [->|v1_neq0] := altP (v1 =P 0).
+  by apply: RatioProportional; rewrite ?scale0r ?eqxx.
+by constructor => r; rewrite scaler0 v1_neq0.
+Qed.
+
+(* rename ratio0v *)
 Lemma ratio0p p : ratio 0 p = 0.
 Proof. by rewrite /ratio; case: pickP => /= [? _|//]; rewrite mxE mul0r. Qed.
 
@@ -242,6 +260,7 @@ move=> v_neq0; rewrite /ratio; case: pickP => /= [x px|/all_v_neq0 //].
 by rewrite divrr ?unitfE.
 Qed.
 
+(* rename ratiov0 *)
 Lemma ratiop0 p : ratio p 0 = 0.
 Proof.
 by rewrite /ratio; case: pickP => /= [x px|//]; rewrite mxE invr0 mulr0.
@@ -253,15 +272,30 @@ Proof.
 by rewrite /ratio; case: pickP => [k _|]; rewrite ?oppr0// funmxN mulNr.
 Qed.
 
+(* rename to ratiovN *)
 Lemma ratiorN v1 v2 : ratio v1 (- v2) = - ratio v1 v2.
 Proof.
 rewrite /ratio; under eq_pick => k do rewrite funmxN oppr_eq0.
 by case: pickP => [k _|]; rewrite ?oppr0// funmxN invrN mulrN.
 Qed.
 
-Lemma ratioNN v1 v2 : ratio v1 v2 = ratio (- v1) (- v2).
+Lemma ratiovNN v1 v2 : ratio (- v1) (- v2) = ratio v1 v2.
 Proof. by rewrite ratioNr ratiorN opprK. Qed.
 
+Lemma ratiovNLR v1 v2 : ratio (- v1) v2 = ratio v1 (- v2).
+Proof. by rewrite ratioNr ratiorN. Qed.
+
+#[deprecated(note = "use -ratiovNN instead")]
+Lemma ratioNN' v1 v2 : ratio v1 v2 = ratio (- v1) (- v2).
+Proof. by rewrite ratioNr ratiorN opprK. Qed.
+
+Lemma ratiovD v1 v2 v3 : ratio (v1 + v2) v3 = ratio v1 v3 + ratio v2 v3.
+Proof.
+have [->|v3_neq0] := altP (v3 =P 0); first by rewrite !ratiop0 addr0.
+by rewrite /ratio; case: pickP => [x xN0|/all_v_neq0//]; rewrite -mulrDl !mxE.
+Qed.
+
+#[deprecated( note = "use -ratiovD instead")]
 Lemma add_ratio v1 v2 v3 : v3 != 0 ->
   ratio v1 v3 + ratio v2 v3 = ratio (v1 + v2) v3.
 Proof.
@@ -269,38 +303,53 @@ move=> v_neq0; rewrite /ratio; case: pickP => /= [x px|/all_v_neq0 //].
 by rewrite -mulrDl !mxE.
 Qed.
 
-Lemma add_ratio_1 v1 v2 : v2 != 0 ->
-  ratio v1 v2 + 1 = ratio (v1 + v2) v2.
-Proof. by move=> v_neq0; rewrite -(ratiovv v_neq0) add_ratio. Qed.
+Lemma ratioDrv v1 v2 : v2 != 0 -> ratio (v1 + v2) v2 = ratio v1 v2 + 1.
+Proof. by move=> v_neq0; rewrite ratiovD ratiovv. Qed.
 
-Lemma sub_1_ratio v1 v2 : v2 != 0 ->
-  1 - ratio v1 v2 = ratio (v2 - v1) v2.
+Lemma ratioDlv v1 v2 : v2 != 0 -> ratio (v2 + v1) v2 = 1 + ratio v1 v2.
+Proof. by move=> v_neq0; rewrite addrC ratioDrv// addrC. Qed.
+
+#[deprecated(note = "use -ratioDrv instead")]
+Lemma add_ratio_1 v1 v2 : v2 != 0 -> ratio v1 v2 + 1 = ratio (v1 + v2) v2.
+Proof. by move=> /ratioDrv. Qed.
+
+Lemma ratioBlv v1 v2 : v2 != 0 -> ratio (v2 - v1) v2 = 1 - ratio v1 v2.
+Proof. by move=> v2_neq0; rewrite ratioDlv// ratioNr. Qed.
+
+Lemma ratioBrv v1 v2 : v2 != 0 -> ratio (v1 - v2) v2 = ratio v1 v2 - 1.
 Proof.
-move=> v_neq0; apply /eqP; rewrite subr_eq add_ratio //.
-by rewrite addrAC -addrA subrr addr0 ratiovv.
+by move=> v2_neq0; rewrite -opprB ratiovNLR ratiorN ratioBlv// opprB.
 Qed.
 
-Lemma ratio_neq0 v1 v2:
-  v1 != 0 -> v2 != 0 -> v1 == ratio v1 v2 *: v2 -> ratio v1 v2 != 0.
+#[deprecated(note = "use -ratioBlv instead")]
+Lemma sub_1_ratio v1 v2 : v2 != 0 -> 1 - ratio v1 v2 = ratio (v2 - v1) v2.
+Proof. by move=> /ratioBlv. Qed.
+
+Lemma ratioZl v r : v != 0 -> ratio (r *: v) v = r.
 Proof.
-move=> /eqP v1P ?; rewrite /ratio; case: pickP=> /= [x px rP|/all_v_neq0 //].
-by apply/eqP; move=> neq; move: rP; rewrite neq scale0r=> /eqP ?; apply v1P.
+rewrite /ratio => v_neq0.
+by case: pickP => [x vx_neq0|/all_v_neq0//]; rewrite mxE mulfK.
 Qed.
 
-Lemma ratio_eq v1 v2 r : v2 != 0 -> v1 == r *: v2 -> ratio v1 v2 = r.
+#[deprecated(note = "use ratioZl instead")]
+Lemma ratio_eq v1 v2 r : v2 != 0 -> v1 = r *: v2 -> ratio v1 v2 = r.
+Proof. by move=> v2_neq0 ->; rewrite ratioZl. Qed.
+
+Lemma ratioC v1 v2 : v1 != 0 -> v2 != 0 -> ratio v1 v2 = (ratio v2 v1)^-1.
 Proof.
-move=> v2_neq0 /eqP Hr. rewrite /ratio. case: pickP=> /= [x px|/all_v_neq0 //].
-by rewrite Hr mxE -mulrA mulfV // mulr1.
-Qed.
+
+
+Lemma ratio_neq0 v1 v2: v1 != 0 -> v1 = ratio v1 v2 *: v2 -> ratio v1 v2 != 0.
+Proof. by move=> v1_neq0; apply: contra_eq_neq => ->; rewrite scale0r. Qed.
 
 Lemma ratio_bet' v1 v2 k1 :
   0 < k1 -> v1 != v2 -> k1 = ratio (v2 - v1) (k1^-1 *: (v2 - v1)).
 Proof.
 move=> ? ?; rewrite /ratio. have: (k1^-1 *: (v2 - v1) != 0)
-by rewrite scalemx_eq0 negb_or invr_eq0 lt0r_neq0 // subr_eq0 eq_sym.
+  by rewrite scalemx_eq0 negb_or invr_eq0 lt0r_neq0 // subr_eq0 eq_sym.
 move=> neq; case: pickP => /=[x px|/all_v_neq0 //].
 rewrite !mxE -{1}[(v2 0 x - v1 0 x)]mul1r -mulf_div mulfV;
-last by apply /eqP; move=> eq; move/eqP: px; rewrite !mxE eq mulr0.
+  last by apply /eqP; move=> eq; move/eqP: px; rewrite !mxE eq mulr0.
 by rewrite mulr1 -[k1^-1]div1r invf_div divr1 mul1r.
 Qed.
 
@@ -430,7 +479,7 @@ Proof.
 rewrite /bet /betE /betS !eqr_opp; apply orb_id2l => _.
 rewrite -eqr_opp opprB opprK -scalerN opprB ![a + _]addrC.
 suffices: betR a b c = betR (-a) (-b) (-c) by move ->.
-by rewrite /betR !opprK ![_ +a]addrC -![a + _]opprB ratioNN.
+by rewrite /betR !opprK ![_ +a]addrC -![a + _]opprB ratioNN'.
 Qed.
 
 Lemma bet_trans a b c d : bet a b c = bet (a + d) (b + d) (c + d).
@@ -732,8 +781,8 @@ Qed.
 
 Lemma congC a b c d: cong a b c d = cong b a d c.
 Proof.
-rewrite /cong -opprB mulNmx dotC -mulNmx 2?opprB eq_sym -opprB.
-by rewrite mulNmx [X in -X]dotC -mulNmx 2?opprB eq_sym.
+rewrite /cong -opprB mulNmx dotC' -mulNmx 2?opprB eq_sym -opprB.
+by rewrite mulNmx [X in -X]dotC' -mulNmx 2?opprB eq_sym.
 Qed.
 
 Lemma cong_eq a b c : cong a b c c -> a = b.
@@ -767,10 +816,10 @@ rewrite scaler_eq0 ?quad_eq0 ?subr_eq0=> /orP[|/eqP E]; rewrite ?eqf_sqr;
 last by rewrite E in NE; move/eqP: NE=> //. move=> /orP[/eqP ->//|].
 rewrite eq_sym -sub0r subr_eq=>/eqP E. have: (0 < (1 - r) / r + (1 - r') / r');
 first by rewrite addr_gt0 ?betS_gt0 //. by rewrite lt0r -E eqxx andFb //.
-rewrite scalerBl {2}c1 subr_eq0 !expr2 -scalerA scalemxAl dotC.
-rewrite  scalemxAl eq_sym -scalerA scalemxAl dotC scalemxAl.
+rewrite scalerBl {2}c1 subr_eq0 !expr2 -scalerA scalemxAl dotC'.
+rewrite  scalemxAl eq_sym -scalerA scalemxAl dotC' scalemxAl.
 rewrite -[a - b]opprB -[a'-b']opprB !scalerN -(betS_ratio b2) -(betS_ratio b1).
-by rewrite !mulNmx dotC [X in _ == -X]dotC !mulNmx c2.
+by rewrite !mulNmx dotC' [X in _ == -X]dotC' !mulNmx c2.
 Qed.
 
 Lemma five_segment a a' b b' c c' d d' :
@@ -1354,7 +1403,7 @@ Lemma segment_construction a b c d :
 Proof.
 have [->|neq_ba] := eqVneq b a; [|move: neq_ba; rewrite -subr_eq0=> neq_ba].
   exists ((c - d) + a); rewrite /bet /cong betE_xxa; split=> //.
-  by rewrite -!addrA subrr addr0 -opprB mulNmx eq_sym dotC opprB -mulNmx opprB.
+  by rewrite -!addrA subrr addr0 -opprB mulNmx eq_sym dotC' opprB -mulNmx opprB.
 have [->|neq_dc] := eqVneq d c ; [|move: neq_dc; rewrite -subr_eq0=> neq_dc].
   by exists b; rewrite /bet /cong betE_axx !subrr mul0mx eqxx; split.
 exists (normv(d - c) / normv(b - a) *: (b - a) + b); rewrite /bet /cong; split.
@@ -1363,7 +1412,7 @@ exists (normv(d - c) / normv(b - a) *: (b - a) + b); rewrite /bet /cong; split.
   rewrite ?scale1r ?eqxx ?invr_gt0 ?invf_lt1 ?lt0r_neq0 -1?{2}[1]add0r;
   rewrite ?ltr_add2r ?addr_gt0 ?ltr01 1?eq_sym -1?subr_eq0 //= divr_gt0 //;
   by rewrite sqrtr_gt0 lt0r quad_neq0 quad_ge0 ?neq_ba ?neq_dc.
-rewrite -addrA subrr addr0 -scalemxAl dotC -scalemxAl scalerA mulf_div -!expr2.
+rewrite -addrA subrr addr0 -scalemxAl dotC' -scalemxAl scalerA mulf_div -!expr2.
 rewrite [X in _ *: X == _]mx11_scalar !sqr_sqrtr ?quad_ge0 // -!scalerA.
 by rewrite scale_scalar_mx mulrC divff ?quad_neq0 // scalemx1 -mx11_scalar.
 Qed.
