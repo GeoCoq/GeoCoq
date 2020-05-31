@@ -124,12 +124,14 @@ Ltac not_exist_hyp_perm_col A B C := not_exist_hyp (Col A B C); not_exist_hyp (C
                                  not_exist_hyp (Col B A C); not_exist_hyp (Col B C A);
                                  not_exist_hyp (Col C A B); not_exist_hyp (Col C B A).
 
-Ltac assert_cols :=
+Ltac assert_cols_1 :=
 repeat
  match goal with
       | H:Bet ?X1 ?X2 ?X3 |- _ =>
      not_exist_hyp_perm_col X1 X2 X3;assert (Col X1 X2 X3) by (apply bet_col;apply H)
  end.
+
+Ltac assert_cols := assert_cols_1.
 
 Ltac clean_trivial_hyps :=
   repeat
@@ -144,8 +146,7 @@ Ltac clean_trivial_hyps :=
    | H:(Col ?X1 ?X2 ?X1) |- _ => clear H
 end.
 
-Ltac clean_reap_hyps :=
-  clean_duplicated_hyps;
+Ltac clean_reap_hyps_1 :=
   repeat
   match goal with
    | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
@@ -164,6 +165,8 @@ Ltac clean_reap_hyps :=
    | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
 end.
 
+Ltac clean_reap_hyps := clean_duplicated_hyps; clean_reap_hyps_1.
+
 Ltac clean := clean_trivial_hyps;clean_reap_hyps.
 
 Ltac smart_subst X := subst X;clean.
@@ -174,8 +177,7 @@ Ltac treat_equalities_aux :=
    | H:(?X1 = ?X2) |- _ => smart_subst X2
 end.
 
-Ltac treat_equalities :=
-treat_equalities_aux;
+Ltac treat_equalities_1 :=
 repeat
   match goal with
    | H : Cong ?X3 ?X3 ?X1 ?X2 |- _ =>
@@ -196,6 +198,8 @@ repeat
      let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
                        smart_subst A
 end.
+
+Ltac treat_equalities := treat_equalities_aux; treat_equalities_1.
 
 Ltac show_distinct X Y := assert (X<>Y);[intro;treat_equalities|idtac].
 

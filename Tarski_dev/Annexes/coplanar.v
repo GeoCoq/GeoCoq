@@ -541,7 +541,7 @@ Ltac not_exist_hyp_perm_cop A B C D := not_exist_hyp_perm_cop_aux A B C D;
                                        not_exist_hyp_perm_cop_aux C A B D;
                                        not_exist_hyp_perm_cop_aux D A B C.
 
-Ltac assert_cops :=
+Ltac assert_cops_1 :=
  repeat match goal with
       | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
      not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
@@ -574,6 +574,8 @@ Ltac assert_cops :=
       | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
      not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
  end.
+
+Ltac assert_cops := assert_cops_1.
 
 Ltac exist_hyp_perm_cop_aux A B C D := first
   [exist_hyp (Coplanar A B C D)|exist_hyp (Coplanar A B D C)|exist_hyp (Coplanar A C B D)

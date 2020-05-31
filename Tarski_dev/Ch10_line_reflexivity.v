@@ -1,43 +1,15 @@
 Require Export GeoCoq.Tarski_dev.Ch09_plane.
 Require Export GeoCoq.Tarski_dev.Tactics.CoincR_for_cop.
 
-Ltac assert_cops :=
+Ltac assert_cops_2 :=
  repeat match goal with
-      | H:Perp ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply perp__coplanar, H)
-      | H:TS ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply ts__coplanar, H)
       | H:OS ?X1 ?X2 ?X3 ?X4 |- _ =>
      not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply os__coplanar, H)
-      | H:ReflectL ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflectl__coplanar, H)
-      | H:Reflect ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply reflect__coplanar, H)
-      | H:InAngle ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply inangle__coplanar, H)
-      | H:Par_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply pars__coplanar, H)
-      | H:Par ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply par__coplanar, H)
-      | H:Plg ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plg__coplanar, H)
-      | H:Parallelogram_strict ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgs__coplanar, H)
-      | H:Parallelogram_flat ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply plgf__coplanar, H)
-      | H:Parallelogram ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply parallelogram__coplanar, H)
-      | H:Rhombus ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rhombus__coplanar, H)
-      | H:Rectangle ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply rectangle__coplanar, H)
-      | H:Square ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply square__coplanar, H)
       | H:Saccheri ?X1 ?X2 ?X3 ?X4 |- _ =>
      not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply sac__coplanar, H)
-      | H:Lambert ?X1 ?X2 ?X3 ?X4 |- _ =>
-     not_exist_hyp_perm_cop X1 X2 X3 X4; assert (Coplanar X1 X2 X3 X4) by (apply lambert__coplanar, H)
  end.
+
+Ltac assert_cops := assert_cops_1; assert_cops_2.
 
 Ltac Cop := auto; try (intros; solve [apply col__coplanar; Col
      |apply coplanar_perm_1, col__coplanar; Col|apply coplanar_perm_4, col__coplanar; Col
@@ -57,14 +29,17 @@ Ltac copr_aux :=
           |exist_hyp_perm_col X1 X3 X4; assert (Coplanar X1 X3 X4 X2) by (apply col__coplanar; Col)]
  end.
 
-Ltac CopR :=
+Ltac copr :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in
  let cop := constr:(Coplanar) in
-   treat_equalities; assert_cols; clean; assert_ncols; assert_cops; auto 2 with cop_perm;
-   solve[apply col__coplanar; Col|apply coplanar_perm_1, col__coplanar; Col
-        |apply coplanar_perm_4, col__coplanar; Col|apply coplanar_perm_18, col__coplanar; Col
-        |copr_aux; Cop_refl tpoint col cop] || fail "Can not be deduced".
+   Cop_refl tpoint col cop.
+
+Ltac CopR :=
+  treat_equalities; assert_cols; clean; assert_ncols; assert_cops; auto 2 with cop_perm;
+  solve[apply col__coplanar; Col|apply coplanar_perm_1, col__coplanar; Col|
+        apply coplanar_perm_4, col__coplanar; Col|apply coplanar_perm_18, col__coplanar; Col|
+        copr_aux; copr] || fail "Can not be deduced".
 
 Section T10.
 

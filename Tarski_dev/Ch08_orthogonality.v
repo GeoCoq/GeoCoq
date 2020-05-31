@@ -16,12 +16,9 @@ Ltac assert_diffs_by_cases :=
  | A: Tpoint, B: Tpoint |- _ => not_exist_hyp_comm A B;induction (eq_dec_points A B);[treat_equalities;solve [finish|trivial] |idtac]
 end.
 
-Ltac assert_cols :=
+Ltac assert_cols_2 :=
 repeat
  match goal with
-      | H:Bet ?X1 ?X2 ?X3 |- _ =>
-     not_exist_hyp_perm_col X1 X2 X3;assert (Col X1 X2 X3) by (apply bet_col;apply H)
-
       | H:Midpoint ?X1 ?X2 ?X3 |- _ =>
      not_exist_hyp_perm_col X1 X2 X3;let N := fresh in assert (N := midpoint_col X2 X1 X3 H)
 
@@ -29,78 +26,26 @@ repeat
      not_exist_hyp_perm_col X1 X2 X3;let N := fresh in assert (N := out_col X1 X2 X3 H)
  end.
 
+Ltac assert_cols := assert_cols_1; assert_cols_2.
+
 Ltac assert_bets :=
 repeat
  match goal with
       | H:Midpoint ?B ?A ?C |- _ => let T := fresh in not_exist_hyp (Bet A B C); assert (T := midpoint_bet A B C H)
  end.
 
-Ltac clean_reap_hyps :=
-  clean_duplicated_hyps;
+Ltac clean_reap_hyps_2 :=
   repeat
   match goal with
    | H:(Midpoint ?A ?B ?C), H2 : Midpoint ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?A ?C |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?C ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?B ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?A ?B |- _ => clear H2
-   | H:(Bet ?A ?B ?C), H2 : Bet ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?D ?C |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?C ?D |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?D ?C |- _ => clear H2
-   | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
 end.
 
-Ltac assert_diffs :=
+Ltac clean_reap_hyps :=
+  clean_duplicated_hyps; clean_reap_hyps_1; clean_reap_hyps_2.
+
+Ltac assert_diffs_2 :=
 repeat
  match goal with
-      | H:(~Col ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp3 X1 X2 X1 X3 X2 X3;
-      assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp2 X1 X2 X2 X3;
-      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
-
-      | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff_2 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?C <> ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_3 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?D <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
-
-      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
-      | H:Lt ?A ?B ?C ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= lt_diff A B C D H);clean_reap_hyps
-
       | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
       let T:= fresh in (not_exist_hyp2 I B I A);
        assert (T:= midpoint_distinct_1 I A B H2 H);
@@ -127,12 +72,9 @@ repeat
       let T:= fresh in (not_exist_hyp2 I A A B);
        assert (T:= midpoint_distinct_3 I A B (swap_diff B I H2) H);
        decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Out ?A ?B ?C |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B A C);
-       assert (T:= out_distinct A B C H);
-       decompose [and] T;clear T;clean_reap_hyps
  end.
+
+Ltac assert_diffs := repeat (assert_diffs_1; assert_diffs_2).
 
 Ltac clean_trivial_hyps :=
   repeat
@@ -158,33 +100,14 @@ Ltac treat_equalities_aux :=
    | H:(?X1 = ?X2) |- _ => smart_subst X2
 end.
 
-Ltac treat_equalities :=
-treat_equalities_aux;
+Ltac treat_equalities_2 :=
 repeat
   match goal with
-   | H : Cong ?X3 ?X3 ?X1 ?X2 |- _ =>
-      apply cong_symmetry in H; apply cong_identity in H; smart_subst X2
-   | H : Cong ?X1 ?X2 ?X3 ?X3 |- _ =>
-      apply cong_identity in H;smart_subst X2
-   | H : Bet ?X1 ?X2 ?X1 |- _ =>
-      apply between_identity in H;smart_subst X2
    | H : Le ?X1 ?X2 ?X3 ?X3 |- _ =>
       apply le_zero in H;smart_subst X2
    | H : Midpoint ?X ?Y ?Y |- _ => apply l7_3 in H; smart_subst Y
    | H : Midpoint ?A ?B ?A |- _ => apply is_midpoint_id_2 in H; smart_subst A
    | H : Midpoint ?A ?A ?B |- _ => apply is_midpoint_id in H; smart_subst A
-   | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
-     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
-                       smart_subst A
-   | H : Bet ?A ?B ?C, H2 : Bet ?A ?C ?B |- _ =>
-     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
-                       smart_subst B
-   | H : Bet ?A ?B ?C, H2 : Bet ?C ?A ?B |- _ =>
-     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
-                       smart_subst A
-   | H : Bet ?A ?B ?C, H2 : Bet ?B ?C ?A |- _ =>
-     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
-                       smart_subst A
    | H : Midpoint ?P ?A ?P1, H2 : Midpoint ?P ?A ?P2 |- _ =>
      let T := fresh in assert (T := symmetric_point_uniqueness A P P1 P2 H H2); smart_subst P1
    | H : Midpoint ?A ?P ?X, H2 : Midpoint ?A ?Q ?X |- _ =>
@@ -197,15 +120,13 @@ repeat
      let T := fresh in assert (T := l7_17_bis P P' A B H H2); smart_subst A
 end.
 
-Ltac CongR :=
- let tpoint := constr:(Tpoint) in
- let cong := constr:(Cong) in
-   treat_equalities; unfold Midpoint in *; spliter; Cong; Cong_refl tpoint cong.
+Ltac treat_equalities :=
+  treat_equalities_aux;
+  repeat (treat_equalities_1; treat_equalities_2).
 
-Ltac ColR :=
- let tpoint := constr:(Tpoint) in
- let col := constr:(Col) in
-   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
+Ltac CongR := treat_equalities; unfold Midpoint in *; spliter; Cong; congr.
+
+Ltac ColR := treat_equalities; assert_cols; Col; assert_diffs; colr.
 
 Ltac show_distinct X Y := assert (X<>Y);[intro;treat_equalities|idtac].
 
@@ -227,11 +148,12 @@ Ltac show_distinct' X Y :=
  assert (X<>Y);
  [intro;treat_equalities; solve [search_contradiction]|idtac].
 
+(*
 Ltac assert_all_diffs_by_contradiction' :=
 repeat match goal with
  | A: Tpoint, B: Tpoint |- _ => not_exist_hyp_comm A B;show_distinct' A B
 end.
-(*
+
 Ltac update_cols :=
  let tpoint := constr:(Tpoint) in
  let col := constr:(Col) in

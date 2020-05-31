@@ -4,7 +4,7 @@ Require Export GeoCoq.Highschool.gravityCenter.
 
 (** In this file we give as example the proof of some exercises given in
 french high-school at 8th Grade (quatrième).
-The exercise is taken from 
+The exercise is taken from
 http://mep-outils.sesamath.net/manuel_numerique/index.php?ouvrage=ms4_2011&page_gauche=169
  *)
 
@@ -567,7 +567,7 @@ treat_equalities.
 intuition.
 }
 assert (~ Col I M C)
-  by (intro;apply H14;ColR).
+  by (intro;apply H15;ColR).
 assert_diffs.
 assert(Midpoint K C I).
  (apply(triangle_par_mid C A I J K);finish).
@@ -622,10 +622,10 @@ assert(Col B B' x)
 assert( Par A A' B x)
   by(apply(par_trans A A' B B' B x);finish).
 assert_diffs.
-assert(x=B'\/x<>B')
+assert(HE : x = B' \/ x <> B')
   by(apply(eq_dec_points x B');finish).
-destruct H14.
-destruct H14.
+destruct HE as [HE|HE].
+destruct HE.
 assert(Col A C' A')
   by(apply(l6_16_1 C' x A' A);finish;Par).
 destruct H0.

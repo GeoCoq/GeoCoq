@@ -6,7 +6,7 @@ Ltac not_exist_hyp_comm A B := not_exist_hyp (A<>B);not_exist_hyp (B<>A).
 Ltac not_exist_hyp2 A B C D := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D].
 Ltac not_exist_hyp3 A B C D E F := first [not_exist_hyp_comm A B | not_exist_hyp_comm C D | not_exist_hyp_comm E F].
 
-Ltac assert_diffs :=
+Ltac assert_diffs_1 :=
 repeat
  match goal with
       | H:(~Col ?X1 ?X2 ?X3) |- _ =>
@@ -57,10 +57,14 @@ repeat
        decompose [and] T;clear T;clean_reap_hyps
  end.
 
-Ltac ColR :=
- let tpoint := constr:(Tpoint) in
- let col := constr:(Col) in
-   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
+Ltac assert_diffs := assert_diffs_1.
+
+Ltac colr :=
+  let tpoint := constr:(Tpoint) in
+  let col := constr:(Col) in
+    Col_refl tpoint col.
+
+Ltac ColR := treat_equalities; assert_cols; Col; assert_diffs; colr.
 
 Section T7_1.
 
@@ -264,8 +268,7 @@ Ltac Midpoint := auto with midpoint.
 
 Section T7_2.
 
-Context {Tn:Tarski_neutral_dimensionless}.
-Context {TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality Tn}.
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
 Lemma Mid_cases :
   forall A B C,
@@ -1325,7 +1328,6 @@ Between.
 
 
 eapply (col_cong2_bet2 _ A).
-apply bet_col in H0.
 ColR.
 Between.
 Cong.

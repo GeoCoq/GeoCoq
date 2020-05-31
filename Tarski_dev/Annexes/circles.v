@@ -123,21 +123,9 @@ Hint Resolve inc112 onc212 onc_sym inc__outc onc__inc onc__outc
 
 Ltac Circle := auto with circle.
 
-Ltac treat_equalities :=
-treat_equalities_aux;
+Ltac treat_equalities_circle :=
 repeat
   match goal with
-   | H : Cong ?X3 ?X3 ?X1 ?X2 |- _ =>
-      apply cong_symmetry in H; apply cong_identity in H; smart_subst X2
-   | H : Cong ?X1 ?X2 ?X3 ?X3 |- _ =>
-      apply cong_identity in H;smart_subst X2
-   | H : Bet ?X1 ?X2 ?X1 |- _ =>
-      apply between_identity in H;smart_subst X2
-   | H : Le ?X1 ?X2 ?X3 ?X3 |- _ =>
-      apply le_zero in H;smart_subst X2
-   | H : Midpoint ?X ?Y ?Y |- _ => apply l7_3 in H; smart_subst Y
-   | H : Midpoint ?A ?B ?A |- _ => apply is_midpoint_id_2 in H; smart_subst A
-   | H : Midpoint ?A ?A ?B |- _ => apply is_midpoint_id in H; smart_subst A
    | H : OnCircle ?A ?A ?B |- _ =>
       apply cong_reverse_identity in H;smart_subst B
    | H : OnCircle ?B ?A ?A |- _ =>
@@ -146,34 +134,13 @@ repeat
       apply le_zero in H;smart_subst B
    | H : OutCircle ?A ?A ?B |- _ =>
       apply le_zero in H;smart_subst B
-   | H : Bet ?A ?B ?C, H2 : Bet ?B ?A ?C |- _ =>
-     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
-                       smart_subst A
-   | H : Bet ?A ?B ?C, H2 : Bet ?A ?C ?B |- _ =>
-     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
-                       smart_subst B
-   | H : Bet ?A ?B ?C, H2 : Bet ?C ?A ?B |- _ =>
-     let T := fresh in assert (T : A=B) by (apply (between_equality A B C); Between);
-                       smart_subst A
-   | H : Bet ?A ?B ?C, H2 : Bet ?B ?C ?A |- _ =>
-     let T := fresh in assert (T : B=C) by (apply (between_equality_2 A B C); Between);
-                       smart_subst A
-   | H : Midpoint ?P ?A ?P1, H2 : Midpoint ?P ?A ?P2 |- _ =>
-     let T := fresh in assert (T := symmetric_point_uniqueness A P P1 P2 H H2); smart_subst P1
-   | H : Midpoint ?A ?P ?X, H2 : Midpoint ?A ?Q ?X |- _ =>
-     let T := fresh in assert (T := l7_9 P Q A X H H2); smart_subst P
-   | H : Midpoint ?A ?P ?X, H2 : Midpoint ?A ?X ?Q |- _ =>
-     let T := fresh in assert (T := l7_9_bis P Q A X H H2); smart_subst P
-   | H : Midpoint ?A ?P ?P', H2 : Midpoint ?B ?P ?P' |- _ =>
-     let T := fresh in assert (T := l7_17 P P' A B H H2); smart_subst A
-   | H : Midpoint ?A ?P ?P', H2 : Midpoint ?B ?P' ?P |- _ =>
-     let T := fresh in assert (T := l7_17_bis P P' A B H H2); smart_subst A
 end.
 
-Ltac CongR :=
- let tpoint := constr:(Tpoint) in
- let cong := constr:(Cong) in
-   treat_equalities; unfold OnCircle, Midpoint in *; spliter; Cong; Cong_refl tpoint cong.
+Ltac treat_equalities :=
+  treat_equalities_aux;
+  repeat (treat_equalities_1; treat_equalities_2; treat_equalities_circle).
+
+Ltac CongR := treat_equalities; unfold OnCircle, Midpoint in *; spliter; Cong; congr.
 
 Section Circle_2.
 

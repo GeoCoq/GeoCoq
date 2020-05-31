@@ -135,7 +135,7 @@ assert (~ Col G A D)
 assert (Parallelogram G A D B)
      by (apply (par_2_plg G A D B); finish).
 Name Z the intersection of the diagonals (G D)
-     and (A B) of the parallelogram H17...
+     and (A B) of the parallelogram H19...
 ColR.
 Qed.
 
