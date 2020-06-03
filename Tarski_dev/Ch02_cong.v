@@ -75,15 +75,13 @@ Lemma cong_trivial_identity : forall A B : Tpoint,
  Cong A A B B.
 Proof.
     intros.
-    prolong A B E A A.
-    eapply cong_inner_transitivity.
-      apply H0.
-    assert(B=E).
-      eapply cong_identity.
-      apply H0.
+    destruct (segment_construction B A B B) as [E [HBet HCong]].
+    assert(A=E)
+      by (eapply cong_identity;apply HCong).
     subst.
-    apply cong_reflexivity.
+    assumption.
 Qed.
+
 
 Lemma cong_reverse_identity : forall A C D,
  Cong A A C D -> C=D.
