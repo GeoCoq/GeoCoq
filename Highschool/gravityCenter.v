@@ -350,7 +350,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       show_distinct G A''; treat_equalities; Col.
       show_distinct G B''; treat_equalities; Col.
       assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
-      split; try (intro; apply HABG; ColR).
+      split; [|intro; apply HABG; ColR].
       split; Col.
       split; try (intro; treat_equalities; Col).
       unfold Midpoint in *; spliter; Between.
@@ -365,8 +365,8 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
     show_distinct G A''; treat_equalities; Col.
     show_distinct G B''; treat_equalities; Col.
     assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
-    split; try (intro; apply HABG; ColR).
-    split; try (intro; apply HABG; ColR).
+    split; [intro; apply HABG; ColR|].
+    split; [intro; apply HABG; ColR|].
     exists A'; unfold Midpoint in *; spliter; split; Col; Between.
     }
 
@@ -388,7 +388,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
         assert (HH3 : Col G A  A') by ColR.
         assert (HH := l9_19 A' B'' G A A' HH2 HH3); rewrite HH.
         assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
-        split; try (intro; apply HABG; ColR).
+        split; [|intro; apply HABG; ColR].
         split; Col.
         split; try (intro; treat_equalities; Col).
         unfold Midpoint in *; spliter; eBetween.
@@ -403,8 +403,8 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
           show_distinct G A''; treat_equalities; Col.
           show_distinct G B''; treat_equalities; Col.
           assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
-          split; try (intro; apply HABG; ColR).
-          split; try (intro; apply HABG; ColR).
+          split; [intro; apply HABG; ColR|].
+          split; [intro; apply HABG; ColR|].
           exists B''; unfold Midpoint in *; spliter; split; Col; Between.
           }
 
@@ -414,8 +414,8 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
           show_distinct G A''; treat_equalities; Col.
           show_distinct G B''; treat_equalities; Col.
           assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
-          split; try (intro; apply HABG; ColR).
-          split; try (intro; apply HABG; ColR).
+          split; [intro; apply HABG; ColR|].
+          split; [intro; apply HABG; ColR|].
           exists A'; unfold Midpoint in *; spliter; split; Col; Between.
           }
         }
@@ -431,7 +431,7 @@ assert (HElim := l7_20 A' B' B'''); elim HElim; clear HElim; try intro HElim; Co
       assert (HH := l9_19 A' B'' A A'' A' HH2 HH3); rewrite HH.
       assert_diffs; assert_cols; assert (HABG : ~ Col A B G) by (intro; apply HNC; ColR).
       show_distinct A A'; Col.
-      split; try (intro; apply HABG; ColR).
+      split; [|intro; apply HABG; ColR].
       split; Col.
       split; try (intro; treat_equalities; Col).
       unfold Midpoint in *; spliter; eBetween.

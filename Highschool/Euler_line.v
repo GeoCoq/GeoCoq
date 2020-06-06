@@ -105,11 +105,10 @@ assert (HOM1M2 : ~ Col O M1 M2).
 assert (HPar_strict : Par_strict O M1 O M2).
   {
   apply par_not_col_strict with M2; Col.
-  apply l12_9 with A B; try CopR.
+  apply l12_9 with A B; [CopR| |CopR|CopR|..].
     apply coplanar_perm_16, col_cop__cop with C; Col; Cop.
     apply perp_bisect_perp; Col.
   apply perp_col0 with A C; Col; perm_apply perp_bisect_perp.
-
   }
 assert (H := not_par_strict_id O M1 M2); Col.
 Qed.
@@ -264,7 +263,7 @@ assert (Perp A' B B A)
 assert (Par C H A' B).
  unfold Concyclic in *; spliter.
  apply is_orthocenter_coplanar in H2.
- apply l12_9 with A B; try CopR; Perp.
+ apply l12_9 with A B; [CopR..| |]; Perp.
 
 assert (Perp B H A C)
  by (unfold is_orthocenter in *;spliter;finish).
@@ -280,7 +279,7 @@ assert (Perp A' C C A) by (apply per_perp;finish).
 
 assert (Par B H C A').
  unfold Concyclic in *; spliter.
- apply l12_9 with A C; try CopR; Perp.
+ apply l12_9 with A C; [CopR..| |]; Perp.
 
 induction (col_dec B H C).
  * assert (H=B \/ H=C) by (apply (orthocenter_col A B C H);finish).
@@ -292,7 +291,7 @@ induction (col_dec B H C).
         apply is_gravity_center_perm in H1;intuition idtac.
         assumption.
      Col.
-   (*  perm_apply (is_gravity_center_col A C B G O). bug in 8.5 *) 
+   (*  perm_apply (is_gravity_center_col A C B G O). bug in 8.5 *)
    + subst H;assert_diffs; intuition.
  * assert (Parallelogram B H C A')
      by (apply par_2_plg;finish).
