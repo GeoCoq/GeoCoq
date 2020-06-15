@@ -160,7 +160,7 @@ by cases on (BetS A V C \/ eq C V \/ BetS A C V).
  assert (Cong V C v c) by (conclude lemma_differenceofparts).
  assert (Cong V B v b) by (forward_using lemma_congruenceflip).
  
- assert (Cong B C b c) by (eauto using  (axiom_5_line _ _ _ _ _ _ _ _ H37 H H38)).
+ assert (Cong B C b c) by (epose proof (axiom_5_line _ _ _ _ _ _ _ _ H37 H H38); eauto).
  close.
  }
 {
