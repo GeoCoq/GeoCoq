@@ -4761,7 +4761,7 @@ exists C.
 exists D.
 assert (Rectangle B C D A) by (apply sac_rectangle;auto).
 unfold Square;split.
-auto using rect_permut.
+eauto using rect_permut.
 Cong.
 Qed.
 

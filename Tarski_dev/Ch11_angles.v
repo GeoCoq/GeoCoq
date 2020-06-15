@@ -479,9 +479,9 @@ Proof.
     prolong B C C'' B A.
     exists A', C', C'', A''.
     repeat split; try assumption.
-    assert (A' = A'') by (eauto using (construction_uniqueness B A)).
+    assert (A' = A'') by (pose (construction_uniqueness B A); eauto).
     subst A''.
-    assert (C' = C'') by (eauto using (construction_uniqueness B C)).
+    assert (C' = C'') by (pose (construction_uniqueness B C); eauto).
     subst C''.
     Cong.
 Qed.
