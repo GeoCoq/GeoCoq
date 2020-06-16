@@ -97,7 +97,7 @@ assert (neq F E) by (forward_using lemma_NCdistinct).
 assert (neq G B) by (forward_using lemma_NCdistinct).
 assert (nCol H A G) by (forward_using lemma_parallelNC).
 assert (neq H A) by (forward_using lemma_NCdistinct).
-assert (Par H A F E) by (eauto using (proposition_30 _ _ _ _ _ _ _ _ _ _ H79 H1 H93)).
+assert (Par H A F E) by (unshelve epose (proposition_30 _ _ _ _ _ _ _ _ _ _ H79 H1 H93); eauto).
 assert (Cong G B F E) by (forward_using proposition_34).
 assert (Cong H A F E) by (conclude lemma_congruencetransitive).
 assert (Par G F B E) by (conclude_def PG ).

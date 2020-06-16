@@ -102,7 +102,7 @@ Ltac conclude t :=
  spliter;
  remove_double_neg;
  solve [unfold eq in *;mysubst;assumption |
-        eauto using t |
+        pose t; eauto |
         eapply t;eauto |
         eapply t;intuition |
         apply <- t;remove_exists;eauto  |

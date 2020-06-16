@@ -559,7 +559,7 @@ destruct x as [x Hx]; destruct y as [y Hy]; simpl in *.
 destruct (opp_f x Hx).
 destruct (opp_f y Hy); simpl.
 rewrite Hxy in *.
-eauto using (opp_uniqueness O E E' ncolOEE').
+pose (opp_uniqueness O E E' ncolOEE'); eauto.
 Defined.
 
 Definition InvF (x : F) : F.

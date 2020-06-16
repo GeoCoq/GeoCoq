@@ -121,14 +121,14 @@ by cases on (eq A B \/ eq A G \/ eq B G \/ BetS B A G \/ BetS A B G \/ BetS A G 
  assert (Cong A G A G) by (conclude cn_congruencereflexive).
  assert (Cong A D A E) by (conclude lemma_congruencesymmetric).
  assert (Cong D G E G)
-  by (auto using (axiom_5_line B A G D B A G E)). 
+  by (pose proof (axiom_5_line B A G D B A G E); auto). 
  assert (Cong G D G E) by (forward_using lemma_congruenceflip).
  close.
  }
 {
  assert (Cong A B A B) by (conclude cn_congruencereflexive).
  assert (Cong B G B G) by (conclude cn_congruencereflexive).
- assert (Cong D G E G) by (auto using (axiom_5_line A B G D A B G E)).
+ assert (Cong D G E G) by (pose proof (axiom_5_line A B G D A B G E); auto).
  assert (Cong G D G E) by (forward_using lemma_congruenceflip).
  close.
  }
