@@ -31,6 +31,20 @@ Arguments dot R n : clear implicits.
 Local Notation "''[' u , v ]" := (dot _ _ u v) : ring_scope.
 Local Notation "''[' u ]" := '[u, u]%R : ring_scope.
 
+Notation dup := (ltac:(move;
+  lazymatch goal with
+  | |- forall (x : _), _ =>
+    let x := fresh x in move=> x;
+    let copy := fresh x in have copy := x; move: copy x
+  | |- let x := _ in _ =>
+    let x := fresh x in move=> x;
+    let copy := fresh x in pose copy := x;
+    do [unfold x in (value of copy)]; move: @copy @x
+  | |- _ =>
+    let x := fresh "_top_" in move=> x;
+    let copy := fresh "_top" in have copy := x; move: copy x
+  end)).
+
 Section Aux.
 
 Definition andb_assoc := Bool.andb_assoc.
@@ -90,75 +104,117 @@ Qed.
 Lemma add11_neq0 : 1 + 1 != 0 :> R.
 Proof. by rewrite (pnatr_eq0 _ 2). Qed.
 
-(* revise names *)
-Lemma addrBDB (ZT : zmodType) (v1 v2 v3 : ZT) : v1 - v2 + (v2 - v3) = v1 - v3.
-Proof. exact: subrKA. Qed.
+(* Lemma subrKA (ZT : zmodType) (v1 v2 v3 : ZT) : v1 - v2 + (v2 - v3) = v1 - v3. *)
 
-Lemma addrDBD (ZT : zmodType) (v1 v2 v3 : ZT) : v1 + v3 - (v2 + v3) = v1 - v2.
+Lemma addrKAC (ZT : zmodType) (v1 v2 v3 : ZT) : v1 + v3 - (v2 + v3) = v1 - v2.
 Proof. by rewrite [v2 + _]addrC addrKA. Qed.
 
-Lemma addrBBB (ZT : zmodType) (v1 v2 v3 : ZT) : v1 - v2 - (v1 - v3) = v3 - v2.
-Proof. by rewrite opprB addrC subrKA. Qed.
+Lemma subrDKl (ZT : zmodType) (v1 v2 v3 : ZT) : v1 + v2 - (v1 + v3) = v2 - v3.
+Proof. by rewrite opprD addrCA addrA addKr. Qed.
 
+Lemma subrBKl (ZT : zmodType) (v1 v2 v3 : ZT) : v1 - v2 - (v1 - v3) = v3 - v2.
+Proof. by rewrite subrDKl -opprD opprB. Qed.
+
+Lemma subrDKr (ZT : zmodType) (v1 v2 v3 : ZT) : v1 + v2 - (v3 + v2) = v1 - v3.
+Proof. by rewrite [v3 + _]addrC addrKA. Qed.
+
+
+(* revise name *)
 Lemma addrDBB (ZT : zmodType) (v1 v2 : ZT) : (v1 + v2 - (v1 - v2) = v2 *+ 2).
-Proof. by rewrite opprB addrCA [X in _ + X]addrAC subrr add0r mulr2n. Qed.
+Proof. by rewrite subrDKl opprK mulr2n. Qed.
 
+(* revise name *)
 Lemma addrBDD (ZT : zmodType) (v1 v2 : ZT) : (v1 - v2 + (v1 + v2) = v1 *+ 2).
 Proof. by rewrite addrAC -!addrA subrr addr0 mulr2n. Qed.
 
+(* revise name *)
 Lemma add2r_eq (ZT : zmodType) (x y z : ZT) : (x + y == x + z) = (y == z).
 Proof. exact: (inj_eq (addrI _)). Qed.
 
 Lemma bet_gt0 (k1 k2 : R) : 0 < k1 -> k2 < 1 -> 0 < k1 - k1 * k2.
 Proof. by move=> k1_gt0 k2_lt1; rewrite subr_gt0 gtr_pmulr. Qed.
 
-(* find a name for "thing" and for "stuff" *)
-Section thing_and_stuff.
-Variables (k1 k2 k3 : R).
-Variables (k1_gt0 : k1 > 0) (k2_gt0 : k2 > 0).
-Variables (k1_lt1 : k1 < 1) (k3_gt0 : k3 > 0).
+Lemma pmulr_gt1l (a b : R) : a > 0 -> (1 < a * b) = (a^-1 < b).
+Proof. by move=> a_gt0; rewrite -ltr_pdivr_mull ?mulr1. Qed.
 
-Let thing := k1 + k2 - k1 * k2.
-Let stuff := thing / k3.
+Lemma pmulr_gt1r (a b : R) : b > 0 -> (1 < a * b) = (b^-1 < a).
+Proof. by move=> a_gt0; rewrite -ltr_pdivr_mulr ?mul1r. Qed.
 
-Lemma thing_gt0 : thing > 0.
+Lemma pmulr_lt1l (a b : R) : a > 0 -> (a * b < 1) = (b < a^-1).
+Proof. by move=> a_gt0; rewrite -ltr_pdivl_mull ?mulr1. Qed.
+
+Lemma pmulr_lt1r (a b : R) : b > 0 -> (a * b < 1) = (a < b^-1).
+Proof. by move=> a_gt0; rewrite -ltr_pdivl_mulr ?mul1r. Qed.
+
+Lemma pdivr_gt1 (a b : R) : b > 0 -> (1 < a / b) = (b < a).
+Proof. by move=> b_gt0; rewrite pmulr_gt1r ?invr_gt0 ?invrK. Qed.
+
+Lemma pdivr_lt1 (a b : R) : b > 0 -> (a / b < 1) = (a < b).
+Proof. by move=> b_gt0; rewrite pmulr_lt1r ?invr_gt0 ?invrK. Qed.
+
+(* find a name for "DBM" and for "DBMV" *)
+Section DBM.
+Variables (k1 k2 : R).
+Variables (k1_gt0 : k1 > 0) (k2_gt0 : k2 > 0) (k1_lt1 : k1 < 1) (k2_lt1 : k2 < 1).
+
+Let DBM := k1 + k2 - k1 * k2.
+Let MSym := k1 - k1 * k2.
+
+Lemma DBM_gt0 : DBM > 0.
 Proof. by rewrite subr_gt0 ltr_paddl ?ltrW// gtr_pmull. Qed.
-Hint Resolve thing_gt0 : core.
+Hint Resolve DBM_gt0 : core.
 
-Lemma thing_neq0 : thing != 0. Proof. by rewrite gtr_eqF. Qed.
+Lemma DBM_neq0 : DBM != 0. Proof. by rewrite gtr_eqF. Qed.
+Hint Resolve DBM_neq0 : core.
 
-Lemma stuff_gt0 : stuff > 0. Proof. by rewrite divr_gt0. Qed.
-Hint Resolve stuff_gt0 : core.
+Lemma MSymBE : MSym = k1 - k1 * k2. Proof. by []. Qed.
+(* Lemma MSymE : MSym = k1 - k1 * k2. Proof. by rewrite /MSym mulrBr mulr1. Qed. *)
 
-Lemma stuff_neq0 : stuff != 0. Proof. by rewrite gtr_eqF. Qed.
+Lemma MSymME : MSym = k1 * (1 - k2).
+Proof. by rewrite mulrBr mulr1. Qed.
 
-End thing_and_stuff.
+Lemma lt_MSym_DBM : MSym < DBM.
+Proof. by rewrite MSymBE /DBM -addrA ltr_add2l -{1}[-(k1 * k2)]add0r ltr_add2r. Qed.
 
-(* most of this can be added to the section about thing and stuff *)
-(* naming with ' is not recommended, change all namings *)
-Lemma bet_gt0' (k1 k2 k3 : R) :
-  0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> 0 < ((k1 + k2 - k1 * k2) / k3)^-1.
-Proof. by move=> *; rewrite invr_gt0 stuff_gt0. Qed.
+Lemma MSym_gt0 : MSym > 0.
+Proof. by rewrite subr_gt0 -ltr_pdivl_mull// mulVf// gtr_eqF. Qed.
 
-(* this is exactly stuff_neq0 *)
-Lemma bet_neq0 (k1 k2 k3 : R) :
-  0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> (k1 + k2 - k1 * k2) / k3 != 0.
-Proof. exact: stuff_neq0. Qed.
+Section DBMV.
 
-(* this is exactly thing_neq0 *)
-Lemma bet_neq0' (k1 k2 : R) :
-   0 < k1 -> 0 < k2 -> k1 < 1 -> k1 + k2 - k1 * k2 != 0.
-Proof. exact: thing_neq0. Qed.
+Variables (k3 : R) (k3_gt0 : k3 > 0).
 
-Lemma bet_lt (k1 k2 : R) : 0 < k2 -> k1 - k1 * k2 < k1 + k2 - k1 * k2.
-Proof. by move=> ?; rewrite -addrA ltr_add2l -{1}[-(k1 * k2)]add0r ltr_add2r. Qed.
+Let VDBM := k3 / DBM.
+Let DBMV := DBM / k3.
 
-(* add this to things about stuff *)
-Lemma bet_lt1 (k1 k2 k3 : R) :
-  0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1 + k2 - k1 * k2 ->
-  ((k1 + k2 - k1 * k2) / k3)^-1 < 1.
-Proof. by move=> *; rewrite invf_lt1 ?stuff_gt0// ltr_pdivl_mulr ?mul1r. Qed.
+Lemma DBMV_gt0 : DBMV > 0. Proof. by rewrite divr_gt0. Qed.
+Hint Resolve DBMV_gt0 : core.
 
+Lemma DBMV_neq0 : DBMV != 0. Proof. by rewrite gtr_eqF. Qed.
+Hint Resolve DBMV_neq0 : core.
+
+Lemma VDBMV_gt0 : 0 < DBMV^-1.
+Proof. by rewrite invr_gt0. Qed.
+
+Lemma VDBMV_eq0 : (DBMV^-1 == 0) = false.
+Proof. by rewrite gtr_eqF ?VDBMV_gt0. Qed.
+
+Lemma VDBMV_lt1 : k3 < k1 + k2 - k1 * k2 -> DBMV^-1 < 1.
+Proof. by move=> ?; rewrite invf_lt1// ltr_pdivl_mulr ?mul1r. Qed.
+
+Lemma VDBM_gt0 : 0 < VDBM.
+Proof. by rewrite mulr_gt0 ?invr_gt0. Qed.
+Hint Resolve VDBM_gt0 : core.
+
+Lemma VDBM_neq0 : VDBM != 0. Proof. by rewrite gtr_eqF. Qed.
+
+Lemma VDBM_eq0 : (VDBM == 0) = false. Proof. by rewrite gtr_eqF. Qed.
+
+Lemma VDBM_lt1 : (k3 < k1 + k2 - k1 * k2) = (VDBM < 1).
+Proof. by rewrite -pdivr_lt1. Qed.
+
+End DBMV.
+
+End DBM.
 
 (* replace eq_inv_scale by -(can2_eq (scalerK _) (scalerKV _)) *)
 Lemma eq_inv_scale (V : lmodType R) (s : R) (x y : V) :
@@ -384,13 +440,17 @@ Proof. by move=> r_neq0; rewrite ratioDlv// ?ratioNv ?oppr_eq0. Qed.
 Lemma ratioBrv v1 v2 : ratio v1 v2 != 0 -> ratio (v1 - v2) v2 = ratio v1 v2 - 1.
 Proof. by move=> r_neq0; rewrite -opprB ratiovNLR ratiovN ratioBlv// opprB. Qed.
 
-#[deprecated(note = "use -ratioBlv instead")]
 Lemma sub_1_ratio v1 v2 :ratio v1 v2 != 0 -> 1 - ratio v1 v2 = ratio (v2 - v1) v2.
 Proof. by move=> /ratioBlv. Qed.
 
-#[deprecated(note = "use ratioZvv instead")]
-Lemma ratio_eq v1 v2 r : v2 != 0 -> v1 = r *: v2 -> ratio v1 v2 = r.
+Lemma ratior_eq v1 v2 r : v2 != 0 -> v1 = r *: v2 -> ratio v1 v2 = r.
 Proof. by move=> v2_neq0 ->; rewrite ratioZvv. Qed.
+
+Lemma ratiol_eq v1 v2 r : v1 != 0 -> v1 = r *: v2 -> ratio v1 v2 = r.
+Proof.
+move=> v_neq0 v1_eq; apply: ratior_eq => //.
+by apply: contra_neq v_neq0; rewrite v1_eq => ->; rewrite scaler0.
+Qed.
 
 Lemma ratio_bet' v1 v2 k1 :
   0 < k1 -> v1 != v2 -> k1 = ratio (v2 - v1) (k1^-1 *: (v2 - v1)).
@@ -449,7 +509,7 @@ rewrite /betS /betR -opprB ratiovNLR opprB => /andP[/lt0r_neq0 r_neq0 _].
 have sub_ac_neq0 : a - c != 0 by apply: contra_neq r_neq0 => ->; rewrite ratiov0.
 apply: (addIr (- ratio (a - c) (a - c))).
 rewrite -ratiovB// ?ratiovv ?oner_eq0//.
-by rewrite addrBBB addrAC subrr sub0r -ratioNv opprB.
+by rewrite subrBKl addrAC subrr sub0r -ratioNv opprB.
 Qed.
 
 Lemma betS_sym a b c : betS a b c = betS c b a.
@@ -469,20 +529,6 @@ Proof. by rewrite /bet betE_sym betS_sym. Qed.
 Lemma bet_symmetry a b c : bet a b c -> bet c b a.
 Proof. by rewrite bet_sym. Qed.
 
-Lemma betS_neq12 a b c : betS a b c = betS a b c && (b != a).
-Proof.
-rewrite /betS/ betR; case (b =P a)=> [->|/eqP ?]; last by rewrite andbT.
-by rewrite subrr ratio0v ltrr.
-Qed.
-
-Lemma betS_neq23 a b c : betS a b c = betS a b c && (b != c).
-Proof. by rewrite betS_sym {1}betS_neq12. Qed.
-
-Lemma betS_neq13 a b c : betS a b c = betS a b c && (a != c).
-Proof.
-rewrite /betS /betR. case (a =P c)=> [->|/eqP ?]; rewrite ?andbT //.
-by rewrite subrr ratiov0 ltrr /=.
-Qed.
 
 Lemma betS_id a b : betS a b a = false.
 Proof. by rewrite /betS /betR subrr ratiov0 ltrr. Qed.
@@ -502,7 +548,9 @@ Proof. by rewrite /bet betE_axx orTb. Qed.
 Lemma bet_xxa x a : bet x x a.
 Proof. by rewrite /bet betE_xxa orTb. Qed.
 
-Lemma bet_opp a b c : bet a b c = bet (-a) (-b) (-c).
+Hint Resolve betE_axx betE_xxa bet_axx bet_xxa : core.
+
+Lemma bet_opp a b c : bet a b c = bet (- a) (- b) (- c).
 Proof.
 rewrite /bet /betE /betS !eqr_opp; apply orb_id2l => _.
 by rewrite /betR -!opprD ratiovNN.
@@ -512,7 +560,7 @@ Lemma bet_trans a b c d : bet a b c = bet (a + d) (b + d) (c + d).
 Proof.
 rewrite ![_ + d]addrC /bet /betE /betS !add2r_eq ![d + _]addrC.
 suffices -> : betR a b c = betR (a + d) (b + d) (c + d) by [].
-by rewrite /betR !addrDBD.
+by rewrite /betR !addrKAC.
 Qed.
 
 Lemma betE_xax x a : betE x a x = (x == a).
@@ -522,6 +570,30 @@ Lemma bet_xax x a : bet x a x = (x == a).
 Proof.
 by rewrite /bet /betS /betR subrr ratiov0 ltr_def eqxx orbF betE_xax.
 Qed.
+
+Lemma betS_neq21 a b c : betS a b c -> b != a.
+Proof. by apply: contraTneq => ->; rewrite /betS /betR subrr ratio0v ltrr. Qed.
+
+Lemma betS_neq23 a b c : betS a b c -> b != c.
+Proof. by rewrite betS_sym; apply: betS_neq21. Qed.
+
+Lemma betS_neq13 a b c : betS a b c -> a != c.
+Proof. by apply: contraTneq=> ->; rewrite /betS /betR subrr ratiov0 ltrr. Qed.
+
+Lemma betS_neq12 a b c : betS a b c -> a != b.
+Proof. by rewrite eq_sym; apply: betS_neq21. Qed.
+
+Lemma betS_neq32 a b c : betS a b c -> c != b.
+Proof. by rewrite eq_sym; apply: betS_neq23. Qed.
+
+Lemma betS_neq31 a b c : betS a b c -> c != a.
+Proof. by rewrite eq_sym; apply: betS_neq13. Qed.
+
+Lemma betS_rgt0 a b c : betS a b c -> betR a b c > 0. Proof. by case/andP. Qed.
+Hint Resolve betS_rgt0 : core.
+
+Lemma betS_rlt1 a b c : betS a b c -> betR a b c < 1. Proof. by case/andP. Qed.
+Hint Resolve betS_rlt1 : core.
 
 (* TODO: rename to scaling *)
 Definition scaling k a b := k *: (b - a) + a.
@@ -647,8 +719,8 @@ Proof. by move=> neq_ba k1; rewrite /betS betR_scaling3 ?invr_bet01. Qed.
 
 Lemma bet_scaling3 k a b : 1 <= k -> bet a b (scaling k a b).
 Proof.
-have [->|neq_ba] := altP (b =P a); first by rewrite bet_xxa.
-rewrite ler_eqVlt => /predU1P[<-|k_gt1]; first by rewrite scaling1 bet_axx.
+have [->//|neq_ba] := altP (b =P a).
+rewrite ler_eqVlt => /predU1P[<-|k_gt1]; first by rewrite scaling1.
 by rewrite /bet betS_scaling3 ?orbT.
 Qed.
 
@@ -663,9 +735,9 @@ Proof. by move=> neq_ba k01; rewrite /betS betR_scaling2. Qed.
 
 Lemma bet_scaling2 k a b : 0 <= k <= 1 -> bet a (scaling k a b) b.
 Proof.
-have [->|neq_ba] := altP (b =P a); first by rewrite scaling_id bet_xxa.
-have [k_gt0|//|->] := ltrgt0P k; last by rewrite scaling0 bet_xxa.
-have [k_gt1|//|->] := ltrgtP k 1; last by rewrite scaling1 bet_axx.
+have [->|neq_ba] := altP (b =P a); first by rewrite scaling_id.
+have [k_gt0|//|->] := ltrgt0P k; last by rewrite scaling0.
+have [k_gt1|//|->] := ltrgtP k 1; last by rewrite scaling1.
 by rewrite /bet betS_scaling2 ?orbT ?k_gt0.
 Qed.
 
@@ -674,8 +746,8 @@ Proof. by move=> Nba k1; rewrite /betS betR_scaling1// theta_bet01 oppr_gt0. Qed
 
 Lemma bet_scaling1 k a b : k <= 0 -> bet (scaling k a b) a b.
 Proof.
-have [->|neq_ba] := altP (b =P a); first by rewrite bet_axx.
-rewrite ler_eqVlt => /predU1P [->|k_lt0]; first by rewrite scaling0 bet_xxa.
+have [->//|neq_ba] := altP (b =P a).
+rewrite ler_eqVlt => /predU1P [->|k_lt0]; first by rewrite scaling0.
 by rewrite /bet betS_scaling1 ?orbT.
 Qed.
 
@@ -694,39 +766,48 @@ have /orP[k_le1|k_ge1] := ler_total k 1; last by rewrite bet_scaling3.
 by rewrite [bet b _ _]bet_sym bet_scaling2 ?orbT ?k_ge0.
 Qed.
 
+
+(* decompose in more elementary lemmas? *)
 Lemma ratio_betS a b c k1 k2 k3 :
   b != a -> 0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1 + k2 - k1 * k2 ->
-  b - a == ((k1 + k2 - k1 * k2) / k3)^-1 *: (c - a) -> betS a b c.
+  b - a = (k3 / (k1 + k2 - k1 * k2)) *: (c - a) -> betS a b c.
 Proof.
-move=> H ? ? ? ? ?; rewrite /betS/ betR; move: H. case: (a =P c)=> [->|];
-rewrite ?subrr ?scaler0 ?subr_eq0; [by move=> /eqP HF /eqP H; rewrite H in HF|].
-move=> ? /eqP ? k3_eq. suff: (ratio (b - a) (c - a) = ((k1 + k2 - k1 * k2) / k3)^-1).
-  by move=> ->; rewrite bet_gt0' ?bet_lt1 // k3_eq.
-by apply ratio_eq => //; rewrite subr_eq0 eq_sym; apply /eqP.
+rewrite /betS /betR => neq_ba k1_gt0 k2_gt0 k1_lt1 k3_gt0 lt_k3_DBM.
+by move=> /ratiol_eq->; by [rewrite subr_eq0|rewrite VDBM_gt0 -?VDBM_lt1].
 Qed.
 
 Lemma ratio_bet a b c k1 k2 k3 :
   0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1 + k2 - k1 * k2 ->
-  b - a == ((k1 + k2 - k1 * k2) / k3)^-1 *: (c - a) -> bet a b c.
+  b - a = (k3 / (k1 + k2 - k1 * k2)) *: (c - a) -> bet a b c.
 Proof.
-move=> L1 L2 L3 L4 L5; rewrite /bet /betE. case: (a =P b)=> [->|/eqP ab_neq].
-  have: (0 < k1 + k2 - k1 * k2)=> [|L6]; first by rewrite (ltr_trans L4).
-  rewrite subrr eq_sym scalemx_eq0 subr_eq0 [c == b]eq_sym => /orP[HF|-> //].
-  rewrite lt0r in L4; rewrite lt0r in L6; move: HF L4 L6.
-  by rewrite invr_eq0 mulf_eq0 invr_eq0 => /orP[/eqP->|/eqP->]; rewrite eqxx.
-by move=> ?; apply /orP; right; apply (ratio_betS ab_neq L1 L2 L3 L4).
+move=> k1_gt0 k2_gt0 k1_lt1 k3_gt0 lt_k3_DBM.
+by have [->//|neq_ba /ratio_betS rbS] := eqVneq b a; rewrite /bet rbS ?orbT.
+Qed.
+
+Lemma betSZratio a b c : betS a b c -> b - a = betR a b c *: (c - a).
+Proof. by move=> abc; rewrite scaler_ratio// gtr_eqF ?betS_rgt0. Qed.
+
+Lemma betSP a b c (r := betR a b c) :
+   reflect ([ /\ b - a = r *: (c - a), [/\ b != a, c != b & c != a], 0 < r & r < 1 ]) (betS a b c).
+Proof.
+apply: (iffP idP) => [abc|]; last by rewrite /betS -/r => -[_ _ -> ->].
+rewrite (betS_neq21 abc) (betS_neq32 abc) (betS_neq31 abc).
+rewrite (betS_rgt0 abc) (betS_rlt1 abc).
+by split=> //; apply: betSZratio.
 Qed.
 
 Lemma betS_inner_transitivity a b c d (k1 := betR a b d) (k2 := betR b c d) :
   betS a b d -> betS b c d -> betS a b c.
 Proof.
-rewrite betS_neq12=> /andP[/betSP[k1P ? ?] ?] /betSP[k2P ? ?].
-apply ratio_betS with k1 k2 k1=> //.
-  by rewrite -addrA -ltr_subl_addl subrr subr_gt0 gtr_pmull.
-rewrite eq_inv_scale ?bet_neq0 // -addrA addrC -addf_divrr ?divff ?lt0r_neq0 //.
-rewrite scalerDl scale1r eq_sym -subr_eq opprB eq_div_scale ?lt0r_neq0 //.
-rewrite addrBDB k2P scalerA scalerBl eq_sym subr_eq.
-by rewrite -scalerDr addrBDB k1P scalerA mulrC.
+pose simp := (betS_rgt0, betS_rlt1).
+move=> abd bcd; apply: (@ratio_betS _ _ _ k1 k2 k1);
+    rewrite ?(betS_neq21 abd, simp)//=.
+  by rewrite -addrA // ltr_spaddr// mulrC MSym_gt0// ?simp.
+apply/eqP; rewrite eq_div_scale ?DBM_neq0// ?simp// scalerBl scalerDl -addrA.
+rewrite (can2_eq (addKr _) (addNKr _)) eq_sym.
+rewrite -scalerN -scalerDr addrC subrDKr (betSZratio bcd).
+rewrite -(can2_eq (addrK _) (addrNK _)) scalerA -scalerDr subrKA mulrC.
+by rewrite -scalerA -betSZratio.
 Qed.
 
 Lemma bet_inner_transitivity a b c d: bet a b d -> bet b c d -> bet a b c.
@@ -752,22 +833,22 @@ move=> ? ? /betSP[P1 G1 L1] /betSP[P2 G2 L2].
 suff: (((k2 + k1 - k2 * k1) / (k2 - k2 * k1))^-1 *: (a - q) + q ==
        ((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1 *: (b - p) + p)=> [/eqP E|].
   exists (((k1 + k2 - k1 * k2) / (k1 - k1 * k2))^-1*:(b - p) + p); apply/andP;
-  rewrite -!bet_betS ?[bet p _ _](ratio_bet G1 G2 _ (bet_gt0 G1 L2)) ?bet_lt //;
-  rewrite ?(ratio_bet G2 G1 _ (bet_gt0 G2 L1)) ?bet_lt //;
+  rewrite -!bet_betS ?[bet p _ _](ratio_bet G1 G2 _ (bet_gt0 G1 L2)) ?lt_MSym_DBM //;
+  rewrite ?(ratio_bet G2 G1 _ (bet_gt0 G2 L1)) ?lt_MSym_DBM //;
   [rewrite -E| |rewrite -E..| |]; [| |apply /eqP..]; rewrite -!addrA ?subrr;
   rewrite ?addr0 // eq_sym -?subr_eq -1?subr_eq0 -1?[X in X - _]scale1r;
   rewrite -?scalerBl ?scale1r -?addrA ?subrr ?addr0 scaler_eq0 negb_or;
-  rewrite ?lt0r_neq0 ?subr_gt0 ?addrA ?bet_gt0' ?bet_lt1 //= ?subr_eq0;
-  rewrite ?[k1 + k2]addrC ?bet_lt ?[k2 + k1]addrC ?bet_lt ?subr_gt0;
+  rewrite ?lt0r_neq0 ?subr_gt0 ?addrA ?VDBMV_gt0 ?VDBM_lt1 //= ?subr_eq0;
+  rewrite ?[k1 + k2]addrC ?lt_MSym_DBM ?[k2 + k1]addrC ?lt_MSym_DBM ?subr_gt0;
   rewrite 1?mulrC ?gtr_pmull //; by apply /eqP.
 rewrite [X in X - _]addrC eq_sym [X in X - _]addrC -!addrA !invf_div.
 rewrite -subr_eq [k2 * _]mulrC !addrA -addrA [k2 + k1]addrC.
-rewrite eq_div_scale ?bet_neq0' // scalerDr scalerA mulrCA mulfV ?bet_neq0' //.
+rewrite eq_div_scale ?DBM_neq0 // scalerDr scalerA mulrCA mulfV ?DBM_neq0 //.
 rewrite  mulr1 -subr_eq0 -[a - q]opprB scalerN !scalerBl !opprB.
-rewrite addrACA -[X in _ + X]addrA -!scaleNr -scalerDr addrBDB -addrCA addrAC.
-rewrite -[X in _ + (X + _)]addrA -scalerDr addrBDB -addrCA scalerDl -!addrA.
-rewrite  -scalerDr addrBDB addrCA addr_eq0 addrA -scalerDr addrBDB -[b - q]opprB.
-by rewrite P1 P2 -scalerN opprB !scalerA [k2 * _]mulrC -scalerDr addrBDB scaleNr.
+rewrite addrACA -[X in _ + X]addrA -!scaleNr -scalerDr subrKA -addrCA addrAC.
+rewrite -[X in _ + (X + _)]addrA -scalerDr subrKA -addrCA scalerDl -!addrA.
+rewrite  -scalerDr subrKA addrCA addr_eq0 addrA -scalerDr subrKA -[b - q]opprB.
+by rewrite P1 P2 -scalerN opprB !scalerA [k2 * _]mulrC -scalerDr subrKA scaleNr.
 Qed.
 
 Lemma inner_pasch' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
@@ -844,8 +925,8 @@ move=> _ _ /betSP[P1 k2_gt0 k2_lt1]; rewrite /betS.
 suff: (t - x == k2 *: (y - x))=> [/eqP P2|]; [suff: (betR x t y = k2)=> [->|]|].
     by rewrite P2 k2_gt0 k2_lt1 eqxx.
   by apply ratio_eq; rewrite ?P2 ?eqxx // subr_eq0 scalingV_eq // eq_sym.
-rewrite /x /t /y /scalingV addrDBD -scalerBr opprB addrBDB addrDBD -scalerBr.
-by rewrite opprB addrBDB scalerA mulrC -scalerA P1 eqxx.
+rewrite /x /t /y /scalingV addrKAC -scalerBr opprB subrKA addrKAC -scalerBr.
+by rewrite opprB subrKA scalerA mulrC -scalerA P1 eqxx.
 Qed.
 
 Lemma euclid' a b c d t (k1 := betR a d t) (k2 := betR b d c) :
@@ -889,7 +970,7 @@ Lemma betS_ratio a b c (r := betR a b c) :
 Proof.
 move=> b1. have: betS c b a by rewrite betS_sym. rewrite betS_neq13; move: b1.
 move=> /betSP[E1 ? ?] /andP[/betSP[E2 ? ?]?]. apply /eqP; rewrite -opprB E1 E2.
-rewrite eq_div_scale /r ?lt0r_neq0 // sub_1_ratio ?subr_eq0 // opprB addrBDB.
+rewrite eq_div_scale /r ?lt0r_neq0 // sub_1_ratio ?subr_eq0 // opprB subrKA.
 by rewrite /betR -scalerN opprB !scalerA mulrC -opprB ratioNv -ratiovN opprB.
 Qed.
 
@@ -1080,7 +1161,7 @@ rewrite subr_eq0 eq_sym -{1}[b]add0r -subr_eq0 add0r=> ? ?.
 have: (0 < ((b - a) / (c - a)))=> [|H].
   by apply ler_lt_trans with 1; rewrite ?ler01.
 rewrite andbC -subr_lt0 andbC -(ltr_addr (-1)) -[1]divr1.
-rewrite {1}divr1 -mulNr addf_div ?oner_neq0 // !mulr1 mulNr mul1r opprB addrBDB.
+rewrite {1}divr1 -mulNr addf_div ?oner_neq0 // !mulr1 mulNr mul1r opprB subrKA.
 by rewrite -[a - b]opprB invrN mulrN oppr_lt0 -[X in _ < X]mulN1r ltr_nmulr;
 rewrite ?oppr_lt0 ?ltr01 // -invf_div invr_gt0 H andbT invf_cp1.
 Qed.
@@ -1089,7 +1170,7 @@ Lemma ratio_cp'_aux_2 (a b c : R) :
   a - b != 0 -> (b - a) / (c - a) < 0 -> 0 < (c - b) / (a - b).
 Proof.
 move=> ? ?; rewrite -[X in _ < X]addr0 -{2}(subrr 1) addrCA -{2}[1]divr1 -mulNr.
-rewrite addf_div ?oner_neq0 // !mulr1 mulNr mul1r opprB addrBDB -[a - b]opprB.
+rewrite addf_div ?oner_neq0 // !mulr1 mulNr mul1r opprB subrKA -[a - b]opprB.
 by rewrite invrN mulrN subr_gt0; apply ltr_le_trans with 0;
 rewrite ?ler01 // -invr_lt0 invf_div.
 Qed.
@@ -1100,10 +1181,10 @@ Lemma ratio_cp' (a b c : R) :
 Proof.
 move=> H1 H2 H; have: ((b - a) / (c - a) != 1)=> [|H4].
   rewrite -[X in _ != X]add0r -subr_eq -[1]divr1 -mulNr addf_div ?oner_neq0 //.
-  by rewrite !mulr1 mulNr mul1r opprB addrBDB mulf_neq0 // invr_neq0.
+  by rewrite !mulr1 mulNr mul1r opprB subrKA mulf_neq0 // invr_neq0.
 have: ((c - b) / (a - b) != 1)=> [|H5].
   rewrite -[X in _ != X]add0r -subr_eq -[1]divr1 -mulNr addf_div ?oner_neq0 //;
-  rewrite ?mulr1 ?mulNr ?mul1r ?opprB ?addrBDB ?mulf_neq0 // ?invr_neq0 //;
+  rewrite ?mulr1 ?mulNr ?mul1r ?opprB ?subrKA ?mulf_neq0 // ?invr_neq0 //;
   by rewrite subr_eq add0r eq_sym -[X in _ != X]add0r -subr_eq.
 move: (ltr_total H1) (ltr_total H2)=> /orP[L1|G1] /orP[L2|G2].
       have: (0 < (b - a) / (c - a)); first by rewrite nmulr_lgt0 // invr_lt0.
@@ -1139,7 +1220,7 @@ Lemma col_2D_aux_1 a b c :
   ((a 0 1 - c 0 1) * (b 0 0 - c 0 0) == (a 0 0 - c 0 0) * (b 0 1 - c 0 1)) =
   ((a 0 0 - b 0 0) * (b 0 1 - c 0 1) == (a 0 1 - b 0 1) * (b 0 0 - c 0 0)).
 Proof.
-rewrite eq_sym -(addrBDB _ (b 0 0)) -[X in _ == X * _](addrBDB _ (b 0 1)).
+rewrite eq_sym -(subrKA _ (b 0 0)) -[X in _ == X * _](subrKA _ (b 0 1)).
 rewrite mulrDl [X in _ + X]mulrC addrC [X in _ == X]mulrDl [X in _ == X] addrC.
 by rewrite add2r_eq.
 Qed.
@@ -1157,7 +1238,7 @@ Lemma col_2D_aux_3 a b c :
   ((a 0 0 - b 0 0) * (b 0 1 - c 0 1) == (a 0 1 - b 0 1) * (b 0 0 - c 0 0)).
 Proof.
 rewrite -opprB mulNr -mulrN opprB eq_sym -opprB mulNr -mulrN opprB.
-rewrite -[X in _ * X](addrBDB _ (b 0 1)) -[X in _ == _ * X](addrBDB _ (b 0 0)).
+rewrite -[X in _ * X](subrKA _ (b 0 1)) -[X in _ == _ * X](subrKA _ (b 0 0)).
 by rewrite mulrDr [X in _ == X]mulrDr mulrC add2r_eq.
 Qed.
 
@@ -1188,10 +1269,10 @@ case: (b 0 1 =P c 0 1)=> [->|?] /=; rewrite ?subrr ?mulr0 eq_sym.
   by apply Or32; apply And5=> //; rewrite eq_sym.
 case: (c 0 0 =P a 0 0)=> [->|?] /=; [|case: (c 0 1 =P a 0 1)=> [->|?] /=].
     rewrite -[X in _ == X *_]opprB mulNr -addr_eq0 mulrC -mulrDr mulf_eq0.
-    rewrite addrBDB !subr_eq0 [X in X || _]eq_sym [X in _ || X]eq_sym.
+    rewrite subrKA !subr_eq0 [X in X || _]eq_sym [X in _ || X]eq_sym.
     move=> /orP[/eqP //|/eqP ?] [/eqP //|/eqP //].
   rewrite -[X in _ == _ * X]opprB mulrN -addr_eq0 mulrC -mulrDl mulf_eq0.
-  rewrite addrC addrBDB !subr_eq0 eq_sym.
+  rewrite addrC subrKA !subr_eq0 eq_sym.
   move=> /orP[/eqP ?|/eqP //] [/eqP //|/eqP //].
 by move=> _ _ _ _; apply Or33.
 Qed.
@@ -1224,22 +1305,22 @@ move=> ab_neq; case: (b =P c)=> [->|]; first by rewrite !subrr !mulr0 eqxx.
 move=> bc_neq; case: (c =P a)=> [->|ca_neq] /=; [|move=> HC].
   by rewrite -[b 0 1 - a 0 1]opprB mulrN -mulNr opprB mulrC.
 elim HC; clear HC; [|move=> HC; elim HC; clear HC]; move=> /betSP'[E0 E1 _ _].
-    rewrite -[b 0 0 - c 0 0](addrBDB _ (a 0 0)) -[a 0 0 - b 0 0]opprB E0.
-    rewrite -[b 0 1 - c 0 1](addrBDB _ (a 0 1)) -[a 0 1 - b 0 1]opprB E1.
+    rewrite -[b 0 0 - c 0 0](subrKA _ (a 0 0)) -[a 0 0 - b 0 0]opprB E0.
+    rewrite -[b 0 1 - c 0 1](subrKA _ (a 0 1)) -[a 0 1 - b 0 1]opprB E1.
     rewrite -[a 0 0 - c 0 0]opprB -{3}[c 0 0 - a 0 0]mul1r.
     rewrite -[a 0 1 - c 0 1]opprB -{2}[c 0 1 - a 0 1]mul1r.
     rewrite -!mulrBl mulrCA [X in _ == X]mulrCA !mulNr -!mulrA.
     by rewrite [X in _ * - (_ * X)]mulrC.
   rewrite -[b 0 0 - c 0 0]opprB E0 -[b 0 1 - c 0 1]opprB E1 !mulrN mulrCA.
   by rewrite [X in _ * X]mulrC eq_sym mulrCA.
-rewrite -[a 0 0 - b 0 0](addrBDB _ (c 0 0)) -[a 0 1 - b 0 1](addrBDB _ (c 0 1)).
+rewrite -[a 0 0 - b 0 0](subrKA _ (c 0 0)) -[a 0 1 - b 0 1](subrKA _ (c 0 1)).
 rewrite E0 E1 -[c 0 0 - b 0 0]opprB -[c 0 1 - b 0 1]opprB -[X in _ - X]mul1r.
 by rewrite eq_sym -[X in _ - X]mul1r -!mulrBl mulrAC.
 Qed.
 
 Lemma cong_perp_aux1 (a p m : 'rV[R]_2) i :
   (m 0 i - a 0 i) - (m 0 i - p 0 i) = p 0 i - a 0 i.
-Proof. by apply /eqP; rewrite opprB addrC addrBDB eqxx. Qed.
+Proof. by apply /eqP; rewrite opprB addrC subrKA eqxx. Qed.
 
 Lemma cong_perp_aux2 (a p q : 'rV[R]_2) (m := (1 / (1 + 1)) *: (p + q)) i :
   (m 0 i - a 0 i) + (m 0 i - p 0 i) = q 0 i - a 0 i.
@@ -1344,8 +1425,8 @@ Lemma upper_dim_aux (a b m : 'rV[R]_2) (c0 c1: R) :
   c0 * (b 0 0 - a 0 0) = - c1 * (b 0 1 - a 0 1).
 Proof.
 move=> /eqP E1 /eqP E2; move: E1 E2; rewrite !addr_eq0 -!mulNr.
-move=> /eqP E1 /eqP E2; apply /eqP; rewrite -(addrBBB (m 0 0)) eq_sym.
-by rewrite -(addrBBB (m 0 1)) mulrBr eq_sym mulrBr -E1 -E2.
+move=> /eqP E1 /eqP E2; apply /eqP; rewrite -(subrBKl (m 0 0)) eq_sym.
+by rewrite -(subrBKl (m 0 1)) mulrBr eq_sym mulrBr -E1 -E2.
 Qed.
 
 Lemma upper_dim a b c p q :
