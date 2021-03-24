@@ -1,4 +1,5 @@
 Require Export List.
+Require Lt.
 
 Definition all_equiv (l: list Prop) :=
   forall x y, In x l -> In y l -> (x <-> y).
