@@ -1378,9 +1378,6 @@ elim (col_dec A B BX''); intro HABBX''.
   }
 Qed.
 
-
-Unset Regular Subst Tactic.
-
 Lemma characterization_of_betweenness :
   forall O E E' S U1 U2
          A AX AY B BX BY C CX CY
@@ -1587,8 +1584,8 @@ split; [intro HBet|intro HT].
       assert (E = T); treat_equalities.
         {
         apply prod_uniquenessA with O E E' AB AB; try apply prod_1_l; auto.
-        intro; treat_equalities; apply length_id in HAB;
-        assert_diffs; induction HAB; auto.
+        intro; treat_equalities; apply length_id in HAC;
+        assert_diffs; induction HAC; auto.
         }
       assert (CXMAX = B'XMAX)
         by (apply prod_uniqueness with O E E' E CXMAX; auto; apply prod_1_l; Col).
@@ -1598,7 +1595,7 @@ split; [intro HBet|intro HT].
       assert (BX = B'X) by (apply diff_uniquenessA with O E E' AX CXMAX; auto).
       assert (BY = B'Y) by (apply diff_uniquenessA with O E E' AY CYMAY; auto).
       assert (B = B'); treat_equalities; Between.
-      rewrite eq_points_coordinates; [|apply HCdB|apply HCdB']; auto.
+      rewrite eq_points_coordinates; [|apply HCdC|apply HCdB']; auto.
       }
 
       {
@@ -2310,7 +2307,7 @@ split; intro HCol; treat_equalities.
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
             elim H; clear H; intro H; auto; treat_equalities.
-            exfalso; apply HDiff7; apply diff_uniqueness with O E E' BX BX; auto.
+            exfalso; apply HDiff1; apply diff_uniqueness with O E E' BX BX; auto.
             apply diff_null; Col.
             }
           assert (HLe7 : LeP O E E' CX AX) by (apply bet_lt21_le31 with BX; auto).
@@ -2426,7 +2423,7 @@ split; intro HCol; treat_equalities.
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
             elim H; clear H; intro H; auto; treat_equalities.
-            exfalso; apply HDiff7; apply diff_uniqueness with O E E' CX CX; auto.
+            exfalso; apply HDiff3; apply diff_uniqueness with O E E' CX CX; auto.
             apply diff_null; Col.
             }
           assert (HLe7 : LeP O E E' AX BX) by (apply bet_lt21_le31 with CX; auto).
