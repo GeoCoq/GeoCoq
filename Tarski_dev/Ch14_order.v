@@ -687,8 +687,6 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
   }
 Qed.
 
-Unset Regular Subst Tactic.
-
 Lemma le_pos_prod_le : forall O E E' A B C AC BC,
   LeP O E E' A B -> LeP O E E' O C ->
   Prod O E E' A C AC -> Prod O E E' B C BC ->
@@ -756,7 +754,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
              try destruct HCMB as [HBet1 HBet2])).
 
     {
-    exfalso; apply HDiff5; apply between_equality with C; Between.
+    exfalso; apply HDiff3; apply between_equality with C; Between.
     }
 
     {
@@ -801,7 +799,7 @@ elim (eq_dec_points O C); intro HDiff6; treat_equalities;
                try destruct HBMA as [HBet1 HBet2])).
 
       {
-      apply HDiff5; apply between_equality with A; Between.
+      apply HDiff2; apply between_equality with A; Between.
       }
 
       {
