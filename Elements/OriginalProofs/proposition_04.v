@@ -77,7 +77,7 @@ by cases on (BetS A U B \/ eq B U \/ BetS A B U).
  assert (eq w u) by (conclude lemma_layoffunique).
  assert (BetS a u b) by (conclude cn_equalitysub).
  assert (Cong U B u b) by (conclude lemma_differenceofparts).
- assert (Cong V B v b) by (eapply (axiom_5_line) with (B0:=U) (b0:=u) (A0:=A) (a0:=a);assumption) .
+ assert (Cong V B v b) by (eapply @axiom_5_line with (B:=U) (b:=u) (A:=A) (a:=a);assumption) .
  assert (Cong B V b v) by (forward_using lemma_congruenceflip).
  close.
  }
