@@ -10843,17 +10843,20 @@ Ltac ColR :=
  let col := constr:(Col) in
    treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
 
+#[global]
 Hint Resolve conga_refl conga_sym cong3_conga conga_pseudo_refl conga_trivial_1
              conga_right_comm conga_left_comm conga_comm conga_line l11_16 : conga.
 
 Ltac CongA := auto 3 with conga.
 
+#[global]
 Hint Resolve l11_31_1 l11_31_2 lta__lea lea_comm lea_right_comm lea_left_comm lta_comm
              lta_right_comm lta_left_comm lea_asym lea121345 inangle__lea inangle__lea_1
              conga__lea conga__lea456123 lea_refl acute_per__lta obtuse_per__lta acute_obtuse__lta : lea.
 
 Ltac Lea := auto 3 with lea.
 
+#[global]
 Hint Resolve l11_24 out321__inangle out341__inangle inangle1123 inangle3123 in_angle_line
              ts2__inangle os_ts__inangle os2__inangle : side.
 

@@ -349,6 +349,7 @@ Qed.
 
 End T6_1.
 
+#[global]
 Hint Resolve col_transitivity_1 col_transitivity_2 out_col : col.
 
 Section T6_2.
@@ -1015,6 +1016,7 @@ Qed.
 
 End T6_2.
 
+#[global]
 Hint Resolve bet_out bet_out_1 out_trivial l6_6 : out.
 
 Ltac Out := auto 4 with out.

@@ -257,7 +257,9 @@ Qed.
 
 End T7_1.
 
+#[global]
 Hint Resolve l7_13 : cong.
+#[global]
 Hint Resolve l7_2 l7_3_2 : midpoint.
 
 Ltac Midpoint := auto with midpoint.
@@ -1516,7 +1518,11 @@ Qed.
 
 End T7_2.
 
+#[global]
 Hint Resolve midpoint_bet : between.
+#[global]
 Hint Resolve midpoint_col : col.
+#[global]
 Hint Resolve midpoint_cong : cong.
+#[global]
 Hint Resolve midpoint_out midpoint_out_1 : out.

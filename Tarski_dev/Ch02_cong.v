@@ -103,6 +103,7 @@ Qed.
 
 End T1_1.
 
+#[global]
 Hint Resolve cong_commutativity cong_3421 cong_4312 cong_4321 cong_trivial_identity
              cong_left_commutativity cong_right_commutativity
              cong_transitivity cong_symmetry cong_reflexivity : cong.
@@ -153,6 +154,7 @@ Qed.
 
 End T1_2.
 
+#[global]
 Hint Resolve not_cong_2134 not_cong_1243 not_cong_2143
              not_cong_3412 not_cong_4312 not_cong_3421 not_cong_4321 : cong.
 
@@ -240,8 +242,11 @@ Qed.
 
 End T1_3.
 
+#[global]
 Hint Resolve cong_3_sym : cong.
+#[global]
 Hint Resolve cong_3_swap cong_3_swap_2 cong3_transitivity : cong3.
+#[global]
 Hint Unfold Cong_3 : cong3.
 
 Section T1_4.

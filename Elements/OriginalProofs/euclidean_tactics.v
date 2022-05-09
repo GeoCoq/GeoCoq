@@ -72,9 +72,11 @@ Qed.
 
 End basic_lemmas.
 
+#[global]
 Hint Resolve not_nCol_Col 
  nCol_not_Col nCol_notCol Col_nCol_False.
 
+#[global]
 Hint Resolve 
  Col_or_nCol nCol_or_Col eq_or_neq neq_or_eq : decidability.
 

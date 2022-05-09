@@ -317,6 +317,7 @@ Qed.
 
 End Orthocenter.
 
+#[global]
 Hint Resolve
      is_orthocenter_perm_1
      is_orthocenter_perm_2
@@ -324,4 +325,5 @@ Hint Resolve
      is_orthocenter_perm_4
      is_orthocenter_perm_5 : Orthocenter.
 
+#[global]
 Hint Resolve is_orthocenter_coplanar : cop.

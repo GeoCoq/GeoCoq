@@ -79,6 +79,7 @@ Qed.
 
 End PerpBisect_1.
 
+#[global]
 Hint Resolve perp_bisect_perp : perp.
 
 Section PerpBisect_2.
@@ -119,6 +120,7 @@ Qed.
 
 End PerpBisect_2.
 
+#[global]
 Hint Resolve perp_bisect_cong_1 perp_bisect_cong_2 : cong.
 
 Section PerpBisect_3.
