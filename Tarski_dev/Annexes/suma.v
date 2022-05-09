@@ -849,6 +849,7 @@ repeat
       assert (h := suppa_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
  end.
 
+#[global]
 Hint Resolve suma_sym suma_left_comm suma_middle_comm suma_right_comm
              suma_comm ts__suma ts__suma_1 inangle__suma bet__suma
              sams_right_comm sams_comm sams_left_comm sams_sym
@@ -2485,4 +2486,5 @@ Qed.
 
 End Suma_2.
 
+#[global]
 Hint Resolve per2__sams acute2__sams acute_per__sams sams123231 bet_suppa__suma : suma.

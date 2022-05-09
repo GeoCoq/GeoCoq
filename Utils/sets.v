@@ -30,11 +30,13 @@ Module SetOfSetsOfPositiveOrderedType <: OrderedType.
 
   Definition lt := S.lt.
 
+#[global]
   Instance lt_compat : Proper (eq==>eq==>iff) lt.
   Proof.
   apply S.lt_compat.
  Qed.
 
+#[global]
   Instance lt_strorder : StrictOrder lt.
   Proof.
   apply S.lt_strorder.
@@ -183,6 +185,7 @@ Module SetOfPairsOfPositiveOrderedType <: OrderedType.
         apply HTP with (fstpp(y)); assumption.
  Qed.
 
+#[global]
   Instance lt_compat : Proper (eq==>eq==>iff) lt.
   Proof.
   intros x y HXY x' y' HX'Y'.
@@ -231,6 +234,7 @@ Module SetOfPairsOfPositiveOrderedType <: OrderedType.
     intuition.
  Qed.
 
+#[global]
   Instance lt_strorder : StrictOrder lt.
   Proof.
   apply Build_StrictOrder.
@@ -427,11 +431,13 @@ Module SetOfSetsOfPairsOfPositiveOrderedType <: OrderedType.
 
   Definition lt := SP.lt.
 
+#[global]
   Instance lt_compat : Proper (eq==>eq==>iff) lt.
   Proof.
   apply SP.lt_compat.
  Qed.
 
+#[global]
   Instance lt_strorder : StrictOrder lt.
   Proof.
   apply SP.lt_strorder.

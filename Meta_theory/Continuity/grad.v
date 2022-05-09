@@ -280,6 +280,9 @@ Qed.
 
 End Grad.
 
+#[global]
 Hint Resolve grad__bet : between.
+#[global]
 Hint Resolve grad__col : col.
+#[global]
 Hint Resolve grad__le : le.

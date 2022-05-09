@@ -3865,8 +3865,10 @@ Qed.
 
 End T9.
 
+#[global]
 Hint Resolve l9_2 invert_two_sides invert_one_side one_side_symmetry l9_9 l9_9_bis
              l9_31 l9_38 osp_symmetry osp__ntsp tsp__nosp : side.
+#[global]
 Hint Resolve os__coplanar sac__coplanar : cop.
 
 Ltac Side := auto 4 with side.

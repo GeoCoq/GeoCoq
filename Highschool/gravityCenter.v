@@ -520,8 +520,10 @@ End GravityCenter.
 (* If we prove it with "Context `{Tn:Tarski_neutral_dimensionless}." we do not get the warning
 "the hint: eapply @is_gravity_center_perm_1 will only be used by eauto".
 There must be a bug with the handling of bases of hints. *)
+#[global]
 Hint Resolve is_gravity_center_coplanar : cop.
 
+#[global]
 Hint Resolve
      is_gravity_center_perm_1
      is_gravity_center_perm_2

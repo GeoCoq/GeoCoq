@@ -85,6 +85,7 @@ Qed.
 
 End Circumcenter.
 
+#[global]
 Hint Resolve
      is_circumcenter_perm_1
      is_circumcenter_perm_2
@@ -92,6 +93,7 @@ Hint Resolve
      is_circumcenter_perm_4
      is_circumcenter_perm_5 : Circumcenter.
 
+#[global]
 Hint Resolve is_circumcenter_coplanar : cop.
 
 Ltac assert_cops :=

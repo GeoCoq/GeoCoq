@@ -41,6 +41,7 @@ Qed.
 
 End T4_1.
 
+#[global]
 Hint Resolve bet_col col_permutation_1 col_permutation_2
 col_permutation_3 col_permutation_4 col_permutation_5 : col.
 
@@ -98,6 +99,7 @@ Qed.
 
 End T4_2.
 
+#[global]
 Hint Resolve not_col_permutation_1 not_col_permutation_2
 not_col_permutation_3 not_col_permutation_4 not_col_permutation_5 : col.
 
@@ -149,6 +151,7 @@ Qed.
 
 End T4_3.
 
+#[global]
 Hint Immediate col_trivial_1 col_trivial_2 col_trivial_3: col.
 
 Section T4_4.

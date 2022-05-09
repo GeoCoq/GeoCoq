@@ -2373,5 +2373,6 @@ Qed.
 
 End Saccheri.
 
+#[global]
 Hint Resolve sac__pars1423 sac__pars1234 sac__par1423 sac__par1234
              lam__pars1234 lam__pars1423 lam__par1234 lam__par1423 : Par.

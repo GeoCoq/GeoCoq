@@ -2438,11 +2438,13 @@ assert_diffs;repeat match goal with
  | A: Tpoint, B: Tpoint |- _ => not_exist_hyp_comm A B;show_distinct'' A B
 end.
 
+#[global]
 Hint Resolve parallelogram_strict_not_col
              parallelogram_strict_not_col_2
              parallelogram_strict_not_col_3
              parallelogram_strict_not_col_4 : col.
 
+#[global]
 Hint Resolve plg_cong_1 plg_cong_2 plgs_cong_1 plgs_cong_2 : cong.
 
 Section Quadrilateral_inter_dec_2.
@@ -3074,6 +3076,7 @@ Ltac assert_pars_1 :=
 
 Ltac assert_pars_perm := permutation_intro_in_hyps; assert_pars_1; clean_reap_hyps.
 
+#[global]
 Hint Resolve plg_par_1 plg_par_2 plgs_pars_1 plgs_pars_2 : par.
 
 Section Quadrilateral_inter_dec_3.

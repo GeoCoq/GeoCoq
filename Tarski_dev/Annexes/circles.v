@@ -118,6 +118,7 @@ Qed.
 End Circle.
 
 
+#[global]
 Hint Resolve inc112 onc212 onc_sym inc__outc onc__inc onc__outc
              inc_outc__onc incs__inc outcs__outc : circle.
 

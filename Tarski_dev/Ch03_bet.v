@@ -114,7 +114,9 @@ End T2_1.
 
 (** Some tactics *)
 
+#[global]
 Hint Resolve between_symmetry : between.
+#[global]
 Hint Resolve between_trivial between_trivial2 : between_no_eauto.
 
 Ltac eBetween := eauto with between.
@@ -222,6 +224,7 @@ Qed.
 
 End T2_2.
 
+#[global]
 Hint Resolve outer_transitivity_between2 between_inner_transitivity between_exchange3 : between.
 
 Section T2_3.
@@ -250,6 +253,7 @@ Qed.
 
 End T2_3.
 
+#[global]
 Hint Resolve between_exchange2 outer_transitivity_between between_exchange4 : between.
 
 Section T2_4.

@@ -278,6 +278,7 @@ Qed.
 
 End Hilbert_2D_to_Tarski_2D.
 
+#[global]
 Hint Resolve colH_trivial121 colH_trivial122 colH_trivial112 colH_trivial111 colH_permut_231
              colH_permut_312 colH_permut_321 colH_permut_213 colH_permut_132 colH_permut_231
              between_col bet_colH : col.
@@ -307,6 +308,7 @@ Ltac ColHR :=
  let col := constr:(ColH) in
    Col_refl tpoint col.
 
+#[global]
 Hint Resolve between_comm : bet.
 
 Ltac Bet := auto 3 with bet.
@@ -5197,8 +5199,10 @@ Ltac not_on_line A B X :=  try match goal with |H : A <> B |- _
                                  => assert(HH:=ncolH_exists A B H);auto; destruct HH as [X]
                               end.
 
+#[global]
 Hint Resolve betH_trans0 betH_trans1 betH2_out out2_out : bet.
 
+#[global]
 Hint Resolve congH_sym congH_perm congH_perml cong_permr congH_refl
      cong_pseudo_transitivity congH_perms: cong.
 
