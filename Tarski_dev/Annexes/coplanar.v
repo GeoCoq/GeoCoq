@@ -517,6 +517,7 @@ Qed.
 
 End Coplanar.
 
+#[global]
 Hint Resolve coplanar_perm_1 coplanar_perm_2 coplanar_perm_3 coplanar_perm_4 coplanar_perm_5
 coplanar_perm_6 coplanar_perm_7 coplanar_perm_8 coplanar_perm_9 coplanar_perm_10 coplanar_perm_11
 coplanar_perm_12 coplanar_perm_13 coplanar_perm_14 coplanar_perm_15 coplanar_perm_16 coplanar_perm_17
@@ -527,6 +528,7 @@ ncoplanar_perm_12 ncoplanar_perm_13 ncoplanar_perm_14 ncoplanar_perm_15 ncoplana
 ncoplanar_perm_17 ncoplanar_perm_18 ncoplanar_perm_19 ncoplanar_perm_20 ncoplanar_perm_21
 ncoplanar_perm_22 ncoplanar_perm_23 : cop_perm.
 
+#[global]
 Hint Resolve coplanar_trivial col__coplanar bet__coplanar out__coplanar midpoint__coplanar
 perp__coplanar ts__coplanar reflectl__coplanar reflect__coplanar inangle__coplanar pars__coplanar
 par__coplanar plg__coplanar plgs__coplanar plgf__coplanar parallelogram__coplanar rhombus__coplanar

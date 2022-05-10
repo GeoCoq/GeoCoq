@@ -447,11 +447,13 @@ Ltac CopR :=
         |copr_aux; Cop_refl tpoint col cop] || fail "Can not be deduced".
 
 
+#[global]
 Hint Resolve
  par_reflexivity par_strict_irreflexivity
  par_strict_symmetry par_strict_comm par_strict_right_comm par_strict_left_comm
  par_symmetry par_comm par_right_comm par_left_comm : par.
 
+#[global]
 Hint Resolve par_strict_not_col_1 par_strict_not_col_2
              par_strict_not_col_3 par_strict_not_col_4 : col.
 
@@ -2151,8 +2153,10 @@ Qed.
 
 End T12_2'.
 
+#[global]
 Hint Resolve col_par par_strict_par : par.
 
+#[global]
 Hint Resolve l12_6 pars__os3412 : side.
 
 (*

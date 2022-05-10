@@ -377,6 +377,7 @@ Qed.
 
 End Sums.
 
+#[global]
 Hint Resolve sums_sym sums_left_comm sums_middle_comm sums_right_comm
              sums_comm sums112323 sums123312 bet__sums : sums.
 

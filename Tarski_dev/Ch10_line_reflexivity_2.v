@@ -964,6 +964,7 @@ Qed.
 
 End T10_2D.
 
+#[global]
 Hint Resolve all_coplanar : cop.
 (* the hint: eapply @all_coplanar will only be used by eauto *)
 

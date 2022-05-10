@@ -372,6 +372,7 @@ Qed.
 
 End T8_1.
 
+#[global]
 Hint Resolve l8_2 : perp.
 
 Ltac Perp := auto with perp.
@@ -451,6 +452,7 @@ Qed.
 
 End T8_2.
 
+#[global]
 Hint Resolve l8_5 : perp.
 
 Ltac let_symmetric C P A :=
@@ -1007,6 +1009,7 @@ Qed.
 
 End T8_3.
 
+#[global]
 Hint Resolve perp_sym perp_left_comm perp_right_comm perp_comm per_perp_in per_perp
              perp_in_per perp_in_left_comm perp_in_right_comm perp_in_comm perp_in_sym : perp.
 
@@ -2543,6 +2546,7 @@ Qed.
 
 End T8_4.
 
+#[global]
 Hint Resolve perp_per_1 perp_per_2 perp_col perp_perp_in perp_in_perp : perp.
 
 Section T8_5.
@@ -2787,6 +2791,7 @@ Qed.
 
 End T8_5.
 
+#[global]
 Hint Resolve perp_in_per_1 perp_in_per_2 perp_in_per_3 perp_in_per_4 : perp.
 
 Ltac midpoint M A B :=
