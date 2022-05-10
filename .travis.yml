@@ -11,7 +11,6 @@ matrix:
     - env: COQ_VERSION="8.8.2"    COQ_PACKAGE="coq-8.8.2" PPA="ppa:jgross-h/many-coq-versions"  
     - env: COQ_VERSION="8.9.0"    COQ_PACKAGE="coq-8.9.0" PPA="ppa:jgross-h/many-coq-versions"
     - env: COQ_VERSION="8.9.1"    COQ_PACKAGE="coq-8.9.1" PPA="ppa:jgross-h/many-coq-versions"
-    - env: COQ_VERSION="8.10.0"   COQ_PACKAGE="coq-8.10.0" PPA="ppa:jgross-h/many-coq-versions"
 
 before_install:
   - if [ ! -z "$PPA" ]; then sudo add-apt-repository "$PPA" -y; fi
