@@ -20,7 +20,17 @@ Module SetOfSetsOfPositiveOrderedType <: OrderedType.
 
   Definition eq := S.Equal.
 
-  Include IsEq.
+  Lemma eq_equiv : Equivalence eq.
+  Proof.
+  split; intro; intros.
+
+    reflexivity.
+
+    symmetry.
+    assumption.
+
+    etransitivity; eassumption.
+  Qed.
 
   Definition eqb := S.equal.
 
@@ -70,7 +80,10 @@ Module SetOfPairsOfPositiveOrderedType <: OrderedType.
   Definition eq (t1 t2 : t) :=
     Pos.eq (fstpp(t1)) (fstpp(t2)) /\ Pos.eq (sndpp(t1)) (sndpp(t2)).
 
-  Include IsEq.
+  Lemma eq_equiv : Equivalence eq.
+  Proof.
+  split; repeat intros []; split; congruence.
+  Qed.
 
   Definition eqb (t1 t2 : t) :=
     Pos.eqb (fstpp(t1)) (fstpp(t2)) && Pos.eqb (sndpp(t1)) (sndpp(t2)).
