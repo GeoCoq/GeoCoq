@@ -154,7 +154,7 @@ apply /eqP; rewrite mulrDl !mul1r eq_sym subr_eq addrA -!subr_eq addrAC.
 rewrite  -mulmxBl -!addrA opprB [X in (_+X)*m_]addrA [X in (_+(X+_))*m_]addrC.
 rewrite  subrr sub0r [X in _+(_-X)]dotC -mulmxBl opprB -[X in _+X*m_]addrA.
 rewrite [X in _+(_+X)*m_]addrCA [X in _+(_+X)*m_]addrA subrr sub0r.
-rewrite -[X in _+X*m_]opprB mulNmx dotC [X in _-X]dotC -mulmxBl opprB.
+rewrite -[X in _+X*m_]opprB mulNmx dotC [X in _*m_-X]dotC -mulmxBl opprB.
 by rewrite addrA -[X in X-_]addrA [X in _+X-_]addrC subrr addr0.
 Qed.
 
@@ -329,7 +329,8 @@ Lemma betS_sym a b c : betS a b c = betS c b a.
 Proof.
 rewrite /betS /betR !andb_assoc -(addrBDB b c a) -[c-a]opprB ratiorN oppr_gt0.
 case (a-c =P 0)=> [->|/eqP ?]; first by rewrite !ratiop0 ltxx !andbF.
-rewrite -add_ratio ?ratioNr ?ratiovv // andbAC subr_lt0 ltr_oppl ltr_subr_addl.
+rewrite -(add_ratio (b - c)) ?ratioNr ?ratiovv //.
+rewrite andbAC subr_lt0 ltr_oppl ltr_subr_addl.
 by rewrite scaleNr -scalerN scalerBl scale1r -subr_eq !opprB !addrBDB subrr.
 Qed.
 
@@ -612,7 +613,7 @@ Qed.
 
 Lemma congC a b c d: cong a b c d = cong b a d c.
 Proof.
-rewrite /cong -opprB mulNmx dotC -mulNmx 2?opprB eq_sym -opprB.
+rewrite /cong -opprB mulNmx dotC -mulNmx 2?opprB eq_sym -[d - c]opprB.
 by rewrite mulNmx [X in -X]dotC -mulNmx 2?opprB eq_sym.
 Qed.
 
@@ -630,7 +631,8 @@ Proof.
 move=> b1. have: betS c b a by rewrite betS_sym. rewrite betS_neq13; move: b1.
 move=> /betSP[E1 ? ?] /andP[/betSP[E2 ? ?]?]. apply /eqP; rewrite -opprB E1 E2.
 rewrite eq_div_scale /r ?lt0r_neq0 // sub_1_ratio ?subr_eq0 // opprB addrBDB.
-by rewrite /betR -scalerN opprB !scalerA mulrC -opprB ratioNr -ratiorN opprB.
+rewrite /betR -scalerN opprB !scalerA mulrC -[b - c]opprB.
+by rewrite ratioNr -ratiorN opprB.
 Qed.
 
 Lemma betS_gt0 a b c (r := ratio(b-a)(c-a)) : betS a b c -> 0 < (1 - r) / r.
@@ -896,8 +898,8 @@ Lemma col_2D_aux_3 a b c :
   ((b 0 1 - a 0 1) * (c 0 0 - a 0 0) == (b 0 0 - a 0 0) * (c 0 1 - a 0 1)) =
   ((a 0 0 - b 0 0) * (b 0 1 - c 0 1) == (a 0 1 - b 0 1) * (b 0 0 - c 0 0)).
 Proof.
-rewrite -opprB mulNr -mulrN opprB eq_sym -opprB mulNr -mulrN opprB.
-rewrite -[X in _ * X](addrBDB _ (b 0 1)) -[X in _ == _ * X](addrBDB _ (b 0 0)).
+rewrite -opprB mulNr -mulrN opprB eq_sym -[b 0 0 - a 0 0]opprB mulNr -mulrN opprB.
+rewrite -[X in _ * X](addrBDB _ (b 0 1)) -[a 0 0 - c 0 0](addrBDB _ (b 0 0)).
 by rewrite mulrDr [X in _ == X]mulrDr mulrC add2r_eq.
 Qed.
 
@@ -997,7 +999,8 @@ rewrite -(cong_perp_aux1 a p m) -[p 0 1 - a 0 1](cong_perp_aux1 a p m).
 rewrite -(cong_perp_aux2 a p q) -[q 0 1 - a 0 1](cong_perp_aux2 a p) -!/m.
 rewrite -[p 0 0 - m 0 0]opprB; set x0 := m 0 0 - a 0 0; set y0 := m 0 0 - p 0 0.
 rewrite -[p 0 1 - m 0 1]opprB; set x1 := m 0 1 - a 0 1; set y1 := m 0 1 - p 0 1.
-rewrite !mulNr -subr_eq eq_sym -addrA [X in _ == X]addrC -subr_eq !subr_sqr.
+rewrite !mulNr -subr_eq eq_sym -[X in _ == X]addrA [X in _ == X]addrC.
+rewrite -subr_eq !subr_sqr.
 rewrite eq_sym -opprB mulNr -sub0r subr_eq eq_sym !addrDBB [X in _ * X]addrC.
 rewrite !addrBDD !mulrnAl !mulrnAr -!mulrnA -mulrnDl mulrn_eq0 muln_eq0 /=.
 by rewrite addr_eq0=> /eqP E; rewrite -E addrC subrr.
@@ -1085,7 +1088,7 @@ Lemma upper_dim_aux (a b m : 'rV[R]_(2)) (c0 c1: R) :
 Proof.
 move=> /eqP E1 /eqP E2; move: E1 E2; rewrite !addr_eq0 -!mulNr.
 move=> /eqP E1 /eqP E2; apply /eqP; rewrite -(addrBBB (m 0 0)) eq_sym.
-by rewrite -(addrBBB (m 0 1)) mulrBr eq_sym mulrBr -E1 -E2.
+by rewrite -[b 0 1 - a 0 1](addrBBB (m 0 1)) mulrBr eq_sym mulrBr -E1 -E2.
 Qed.
 
 Lemma upper_dim a b c p q :
@@ -1182,7 +1185,7 @@ Lemma segment_construction a b c d :
 Proof.
 have [->|neq_ba] := eqVneq b a; [|move: neq_ba; rewrite -subr_eq0=> neq_ba].
   exists ((c - d) + a); rewrite /bet /cong betE_xxa; split=> //.
-  by rewrite -!addrA subrr addr0 -opprB mulNmx eq_sym dotC opprB -mulNmx opprB.
+  by rewrite -!addrA subrr addr0 -[d - c]opprB mulNmx eq_sym dotC opprB -mulNmx opprB.
 have [->|neq_dc] := eqVneq d c ; [|move: neq_dc; rewrite -subr_eq0=> neq_dc].
   by exists b; rewrite /bet /cong betE_axx !subrr mul0mx eqxx; split.
 exists (normv(d - c) / normv(b - a) *: (b - a) + b); rewrite /bet /cong; split.
