@@ -329,7 +329,6 @@ Section Gupta_inspired_variant_of_Tarski_euclidean_to_Tarski_euclidean.
 
 Context `{ITE:Gupta_inspired_variant_of_Tarski_euclidean}.
 
-
 Lemma euclidT : forall A B C D T,
   Bet A D T -> Bet B D C -> A <> D ->
   exists X, exists Y, Bet A B X /\ Bet A C Y /\ Bet X T Y.
