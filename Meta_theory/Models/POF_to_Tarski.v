@@ -18,7 +18,7 @@ Local Open Scope ring_scope.
 Require Import GeoCoq.Axioms.tarski_axioms.
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Meta_theory.Models.gupta_inspired_to_tarski.
-Require Import GeoCoq.Meta_theory.Counter_models.nD.coplanarity.
+Require Import GeoCoq.Meta_theory.Counter_models.coplanarity.
 Require Import GeoCoq.Meta_theory.Parallel_postulates.parallel_postulates.
 Require Import GeoCoq.Tarski_dev.Ch12_parallel_inter_dec.
 
