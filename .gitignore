@@ -1,5 +1,8 @@
 _CoqProject
+.lia.cache
 Makefile
+.Makefile.d
+Makefile.conf
 *.vo
 *.glob
 *.v.d
