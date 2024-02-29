@@ -83,11 +83,13 @@ Proof. by rewrite !congP_aux; exact /andP. Qed.
 
 Lemma bet_012 : @bet R 1 0%:M 1%:M (1+1)%:M.
 Proof.
-apply /orP; right; rewrite -scalemx1 -{2}[1%:M]scalemx1 -[(1+1)%:M]scalemx1.
-rewrite /betS /betR /ratio -!scalerBl -addrA subr0.
+have eq0P : 0%:M = 0 by move => *; apply/matrixP => i j; rewrite !mxE// mul0rn.
+apply /orP; right; rewrite -scalemx1 -scalemx1 -[(1+1)%:M]scalemx1 ?eq0P.
+rewrite /betS /betR ?scale0r !subr0 scale1r /ratio.
 case: pickP=> [x _|HF]; [|move: (HF 0)]; rewrite ?ord1 !mxE eqxx !mulr1;
 rewrite ?add11_neq0 // mul1r !scalerA 1!mulrC divff ?add11_neq0 ?eqxx //=.
-by rewrite  invf_lt1 -1?{3}[1]add0r ?invr_gt0 ?addr_gt0 ?ltr_add2r ?ltr01.
+rewrite ?scale1r ?eqxx//.
+by rewrite invf_lt1 -1?{3}[1]add0r ?invr_gt0 ?addr_gt0 ?ltr_add2r ?ltr01.
 Qed.
 
 (* Proof that the following axiom does not hold in the given model *)
