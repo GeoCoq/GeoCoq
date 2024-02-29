@@ -1,6 +1,6 @@
 Require Import mathcomp.ssreflect.ssreflect.
 From mathcomp
-Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
+Require Import ssrbool ssrfun ssrnat eqtype seq order.
 From mathcomp
 Require Import fintype bigop.
 From mathcomp
