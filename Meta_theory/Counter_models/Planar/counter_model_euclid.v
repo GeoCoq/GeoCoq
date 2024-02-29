@@ -1208,7 +1208,7 @@ Lemma segment_addition (a b c a' b' c' : Vector):
   cong a b a' b' -> cong b c b' c' -> bet a b c -> bet a' b' c' ->
   cong a c a' c'.
 Proof.
-case: (a=Pb).
+case: (a =P b).
   move ->.
   rewrite cong_cdab=> H.
   by rewrite (POF_to_Tarski.cong_identity H).
@@ -1749,14 +1749,14 @@ Lemma segment_construction : segment_constructionP Point bet' cong'.
 Proof.
 rewrite /bet'/cong'=> a b c d.
 apply E_in_disk.
-case: (c=Pd).
+case: (c =P d).
   move->.
   exists (#b).
   by rewrite bet_axx /cong_v -!expr2 -!/(omd _ _)
     !divff ?expr2 ?mulf_neq0 ?omd_eq0 .
 move=> /eqP cd_neq.
-case: (a=Pb).
-  case: (c=Pb).
+case: (a =P b).
+  case: (c =P b).
     move=> <- ->.
     exists (#d).
     by rewrite bet_xxa /cong_v.
