@@ -83,7 +83,7 @@ Ltac assert_ss_ok Tpoint Cop lvar int ss t HSS :=
       let pc := List_assoc Tpoint C lvar in
       let pd := List_assoc Tpoint D lvar in
       let ss' := fresh in
-      set (ss' := add (@CPToSS 4 (pa, (pb, (pc, pd)))) ss);
+      set (ss' := SS.add (@CPToSS 4 (pa, (pb, (pc, pd)))) ss);
       apply PropToTagged in HCop;
       let t' := apply (collect_coincs_for_cop A B C D pa pb pc pd ss int HCop);
                 [reflexivity..|t] in
@@ -99,7 +99,7 @@ Ltac assert_st_ok Tpoint Col lvar int st t HST :=
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let st' := fresh in
-      set (st' := (@add (@ST Tarski_is_a_Arity_for_cop)) (pa, (pb, pc)) st);
+      set (st' := (@STadd Tarski_is_a_Arity_for_cop (pa, (pb, pc)) st));
       apply PropToTagged in HNCol;
       let t' := apply (collect_wds_for_cop A B C pa pb pc st int HNCol);
                 [reflexivity..|t] in
@@ -123,8 +123,8 @@ Ltac Cop_refl Tpoint Col Cop :=
       set (int := (@interp Tarski_is_a_Arity_for_cop) xlvar Default);
       let tss := exact (ss_ok_empty_for_cop int) in
       let HSS := fresh in
-      assert_ss_ok Tpoint Cop lvar int (@empty SS) tss HSS;
-      let emptyST := constr:(@empty (@ST Tarski_is_a_Arity_for_cop)) in
+      assert_ss_ok Tpoint Cop lvar int SS.empty tss HSS;
+      let emptyST := constr:(@STempty Tarski_is_a_Arity_for_cop) in
       let tst := exact (st_ok_empty_for_cop int) in
       let HST := fresh in
       assert_st_ok Tpoint Col lvar int emptyST tst HST;
