@@ -66,7 +66,7 @@ Ltac assert_ss_ok Tpoint Col lvar int ss t HSS :=
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
       let ss' := fresh in
-      set (ss' := (@add SS (@add S pa (@add S pb (@add S pc (@empty S)))) ss));
+      set (ss' := (SS.add (S.add pa (S.add pb (S.add pc S.empty))) ss));
       apply PropToTagged in HCol;
       let t' := apply (collect_cols A B C HCol pa pb pc ss int);
                 [reflexivity..|t] in
@@ -81,7 +81,7 @@ Ltac assert_sp_ok Tpoint lvar int sp t HSP :=
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let sp' := fresh in
-      set (sp' := (@add SP (pa, pb) sp));
+      set (sp' := (SP.add (pa, pb) sp));
       apply PropToTagged in HDiff;
       let t' := apply (collect_diffs A B HDiff pa pb sp int);
                 [reflexivity..|t] in
@@ -139,10 +139,10 @@ Ltac Col_refl Tpoint Col :=
       set (int := interp xlvar Default);
       let tss := exact (@ss_ok_empty Tpoint Col int) in
       let HSS := fresh in
-      assert_ss_ok Tpoint Col lvar int (@empty SS) tss HSS;
+      assert_ss_ok Tpoint Col lvar int SS.empty tss HSS;
       let tsp := exact (@sp_ok_empty Tpoint int) in
       let HSP := fresh in
-      assert_sp_ok Tpoint lvar int (@empty SP) tsp HSP;
+      assert_sp_ok Tpoint lvar int SP.empty tsp HSP;
       apply (test_col_ok _ _ int pa pb pc HSS HSP); c
   end.
 
