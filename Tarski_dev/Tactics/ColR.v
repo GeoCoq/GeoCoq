@@ -46,6 +46,7 @@ Definition Tagged P : Prop := P.
 Lemma PropToTagged : forall P : Prop, P -> Tagged P.
 Proof. trivial. Qed.
 
+(*
 Ltac assert_ss_ok Tpoint Col lvar :=
   repeat
   match goal with
@@ -56,15 +57,37 @@ Ltac assert_ss_ok Tpoint Col lvar :=
          apply PropToTagged in HCol;
          apply (collect_cols A B C HCol pa pb pc SS Interp) in HOK; try reflexivity
   end.
+*)
 
-Ltac assert_sp_ok Tpoint Col lvar :=
-  repeat
+Ltac assert_ss_ok Tpoint Col lvar int ss t HSS :=
   match goal with
-    | HDiff : ?A <> ?B, HOK : sp_ok ?SP ?Interp |- _ =>
-        let pa := List_assoc Tpoint A lvar in
-        let pb := List_assoc Tpoint B lvar in
-          apply PropToTagged in HDiff;
-          apply (collect_diffs A B HDiff pa pb SP Interp) in HOK; try reflexivity
+    | HCol : Col ?A ?B ?C |- _ =>
+      let pa := List_assoc Tpoint A lvar in
+      let pb := List_assoc Tpoint B lvar in
+      let pc := List_assoc Tpoint C lvar in
+      let ss' := fresh in
+      set (ss' := (SS.add (S.add pa (S.add pb (S.add pc S.empty))) ss));
+      apply PropToTagged in HCol;
+      let t' := apply (collect_cols A B C HCol pa pb pc ss int);
+                [reflexivity..|t] in
+      assert_ss_ok Tpoint Col lvar int ss' t' HSS
+    | _                        =>
+      assert (HSS : @ss_ok Tpoint Col ss int) by t
+  end.
+
+Ltac assert_sp_ok Tpoint lvar int sp t HSP :=
+  match goal with
+    | HDiff : ?A <> ?B |- _ =>
+      let pa := List_assoc Tpoint A lvar in
+      let pb := List_assoc Tpoint B lvar in
+      let sp' := fresh in
+      set (sp' := (SP.add (pa, pb) sp));
+      apply PropToTagged in HDiff;
+      let t' := apply (collect_diffs A B HDiff pa pb sp int);
+                [reflexivity..|t] in
+      assert_sp_ok Tpoint lvar int sp' t' HSP
+    | _                        =>
+      assert (HSP : @sp_ok Tpoint sp int) by t
   end.
 
 Ltac subst_in_cols Tpoint Col :=
@@ -105,19 +128,22 @@ Ltac clear_cols_gen Tpoint Col := show_all'; clear_cols_aux Tpoint Col.
 Ltac Col_refl Tpoint Col :=
   match goal with
     | Default : Tpoint |- Col ?A ?B ?C =>
-        let lvar := build_numbered_points_list Tpoint in
-        let pa := List_assoc Tpoint A lvar in
-        let pb := List_assoc Tpoint B lvar in
-        let pc := List_assoc Tpoint C lvar in
-        let c := ((vm_compute;reflexivity) || fail 2 "Can not be deduced") in
-        let HSS := fresh in
-          assert (HSS := @ss_ok_empty Tpoint Col (interp lvar Default)); assert_ss_ok Tpoint Col lvar;
-        let HSP := fresh in
-          assert (HSP := @sp_ok_empty Tpoint (interp lvar Default)); assert_sp_ok Tpoint Col lvar; 
-          match goal with
-            | HOKSS : ss_ok ?SS ?Interp, HOKSP : sp_ok ?SP ?Interp |- _ =>
-              apply (test_col_ok SS SP Interp pa pb pc HOKSS HOKSP); c
-          end
+      let lvar := build_numbered_points_list Tpoint in
+      let xlvar := fresh in
+      set (xlvar := lvar);
+      let pa := List_assoc Tpoint A lvar in
+      let pb := List_assoc Tpoint B lvar in
+      let pc := List_assoc Tpoint C lvar in
+      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+      let int := fresh in
+      set (int := interp xlvar Default);
+      let tss := exact (@ss_ok_empty Tpoint Col int) in
+      let HSS := fresh in
+      assert_ss_ok Tpoint Col lvar int SS.empty tss HSS;
+      let tsp := exact (@sp_ok_empty Tpoint int) in
+      let HSP := fresh in
+      assert_sp_ok Tpoint lvar int SP.empty tsp HSP;
+      apply (test_col_ok _ _ int pa pb pc HSS HSP); c
   end.
 
 (*
@@ -135,7 +161,6 @@ Ltac deduce_cols_aux Tpoint Col :=
   end.
 
 Ltac deduce_cols Tpoint Col := deduce_cols_aux Tpoint Col.
-*)
 
 Ltac deduce_cols_hide_aux Tpoint Col :=
   match goal with
@@ -175,3 +200,21 @@ Ltac cols_aux Tpoint Col :=
 Ltac cols_gen Tpoint Col := show_all'; cols_aux Tpoint Col.
 
 Ltac Col_refl_test Tpoint Col := deduce_cols_hide_gen Tpoint Col; cols_gen Tpoint Col.
+*)
+
+(*
+Section Test.
+
+Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
+
+Goal forall A B C D,
+  A <> B ->
+  Col A B C -> Col A B D ->
+  Col B C D.
+Proof.
+intros.
+Time Col_refl Tpoint Col.
+Qed.
+
+End Test.
+*)

@@ -2257,7 +2257,7 @@ assert (HC : Definitions.Col B' D' C).
    try (right; intro; apply HNC; assert_diffs; ColR).
    apply bet2_out_out with T T; try solve [assert_diffs; auto];
    try apply out_trivial; intro;treat_equalities;
-   apply HNC; assert_diffs; try ColR.
+   apply HNC; assert_diffs; [|ColR..].
    assert (Definitions.Col D' B' C); [|ColR].
    apply col_conga_col with D' X T; auto.
    apply col_conga_col with D' B' D'; try apply conga_sym; Col.

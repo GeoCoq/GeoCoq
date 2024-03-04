@@ -72,49 +72,59 @@ Qed.
 
 End CoincR_for_col.
 
-Ltac assert_ss_ok Tpoint Col lvar :=
-  repeat
+Ltac assert_ss_ok Tpoint Col lvar int ss t HSS :=
   match goal with
-    | HCol : Col ?A ?B ?C, HOK : ss_ok_for_col ?SS ?Interp |- _ =>
+    | HCol : Col ?A ?B ?C |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
+      let ss' := fresh in
+      set (ss' := SS.add (@CPToSS 3 (pa, (pb, pc))) ss);
       apply PropToTagged in HCol;
-      apply (collect_coincs_for_col A B C pa pb pc SS Interp HCol) in HOK;
-      try reflexivity
+      let t' := apply (collect_coincs_for_col A B C pa pb pc ss int HCol);
+                [reflexivity..|t] in
+      assert_ss_ok Tpoint Col lvar int ss' t' HSS
+    | _                        =>
+      assert (HSS : ss_ok_for_col ss int) by t
   end.
 
-Ltac assert_st_ok Tpoint lvar :=
-  repeat
+Ltac assert_st_ok Tpoint lvar int st t HST :=
   match goal with
-    | HDiff : ?A <> ?B, HOK : st_ok_for_col ?ST ?Interp |- _ =>
+    | HDiff : ?A <> ?B |- _ =>
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
+      let st' := fresh in
+      set (st' := (@STadd Tarski_is_a_Arity_for_col (pa, pb) st));
       apply PropToTagged in HDiff;
-      apply (collect_wds_for_col A B pa pb ST Interp HDiff) in HOK;
-      try reflexivity
+      let t' := apply (collect_wds_for_col A B pa pb st int HDiff);
+                [reflexivity..|t] in
+      assert_st_ok Tpoint lvar int st' t' HST
+    | _                     =>
+      assert (HST : st_ok_for_col st int) by t
   end.
 
 Ltac Col_refl Tpoint Col :=
   match goal with
     | Default : Tpoint |- Col ?A ?B ?C =>
       let lvar := build_numbered_points_list Tpoint in
+      let xlvar := fresh in
+      set (xlvar := lvar);
       let pa := List_assoc Tpoint A lvar in
       let pb := List_assoc Tpoint B lvar in
       let pc := List_assoc Tpoint C lvar in
-      let c := ((vm_compute;reflexivity) || fail 2 "Can not be deduced") in
+      let c := ((vm_compute; reflexivity) || fail 2 "Can not be deduced") in
+      let int := fresh in
+      set (int := (@interp Tarski_is_a_Arity_for_col) xlvar Default);
+      let tss := exact (ss_ok_empty_for_col int) in
       let HSS := fresh in
-      assert (HSS := ss_ok_empty_for_col (interp lvar Default));
-      assert_ss_ok Tpoint Col lvar;
+      assert_ss_ok Tpoint Col lvar int SS.empty tss HSS;
+      let emptyST := constr:(@STempty Tarski_is_a_Arity_for_col) in
+      let tst := exact (st_ok_empty_for_col int) in
       let HST := fresh in
-      assert (HST := st_ok_empty_for_col (interp lvar Default));
-      assert_st_ok Tpoint lvar;
-      match goal with
-        | HOKSS : ss_ok_for_col ?SS ?Interp, HOKST : st_ok_for_col ?ST ?Interp |- _ =>
-          apply (test_coinc_ok_for_col pa pb pc SS ST
-                                       Interp HOKSS HOKST); c
-      end
+      assert_st_ok Tpoint lvar int emptyST tst HST;
+      apply (test_coinc_ok_for_col pa pb pc _ _ int HSS HST); c
   end.
+
 (*
 Section Test.
 
