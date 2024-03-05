@@ -1,0 +1,6 @@
+# Library name
+-R Axioms     GeoCoq.Axioms
+-R Tactics    GeoCoq.Tactics
+-R Tarski_dev GeoCoq.Tarski_dev
+
+# Coq files (filled by the configure)

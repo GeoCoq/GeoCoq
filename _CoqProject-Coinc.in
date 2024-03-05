@@ -1,0 +1,5 @@
+# Library name
+-R Tactics/Coinc GeoCoq.Tactics.Coinc
+-R Utils         GeoCoq.Utils
+
+# Coq files (filled by the configure)
