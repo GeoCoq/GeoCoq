@@ -1,5 +1,6 @@
 Release 2.4.1
 ==========================
+	- This release is compatible with Coq 8.7.0-8.11.2. Some files depends on mathcomp field library (1.6.4  <= version < 1.11.0).
 	- Add compatibility with Coq 8.10-11.
 	- Proof that Greenberg's axiom implies Aristotle's axiom.
 	- Proof that the conjunction of Archimedes' axiom and Cantor's nested intervals axiom implies Dedekind cut axiom.
@@ -9,11 +10,11 @@ Release 2.4.1
 Release 2.4.0
 ==========================
 
+	- This release is compatible with Coq 8.6.1, 8.7.2, 8.8. Some files depends on mathcomp field library (version >=1.6.4).
+	  Mathcomp is used only to build a model of the axioms, it is not essential for using the library.
 	- Introduction of several packages: "coinc" includes some useful tactics we developed, "axioms" all our axiom systems,
 	  "elements" the formalization of Euclid's proofs, "pof" the plane over a real closed field modeling Tarski's axioms,
 	  and "main" the rest of the development.
-	- This release is compatible with Coq 8.6.1, 8.7.2, 8.8. Some files depends on mathcomp field library (version >=1.6.4).
-	  Mathcomp is used only to build a model of the axioms, it is not essential for using the library.
 	- Reorganization of the type classes to allow more different contexts.
 	- Definition of Hilbert's line completeness axiom and two versions of Hilbert's completeness axiom.
 	- Proof that Hilbert's line completeness axiom implies Hilbert's completeness axiom.
