@@ -11,5 +11,3 @@ https://github.com/GeoCoq/GeoCoq/issues
 
 Mailing list:
 https://groups.google.com/forum/?hl=fr#!forum/geocoq
-
-[![Build Status](https://travis-ci.org/GeoCoq/GeoCoq.svg?branch=master)](https://travis-ci.org/GeoCoq/GeoCoq)
