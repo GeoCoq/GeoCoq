@@ -160,7 +160,6 @@ Lemma bet_lt1 (k1 k2 k3 : R) :
   ((k1 + k2 - k1 * k2) / k3)^-1 < 1.
 Proof. by move=> *; rewrite invf_lt1 ?stuff_gt0// ltr_pdivl_mulr ?mul1r. Qed.
 
-
 (* replace eq_inv_scale by -(can2_eq (scalerK _) (scalerKV _)) *)
 Lemma eq_inv_scale (V : lmodType R) (s : R) (x y : V) :
   s != 0 -> (x == s^-1 *: y) = (s *: x == y).
