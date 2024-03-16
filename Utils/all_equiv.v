@@ -1,5 +1,5 @@
 Require Export List.
-Require Lt.
+Require Import Arith.
 
 Definition all_equiv (l: list Prop) :=
   forall x y, In x l -> In y l -> (x <-> y).
@@ -43,8 +43,8 @@ elim l; [intro a|clear l; intros b l IHl a]; intros n1 n2 d1 d2 _ H Hn1 Hn2 Hn.
     {
     intro n2; elim n2; [simpl; auto|clear n2; intros n2 IHn2 Hn2 _ Ha].
     simpl in Ha; apply HI in Ha; apply IHl with 0 d1; auto; simpl in *;
-    [discriminate|apply PeanoNat.Nat.lt_0_succ|
-     apply Lt.lt_S_n; auto|apply le_0_n].
+    [discriminate|apply PeanoNat.Nat.lt_0_succ| |apply le_0_n].
+    apply Nat.succ_lt_mono; auto.
     }
 
     {
@@ -55,8 +55,8 @@ elim l; [intro a|clear l; intros b l IHl a]; intros n1 n2 d1 d2 _ H Hn1 Hn2 Hn.
                      nth (S n) (a :: l) d = nth n l d)
       by (intro n; induction n; simpl; auto).
     rewrite Hnth; rewrite Hnth in H'; clear Hnth; apply IHl with n1 d1; auto;
-    [discriminate|simpl in Hn1|simpl in Hn2|apply Le.le_S_n]; auto;
-    apply Lt.lt_S_n; auto.
+    [discriminate|simpl in Hn1|simpl in Hn2|apply le_S_n]; auto; simpl;
+    apply Nat.succ_lt_mono; auto.
     }
   }
 Qed.
@@ -66,42 +66,6 @@ Proof.
 induction l; [exact True|].
 exact ((last l a -> a) /\ all_equiv'_aux (a::l)).
 Defined.
-(*
-Definition all_equiv' (l: list Prop) : Prop.
-Proof.
-induction l; [exact True|].
-induction l; [exact True|].
-exact ((a <-> a0) /\ IHl).
-Defined.
-
-Lemma all_equiv_equiv : forall l, all_equiv l <-> all_equiv' l.
-Proof.
-assert (IH : forall a a0 l,
-  all_equiv' (a::a0::l) <-> (a <-> a0) /\ all_equiv' (a0::l))
-  by (intros a a0 l; induction l; simpl; tauto).
-unfold all_equiv; intro l; induction l; [simpl; tauto|].
-induction l; [simpl|clear IHl0; rewrite IH; split]; clear IH.
-
-  {
-  split; [auto|intros _ x y Hx Hy].
-  elim Hx; [clear Hx; intro Hx; rewrite <- Hx|intuition].
-  elim Hy; [clear Hy; intro Hy; rewrite <- Hy|]; intuition.
-  }
-
-  {
-  intro H; split; [apply H; simpl; tauto|].
-  apply IHl; intros x y Hx Hy; apply H; right; assumption.
-  }
-
-  {
-  intros [H Hl] x y [Ha|Hx] [Ha'|Hy];
-  try (rewrite <- Ha; clear Ha);
-  try (rewrite <- Ha'; clear Ha'); [tauto| | |];
-  try (cut (a0 <-> y); [try tauto|apply IHl; try assumption; left; reflexivity]);
-  try (cut (a0 <-> x); [tauto|apply IHl; try assumption; left; reflexivity]).
-  }
-Qed.
-*)
 
 Lemma all_equiv__equiv : forall l, all_equiv l <-> all_equiv' l.
 Proof.
