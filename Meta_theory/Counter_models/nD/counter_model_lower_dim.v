@@ -65,8 +65,19 @@ move => /and3P [] /eqP -> _ _ /and3P [] /eqP -> _ _.
 by rewrite -scalerN opprB r1E r2E.
 Qed.
 
+Lemma zeromxE : 0%:M == 0 :> 'rV[R]_1.
+Proof. by apply /eqP/rowP; move => i; rewrite ord1 !mxE mul0rn. Qed.
+
+Lemma mulmx11_eq0 (A B : 'rV[R]_1) : A * B == 0 = (A == 0) || (B == 0).
+Proof.
+apply /eqP/orP => [|[/eqP ->|/eqP ->]]; rewrite ?mulr0 ?mul0r //.
+move => E; apply /orP; move/rowP/(_ 0): E; rewrite mxE big_ord1 => /eqP.
+rewrite [X in (X == _) || _](mx11_scalar A) [X in _ || (X == _)](mx11_scalar B).
+by rewrite mxE mulf_eq0 => /orP [] /eqP ->; rewrite zeromxE ?orbT.
+Qed.
+
 Lemma lower_dim : forall o i basis,
-  ~ lower_dimP _ (@bet R (n.+1)) (@cong R (n.+1)) n.+2 o i basis.
+  ~ lower_dimP _ (@bet R n.+1) (@cong R n.+1) n.+2 o i basis.
 Proof.
 move => o i' basis HF; pose new_basis := map_tuple (+%R^~ (- o)) basis.
 suff: free new_basis.
@@ -88,12 +99,12 @@ move => [] HNE [] HB []; rewrite -big_andb_and -big_pairs_andb_and !big_all.
 move => /allP HC1 /allP HC2; split => [j|j k jk_neq].
 - apply /eqP; rewrite quad_eq0 /new_basis.
   rewrite (nth_map 0) ?size_tuple ?(ltn_ord j) // subr_eq0.
-  case: (basis`_j =P o) => // jP; move: (HC1 j).
+  case: (basis`_j =P o) => // jP; have := HC1 j.
   rewrite mem_index_iota leq0n (ltn_ord j) => {HC2} HC2.
-  move: (HC2 isT); rewrite nth_basis ?(ltn_ord j) // => {HC2}.
+  have := HC2 isT; rewrite nth_basis ?(ltn_ord j) // => {HC2}.
   rewrite /cong jP subrr mul0mx quad_eq0 subr_eq0 => /eqP i'oE.
-  move: (HC1 O); rewrite mem_index_iota ltn0Sn /= => {HC1} HC.
-  move: (HC isT); rewrite /cong i'oE subrr mul0mx eq_sym quad_eq0.
+  have := (HC1 O); rewrite mem_index_iota ltn0Sn /= => {HC1} HC.
+  have := HC isT; rewrite /cong i'oE subrr mul0mx eq_sym quad_eq0.
   by rewrite subr_eq0 => /eqP ioE; move: HNE; rewrite /i ioE i'oE.
 - suff: forall (j k : 'I_n.+2), (j < k)%N -> new_basis`_j *m new_basis`_k^T = 0.
   + move/eqP: jk_neq; rewrite neq_ltn => /orP.
@@ -101,39 +112,37 @@ move => /allP HC1 /allP HC2; split => [j|j k jk_neq].
     by rewrite dotC (jkP k j jk_lt).
   have: forall i, (i < n.+2)%N ->
                   (basis`_i - o) *m (basis`_i - o)^T = (i' - o) *m (i' - o)^T.
-  + move => l lP; move: (HC1 l); rewrite mem_index_iota leq0n lP /= => {HC1} HC.
-    by move: (HC isT); rewrite nth_basis // /cong eq_sym => /eqP.
+  + move => l lP; have := HC1 l; rewrite mem_index_iota leq0n lP /= => {HC1} HC.
+    by have := HC isT; rewrite nth_basis // /cong eq_sym => /eqP.
   have {HC1 j k jk_neq} : cong o i' o i by rewrite (HC1 O).
   move => ii'P E j k jk_lt; move: (HC2 O) (HC2 j) => {HC2}.
   rewrite mem_index_iota leq0n ltn0Sn big_all => HC.
-  move: (HC isT) => {HC} /allP HC; move: (HC (S O)).
+  have := HC isT => {HC} /allP HC; have := HC (S O).
   rewrite mem_index_iota -ltn_predRL ?ltn0Sn => {HC} HC.
-  move: (HC isT); rewrite !nth_basis -?ltn_predRL ?ltn0Sn // => {HC} HC.
+  have := HC isT; rewrite !nth_basis -?ltn_predRL ?ltn0Sn // => {HC} HC.
   have {HC} iP : (i' - o) *m (basis`_1 - o)^T = 0.
   - move: HC; rewrite /cong (cosine_rule o) eq_sym (cosine_rule o).
     rewrite (E O) ?ltn0Sn // (E (S O)) -?ltn_predRL ?ltn0Sn //.
     rewrite add2r_eq eqr_opp -/i -(@nth_basis O) ?ltn0Sn // -/i.
     rewrite (bet_cong__mid HB) // mulNmx mulrN -subr_eq0 opprK -mulrDl.
-    move => {E} /eqP/rowP E; apply /rowP => l; apply /eqP.
-    move: (E l); rewrite ord1 2?mxE !big_ord1; move => /eqP.
-    rewrite mulf_eq0 => /orP [] //; rewrite mxE -mulr2n mulrn_eq0 !mxE eqxx.
-    by rewrite -natrD pnatr_eq0 addn1.
+    move => {}E; apply /rowP => l; rewrite ?ord0 ?ord1; apply /eqP; move: E.
+    rewrite mulmx11_eq0 => /orP [] /eqP/rowP/(_ 0)/eqP //.
+    by rewrite !mxE -mulr2n mulrn_eq0 -natrD pnatr_eq0 addn1.
   rewrite mem_index_iota leq0n (ltn_ord j) big_all => HC.
-  move: (HC isT) => {HC} /allP HC; move: (HC k).
+  have := HC isT => {HC} /allP HC; have := HC k.
   rewrite mem_index_iota jk_lt (ltn_ord k) => {HC} HC.
-  move: (HC isT); rewrite !nth_basis ?(ltn_ord j) ?(ltn_ord k) // => {HC}.
+  have := HC isT; rewrite !nth_basis ?(ltn_ord j) ?(ltn_ord k) // => {HC}.
   rewrite /cong (cosine_rule o) eq_sym (cosine_rule o).
   rewrite (E j) // (E k) // eq_sym (E (S O)) -?ltn_predRL ?ltn0Sn //.
   rewrite add2r_eq eqr_opp iP mulr0 /new_basis.
   rewrite !(nth_map 0) ?size_tuple ?(ltn_ord j) //.
-  move => {E} /eqP/rowP E; apply /rowP => l; apply /eqP.
-  move: (E l); rewrite ord1 2?mxE !big_ord1; move => /eqP.
-  rewrite mulf_eq0 => /orP [] //.
-  by rewrite mxE -mulr2n mulrn_eq0 !mxE eqxx oner_eq0.
+  move => {}E; apply /rowP => l; rewrite ?ord0 ?ord1; apply /eqP; move: E.
+  rewrite mulmx11_eq0 => /orP [] /eqP/rowP/(_ 0)/eqP //.
+  by rewrite !mxE -mulr2n mulrn_eq0 eqxx oner_eq0.
 Qed.
 
 Lemma upper_dim : forall o i basis,
-  upper_dimP _ (@bet R (n.+1)) (@cong R (n.+1)) n.+2 o i basis.
+  upper_dimP _ (@bet R n.+1) (@cong R n.+1) n.+2 o i basis.
 Proof.
 move => o i basis; move: (@lower_dim o i basis).
 by rewrite /lower_dimP /upper_dimP /no_more_orthogonal_point.
