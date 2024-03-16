@@ -142,10 +142,8 @@ case: (w*m w^T =P 0).
 move=> /eqP; rewrite quad_eq0 => w_neq0.
 move: (cauchy_schwartz v w).
 rewrite -[_^+2 <= _]ler_sqrt.
-rewrite sqrtr_sqr ler_norml  !sqrtrM !/norm.
-by rewrite -mulNr.
-by rewrite quad_ge0.
-by rewrite mulr_gt0 ?lt0r ?quad_ge0 ?quad_neq0 ?w_neq0 ?v_neq0.
+- by rewrite sqrtr_sqr ler_norml  !sqrtrM !/norm -?mulNr ?quad_ge0.
+- by rewrite ?mulr_ge0 ?mulr_gt0 ?lt0r ?quad_ge0 ?quad_neq0 ?w_neq0 ?v_neq0.
 Qed.
 
 Lemma cauchy_schwartz_eq v w (r := ((v *m w^T) 0 0)/((w *m w^T) 0 0)):
@@ -352,17 +350,18 @@ by rewrite -subr_ge0 addrAC subrr add0r.
 Qed.
 
 Lemma triangle_ineq v w :
-  norm(v + w) <= norm(v) + norm(w).
+  norm (v + w) <= norm (v) + norm (w).
 Proof.
 case: (w =P 0).
   move ->.
   by rewrite {3}/norm mul0mx mxE sqrtr0 !addr0 lexx.
 move=>/eqP w_neq0.
 suffices : (norm (v + w))^+2 <= (norm v + norm w)^+2.
-  rewrite -ler_sqrt ;
-  last by rewrite addrC expr2 mulr_gt0 ?addr_ge_gt0 ?lt_def ?norm_ge0 //
-  /norm lt0r_neq0 // sqrtr_gt0 lt_def quad_ge0 quad_neq0 w_neq0.
-  by rewrite !sqrtr_sqr !ger0_norm ?addr_ge0 ?norm_ge0.
+- rewrite -ler_sqrt ?le0r.
+  + by rewrite !sqrtr_sqr !ger0_norm ?addr_ge0 ?norm_ge0.
+  rewrite addrC expr2 ?mulr_gt0 ?addr_ge_gt0 ?orbT ?norm_ge0 // lt_def;
+  rewrite norm_ge0 /norm lt0r_neq0 //;
+  by rewrite sqrtr_gt0 lt_def quad_ge0 quad_neq0 w_neq0.
 rewrite norm_sqr mulmxDl ![_*m(v+w)^T]dotC !mulmxDl mxE.
 rewrite ![(_*m_^T+_*m_^T) 0 0]mxE expr2 mulrDr !mulrDl -!norm_sqr -!expr2.
 rewrite ?ler_add ?lexx //.
