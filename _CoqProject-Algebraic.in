@@ -1,0 +1,7 @@
+# Library name
+-Q theories/Algebraic GeoCoq.Algebraic
+
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -notation-overridden
+
+# Coq files (filled by the configure)

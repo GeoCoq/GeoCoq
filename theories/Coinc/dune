@@ -1,0 +1,6 @@
+(coq.theory
+ (name GeoCoq.Coinc)
+ (package coq-geocoq-coinc)
+ (synopsis "This subpackage contains some tactics to deal with incidence properties."))
+
+(include_subdirs qualified)

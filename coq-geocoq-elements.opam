@@ -1,0 +1,31 @@
+opam-version: "2.0"
+maintainer:   "Pierre Boutry <contact@pierre.boutry.fr>"
+version:      "dev"
+
+homepage:     "http://geocoq.github.io/GeoCoq/"
+dev-repo:     "git+https://github.com/GeoCoq/GeoCoq.git"
+bug-reports:  "https://github.com/GeoCoq/GeoCoq/issues"
+license:      "LGPL-3.0-only"
+
+synopsis:     "A formalization of foundations of geometry in Coq"
+description:  "This subpackage contains a formalization of Euclid's proofs from Book I of the Elements."
+
+build:   ["dune" "build" "-p" name "-j" jobs]
+depends: [
+  "coq-geocoq-axioms" { = version }
+]
+
+tags: [
+  "category:Mathematics/Geometry/General"
+  "keyword:geometry"
+  "keyword:neutral geometry"
+  "keyword:Euclidean geometry"
+  "keyword:foundations"
+  "keyword:Euclid"
+  "keyword:Elements"
+]
+authors: [
+  "Michael Beeson      <profbeeson@gmail.com>"
+  "Julien Narboux      <narboux@unistra.fr>"
+  "Freek Wiedijk       <freek@cs.ru.nl>"
+]

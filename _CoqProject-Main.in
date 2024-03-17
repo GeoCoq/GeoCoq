@@ -1,9 +1,7 @@
 # Library name
--R Meta_theory         GeoCoq.Meta_theory
--R Highschool          GeoCoq.Highschool
--R Tarski_dev          GeoCoq.Tarski_dev
--R Tactics/UnitTests   GeoCoq.Tactics.UnitTests
--R Elements/Statements GeoCoq.Elements.Statements
--Q main/               GeoCoq
+-Q theories/Main GeoCoq.Main
+
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -notation-overridden
 
 # Coq files (filled by the configure)

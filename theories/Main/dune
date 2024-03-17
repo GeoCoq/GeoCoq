@@ -1,0 +1,7 @@
+(coq.theory
+ (name GeoCoq.Main)
+ (package coq-geocoq-main)
+ (synopsis "This subpackage contains the main developments from Hilbert's and Tarski's axiom systems.")
+ (theories GeoCoq.Coinc GeoCoq.Axioms))
+
+(include_subdirs qualified)
