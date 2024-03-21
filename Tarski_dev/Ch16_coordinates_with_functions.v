@@ -465,7 +465,7 @@ split.
 Qed.
 
 Lemma coordinates_of_point_F : forall P,
-  {C: F*F | Cd O E SS U1 U2 P (proj1_sig (fst C)) (proj1_sig (snd C))}.
+  {C: F * F | Cd O E SS U1 U2 P (proj1_sig (fst C)) (proj1_sig (snd C))}.
 Proof.
 intros; destruct (coordinates_of_point_f P) as [C HC].
 assert (T:=HC); apply Cd_Col in HC; destruct HC as [HCol1 HCol2].
@@ -857,16 +857,14 @@ Qed.
 
 Definition sqrt3 := PythF 1 (PythF 1 1).
 
-Lemma sqrt3_square : sqrt3* sqrt3 =F= 1 + 2.
+Lemma sqrt3_square : sqrt3 * sqrt3 =F= 1 + 2.
 Proof.
 unfold sqrt3.
 rewrite PythFOk.
 rewrite PythFOk.
-(*
+unfold TwoF.
 nsatz.
 Qed.
-*)
-Admitted.
 
 Lemma characterization_of_congruence_F : forall A B C D,
   Cong A B C D <->
@@ -1155,7 +1153,8 @@ intros; elim (eq_dec_points A B); intro HAB.
 
     {
     elim (coordinates_of_point_F I); intros Ic HIc.
-    destruct Ic as [[Ix HIx] [Iy HIy]]; split; (* nsatz. *) admit.
+    destruct Ic as [[Ix HIx] [Iy HIy]]; split;
+    unfold TwoF; nsatz.
     }
 
     {
@@ -1165,7 +1164,7 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F I); intros Ic HIc.
     destruct Ac as [[Ax HAx] [Ay HAy]].
     destruct Ic as [[Ix HIx] [Iy HIy]].
-    intro; spliter; split; assert (NU := neq20); (* nsatz. *) admit.
+    unfold TwoF; intro; spliter; split; assert (NU := neq20); nsatz.
     }
   }
 
@@ -1184,7 +1183,8 @@ intros; elim (eq_dec_points A B); intro HAB.
     intros HAB HCong HCol.
     cut ((Ix * 2 - (Ax + Bx) =F= 0 /\ Iy * 2 - (Ay + By) =F= 0) \/
          (Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By) =F= 0); [intuition|].
-    clear HAB; scnf; repeat rewrite <- mulF__eq0; [(* nsatz *) admit..|rtauto].
+    clear HAB; unfold TwoF; scnf; repeat rewrite <- mulF__eq0;
+    [nsatz..|rtauto].
     }
 
     {
@@ -1196,10 +1196,10 @@ intros; elim (eq_dec_points A B); intro HAB.
     elim (coordinates_of_point_F A); intros [Ax Ay] _.
     elim (coordinates_of_point_F B); intros [Bx By] _.
     elim (coordinates_of_point_F I); intros [Ix Iy] _.
-    intro; spliter; split; assert (NU := neq20); (* nsatz. *) admit.
+    unfold TwoF; intro; spliter; split; assert (NU := neq20); nsatz.
     }
   }
-Admitted.
+Qed.
 
 Lemma characterization_of_right_triangle_F : forall A B C,
   Per A B C <->
@@ -1226,8 +1226,8 @@ split; [clear H; clear D;
 elim (coordinates_of_point_F D); intros Dc _;
 destruct Dc as [Dx Dy]; intros; spliter;
 assert (NU := neqO_mul_neqO _ _ neq20 neq20);
-(* nsatz. *) admit.
-Admitted.
+unfold TwoF in *; nsatz.
+Qed.
 
 Lemma characterization_of_parallelism_F_aux : forall A B C D,
   Par A B C D <->
@@ -1540,34 +1540,9 @@ Lemma centroid_theorem : forall A B C A1 B1 C1 G,
   Col C C1 G \/ Col A B C.
 Proof.
 intros A B C A1 B1 C1 G; convert_to_algebra; decompose_coordinates.
-intros; spliter. (* express_disj_as_a_single_poly; nsatz. *) admit.
-Admitted.
-
-Lemma nine_point_circle : forall A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O,
-  ~ Col A B C ->
-  Col A B C2 -> Col B C A2 -> Col A C B2 ->
-  Perp A B C C2 -> Perp B C A A2 -> Perp A C B B2 ->
-  Perp A B C2 H -> Perp B C A2 H -> Perp A C B2 H ->
-  Midpoint A3 A H -> Midpoint B3 B H -> Midpoint C3 C H ->
-  Midpoint C1 A B -> Midpoint A1 B C -> Midpoint B1 C A ->
-  Cong O A1 O B1 -> Cong O A1 O C1 ->
-  Cong O A2 O A1 /\ Cong O B2 O A1 /\ Cong O C2 O A1 /\
-  Cong O A3 O A1 /\ Cong O B3 O A1 /\ Cong O C3 O A1.
-Proof.
-intros A B C A1 B1 C1 A2 B2 C2 A3 B3 C3 H O0; convert_to_algebra.
-decompose_coordinates; intros; spliter.
-clear H24; clear H25; clear H26; clear H27; clear H28; clear H29;
-clear H30; clear H31; clear H32; clear H33; clear H34; clear H35;
-put_negs_in_goal.
-(*
-scnf; [ .. |spliter; rtauto]; express_disj_as_a_single_poly;
- (assert (Nsat2 : ~ ((2) =F= 0)) by
-  prove_discr_for_powers_of_2;
- assert (Nsatm2 : ~ (-(2) =F= 0)) by
-   prove_discr_for_powers_of_2;
- nsatz).
-*)
-Admitted.
+intros; spliter; unfold TwoF in *.
+express_disj_as_a_single_poly; nsatz.
+Qed.
 
 (** We deduce the axioms of the area method. *)
 
@@ -2121,11 +2096,8 @@ unfold cross_product.
 simpl.
 intros;spliter.
 assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2.
-(*
-nsatz.
+unfold TwoF in *; nsatz.
 Qed.
-*)
-Admitted.
 
 Lemma exists_equilateral_triangle : forall A B,
   exists C, Cong A B A C /\ Cong A B B C.
@@ -2141,16 +2113,13 @@ spliter.
 revert dependent A .
 intro A.
 convert_to_algebra.
-(*
 decompose_coordinates; intros; spliter;
 split;
 assert (NU : ~(2 * 2 =F= 0)) by prove_discr_for_powers_of_2;
 assert (NUm : ~(-(2 * 2) =F= 0)) by prove_discr_for_powers_of_2;
 assert (NUm' : ~(-(2 * (2 * 2)) =F= 0)) by prove_discr_for_powers_of_2;
-nsatz.
+unfold TwoF in *; nsatz.
 Qed.
-*)
-Admitted.
 
 (*
 (** This is Euclid Book I, Prop 35 *)
