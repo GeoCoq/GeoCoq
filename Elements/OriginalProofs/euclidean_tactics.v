@@ -74,7 +74,7 @@ End basic_lemmas.
 
 #[global]
 Hint Resolve not_nCol_Col
- nCol_not_Col nCol_notCol Col_nCol_False.
+ nCol_not_Col nCol_notCol Col_nCol_False : core.
 
 #[global]
 Hint Resolve

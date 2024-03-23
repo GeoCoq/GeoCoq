@@ -94,7 +94,7 @@ case: (inord j =P inord k) => [HF|_/=]; last first.
 have: val (@inord n.+2 j) = val (@inord n.+2 k) by rewrite HF.
 have lt_np2_np3 : (n.+2 < n.+3)%N by [].
 rewrite !val_insubd ?k_lt_np2__k_lt_np3.
-rewrite ?(ltn_trans _ lt_np2_np3) // ?(ltn_trans j_lt_k) //= => {HF} HF.
+rewrite ?(ltn_trans _ lt_np2_np3) // ?(ltn_trans j_lt_k) //= => {}HF.
 by move: j_lt_k; rewrite HF ltnn.
 Qed.
 
@@ -123,7 +123,7 @@ rewrite m_lt_n (@nth_map nat 0%N) ?size_belast ?size_iota //.
 suff -> : nth O (belast (S O) (iota 2 n)) m = m.+1 by rewrite /f.
 suff: forall l, (m < l)%N -> nth O (belast (S O) (iota 2 l)) m = m.+1.
 - by move => lP; rewrite (lP n).
-move => {p f i m_lt_n} l; elim l => // {l} l IHl m_lt_lp1.
+move => {p f i m_lt_n} l; elim l => // {}l IHl m_lt_lp1.
 rewrite -(addn1 l) 1?iota_add 1?iotaD belast_cat nth_cat size_belast size_iota.
 case: (m =P l) => [-> {IHl m_lt_lp1 m}|/eqP lm_neq]; last first.
 - suff m_lt_l : (m < l)%N by rewrite m_lt_l IHl.
@@ -188,7 +188,7 @@ case: (inord j =P inord k) => [HF|_/=]; last first.
 have: val (@inord n.+2 j) = val (@inord n.+2 k) by rewrite HF.
 have lt_np1_np3 : (n.+1 < n.+3)%N by [].
 rewrite !val_insubd ?(ltn_trans _ lt_np1_np3) // ?(ltn_trans j_lt_k) //.
-by move => {HF} HF; move: j_lt_k; rewrite HF ltnn.
+by move => {}HF; move: j_lt_k; rewrite HF ltnn.
 Qed.
 
 Lemma to_nD'E : (addn n.+1 (S (S O)) = n.+3).
@@ -368,7 +368,7 @@ have HC : cong o i o p.
   by rewrite !trmx_delta !mul_delta_mx.
 pose new_basis := rot_tuple 1 (belast_tuple p basis).
 have HNE : tnth basis (inord n.+1) <> p.
-- rewrite nth_basis // /p -!row1 => HF; move: (row_eq HF) => {HF} HF.
+- rewrite nth_basis // /p -!row1 => HF; move: (row_eq HF) => {}HF.
   move: (HF (inord n.+1)); rewrite !mxE eqxx.
   case: (inord n.+2 =P inord n.+1) => {HF} [HF|_];
   last by apply /eqP; rewrite oner_neq0.
