@@ -466,7 +466,7 @@ rewrite consTailOK.
 rewrite app_nth2.
 rewrite <- lengthOfCPToList.
 simpl.
-rewrite <- Minus.minus_diag_reverse.
+rewrite Nat.sub_diag.
 reflexivity.
 rewrite <- lengthOfCPToList.
 simpl.
@@ -494,7 +494,7 @@ unfold nthCP in *.
 simpl in Hnth.
 rewrite <- Hnth.
 simpl; reflexivity.
-assert (H := Le.le_Sn_0 id); intuition.
+assert (H := Nat.nle_succ_0 id); intuition.
 unfold nthCP in *.
 rewrite consTailOK.
 rewrite CPLHdTlOK in Hnth.
@@ -505,7 +505,7 @@ rewrite app_nth1; try assumption.
 rewrite <- lengthOfCPToList.
 simpl.
 rewrite minus_n_0.
-apply Lt.le_lt_n_Sm; assumption.
+apply Nat.lt_succ_r; assumption.
 simpl.
 intuition.
 Qed.
@@ -537,7 +537,7 @@ rewrite app_nth1; try reflexivity.
 rewrite <- lengthOfCPToList.
 simpl.
 rewrite minus_n_0.
-apply Lt.le_lt_n_Sm; assumption.
+apply Nat.lt_succ_r; assumption.
 unfold nthCP.
 rewrite nth_overflow.
 rewrite nth_overflow; try reflexivity.
@@ -622,7 +622,11 @@ Proof.
 intros cp Default id n Hle; revert cp; induction n; intro cp.
 rewrite plus_n_0; simpl; reflexivity.
 rewrite circPermNCPOK.
-assert (H : id + n <= S m) by (apply le_Sn_le; rewrite plus_n_Sm; assumption).
+assert (H : id + n <= S m).
+  {
+  apply (Nat.le_trans _ (id + S n)); auto.
+  rewrite <- plus_n_Sm; apply Nat.le_succ_diag_r.
+  }
 assert (H' : id + n <= m) by (apply le_S_n; transitivity (id + S n); intuition).
 rewrite <- IHn; try assumption.
 rewrite <- plus_n_Sm.
@@ -703,7 +707,7 @@ assert (H : m + 1 <= S n) by (rewrite plus_n_1; intuition).
 rewrite <- nthCircPermNAny; try assumption; clear H.
 rewrite plus_n_1; reflexivity.
 induction m.
-assert (H := lt_n_0 (S (S n))); intuition.
+assert (H := Nat.nlt_0_r (S (S n))); intuition.
 clear IHm.
 unfold nthCP.
 rewrite nth_overflow.
@@ -711,12 +715,12 @@ rewrite nth_overflow; try reflexivity.
 rewrite <- lengthOfCPToList.
 simpl.
 rewrite minus_n_0.
-apply gt_S_le.
+apply Nat.lt_succ_r.
 assumption.
 rewrite <- lengthOfCPToList.
 simpl.
 rewrite minus_n_0.
-apply gt_S_le.
+apply Nat.lt_succ_r.
 assumption.
 Qed.
 
@@ -1203,7 +1207,7 @@ induction n; intros cp1 cp2 appPred pred_perm_1 pred_perm_2 Hpred HPerm.
   assert (H : exists cp, appPred cp /\ Permutation.Permutation (CPToList cp2) (CPToList cp) /\
                                        lastCP cp = lastCP cp2).
 
-    induction id; try (unfold ge in Hge; assert (H := Le.le_Sn_0 0); contradiction); clear IHid.
+    induction id; try (unfold ge in Hge; assert (H := Nat.nle_succ_0 0); contradiction); clear IHid.
     revert Hnth; revert HPerm; revert Hpred; revert cp1; induction id; intros.
 
       exists (consTailCP (tailCP cp1) (headCP cp1)).
@@ -1223,9 +1227,10 @@ induction n; intros cp1 cp2 appPred pred_perm_1 pred_perm_2 Hpred HPerm.
           assert (H := nthLast (consTailCP (tailCP cp1) (headCP cp1)) (headCP cp2)); rewrite H; reflexivity.
 
       assert (H := Hle).
-      do 2 (apply Le.le_S_n in H).
+      do 2 (apply Nat.succ_le_mono in H).
       apply nthCircPerm2 in Hnth; try assumption; clear H.
-      apply Le.le_Sn_le in Hle.
+      apply le_S in Hle.
+      rewrite <- Nat.succ_le_mono in Hle.
       assert (H : S id >= 1) by intuition; clear Hge; rename H into Hge.
       assert (H : appPred (consTailCP (tailCP cp1) (headCP cp1)))
         by (apply pred_perm_1; rewrite <- consHeadCPOK; assumption) ; clear Hpred; rename H into Hpred.

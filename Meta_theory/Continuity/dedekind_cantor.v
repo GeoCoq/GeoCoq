@@ -81,7 +81,7 @@ Proof.
     subst n1; apply (nested_aux1 A B n m); assumption.
   destruct (nested__ex_right A B n1 HAB) as [Bn1].
   assert (Bet An An1 Bn1) by (apply (nested_aux1 A B n n1); assumption).
-  destruct (nat_total_order n1 m) as [Hlt1|Hlt1]; auto.
+  destruct (Nat.lt_gt_cases n1 m) as [[Hlt1|Hlt1] _]; auto.
   - apply between_inner_transitivity with Bn1; trivial.
     apply between_symmetry, (nested_aux2 B A n1 m); assumption.
   - apply outer_transitivity_between with Bn1; trivial.
