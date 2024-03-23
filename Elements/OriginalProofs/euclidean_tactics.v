@@ -73,11 +73,11 @@ Qed.
 End basic_lemmas.
 
 #[global]
-Hint Resolve not_nCol_Col 
- nCol_not_Col nCol_notCol Col_nCol_False.
+Hint Resolve not_nCol_Col
+ nCol_not_Col nCol_notCol Col_nCol_False : core.
 
 #[global]
-Hint Resolve 
+Hint Resolve
  Col_or_nCol nCol_or_Col eq_or_neq neq_or_eq : decidability.
 
 Tactic Notation "by" "cases" "on" constr(t) :=
@@ -97,7 +97,7 @@ Ltac forward_using thm :=
   H: ?X |- _ => apply thm in H;spliter;assumption
  end.
 
-Ltac contradict := 
+Ltac contradict :=
  (solve [eauto using Col_nCol_False]) || contradiction || (unfold nCol in *;intuition).
 
 Ltac conclude t :=
@@ -117,18 +117,18 @@ Ltac close := solve [assumption |
                      auto |
                      repeat (split;auto) |
                      unfold neq, nCol in *;try assumption;tauto |
-                     remove_exists;eauto 15 
+                     remove_exists;eauto 15
                     ].
 
 Ltac conclude_def_aux t := (remove_double_neg;
-  (progress (unfold t);  
-   solve [remove_exists;eauto 6 | 
+  (progress (unfold t);
+   solve [remove_exists;eauto 6 |
           remove_exists;splits;eauto  |
           remove_exists;eauto 11 |
           one_of_disjunct |
           intuition
-         ])) 
- || 
+         ]))
+ ||
  solve [unfold t in *;spliter;assumption |
         unfold t in *;destruct_all;assumption |
         unfold t in *;remove_double_neg;destruct_all;remove_exists;eauto 11  ].

@@ -762,6 +762,8 @@ Qed.
 Global Instance Fcri: (Cring (Rr:=FRing)).
 Proof. exact (Rmul_comm ringF). Qed.
 
+Declare Scope FScope.
+
 Delimit Scope FScope with FS.
 
 Notation "0" := OF : FScope.

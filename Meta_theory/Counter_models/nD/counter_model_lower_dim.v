@@ -81,7 +81,7 @@ Lemma lower_dim : forall o i basis,
 Proof.
 move => o i' basis HF; pose new_basis := map_tuple (+%R^~ (- o)) basis.
 suff: free new_basis.
-- move => {HF} HF; suff {HF} : ~~ free new_basis by rewrite HF.
+- move => {}HF; suff {HF} : ~~ free new_basis by rewrite HF.
   rewrite /free size_tuple ltn_eqF // ltnS.
   apply: (leq_trans (dimvS (subvf <<new_basis>>))).
   by rewrite dimvf /Vector.dim /= mul1n.
@@ -100,7 +100,7 @@ move => /allP HC1 /allP HC2; split => [j|j k jk_neq].
 - apply /eqP; rewrite quad_eq0 /new_basis.
   rewrite (nth_map 0) ?size_tuple ?(ltn_ord j) // subr_eq0.
   case: (basis`_j =P o) => // jP; have := HC1 j.
-  rewrite mem_index_iota leq0n (ltn_ord j) => {HC2} HC2.
+  rewrite mem_index_iota leq0n (ltn_ord j) => {}HC2.
   have := HC2 isT; rewrite nth_basis ?(ltn_ord j) // => {HC2}.
   rewrite /cong jP subrr mul0mx quad_eq0 subr_eq0 => /eqP i'oE.
   have := (HC1 O); rewrite mem_index_iota ltn0Sn /= => {HC1} HC.
@@ -118,8 +118,8 @@ move => /allP HC1 /allP HC2; split => [j|j k jk_neq].
   move => ii'P E j k jk_lt; move: (HC2 O) (HC2 j) => {HC2}.
   rewrite mem_index_iota leq0n ltn0Sn big_all => HC.
   have := HC isT => {HC} /allP HC; have := HC (S O).
-  rewrite mem_index_iota -ltn_predRL ?ltn0Sn => {HC} HC.
-  have := HC isT; rewrite !nth_basis -?ltn_predRL ?ltn0Sn // => {HC} HC.
+  rewrite mem_index_iota -ltn_predRL ?ltn0Sn => {}HC.
+  have := HC isT; rewrite !nth_basis -?ltn_predRL ?ltn0Sn // => {}HC.
   have {HC} iP : (i' - o) *m (basis`_1 - o)^T = 0.
   - move: HC; rewrite /cong (cosine_rule o) eq_sym (cosine_rule o).
     rewrite (E O) ?ltn0Sn // (E (S O)) -?ltn_predRL ?ltn0Sn //.
@@ -130,7 +130,7 @@ move => /allP HC1 /allP HC2; split => [j|j k jk_neq].
     by rewrite !mxE -mulr2n mulrn_eq0 -natrD pnatr_eq0 addn1.
   rewrite mem_index_iota leq0n (ltn_ord j) big_all => HC.
   have := HC isT => {HC} /allP HC; have := HC k.
-  rewrite mem_index_iota jk_lt (ltn_ord k) => {HC} HC.
+  rewrite mem_index_iota jk_lt (ltn_ord k) => {}HC.
   have := HC isT; rewrite !nth_basis ?(ltn_ord j) ?(ltn_ord k) // => {HC}.
   rewrite /cong (cosine_rule o) eq_sym (cosine_rule o).
   rewrite (E j) // (E k) // eq_sym (E (S O)) -?ltn_predRL ?ltn0Sn //.

@@ -594,7 +594,7 @@ Proof.
 decide equality.
 Defined.
 
-Definition interp (lvar : list (CONGpoint * positive)) (Default : CONGpoint) : positive -> CONGpoint := 
+Definition interp (lvar : list (CONGpoint * positive)) (Default : CONGpoint) : positive -> CONGpoint :=
   fun p => list_assoc_inv CONGpoint positive positive_dec lvar p Default.
 
 End Cong_refl.

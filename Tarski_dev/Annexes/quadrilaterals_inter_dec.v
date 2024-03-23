@@ -27,13 +27,13 @@ Ltac par_strict :=
 repeat
  match goal with
       | H: Par_strict ?A ?B ?C ?D |- _ =>
-       let T := fresh in not_exist_hyp (Par_strict B A D C); assert (T := par_strict_comm A B C D H)  
+       let T := fresh in not_exist_hyp (Par_strict B A D C); assert (T := par_strict_comm A B C D H)
       | H: Par_strict ?A ?B ?C ?D |- _ =>
-       let T := fresh in not_exist_hyp (Par_strict C D A B); assert (T := par_strict_symmetry A B C D H)  
+       let T := fresh in not_exist_hyp (Par_strict C D A B); assert (T := par_strict_symmetry A B C D H)
       | H: Par_strict ?A ?B ?C ?D |- _ =>
-       let T := fresh in not_exist_hyp (Par_strict B A C D); assert (T := par_strict_left_comm A B C D H)   
+       let T := fresh in not_exist_hyp (Par_strict B A C D); assert (T := par_strict_left_comm A B C D H)
       | H: Par_strict ?A ?B ?C ?D |- _ =>
-       let T := fresh in not_exist_hyp (Par_strict A B D C); assert (T := par_strict_right_comm A B C D H) 
+       let T := fresh in not_exist_hyp (Par_strict A B D C); assert (T := par_strict_right_comm A B C D H)
  end.
 
 Ltac clean_trivial_hyps :=

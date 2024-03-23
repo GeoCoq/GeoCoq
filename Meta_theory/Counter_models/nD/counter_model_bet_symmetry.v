@@ -125,7 +125,7 @@ move => [e [f [g [HNC [aP [bP [cP dP]]]]]]]; exists e, f, g.
 split; first by move: HNC; rewrite -ColP col__colI.
 suff: forall a b c d, inplane a b c d ->
                       InP _ (@bet' (n.+1) R) a b c d by auto.
-move => {a b c d e f g HNC aP bP cP dP} a b c d.
+move => {e f g HNC aP bP cP dP} {}a {}b {}c {}d.
 by move => [x [Hc1 Hc2]]; exists x; rewrite -!ColP !col__colI.
 Qed.
 

@@ -39,6 +39,7 @@ Qed.
 Instance altIT_to_T : Tarski_neutral_dimensionless.
 Proof.
 apply (@IT_to_T (@altIT_to_IT n Tpoint ITn Estability ITnD)).
+intros A B; elim (point_equality_decidability A B); tauto.
 Defined.
 
 Instance altIT_to_T_PED :
@@ -98,8 +99,10 @@ clear HE; cut (@Definitions.Col (altIT_to_T 0 Tpoint) IPC O IPC').
                                 _ _ _ _ IPB IPA IPC'); Cop.
   by apply (@os__coplanar _ (altIT_to_T_PED 0 Tpoint)); auto.
 cut (Bet IPC O IPC').
-- unfold Definitions.Col, tarski_axioms.Bet; simpl.
-  by unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS; tauto.
+- unfold Definitions.Col, tarski_axioms.Bet; simpl; left.
+  unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS.
+  elim (point_equality_decidability IPC O); [tauto|].
+  elim (point_equality_decidability O IPC'); tauto.
 assert (H := upper_dim IPC'); revert H; unfold upper_dimP; clear HNE.
 assert (HNE : IPC <> IPC').
 - elim (point_equality_decidability IPC IPC'); auto.
@@ -139,7 +142,9 @@ first by rewrite /tarski_axioms.Cong /=.
 destruct Per as [I' [HI' HC5]]; assert (HI : I = I'); [|by rewrite HI; Cong].
 apply (@symmetric_point_uniqueness _ (altIT_to_T_PED 0 Tpoint) IPB IPA); auto.
 split; Cong; apply between_symmetry; unfold IPA, IPB, tarski_axioms.Bet.
-by simpl; unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS; tauto.
+simpl; unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS.
+elim (point_equality_decidability I O); [tauto|].
+elim (point_equality_decidability O (tnth basis (inord 0))); tauto.
 Qed.
 
 End altIT2D_to_T2D.

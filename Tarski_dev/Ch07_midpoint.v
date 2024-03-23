@@ -57,10 +57,12 @@ repeat
        decompose [and] T;clear T;clean_reap_hyps
  end.
 
-Ltac ColR :=
- let tpoint := constr:(Tpoint) in
- let col := constr:(Col) in
-   treat_equalities; assert_cols; Col; assert_diffs; Col_refl tpoint col.
+Ltac colr :=
+  let tpoint := constr:(Tpoint) in
+  let col := constr:(Col) in
+    Col_refl tpoint col.
+
+Ltac ColR := treat_equalities; assert_cols; Col; assert_diffs; colr.
 
 Section T7_1.
 
@@ -1327,7 +1329,6 @@ Between.
 
 
 eapply (col_cong2_bet2 _ A).
-apply bet_col in H0.
 ColR.
 Between.
 Cong.

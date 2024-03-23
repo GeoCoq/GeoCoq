@@ -228,7 +228,7 @@ have -> /= : @inord (S n) (S O) = 1 by apply: val_inj; rewrite val_insubd.
 case: (inord j =P inord k) => [HF|_/=]; last first.
 - by rewrite mulr0n subr0 sub0r opprK addr0 add0r.
 have: val (@inord n.+1 j) = val (@inord n.+1 k) by rewrite HF.
-rewrite !val_insubd k_lt_np2 (ltn_trans j_lt_k) // => {HF} HF.
+rewrite !val_insubd k_lt_np2 (ltn_trans j_lt_k) // => {}HF.
 by move: j_lt_k; rewrite HF ltnn.
 Qed.
 
@@ -257,7 +257,7 @@ rewrite m_lt_n (@nth_map nat 0%N) ?size_belast ?size_iota //.
 suff -> : nth O (belast (S O) (iota 2 n)) m = m.+1 by rewrite /f.
 suff: forall l, (m < l)%N -> nth O (belast (S O) (iota 2 l)) m = m.+1.
 - by move => lP; rewrite (lP n).
-move => {p f i m_lt_n} l; elim l => // {l} l IHl m_lt_lp1.
+move => {p f i m_lt_n} l; elim l => // {}l IHl m_lt_lp1.
 rewrite -(addn1 l) 1?iota_add 1?iotaD belast_cat nth_cat size_belast size_iota.
 case: (m =P l) => [-> {IHl m_lt_lp1 m}|/eqP lm_neq]; last first.
 - suff m_lt_l : (m < l)%N by rewrite m_lt_l IHl.
@@ -312,18 +312,18 @@ have pE : tnth new_basis (inord n.+1) = p.
   have -> : nat_of_ord (@inord n.+1 n.+1) = (size new_basis).-1.
   + by rewrite inordK // size_rot size_belast size_map size_iota.
   by rewrite nth_last last_cat.
-have {HC1} HC1 : cong o i o p.
+have {}HC1 : cong o i o p.
 - suff: cong o i o (tnth new_basis (inord n.+1)) by rewrite pE.
   by move: (HC1 n.+1); rewrite mem_index_iota ltnSn /= => ->.
-have {HC2} HC2 : (n =  O -> cong (delta_mx 0 0) p i p) /\
-                 (n <> O -> forall j, (0 <= j < n.+1)%N ->
-                              cong p (tnth basis (inord j))
-                                   i (delta_mx 0 (inord 1))).
+have {}HC2 : (n =  O -> cong (delta_mx 0 0) p i p) /\
+             (n <> O -> forall j, (0 <= j < n.+1)%N ->
+                          cong p (tnth basis (inord j))
+                               i (delta_mx 0 (inord 1))).
 - case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
   + suff -> : cong (delta_mx 0 0) p i p by done.
-    move: (HC2 O); rewrite mem_index_iota ltn0Sn /= big_all => {HC2} HC2.
-    move: (HC2 is_true_true) => {HC2} /= /andP[HC2 _].
-    have {pE} pE : tnth new_basis (inord 1) = p.
+    move: (HC2 O); rewrite mem_index_iota ltn0Sn /= big_all => {}HC2.
+    move: (HC2 is_true_true) => /= /andP[{}HC2 _].
+    have {}pE : tnth new_basis (inord 1) = p.
     * suff -> : @inord (S n) 1 = inord n.+1 by rewrite pE.
       by rewrite n_ez.
     move: HC2; rewrite pE nth_new_basis //.
@@ -334,16 +334,16 @@ have {HC2} HC2 : (n =  O -> cong (delta_mx 0 0) p i p) /\
     * move => H j jP; move/eqP: (H _ jP); rewrite /cong.
       by move => <-; rewrite -opprB mulNmx dotC -mulNmx opprK.
     move => j /andP[j_ge0 j_lt_np1]; move: n_nz (HC2 j) => /eqP n_nz.
-    rewrite mem_index_iota j_ge0 (ltn_trans j_lt_np1) //= big_all => {HC2} HC2.
+    rewrite mem_index_iota j_ge0 (ltn_trans j_lt_np1) //= big_all => {}HC2.
     move: (HC2 is_true_true) => {HC2} /allP HC2; move: (HC2 n.+1).
-    rewrite mem_index_iota ltnSn j_lt_np1 pE /= => {HC2} HC2.
+    rewrite mem_index_iota ltnSn j_lt_np1 pE /= => {}HC2.
     move: (HC2 is_true_true); rewrite nth_basis ?(ltn_trans j_lt_np1) //.
     by rewrite !nth_new_basis // ltnS lt0n.
 set i_n := tnth basis (inord n.+1); move => i_n_neq_p.
 suff: (n = O -> betS i_n o p) /\ (n <> O -> betS i_n o p)
   by case (n =P O); tauto.
 case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
-- have {HC2} HC2 : cong (delta_mx 0 0) p i p by tauto.
+- have {}HC2 : cong (delta_mx 0 0) p i p by tauto.
   have i_nP : i_n = to_nD n (row2 0 1).
   + rewrite /i_n nth_basis // /to_nD.
     have -> : inord n.+1 = @inord (S n) 1 by rewrite n_ez.
@@ -418,7 +418,7 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
       by rewrite !mxE /= mulr1 mulr0 add0r.
     * have: (m + 2 < 0 + 2)%N by move: j; rewrite n_ez.
       by rewrite ltn_add2r ltn0.
-  move => {pE} pE; move: HC2; rewrite {1 2}pE iP /cong opprK addrAC.
+  move => {}pE; move: HC2; rewrite {1 2}pE iP /cong opprK addrAC.
   rewrite -{2}(scale1r (delta_mx 0 0)) -scalerBl dotC.
   rewrite -{2}(scale1r (delta_mx 0 0)) -scalerBl eq_sym addrAC.
   rewrite -{2}(scale1r (delta_mx 0 0)) -scalerDl dotC.
@@ -448,11 +448,11 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
   rewrite -expr2 subr_eq0 eq_sym sqrf_eq1 orbF => /orP[|]/eqP // p1.
   exfalso; apply i_n_neq_p; rewrite i_nP pE p0 p1 scale0r scale1r add0r.
   by rewrite basis_nth1.
-- move: HC2 => [_ HC2]; move: (HC2 n_nz) => {HC2} HC2.
+- move: HC2 => [_ HC2]; move: (HC2 n_nz) => {}HC2.
   have {HC1} pP : p *m p^T = delta_mx 0 0.
   + move: HC1; rewrite /cong oP iP !subr0 mulNmx dotC mulNmx opprK.
     by rewrite trmx_delta mul_delta_mx_cond eqxx mulr1n => /eqP ->.
-  have {HC2} HC2 : forall j, (0 <= j < n.+1)%N -> p 0 (inord j) = 0.
+  have {}HC2 : forall j, (0 <= j < n.+1)%N -> p 0 (inord j) = 0.
   + move => j jP; move: jP (HC2 j jP) => /andP[j_ge0 j_lt_n].
     rewrite /cong dist_10_01 nth_basis ?(ltn_trans j_lt_n) //.
     rewrite mulmxDl dotC mulmxDl trmx_delta.

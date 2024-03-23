@@ -899,7 +899,7 @@ intros A B C D I HCD HCol1 HCol2 HNC.
 assert (HX : exists X, Col C D X /\ I <> X) by (exists C; split; try intro; treat_equalities; Col).
 destruct HX as [X [HCol3 HIX]].
 destruct (symmetric_point_construction X I) as [Y HMid].
-exists X; exists Y; assert_diffs; assert_cols; repeat split; try ColR.
+exists X; exists Y; assert_diffs; assert_cols; repeat split; [ColR|ColR|..].
   intro; apply HIX, l6_21 with A B C D; Col.
   intro; absurd (I = Y); [auto|apply l6_21 with A B C D; ColR].
 exists I; unfold Midpoint in HMid; spliter; split; Col; Between.
