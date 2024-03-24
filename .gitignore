@@ -10,4 +10,5 @@ Makefile.conf
 *.vok
 *.vos
 _build/
+*.install
 .DS_Store

@@ -32,6 +32,9 @@ GeoCoq is available as [releases packages](https://github.com/coq/opam/tree/mast
 - The general Makefile is in the top directory.
   - `make` : compilation of the Coq scripts (after using `./configure.sh`).
 
+- [Dune](https://dune.readthedocs.io/en/stable/coq.html) can used for compilation.
+  - ``dune build`
+
 - You may also rely on `dune` to install just one part. Run:
   - `dune build coq-geocoq-coinc.install` to build only the _GeoCoq Coinc_ part (and its dependencies);
   - `dune build coq-geocoq-axioms.install` to build only the _GeoCoq Axioms_ part (and its dependencies);
