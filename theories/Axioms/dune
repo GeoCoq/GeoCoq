@@ -1,0 +1,5 @@
+(coq.theory
+ (name GeoCoq.Axioms)
+ (package coq-geocoq-axioms)
+ (synopsis "This subpackage contains the axioms.")
+ (theories GeoCoq.Coinc))

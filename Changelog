@@ -1,6 +1,16 @@
+Release 2.5.0
+==========================
+        - This release is compatible, at the moment of the release, with Coq 8.10.0-8.19.1. Some files depends on mathcomp field library (1.11.0 <= version <= 1.19.0).
+	- Reorganization of files into directories that match the various subpackages of GeoCoq.
+	- Add the possibility to build with dune. This requires dune >= 3.8 so it is only compatible with Coq > 8.13.
+	- While the compilation time of the library decreased thanks to some performance improvements made by Coq, we also made GeoCoq compile faster.
+        - We formalized ten out of the eleven counter-models for planar geometry present in Gupta's thesis. For a few of them we did not yet mechanize the proof that the continuity axiom holds.
+        - We defined an alternative axiom system that, we believe, allows to obtain the arithmetization of n-dimensional geometry without relying on decidability properties.
+        - We formalized counter-models for this system, either by generalizing Gupta's ones or by inventing new ones. Up to the mechanization of the proofs that the proposed dimensional axioms hold in some counter-models, we have the same results as for planar geometry.
+
 Release 2.4.1
 ==========================
-	- This release is compatible with Coq 8.7.0-8.11.2. Some files depends on mathcomp field library (1.6.4  <= version < 1.11.0).
+	- This release is compatible with Coq 8.7.0-8.11.2. Some files depends on mathcomp field library (1.6.4 <= version < 1.11.0).
 	- Add compatibility with Coq 8.10-11.
 	- Proof that Greenberg's axiom implies Aristotle's axiom.
 	- Proof that the conjunction of Archimedes' axiom and Cantor's nested intervals axiom implies Dedekind cut axiom.

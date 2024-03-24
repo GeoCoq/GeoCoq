@@ -1,0 +1,37 @@
+opam-version: "2.0"
+maintainer:   "Pierre Boutry <contact@pierre.boutry.fr>"
+version:      "dev"
+
+homepage:     "http://geocoq.github.io/GeoCoq/"
+dev-repo:     "git+https://github.com/GeoCoq/GeoCoq.git"
+bug-reports:  "https://github.com/GeoCoq/GeoCoq/issues"
+license:      "LGPL-3.0-only"
+
+synopsis:     "A formalization of foundations of geometry in Coq"
+description:  "This subpackage contains the axioms."
+
+build:   ["dune" "build" "-p" name "-j" jobs]
+depends: [
+  "coq-geocoq-coinc" { = version }  
+]
+
+tags: [
+  "category:Mathematics/Geometry/General"
+  "keyword:geometry"
+  "keyword:neutral geometry"
+  "keyword:Euclidean geometry"
+  "keyword:foundations"
+  "keyword:Tarski"
+  "keyword:Hilbert"
+  "keyword:Euclid"
+  "keyword:Elements"
+  "keyword:parallel postulates"
+]
+authors: [
+  "Michael Beeson      <profbeeson@gmail.com>"
+  "Gabriel Braun       <gabriel.braun@unistra.fr>"
+  "Pierre Boutry       <contact@pierre.boutry.fr>"
+  "Charly Gries        <charly.gries@etu.unistra.fr>"
+  "Julien Narboux      <narboux@unistra.fr>"
+  "Pascal Schreck      <schreck@unistra.fr>"
+]

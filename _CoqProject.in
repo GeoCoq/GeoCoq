@@ -1,5 +1,5 @@
 # Library name
--R . GeoCoq
+-Q theories GeoCoq
 
 -arg -w -arg -ambiguous-paths
 -arg -w -arg -notation-overridden

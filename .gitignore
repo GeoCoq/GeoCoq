@@ -9,4 +9,5 @@ Makefile.conf
 *.aux
 *.vok
 *.vos
+_build/
 .DS_Store

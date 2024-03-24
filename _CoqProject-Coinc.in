@@ -1,5 +1,7 @@
 # Library name
--R Tactics/Coinc GeoCoq.Tactics.Coinc
--R Utils         GeoCoq.Utils
+-Q theories/Coinc GeoCoq.Coinc
+
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -notation-overridden
 
 # Coq files (filled by the configure)

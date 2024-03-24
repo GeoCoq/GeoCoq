@@ -1,6 +1,7 @@
 # Library name
--R Axioms     GeoCoq.Axioms
--R Tactics    GeoCoq.Tactics
--R Tarski_dev GeoCoq.Tarski_dev
+-Q theories/Axioms GeoCoq.Axioms
+
+-arg -w -arg -ambiguous-paths
+-arg -w -arg -notation-overridden
 
 # Coq files (filled by the configure)

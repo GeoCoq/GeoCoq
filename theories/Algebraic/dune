@@ -1,0 +1,7 @@
+(coq.theory
+ (name GeoCoq.Algebraic)
+ (package coq-geocoq-algebraic)
+ (synopsis "This subpackage contains a model of Tarski's axioms and some counter-models.")
+ (theories GeoCoq.Coinc GeoCoq.Axioms GeoCoq.Main mathcomp))
+
+(include_subdirs qualified)

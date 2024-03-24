@@ -1,0 +1,35 @@
+opam-version: "2.0"
+maintainer:   "Pierre Boutry <contact@pierre.boutry.fr>"
+version:      "dev"
+
+homepage:     "http://geocoq.github.io/GeoCoq/"
+dev-repo:     "git+https://github.com/GeoCoq/GeoCoq.git"
+bug-reports:  "https://github.com/GeoCoq/GeoCoq/issues"
+license:      "LGPL-3.0-only"
+
+synopsis:     "A formalization of foundations of geometry in Coq"
+description:  "This subpackage contains a model of Tarski's axioms and some counter-models."
+
+build:   ["dune" "build" "-p" name "-j" jobs]
+depends: [
+  "coq-geocoq-main"    { = version              }
+  "coq-mathcomp-field" { >= "1.11.0" & < "2.0~" }
+]
+
+tags: [
+  "category:Mathematics/Geometry/General"
+  "keyword:geometry"
+  "keyword:Euclidean geometry"
+  "keyword:hyperbolic geometry"
+  "keyword:foundations"
+  "keyword:Tarski"
+  "keyword:parallel postulates"
+  "keyword:model"
+  "keyword:counter-model"
+  "keyword:Cartesian space"
+]
+authors: [
+  "Pierre Boutry       <contact@pierre.boutry.fr>"
+  "Cyril Cohen         <cyril.cohen@inria.fr>"
+  "Stéphane Kastenbaum <stephane.kastenbaum@gmail.com>"
+]
