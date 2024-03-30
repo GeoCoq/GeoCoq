@@ -100,14 +100,14 @@ set p2 := (fun k : 'I_(n.+2) => row_mx (b - a) 0 0 k != 0).
 suff: (ohead (enum p2) = ohead (map (fun k => lshift n k) (enum p1))) => [->|].
   case: (enum _) (mem_enum p1) => [//|h t /= _ H].
   by have -> : h = i by move: H; apply: Some_inj.
-move: i => _; rewrite /enum_mem -enumT ?enum_ordS ?enum_ordSl.
+move: i => _; rewrite /enum_mem -enumT !enum_ordSl.
 rewrite -[X in _ :: X]cat1s -cat1s !filter_cat /=; set t_nil := filter _ _.
 have: (t_nil == [::]) => [|/eqP->]; rewrite ?cats0.
   rewrite /t_nil -size_eq0 -all_pred0 all_filter; apply /allP => x xP.
   move/mapP: xP => [] x0 /mapP [] x1 _ -> ->; rewrite !inE implybF /in_mem /p2.
   set i := lift _ _; have -> : (i = rshift 2 x1) by rewrite /i; apply: val_inj.
   by rewrite /= row_mxEr mxE eqxx.
-apply /eqP; rewrite eq_sym /enum_mem -enumT ?enum_ordS ?enum_ordSl -cat1s.
+apply /eqP; rewrite eq_sym /enum_mem -enumT !enum_ordSl -cat1s.
 move: t_nil => _; rewrite filter_cat map_cat.
 rewrite -[ord0 :: [seq lift ord0 i | i <- enum 'I_0]]cat1s.
 rewrite map_cat filter_cat map_cat /=; suff: ((ord0 \in p1) = (ord0 \in p2)).
