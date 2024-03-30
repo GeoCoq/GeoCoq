@@ -160,8 +160,8 @@ Proof.
 suff: @betS R 2 (row2 (-1) 0) (row2 0 0) (row2 1 0)
   by rewrite basis_nth0 /i /o /to_nD bet_nD_2D /bet => ->; rewrite orbT.
 rewrite /betS betR_o_i_basis_nth0.
-rewrite ltr_pdivl_mulr ?ltr_pdivr_mulr ?addr_gt0 ?ltr01 //.
-rewrite mul0r !mul1r ltr_addr ltr01 /= andbT eq_inv_scale ?add11_neq0 //.
+rewrite ltr_pdivlMr ?ltr_pdivrMr ?addr_gt0 ?ltr01 //.
+rewrite mul0r !mul1r ltrDr ltr01 /= andbT eq_inv_scale ?add11_neq0 //.
 apply /eqP; rewrite -matrixP => i j; case: i => m; case: m => // i.
 have -> : Ordinal i = inord 0 by apply: val_inj; rewrite val_insubd.
 have -> : @inord O O = 0 by apply val_inj; rewrite val_insubd.
@@ -370,8 +370,8 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
       by rewrite ltn_add2r ltn0.
   suff -> : p = to_nD n (row2 0 (-1)).
   + rewrite i_nP oP -row_mx_const betS_nD_2D.
-    rewrite /betS betR_ud_2D ltr_pdivl_mulr ?ltr_pdivr_mulr ?addr_gt0 ?ltr01 //.
-    rewrite mul0r !mul1r ltr_addr ltr01 /= andbT eq_inv_scale ?add11_neq0 //.
+    rewrite /betS betR_ud_2D ltr_pdivlMr ?ltr_pdivrMr ?addr_gt0 ?ltr01 //.
+    rewrite mul0r !mul1r ltrDr ltr01 /= andbT eq_inv_scale ?add11_neq0 //.
     apply /eqP; rewrite -matrixP => i j; case: i => m; case: m => // i.
     have -> : Ordinal i = inord 0 by apply: val_inj; rewrite val_insubd.
     have -> : @inord O O = 0 by apply val_inj; rewrite val_insubd.
@@ -475,8 +475,8 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
                        (- delta_mx 0 (inord n.+1)) = 1%:R / 2%:R.
     * rewrite /betS => ->; rewrite add0r -mulr2n -scalerMnr scalerMnl.
       rewrite mulr2n addf_divrr ?divff ?(pnatr_eq0 _ 2) // scale1r eqxx.
-      rewrite ltr_pdivl_mulr ?ltr_pdivr_mulr ?addr_gt0 ?ltr01 //.
-      by rewrite mul0r mul1r ltr_addr ltr01.
+      rewrite ltr_pdivlMr ?ltr_pdivrMr ?addr_gt0 ?ltr01 //.
+      by rewrite mul0r mul1r ltrDr ltr01.
     rewrite /betR /ratio; case: pickP => /= [x xP|/all_v_neq0 H]; last first.
     * exfalso; apply H; apply /eqP/matrixP => HF; move: (HF 0 (inord n.+1)).
       rewrite !mxE !eqxx -mulNrn mulr1n; apply /eqP.

@@ -111,7 +111,7 @@ Lemma add2r_eq (ZT : zmodType) (x y z : ZT) : (x + y == x + z) = (y == z).
 Proof. exact: (inj_eq (addrI _)). Qed.
 
 Lemma bet_gt0 (k1 k2 : R) : 0 < k1 -> k2 < 1 -> 0 < k1 - k1 * k2.
-Proof. by move=> k1_gt0 k2_lt1; rewrite subr_gt0 gtr_pmulr. Qed.
+Proof. by move=> k1_gt0 k2_lt1; rewrite subr_gt0 gtr_pMr. Qed.
 
 (* find a name for "thing" and for "stuff" *)
 Section thing_and_stuff.
@@ -123,7 +123,7 @@ Let thing := k1 + k2 - k1 * k2.
 Let stuff := thing / k3.
 
 Lemma thing_gt0 : thing > 0.
-Proof. by rewrite subr_gt0 ltr_paddl ?ltW// gtr_pmull. Qed.
+Proof. by rewrite subr_gt0 ltr_wpDl ?ltW// gtr_pMl. Qed.
 Hint Resolve thing_gt0: core.
 
 Lemma thing_neq0 : thing != 0. Proof. by rewrite gt_eqF. Qed.
@@ -152,13 +152,13 @@ Lemma bet_neq0' (k1 k2 : R) :
 Proof. exact: thing_neq0. Qed.
 
 Lemma bet_lt (k1 k2 : R) : 0 < k2 -> k1 - k1 * k2 < k1 + k2 - k1 * k2.
-Proof. by move=> ?; rewrite -addrA ltr_add2l -{1}[-(k1 * k2)]add0r ltr_add2r. Qed.
+Proof. by move=> ?; rewrite -addrA ltrD2l -{1}[-(k1 * k2)]add0r ltrD2r. Qed.
 
 (* add this to things about stuff *)
 Lemma bet_lt1 (k1 k2 k3 : R) :
   0 < k1 -> 0 < k2 -> k1 < 1 -> 0 < k3 -> k3 < k1 + k2 - k1 * k2 ->
   ((k1 + k2 - k1 * k2) / k3)^-1 < 1.
-Proof. by move=> *; rewrite invf_lt1 ?stuff_gt0// ltr_pdivl_mulr ?mul1r. Qed.
+Proof. by move=> *; rewrite invf_lt1 ?stuff_gt0// ltr_pdivlMr ?mul1r. Qed.
 
 (* replace eq_inv_scale by -(can2_eq (scalerK _) (scalerKV _)) *)
 Lemma eq_inv_scale (V : lmodType R) (s : R) (x y : V) :
@@ -380,7 +380,7 @@ Lemma betS_sym a b c : betS a b c = betS c b a.
 Proof.
 rewrite /betS /betR !andb_assoc -(addrBDB b c a) -[c - a]opprB ratiorN oppr_gt0.
 case (a - c =P 0)=> [->|/eqP ?]; first by rewrite !ratiop0 ltxx !andbF.
-rewrite -add_ratio ?ratioNr ?ratiovv // andbAC subr_lt0 ltr_oppl ltr_subr_addl.
+rewrite -add_ratio ?ratioNr ?ratiovv // andbAC subr_lt0 ltrNl ltrBrDl.
 by rewrite scaleNr -scalerN scalerBl scale1r -subr_eq !opprB !addrBDB subrr.
 Qed.
 
@@ -582,7 +582,7 @@ Lemma betS_inner_transitivity a b c d (k1 := betR a b d) (k2 := betR b c d) :
 Proof.
 rewrite betS_neq12=> /andP[/betSP[k1P ? ?] ?] /betSP[k2P ? ?].
 apply ratio_betS with k1 k2 k1=> //.
-  by rewrite -addrA -ltr_subl_addl subrr subr_gt0 gtr_pmull.
+  by rewrite -addrA -ltrBlDl subrr subr_gt0 gtr_pMl.
 rewrite eq_inv_scale ?bet_neq0 // -addrA addrC -addf_divrr ?divff ?lt0r_neq0 //.
 rewrite scalerDl scale1r eq_sym -subr_eq opprB eq_div_scale ?lt0r_neq0 //.
 rewrite addrBDB k2P scalerA scalerBl eq_sym subr_eq.
@@ -619,7 +619,7 @@ suff: (((k2 + k1 - k2 * k1) / (k2 - k2 * k1))^-1 *: (a - q) + q ==
   rewrite -?scalerBl ?scale1r -?addrA ?subrr ?addr0 scaler_eq0 negb_or;
   rewrite ?lt0r_neq0 ?subr_gt0 ?addrA ?bet_gt0' ?bet_lt1 //= ?subr_eq0;
   rewrite ?[k1 + k2]addrC ?bet_lt ?[k2 + k1]addrC ?bet_lt ?subr_gt0;
-  rewrite 1?mulrC ?gtr_pmull //; by apply /eqP.
+  rewrite 1?mulrC ?gtr_pMl //; by apply /eqP.
 rewrite [X in X - _]addrC eq_sym [X in X - _]addrC -!addrA !invf_div.
 rewrite -subr_eq [k2 * _]mulrC !addrA -addrA [k2 + k1]addrC.
 rewrite eq_div_scale ?bet_neq0' // scalerDr scalerA mulrCA mulfV ?bet_neq0' //.
@@ -940,9 +940,9 @@ Proof.
 rewrite subr_eq0 eq_sym -{1}[b]add0r -subr_eq0 add0r=> ? ?.
 have: (0 < ((b - a) / (c - a)))=> [|H].
   by apply le_lt_trans with 1; rewrite ?ler01.
-rewrite andbC -subr_lt0 andbC -(ltr_addr (-1)) -[1]divr1.
+rewrite andbC -subr_lt0 andbC -(ltrDr (-1)) -[1]divr1.
 rewrite {1}divr1 -mulNr addf_div ?oner_neq0 // !mulr1 mulNr mul1r opprB addrBDB.
-by rewrite -[a - b]opprB invrN mulrN oppr_lt0 -[X in _ < X]mulN1r ltr_nmulr;
+by rewrite -[a - b]opprB invrN mulrN oppr_lt0 -[X in _ < X]mulN1r ltr_nMr;
 rewrite ?oppr_lt0 ?ltr01 // -invf_div invr_gt0 H andbT invf_cp1.
 Qed.
 
@@ -1362,7 +1362,7 @@ exists (normv(d - c) / normv(b - a) *: (b - a) + b); rewrite /bet /cong; split.
   rewrite /betS /betR; apply/orP; right; rewrite -addrA.
   rewrite -[X in _ *: _ + X]scale1r -scalerDl scalerA -ratio_bet'' ?mulVf;
   rewrite ?scale1r ?eqxx ?invr_gt0 ?invf_lt1 ?lt0r_neq0 -1?{2}[1]add0r;
-  rewrite ?ltr_add2r ?addr_gt0 ?ltr01 1?eq_sym -1?subr_eq0 //= divr_gt0 //;
+  rewrite ?ltrD2r ?addr_gt0 ?ltr01 1?eq_sym -1?subr_eq0 //= divr_gt0 //;
   by rewrite sqrtr_gt0 lt0r quad_neq0 quad_ge0 ?neq_ba ?neq_dc.
 rewrite -addrA subrr addr0 -scalemxAl dotC -scalemxAl scalerA mulf_div -!expr2.
 rewrite [X in _ *: X == _]mx11_scalar !sqr_sqrtr ?quad_ge0 // -!scalerA.

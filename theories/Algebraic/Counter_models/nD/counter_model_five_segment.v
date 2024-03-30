@@ -136,7 +136,7 @@ rewrite -scalemx1 -{2}[1%:M]scalemx1 -[(1+1)%:M]scalemx1 /ratio -!scalerBl.
 rewrite -addrA subr0; case: pickP=> [x _|HF]; [|move: (HF 0)]; rewrite scale0r;
 rewrite ?ord1 !mxE eqxx !mulr1 ?scalerA ?subr0 ?mul1r 1?mulrC ?divff;
 rewrite ?add11_neq0 // scale1r eqxx /=.
-by rewrite orbC invf_lt1 ?invr_gt0 -1?{3}[1]add0r !addr_gt0 ?ltr_add2r ?ltr01.
+by rewrite orbC invf_lt1 ?invr_gt0 -1?{3}[1]add0r !addr_gt0 ?ltrD2r ?ltr01.
 Qed.
 
 Lemma cong_pseudo_reflexivity : cong_pseudo_reflexivityP Point cong'.

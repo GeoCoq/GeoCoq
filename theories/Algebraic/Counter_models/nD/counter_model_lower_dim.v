@@ -48,7 +48,7 @@ rewrite -(invf_div r1) r1r2P; set r := _ / _; move => E; have r_lt0 : 0 < r.
 have r_nz : r != 0 by move: r_lt0; rewrite lt0r => /andP [].
 have {r_nz} /eqP : r * r = 1 by apply (mulfI r_nz); rewrite {3}E divff ?mulr1.
 rewrite -expr2 sqrf_eq1 => /orP [] /eqP rE; last first.
-- by move: r_lt0; rewrite rE lt0r ler_oppr oppr0 ler10 andbF.
+- by move: r_lt0; rewrite rE lt0r lerNr oppr0 ler10 andbF.
 have /andP[/eqP r1E /eqP r2E] : (r1 == 1%:R / 2%:R) && (r2 == 1%:R / 2%:R).
 - suff /eqP r1E : r1 == 1%:R / 2%:R.
   + rewrite r1E eqxx r1r2P r1E subr_eq.

@@ -88,7 +88,7 @@ rewrite /betS /betR ?scale0r !subr0 scale1r /ratio.
 case: pickP=> [x _|HF]; [|move: (HF 0)]; rewrite ?ord1 !mxE eqxx !mulr1;
 rewrite ?add11_neq0 // mul1r !scalerA 1!mulrC divff ?add11_neq0 ?eqxx //=.
 rewrite ?scale1r ?eqxx//.
-by rewrite invf_lt1 -1?{3}[1]add0r ?invr_gt0 ?addr_gt0 ?ltr_add2r ?ltr01.
+by rewrite invf_lt1 -1?{3}[1]add0r ?invr_gt0 ?addr_gt0 ?ltrD2r ?ltr01.
 Qed.
 
 (* Proof that the following axiom does not hold in the given model *)
@@ -252,7 +252,7 @@ have: betS 1%:M (-1)%:M 0%:M = false.
   case: pickP => /= [i|/all_v_neq0 H].
   case: i => ? ?.
   rewrite ord1 !mxE mul0rn sub0r !mulr1n invrN mulrN divr1.
-  by rewrite opprB ltr_subl_addr subrr ltr10 !andbF.
+  by rewrite opprB ltrBlDr subrr ltr10 !andbF.
   by rewrite ltxx andbF.
 by move->;apply /andP; move=> [/orP[/or3P[||]|]?  _].
 Qed.
@@ -381,9 +381,9 @@ rewrite !le_eqVlt; case: (a 0 i =P b 0 i)=> [->|_]; rewrite ?bet_xxa //=.
 case: (b 0 i =P c 0 i)=> [->|_]; rewrite ?bet_axx //= => HLt HGt.
 have: (0 < c 0 i - a 0 i)=> [|ac_lt]; first by rewrite subr_gt0 (lt_trans HLt).
 have: (0 < (b 0 i-a 0 i) / (c 0 i-a 0 i)); [|move: HLt=> _ HLt].
-  by rewrite ltr_pdivl_mulr // mul0r subr_gt0.
+  by rewrite ltr_pdivlMr // mul0r subr_gt0.
 have: ((b 0 i-a 0 i) / (c 0 i-a 0 i) < 1); [|move: HGt=> _ HGt].
-  by rewrite ltr_pdivr_mulr // mul1r ltr_subr_addr addrAC -addrA subrr addr0.
+  by rewrite ltr_pdivrMr // mul1r ltrBrDr addrAC -addrA subrr addr0.
 have: (betR (a 0 i)%:M (b 0 i)%:M (c 0 i)%:M = (b 0 i-a 0 i) / (c 0 i-a 0 i)).
   by apply ratio_eq; rewrite -[(a 0 i) %:M]scalemx1 -1?[(b 0 i)%:M]scalemx1;
   rewrite -[(c 0 i)%:M]scalemx1 -!scalerBl ?scalerA ?scalemx_eq0 ?negb_or;
@@ -401,9 +401,9 @@ rewrite !le_eqVlt; case: (b 0 i =P a 0 i)=> [->|_]; rewrite ?bet_xxa //=.
 case: (c 0 i =P b 0 i)=> [->|_]; rewrite ?bet_axx //= => HLt HGt.
 have: (c 0 i - a 0 i < 0)=> [|ac_lt]; first by rewrite subr_lt0 (lt_trans HLt).
 have: (0 < (b 0 i-a 0 i) / (c 0 i-a 0 i)); [|move: HGt=> _ HGt].
-  by rewrite ltr_ndivl_mulr // mul0r subr_lt0.
+  by rewrite ltr_ndivlMr // mul0r subr_lt0.
 have: ((b 0 i-a 0 i) / (c 0 i-a 0 i) < 1); [|move: HLt=> _ HLt].
-  by rewrite ltr_ndivr_mulr // mul1r ltr_subr_addr addrAC -addrA subrr addr0.
+  by rewrite ltr_ndivrMr // mul1r ltrBrDr addrAC -addrA subrr addr0.
 have: (betR (a 0 i)%:M (b 0 i)%:M (c 0 i)%:M = (b 0 i-a 0 i) / (c 0 i-a 0 i)).
   by apply ratio_eq; rewrite -[(a 0 i) %:M]scalemx1 -1?[(b 0 i)%:M]scalemx1;
   rewrite -[(c 0 i)%:M]scalemx1 -!scalerBl ?scalerA ?scalemx_eq0 ?negb_or;
