@@ -37,13 +37,13 @@ elim l; [intro a|clear l; intros b l IHl a]; intros n1 n2 d1 d2 _ H Hn1 Hn2 Hn.
   }
 
   {
-  destruct H as [HI H]. revert dependent n2. revert dependent n1; intro n1.
+  destruct H as [HI H]. generalize dependent n2. generalize dependent n1; intro n1.
   elim n1; [|clear n1; intros n1 IHn1]; intro Hn1.
 
     {
     intro n2; elim n2; [simpl; auto|clear n2; intros n2 IHn2 Hn2 _ Ha].
     simpl in Ha; apply HI in Ha; apply IHl with 0 d1; auto; simpl in *;
-    [discriminate|apply PeanoNat.Nat.lt_0_succ| |apply le_0_n].
+    [discriminate|apply PeanoNat.Nat.lt_0_succ| |apply Nat.le_0_l].
     apply Nat.succ_lt_mono; auto.
     }
 
@@ -102,7 +102,7 @@ intro l; split.
   assert (Hlast : nth (S (length l)) (a :: b :: l) a = last (b :: l) a).
     {
     transitivity (nth (length l) (b :: l) a); [simpl; auto|].
-    revert dependent b. intros b _ _ _ _ _ _; clear n1 n2 x y.
+    generalize dependent b. intros b _ _ _ _ _ _; clear n1 n2 x y.
     revert b; revert a; elim l; [simpl; auto|clear l; intros b l IHl d a].
     transitivity (nth (S (length l)) (a :: b :: l) d); [simpl; auto|].
     transitivity (nth (length l) (b :: l) d); [simpl; auto|].

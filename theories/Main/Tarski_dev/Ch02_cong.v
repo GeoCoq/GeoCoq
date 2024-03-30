@@ -214,21 +214,21 @@ Lemma cong_3_sym : forall A B C A' B' C',
  Cong_3 A B C A' B' C' -> Cong_3 A' B' C' A B C.
 Proof.
     unfold Cong_3.
-    intuition.
+    intuition auto with cong.
 Qed.
 
 Lemma cong_3_swap : forall A B C A' B' C',
   Cong_3 A B C A' B' C' -> Cong_3 B A C B' A' C'.
 Proof.
     unfold Cong_3.
-    intuition.
+    intuition auto with cong.
 Qed.
 
 Lemma cong_3_swap_2 : forall A B C A' B' C',
  Cong_3 A B C A' B' C' -> Cong_3 A C B A' C' B'.
 Proof.
     unfold Cong_3.
-    intuition.
+    intuition auto with cong.
 Qed.
 
 Lemma cong3_transitivity : forall A0 B0 C0 A1 B1 C1 A2 B2 C2,

@@ -1620,8 +1620,8 @@ intros.
 split; auto.
 unfold outH in *.
 decompose [or] H.
-apply betH_expand in H0;intuition.
-apply betH_expand in H1;intuition.
+apply betH_expand in H0; intuition.
+apply betH_expand in H1; intuition auto with col.
 destruct H1.
 subst.
 split.
@@ -1929,7 +1929,7 @@ elim (pasch B G A lCD bga); trivial; clear dependent bga; intro HCut4.
       apply inter_uniquenessH with G E F C; Col; try exists lCF; auto.
       intro; apply HNC4; ColHR.
       }
-    apply between_only_one' in HBet4; spliter; intuition.
+    apply between_only_one' in HBet4; spliter; exfalso; intuition auto with bet.
     }
   }
 Qed.
@@ -3045,7 +3045,7 @@ intuition.
 exists A.
 split; auto.
 assert(HH:= betH_trans0 P Y A X H11 H4).
-intuition.
+intuition auto with bet.
 exfalso.
 apply HC.
 unfold cut.
@@ -3429,7 +3429,7 @@ destruct (eq_dec_pointsH B' D').
  apply betH_expand in H10;intuition.
  destruct H10.
  apply betH_expand in H10;intuition.
- intuition.
+ exfalso; intuition.
  }
 assert (CongaH A B C A' B' C') by ( apply cong_5;auto).
 

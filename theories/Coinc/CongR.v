@@ -146,7 +146,7 @@ case_eq (exists_witness (fun s2 : SSP.elt => negb (SP.is_empty (SP.inter x1 s2))
   simpl in H.
   assumption.
 
-  intuition.
+  intuition auto with crelations.
 Qed.
 
 Lemma pick_lengths_ok_1 : forall s1 s2 ss,

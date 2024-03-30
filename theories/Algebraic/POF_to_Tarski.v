@@ -635,9 +635,10 @@ Lemma inner_pasch' a b c p q (k1 := betR a p c) (k2 := betR b q c) :
   ~ (bet a b c \/ bet b c a \/ bet c a b) ->
   exists x, betS p x b /\ betS q x a.
 Proof.
-rewrite /bet; case: (b =P p) => [-> ->|bp_neq]; [rewrite orbT; intuition|].
+rewrite /bet; case: (b =P p) => [-> -> ? ?|bp_neq];
+first by exfalso; intuition auto with bool.
 case: (a =P q)=> [-> _|aq_neq ? ? _].
-  by rewrite [betS c q b]betS_sym=> ->; rewrite orbT; intuition.
+  by rewrite [betS c q b]betS_sym=> -> ?; exfalso; intuition auto with bool.
 by destruct (@inner_pasch'' a b c p q) as [x []]=> //; exists x.
 Qed.
 
@@ -1421,7 +1422,7 @@ cut (triangle_circumscription_principle); [|have: tarski_s_parallel_postulate].
       by move: HNC1; rewrite /Col /colI; intuition.
     split; [|split]; [intuition..|move: HCop; rewrite -Cop__Coplanar].
     move => [e [f [g [HNC2 [[iaP aP] [[ibP bP] [[icP cP] [ixP xP]]]]]]]].
-    exists e, f, g; split; first by rewrite /Col /colI; intuition.
+    exists e, f, g; split; first by rewrite /Col /colI; intuition auto with col.
     split; first by exists iaP; move: aP; rewrite /Col /colI; intuition.
     split; first by exists ibP; move: bP; rewrite /Col /colI; intuition.
     split; first by exists icP; move: cP; rewrite /Col /colI; intuition.

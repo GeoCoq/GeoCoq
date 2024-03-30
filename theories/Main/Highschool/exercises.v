@@ -22,7 +22,7 @@ elim (eq_dec_points A C); intro; apply plg_per_rect.
   treat_equalities.
   assert (HM : exists M : Tpoint, Midpoint M J I) by (apply midpoint_existence); decompose [ex] HM; repeat split; intuition; exists x; intuition.
 
-  treat_equalities; intuition.
+  treat_equalities; intuition auto with perp.
 
   assert( Par A B J I /\ Par A C I K /\ Par B C J K /\
     Cong A K I J /\ Cong B K I J /\ Cong A J I K /\ Cong C J I K /\ Cong B I J K /\ Cong C I J K)
@@ -46,17 +46,20 @@ elim (eq_dec_points A C); intro; apply plg_per_rect.
         Cong A K I J /\ Cong B K I J /\ Cong A J I K /\ Cong C J I K /\ Cong B I J K /\ Cong C I J K)
       by (apply triangle_mid_par_strict_cong; intuition).
       spliter.
-      apply par_strict_symmetry; apply par_strict_col_par_strict with C; intuition; apply par_strict_symmetry; apply par_strict_right_comm; assumption; Col.
-      Par.
-      Col.
+      apply par_strict_symmetry; apply par_strict_col_par_strict with C;
+      intuition auto with col par;
+      apply par_strict_symmetry; apply par_strict_right_comm; assumption; Col.
 
       assert (Par_strict A B J I /\ Par_strict A C I K /\ Par_strict B C J K /\
         Cong A K I J /\ Cong B K I J /\ Cong A J I K /\ Cong C J I K /\ Cong B I J K /\ Cong C I J K)
       by (apply triangle_mid_par_strict_cong; intuition).
       spliter.
-      apply par_symmetry; apply par_col_par with B; intuition; apply par_symmetry; apply par_strict_par; assumption.
+      apply par_symmetry; apply par_col_par with B;
+      intuition auto with col par;
+      apply par_symmetry; apply par_strict_par; assumption.
 
-  left; apply l8_3 with B; try apply l8_2; try apply l8_3 with C; try apply l8_2; try assumption; intuition; Col.
+  left; apply l8_3 with B; try apply l8_2; try apply l8_3 with C; try apply l8_2;
+  try assumption; intuition auto with col.
 
 Qed.
 

@@ -556,7 +556,7 @@ Lemma col_pos_or_neg : forall O E X,
 Proof.
 intros O E X HOE HOX HCol.
 unfold Ps, Ng, Out.
-unfold Col in HCol; intuition.
+unfold Col in HCol; intuition auto with between.
 Qed.
 
 Lemma ltP_neg : forall O E E' A, LtP O E E' A O -> Ng O E A.
@@ -668,7 +668,7 @@ elim HElim; clear HElim; intro HPs2; treat_equalities.
   {
   assert (O = E)
     by (apply prod_uniqueness with O E E' O A; auto; apply prod_0_l; Col).
-  treat_equalities; intuition.
+  exfalso; treat_equalities; intuition auto with col.
   }
 
   {

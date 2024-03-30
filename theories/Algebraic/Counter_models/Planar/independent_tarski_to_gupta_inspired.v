@@ -51,8 +51,8 @@ assert (HP : @tarski_s_parallel_postulate (@GI_to_T (@IT_to_GI Tpoint IT ED IT2D
     [clear HC HNC HCop|intuition..|exists Y; intuition].
     destruct HPar as [HParS|HSL]; [left|right; intuition].
     destruct HParS as [HCop HNI]; split;
-    [intro; subst; apply HNI; exists C; intuition|].
-    split; [intro; subst; apply HNI; exists A; intuition|].
+    [intro; subst; apply HNI; exists C; intuition auto with col|].
+    split; [intro; subst; apply HNI; exists A; intuition auto with col|].
     split; [intuition|clear HCop].
     intros [X [HC1 HC2]]; apply HNI; exists X; intuition.
     }

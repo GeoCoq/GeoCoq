@@ -74,7 +74,7 @@ destruct ex_saccheri as [A1 [B1 [B2 [A2 [HPer1 [HPer2 [HCong HOS]]]]]]].
 exists A1; exists A2; exists B1; exists B2.
 assert (HNE : A1 <> A2) by (destruct HOS as [X [[H ?] ?]]; intro; subst A2; Col).
 split; [destruct HOS; unfold TS in *; spliter; Col|].
-split; [intro; treat_equalities; apply l8_7 in HPer1; intuition|split; [Cop|]].
+split; [intro; treat_equalities; apply l8_7 in HPer1; intuition auto with perp|split; [Cop|]].
 intros A3 A4 B3 B4 HC1 HC2 HPerp1 HC3 HC4 HPerp2.
 assert (HCong1 := rah__posidonius_aux HP A1 A2 A3 B1 B2 B3).
 assert (HCong2 := rah__posidonius_aux HP A1 A2 A4 B1 B2 B4).

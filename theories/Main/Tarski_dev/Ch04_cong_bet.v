@@ -117,8 +117,7 @@ Proof.
 unfold Cong_3.
 intros.
 spliter.
-assert (IFSC A B C B A B C X)
- by (unfold IFSC;intuition).
+assert (IFSC A B C B A B C X) by (unfold IFSC; intuition auto with cong).
 assert (Cong B B B X)
  by (apply (l4_2 _ _ _ _ _ _ _ _ H3)).
 treat_equalities.

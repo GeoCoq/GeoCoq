@@ -234,7 +234,7 @@ Proof.
   destruct HReach as [D [HD1 HD2]].
   apply l6_13_1 in HD2;
     [|apply l6_7 with B; [apply l6_6|]; apply bet_out; auto; apply grad__bet, HD1].
-  revert dependent C.
+  generalize dependent C.
   induction HD1.
     intros; assert (B = C) by (apply between_equality with A; Between); subst C.
     destruct (segment_construction A B A B) as [C []].

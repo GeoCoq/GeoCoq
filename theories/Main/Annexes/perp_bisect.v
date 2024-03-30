@@ -36,7 +36,7 @@ apply perp_bisect_equiv_def.
 unfold Perp_bisect_bis in *.
 elim H;intros.
 exists x.
-intuition; Perp.
+intuition auto with perp.
 Qed.
 
 Lemma perp_bisect_sym_2 :
@@ -50,7 +50,7 @@ apply perp_bisect_equiv_def.
 unfold Perp_bisect_bis in *.
 elim H;intros.
 exists x.
-intuition; Perp.
+intuition auto with perp; Midpoint.
 Qed.
 
 Lemma perp_bisect_sym_3 : forall A B C D,

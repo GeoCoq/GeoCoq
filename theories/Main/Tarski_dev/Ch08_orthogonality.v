@@ -944,7 +944,7 @@ Proof.
     ex_and H X.
     exists X.
     unfold Perp_at in *.
-    intuition.
+    intuition auto with col.
 Qed.
 
 Lemma perp_right_comm : forall A B C D, Perp A B C D -> Perp A B D C.
@@ -954,7 +954,7 @@ Proof.
     ex_and H X.
     exists X.
     unfold Perp_at in *.
-    intuition.
+    intuition auto with col.
 Qed.
 
 Lemma perp_comm : forall A B C D, Perp A B C D -> Perp B A D C.
@@ -987,7 +987,7 @@ Lemma perp_in_left_comm :
   Perp_at X A B C D -> Perp_at X B A C D.
 Proof.
     unfold Perp_at.
-    intuition.
+    intuition auto with col.
 Qed.
 
 Lemma perp_in_right_comm : forall A B C D X, Perp_at X A B C D -> Perp_at X A B D C.
@@ -1064,7 +1064,7 @@ Qed.
 Lemma perp_in_col : forall A B C D X, Perp_at X A B C D -> Col A B X /\ Col C D X.
 Proof.
     unfold Perp_at.
-    intuition.
+    intuition auto with col.
 Qed.
 
 Lemma perp_perp_in : forall A B C, Perp A B C A -> Perp_at A A B C A.
@@ -1074,7 +1074,7 @@ Proof.
       unfold Perp in H.
       ex_and H X.
       unfold Perp_at in H0.
-      intuition.
+      intuition auto with col.
     assumption.
 Qed.
 
@@ -1522,7 +1522,7 @@ Lemma l8_18_uniqueness : forall A B C X Y,
 Proof.
     intros.
     show_distinct A B.
-      solve [intuition].
+      solve [intuition auto with col].
     assert (Perp_at X A B C X) by (eapply l8_15_1;assumption).
     assert (Perp_at Y A B C Y) by (eapply l8_15_1;assumption).
     unfold Perp_at in *.
@@ -1744,7 +1744,7 @@ Proof.
     ex_and H13 X.
     assert (OFSC A Y Z Q Q Y P A) by (unfold OFSC;repeat split;Between;Cong).
     show_distinct A Y.
-      intuition.
+      intuition auto with col.
     assert (Cong Z Q P A) by (eauto using five_segment_with_def).
     assert (Cong_3 A P Y Q Z Y) by (unfold Cong_3;repeat split;Cong).
     assert (Per Q Z Y) by (eauto using l8_10).
@@ -1886,7 +1886,6 @@ Proof.
     spliter.
     apply H57;ColR.
 Qed.
-
 
 Lemma l8_21_aux : forall A B C,
  ~ Col A B C -> exists P, exists T, Perp A B P A /\ Col A B T /\ Bet C T P.

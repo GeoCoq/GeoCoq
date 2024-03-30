@@ -235,7 +235,7 @@ Lemma cong3_symmetry : forall A B C A' B' C' : Tpoint , Cong_3 A B C A' B' C' ->
 Proof.
     unfold Cong_3.
     intros.
-    intuition.
+    intuition auto with cong.
 Qed.
 
 Lemma between_cong_2 : forall A B D E, Bet A D B -> Bet A E B -> Cong A D A E -> D = E.
@@ -289,9 +289,9 @@ Proof.
     assert (Cong A D' A B) by CongR.
     elim H1; intro; clear H1.
     assert (B = D') by (apply (between_cong A D' B); Cong).
-    subst;intuition.
+    subst; intuition.
     assert (D'=B) by (apply (between_cong A B D');assumption).
-    subst;intuition.
+    subst; intuition.
     intuition.
 Qed.
 
@@ -799,12 +799,12 @@ Proof.
 intros.
 induction(eq_dec_points A O).
 treat_equalities; auto.
-assert (o=a). 
+assert (o=a).
 apply le_zero with A;auto.
 subst;auto.
 induction(eq_dec_points B O).
 treat_equalities;auto.
-assert (o=b). 
+assert (o=b).
 apply le_zero with B;auto.
 subst;auto using le_left_comm, le_right_comm.
 

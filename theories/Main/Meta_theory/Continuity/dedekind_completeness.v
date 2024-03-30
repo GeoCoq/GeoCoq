@@ -99,7 +99,8 @@ cut(forall P Q A B,
                exists X, Col P Q X /\ Bet A (f X) B /\ f X <> A /\ f X <> B).
     {
     intros [|]; [destruct (HX P Q' A B) as [X]|destruct (HX P Q' B A) as [X]];
-    Col; [exists X; intuition|apply lt_right_comm, HLt|exists X; intuition].
+    Col; [exists X; intuition|apply lt_right_comm, HLt|].
+    exists X; intuition auto with between.
     }
   (* Either we can conclude using HH which is a corrolary of the auxilliary
      statement or Bet A (f P) B holds in which case we are done *)
@@ -123,7 +124,7 @@ cut(forall P Q A B,
     [destruct (segment_construction Q P P Q) as [Q' []]; exists Q'|exists Q];
     [assert (f Q' <> f P) by (intro; cut (P = Q'); assert_diffs; finish)|];
     repeat split; Col; [| |apply l6_13_1; Le|];
-    [|intro; subst; destruct HLt; intuition..].
+    [|intro; subst; destruct HLt; intuition auto with cong col..].
     assert (Bet (f Q) (f P) (f Q')) by (apply fBet; Col).
     assert (Cong (f P) (f Q') (f P) (f Q)) by (apply fCong; Col).
     apply l6_13_1; [apply l6_2 with (f Q); Between|].
@@ -170,7 +171,7 @@ cut(forall P Q A B,
         }
 
         {
-        destruct (HX Q P A B) as [X]; [..|exists X; repeat split; intuition];
+        destruct (HX Q P A B) as [X]; [..|exists X; repeat split; intuition auto with col];
         [apply line_extension_symmetry|Between|apply lt_left_comm, HLt|..];
         [auto| |apply outer_transitivity_between2 with (f P)]; Between.
         }

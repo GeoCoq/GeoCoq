@@ -127,9 +127,9 @@ Proof.
     induction H.
       contradiction.
     induction (eq_dec_points A P).
-      subst P; intuition.
+      subst P; intuition auto with between_no_eauto.
     induction (eq_dec_points B P).
-      subst P; intuition.
+      subst P; intuition auto with between_no_eauto.
     induction H; repeat split; Between.
 Qed.
 
@@ -240,7 +240,7 @@ Proof.
     assert (exists X : Tpoint, (Bet A R X \/ Bet A X R) /\ Cong A X B C) by (apply (segment_construction_2);assumption).
     ex_and H1 X.
     exists X.
-    unfold Out;repeat split; try intro;treat_equalities;intuition.
+    unfold Out; repeat split; try intro;treat_equalities; intuition.
 Qed.
 
 Lemma segment_construction_3 : forall A B X Y, A <> B -> X <> Y -> exists C, Out A B C /\ Cong A C X Y.
@@ -602,7 +602,7 @@ Proof.
       intuition.
     exfalso.
     apply H0.
-    intuition.
+    intuition auto with between.
 Qed.
 
 Lemma or_bet_out : forall A B C, Bet A B C \/ Out B A C \/ ~Col A B C.

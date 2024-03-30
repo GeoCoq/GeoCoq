@@ -21,7 +21,7 @@ elim (col_dec A1 A2 P); [intro HCol; treat_equalities|intro HNC1].
 
   {
   destruct (perp_exists P A1 A2) as [X HPerp1]; [assert_diffs; auto|].
-  revert dependent A2; revert A1.
+  generalize dependent A2; revert A1.
   cut (forall A1 A2, Par A1 A2 B1 B2 -> Par A1 A2 C1 C2 -> ~ Col A1 A2 P -> Perp P X A1 A2 ->
                      ~ Col P X A1 -> Col C1 B1 B2 /\ Col C2 B1 B2).
   {

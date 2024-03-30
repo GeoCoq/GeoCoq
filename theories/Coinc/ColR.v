@@ -184,7 +184,7 @@ case_eq (exists_witness (fun s2 : SS.elt => pick_line (S.inter x1 s2) y3) x2).
   simpl in *.
   intuition.
 
-  intuition.
+  intuition auto with crelations.
 Qed.
 
 Lemma pick_lines_ok_1 : forall s1 s2 ss sp,

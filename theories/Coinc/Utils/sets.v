@@ -296,7 +296,7 @@ Module SetOfPairsOfPositiveOrderedType <: OrderedType.
       rewrite HC.
       apply CompEq.
       unfold eq.
-      rewrite HF; rewrite HS; split; intuition.
+      rewrite HF; rewrite HS; split; intuition auto with crelations.
 
       case_eq (Pos.ltb (sndpp(t1)) (sndpp(t2))); intro HLS.
 
@@ -780,7 +780,7 @@ Section Set_of_tuple_of_positive.
       simpl.
       intro H.
       destruct H as [Haa0 Hll'].
-      split; intuition.
+      split; intuition auto with crelations.
   Qed.
 
   Lemma eqListTrans : forall l1 l2 l3, eqList l1 l2 -> eqList l2 l3 -> eqList l1 l3.
@@ -855,13 +855,13 @@ Section Set_of_tuple_of_positive.
         intuition.
 
         simpl; unfold eqList.
-        split; intro; intuition; discriminate.
+        split; intro; intuition auto with bool; discriminate.
 
       intro l2.
       induction l2.
 
         simpl; unfold eqList.
-        split; intro; intuition; discriminate.
+        split; intro; intuition auto with bool; discriminate.
 
         split; intro H.
 

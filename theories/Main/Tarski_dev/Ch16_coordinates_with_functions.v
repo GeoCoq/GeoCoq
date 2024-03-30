@@ -2112,7 +2112,7 @@ destruct (midpoint_existence A B) as [I HI].
 destruct (exists_cong_per A I A R) as [C HC].
 exists C.
 spliter.
-revert dependent A .
+generalize dependent A .
 intro A.
 convert_to_algebra.
 decompose_coordinates; intros; spliter;

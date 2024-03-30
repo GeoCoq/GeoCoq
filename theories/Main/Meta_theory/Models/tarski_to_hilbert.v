@@ -28,7 +28,7 @@ Proof.
 intros.
 exists (Lin A B H).
 unfold IncidentL.
-intuition.
+intuition auto with col.
 Qed.
 
 (** We need a notion of equality over lines. *)
@@ -194,11 +194,11 @@ assert (exists B, A<>B).
 eapply another_point.
 DecompEx H0 B.
 exists (Lin A B H1).
-unfold IncidentL;intuition.
+unfold IncidentL; intuition auto with col.
 exists (Lin A C H0).
-unfold IncidentL;intuition.
+unfold IncidentL; intuition auto with col.
 exists (Lin A B H0).
-unfold IncidentL;intuition.
+unfold IncidentL; intuition auto with col.
 Qed.
 
 Lemma cols_coincide : forall A B C, Col A B C <-> Col_H A B C.
@@ -392,7 +392,7 @@ unfold Col_H, Between_H in *.
 DecompAndAll.
 exists (Lin A B H2).
 unfold IncidentL.
-intuition.
+intuition auto with col.
 Qed.
 
 Lemma axiom_between_diff :
@@ -409,7 +409,7 @@ Lemma axiom_between_comm : forall A B C, Between_H A B C -> Between_H C B A.
 Proof.
 unfold Between_H in |- *.
 intros.
-intuition.
+intuition auto with between.
 Qed.
 
 

@@ -176,9 +176,9 @@ elim (T_dec C A B); intro HT3.
 
   apply T_Bet in HT1; intuition.
 
-  apply T_Bet in HT2; intuition.
+  apply T_Bet in HT2; intuition auto with between.
 
-  apply T_Bet in HT2; intuition.
+  apply T_Bet in HT2; intuition auto with between.
 
   apply T_Bet in HT3; intuition.
 
@@ -273,7 +273,7 @@ Lemma between_symmetry_B : forall A B C, BetH A B C -> BetH C B A.
 Proof.
 unfold BetH.
 intros A B C HBet.
-repeat split; intuition.
+repeat split; intuition auto with between.
 Qed.
 
 Lemma five_segment_B : forall A A' B B' C C' D D' : Tpoint,

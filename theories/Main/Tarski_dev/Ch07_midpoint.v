@@ -96,7 +96,7 @@ Qed.
 Lemma l7_2 : forall M A B, Midpoint M A B -> Midpoint M B A.
 Proof.
     unfold Midpoint.
-    intuition.
+    intuition auto with between cong.
 Qed.
 
 Lemma l7_3 : forall M A, Midpoint M A A -> M=A.
@@ -339,7 +339,7 @@ Lemma l7_20_bis : forall M A B, A<>B ->
   Col A M B -> Cong M A M B -> Midpoint M A B.
 Proof.
    intros.
-   induction (l7_20 M A B H0 H1);intuition.
+   induction (l7_20 M A B H0 H1); intuition.
 Qed.
 
 Lemma cong_col_mid : forall A B C,
@@ -634,7 +634,7 @@ Proof.
       assert(A = B \/ Midpoint C A B).
         apply l7_20.
           unfold Col in *.
-          intuition.
+          intuition auto with between.
         assumption.
       induction H1.
         subst B.

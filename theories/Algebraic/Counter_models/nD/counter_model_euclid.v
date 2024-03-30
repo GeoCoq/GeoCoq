@@ -2757,8 +2757,8 @@ cut (triangle_circumscription_principle); [|rewrite /proclus_postulate].
   apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
   simpl; try tauto.
 move=> a b c Hnc; destruct (HP a b c) as [x [? [? HCop]]];
-[intro; subst; Col..|rewrite /independence.Col; intuition|exists x].
-split; [|split] => //; apply Cop__Coplanar.
+[intro; subst; Col..|rewrite /independence.Col; intuition auto with col|].
+exists x; split; [|split] => //; apply Cop__Coplanar.
 destruct HCop as [E [F [G [? [HCopA [HCopB [HCopC HCopD]]]]]]]; exists E, F, G.
 split; first by rewrite -Col_Col.
 split; first by destruct HCopA as [P []]; exists P; split; rewrite -Col_Col.

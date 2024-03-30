@@ -308,7 +308,7 @@ eapply (Build_euclidean_neutral Tpoint Tcircle tarski_axioms.Cong Axioms.Definit
   intro H;rewrite H in *;apply T;Between.
   split.
   unfold Definitions.BetS in *;intuition.
-  unfold Definitions.BetS in *;intuition.
+  unfold Definitions.BetS in *; intuition auto with between.
 - intros; unfold Definitions.BetS;
 intro;spliter;treat_equalities;intuition.
 - intros;unfold Definitions.BetS in *;

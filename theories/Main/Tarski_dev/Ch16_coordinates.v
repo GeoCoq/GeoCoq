@@ -243,15 +243,15 @@ split; intro; spliter; treat_equalities.
 
       {
       destruct HProjp2 as [H H1]; clear H; elim H1; clear H1; intro H1;
-      [destruct H1 as [H1 HPerp1]|spliter; intuition].
+      [destruct H1 as [H1 HPerp1]|spliter; exfalso; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
-      [destruct H2 as [H2 HPerp2]|spliter; intuition].
+      [destruct H2 as [H2 HPerp2]|spliter; exfalso; intuition].
       apply l12_9_2D with P2 P1; Perp.
       }
 
       {
       destruct HProjp2 as [H H1]; clear H; elim H1; clear H1; intro H1;
-      [destruct H1 as [H1 HPerp1]|spliter; intuition].
+      [destruct H1 as [H1 HPerp1]|spliter; exfalso; intuition].
       destruct HProjp3 as [H H2]; clear H; elim H2; clear H2; intro H2;
       [destruct H2 as [H2 HPerp2]|spliter; intuition].
       apply l12_9_2D with P2 P1; Perp.
@@ -262,7 +262,7 @@ split; intro; spliter; treat_equalities.
       destruct HProjp1 as [H H1]; clear H; elim H1; clear H1; intro H1;
       [destruct H1 as [H1 HPerp1]|spliter; intuition].
       destruct HProjp4 as [H H2]; clear H; elim H2; clear H2; intro H2;
-      [destruct H2 as [H2 HPerp2]|spliter; intuition].
+      [destruct H2 as [H2 HPerp2]|spliter; exfalso; intuition].
       apply l12_9_2D with P2 P1; Perp.
       apply perp_col0 with P1 PX; Perp; Col.
       }
@@ -1569,7 +1569,7 @@ split; [intro HBet|intro HT].
         }
 
         {
-        apply prod_null in HT; elim HT; clear HT; intro H; [intuition|].
+        apply prod_null in HT; elim HT; clear HT; intro H; [exfalso; intuition|].
         apply eq_sym in H; treat_equalities; exfalso; apply HDiff2.
         apply length_id in HAC; spliter; auto.
         }

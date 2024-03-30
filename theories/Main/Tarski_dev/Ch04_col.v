@@ -22,21 +22,21 @@ Lemma col_permutation_3 : forall A B C, Col A B C -> Col C B A.
 Proof.
     unfold Col.
     intros.
-    intuition.
+    intuition auto with between.
 Qed.
 
 Lemma col_permutation_4 : forall A B C, Col A B C -> Col B A C.
 Proof.
     unfold Col.
     intros.
-    intuition.
+    intuition auto with between.
 Qed.
 
 Lemma col_permutation_5 : forall A B C, Col A B C -> Col A C B.
 Proof.
     unfold Col.
     intros.
-    intuition.
+    intuition auto with between.
 Qed.
 
 End T4_1.
@@ -176,15 +176,15 @@ Proof.
       prolong A' B' C' B C.
       exists C'.
       assert (Cong A C A' C') by (eapply l2_11;eCong).
-      unfold Cong_3;intuition.
+      unfold Cong_3; intuition auto with cong.
       assert (exists C', Bet A' C' B' /\ Cong_3 A C B A' C' B') by (eapply l4_5;Between).
       ex_and H1 C'.
       exists C'.
       auto with cong3.
     prolong B' A' C' A C.
     exists C'.
-    assert (Cong B C B' C') by (eapply l2_11;eBetween;Cong).
-    unfold Cong_3;intuition.
+    assert (Cong B C B' C') by (eapply l2_11; eBetween; Cong).
+    unfold Cong_3; intuition auto with cong.
 Qed.
 
 Lemma l4_16 : forall A B C D A' B' C' D',

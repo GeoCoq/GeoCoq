@@ -249,7 +249,7 @@ Proof with Col.
         apply H4.
         apply col_permutation_2.
         eapply (col_transitivity_1 _ B).
-          assert_diffs;intuition.
+          assert_diffs; intuition.
           apply col_permutation_4.
           assumption.
         assert_cols...
@@ -1254,11 +1254,11 @@ Proof.
     induction (eq_dec_points B Q).
       subst Q;exists B;Between.
     show_distinct A P.
-      intuition.
+      intuition auto with col.
     show_distinct P Q.
-      intuition.
+      intuition auto with col.
     show_distinct P B.
-      intuition.
+      intuition auto with col.
     assert(TS P Q C B).
       unfold TS.
       repeat split.
@@ -1267,7 +1267,8 @@ Proof.
         intro;apply H1; ColR.
       exists Q; split;Col;Between.
     assert_diffs.
-    assert (TS P Q A B) by (apply l9_5 with C P;unfold Out;intuition).
+    assert (TS P Q A B)
+      by (apply l9_5 with C P; unfold Out; intuition auto with between col).
     unfold TS in H8.
     spliter.
     ex_and H11 X.
@@ -3033,7 +3034,7 @@ Proof.
   intros A B C U V P HUV HU HV HCol.
   destruct (col_dec A B C) as [HCol1|HNCol].
     apply col__coplanar, HCol1.
-  revert dependent C.
+  generalize dependent C.
   revert A B.
   assert (Haux : forall A B C, ~ Col A B C -> ~ Col U A B ->
   Coplanar A B C U -> Coplanar A B C V -> Coplanar A B C P).

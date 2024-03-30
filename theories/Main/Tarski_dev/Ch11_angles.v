@@ -1759,7 +1759,7 @@ Proof.
         unfold OS in *.
         decompose [ex and] H1.
         unfold TS in *.
-        intuition.
+        exfalso; intuition auto with col.
       subst.
       unfold OS in *.
       decompose [ex and] H1.
@@ -1773,7 +1773,7 @@ Proof.
         unfold OS in *.
         decompose [ex and] H1.
         unfold TS in *.
-        intuition.
+        exfalso; intuition auto with col.
         subst.
         unfold OS in *.
         decompose [ex and] H1.
@@ -6658,13 +6658,13 @@ Lemma conga_dec :
 Proof.
     intros.
     induction (eq_dec_points A B).
-      subst;right;intro;unfold CongA in *;intuition.
+      subst;right;intro;unfold CongA in *; intuition.
     induction (eq_dec_points C B).
-      subst;right;intro;unfold CongA in *;intuition.
+      subst;right;intro;unfold CongA in *; intuition.
     induction (eq_dec_points D E).
-      subst;right;intro;unfold CongA in *;intuition.
+      subst;right;intro;unfold CongA in *; intuition.
     induction (eq_dec_points F E).
-      subst;right;intro;unfold CongA in *;intuition.
+      subst;right;intro;unfold CongA in *; intuition.
     assert (exists A' : Tpoint, Bet B A A' /\ Cong A A' E D) by (apply segment_construction).
     decompose [ex and] H3; clear H3.
     assert (exists C' : Tpoint, Bet B C C' /\ Cong C C' E F) by (apply segment_construction).
@@ -8231,7 +8231,7 @@ Proof.
   apply l8_2, (l11_60 A' A C'');
     [apply one_side_not_col124 with C; Side|Perp..| |apply coplanar_trans_1 with C; Col; Cop].
   apply l8_2.
-  revert dependent B'.
+  generalize dependent B'.
   assert (Haux : forall B', OS A A' B B' -> Per B' A' A -> Per B' A' C'').
   { intros B' HOS HPer.
     apply (l11_17 B A C); trivial.
@@ -8531,7 +8531,7 @@ Proof.
   intros A B C U V.
   destruct (eq_dec_points U V).
     unfold Orth, Orth_at; right; intros [X []]; spliter; auto.
-  revert dependent V.
+  generalize dependent V.
   revert U.
   assert (Haux : forall U V, U <> V -> ~ Coplanar A B C U -> Orth A B C U V \/ ~ Orth A B C U V).
   { intros U V HUV HU.
