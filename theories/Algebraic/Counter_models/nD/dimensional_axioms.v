@@ -258,7 +258,7 @@ suff -> : nth O (belast (S O) (iota 2 n)) m = m.+1 by rewrite /f.
 suff: forall l, (m < l)%N -> nth O (belast (S O) (iota 2 l)) m = m.+1.
 - by move => lP; rewrite (lP n).
 move => {p f i m_lt_n} l; elim l => // {}l IHl m_lt_lp1.
-rewrite -(addn1 l) 1?iota_add 1?iotaD belast_cat nth_cat size_belast size_iota.
+rewrite -(addn1 l) iotaD belast_cat nth_cat size_belast size_iota.
 case: (m =P l) => [-> {IHl m_lt_lp1 m}|/eqP lm_neq]; last first.
 - suff m_lt_l : (m < l)%N by rewrite m_lt_l IHl.
   by move: (ltnSE m_lt_lp1) lm_neq; rewrite leq_eqVlt => /orP[/eqP ->/eqP|->].
