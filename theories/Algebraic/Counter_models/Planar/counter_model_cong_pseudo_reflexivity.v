@@ -18,35 +18,25 @@ Unset Printing Implicit Defensive.
 Import GRing.Theory Num.Theory Order.TTheory.
 Local Open Scope ring_scope.
 
+Require Import GeoCoq.Algebraic.Counter_models.nD.counter_model_cong_pseudo_reflexivity.
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
 
-Section TarskinD.
+Section Tarski2D.
 
-Variable n : nat.
 Variable R : realFieldType.
 
-Definition Point := 'rV[R]_(n.+1).
+Definition Point := 'rV[R]_2.
 Implicit Types (a b c d : Point).
 
 Definition cong' a b c d := a == b.
 Definition bet' a b c := bet a b c.
 
-Lemma onemx_neq0 :
-  @const_mx (Num.RealField.sort R) (S O) (S n) 0 !=
-  @const_mx (Num.RealField.sort R) (S O) (S n) 1.
-Proof.
-by apply/eqP=> /matrixP/(_ 0 0)/eqP; rewrite /const_mx !mxE eq_sym oner_eq0.
-Qed.
-
-Lemma point_equality_decidability : point_equality_decidability Point.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof. by move => a b; case: (a =P b); tauto. Qed.
 
 Lemma cong_pseudo_reflexivity : ~ cong_pseudo_reflexivityP Point cong'.
-Proof.
-move=> HF; move: onemx_neq0 (HF (const_mx 0) (const_mx 1)).
-by rewrite /cong'; case: (const_mx 0 =P const_mx 1).
-Qed.
+Proof. apply counter_model_cong_pseudo_reflexivity.cong_pseudo_reflexivity. Qed.
 
 Lemma cong_inner_transitivity : cong_inner_transitivityP Point cong'.
 Proof. by move=> a b; rewrite /cong'. Qed.
@@ -73,26 +63,18 @@ Proof. unfold bet_symmetryP; apply bet_symmetry. Qed.
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point bet'.
 Proof. unfold bet_inner_transitivityP; apply bet_inner_transitivity. Qed.
 
-End TarskinD.
-
-Section Tarski2D.
-
-Variable R: realFieldType.
-Implicit Types (A B C D a b c d v : (@Point 1 R)).
-
-
 Definition a' := (@a R 0).
 Definition b' := (@b R 0).
 Definition c' := (@c R 0).
 
-Lemma lower_dim : lower_dimP (@Point 1 R) (@bet' 1 R) a' b' c'.
+Lemma lower_dim : lower_dimP Point bet' a' b' c'.
 Proof.
 rewrite /lower_dimP /Col /bet' /bet /betE ab_neq bc_neq ca_neq /= => H; move: H.
 rewrite /betS betR_abc betR_bca; elim ((@betR_cab R 0))=> [->|->];
 rewrite !ltxx ltr01 /= ![_ && false]andbC /=; firstorder.
 Qed.
 
-Lemma upper_dim : upper_dimP (@Point 1 R) (@bet' 1 R) (@cong' 1 R).
+Lemma upper_dim : upper_dimP Point bet' cong'.
 Proof.
 rewrite /cong' => a b c p q ? ? ? ? /eqP -> /eqP -> /eqP ->.
 by rewrite /Col /bet' bet_axx; left.
@@ -104,7 +86,7 @@ Section rcfTarski2D.
 
 Variable R : rcfType.
 
-Lemma euclid : euclidP (@Point 1 R) (@bet' 1 R).
+Lemma euclid : euclidP (@Point R) (@bet' R).
 Proof.
 move => a b c d p q abcdP abpP abqP cdpqP.
 destruct (@proclus R 0 a b c d p q) as [y [pqyP cdyP]];

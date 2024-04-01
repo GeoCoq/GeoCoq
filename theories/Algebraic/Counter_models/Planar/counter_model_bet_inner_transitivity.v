@@ -22,9 +22,9 @@ Qed.
 
 (* Proof that the following axioms hold in the given model *)
 
-Lemma point_equality_decidability : point_equality_decidability Point.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof.
-unfold point_equality_decidability;
+unfold point_equality_decidabilityP;
 destruct A, B; try tauto; right; discriminate.
 Qed.
 

@@ -18,7 +18,6 @@ Local Open Scope ring_scope.
 
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
-
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
 
 Section RfTarski2D.
@@ -118,7 +117,7 @@ by apply /implyP.
 Qed.
 
 (* Proof that the following axioms hold in the given model *)
-Lemma point_equality_decidability : point_equality_decidability Point.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof. by move=> a b; case: (a =P b); tauto. Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point bet'.

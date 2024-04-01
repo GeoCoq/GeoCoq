@@ -16,20 +16,8 @@ Import GRing.Theory Num.Theory Order.TTheory.
 Local Open Scope ring_scope.
 
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
+Require Import GeoCoq.Algebraic.Counter_models.nD.counter_model_five_segment.
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
-
-Section Ratio1D.
-
-Variable R : realFieldType.
-
-Lemma ratio_1D (v1 v2 : 'rV[R]_(1)) : v2 != 0 -> v1 == ratio v1 v2 *: v2.
-Proof.
-rewrite /ratio; case: pickP=> [x|/all_v_neq0 //]; case: x=> ? ?.
-rewrite ord1=> ? ?; apply /eqP /matrixP=> i j; case: i; case: j=> ? ? ? ?.
-by rewrite !ord1 !mxE mulrAC -mulrA divff // mulr1.
-Qed.
-
-End Ratio1D.
 
 Section RfTarski2D.
 
@@ -38,142 +26,63 @@ Definition Point := 'rV[R]_2.
 Implicit Types (a b c d : Point).
 
 (* Definition of the counter-model *)
-Definition bet' a b c :=
-  bet (a 0 0)%:M (b 0 0)%:M (c 0 0)%:M &&
-  bet (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M.
+Definition bet' a b c := counter_model_five_segment.bet' a b c.
 
-Definition cong' a b c d :=
-  cong (a 0 0)%:M (b 0 0)%:M  (c 0 0)%:M (d 0 0)%:M &&
-  cong (a 0 1)%:M (b 0 1)%:M  (c 0 1)%:M (d 0 1)%:M.
+Lemma bet'P a b c :
+  bet' a b c =
+  bet (a 0 0)%:M (b 0 0)%:M (c 0 0)%:M && bet (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M.
+Proof.
+rewrite /bet' /counter_model_five_segment.bet'.
+have E : forall p, @head 0 R p = p 0 0 by move => p; rewrite /head lshift0.
+suff {E} -> : bet (behead a) (behead b) (behead c) =
+              bet (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M by rewrite !E.
+suff {a b c} E : forall p, @behead 0 R p = (p 0 1)%:M by rewrite !E.
+move => p; rewrite /behead lshift0 /col'; apply /rowP => i; rewrite !mxE.
+case: i => i; case: i => // i.
+have -> : Ordinal i = inord 0 by apply: val_inj; rewrite val_insubd.
+have -> : @inord 0 0 = 0 by apply val_inj; rewrite val_insubd.
+have -> : @lift 2 0 0 = inord 1 by apply: val_inj; rewrite val_insubd.
+have -> : @inord 1 1 = 1 by apply: val_inj; rewrite val_insubd.
+by rewrite eqxx mulr1n.
+Qed.
+
+Definition cong' a b c d := counter_model_five_segment.cong' a b c d.
 
 Definition a' : 'rV[R]_2 := row2 (-1) 0.
 Definition b' : 'rV[R]_2 := row2 0 1.
 Definition c' : 'rV[R]_2 := row2 1 0.
 
-Definition sqr_L2_norm_1D (a b : 'rV[R]_1) := (b 0 0 - a 0 0) ^+ 2.
-
-Definition sqr_L2_norm_1D_i a b i := sqr_L2_norm_1D (a 0 i)%:M (b 0 i)%:M.
-
-Lemma congP_aux' (a b : 'rV[R]_1) :
-  (b - a) *m (b - a)^T = (sqr_L2_norm_1D a b)%:M.
-Proof.
-rewrite [X in X=_]mx11_scalar /sqr_L2_norm_1D !mxE.
-rewrite !big_ord_recr /= big_ord0 add0r !mxE -!expr2.
-by congr ((b 0 _ - a 0 _) ^+ 2)%:M; apply: val_inj.
-Qed.
-
-Lemma congP_aux a b c d :
-  cong' a b c d =
-  (sqr_L2_norm_1D_i a b 0 == sqr_L2_norm_1D_i c d 0) &&
-  (sqr_L2_norm_1D_i a b 1 == sqr_L2_norm_1D_i c d 1).
-Proof.
-rewrite /cong' /sqr_L2_norm_1D_i /cong !congP_aux' /sqr_L2_norm_1D;
-apply/andP/andP; [move=> [H0 H1]|move=> [/eqP-> /eqP->] //].
-move/eqP: H0; move/eqP: H1; move=>/matrixP /(_ 0 0) /eqP H0.
-move=> /matrixP /(_ 0 0) /eqP H1; move: H1 H0; rewrite !mxE /= !mulr1n.
-move=> /eqP -> /eqP ->; by split.
-Qed.
-
-Lemma congP a b c d :
-  reflect ((sqr_L2_norm_1D_i a b 0 == sqr_L2_norm_1D_i c d 0) /\
-           (sqr_L2_norm_1D_i a b 1 == sqr_L2_norm_1D_i c d 1))
-          (cong' a b c d).
-Proof. by rewrite !congP_aux; exact /andP. Qed.
-
-Lemma bet_012 : @bet R 1 0%:M 1%:M (1+1)%:M.
-Proof.
-have eq0P : 0%:M = 0 by move => *; apply/matrixP => i j; rewrite !mxE// mul0rn.
-apply /orP; right; rewrite -scalemx1 -scalemx1 -[(1+1)%:M]scalemx1 ?eq0P.
-rewrite /betS /betR ?scale0r !subr0 scale1r /ratio.
-case: pickP=> [x _|HF]; [|move: (HF 0)]; rewrite ?ord1 !mxE eqxx !mulr1;
-rewrite ?add11_neq0 // mul1r !scalerA 1!mulrC divff ?add11_neq0 ?eqxx //=.
-rewrite ?scale1r ?eqxx//.
-by rewrite invf_lt1 -1?{3}[1]add0r ?invr_gt0 ?addr_gt0 ?ltrD2r ?ltr01.
-Qed.
-
 (* Proof that the following axiom does not hold in the given model *)
 Lemma five_segment : ~ five_segmentP Point bet' cong'.
-Proof.
-unfold five_segmentP=> H.
-set a := (@row2 R 0 1); set b := (@row2 R 1 1); set c := (@row2 R (1+1) (1+1)).
-set d := (@row2 R 1 (1+1)); set d' := (@row2 R 1 0); absurd (cong' c d c d').
-  rewrite /cong' /cong !mxE eqxx /= subrr mul0mx eq_sym quad_eq0.
-  rewrite -[X in X == _]opprB oppr_eq0 -scalemx1 -[0%:M]scalemx1 -scalerBl.
-  rewrite subr0 scalemx_eq0=> /orP [|/eqP HF]; rewrite ?paddr_eq0 ?oner_eq0;
-  by rewrite ?ler01 //; move: (matrix_nonzero1 R 0); rewrite HF eqxx.
-apply (H a a b b c c d d'); rewrite /bet' /a /b /c /d /d'; try apply /congP;
-rewrite /sqr_L2_norm_1D_i /sqr_L2_norm_1D ?mxE /= ?eqxx ?bet_xxa ?andbT //=;
-rewrite ?mul0rn ?sub0r ?mulr1n ?sqrrN -1?addrA ?subrr ?addr0 ?eqxx ?bet_012 //.
-by apply /eqP; rewrite -subr_eq0 vector2_eq0 !mxE /= sub0r oppr_eq0 oner_eq0.
-Qed.
+Proof. by apply five_segment. Qed.
 
 (* Proof that the following axioms hold in the given model *)
-Lemma point_equality_decidability : point_equality_decidability Point.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof. by move=> a b; case: (a =P b); tauto. Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point bet'.
-Proof.
-move=> a b c d /andP[H10 H11] /andP[H20 H21]; rewrite /bet'; apply /andP; split;
-[move : H10 H20|move: H11 H21]; apply bet_inner_transitivity.
-Qed.
+Proof. by apply bet_inner_transitivity. Qed.
 
 Lemma cong_pseudo_reflexivity :
   cong_pseudo_reflexivityP Point cong'.
-Proof.
-move => a b; rewrite /cong'; apply /andP; split; apply cong_pseudo_reflexivity.
-Qed.
+Proof. by apply cong_pseudo_reflexivity. Qed.
 
 Lemma cong_identity : cong_identityP Point cong'.
-Proof.
-move => a b c /congP[H0 H1]; apply /eqP; rewrite vector2_eq; move: H0 H1.
-rewrite /sqr_L2_norm_1D_i /sqr_L2_norm_1D !mxE eqxx !subrr !mulr1n expr0n.
-by rewrite !sqrf_eq0 !subr_eq0=> /eqP -> /eqP ->; rewrite !eqxx.
-Qed.
+Proof. by apply cong_identity. Qed.
 
 Lemma cong_inner_transitivity :
   cong_inner_transitivityP Point cong'.
-Proof.
-move => a b c d e f /andP[H10 H11] /andP[H20 H21]; rewrite /cong'; apply /andP;
-split; [move: H10 H20|move: H11 H21]; apply cong_inner_transitivity.
-Qed.
+Proof. by apply cong_inner_transitivity. Qed.
 
 Lemma inner_pasch : inner_paschP Point bet'.
 Proof.
-move=> a b c p q /andP[H00 H01] /andP[H10 H11] /eqP E1 /eqP E2 /eqP E3 /eqP E4.
-move: E1; rewrite -subr_eq0 vector2_neq0 !mxE !subr_eq0 => E1.
-move: E2; rewrite -subr_eq0 vector2_neq0 !mxE !subr_eq0 => E2.
-move: E3; rewrite -subr_eq0 vector2_neq0 !mxE !subr_eq0 => E3.
-move: E4; rewrite -subr_eq0 vector2_neq0 !mxE !subr_eq0 => E4.
-suffices: ((exists x0,
-             bet (p 0 0)%:M x0 (b 0 0)%:M && bet (q 0 0)%:M x0 (a 0 0)%:M) /\
-           (exists x1,
-             bet (p 0 1)%:M x1 (b 0 1)%:M && bet (q 0 1)%:M x1 (a 0 1)%:M)).
-  move=> [[x0 /andP[Hx01 Hx02]] [x1 /andP[Hx11 Hx12]]].
-  exists (row2 (x0 0 0) (x1 0 0)); rewrite /bet' !mxE /= -2!mx11_scalar.
-  by rewrite Hx01 Hx02 Hx11 Hx12.
-split; [move: H00 H10|move: H01 H11]; move: E1 E2 E3 E4.
-  case: (a 0 0 =P p 0 0)=> [->|?];
-  [set x0 := p 0 0|case: (p 0 0 =P c 0 0)=> [->|?];
-  [set x0 := q 0 0|case: (b 0 0 =P q 0 0)=> [->|?];
-  [set x0 := q 0 0|case: (q 0 0 =P c 0 0)=> [->|?]; [set x0 := p 0 0|]]]];
-  try (exists (x0)%:M); rewrite ?bet_xxa ?bet_axx ?andbT /= 1?bet_sym ?H00 ?H10;
-  rewrite //; move=> _ _ _ _ Hb1 Hb2; assert (H := @inner_pasch_gen R 1);
-  destruct (H (a 0 0)%:M (b 0 0)%:M (c 0 0)%:M (p 0 0)%:M (q 0 0)%:M) as [x Hx];
-  try solve[move=> /matrixP /(_ 0 0) /eqP; rewrite !mxE !mulr1n=> /eqP E //];
-  [rewrite bet_sym Hb1|rewrite Hb2|exists x]=> //; by apply /andP.
-case: (a 0 1 =P p 0 1)=> [->|?];
-[set x1 := p 0 1|case: (p 0 1 =P c 0 1)=> [->|?];
-[set x1 := q 0 1|case: (b 0 1 =P q 0 1)=> [->|?];
-[set x1 := q 0 1|case: (q 0 1 =P c 0 1)=> [->|?]; [set x1 := p 0 1|]]]];
-try (exists (x1)%:M); rewrite ?bet_xxa ?bet_axx ?andbT /= 1?bet_sym ?H01 ?H11;
-rewrite //; move=> _ _ _ _ Hb1 Hb2; assert (H := @inner_pasch_gen R 1).
-destruct (H (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M (p 0 1)%:M (q 0 1)%:M) as [x Hx];
-try solve[move=> /matrixP /(_ 0 0) /eqP; rewrite !mxE !mulr1n=> /eqP E //];
-[rewrite bet_sym Hb1|rewrite Hb2|exists x]=> //; by apply /andP.
+move=> a b c p q HB1 HB2 ap_neq pc_neq bq_neq qc_neq HNC.
+destruct (@inner_pasch 0 R a b c p q) as [x [HB3 HB4]] => //; [|by exists x].
+by intuition.
 Qed.
 
 Lemma bet_symmetry : bet_symmetryP Point bet'.
-Proof. move => a b c /andP[H1 H2]; apply /andP; split; by rewrite bet_sym. Qed.
+Proof. by apply bet_symmetry. Qed.
 
 Lemma bet_1D (a b c : Point) i :
   a 0 i - c 0 i != 0 ->
@@ -192,11 +101,7 @@ by rewrite ?eqxx ?orbT // subr_eq0 eq_sym -subr_eq0.
 Qed.
 
 Lemma neq_mx10 (n : nat) : ((1%:M : 'M[R]_n.+1) == 0) = false.
-Proof.
-apply /eqP. intro H.
-move: (@matrix_nonzero1 R n).
-by rewrite H eqxx.
-Qed.
+Proof. by apply /eqP => H; move: (@matrix_nonzero1 R n); rewrite H eqxx. Qed.
 
 Lemma neq_mx (n : nat) (a b : R) : ((a%:M : 'M[R]_n.+1) == b%:M) = (a == b).
 Proof.
@@ -204,151 +109,61 @@ by rewrite -scalemx1 -[b%:M]scalemx1 -subr_eq0 -scalerBl scalemx_eq0
            neq_mx10 orbF subr_eq0.
 Qed.
 
-Lemma oner_neqm1: 1 != -1 :> R.
-Proof. by rewrite -addr_eq0 lt0r_neq0 ?addr_gt0 ?ltr01. Qed.
-
-Lemma oner_eqm1: 1 == -1 :> R = false.
-Proof. by rewrite (negbTE oner_neqm1). Qed.
+Lemma nbetS_abc : @betS R 1 0%:M 1%:M 0%:M = false.
+Proof.
+rewrite /betS /betR /ratio /=.
+case: pickP => /= [i|/all_v_neq0 H]; last by rewrite ltxx /= andbF.
+by rewrite subrr ord1 mxE eqxx.
+Qed.
 
 Lemma nbet_abc : (bet' a' b' c') = false.
 Proof.
-rewrite /bet' /bet /betE /a /b /c !mxE /= !neq_mx oner_eq0.
-rewrite [0 == 1]eq_sym oner_eq0.
-have:  (betS 0%:M 1%:M 0%:M = false).
-  rewrite /betS /betR /ratio /= => t.
-  case: pickP => /= [i|/all_v_neq0 H].
-  case: i => ? ?.
-  rewrite ord1 /= subrr.
-  rewrite !mxE /=.
-  by rewrite eqxx.
-  by rewrite ltxx /= andbF.
-by move->;apply /andP; move=> [_ /orP[/or3P[||]|]].
+rewrite bet'P /bet /betE /a' /b' /c' !mxE /= !neq_mx.
+by rewrite ![0 == 1]eq_sym oppr_eq0 !oner_eq0 nbetS_abc !andbF.
+Qed.
+
+Lemma nbetS_bca : @betS R 1 0%:M 1%:M (-1)%:M = false.
+Proof.
+rewrite /betS /betR /ratio /=.
+case: pickP => /= [i|/all_v_neq0 H]; last by rewrite ltxx /= andbF.
+rewrite ord1 !mxE eqxx !mulr1n !subr0 divrN divff ?oner_eq0 //.
+by rewrite ltrNr oppr0 ltr10 andbF.
 Qed.
 
 Lemma nbet_bca : (bet' b' c' a') = false.
 Proof.
-rewrite /bet'/bet /betE /a /b /c !mxE /= !neq_mx.
-rewrite oner_eq0 [0 == 1]eq_sym oner_eq0.
-rewrite gt_eqF ?gt0_cp ?ltr01 //.
-have: betS 0%:M 1%:M (-1)%:M = false.
-  move=>t.
-  rewrite /betS /betR /ratio.
-  case: pickP => /= [i|/all_v_neq0 H].
-  case: i => ? ?.
-  rewrite ord1 !mxE /= mul0rn subr0 mulr1n subr0 invrN mulrN.
-  rewrite divff ?oner_eq0 //.
-  by rewrite oppr_gt0 ltr10 andbF.
-  by rewrite ltxx andbF.
-by move->;apply /andP; move=> [/orP[/or3P[||]|]?  _].
+rewrite bet'P /bet /betE /a' /b' /c' !mxE /= !neq_mx.
+rewrite ![0 == 1]eq_sym -(subr_eq0 1 (-1)) opprK !oner_eq0.
+by move: (add11_neq0 R) => /negPf => ->; rewrite nbetS_bca.
+Qed.
+
+Lemma nbetS_cab : @betS R 1 1%:M (-1)%:M 0%:M = false.
+Proof.
+rewrite /betS /betR /ratio /=.
+case: pickP => /= [i|/all_v_neq0 H]; last by rewrite ltxx /= andbF.
+rewrite ord1 !mxE eqxx !mulr1n add0r divrN divr1 opprB opprK.
+by rewrite -ltrBrDr subrr ltr10 !andbF.
 Qed.
 
 Lemma nbet_cab : (bet' c' a' b') = false.
 Proof.
-rewrite /bet' /bet /betE /a /b /c !mxE /= !neq_mx.
-rewrite oner_eqm1 oppr_eq0 oner_eq0.
-have: betS 1%:M (-1)%:M 0%:M = false.
-  move=>t.
-  rewrite /betS  /betR /ratio /=.
-  case: pickP => /= [i|/all_v_neq0 H].
-  case: i => ? ?.
-  rewrite ord1 !mxE mul0rn sub0r !mulr1n invrN mulrN divr1.
-  by rewrite opprB ltrBlDr subrr ltr10 !andbF.
-  by rewrite ltxx andbF.
-by move->;apply /andP; move=> [/orP[/or3P[||]|]?  _].
+rewrite bet'P /bet /betE /a' /b' /c' !mxE /= !neq_mx.
+rewrite ![0 == 1]eq_sym -(subr_eq0 1 (-1)) opprK oppr_eq0 !oner_eq0.
+by move: (add11_neq0 R) => /negPf => ->; rewrite nbetS_cab.
 Qed.
 
 Lemma lower_dim : lower_dimP Point bet' a' b' c'.
 Proof.
-rewrite /lower_dimP /Col nbet_abc nbet_cab nbet_bca.
-by move=> [|[|]].
-Qed.
-
-Lemma cong_abac_1D  (a b c : 'rV[R]_1) :
-  (cong a b a c) = ((b == c) || (a == (1+1)^-1 *: (b+c))).
-Proof.
-rewrite /cong !congP_aux' /sqr_L2_norm_1D neq_mx eqf_sqr.
-rewrite -subr_eq0 opprB addrBDB subr_eq0.
-rewrite -[(b 0 0 - a 0 0 == a 0 0 - c 0 0)]subr_eq0.
-rewrite opprB addrACA -[X in _ + X]opprB opprK.
-rewrite subr_eq0 -[a 0 0]mul1r -mulrDl.
-apply /orP/orP.
-move=> [/eqP H|/eqP H]; [left|right].
-apply /eqP /matrixP=> i j.
-by rewrite !ord1 H.
-apply /eqP /matrixP=> i j.
-by rewrite !ord1 !mxE H mulKf ?add11_neq0.
-move=> [/eqP->|/eqP->]; [left|right]; rewrite ?eqxx //.
-by rewrite !mxE /= mulrA divff ?add11_neq0 ?mul1r.
-Qed.
-
-Lemma mx11_eq (a b : 'rV[R]_1):
-  a == b = (a 0 0 == b 0 0).
-Proof.
-apply /eqP/eqP=> [-> //|H].
-by apply/matrixP=> i j; rewrite !ord1.
-Qed.
-
-Lemma bet_1D' (a b c : 'rV[R]_1) :
-  a 0 0 - c 0 0 != 0 ->
-  0 < (b 0 0 - a 0 0) / (c 0 0 - a 0 0) < 1 ->
-  bet a b c.
-Proof.
-move=> NE /andP[HGt HLt]; rewrite /bet /betS.
-have: (betR (a 0 0)%:M (b 0 0)%:M (c 0 0)%:M = (b 0 0-a 0 0) / (c 0 0-a 0 0)).
-  apply ratio_eq; rewrite -[(a 0 0) %:M]scalemx1 -1?[(b 0 0)%:M]scalemx1;
-  rewrite -[(c 0 0)%:M]scalemx1 -!scalerBl ?scalerA ?scalemx_eq0 ?negb_or;
-  rewrite ?matrix_nonzero1 ?andbT -1?mulrAC -?mulrA ?divff ?mulr1 //;
-  by rewrite subr_eq0 eq_sym -subr_eq0.
-
-rewrite -!mx11_scalar.
-move=> ->. rewrite HLt HGt !andbT. apply /orP; right.
-apply /eqP/matrixP=> i j.
-by rewrite !ord1 !mxE /= mulrAC -mulrA divff ?mulr1 // subr_eq0 eq_sym -subr_eq0.
-Qed.
-
-Lemma col_1D (a b c : 'rV[R]_1) :
-  (bet a b c \/ bet b c a \/ bet c a b).
-Proof.
-suffices: ([ || bet a b c, bet b c a | bet c a b]).
-  by move => /or3P[]; tauto.
-case: (a =P b) => [-> |/eqP NE1]; rewrite ?bet_xxa //.
-case: (b =P c) => [-> |/eqP NE2]; rewrite ?bet_xxa ?bet_axx //.
-case: (c =P a) => [-> |/eqP NE3]; rewrite ?bet_xxa ?orbT //.
-move: NE1 NE2 NE3.
-rewrite !mx11_eq.
-rewrite -subr_eq0 => NE1.
-rewrite -subr_eq0 => NE2.
-rewrite -subr_eq0 => NE3.
-elim (ratio_cp NE1 NE2 NE3).
-move => H .
-move: NE3.
-rewrite subr_eq0 eq_sym -subr_eq0 => NE3.
-by move: (bet_1D' NE3 H)=> ->.
-elim.
-move => H.
-move: NE1.
-rewrite subr_eq0 eq_sym -subr_eq0 => NE1.
-move: (bet_1D' NE1 H)=> -> /=.
-apply /orP.
-by right.
-move => H.
-move: NE2.
-rewrite subr_eq0 eq_sym -subr_eq0 => NE2.
-move: (bet_1D' NE2 H) => ->.
-apply /orP.
-right.
-apply /orP.
-by right.
+by rewrite /lower_dimP /Col nbet_abc nbet_cab nbet_bca; move=> [|[|]].
 Qed.
 
 Lemma upper_dim : upper_dimP Point bet' cong'.
 Proof.
-move => a b c p q /eqP neq_pq _ _ _; move: neq_pq.
-rewrite /cong' !cong_abac_1D !neq_mx -subr_eq0 vector2_neq0 !mxE /= !subr_eq0.
-case: (p 0 0 =P q 0 0) => /= _; [case: (p 0 1 =P q 0 1) => //= _ | ] => _.
-  rewrite /Col /bet'=> /eqP-> /eqP-> /eqP->; rewrite !bet_xxa !andbT; apply col_1D.
-rewrite /Col /bet'=> /andP[/eqP-> _] /andP[/eqP-> _] /andP[/eqP-> _].
-rewrite !bet_xxa /=; apply col_1D.
+move => a b c p q pq_neq ab_neq ac_neq bc_neq HCa HCb HCc.
+destruct (@POF_to_Tarski.upper_dim R a b c p q) as [HB|[HB|HB]] => //.
+- by left; apply bet_bet'.
+- by right; left; apply bet_bet'.
+- by right; right; apply bet_bet'.
 Qed.
 
 End RfTarski2D.
@@ -362,15 +177,8 @@ Implicit Types (a b c d : 'rV[R]_(2)).
 Lemma segment_construction :
   segment_constructionP (@Point R) (@bet' R) (@cong' R).
 Proof.
-move=> a b c d.
-(*pose (@segment_construction R 1 a b c d).*)
-destruct (@segment_construction R _ (a 0 0)%:M (b 0 0)%:M (c 0 0)%:M (d 0 0)%:M) as [x [HxB HxC]].
-destruct (@segment_construction R _ (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M (d 0 1)%:M) as [y [HyB HyC]].
-exists (row2 (x 0 0) (y 0 0)).
-rewrite /bet' /cong' !mxE /=.
-rewrite [x]mx11_scalar in HxB HxC.
-rewrite [y]mx11_scalar in HyB HyC.
-by split; apply /andP; split.
+move=> a b c d; destruct (POF_to_Tarski.segment_construction a b c d) as [e []].
+by exists e; split => //; apply bet_bet'.
 Qed.
 
 Lemma bet_1Di a b c i :
@@ -476,13 +284,14 @@ have: (bet (c 0 1)%:M (Num.min (a 0 1) (b 0 1))%:M (b 0 1)%:M)=> [|betPy2].
   move: (lt_total H)=> /orP[?|?]; [rewrite min_l|rewrite min_r];
   by rewrite ?ltW // bet_1Di ?lexx // ltW.
 exists (row2 (Num.max (a 0 0) (c 0 0)) (Num.min (a 0 1) (b 0 1))).
-split; right; left; rewrite /bet' !mxE /= ?betPy1 ?betPy2 andbT.
+split; right; left; rewrite bet'P.
+  rewrite !mxE /= ?betPy1 ?betPy2 andbT.
   case: (a 0 0 =P c 0 0)=> [->|/eqP H]; first by rewrite max_l ?bet_1Dd ?lexx.
   move: (lt_total H)=> /orP[?|?]; [rewrite max_r|rewrite max_l];
   by rewrite ?ltW // ?bet_axx // bet_1Dd ?lexx // ltW.
-case: (a 0 0 =P c 0 0)=> [->|/eqP H]; first by rewrite max_l ?bet_xxa ?lexx.
-move: (lt_total H)=> /orP[?|?]; [rewrite max_r|rewrite max_l];
-by rewrite ?ltW // ?bet_xxa // bet_1Di ?lexx // ltW.
+case: (a 0 0 =P c 0 0)=> [->|/eqP]; first by rewrite max_l ?mxE ?bet_xxa ?lexx.
+move => H; move: (lt_total H)=> /orP[?|?]; [rewrite max_r|rewrite max_l];
+by rewrite ?ltW // !mxE ?bet_xxa // bet_1Di ?lexx // ltW.
 Qed.
 
 Lemma line_intersection_2 a b c d :
@@ -510,11 +319,11 @@ have: (bet (c 0 0)%:M (d 0 0)%:M (Num.max (b 0 0) (d 0 0))%:M)=> [|betPx4].
   by rewrite ?ltW // bet_1Di ?lexx // ltW.
 case: (a 0 1 =P b 0 1)=> [H|/eqP H]; [|move: (lt_total H)=> /orP[?|?]].
     exists (row2 (Num.max (b 0 0) (d 0 0)) (d 0 1)).
-    by split; left; rewrite /bet' !mxE /= ?H ?bet_xxa ?bet_axx ?betPx2 ?betPx4.
+    by split; left; rewrite bet'P !mxE /= ?H ?bet_xxa ?bet_axx ?betPx2 ?betPx4.
   exists (row2 (Num.min (a 0 0) (c 0 0)) (c 0 1)); split; right; right;
-  by rewrite /bet' !mxE /= ?bet_xxa ?betPx1 ?betPx3 ?bet_1Di // ?ltW.
+  by rewrite bet'P !mxE /= ?bet_xxa ?betPx1 ?betPx3 ?bet_1Di // ?ltW.
 exists (row2 (Num.max (b 0 0) (d 0 0)) (d 0 1)); split; left;
-by rewrite /bet' !mxE /= ?bet_axx ?betPx2 ?betPx4 ?bet_1Dd // ?ltW.
+by rewrite bet'P !mxE /= ?bet_axx ?betPx2 ?betPx4 ?bet_1Dd // ?ltW.
 Qed.
 
 Lemma line_intersection_3 a b c d :
@@ -542,21 +351,21 @@ have: (bet (b 0 1)%:M (d 0 1)%:M (Num.min (c 0 1) (d 0 1))%:M)=> [|betPx4].
   by rewrite ?ltW // bet_1Dd ?lexx // ltW.
 case: (a 0 0 =P c 0 0)=> [H|/eqP H]; [|move: (lt_total H)=> /orP[?|?]].
     exists (row2 (d 0 0) (Num.min (c 0 1) (d 0 1))).
-    by split; left; rewrite /bet' !mxE /= ?H ?bet_xxa ?bet_axx ?betPx2 ?betPx4.
+    by split; left; rewrite bet'P !mxE /= ?H ?bet_xxa ?bet_axx ?betPx2 ?betPx4.
   exists (row2 (d 0 0) (Num.min (c 0 1) (d 0 1))); split; left;
-  by rewrite /bet' !mxE /= ?bet_axx ?betPx2 ?betPx4 ?bet_1Di // ?ltW.
+  by rewrite bet'P !mxE /= ?bet_axx ?betPx2 ?betPx4 ?bet_1Di // ?ltW.
 exists (row2 (b 0 0) (Num.max (a 0 1) (b 0 1))); split; right; right;
-by rewrite /bet' !mxE /= ?bet_xxa ?betPx1 ?betPx3 ?bet_1Dd // ?ltW.
+by rewrite bet'P !mxE /= ?bet_xxa ?betPx1 ?betPx3 ?bet_1Dd // ?ltW.
 Qed.
 
-Lemma col_axx a x : Col _ (@bet' R) a x x.
-Proof. by left; rewrite /Col /bet' !bet_axx. Qed.
+Lemma col_axx a x : Col _ (fun b c d : Point R => bet' b c d) a x x.
+Proof. by left; rewrite /Col bet'P !bet_axx. Qed.
 
-Lemma col_xax x a : Col _ (@bet' R) x a x.
-Proof. by right; left; rewrite /Col /bet' !bet_axx. Qed.
+Lemma col_xax x a : Col _  (fun b c d : Point R => bet' b c d) x a x.
+Proof. by right; left; rewrite /Col bet'P !bet_axx. Qed.
 
-Lemma col_xxa x a : Col _ (@bet' R) x x a.
-Proof. by left; rewrite /Col /bet' !bet_xxa. Qed.
+Lemma col_xxa x a : Col _  (fun b c d : Point R => bet' b c d) x x a.
+Proof. by left; rewrite /Col bet'P !bet_xxa. Qed.
 
 Lemma dup_meet a b c d :
   uniq [:: a; b; c; d] = false ->
@@ -566,14 +375,13 @@ move=> H; have: (~~ uniq [:: a; b; c; d]) by rewrite H. move: H=> _ H.
 move/uniqPn: H=> H; move: H (H a)=> _ [i [j [H1 H2 H3]]]; move: H1 H2 H3.
 case: j; rewrite ?ltn0 //= => j; repeat try (case: j=> [|j //=]);
 repeat try (case: i=> [|i //=])=> /=; move=> _ _ ->;
-try solve [exists b; split; rewrite /Col /bet' ?bet_axx ?bet_xxa; intuition];
-try solve [exists c; split; rewrite /Col /bet' ?bet_axx ?bet_xxa; intuition];
-           exists d; split; rewrite /Col /bet' ?bet_axx ?bet_xxa; intuition.
+[exists d|exists c|exists c|exists d|exists d|exists b];
+by split; try apply col_axx; try apply col_xax; apply col_xxa.
 Qed.
 
 Lemma bet'_sym a b c : bet' a b c = bet' c b a.
 Proof.
-by rewrite /bet' bet_sym [bet (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M] bet_sym.
+by rewrite !bet'P bet_sym [bet (a 0 1)%:M (b 0 1)%:M (c 0 1)%:M] bet_sym.
 Qed.
 
 Lemma col_213 a b c :

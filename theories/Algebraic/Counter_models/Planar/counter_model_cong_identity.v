@@ -35,9 +35,9 @@ Proof. intro H; assert (HFalse := H P0 P1 P2); firstorder; discriminate. Qed.
 
 (* Proof that the following axioms hold in the given model *)
 
-Lemma point_equality_decidability : point_equality_decidability Point.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof.
-unfold point_equality_decidability; destruct A, B; auto; right; discriminate.
+unfold point_equality_decidabilityP; destruct A, B; auto; right; discriminate.
 Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point Bet.

@@ -8,7 +8,7 @@ Variable Cong : Point -> Point -> Point -> Point -> Prop.
 
 Variable PA PB PC : Point.
 
-Definition point_equality_decidability :=
+Definition point_equality_decidabilityP :=
   forall A B : Point, A = B \/ ~ A = B.
 
 (* This axiom was denoted by A2 in Gupta's PhD thesis. *)

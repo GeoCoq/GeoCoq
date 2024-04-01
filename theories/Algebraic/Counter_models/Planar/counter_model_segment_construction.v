@@ -22,8 +22,8 @@ Qed.
 
 (* Proof that the following axioms hold in the given model *)
 
-Lemma point_equality_decidability : point_equality_decidability Point.
-Proof. unfold point_equality_decidability; destruct A, B; auto. Qed.
+Lemma point_equality_decidability : point_equality_decidabilityP Point.
+Proof. unfold point_equality_decidabilityP; destruct A, B; auto. Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point Bet.
 Proof. unfold bet_inner_transitivityP; tauto. Qed.

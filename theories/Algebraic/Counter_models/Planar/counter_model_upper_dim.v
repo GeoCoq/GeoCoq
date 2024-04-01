@@ -47,8 +47,6 @@ Lemma negb_and3 (a b c : bool) :
 ~~ (a && b && c) = ~~ a || ~~ b || ~~ c.
 Proof. by case: a; case: b; case: c. Qed.
 
-
-
 Lemma row3_eq (a b c d e f : R) :
 row3 a b c == row3 d e f = [&& (a == d), (b == e) & (c == f)].
 Proof.
