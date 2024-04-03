@@ -17,7 +17,6 @@ Import GRing.Theory Order.Theory Num.Theory.
 Local Open Scope ring_scope.
 
 Require Import GeoCoq.Algebraic.Counter_models.nD.independence.
-Require Import GeoCoq.Algebraic.tcp_ndc.
 Require Import GeoCoq.Algebraic.coplanarity.
 Require Import GeoCoq.Algebraic.Counter_models.nD.dimensional_axioms.
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.

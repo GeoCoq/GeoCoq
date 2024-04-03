@@ -1,7 +1,6 @@
 Require Import GeoCoq.Algebraic.coplanarity.
 Require Import GeoCoq.Main.Tarski_dev.Ch12_parallel_inter_dec.
 Require Import GeoCoq.Main.Annexes.quadrilaterals_inter_dec.
-Require Import GeoCoq.Main.Highschool.circumcenter.
 Require Import GeoCoq.Main.Highschool.gravityCenter.
 
 Section tcp_ndc.
@@ -1010,11 +1009,11 @@ assert (HNC3 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
 assert (HOS1 : OS A B MAC P).
   {
-  apply one_side_transitivity with MBC; [apply l12_6|];
-  [apply triangle_mid_par_strict_cong_simp with C; finish|].
-  apply out_one_side; [left; intro; apply HNC3; ColR|].
-  repeat split; [intro; treat_equalities; Col..|left].
-  apply between_exchange4 with SA; finish.
+  apply one_side_transitivity with MBC.
+  - apply l12_6; apply triangle_mid_par_strict_cong_simp with C; auto.
+  - apply out_one_side; [left; intro; apply HNC3; ColR|].
+    split; [|split]; [intro; treat_equalities; Col..|left].
+    apply between_exchange4 with SA; Between.
   }
 destruct (symmetric_point_construction P MAB) as [SP HSP].
 assert (HNE2 : A <> SA) by (intro; treat_equalities; Col).
@@ -1022,252 +1021,341 @@ assert (HNE3 : MAB <> P) by (intro; treat_equalities; apply HNC4; ColR).
 destruct (symmetric_point_construction MAC MMAB) as [SMAC HSMAC].
 assert (HP1 : Per SP MAB MMAB).
   {
-  apply perp_per_2, perp_col2_bis with A B; [|ColR..|assert_diffs; auto].
-  apply perp_col2 with X MAB; [|assert_diffs; auto|ColR..].
-  apply perp_bisect_perp, cong_mid_perp_bisect; finish;
-  intro; treat_equalities; Col.
+  apply perp_per_2, perp_col2_bis with A B; [|Col|ColR|].
+  - apply perp_col2 with X MAB; [..|Col|ColR].
+    + apply perp_bisect_perp, cong_mid_perp_bisect; [..|Cong|Midpoint].
+      * intro; treat_equalities; apply HNC2; Col.
+      * intro; treat_equalities; apply HNC1; Col.
+    + intro; treat_equalities; apply HNE3; auto.
+  - intro; treat_equalities; apply HNC1; Col.
   }
 assert (HCongA : CongA A MAB C MAB MMAB SMAC).
   {
-  apply conga_trans with A MMAB MAC;
-  [|assert_diffs; apply l11_14; finish].
-  apply conga_comm, par_preserves_conga_os; finish;
-  [apply par_left_comm, triangle_mid_par with A; finish|..];
-  [intro; treat_equalities; Col|assert_diffs; auto|].
-  apply out_one_side_1 with A; [intro; apply HNC3; ColR|Col|].
-  assert_diffs; repeat split; finish.
+  apply conga_trans with A MMAB MAC.
+  - apply conga_comm, par_preserves_conga_os; [|Between| |].
+    + apply par_left_comm, triangle_mid_par with A; Midpoint.
+      intro; treat_equalities; apply HNC4; Col.
+    + intro; treat_equalities; apply HNC1; Col.
+    + apply out_one_side_1 with A; [intro; apply HNC3; ColR|Col|].
+      split; [|split; [|right; Between]]; intro; treat_equalities;
+      [apply HNC3|apply HNC1]; Col.
+  - apply l11_14; Between; intro; treat_equalities;
+    [apply HNC1..|apply HNC4|apply HNC4]; Col.
   }
 assert (HLeA : LeA A MAB C A MAB MBC).
   {
-  apply inangle__lea; repeat split; [intro; treat_equalities; Col..|].
-  destruct (inner_pasch A C B MAB MBC) as [I []]; finish.
-  exists I; split; [finish|right].
-  apply bet_out_1; [|finish].
+  apply inangle__lea; split; [|split; [|split]];
+  [intro; treat_equalities..|]; [apply HNC1..|apply HNC4|]; Col.
+  destruct (inner_pasch A C B MAB MBC) as [I []]; [Between..|].
+  exists I; split; [Between|right].
+  apply bet_out_1; [|Between].
   intro; treat_equalities; apply HNC3; ColR.
   }
 assert (HNE4 : MBC <> P).
   {
-  intro; cut (MBC = SA); [intro; treat_equalities; Col|].
-  treat_equalities; apply between_equality with A; finish.
+  intro; cut (MBC = SA); [intro; treat_equalities; apply HNE2; auto|].
+  treat_equalities; apply between_equality with A; Between.
   }
 assert (HAcute1 : Acute A MAB MBC).
   {
-  exists A, MAB, P; split; [apply col_col_per_per with MMAB SP; finish|];
-  [intro; treat_equalities; Col..|].
-  apply inangle__lta; [intro; apply HNC3; ColR|].
-  repeat split; [intro; treat_equalities; Col..|].
-  exists MBC; split; [|right; apply out_trivial; assert_diffs; auto].
-  apply between_exchange4 with SA; finish.
+  exists A, MAB, P; split.
+  - apply col_col_per_per with MMAB SP; [| |Col..|Perp];
+    intro; treat_equalities; [apply HNC1|apply HNE3]; Col.
+  - apply inangle__lta; [intro; apply HNC3; ColR|].
+    split; [|split; [|split]]; [intro; treat_equalities..|];
+    [apply HNC1|apply HNE3|apply HNC1|]; [Col..|].
+    exists MBC; split; [apply between_exchange4 with SA; Between|].
+    right; apply out_trivial; intro; treat_equalities; apply HNC1; Col.
   }
 assert (HAcute2 : Acute MAB MMAB SMAC).
   {
-  apply acute_conga__acute with A MAB C; [|finish].
-  apply acute_lea_acute with A MAB MBC; finish.
+  apply acute_conga__acute with A MAB C; [|CongA].
+  apply acute_lea_acute with A MAB MBC; auto.
   }
 assert (HOS2 : OS MAB MMAB SP SMAC).
   {
-  apply col2_os__os with A B; [assert_diffs; auto|ColR..|].
-  exists P; split; [split; [|split]|];
-  [intro; apply HNC3; ColR..|exists MAB; finish|].
-  apply l9_2, l9_8_2 with MAC; [|finish].
-  split; [|split]; [intro; apply HNC3; ColR..|].
-  exists MMAB; split; [ColR|finish].
+  apply col2_os__os with A B; [|Col|ColR|].
+  - intro; treat_equalities; apply HNC1; Col.
+  - exists P; split; [split; [|split]|]; [intro; apply HNC1; ColR..| |].
+    + exists MAB; split; [Col|Between].
+    + apply l9_2, l9_8_2 with MAC; [|auto].
+      split; [|split]; [intro; apply HNC1; ColR..|].
+      exists MMAB; split; [ColR|Between].
+  }
+assert (HPara : Parallelogram A MAB MBC MAC).
+  {
+  destruct (triangle_mid_par_cong A B C MBC MAC MAB);
+  [intro; treat_equalities; apply HNC1; Col..|Midpoint|Midpoint|Midpoint|].
+  spliter; apply par_par_cong_cong_parallelogram;
+  [intro; treat_equalities; apply HNC1; Col|Cong..| |].
+  - apply par_col4__par with MAB MBC A C; [| |Par|Col..];
+    intro; treat_equalities; apply HNC1; Col.
+  - apply par_col4__par with A B MBC MAC; [| |Par|Col..];
+    intro; treat_equalities; apply HNC1; Col.
   }
 assert (HX : euclid_s_parallel_postulate)
   by (apply postulates_in_euclidean_context; simpl; tauto).
 destruct (ex_suma SP MAB MMAB MAB MMAB SMAC) as [E [F [G HSumA]]];
-[intro; treat_equalities; Col..|].
-destruct (HX SP MAB MMAB SMAC E F G) as [I [HOut1 HOut2]]; auto;
-[apply acute_per__sams|
- apply acute_per_suma__nbet with SP MAB MMAB MAB MMAB SMAC|];
-finish; [intro; treat_equalities; Col..|clear E F G HSumA].
-cut (X = I); [intro; treat_equalities|];
-[|apply l6_21 with MMAB SMAC MAB SP; Col; [| |ColR..]];
-[|intro; apply HNC3; ColR|intro; treat_equalities; Col].
-cut (Out MAB X P); [intro HF; apply (l6_7 _ _ _ _ HOut1) in HF|];
-[apply l6_4_1 in HF; destruct HF as [_ HF]; apply HF; finish|].
+[intro; treat_equalities..|]; [apply HNE3|apply HNC1..|apply HNC4|]; [Col..|].
+assert (HI : SAMS SP MAB MMAB MAB MMAB SMAC).
+  {
+  apply acute_per__sams; [| |auto..];
+  intro; treat_equalities; [apply HNE3|apply HNC1]; Col.
+  }
+assert (HB : ~ Bet E F G).
+  {
+  apply acute_per_suma__nbet with SP MAB MMAB MAB MMAB SMAC; [| |auto..];
+  intro; treat_equalities; [apply HNE3|apply HNC1]; Col.
+  }
+destruct (HX SP MAB MMAB SMAC E F G) as [I [HOut1 HOut2]]; [auto..|].
+clear E F G HSumA HI HB HAcute2 HCongA HOS1 HOS2 HLeA.
+assert (X = I); [|treat_equalities].
+  {
+  apply l6_21 with MMAB SMAC MAB SP; [| |ColR|Col|ColR|Col].
+  - intro; apply HNC3; ColR.
+  - intro; treat_equalities; apply HNE3; auto.
+  }
+cut (Out MAB X P).
+  {
+  intro HF; apply (l6_7 _ _ _ _ HOut1) in HF.
+  apply l6_4_1 in HF; destruct HF as [_ HF]; apply HF; Between.
+  }
 assert (HTS1 : TS MAB P B C).
   {
-  apply bet_ts__ts with MBC; [|finish].
-  apply l9_2, l9_8_2 with A; [|apply invert_one_side, out_one_side];
-  [|left; intro; apply HNC3; ColR|repeat split; [assert_diffs; auto..|]];
-  [|right; apply between_exchange2 with SA; finish].
-  split; [|split]; [intro; apply HNC3; ColR..|exists MAB; finish].
+  apply bet_ts__ts with MBC; [|Between].
+  apply l9_2, l9_8_2 with A; [|apply invert_one_side, out_one_side].
+  - split; [|split; [|exists MAB; split; [Col|Between]]].
+    + intro; apply HNC2; ColR.
+    + intro; apply HNC2; ColR.
+  - left; intro; apply HNC3; ColR.
+  - split; [|split; [|right; apply between_exchange2 with SA; Between]].
+    + intro; treat_equalities; apply HNE2; auto.
+    + intro; treat_equalities; apply HNE4; auto.
   }
 destruct (l8_18_existence MAB X C) as [PC [HCol3 HPC]];
 [destruct HTS1 as [_ [HF _]]; intro; apply HF; ColR|].
 assert (HNE5 : MAB <> PC).
   {
-  intro; treat_equalities; cut (Par A MAB C MAB); [intro HF|];
-  [apply HNC3; apply (not_strict_par1 A MAB C MAB MAB) in HF; ColR|].
-  apply l12_9 with MAB X; Cop; Perp; [CopR|].
-  apply perp_col4 with MMAB MAB MAB SP; finish; [assert_diffs; auto..|].
-  apply per_perp; assert_diffs; finish.
+  intro; treat_equalities; cut (Par A MAB C MAB); [intro HF|].
+  - apply HNC3; apply (not_strict_par1 A MAB C MAB MAB) in HF; ColR.
+  - apply l12_9 with MAB X; [CopR|Cop|Cop|Cop| |Perp].
+    apply perp_col4 with MMAB MAB MAB SP; [| |Col..|apply per_perp; Perp].
+    + intro; treat_equalities; apply HNC1; Col.
+    + apply perp_not_eq_1 in HPC; auto.
+    + intro; treat_equalities; apply HNC1; Col.
+    + intro; treat_equalities; apply HNE3; auto.
   }
 assert (HP2 : Per C PC MAB)
   by (apply perp_per_1, perp_col4 with PC C MAB X; finish; assert_diffs; auto).
 destruct (ex_suma MAB PC C PC C A) as [E [F [G HSumA]]];
-[assert_diffs; auto..|].
+[|apply perp_not_eq_2 in HPC..|intro; treat_equalities; apply HNC1|]; Col.
 assert (HPS1 : Par_strict MAB A PC C).
   {
   apply par_not_col_strict with C; Col; [|intro; apply HNC3; ColR].
-  apply l12_9 with MAB X; Cop; Perp; [CopR|].
-  apply perp_col4 with MMAB MAB MAB SP; finish; [assert_diffs; auto..|].
-  apply per_perp; assert_diffs; finish.
+  apply l12_9 with MAB X; [Cop|Cop|Cop|CopR| |Perp].
+  apply perp_col4 with MMAB MAB MAB SP; [| |Col..|apply per_perp; Perp].
+  - intro; treat_equalities; apply HNC1; Col.
+  - apply perp_not_eq_1 in HPC; auto.
+  - intro; treat_equalities; apply HNC1; Col.
+  - intro; treat_equalities; apply HNE3; auto.
   }
 assert (HPS2 : Par_strict A B C SA)
   by (apply par_strict_right_comm, midpoint_par_strict with MBC; finish).
 assert (HCol4 : Col C SA PC).
   {
-  destruct (parallel_uniqueness A B C SA C PC C); finish.
-  assert_diffs; apply par_col4__par with A MAB C PC; finish.
+  destruct (parallel_uniqueness A B C SA C PC C); [Par|Col| |Col..].
+  apply par_col4__par with A MAB C PC; [| |Par|Col..].
+  - intro; treat_equalities; apply HNC1; Col.
+  - apply perp_not_eq_2 in HPC; auto.
   }
-assert (HOS4 : OS MAB P A C).
+assert (HOS : OS MAB P A C).
   {
-  exists B; split; [|finish].
-  repeat split; [intro; apply HNC3; ColR..|exists MAB; finish].
+  exists B; split; [|Side].
+  split; [|split; [|exists MAB; split; [Col|Between]]].
+  - intro; apply HNC1; ColR.
+  - intro; apply HNC2; ColR.
   }
 assert (HBet2 : Bet MAB PC P).
   {
-  elim (eq_dec_points P PC); [intro; treat_equalities; finish|intro HNE7].
+  elim (eq_dec_points P PC); [intro; treat_equalities; Between|intro HNE7].
   apply col_two_sides_bet with C; [ColR|].
-  apply l9_8_2 with A; [|finish].
-  repeat split; [intro; apply HNC3; try ColR| |exists SA; finish].
-  intro; apply HNE7, l6_21 with C PC MAB P; Col; [|ColR].
-  apply par_strict_not_col_3 in HPS1; Col.
+  apply l9_8_2 with A; [|Side].
+  split; [|split; [|exists SA; split; [Col|Between]]].
+  - intro; apply HNC1; ColR.
+  - intro; apply HNE7, l6_21 with C PC MAB P; [|Col..|ColR].
+    apply par_strict_not_col_3 in HPS1; Col.
   }
 assert (HBet3 : Bet C SA PC).
   {
-  elim (eq_dec_points SA PC); [intro; treat_equalities; finish|intro HNE7].
+  elim (eq_dec_points SA PC); [intro; treat_equalities; Between|intro HNE7].
   apply col_two_sides_bet with A; [Col|].
-  apply l9_2, l9_8_2 with B;
-  [repeat split; [intro; apply HNC3; ColR..|exists MBC; finish]|].
-  apply one_side_transitivity with MAB;
-  [apply invert_one_side, out_one_side; [left; intro; apply HNC3; ColR|]|];
-  [assert_diffs; repeat split; finish|].
-  apply out_one_side_1 with P; [intro; apply HNC3; ColR|Col|].
-  assert_diffs; repeat split; finish.
-  intro; treat_equalities; apply HNC3; ColR.
+  apply l9_2, l9_8_2 with B.
+  - split; [|split; [|exists MBC; split; [Col|Between]]].
+    + intro; apply HNC2; ColR.
+    + intro; apply HNC1; ColR.
+  - apply one_side_transitivity with MAB.
+    + apply invert_one_side, out_one_side; [left; intro; apply HNC1; ColR|].
+      split; [|split; [|right; Between]];
+      intro; treat_equalities; apply HNC1; Col.
+    + apply out_one_side_1 with P; [intro; apply HNC3; ColR|Col|].
+      split; [|split; [|right; Between]].
+      * apply os_distincts in HOS; spliter; auto.
+      * intro; treat_equalities; apply HNC2; ColR.
   }
-assert (HPara : Parallelogram A MAB MBC MAC).
+assert (HAcute2 : Acute PC C A).
   {
-  destruct (triangle_mid_par_cong A B C MBC MAC MAB);
-  [assert_diffs; finish..|spliter].
-  apply par_par_cong_cong_parallelogram; [assert_diffs; auto|Cong..| |];
-  [apply par_col4__par with MAB MBC A C|
-   apply par_col4__par with A B MBC MAC]; assert_diffs; finish.
-  }
-assert (HAcute3 : Acute PC C A).
-  {
-  apply acute_conga__acute with A MAB MBC; [finish|].
+  apply acute_conga__acute with A MAB MBC; [assumption|].
   assert (HOS5 : OS A MAC MBC PC).
     {
-    apply one_side_transitivity with SA; [apply out_one_side|];
-    [left; intro; apply HNC3; ColR|assert_diffs; repeat split; finish|].
-    apply out_one_side_1 with C; [intro; apply HNC3; ColR|Col|].
-    assert_diffs; repeat split; finish.
+    apply one_side_transitivity with SA; [apply out_one_side|].
+    - left; intro; apply HNC1; ColR.
+    - split; [|split; [|left; Between]].
+      + intro; apply HNC3; ColR.
+      + intro; treat_equalities; apply HNC1; Col.
+    - apply out_one_side_1 with C; [intro; apply HNC3; ColR|Col|].
+      split; [|split; [|left; Between]].
+      + apply par_strict_distinct in HPS2; spliter; auto.
+      + apply par_strict_distinct in HPS1; spliter; auto.
     }
-  apply conga_trans with A MAC MBC; [apply conga_right_comm|];
-  [apply plg_conga in HPara; [spliter|assert_diffs; repeat split]; auto|].
-  apply conga_left_comm, l12_22; [assert_diffs; repeat split; finish|auto|].
-  apply par_trans with A MAB; Par.
-  apply plg_par in HPara; [spliter; finish|assert_diffs; auto..].
+  apply conga_trans with A MAC MBC; [apply conga_right_comm|].
+  - apply plg_conga in HPara; [spliter; auto|].
+    split; [|split]; intro; treat_equalities; apply HNC1; Col.
+  - apply conga_left_comm, l12_22; [|auto|].
+    + split; [|split; [|left; Between]];
+      intro; treat_equalities; apply HNC1; Col.
+    + apply par_trans with A MAB; [|Par].
+      apply plg_par in HPara; [spliter; Par|..];
+      intro; treat_equalities; apply HNC1; Col.
   }
-destruct (HX MAB PC C A E F G) as [I [HOut3 HOut4]]; finish;
-[apply acute_per__sams|
- apply acute_per_suma__nbet with MAB PC C PC C A|]; finish;
-[assert_diffs; auto..|clear E F G HSumA].
-assert (HNE6 : MAC <> I) by (intro; treat_equalities; apply HNC3; ColR).
+assert (HD : MAB <> PC /\ PC <> C)
+  by (apply par_strict_distinct in HPS1; spliter; auto).
+destruct HD as [HD1 HD2].
+destruct (HX MAB PC C A E F G) as [I [HOut3 HOut4]]; [Side| |auto|..];
+[apply acute_per__sams|apply acute_per_suma__nbet with MAB PC C PC C A|];
+[| |Perp|assumption| | |Perp|assumption..|]; [assumption..|].
+clear E F G HSumA HD1 HD2.
+assert (HNE6 : MAC <> I) by (intro; treat_equalities; apply HNC1; ColR).
 destruct (l10_15 I MAC MAC P) as [J HJ]; [Col|intro; apply HNC3; ColR|].
 destruct HJ as [HJ HOS3].
 assert (HBet4 : Bet I A C).
   {
-  apply (l9_19 _ _ _ _ I) in HOS4; [|ColR..].
-  destruct HOS4 as [HOut7 _].
-  cut (Bet C A I); [|apply out2__bet]; finish.
+  apply (l9_19 _ _ _ _ I) in HOS; [|ColR|Col].
+  destruct HOS as [HOut7 _].
+  cut (Bet C A I); [|apply out2__bet]; [Between|assumption|].
+  apply l6_6; assumption.
   }
 assert (HTS2 : TS MAB A I P).
   {
-  apply l9_2, l9_8_2 with PC; [|apply out_one_side];
-  [|right; intro; apply HNC3; ColR|assert_diffs; repeat split; finish].
-  apply l9_8_2 with C; [|finish].
-  apply (l9_19 _ _ _ _ I) in HOS4; [|ColR..].
-  destruct HOS4 as [HOut7 _].
-  repeat split; [intro; apply HNC3; ColR..|exists A; finish].
+  apply l9_2, l9_8_2 with PC; [|apply out_one_side].
+  - apply l9_8_2 with C; [|Side].
+    apply (l9_19 _ _ _ _ I) in HOS; [|ColR|Col].
+    destruct HOS as [HOut7 _].
+    split; [|split; [|exists A; split; [Col|Between]]];
+    intro; apply HNC3; ColR.
+  - right; intro; apply HNC3; ColR.
+  - split; [|split; [|left; Between]];
+    apply par_strict_distinct in HPS1; spliter; auto.
   }
 assert (HBet5 : Bet I MAB P)
   by (apply col_two_sides_bet with A; [ColR|auto]).
-assert (HAcute4 : Acute MAC I P).
+assert (HAcute3 : Acute MAC I P).
   {
-  apply acute_out2__acute with C PC; [apply out_bet_out_2 with A|..];
-  [..|apply l6_6, out_bet_out_2 with MAB|]; finish; [apply bet_out..|];
-  [assert_diffs; finish..|destruct (l11_43 PC C I)];
-  [|assert_diffs|left|apply acute_sym]; auto;
-  [intro; assert_diffs; apply HNC3; ColR|].
-  apply perp_per_1, perp_col4 with PC C MAB X; finish;
-  [intro; treat_equalities; apply HNC3..|]; ColR.
+  assert (HD1 : PC <> C) by (apply par_strict_distinct in HPS1; spliter; auto).
+  assert (HD2 : PC <> I) by (apply out_diff2 in HOut3; auto).
+  apply acute_out2__acute with C PC.
+  - apply out_bet_out_2 with A; [|Between].
+    split; [|split; [|left; Between]].
+    + apply ts_distincts in HTS2; spliter; assumption.
+    + apply out_diff2 in HOut4; auto.
+  - apply l6_6, out_bet_out_2 with MAB; [|Between].
+    split; [|split; [|left; Between]].
+    + apply ts_distincts in HTS2; spliter; auto.
+    + apply os_distincts in HOS3; spliter; auto.
+  - apply acute_sym; destruct (l11_43 PC C I); [auto..|left|auto].
+    apply perp_per_1, perp_col4 with PC C MAB X; [Col..|Perp]; ColR.
   }
-destruct (ex_suma J MAC I MAC I P) as [E [F [G HSumA]]];
-[assert_diffs; auto..|].
-destruct (HX J MAC I P E F G) as [Y [HOut5 HOut6]]; auto;
-[|apply acute_per__sams|
- apply acute_per_suma__nbet with J MAC I MAC I P|]; finish;
-[assert_diffs; auto..|clear E F G HSumA].
+assert (HD : J <> MAC /\ MAC <> I /\ I <> P)
+  by (apply os_distincts in HOS3; spliter; auto).
+destruct (ex_suma J MAC I MAC I P) as [E [F [G HSumA]]]; [spliter; auto..|].
+destruct (HX J MAC I P E F G) as [Y [HOut5 HOut6]]; [Side|auto..];
+[apply acute_per__sams|apply acute_per_suma__nbet with J MAC I MAC I P|]; Perp;
+[spliter; auto..|clear HD HX E F G HSumA].
 assert (HNE7 : MAB <> I).
   {
-  intro; treat_equalities; cut (A = MAC); [intro; assert_diffs; auto|].
-  apply l6_21 with A B C MAC; Col; [assert_diffs; auto|ColR].
+  intro; treat_equalities; cut (A = MAC);
+  [intro; treat_equalities; apply HNC1; Col|].
+  apply l6_21 with A B C MAC; Col; [|ColR].
+  intro; treat_equalities; apply HNC1; Col.
   }
-repeat split; [assert_diffs; auto..|apply l5_2 with I; finish].
+split; [intro; treat_equalities; apply HNC2; Col|].
+split; [intro; treat_equalities; apply out_diff1 in HOut3; auto|].
+apply l5_2 with I; Between.
 assert (HBet6 : Bet I MAB Y).
   {
   assert (HTS3 : TS MAC MBC MAB P).
     {
-    apply l9_8_2 with A; [|apply ncol134_plg__pars1234 in HPara];
-    [|finish|intro; apply HNC3; ColR].
-    repeat split; [intro; apply HNC3; ColR..|].
-    exists MBC; split; [Col|apply between_exchange4 with SA; finish].
+    apply l9_8_2 with A.
+    - split; [intro; apply HNC1; ColR|].
+      split; [intro; apply HNC2; ColR|].
+      exists MBC; split; [Col|apply between_exchange4 with SA; Between].
+    - apply ncol134_plg__pars1234 in HPara; [Side|].
+      intro; apply HNC3; ColR.
     }
   destruct HTS3 as [_ [_ [K [HCol5 HK]]]].
   assert (HBet6 : Bet I MAB K)
     by (apply between_inner_transitivity with P; finish).
   assert (HNE8 : MAB <> K) by (intro; treat_equalities; apply HNC3; ColR).
-  cut (Bet I K Y); [intro; apply between_exchange4 with K; finish|].
+  cut (Bet I K Y); [intro; apply between_exchange4 with K; Between|].
   apply col_two_sides_bet with MAC; [ColR|].
-  apply invert_two_sides, lta_os__ts; [intro; apply HNC3; ColR|..];
-  [|apply invert_one_side, one_side_transitivity with P];
-  [|apply out_one_side..]; finish; [|right|left|];
-  [|intro; apply HNC3; ColR..|repeat split; [assert_diffs; auto..|right]];
-  [|apply outer_transitivity_between2 with MAB; finish].
-  apply acute_per__lta; [..|apply perp_per_1, perp_col4 with MAC I MAC J];
-  finish; [|assert_diffs; auto..].
-  assert (HOut7 : Out MAC I A).
-    {
-    repeat split; [assert_diffs; auto..|right].
-    apply between_exchange3 with C; finish.
-    }
-  assert (HOut8 : Out MAC K MBC).
-    {
-    repeat split; [|assert_diffs; auto|right];
-    [intro; treat_equalities; apply HNC3; ColR|].
-    apply col_two_sides_bet with A; [ColR|].
-    apply l9_2, l9_8_2 with MAB; [|apply out_one_side_1 with P];
-    [..|intro; apply HNC3; ColR|ColR|repeat split];
-    [|assert_diffs; auto|intro; treat_equalities; apply HNC3; ColR|finish].
-    apply ncol124_plg__plgs in HPara; [|intro; apply HNC3; ColR].
-    apply plgs_two_sides in HPara; spliter; finish.
-    }
-  apply acute_out2__acute with A MBC; [finish..|].
-  apply acute_conga__acute with A MAB MBC; [finish|].
-  apply plg_conga in HPara; [spliter; finish|].
-  assert_diffs; repeat split; auto.
+  cut (Acute I MAC K); [intro HAcute4|].
+  - apply invert_two_sides, lta_os__ts; [intro; apply HNC3; ColR|..].
+    + assert (HD : MAC <> Y) by (apply out_diff2 in HOut5; auto).
+      apply acute_per__lta; Col.
+      apply perp_per_1, perp_col4 with MAC I MAC J; Col; Perp.
+    + apply invert_one_side, one_side_transitivity with P; apply out_one_side.
+      * right; intro; apply HNC3; ColR.
+      * apply l6_6; assumption.
+      * left; intro; apply HNC3; ColR.
+      * split; [apply ts_distincts in HTS2; spliter; auto|].
+        split; [|right; apply outer_transitivity_between2 with MAB; Between].
+        intro; treat_equalities; auto.
+  - assert (HOut7 : Out MAC I A).
+      {
+      split; [apply perp_not_eq_1 in HJ; auto|].
+      split; [intro; treat_equalities; apply HNC1; Col|].
+      right; apply between_exchange3 with C; Between.
+      }
+    assert (HOut8 : Out MAC K MBC).
+      {
+      split; [intro; treat_equalities; apply HNC3; ColR|].
+      split; [intro; treat_equalities; apply HNC1; Col|].
+      right; apply col_two_sides_bet with A; [Col|].
+      apply l9_2, l9_8_2 with MAB; [|apply out_one_side_1 with P]; [..|ColR|].
+      - apply ncol124_plg__plgs in HPara; [|intro; apply HNC3; ColR].
+        apply plgs_two_sides in HPara; spliter; Side.
+      - intro; apply HNC3; ColR.
+      - split; [apply os_distincts in HOS; spliter; auto|].
+        split; [|right; Between].
+        intro; treat_equalities; apply HNC3; ColR.
+      }
+    apply acute_out2__acute with A MBC; [Between..|].
+    apply acute_conga__acute with A MAB MBC; [auto|].
+    apply plg_conga in HPara; [spliter; CongA|].
+    split; [|split]; intro; treat_equalities; apply HNC1; Col.
   }
-cut (X = Y); [intro; treat_equalities; finish|].
-apply l6_21 with MAB P MAC J; Col;
-[intro; apply HNC3; ColR|assert_diffs; auto|ColR|].
-apply cong_cop2_perp_bisect_col with A C; [Cop|CopR|Cong|].
-apply perp_mid_perp_bisect; [finish|].
-apply perp_col4 with MAC J I MAC; finish; [assert_diffs; auto..| |]; ColR.
+cut (X = Y); [intro; treat_equalities; Between|].
+apply l6_21 with MAB P MAC J; Col; [| |ColR|].
+- intro; apply HNC3; ColR.
+- apply out_diff1 in HOut5; auto.
+- apply cong_cop2_perp_bisect_col with A C; [Cop| |Cong|].
+  + clear HMAB HMBC MSA HNC1 HNC2 HMMAB HMMAC HCol1 HCol2 HCol4 HC1 HC2.
+    clear HNC3 HNC4 HNC5 HNC6 HCop HSP HNE1 HNE2 HNE3 HNE4 HNE5 HNE6 HNE7.
+    clear HSMAC HP1 HP2 HPC HJ HPS2 HPara HOut1 HOut2 HOut3 HOut4 HOut5 HOut6.
+    clear HAcute1 HAcute2 HAcute3 HOS HBet1 HBet2 HBet3 HBet5 HBet6; CopR.
+  + apply perp_mid_perp_bisect; [Midpoint|].
+    apply perp_col4 with MAC J I MAC; [..|Perp]; Col; [| |ColR..].
+    * apply out_diff1 in HOut5; auto.
+    * intro; treat_equalities; apply HNC1; Col.
 Qed.
 
 Lemma tcp_ncol_ndc_choice_col : forall A B C MAB MAC MBC SA MMAB MMAC X P,
