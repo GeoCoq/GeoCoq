@@ -259,6 +259,14 @@ rewrite /ratio; under eq_pick => k do rewrite funmxN oppr_eq0.
 by case: pickP => [k _|]; rewrite ?oppr0// funmxN invrN mulrN.
 Qed.
 
+Lemma scaler_ratio v1 v2 k : k <> 0 -> ratio (k *: v1) (k *: v2) = ratio v1 v2.
+Proof.
+move => k_nz; have fE : (fun x => (k *: v2) 0 x != 0) =1 (fun x => v2 0 x != 0).
+- by move => x; rewrite mxE mulf_eq0; move: k_nz; case: (k =P 0) => [->|].
+rewrite /ratio (eq_pick fE); case: pickP => [x px|//].
+by rewrite !mxE -mulf_div divff ?mul1r //; apply /eqP.
+Qed.
+
 Lemma ratioNN v1 v2 : ratio v1 v2 = ratio (- v1) (- v2).
 Proof. by rewrite ratioNr ratiorN opprK. Qed.
 
@@ -342,6 +350,14 @@ Implicit Types (a b c d : 'rV[R]_n).
 
 Definition cong a b c d := (b - a) *m (b - a)^T == (d - c) *m (d - c)^T.
 
+Lemma scaler_cong a b c d k :
+  k <> 0 -> cong (k *: a) (k *: b) (k *: c) (k *: d) = cong a b c d.
+Proof.
+move => k_nz; rewrite /cong -?scalerBr -!scalemxAl (dotC _ (k *: (b - a))).
+rewrite (dotC _ (k *: (d - c))) -!scalemxAl !scalerA -subr_eq0 -scalerBr.
+by rewrite scaler_eq0 subr_eq0 mulf_eq0; move: k_nz; case: (k =P 0) => [->|].
+Qed.
+
 Lemma cong_pseudo_reflexivity a b : cong a b b a.
 Proof. by rewrite /cong -opprB linearN mulmxN mulNmx opprK. Qed.
 
@@ -364,7 +380,18 @@ Qed.
 Lemma betE_sym a b c : betE a b c = betE c b a.
 Proof. by rewrite /betE !Bool.orb_assoc eq_sym andbC eq_sym orbAC. Qed.
 
+Lemma scaler_betE a b c k :
+  k <> 0 -> betE (k *: a) (k *: b) (k *: c) = betE a b c.
+Proof.
+move => k_nz; rewrite /betE -subr_eq0 -(subr_eq0 _ (k *: c)) -!scalerBr.
+by rewrite !scaler_eq0 !subr_eq0; move: k_nz; case: (k =P 0) => [->|].
+Qed.
+
 Definition betR a b c := ratio (b - a) (c - a).
+
+Lemma scaler_betR a b c k :
+  k <> 0 -> betR (k *: a) (k *: b) (k *: c) = betR a b c.
+Proof. by move => k_nz; rewrite /betR -!scalerBr scaler_ratio. Qed.
 
 Definition betS a b c (r := betR a b c) :=
   [ && b - a == r *: (c - a), 0 < r & r < 1].
@@ -384,10 +411,22 @@ rewrite -add_ratio ?ratioNr ?ratiovv // andbAC subr_lt0 ltrNl ltrBrDl.
 by rewrite scaleNr -scalerN scalerBl scale1r -subr_eq !opprB !addrBDB subrr.
 Qed.
 
+Lemma scaler_betS a b c k :
+  k <> 0 -> betS (k *: a) (k *: b) (k *: c) = betS a b c.
+Proof.
+move => k_nz; rewrite /betS scaler_betR // -!scalerBr scalerA mulrC -scalerA.
+rewrite -subr_eq0 -scalerBr scaler_eq0 subr_eq0.
+by move: k_nz; case: (k =P 0) => [->|].
+Qed.
+
 Definition bet a b c := betE a b c || betS a b c.
 
 Lemma bet_sym a b c : bet a b c = bet c b a.
 Proof. by rewrite /bet betE_sym betS_sym. Qed.
+
+Lemma scaler_bet a b c k :
+  k <> 0 -> bet (k *: a) (k *: b) (k *: c) = bet a b c.
+Proof. by move => k_nz; rewrite /bet scaler_betE // scaler_betS. Qed.
 
 Lemma bet_symmetry a b c : bet a b c -> bet c b a.
 Proof. by rewrite bet_sym. Qed.
@@ -479,7 +518,7 @@ Lemma extension_contraction x y z k:
   k != 0 -> extension x y k == z = (contraction x z k == y).
 Proof.
 move=> k_neq0; rewrite /extension /contraction.
-suffices: (k*:(k^-1 *: (y - x) + x) == k*:z) = (k^-1 *: (y - x) + x == z).
+suffices: (k *: (k^-1 *: (y - x) + x) == k *: z) = (k^-1 *: (y - x) + x == z).
   move<-; rewrite scalerDr scalerA divff // scale1r eq_sym -subr_eq.
   by rewrite -subr_eq opprK -scalerBr.
 rewrite -[X in X = _]subr_eq0 -[X in _ = X]subr_eq0 -scalerBr scaler_eq0.

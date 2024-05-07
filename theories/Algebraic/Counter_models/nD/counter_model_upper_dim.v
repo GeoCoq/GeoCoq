@@ -287,7 +287,7 @@ Proof.
 apply: (inj_map val_inj); rewrite val_enum_ord.
 rewrite -[in iota _  _]addn1 iotaD /=.
 rewrite cats1 map_rcons; congr (rcons _ _).
-by rewrite -map_comp/= (@eq_map _ _ _ val) ?val_enum_ord.
+by rewrite -map_comp /= (@eq_map _ _ _ val) ?val_enum_ord.
 Qed.
 
 Lemma pick_to_nD' (a b : 'rV[R]_2) i :
