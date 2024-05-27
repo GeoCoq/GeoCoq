@@ -62,6 +62,27 @@ move=> ? ? ? ? /orP[/eqP->|/eqP->] /orP[/eqP->|/eqP->];
 by rewrite /bet eqxx ?orbT.
 Qed.
 
+Lemma lower_dim :  forall n, lower_dimP point bet cong n ord0 ord0
+                                       (nseq_tuple n ord_max).
+Proof.
+rewrite /lower_dimP /orthonormal_basis /bet /cong => n /=.
+case: n => // n; rewrite !tnth_nseq; split; [|split] => //.
+split; [apply big_andb_and|apply big_pairs_andb_and]; rewrite big_all.
+- by rewrite eqxx; apply /seq.allP.
+apply /seq.allP => i iP; rewrite big_all; apply /seq.allP => j jP.
+by rewrite !tnth_nseq eqxx.
+Qed.
+
+Lemma upper_dim : forall n,
+  upper_dimP _ bet cong n.+1 ord0 ord0 (nseq_tuple n.+1 ord_max).
+Proof.
+move => n p; case: n => // [[HNC _]|n]; first by apply HNC; rewrite /bet eqxx.
+rewrite /no_more_orthogonal_point /orthonormal_basis !tnth_nseq /bet.
+case: p => p; case: p => [pP|p] ; [|case: p => // pP].
+- by rewrite (@ord_inj _ (Ordinal pP) ord0) // eqxx orbT.
+by rewrite (@ord_inj _ (Ordinal pP) ord_max).
+Qed.
+
 Lemma cong_axay a b c : cong a b a c -> a = b.
 Proof. by move=> /orP[/eqP->|/andP[/eqP-> ?]]. Qed.
 

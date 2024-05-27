@@ -53,7 +53,7 @@ Lemma upper_dim : forall n,
   upper_dimP _ bet cong n.+1 ord0 ord0 (nseq_tuple n.+1 ord_max).
 Proof.
 rewrite /upper_dimP /no_more_orthogonal_point /Col /bet.
-by move=> n; case n => //; intuition.
+by move => n; case n => //; intuition.
 Qed.
 
 Lemma euclid : euclidP point bet cong.
