@@ -20,6 +20,7 @@ Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 
 Require Import GeoCoq.Algebraic.Counter_models.nD.independence.
 Require Import GeoCoq.Algebraic.coplanarity.
+Require Import GeoCoq.Algebraic.Counter_models.nD.dimensional_axioms.
 Require Import GeoCoq.Algebraic.tcp_ndc.
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
 
@@ -141,6 +142,37 @@ by move: Hb1; rewrite Hbc -Hcd betS_neq23 eqxx andbF.
 Qed.
 
 End RfTarskinD.
+
+Section RcfTarskinp2D.
+
+Variable n : nat.
+Variable R : realFieldType.
+
+Definition o := o n R.
+
+Definition i := i n R.
+
+Definition basis := basis n R.
+
+Lemma lower_dim :
+  lower_dimP (@Point n.+2 R) (@bet' n.+2 R) (@cong' n.+2 R) n.+2 o i basis.
+Proof.
+move: (dimensional_axioms.lower_dim n R) => [oi_nz [_ ldP]].
+split => //; split => //; rewrite /bet' /o /i.
+by rewrite nth_basis // betS_o_i_basis_nth0.
+Qed.
+
+Lemma upper_dim :
+  upper_dimP (@Point n.+2 R) (@bet' n.+2 R) (@cong' n.+2 R) n.+2 o i basis.
+Proof.
+have bet'P : forall a b c, @betS R n.+2 a b c -> bet' a b c.
+- by move => a b c; rewrite /bet' => ->.
+move => p ob1P [_ [_ [HC1 HC2]]] pP; apply bet'P, upper_dimS => //.
+- by rewrite nth_new_basis //; apply i_neq_basis_nth0.
+- by rewrite nth_new_basis // bet_o_i_basis_nth0.
+Qed.
+
+End RcfTarskinp2D.
 
 Section RcfTarskinD.
 

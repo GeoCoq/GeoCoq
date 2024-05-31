@@ -20,6 +20,7 @@ Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 
 Require Import GeoCoq.Algebraic.Counter_models.nD.independence.
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
+Require Import GeoCoq.Algebraic.Counter_models.nD.dimensional_axioms.
 
 Section RfTarskinD.
 
@@ -52,7 +53,7 @@ Proof. by unfold cong_identityP; apply cong_identity. Qed.
 Lemma five_segment : five_segmentP Point bet' cong'.
 Proof.
 move => a a' b b' c c' d d' ? ? ? ? /andP[? _] /andP[? _] ?.
-by apply (@five_segment R (n.+1) a a' b b' c c' d d').
+by apply (@five_segment R n.+1 a a' b b' c c' d d').
 Qed.
 
 Lemma inner_pasch : inner_paschP Point bet'.
@@ -85,6 +86,42 @@ by rewrite !andbT=> ? /andP[? _]; apply bet_inner_transitivity with d.
 Qed.
 
 End RfTarskinD.
+
+Section RcfTarskinp2D.
+
+Variable n : nat.
+Variable R : realFieldType.
+
+Definition o := o n R.
+
+Definition i := i n R.
+
+Definition basis := basis n R.
+
+Lemma lower_dim :
+  lower_dimP (@Point n.+1 R) (@bet' n.+1 R) (@cong' n.+1 R) n.+2 o i basis.
+Proof.
+move: (dimensional_axioms.lower_dim n R) => [oi_nz [_ ldP]].
+split => //; split => //; rewrite /bet' /o /i.
+rewrite nth_basis // bet_o_i_basis_nth0 /=.
+suff -> : (dimensional_axioms.i n R == dimensional_axioms.o n R) = false by [].
+apply /negbTE/eqP; move: (betS_o_i_basis_nth0 n R).
+by rewrite betS_neq12 => /andP[_ /eqP].
+Qed.
+
+Lemma upper_dim :
+  upper_dimP (@Point n.+1 R) (@bet' n.+1 R) (@cong' n.+1 R) n.+2 o i basis.
+Proof.
+have bet'P : forall a b c, @betS R n.+2 a b c -> bet' a b c.
+- move => a b c; rewrite /bet' /bet betS_neq12 => /andP[-> ab_nz].
+  rewrite ab_nz orbT; suff -> : (a == b) = false by [].
+  by apply /negbTE.
+move => p ob1P [_ [_ [HC1 HC2]]] pP; apply bet'P, upper_dimS => //.
+- by rewrite nth_new_basis //; apply i_neq_basis_nth0.
+- by rewrite nth_new_basis // bet_o_i_basis_nth0.
+Qed.
+
+End RcfTarskinp2D.
 
 Section RcfTarskinD.
 

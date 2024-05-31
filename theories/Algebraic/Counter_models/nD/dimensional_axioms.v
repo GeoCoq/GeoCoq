@@ -155,10 +155,10 @@ case: x => m; case: m => [j|m]; [|case: m => // j].
     by rewrite !mxE /= subr0 eqxx.
 Qed.
 
-Lemma bet_o_i_basis_nth0 : bet i o (delta_mx 0 (inord 0)).
+Lemma betS_o_i_basis_nth0 : betS i o (delta_mx 0 (inord 0)).
 Proof.
 suff: @betS R 2 (row2 (-1) 0) (row2 0 0) (row2 1 0)
-  by rewrite basis_nth0 /i /o /to_nD bet_nD_2D /bet => ->; rewrite orbT.
+  by rewrite basis_nth0 /i /o /to_nD -betS_nD_2D.
 rewrite /betS betR_o_i_basis_nth0.
 rewrite ltr_pdivlMr ?ltr_pdivrMr ?addr_gt0 ?ltr01 //.
 rewrite mul0r !mul1r ltrDr ltr01 /= andbT eq_inv_scale ?add11_neq0 //.
@@ -173,6 +173,9 @@ case: j => m; case: m => [j|m]; [|case: m => // j].
   have -> : @inord (S O) (S O) = 1 by apply val_inj; rewrite val_insubd.
   by rewrite !mxE /= subr0 mulr0.
 Qed.
+
+Lemma bet_o_i_basis_nth0 : bet i o (delta_mx 0 (inord 0)).
+Proof. by rewrite /bet betS_o_i_basis_nth0 orbT. Qed.
 
 Lemma oP : o = const_mx 0.
 Proof.
