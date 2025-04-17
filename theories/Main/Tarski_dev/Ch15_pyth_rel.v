@@ -1,4 +1,4 @@
-Require Export GeoCoq.Main.Tarski_dev.Ch16_coordinates.
+Require Export GeoCoq.Main.Tarski_dev.Ch15_lengths.
 
 Section PythagoreanFun.
 
