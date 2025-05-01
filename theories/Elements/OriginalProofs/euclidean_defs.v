@@ -32,7 +32,6 @@ Definition PG A B C D := Par A B C D /\ Par A D B C.
 Definition SQ A B C D := Cong A B C D /\ Cong A B B C /\ Cong A B D A /\ Per D A B /\ Per A B C /\ Per B C D /\ Per C D A.
 Definition RE A B C D := Per D A B /\ Per A B C /\ Per B C D /\ Per C D A /\ CR A C B D.
 Definition RC A B C D a b c d := RE A B C D /\ RE a b c d /\ Cong A B a b /\ Cong B C b c.
-Definition ER A B C D a b c d := exists X Y Z U x z u w W, RC A B C D X Y Z U /\ RC a b c d x Y z u /\ BetS x Y Z /\ BetS X Y z /\ BetS W U w. 
 Definition equilateral A B C := Cong A B B C /\ Cong B C C A.
 
 End Definitions.
