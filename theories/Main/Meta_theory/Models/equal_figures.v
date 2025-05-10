@@ -454,11 +454,6 @@ cut (~ Col A B C).
 - apply perp_not_col, perp_in_perp with A; Perp.
 Qed.
 
-Definition is_orthocenter H A B C :=
-  ~ Col A B C /\
-  exists HA HB, Perp A HA B C /\ Col B C HA /\ Perp B HB A C /\ Col A C HB /\
-                Col H A HA /\ Col H B HB.
-
 Lemma Pascal_Kupffer_s_version O A B C A' B' C' :
   Perp O A O A' -> Out O A B -> Out O B C -> Out O A' B' -> Out O B' C' ->
   Par A B' B A' -> Par B C' C B' -> Par A C' C A'.
@@ -6806,18 +6801,474 @@ Qed.
 
 (* 7.4 *)
 Lemma rectangle_cut_in_halves A B C D P Q a b c d p q:
-  Midpoint q b c -> Midpoint Q C D ->
+  Midpoint P A B -> Midpoint p a d ->
+  Midpoint Q C D -> Midpoint q b c ->
   EqR A B C D a b c d ->
   EqR P Q C B a b q p.
 Proof.
-intros HM1 HM2 HEQR.
-destruct HEQR as [HNAB [HNBC [HR1 [HNab [HNbc [HR2 H]]]]]].
-destruct H as [E [F [G [H [I [J [K [L [M H1]]]]]]]]]; spliter.
-destruct (midpoint_existence H I) as [P2 HM5].
-destruct (midpoint_existence G F) as [Q2 HM6].
-destruct (midpoint_existence F M) as [p2 HM7].
-destruct (midpoint_existence E L) as [q2 HM8].
-Admitted.
+intros HM1 HM2 HM3 HM4 HR.
+assert (H : EqR D C B A a b c d).
+  {
+  assert (H : A <> B /\ B <> C /\ Rectangle A B C D)
+    by (destruct HR; spliter; auto).
+  revert HR; cut (EqR D C B A A B C D); [apply EqR_trans|].
+  apply EqR_sym; destruct (EqR_perm A B C D); spliter; auto.
+  }
+clear HR; destruct H as [HNDC [HNCB [HR1 [HNab [HNbc [HR2 H]]]]]].
+destruct H as [E [F [G [H [I [J [K [L [M HE]]]]]]]]].
+destruct HE as [HR3 [HC1 [HC2 [HR4 [HC3 [HC4 HB]]]]]].
+destruct HB as [HB1 [HB2 [HB3 [HB4 [HB5 [HB6 HB7]]]]]].
+assert (HAB : A <> B).
+  {
+  intro; treat_equalities; apply rect_permut in HR1.
+  apply degenerated_rect_eq in HR1; auto.
+  }
+assert (HPQ : P <> Q).
+  {
+  intro; treat_equalities.
+  apply plgf_rect_id in HR1; [destruct HR1 as [[]|[]]; auto|].
+  apply plg_col_plgf; [|apply Rectangle_Parallelogram; auto].
+  apply not_strict_par2 with A P; Col.
+  cut (Par D C B A); [Par|].
+  apply plg_par_1; [..|apply Rectangle_Parallelogram]; auto.
+  }
+assert (HCQ : C <> Q).
+  {
+  intro; treat_equalities; do 3 apply rect_permut in HR1.
+  apply degenerated_rect_eq in HR1; treat_equalities; auto.
+  }
+assert (HR5 : Rectangle P Q C B).
+  {
+  apply plg_per_rect3.
+  - apply parallelogram_to_plg, plg_permut.
+  apply plg_out_plg with A D.
+  + do 2 apply plg_permut; apply Rectangle_Parallelogram; auto.
+  + split; [auto|split; [|Between]].
+    intro; treat_equalities; auto.
+  + split; [|split]; Between.
+  + apply cong_cong_half_1 with A D; Midpoint.
+    apply Rectangle_Parallelogram, plg_cong in HR1; spliter; Cong.
+  - cut (Per C B P); [Perp|]; apply per_col with A; Col.
+    apply rect_per3 in HR1; Perp.
+  }
+assert (Hab : a <> b) by (intro; treat_equalities; auto).
+assert (Had : a <> d).
+  {
+  intro; treat_equalities.
+  do 2 apply rect_permut in HR2; apply degenerated_rect_eq in HR2; auto.
+  }
+assert (Hbq : b <> q) by (intro; treat_equalities; auto).
+assert (HR6 : Rectangle a b q p).
+  {
+  apply plg_per_rect1.
+  - apply parallelogram_to_plg; do 3 apply plg_permut.
+  apply plg_out_plg with c d.
+  + apply plg_permut; apply Rectangle_Parallelogram; auto.
+  + split; [auto|split; [|Between]].
+    intro; treat_equalities; auto.
+  + split; [|split]; Between; intro; treat_equalities.
+    do 2 apply rect_permut in HR2; apply degenerated_rect_eq in HR2; auto.
+  + apply cong_cong_half_1 with c d; Midpoint.
+    apply Rectangle_Parallelogram, plg_cong in HR2; spliter; Cong.
+  - cut (Per b a p); [Perp|]; apply per_col with d; Col.
+    apply rect_per1 in HR2; Perp.
+  }
+assert (HEP : EqR Q C B P a b q p -> EqR P Q C B a b q p).
+  {
+  intro HE; apply EqR_trans with Q C B P; [clear HE|exact HE].
+  apply EqR_perm; auto.
+  }
+apply HEP; clear HEP.
+destruct (midpoint_existence L M) as [P2 HM5].
+destruct (midpoint_existence E F) as [Q2 HM6].
+destruct (midpoint_existence F I) as [p2 HM7].
+destruct (midpoint_existence G H) as [q2 HM8].
+assert (HR7 : Rectangle Q2 F M P2).
+  {
+  apply rect_permut, rect_permut, sac_rectangle.
+  split; [|split; [|split]].
+  - cut (Per F M P2); [Perp|].
+    apply per_col with L; Col; [|apply rect_per3 in HR3; Perp].
+    intro; treat_equalities; apply rect_permut in HR3.
+    apply degenerated_rect_eq in HR3; treat_equalities; auto.
+  - apply per_col with E; Col; [|apply rect_per2 in HR3; Perp].
+    intro; treat_equalities; auto.
+  - cut (Cong M P2 F Q2); [Cong|].
+    apply cong_cong_half_1 with L E; Midpoint.
+    apply Rectangle_Parallelogram, plg_cong in HR3; spliter; Cong.
+  - assert (HO1 : Out M L P2).
+      {
+      split; [|split]; Between; intro; treat_equalities;
+      apply rect_permut, degenerated_rect_eq in HR3;
+      treat_equalities; auto.
+      }
+    assert (HO2 : Out F E Q2).
+      {
+      split; [|split]; Between; intro; treat_equalities;
+      do 3 apply rect_permut in HR3; apply degenerated_rect_eq in HR3;
+      treat_equalities; auto.
+      }
+    cut (OS M F Q2 P2); [Side|].
+    apply out_out_one_side with L; [|auto].
+    cut (OS F M L Q2); [Side|].
+    apply out_out_one_side with E; [apply l12_6|auto].
+    apply ncol123_plg__pars1234; [apply per_not_col|].
+    + intro; treat_equalities.
+      apply degenerated_rect_eq in HR3; treat_equalities; auto.
+    + intro; treat_equalities; apply rect_permut in HR3.
+      apply degenerated_rect_eq in HR3; treat_equalities; auto.
+    + apply rect_per3 in HR3; Perp.
+    + apply Rectangle_Parallelogram, rect_permut; auto.
+  }
+assert (HR8 : Rectangle F G q2 p2).
+  {
+  do 3 apply rect_permut; apply sac_rectangle; split; [|split; [|split]].
+  - cut (Per F G q2); [Perp|].
+    apply per_col with H; Col; [|apply rect_per2 in HR4; Perp].
+    intro; treat_equalities.
+    apply degenerated_rect_eq in HR4; treat_equalities; auto.
+  - apply per_col with I; Col; [|apply rect_per1 in HR4; Perp].
+    intro; treat_equalities; do 2 apply rect_permut in HR4.
+    apply degenerated_rect_eq in HR4; treat_equalities; auto.
+  - cut (Cong F p2 G q2); [Cong|].
+    apply cong_cong_half_1 with I H; Midpoint.
+    apply Rectangle_Parallelogram, plg_cong in HR4; spliter; Cong.
+  - assert (HO1 : Out F I p2).
+      {
+      split; [|split]; Between; intro; treat_equalities;
+      apply rect_permut, rect_permut, degenerated_rect_eq in HR4;
+      treat_equalities; auto.
+      }
+    assert (HO2 : Out G H q2).
+      {
+      split; [|split]; Between; intro; treat_equalities;
+      apply degenerated_rect_eq in HR4;
+      treat_equalities; auto.
+      }
+    cut (OS G F p2 q2); [Side|].
+    apply out_out_one_side with H; [|auto].
+    cut (OS F G H p2); [Side|].
+    apply out_out_one_side with I; [apply l12_6|auto].
+    apply ncol123_plg__pars1234; [apply per_not_col|].
+    + intro; treat_equalities; do 3 apply rect_permut in HR4.
+      apply degenerated_rect_eq in HR4; treat_equalities; auto.
+    + intro; treat_equalities.
+      apply degenerated_rect_eq in HR4; treat_equalities; auto.
+    + apply rect_per2 in HR4; Perp.
+    + apply Rectangle_Parallelogram; auto.
+  }
+assert (HFI : F <> I).
+  {
+  intro; treat_equalities; do 2 apply rect_permut in HR4.
+  apply degenerated_rect_eq in HR4; treat_equalities; auto.
+  }
+assert (HR : exists R, Bet P2 Q2 R /\ Bet R p2 q2).
+  {
+  cut (exists R, Col R P2 Q2 /\ Col R p2 q2).
+  - intros [R [HCol1 HCol2]]; exists R.
+    assert (HPS1 : Par_strict F M P2 Q2).
+      {
+      apply par_not_col_strict with P2; Col.
+      - cut (Par Q2 F M P2 /\ Par Q2 P2 F M); [intro; spliter; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+      - cut (~ Col F M L); [intros HF HCol3; apply HF; ColR|].
+        apply per_not_col; [..|apply rect_per3 in HR3; Perp];
+        intro; treat_equalities; auto; apply rect_permut in HR3.
+        apply degenerated_rect_eq in HR3; treat_equalities; auto.
+      }
+    assert (HPS2 : Par_strict F G p2 q2).
+      {
+      apply par_not_col_strict with p2; Col.
+      - cut (Par F G q2 p2 /\ Par F p2 G q2); [intro; spliter; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+      - cut (~ Col I F G); [intros HF HCol3; apply HF; ColR|].
+        apply per_not_col; [..|apply rect_per1 in HR4; Perp];
+        intro; treat_equalities; auto.
+      }
+    assert (HTS : TS Q2 E P2 R).
+      {
+      cut (TS E Q2 P2 R); [Side|].
+      apply col_two_sides with F; Col; [intro; treat_equalities; auto|].
+      apply l9_8_2 with M; [apply l9_2, l9_8_2 with p2|].
+      - split; [|split; [|exists F; split]]; Col; [..|eBetween].
+        + cut (~ Col G F I); [intros HF HCol3; apply HF; ColR|apply per_not_col];
+          [intro; treat_equalities; auto| |apply rect_per1 in HR4; Perp].
+          intro; treat_equalities; do 2 apply rect_permut in HR4.
+          apply degenerated_rect_eq in HR4; treat_equalities; auto.
+        + cut (~ Col M F E); [Col|].
+          apply per_not_col; [intro; treat_equalities; auto..|].
+          apply rect_per2 in HR3; Perp.
+      - apply l12_6, par_strict_col2_par_strict with p2 q2; Col.
+        + intro; treat_equalities.
+          apply (par_not_col _ _ _ _ p2 HPS1); Col; ColR.
+        + cut (Par_strict p2 q2 E F); [Par|].
+          apply par_strict_col2_par_strict with F G; Par; Col.
+          intro; treat_equalities; auto.
+      - apply l12_6, par_strict_col2_par_strict with L M; Col;
+        [|apply par_not_col_strict with M; Col].
+        + intro; treat_equalities.
+          apply rect_permut, degenerated_rect_eq in HR7.
+          treat_equalities; auto.
+        + cut (Par E F M L /\ Par E L F M); [intros []; Par|].
+          apply plg_par, Rectangle_Parallelogram; auto;
+          intro; treat_equalities; auto.
+        + apply per_not_col; [intro; treat_equalities; auto..|].
+          apply rect_per2 in HR3; Perp.
+      }
+    split; [apply col_two_sides_bet with E; Col|clear HTS].
+    apply col_two_sides_bet with M; Col.
+    cut (TS M p2 R q2); [Side|].
+    assert (HMp2 : M <> p2)
+      by (intro; destruct HM7 as []; treat_equalities; auto).
+    apply col_two_sides with F; Col; [ColR|].
+    apply l9_8_2 with Q2; [apply l9_2, l9_8_2 with G|].
+    + assert (HNC : ~ Col E F M).
+        {
+        apply per_not_col; [intro; treat_equalities; auto..|].
+        apply rect_per2 in HR3; Perp.
+        }
+      split; [|split; [|exists F; split; Col; eBetween]];
+      cut (~ Col E F M); Col; intros HF HCol3; apply HF; ColR.
+    + apply l12_6, par_strict_col2_par_strict with G H; Col;
+      [intro; treat_equalities; auto|].
+      cut (Par_strict G H F M); [Par|].
+      apply par_strict_col2_par_strict with F I; Col;
+      [intro; treat_equalities; auto|].
+      apply par_not_col_strict with F; Col.
+      * cut (Par F G H I /\ Par F I G H); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+      * cut (~ Col H G F); [intros HF HCol3; apply HF; ColR|].
+        apply per_not_col; [intro; treat_equalities; auto..|].
+        apply rect_per2 in HR4; Perp.
+    + apply l12_6, par_strict_col2_par_strict with P2 Q2; Col; Par.
+      intro; treat_equalities; auto.
+      apply (par_not_col _ _ _ _ Q2 HPS2); Col; ColR.
+  - destruct (l12_16 F M P2 Q2 p2 q2 p2) as [R []];
+    [..|exists R; spliter; Col].
+    + cut (Par Q2 F M P2 /\ Par Q2 P2 F M); [intros []; Par|].
+      apply plg_par, Rectangle_Parallelogram; auto;
+      intro; treat_equalities; auto.
+    + assert (HNC : ~ Col G F M).
+        {
+        cut (~ Col G F I); [intros HF HC; apply HF; ColR|apply per_not_col];
+        [intro; treat_equalities; auto| |apply rect_per1 in HR4; Perp].
+        intro; treat_equalities; do 2 apply rect_permut in HR4.
+        apply degenerated_rect_eq in HR4; treat_equalities; auto.
+        }
+      assert (HCop1 : Coplanar G F M P2).
+        {
+        cut (Par G F M P2); [Cop|].
+        apply par_col2_par with M L; Col.
+        - intro; treat_equalities; apply rect_permut in HR3.
+          apply degenerated_rect_eq in HR3; treat_equalities; auto.
+        - cut (Par L M F G); [Par|].
+          apply par_col2_par with E F; Col; [intro; treat_equalities; auto|].
+          cut (Par E F M L /\ Par E L F M); [intros []; Par|].
+          apply plg_par, Rectangle_Parallelogram; auto;
+          intro; treat_equalities; auto.
+        }
+      assert (HCop2 : Coplanar G F M Q2) by (cut (Col G F Q2); [Cop|ColR]).
+      assert (HCop3 : Coplanar G F M p2).
+        {
+        cut (Col F M p2); [Cop|].
+        cut (F <> I); [intro; ColR|].
+        intro; treat_equalities; do 2 apply rect_permut in HR4.
+        apply degenerated_rect_eq in HR4; treat_equalities; auto.
+        }
+      cut (Coplanar G F M q2); [intro; CopR|].
+      cut (Par F M G q2); [Cop|].
+      apply par_col2_par with G H; Col; [intro; treat_equalities; auto|].
+      cut (Par G H F M); [Par|].
+      apply par_col2_par with F I; Col; [intro; treat_equalities; auto|].
+      cut (Par F G H I /\ Par F I G H); [intros []; Par|].
+      apply plg_par, Rectangle_Parallelogram; auto;
+      intro; treat_equalities; auto.
+    + split; [|split; [exists q2; split; Col|split]]; Col; [..|ColR].
+      * intro; treat_equalities; apply rect_permut in HR8.
+        apply degenerated_rect_eq in HR8; treat_equalities; auto.
+      * assert (HPS : Par_strict G H F I).
+          {
+          cut (Par_strict F I G H); [Par|].
+          apply par_not_col_strict with G; Col.
+          - apply Rectangle_Parallelogram, plg_par in HR4; spliter; Par;
+            intro; treat_equalities; auto.
+          - cut (~ Col I F G); [intros HF HC; apply HF; Col|].
+            apply per_not_col; [intro; treat_equalities; auto..|].
+            apply rect_per1 in HR4; Perp.
+          }
+        apply (par_not_col _ _ _ _ q2) in HPS; Col.
+        intro HF; apply HPS; ColR.
+  }
+destruct HR as [R [HB8 HB9]].
+split; [..|split]; [..|split]; [..|split]; [..|split]; [..|split];
+[| |apply rect_permut|..]; auto.
+exists Q2, F, G, q2, p2, R, K, P2, M; repeat (split; auto); [| |eBetween..|].
+- cut (Cong C Q F Q2); [Cong|].
+  apply cong_cong_half_1 with D E; Midpoint; Cong.
+- apply cong_cong_half_1 with c H; Midpoint.
+- destruct (midpoint_existence J F) as [R' HM9].
+  cut (R = R'); [intro; treat_equalities; eBetween|].
+  destruct (midpoint_existence I J) as [R2 HM10].
+  assert (HPer : Per J I F).
+    {
+    apply l8_3 with H; Col; [apply rect_per4 in HR4; Perp|].
+    intro; treat_equalities; apply rect_permut in HR4.
+    apply degenerated_rect_eq in HR4; treat_equalities; auto.
+    }
+  assert (HIJ : I <> J).
+    {
+    intro; treat_equalities; apply (par_not_col E L F M R2); Col.
+    apply par_not_col_strict with F; Col.
+    - cut (Par E F M L /\ Par E L F M); [intros []; Par|].
+      apply plg_par, Rectangle_Parallelogram; auto;
+      intro; treat_equalities; auto.
+    - cut (~ Col F E L); [Col|apply per_not_col];
+      [intro; treat_equalities; auto| |apply rect_per1 in HR3; Perp].
+      intro; treat_equalities; do 2 apply rect_permut in HR3.
+      apply degenerated_rect_eq in HR3; treat_equalities; auto.
+    }
+  assert (HR9 : Rectangle R2 I p2 R').
+    {
+    do 3 apply rect_permut; apply Per_mid_rectangle with J F; Midpoint.
+    intro; treat_equalities; apply l8_8 in HPer; treat_equalities.
+    do 2 apply rect_permut in HR8; apply degenerated_rect_eq in HR8.
+    treat_equalities; auto.
+    }
+  apply (plg_uniqueness R2 I p2); apply Rectangle_Parallelogram; auto.
+  apply rect_permut, rect_permut, sac_rectangle.
+  split; [|split; [|split; [apply cong_inner_transitivity with F Q2|]]].
+    + apply l8_3 with q2; Col.
+      * cut (Per I p2 q2); [Perp|].
+        apply l8_3 with F; Col; [|intro; treat_equalities; auto].
+        apply rect_per4 in HR8; Perp.
+      * intro; treat_equalities; apply rect_permut in HR8.
+        apply degenerated_rect_eq in HR8; treat_equalities; auto.
+    + apply l8_3 with F; Col.
+      cut (Per R2 I F); [Perp|].
+      apply l8_3 with J; Col.
+    + cut (Cong F Q2 R p2); [Cong|].
+      apply plg_cong_1, par_2_plg; Col.
+      * assert (HQ2R : Q2 <> R).
+          {
+          intro; apply (par_not_col F G p2 q2 R); treat_equalities; [|ColR..].
+          apply par_not_col_strict with p2; Col.
+          - cut (Par F G q2 p2 /\ Par F p2 G q2); [intros []; Par|].
+            apply plg_par, Rectangle_Parallelogram; auto;
+            intro; treat_equalities; auto.
+          - cut (~ Col G F p2); [Col|].
+            apply per_not_col; [intro; treat_equalities; auto..|].
+            apply rect_per1 in HR8; Perp.
+          }
+        cut (~ Col P2 Q2 F); [intros HF HC; apply HF; ColR|apply per_not_col];
+        [|intro; treat_equalities; auto|apply rect_per1 in HR7; Perp].
+        intro; treat_equalities; do 2 apply rect_permut in HR7.
+        apply degenerated_rect_eq in HR7; treat_equalities; auto.
+      * assert (Hp2R : p2 <> R).
+          {
+          intro; apply (par_not_col F M P2 Q2 R); treat_equalities; [|ColR..].
+          apply par_not_col_strict with P2; Col.
+          - cut (Par Q2 F M P2 /\ Par Q2 P2 F M); [intros []; Par|].
+            apply plg_par, Rectangle_Parallelogram; auto;
+            intro; treat_equalities; auto.
+          - apply per_not_col; auto;
+            [intro; treat_equalities; auto| |apply rect_per3 in HR7; Perp].
+            intro; treat_equalities; apply rect_permut in HR3.
+            apply degenerated_rect_eq in HR3; treat_equalities; auto.
+          }
+        apply par_col2_par with p2 q2; Col.
+        cut (Par p2 q2 F Q2); [Par|apply par_col2_par with F G];
+        [intro; treat_equalities; auto| |Col|ColR].
+        cut (Par F G q2 p2 /\ Par F p2 G q2); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+      * assert (HQ2R : Q2 <> R).
+          {
+          intro; apply (par_not_col F G p2 q2 R); treat_equalities; [|ColR..].
+          apply par_not_col_strict with p2; Col.
+          - cut (Par F G q2 p2 /\ Par F p2 G q2); [intros []; Par|].
+            apply plg_par, Rectangle_Parallelogram; auto;
+            intro; treat_equalities; auto.
+          - cut (~ Col G F p2); [Col|].
+            apply per_not_col; [intro; treat_equalities; auto..|].
+            apply rect_per1 in HR8; Perp.
+          }
+        apply par_col2_par with P2 Q2; Col.
+        cut (Par P2 Q2 F p2); [Par|apply par_col2_par with F M];
+        [intro; treat_equalities; auto| |Col|ColR].
+        cut (Par Q2 F M P2 /\ Par Q2 P2 F M); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+    + cut (Cong F Q2 I R2); [Cong|].
+      apply cong_cong_half_1 with E J; Midpoint.
+      cut (Cong E F I J); [Cong|].
+      assert (HNC : ~ Col E F I).
+        {
+        apply per_not_col; [intro; treat_equalities; auto..|].
+        apply l8_3 with G; Col; [|intro; treat_equalities; auto].
+        apply rect_per1 in HR4; Perp.
+        }
+      assert (HP : Par E F I J).
+        {
+        apply par_col2_par with H I; Col.
+        cut (Par H I E F); [Par|].
+        apply par_col2_par with F G; Col; [intro; treat_equalities; auto|].
+        cut (Par F G H I /\ Par F I G H); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+        }
+      apply plg_cong_1, par_2_plg; Col.
+      apply par_col2_par with F M; Col.
+      cut (Par F M E J); [Par|].
+      apply par_col2_par with E L; Col; [intro; treat_equalities; auto|].
+      apply par_col2_par with E L; Col.
+      * intro; treat_equalities; auto; do 2 apply rect_permut in HR3.
+        apply degenerated_rect_eq in HR3; treat_equalities; auto.
+      * cut (Par E F M L /\ Par E L F M); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+    + assert (Hp2R : p2 <> R).
+        {
+        intro; apply (par_not_col F M P2 Q2 R); treat_equalities; Col; [|ColR].
+        apply par_not_col_strict with Q2; Col.
+        - cut (Par Q2 F M P2 /\ Par Q2 P2 F M); [intros []; Par|].
+          apply plg_par, Rectangle_Parallelogram; auto;
+          intro; treat_equalities; auto.
+        - cut (~ Col M F Q2); [Col|].
+          apply per_not_col; [intro; treat_equalities; auto..|].
+          apply rect_per2 in HR7; Perp.
+        }
+      apply l9_8_1 with H; [apply l9_2, l9_8_2 with q2|].
+      * apply bet__ts; Between.
+        cut (~ Col q2 p2 F); [intros HF HC; apply HF; ColR|apply per_not_col];
+        [|intro; treat_equalities; auto|apply rect_per4 in HR8; Perp].
+        intro; treat_equalities; apply rect_permut in HR8.
+        apply degenerated_rect_eq in HR8; treat_equalities; auto.
+      * apply l12_6, par_strict_col2_par_strict with G H; Col;
+        [intro; treat_equalities; auto|].
+        cut (Par_strict G H I p2); [Par|].
+        apply par_strict_col2_par_strict with F I; Col;
+        [intro; treat_equalities; auto|].
+        assert (HNC : ~ Col G H I).
+          {
+          apply per_not_col;
+          [intro; treat_equalities; auto| |apply rect_per3 in HR4; Perp].
+          intro; treat_equalities; apply rect_permut in HR4.
+          apply degenerated_rect_eq in HR4; treat_equalities; auto.
+          }
+        apply par_not_col_strict with I; Col.
+        cut (Par F G H I /\ Par F I G H); [intros []; Par|].
+        apply plg_par, Rectangle_Parallelogram; auto;
+        intro; treat_equalities; auto.
+      * cut (TS I p2 H R2); [Side|].
+        apply bet__ts; eBetween; [intro; treat_equalities; auto|].
+        cut (~ Col H I F); [intros HF HC; apply HF; ColR|apply per_not_col];
+        [intro; treat_equalities; auto..|apply rect_per4 in HR4; Perp].
+        apply rect_permut, degenerated_rect_eq in HR4.
+        treat_equalities; auto.
+Qed.
 
 Lemma EqT_not_col A B C a b c : EqT A B C a b c -> ~ Col A B C /\ ~ Col a b c.
 Proof.
@@ -6838,9 +7289,12 @@ assert (HPts : a = k /\ b = d \/ a = b /\ k = d) by (apply plgf_rect_id; auto).
 destruct HPts; destruct H8; auto.
 Qed.
 
+(* Compare with circumscribed_rectangle__bet *)
 Lemma EqT_Convex A B C D E F G H:
-  Convex A C B D -> ~ Col A B C -> ~ Col A B D -> First_circumscribed_rectangle A B C E F ->
-  First_circumscribed_rectangle A B D H G -> Bet G A F /\ Bet H B E.
+  Convex A C B D -> ~ Col A B C -> ~ Col A B D ->
+  First_circumscribed_rectangle A B C E F ->
+  First_circumscribed_rectangle A B D H G ->
+  Bet G A F /\ Bet H B E.
 Proof.
 intros HCV HNC1 HNC2 HF1 HF2.
 apply not_col_distincts in HNC1; apply not_col_distincts in HNC2.
@@ -6938,7 +7392,7 @@ assert (HTS2 : TS B A H E).
 apply col_two_sides_bet with A; Col.
 Qed.
 
-(* 7.5 A priori pas utilisé*)
+(* 7.5 A priori pas utilisé *)
 Lemma quadrilateral_cut_in_halves A B C D P Q S T :
   Convex S P T Q ->
   First_circumscribed_rectangle P Q S A D ->
@@ -7048,40 +7502,97 @@ Lemma halves_of_equals A B C D a b c d :
   EqQ A B C D a b c d ->
   EqT A C B a c b.
 Proof.
-intros HTS1 HTS2 HE1 HE2 HEQ1.
-assert (HNC : ~ Col A C B /\ ~ Col A C D) by (apply EqT_not_col; auto).
-assert (HNC0 : ~ Col a c b /\ ~ Col a c d) by (apply EqT_not_col; auto).
-destruct HNC as [HNC1 HNC2].
-destruct HNC0 as [HNC3 HNC4].
-destruct HEQ1 as [G [H [I [J [g [h [i [j [HCR1 [HCR2 HEQR1]]]]]]]]]].
+intros HTS1 HTS2 HE1 HE2 HEQ.
+assert (HNC1 : ~ Col A C B /\ ~ Col A C D) by (apply EqT_not_col; auto).
+assert (HNC3 : ~ Col a c b /\ ~ Col a c d) by (apply EqT_not_col; auto).
+destruct HNC1 as [HNC1 HNC2].
+destruct HNC3 as [HNC3 HNC4].
+destruct HEQ as [G [H [I [J [g [h [i [j [HCR1 [HCR2 HEQR1]]]]]]]]]].
 destruct HE1 as [K [L [N [M [HF1 [HF2 HEQR2]]]]]].
 destruct HE2 as [k [l [n [m [HF3 [HF4 HEQR3]]]]]].
-assert (HP : A <> C /\ C <> K /\ A <> C /\ C <> N) by (apply EqR_diffs with L M; auto); spliter.
-assert (HP : a <> c /\ c <> k /\ a <> c /\ c <> n) by (apply EqR_diffs with l m; auto); spliter.
-assert (HR1 : Rectangle A C K L) by (destruct HF1; auto).
-assert (HR2 : Rectangle A C N M) by (destruct HF2; auto).
-assert (HR3 : Rectangle a c k l) by (destruct HF3; auto).
-assert (HR4 : Rectangle a c n m) by (destruct HF4; auto).
-assert (HCV1 : Convex A B C D) by (destruct HCR1; spliter; auto).
-assert (HCV2 : Convex a b c d) by (destruct HCR2; spliter; auto).
-assert (HB : Bet M A L /\ Bet N C K) by (apply EqT_Convex with B D; auto).
-assert (HB2 : Bet m a l /\ Bet n c k) by (apply EqT_Convex with b d; auto); spliter.
-assert (HCong1 : Cong N C C K) by (apply B5_5 in HEQR2; auto; Cong).
-assert (HM1 : Midpoint C K N) by (unfold Midpoint; split; Between; Cong).
-assert (HCong2 : Cong k c c n) by (apply B5_5 in HEQR3; auto; Cong).
-assert (HM2 : Midpoint c k n) by (unfold Midpoint; Between).
 cut (EqR M L K N l k n m).
-intro HEQR4.
-assert (HEQR5 : EqR A C K L l k c a) by (apply rectangle_cut_in_halves with M N n m; auto).
-exists K, L, k, l.
-do 2 (split; auto).
-assert (HNlk : l <> k)
-  by (intro; treat_equalities; apply rect_permut in HR3; apply degenerated_rect_eq in HR3; auto).
-assert (HR5 : Rectangle l k c a) by (apply rect_comm2 in HR3; do 2 (apply rect_permut in HR3); auto).
-apply EqR_trans with l k c a; auto.
-apply EqR_perm; auto.
-(*il faut utiliser EqR G H I J g h i j en montrant que c'est la même équivalence, donc détruire HCR1 et HCR2 mais on a besoin de l'équivalence des rectangles circonscrits*)
-Admitted.
+- assert (HP : A <> C /\ C <> K /\ A <> C /\ C <> N) by (apply EqR_diffs with L M; auto); spliter.
+  assert (HP : a <> c /\ c <> k /\ a <> c /\ c <> n) by (apply EqR_diffs with l m; auto); spliter.
+  assert (HR1 : Rectangle A C K L) by (destruct HF1; auto).
+  assert (HR2 : Rectangle A C N M) by (destruct HF2; auto).
+  assert (HR3 : Rectangle a c k l) by (destruct HF3; auto).
+  assert (HR4 : Rectangle a c n m) by (destruct HF4; auto).
+  assert (HCV1 : Convex A B C D) by (destruct HCR1; spliter; auto).
+  assert (HCV2 : Convex a b c d) by (destruct HCR2; spliter; auto).
+  assert (HB : Bet M A L /\ Bet N C K) by (apply EqT_Convex with B D; auto).
+  assert (HB2 : Bet m a l /\ Bet n c k) by (apply EqT_Convex with b d; auto); spliter.
+  assert (HCong1 : Cong N C C K) by (apply B5_5 in HEQR2; auto; Cong).
+  assert (HM1 : Midpoint C K N) by (unfold Midpoint; split; Between; Cong).
+  assert (HCong2 : Cong k c c n) by (apply B5_5 in HEQR3; auto; Cong).
+  assert (HM2 : Midpoint c k n) by (unfold Midpoint; Between).
+  assert (HCong3 : Cong L A A M).
+    {
+    assert (HKL : K <> L).
+      {
+      intro; treat_equalities; apply rect_permut in HR1.
+      apply degenerated_rect_eq in HR1; auto.
+      }
+    assert (HAL : A <> L).
+      {
+      intro; treat_equalities; do 2 apply rect_permut in HR1.
+      apply degenerated_rect_eq in HR1; auto.
+      }
+    cut (EqR  K L A C N M A C).
+    - intro HEQR4; apply B5_5 in HEQR4; Cong.
+      + do 2 apply rect_permut; auto.
+      + do 2 apply rect_permut; auto.
+      + cut (Cong A C K L /\ Cong A C N M); [intros []; eCong|].
+        apply Rectangle_Parallelogram in HR1, HR2.
+        apply plg_cong in HR1, HR2; spliter; Cong.
+    - apply EqR_trans with A C K L; [|eapply EqR_trans; eauto];
+      apply EqR_perm; auto; do 2 apply rect_permut; auto.
+    }
+  assert (HM3 : Midpoint A M L) by (unfold Midpoint; split; Between; Cong).
+  assert (HCong4 : Cong l a a m).
+    {
+    assert (Hkl : k <> l).
+      {
+      intro; treat_equalities; apply rect_permut in HR3.
+      apply degenerated_rect_eq in HR3; auto.
+      }
+    assert (Hal : a <> l).
+      {
+      intro; treat_equalities; do 2 apply rect_permut in HR3.
+      apply degenerated_rect_eq in HR3; auto.
+      }
+    cut (EqR  k l a c n m a c).
+    - intro HEQR4; apply B5_5 in HEQR4; Cong.
+      + do 2 apply rect_permut; auto.
+      + do 2 apply rect_permut; auto.
+      + cut (Cong a c k l /\ Cong a c n m); [intros []; eCong|].
+        apply Rectangle_Parallelogram in HR3, HR4.
+        apply plg_cong in HR3, HR4; spliter; Cong.
+    - apply EqR_trans with a c k l; [|eapply EqR_trans; eauto];
+      apply EqR_perm; auto; do 2 apply rect_permut; auto.
+    }
+  assert (HM4 : Midpoint a l m) by (unfold Midpoint; split; Between; Cong).
+  intro HEQR4; assert (HEQR5 : EqR A C K L l k c a)
+    by (apply rectangle_cut_in_halves with M N n m; auto).
+  exists K, L, k, l; do 2 (split; auto).
+  assert (HNlk : l <> k)
+    by (intro; treat_equalities; apply rect_permut in HR3; apply degenerated_rect_eq in HR3; auto).
+  assert (HR5 : Rectangle l k c a) by (apply rect_comm2 in HR3; do 2 (apply rect_permut in HR3); auto).
+  apply EqR_trans with l k c a; auto.
+  apply EqR_perm; auto.
+- assert (HCR3 : circumscribed_rectangle A B C D K L M N)
+    by (split; [destruct HCR1|]; auto).
+  apply (circumscribed_rectangle_EqR _ _ _ _ G H I J) in HCR3; auto.
+  assert (HCR4 : circumscribed_rectangle a b c d k l m n)
+    by (split; [destruct HCR2|]; auto).
+  apply (circumscribed_rectangle_EqR _ _ _ _ g h i j) in HCR4; auto.
+  cut (EqR K L M N k l m n).
+  + intro HE; apply EqR_trans with K L M N; [|eapply EqR_trans; eauto].
+    * destruct HE as [HKL [HLM [HR _]]]; apply EqR_perm; auto.
+      do 3 apply rect_permut; apply rect_comm2; auto.
+    * destruct HE as [_ [_ [_ [HKL [HLM [HR _]]]]]]; apply EqR_perm; auto.
+  + apply (EqR_trans _ _ _ _ G H I J); [apply EqR_sym; auto|].
+    apply (EqR_trans _ _ _ _ g h i j); auto.
+Qed.
 
 (* 7.7 *)
 Lemma paste3 A B C D M a b c d m :
@@ -7126,13 +7637,5 @@ assert (HB6 : Bet i a h /\ Bet j b g) by (apply EqT_Convex with c d; auto); spli
 assert (HEQR5 : EqR G H I J g h i j) by (apply B5_8 with A B a b; Between).
 exists G, H, I, J, g, h, i, j; split; split; auto; split; auto.
 Qed.
-
-Lemma paste4 A B C D F G H J K L M P e m :
-  EqQ A B m D F K H G -> EqQ D B e C G H M L ->
-  Bet A P C -> Bet B P D -> Bet K H M -> Bet F G L ->
-  Bet B m D -> Bet B e C -> Bet F J M -> Bet K J L ->
-  EqQ A B C D F K M L.
-Proof.
-Admitted.
 
 End Beeson.
