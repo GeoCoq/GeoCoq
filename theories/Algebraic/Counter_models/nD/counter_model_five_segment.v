@@ -94,7 +94,9 @@ rewrite /bet' {1}/bet betS_neq13; case: (a =P c)=> [->|/eqP neq_ac].
 rewrite /betE; case: (a =P b)=> [->|/eqP neq_ab]; first by rewrite !bet_xxa.
 case: (b =P c)=> [->|/eqP neq_bc /=]; first by rewrite !bet_axx.
 rewrite andbT /bet /betE /betS eq_head_behead => /andP[/andP[headP beheadP] bP].
-have: (@eq_op (GRing.Zmodule.eqType (matrix_zmodType R 1 1))
+have: (@eq_op (GRing_Nmodule__to__eqtype_Equality
+        (matrix_matrix__canonical__GRing_Nmodule
+           (Num_RealField__to__GRing_Nmodule R) 1 1))
               ((head b)%:M - (head a)%:M)
               (betR a b c *: ((head c)%:M - (head a)%:M))).
   by apply /eqP/rowP => i; move/eqP: headP; rewrite ord1 /head !mxE eqxx.

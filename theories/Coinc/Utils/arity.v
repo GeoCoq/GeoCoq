@@ -623,12 +623,12 @@ intros cp Default id n Hle; revert cp; induction n; intro cp.
 rewrite plus_n_0; simpl; reflexivity.
 rewrite circPermNCPOK.
 assert (H : id + n <= S m).
-  {
+  (*{*)
   apply (Nat.le_trans _ (id + S n)); auto.
   rewrite <- plus_n_Sm; apply Nat.le_succ_diag_r.
-  }
+  (*}*)
 assert (H' : id + n <= m)
-  by (apply le_S_n; transitivity (id + S n); intuition auto with arith).
+  by (apply le_S_n; transitivity (id + S n);  intuition).
 rewrite <- IHn; try assumption.
 rewrite <- plus_n_Sm.
 apply nthCircPerm2Eq; assumption.
@@ -700,11 +700,11 @@ revert cp; induction m; intro cp.
 apply circPermNIdFirst.
 assert (H : m <= n) by (do 2 (apply le_S_n); assumption).
 rewrite nthCircPerm2Eq; try assumption; clear H.
-assert (H : S m <= S (S n)) by intuition auto with arith.
+assert (H : S m <= S (S n)) by intuition.
 rewrite IHm; try assumption; clear H; clear IHm.
 rewrite <- circPermNCPOK.
 rewrite circPermPerm.
-assert (H : m + 1 <= S n) by (rewrite plus_n_1; intuition auto with arith).
+assert (H : m + 1 <= S n) by (rewrite plus_n_1; auto with arith).
 rewrite <- nthCircPermNAny; try assumption; clear H.
 rewrite plus_n_1; reflexivity.
 induction m.
@@ -1232,7 +1232,7 @@ induction n; intros cp1 cp2 appPred pred_perm_1 pred_perm_2 Hpred HPerm.
       apply nthCircPerm2 in Hnth; try assumption; clear H.
       apply le_S in Hle.
       rewrite <- Nat.succ_le_mono in Hle.
-      assert (H : S id >= 1) by intuition auto with arith.
+      assert (H : S id >= 1) by auto with arith.
       clear Hge; rename H into Hge.
       assert (H : appPred (consTailCP (tailCP cp1) (headCP cp1)))
         by (apply pred_perm_1; rewrite <- consHeadCPOK; assumption) ; clear Hpred; rename H into Hpred.

@@ -488,7 +488,7 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
     case: (x =P inord n.+1) => [_ /=|/eqP/negPf HF]; last first.
     * by exfalso; move/eqP: xP; rewrite !mxE /= -mulNrn HF mulr0n addr0.
     by rewrite mulr1n mulNr -mulrN -invrN opprB opprK.
-  move: (row_sum_delta p); rewrite big_ord_recr; set pl := BigOp.bigop _ _ _.
+  move: (row_sum_delta p); rewrite big_ord_recr; set pl := bigop.bigop _ _ _.
   suff /eqP plE : pl == 0.
   + move => {pE}; rewrite plE /= add0r /ord_max.
     have -> : Ordinal (ltnSn n.+1) = inord n.+1
@@ -501,7 +501,7 @@ case: (n =P O) => [n_ez|n_nz]; split; [|tauto|tauto|]; move => _.
     rewrite scaler_eq0 => /orP[|/eqP/matrixP HF]; last first.
     * by move/eqP: (HF 0 0); rewrite !mxE eqxx oner_eq0.
     rewrite -expr2 subr_eq0 sqrf_eq1 => /orP[|/eqP->]; last first.
-    * by rewrite !mxE eqxx mulr1.
+    * by rewrite !mxE !eqxx mulr1.
     move => /eqP p_maxE; move: pE; rewrite p_maxE scale1r => pE.
     by move: i_n_neq_p; rewrite pE /i_n nth_basis.
   rewrite /pl /= (eq_big_seq (fun i => 0)) /=.

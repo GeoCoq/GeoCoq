@@ -304,7 +304,7 @@ suff: (ohead (enum p2) =
   by have -> : h = i by move: H; apply: Some_inj.
 move: i => _; rewrite /enum_mem -enumT 2?my_enum_ordSr -!cats1 filter_cat.
 rewrite filter_map filter_cat map_cat -catA -filter_map -!map_comp.
-set t_nil := @filter (Finite.sort (ordinal_finType (S (S (S n))))) _ _.
+set t_nil := @filter (Finite.sort (_ (* ordinal_finType *) (S (S (S n))))) _ _.
 have: (t_nil == [::]) => [|/eqP->]; rewrite ?cat0s.
 - rewrite /t_nil -size_eq0 -all_pred0 all_filter; apply /allP => x.
   rewrite -enumT /= => xP; move/mapP: xP => [] x0 /mapP [] x1 _ -> ->.

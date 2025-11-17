@@ -84,7 +84,7 @@ suff: free new_basis.
 - move => {}HF; suff {HF} : ~~ free new_basis by rewrite HF.
   rewrite /free size_tuple ltn_eqF // ltnS.
   apply: (leq_trans (dimvS (subvf <<new_basis>>))).
-  by rewrite dimvf /Vector.dim /= mul1n.
+  by rewrite dimvf /dim /= mul1n.
 suff: (forall (i : 'I_n.+2), new_basis`_i *m new_basis`_i^T <> 0) /\
       (forall (i j : 'I_n.+2), i <> j -> new_basis`_i *m new_basis`_j^T = 0).
 - move => {HF} [no_null_vec ortho]; apply /freeP => k kt0 j.

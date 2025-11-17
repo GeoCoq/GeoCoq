@@ -24,7 +24,9 @@ assert (eq B B) by (conclude cn_equalityreflexive).
 let Tf:=fresh in
 assert (Tf:exists J, CI J B B C) by (conclude postulate_Euclid3);destruct Tf as [J];spliter.
 
-assert (InCirc B J) by (conclude_def InCirc ).
+unshelve assert (InCirc B J) by (conclude_def InCirc ).
+exact A.
+exact A.
 assert (neq D B) by (forward_using lemma_NCdistinct).
 let Tf:=fresh in
 assert (Tf:exists P G, (Col D B P /\ BetS D B G /\ OnCirc P J /\ OnCirc G J /\ BetS P B G)) by (conclude postulate_line_circle);destruct Tf as [P[G]];spliter.
@@ -48,9 +50,9 @@ assert (Cong D G D L) by (conclude lemma_congruencesymmetric).
 assert (Cong B G A L) by (conclude lemma_differenceofparts).
 assert (Cong A L B C) by (conclude cn_congruencetransitive).
 close.
-Unshelve.
+(*Unshelve.
 exact A.
-exact A.
+exact A.*)
 Qed.
 
 End Euclid.
