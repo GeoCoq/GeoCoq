@@ -170,7 +170,7 @@ rewrite divff ?mulf_neq0 ?omd_eq0//.
 rewrite eq_sym mulrC !mulrA expr2.
 rewrite -[(t_aq * t_aq)^-1 * t_aq * t_aq ]mulrC mulrA.
 rewrite -[t_aq/(t_aq*t_aq)*t_aq]mulrC mulrA divff ?mulf_neq0 ?omd_eq0 //.
-rewrite mul1r invfM mulrC !mulrA mulrAC [t_pp / t_aa * t_aa / t_qq ]mulrC !mulrA mulrAC.
+rewrite mul1r invfM mulrC !mulrA mulrAC mulrC !mulrA mulrAC.
 rewrite -!mulrA divff ?omd_eq0 //.
 rewrite mulr1 eq_sym !mulrA mulr1 -!expr2 /k.
 rewrite -eqr_sqrt ?mulr_ge0 ?invr_ge0 ?expr2 ?mulr_ge0 ?omd_ge0 //.
@@ -254,7 +254,7 @@ by rewrite !subrr mulr0 mul0r eqxx.
 move=> /eqP /negPf NX0 /eqP /negPf NX1.
 rewrite -subr_eq0 opprD addrCA -[_-_]addrA -mulrBl addrCA addrA -mulrBl -[X in _ + X]opprK subr_eq0.
 rewrite Bool.andb_comm.
-rewrite -[(# b 0 0 * e 0 0 + # b 0 1 * e 0 1 == # c 0 0 * e 0 0 + # c 0 1 * e 0 1) ]subr_eq0 opprD addrCA -[_-_]addrA -mulrBl addrCA addrA -mulrBl -[X in _ + X]opprK subr_eq0.
+rewrite -subr_eq0 opprD addrCA -[_-_]addrA -mulrBl addrCA addrA -mulrBl -[X in _ + X]opprK subr_eq0.
 move=> /andP[/eqP H4 /eqP H5].
 suffices: (# a 0 0 - # b 0 0) * e 0 0 * -(# b 0 1 - # c 0 1) * e 0 1 ==
           (# b 0 0 - # c 0 0) * e 0 0 * -(# a 0 1 - # b 0 1) * e 0 1.
