@@ -42,7 +42,6 @@ Lemma segment_construction : segment_constructionP point bet cong.
 Proof.
 rewrite /segment_constructionP /bet /cong=> ? b.
 exists b; rewrite eqxx; intuition auto with bool.
-apply/orP; by right.
 Qed.
 
 Lemma five_segment : five_segmentP point bet cong.

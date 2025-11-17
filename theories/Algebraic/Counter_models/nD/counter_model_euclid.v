@@ -469,7 +469,7 @@ have: 1 == (l*1+(1-l)*1) by
   rewrite !mulr1 addrCA subrr addr0.
 move=> /eqP l_eq.
 rewrite {1}l_eq -[l*1 + _ + _]addrA -mulrBr addrAC -mulrBr.
-rewrite omd_ca omd_cb mulrDr [(1 - l) * ((1 - l) * omd a a + l * omd a b)]mulrDr.
+rewrite omd_ca omd_cb mulrDr mulrDr.
 rewrite addrACA [X in X + _]addrC mulrA -expr2.
 rewrite addrA addrAC [(1 - l) * (l * omd a b)]mulrCA.
 rewrite -[X in X +_ == _]addrA addrAC mulrA -expr2.
@@ -489,11 +489,7 @@ rewrite [X in _ - X]mulrC -!mulrA.
 rewrite [X in _ - X]mulrC -!mulrA.
 rewrite [X in _ - X]mulrC -!mulrA.
 rewrite -mulrBr mulf_eq0 omd_eq0 orFb.
-rewrite subr_eq0 !mulrA mulrAC. rewrite [omd b c ^- 2 /
-(1 +
- Num.sqrt (1 - omd a a * omd b b / omd a b ^+ 2) *
- Num.sqrt (1 - omd b b * omd c c / omd b c ^+ 2)) ^+ 2 * 
-omd b b * omd b b / omd a b ^+ 2]mulrC -!mulrA -expr2.
+rewrite subr_eq0 !mulrA mulrAC mulrC -!mulrA -expr2.
 rewrite -!exprVn -!exprMn eqf_sqr.
 suffices: ((omd a c)^-1 == (* We now this is the right equality *)
   ((omd a b)^-1 *
@@ -515,14 +511,14 @@ rewrite -!mulrA -!invfM divf_eq1 ?mulf_neq0 ?omd_eq0 //.
 rewrite -subr_eq0 addrAC addr_eq0.
 move: betS_abc=> /betSP[bet_eq betR_gt0 betR_lt1].
 move/eqP: bet_eq.
-rewrite eq_sym scalerBr -[betR (# a) (# b) (# c) *: # c - betR (# a) (# b) (# c) *: # a == # b - # a]subr_eq0.
+rewrite eq_sym scalerBr -subr_eq0.
 rewrite  -addrA addr_eq0 opprD !opprK.
 have: (betR (#a) (#b) (#c))^-1 != 0
   by rewrite lt0r_neq0 ?invr_gt0.
 move=> l_neq0.
 rewrite (scaler_eq _ _ l_neq0).
 rewrite scalerDr !scalerA mulrC divff ?lt0r_neq0 // !scale1r.
-rewrite scalerBr [((betR (# a) (# b) (# c))^-1 *: # b - (betR (# a) (# b) (# c))^-1 *: # a)]addrC addrA -{1}[#a]scale1r -scalerBl.
+rewrite scalerBr [_ - _]addrC addrA -{1}[#a]scale1r -scalerBl.
 move: l_neq0 ;
 set l := (betR (#a) (#b) (#c))^-1 => l_neq0 /eqP c_eq.
 have: (omd a b * omd b c - omd b b * omd a c ==
@@ -562,9 +558,9 @@ have: (omd b c ^+ 2 - omd b b * omd c c) ==
     have:  1 == (1-l)*1 +(l*1)
       by rewrite !mulr1  addrAC -addrA subrr addr0.
     move=> /eqP one_eq ; rewrite{1}one_eq.
-    rewrite !opprD !addrA addrAC addrC !addrA  -!addrA -mulrBr.
+    rewrite !opprD !addrA addrAC addrC !addrA -!addrA -mulrBr.
     rewrite !addrA [ X in X + _]addrC -mulrBr.
-    rewrite omd_cb omd_ca mulrDr [l * ((1 - l) * omd a b + l * omd b b)]mulrDr.
+    rewrite omd_cb omd_ca mulrDr mulrDr.
     rewrite mulrA -expr2 [l * ((1 - l) * omd a b)]mulrCA.
     rewrite [l * (l * omd b b)]mulrA -expr2.
     rewrite [(1 - l) * (l * omd a b)]mulrA.
@@ -716,7 +712,7 @@ move: ca_lt1 ; rewrite !mxE //.
 move: a_in_disk ; rewrite !mxE //.
 rewrite !mulr1 !mulrBl !mulrBr !mul1r !mulr1.
 rewrite [r * r + (r -r * r)]addrCA subrr addr0.
-rewrite [(1 - r) - (r - r * r)]addrC. rewrite [r + (r - r * r) + (- (r - r * r) + (1 - r))]addrA addrC.
+rewrite [(1 - r) - (r - r * r)]addrC addrA addrC.
 rewrite -[r + (r - r * r) - (r - r * r)]addrA subrr addr0.
 by rewrite addrAC -addrA subrr addr0 lexx.
 Qed.
@@ -802,7 +798,7 @@ have: omd c c == (
   move=> /eqP one_eq ; rewrite{1}one_eq.
   rewrite !opprD !addrA addrAC addrC !addrA -!addrA -mulrBr.
   rewrite !addrA [ X in X + _]addrC -mulrBr.
-  rewrite omd_cb omd_ca. rewrite mulrDr. rewrite [l * ((1 - l) * omd a b + l * omd b b)]mulrDr.
+  rewrite omd_cb omd_ca mulrDr mulrDr.
   rewrite mulrA -expr2 [l * ((1 - l) * omd a b)]mulrCA.
   rewrite [l * (l * omd b b)]mulrA -expr2.
   rewrite [(1 - l) * (l * omd a b)]mulrA.
@@ -848,7 +844,7 @@ have: omd c d == (1-l) * omd a d + l * (omd b d).
 move=> /eqP ->.
 rewrite [(_ + _)/omd a d]mulrDl -[X in (X+_)^+2]mulrA.
 rewrite divff ?omd_eq0 // mulr1 expr2 mulrDl mulrDr -expr2.
-rewrite [l * omd b d / omd a d * (1 - l + l * omd b d / omd a d)]mulrDr. rewrite -expr2 -[l* omd _ _ / omd _ _]mulrA exprMn.
+rewrite mulrDr -expr2 -[l* omd _ _ / omd _ _]mulrA exprMn.
 rewrite [X in _ + _ + (X + _)]mulrC eq_sym.
 rewrite ![mu^+2 * (_ +_)]mulrDr exprMn exprVn mulrCA.
 rewrite divff; last by rewrite expr2 mulf_neq0.
@@ -921,10 +917,7 @@ rewrite invfM invfM mulrA mulrA mulrA mulrA mulrC mulrA.
 rewrite mulrA mulrA -mulrA divff ?omd_eq0 // mulr1.
 rewrite mulrACA mulrA mulrC mulrA mulrA mulrA mulrC.
 rewrite mulrA mulrA mulrA mulrA -mulrA divff ?l_neq0 //.
-rewrite mulr1 mulrC. 
-rewrite mulrA. rewrite mulrA. rewrite mulrAC.
-rewrite [omd a a / l / omd a b * (1 - l)]mulrC.
-rewrite mulrA mulrA.
+rewrite mulr1 mulrC mulrA mulrA mulrAC mulrC mulrA mulrA.
 rewrite !opprD addrA -[-_-_-_+_]addrA [X in -_-_+X]addrC.
 rewrite subrr addr0 addrC addrA addrA -addrA [X in 1 -_+X]addrC.
 by rewrite subrr addr0 eqxx.
@@ -1014,7 +1007,7 @@ have : (1-l)/mu == (1-l')/mu'.
     rewrite add2r_eq.
     rewrite mulrAC mulrC mulrA mulrA [_^-1*_]mulrC.
     rewrite eq_sym.
-    by rewrite [X in X == _]mulrAC [(1 - l) * omd a a / omd a b / l ]mulrC !mulrA [_^-1*_]mulrC.
+    by rewrite [X in X == _]mulrAC mulrC !mulrA [_^-1*_]mulrC.
     rewrite -subr_eq0 opprK => /negPn /negPf H1.
     move: H1.
     rewrite lt0r_neq0 //.
@@ -1097,7 +1090,7 @@ Proof.
 move=> a_neq0 d_ge0 r1 r2.
 have: 4%:R * a * c * (2%:R^-1 / a) ^+ 2 == c / a.
   rewrite exprMn !exprVn mulrCA !mulrA [2%:R ^- 2 * 4%:R]mulrC.
-  rewrite /GRing.natmul /= expr2.  rewrite [((1 + 1) * (1 + 1))]mulrDl mul1r !addrA.
+  rewrite /GRing.natmul /= expr2 mulrDl mul1r !addrA.
   rewrite divff ?lt0r_neq0 ?addr_gt0 ?ltr01 //.
   rewrite mul1r expr2 mulrAC invfM mulrA divff //.
   by rewrite mul1r mulrC.
@@ -1359,12 +1352,12 @@ rewrite !mul1r !norm_sqr !seg_aux7 mulrBr.
 rewrite [omd b b /dist c d]mulrC.
 rewrite -![(dist c d)^-1 * _ * _]mulrA.
 rewrite -mulrBr [omd a b * ( _ -_)]mulrBr.
-rewrite mulrDl [(omd a b * omd b b - omd a b * omd a b) / (omd a a * omd b b)]mulrBl -expr2 -[_^+2/_]invrK.
+rewrite mulrDl mulrBl -expr2 -[_^+2/_]invrK.
 rewrite [(_^+2/_)^-1]invf_div /omd -/(dist_v _ _).
 rewrite -!/(omd _ _) -/(dist _ _).
 rewrite -mulrA mulrBl [omd b b * _]mulrC divff ?mulf_neq0 ?omd_eq0 //.
 rewrite mulrAC [_ * omd b b]mulrC [(omd b b * _)^-1]invfM.
-rewrite mulrA divff ?omd_eq0 // mul1r [(omd a a)^-1 * omd a b]mulrC.
+rewrite mulrA divff ?omd_eq0 // mul1r mulrC.
 rewrite mulrA -[_*_/omd b b]mulrA divff ?omd_eq0 //.
 by rewrite mulr1 addrA eqxx.
 Qed.
@@ -1420,15 +1413,15 @@ Proof.
 apply /eqP.
 rewrite eq_sym.
 rewrite exprMn exprVn ![_ + dist c d ^-2 * _]addrAC.
-rewrite -mulrDr. rewrite /GRing.natmul /=. rewrite [(1 + 1) * omd a b]mulrDl. rewrite [(1 * omd a b + 1 * omd a b) / omd a a]mulrDl. rewrite -{1}[1]mulr1.
-rewrite opprD. rewrite [(1 * 1 + (- (1 * omd a b / omd a a) - 1 * omd a b / omd a a))]addrA. rewrite -mulrA. rewrite -mulrBr. rewrite addrA.
+rewrite -mulrDr /GRing.natmul /= mulrDl mulrDl -{1}[1]mulr1.
+rewrite opprD addrA -mulrA -mulrBr addrA.
 rewrite [_-1* (omd a b /omd a a)]addrAC.
 rewrite [(omd a b/omd a a)^+2]expr2 -mulrBl.
 rewrite [_ + (1 * _)]addrC -[X in (1*_)+X]opprK.
 rewrite -[- ((omd a b/omd a a -1) * _)]mulNr opprB.
 rewrite [X in 1 * _ - X]mulrC -mulrBl -expr2 -exprVn.
 rewrite ![_+ (1 + 1) / dist c d * (omd a b / omd a a)]addrAC.
-rewrite [(1 + 1) / dist c d]mulrDl. rewrite [(1 / dist c d + 1 / dist c d) * (omd a b / omd a a)]mulrDl. rewrite mul1r. rewrite addrA.
+rewrite mulrDl mulrDl mul1r addrA.
 rewrite  -[_ + _ + (dist c d)^-1 * _ -_]addrA -mulrBr.
 rewrite -{3}[omd a b / omd a a]mul1r -mulrBl.
 rewrite [_+_+ (dist c d)^-1 * _]addrAC -[_+_+_-(dist c d)^-1 * _]addrA.
@@ -1494,13 +1487,7 @@ rewrite opprD !addrA ![_-(dist c d)^-1 / dist a b]addrAC.
 rewrite -exprVn expr2 -mulrBl.
 rewrite ![_+((dist a b)^-1 - (dist c d)^-1)*_]addrAC.
 rewrite -mulrDr !addrA.
-rewrite [X in _-X==_]mulrA. 
-rewrite -[((dist a b)^-1 - (dist c d)^-1) *
-((dist a b)^-1 - omd a b / omd a a + omd b b / omd a a - omd a b / omd a a) +
-dist c d ^- 2 * (omd b b / omd a a + 1 - omd a b / omd a a - omd a b / omd a a) -
-(dist c d)^-1 / dist a b * - (omd a b / omd a a) -
-(dist c d)^-1 / dist a b * (1 - omd a b / omd a a) -
-(dist c d)^-1 / dist a b * (omd b b / omd a a) ]addrA.
+rewrite [X in _-X==_]mulrA -addrA.
 rewrite -![- ((dist c d)^-1 / dist a b * _)]mulrN.
 rewrite -mulrDr -addrA -mulrDr !opprD !opprK !addrA.
 rewrite -[dist c d ^- 2 *_]opprK -[-(dist c d ^- 2 *_)]mulrN.
@@ -1657,7 +1644,7 @@ have: (f' *m (f')^T)0 0 <1.
     move=> ?.
     by rewrite -norm_sqr expr2 mulr_ilt1 ?norm_ge0.
   rewrite /f'/extension invrK scalerDl scale1r addrA.
-  rewrite -[eps *: (# b - # a) + # b - # a + # a]addrA [-#a+#a]addrC subrr addr0.
+  rewrite -addrA [-#a+#a]addrC subrr addr0.
   apply le_lt_trans with (norm(eps*:(#b-#a)) + norm(#b)).
     exact: triangle_ineq.
   rewrite /norm -scalemxAl dotC -scalemxAl scalerA mxE.
@@ -1693,7 +1680,7 @@ move: one_side_E2'=> [|bet_E2'ab].
 exact: (@cong_inner_transitivity_vector (# b) E1' (# b) E2' (#c) (#d)).
 rewrite point_vector_neq.
 rewrite /=/f'/extension invrK scalerDl scale1r.
-rewrite !addrA -[eps *: (# b - # a) + # b - # a + # a]addrA [-#a+#a]addrC subrr addr0 -subr_eq0.
+rewrite !addrA -addrA [-#a+#a]addrC subrr addr0 -subr_eq0.
 rewrite -addrA subrr addr0 scaler_eq0 subr_eq0 [#b==#a]eq_sym.
 by rewrite Bool.negb_orb lt0r_neq0.
 Qed.
@@ -2065,14 +2052,13 @@ rewrite orbF eqf_sqr /omd_v /i' !nth_basis //.
 rewrite !dimensional_axioms.nth_basis // iP.
 rewrite -!scalemxAl mulNmx dotC (dotC (delta_mx 0 0)) -!scalemxAl.
 rewrite !trmx_delta !mul_delta_mx_0 ?mxE ?(mulr0, oppr0) ?addr0 ?eqxx //.
-
 - apply /eqP => HF.
-have: val (@inord n.+1 1) = @ord0 n.+1 by rewrite HF.
-by rewrite val_insubd.
-apply /eqP => HF.
   have: val (@inord n.+1 j) = val (@inord n.+1 k) by rewrite HF.
   rewrite !val_insubd jP kP => jkE.
   by suff // : (j < k)%N by rewrite jkE ltnn.
+apply /eqP => HF.
+have: val (@inord n.+1 1) = @ord0 n.+1 by rewrite HF.
+by rewrite val_insubd.
 Qed.
 
 Lemma lower_dim_holds :
@@ -2264,7 +2250,7 @@ rewrite divff ?mulf_neq0 ?omd_eq0//.
 rewrite eq_sym mulrC !mulrA expr2.
 rewrite -[(t_aq * t_aq)^-1 * t_aq * t_aq ]mulrC mulrA.
 rewrite -[t_aq/(t_aq*t_aq)*t_aq]mulrC mulrA divff ?mulf_neq0 ?omd_eq0 //.
-rewrite mul1r invfM mulrC !mulrA mulrAC. rewrite [t_pp / t_aa * t_aa / t_qq ]mulrC !mulrA mulrAC.
+rewrite mul1r invfM mulrC !mulrA mulrAC mulrC !mulrA mulrAC.
 rewrite -!mulrA divff ?omd_eq0 //.
 rewrite mulr1 eq_sym !mulrA mulr1 -!expr2 /k.
 rewrite -eqr_sqrt ?mulr_ge0 ?invr_ge0 ?expr2 ?mulr_ge0 ?omd_ge0 //.
@@ -2763,7 +2749,7 @@ case: pickP => /= [z|/all_v_neq0 H].
   rewrite (@ord_inj _ (Ordinal p) 1) // =>_.
   rewrite addr0 ler_pdivlMr.
   rewrite mulrBr mul1r divff ?add11_neq0 //.
-  rewrite -subr_le0 mulrDl !mul1r [# x 0 1 + # x 0 1 - 1]addrAC -!addrA subrr addr0.
+  rewrite -subr_le0 mulrDl !mul1r addrAC -!addrA subrr addr0.
   rewrite subr_le0 ltW // bet_abx_x01_lt1 //.
   by rewrite subr_gt0 bet_abx_x01_gt.
 exfalso; apply H; rewrite subr_eq0 a'_eq0.

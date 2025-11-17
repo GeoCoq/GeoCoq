@@ -22,16 +22,12 @@ assert (Tf:exists D, (BetS B A D /\ Cong A D A B)) by (conclude lemma_localexten
 assert (Cong B A B A) by (conclude cn_congruencereflexive).
 assert (OutCirc D K) by (conclude_def OutCirc) .
 assert (eq B B) by (conclude cn_equalityreflexive).
-unshelve assert (InCirc B K) by first [(conclude_def InCirc )].
-exact A.
-exact A.
+assert (InCirc B K) by (conclude_def InCirc ).
 assert (Cong A B A B) by (conclude cn_congruencereflexive).
 assert (OnCirc B J) by (conclude_def OnCirc ).
 assert (OnCirc D J) by (conclude_def OnCirc ).
 assert (eq A A) by (conclude cn_equalityreflexive).
-unshelve assert (InCirc A J) by (conclude_def InCirc ).
-exact A.
-exact A.
+assert (InCirc A J) by (conclude_def InCirc ).
 let Tf:=fresh in
 assert (Tf:exists C, (OnCirc C K /\ OnCirc C J)) by (conclude postulate_circle_circle);destruct Tf as [C];spliter.
 assert (Cong A C A B) by (conclude axiom_circle_center_radius).
@@ -81,8 +77,8 @@ assert (~ Col A B C).
  }
 assert (Triangle A B C) by (conclude_def Triangle ).
 close.
-(*Unshelve.
-all: (exact A).*)
+Unshelve.
+all: (exact A).
 Qed.
 
 End Euclid.

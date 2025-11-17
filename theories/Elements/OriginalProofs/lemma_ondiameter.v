@@ -39,16 +39,14 @@ by cases on (BetS D N F \/ BetS F N M \/ eq F N).
  }
 {
  assert (eq N F) by (conclude lemma_equalitysymmetric).
- unshelve assert (InCirc N K) by (conclude_def InCirc ).
-exact M.
-exact M.
+ assert (InCirc N K) by (conclude_def InCirc ).
  close.
  }
 (* cases *)
 close.
-(*Unshelve.
+Unshelve.
 exact M.
-exact M.*)
+exact M.
 Qed.
 
 End Euclid.
