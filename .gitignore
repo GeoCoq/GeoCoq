@@ -12,3 +12,17 @@ Makefile.conf
 _build/
 *.install
 .DS_Store
+
+# Python orchestrator
+.venv/
+__pycache__/
+*.pyc
+orchestrator/experiment_outputs/
+.nia.cache
+
+# Lean / Lake build artifacts
+.lake/
+lakefile.olean
+
+# Editor/tooling local state
+.vscode/*.log
