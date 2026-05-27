@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "rocq-mcp": {
+      "command": "rocq-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
