@@ -4,10 +4,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_36.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_38 : 
-   forall A B C D E F P Q, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_38 :
+   forall A B C D E F P Q,
    Par P Q B C -> Col P Q A -> Col P Q D -> Cong B C E F -> Col B C E -> Col B C F ->
    ET A B C D E F.
 Proof.
@@ -53,12 +55,16 @@ assert (TS C B A G) by (conclude lemma_oppositesidesymmetric).
 assert (TS H F D E) by (conclude_def TS ).
 assert (TS E F D H) by (conclude lemma_oppositesidesymmetric).
 assert (Cong_3 F H D D E F) by (conclude proposition_34).
+assert (nCol F H D) by (forward_using lemma_NCorder).
+assert (Triangle F H D) by (conclude_def Triangle ).
 assert (ET F H D D E F) by (conclude axiom_congruentequal).
 assert (ET F H D E F D) by (forward_using axiom_ETpermutation).
 assert (ET E F D F H D) by (conclude axiom_ETsymmetric).
 assert (ET E F D F D H) by (forward_using axiom_ETpermutation).
 assert (PG G B C A) by (conclude lemma_PGrotate).
 assert (Cong_3 B G A A C B) by (conclude proposition_34).
+assert (nCol B G A) by (forward_using lemma_NCorder).
+assert (Triangle B G A) by (conclude_def Triangle ).
 assert (ET B G A A C B) by (conclude axiom_congruentequal).
 assert (ET B G A C B A) by (forward_using axiom_ETpermutation).
 assert (ET C B A B G A) by (conclude axiom_ETsymmetric).
@@ -71,5 +77,3 @@ close.
 Qed.
 
 End Euclid.
-
-

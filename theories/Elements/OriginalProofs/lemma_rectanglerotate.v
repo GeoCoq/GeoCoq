@@ -2,7 +2,7 @@ Require Export GeoCoq.Elements.OriginalProofs.euclidean_tactics.
 
 Section Euclid.
 
-Context `{Ax1:area}.
+Context `{Ax:euclidean_neutral}.
 
 Lemma lemma_rectanglerotate : 
    forall A B C D, 

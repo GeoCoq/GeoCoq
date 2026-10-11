@@ -6,7 +6,7 @@ Require Import Classical.
 
 Section Euclid_to_Tarski.
 
-Context `{Ax:euclidean_neutral_ruler_compass}.
+Context `{Ax : euclidean_neutral_ruler_compass}.
 
 Definition Bet A B C := BetS A B C \/ A=B \/ B=C.
 
@@ -30,7 +30,7 @@ intros.
 apply (cn_congruencetransitive C D A B A B).
 assumption.
 apply (cn_congruencereflexive).
-Qed. 
+Qed.
 
 Lemma cong_eq : forall A B C, Cong B C A A -> B=C.
 Proof.
@@ -148,11 +148,11 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet TCong) with (PA:=PA) (PB:=P
   * destruct (lemma_extension A B C D) as [X [HXA HXB]];
   unfold neq;auto.
   exists X.
-  unfold Bet, TCong;auto. 
+  unfold Bet, TCong;auto.
 - intros.
   elim (classic (B=C));intro.
   subst.
-  assert (B'=C'). 
+  assert (B'=C').
   apply nullsegment1 with C;assumption.
   subst.
   assumption.
@@ -236,7 +236,7 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet TCong) with (PA:=PA) (PB:=P
     unfold neq,eq in *;intuition.
   * exists A.
   split.
-  unfold Bet;left. 
+  unfold Bet;left.
   eauto using lemma_3_6a, axiom_betweennesssymmetry.
   unfold Bet;auto.
   * exists B.
@@ -277,8 +277,84 @@ eapply (Build_Tarski_neutral_dimensionless Point Bet TCong) with (PA:=PA) (PB:=P
   intro;spliter.
   decompose [or] H;try
   solve [auto using  axiom_betweennesssymmetry].
+Defined.
+
+Lemma BetS_of_Bet : forall A B C, Bet A B C -> A <> B -> B <> C -> BetS A B C.
+Proof.
+unfold Bet; intros A B C [HBet|[HEq|HEq]] HAB HBC; [assumption|contradiction|contradiction].
+Qed.
+
+Lemma Bet_of_BetS : forall A B C, BetS A B C -> Bet A B C /\ A <> B /\ B <> C.
+Proof.
+intros A B C HBet.
+destruct (lemma_betweennotequal A B C HBet) as [HBC [HAB _]].
+unfold Bet, neq, eq in *; auto.
+Qed.
+
+Lemma nCol_of_not_Col : forall A B C,
+  ~ (Bet A B C \/ Bet B C A \/ Bet C A B) -> nCol A B C.
+Proof.
+intros A B C HNC.
+unfold nCol, neq, eq, Bet in *.
+repeat split; intro HX; apply HNC.
+- left; right; left; auto.
+- right; left; right; right; auto.
+- left; right; right; auto.
+- left; left; auto.
+- right; left; left; apply axiom_betweennesssymmetry; auto.
+- right; right; left; apply axiom_betweennesssymmetry; auto.
 Qed.
 
 End Euclid_to_Tarski.
 
 
+Section Euclid5_to_Tarski.
+
+Context `{Ax:euclidean_euclidean}.
+
+Lemma Euclid5_Tarski_form : forall P Q R S T U,
+  (Bet P T Q /\ P <> T /\ T <> Q) -> (Bet R T S /\ R <> T /\ T <> S) ->
+  (Bet Q U R /\ Q <> U /\ U <> R) -> ~ (Bet P Q S \/ Bet Q S P \/ Bet S P Q) ->
+  TCong P T Q T -> TCong R T S T ->
+  exists I, (Bet S Q I /\ S <> Q /\ Q <> I) /\ (Bet P U I /\ P <> U /\ U <> I).
+Proof.
+intros P Q R S T U [HB1 [HPT HTQ]] [HB2 [HRT HTS]] [HB3 [HQU HUR]] HNC HC1 HC2.
+assert (HB1' : BetS P T Q) by (apply BetS_of_Bet; auto).
+assert (HB2' : BetS R T S) by (apply BetS_of_Bet; auto).
+assert (HB3' : BetS R U Q) by (apply axiom_betweennesssymmetry, BetS_of_Bet; auto).
+assert (HC1' : Cong P T Q T) by (apply TCong_neq_Cong; auto).
+assert (HC2' : Cong R T S T) by (apply TCong_neq_Cong; auto).
+assert (HC3 : Cong T R T S) by (apply lemma_congruenceflip in HC2'; tauto).
+assert (HN : nCol P Q S) by (apply nCol_of_not_Col; auto).
+destruct (postulate_Euclid5 U P Q R S T HB2' HB1' HB3' HC1' HC3 HN) as [X [HX1 HX2]].
+exists X; split; apply Bet_of_BetS; auto.
+Qed.
+
+End Euclid5_to_Tarski.
+
+Require Import GeoCoq.Main.Meta_theory.Parallel_postulates.parallel_postulates.
+
+Section Euclid_to_Tarski_euclidean.
+
+Context `{Ax : euclidean_euclidean}.
+
+Existing Instance Tarski_follows_Euclid.
+
+Instance Tarski_follows_Euclid_dec :
+  Tarski_neutral_dimensionless_with_decidable_point_equality Tarski_follows_Euclid.
+Proof. split; intros A B; apply classic. Qed.
+
+Lemma euclid_5_follows_Euclid : euclid_5.
+Proof. unfold euclid_5, BetS, Col; exact Euclid5_Tarski_form. Qed.
+
+Instance Tarski_euclidean_follows_Euclid : Tarski_euclidean Tarski_follows_Euclid_dec.
+Proof.
+assert (HP : tarski_s_parallel_postulate).
+  {
+  cut euclid_5; [|apply euclid_5_follows_Euclid].
+  apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis; simpl; tauto.
+  }
+split; exact HP.
+Qed.
+
+End Euclid_to_Tarski_euclidean.
