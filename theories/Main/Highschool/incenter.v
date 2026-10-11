@@ -11,7 +11,9 @@ Definition is_incenter I A B C :=
 
 (** Proof of the existence of the incenter of a triangle. *)
 
-Lemma incenter_exists : forall A B C, ~ Col A B C -> exists I, is_incenter I A B C.
+Lemma incenter_exists_inangle : forall A B C,
+  ~ Col A B C ->
+  exists I, is_incenter I A B C /\ InAngle I A B C /\ InAngle I B A C /\ InAngle I A C B.
 Proof.
 intros A B C HNCOL.
 (*----construction---*)
@@ -43,10 +45,6 @@ assert (~ Col B C X) by (intro;assert (Col C B A) by (col_with_conga);elim HNCOL
 destruct (l8_18_existence A B X) as [HC [HCC1 HCC2]];auto.
 destruct (l8_18_existence A C X) as [HB [HBC1 HBC2]];auto.
 destruct (l8_18_existence B C X) as [HA [HAC1 HAC2]];auto.
-exists X.
-unfold is_incenter.
-split.
-assumption.
 (*-prove some conclusions which will be required later for many times.-*)
 assert (Out A X IA) by (assert (Out A X XA) by (assert_diffs;apply (bet_out A X XA);Between);
 apply (l6_7 A X XA IA);auto).
@@ -62,10 +60,8 @@ assert (Coplanar C A B X) by (exists XB; left; split; Col).
 assert (Cong X HB X HC) by (apply (bisector_perp_equality C A B X HB HC);Col;Perp;CongA).
 assert (Cong X HC X HA) by (apply (bisector_perp_equality A B C X HC HA);Col;Cop).
 assert (Cong X HB X HA) by (apply (cong_transitivity X HB X HC X HA);auto).
-assert (CongA A C X X C B).
-{ 
- apply (perp_equality_bisector A C B X HB HA);Col;Perp.
- assert (InAngle X A B C).
+assert (InAngle X A B C).
+{
  repeat split;auto.
  exists XB.
  split;auto.
@@ -73,7 +69,9 @@ assert (CongA A C X X C B).
  apply (l6_6 B X XB);auto.
  apply (bet_out B X XB);auto.
  Between.
- assert (InAngle X B A C).
+}
+assert (InAngle X B A C).
+{
  assert_diffs.
  repeat split;auto.
  exists XA.
@@ -82,6 +80,9 @@ assert (CongA A C X X C B).
  apply (l6_6 A X XA);auto.
  apply (bet_out A X XA);auto.
  Between.
+}
+assert (InAngle X A C B).
+{
  apply (os2__inangle A C B X).
  apply (one_side_symmetry C A X B).
  apply (in_angle_one_side C A B X);Col.
@@ -90,7 +91,17 @@ assert (CongA A C X X C B).
  apply (in_angle_one_side C B A X);Col.
  apply (l11_24 X A B C);auto.
 }
-split;auto.
+assert (CongA A C X X C B)
+  by (apply (perp_equality_bisector A C B X HB HA);Col;Perp).
+exists X.
+split;[unfold is_incenter;split;[|split;[|split]];auto|split;[|split];auto].
+Qed.
+
+Lemma incenter_exists : forall A B C, ~ Col A B C -> exists I, is_incenter I A B C.
+Proof.
+intros A B C HNCOL.
+destruct (incenter_exists_inangle A B C HNCOL) as [I [HI _]].
+exists I; auto.
 Qed.
 
 Lemma incenter_permut132 : forall A B C I, is_incenter I A B C -> is_incenter I A C B.

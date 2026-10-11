@@ -4,7 +4,9 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_41.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax:euclidean_euclidean}.
+
+Existing Instance area_follows_Euclid.
 
 Lemma proposition_47B : 
    forall A B C D E F G, 
@@ -176,6 +178,8 @@ assert (Cong_3 A B F F G A) by (conclude proposition_34).
 assert (ET A B F F G A) by (conclude axiom_congruentequal).
 assert (PG B M L D) by (conclude lemma_PGflip).
 assert (Cong_3 M B D D L M) by (conclude proposition_34).
+assert (nCol M B D) by (forward_using lemma_parallelNC).
+assert (Triangle M B D) by (conclude_def Triangle ).
 assert (ET M B D D L M) by (conclude axiom_congruentequal).
 assert (ET F G A A B F) by (conclude axiom_ETsymmetric).
 assert (ET F G A A B D) by (conclude axiom_ETtransitive).

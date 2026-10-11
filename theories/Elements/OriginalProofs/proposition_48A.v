@@ -1,8 +1,12 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_squarerectangle.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax:euclidean_euclidean}.
+
+Existing Instance area_follows_Euclid.
 
 Lemma proposition_48A : 
    forall A B C D a b c d, 
@@ -14,7 +18,15 @@ assert (PG A B C D) by (conclude lemma_squareparallelogram).
 assert (PG a b c d) by (conclude lemma_squareparallelogram).
 assert (Cong_3 B A D D C B) by (conclude proposition_34).
 assert (Cong_3 b a d d c b) by (conclude proposition_34).
+assert ((Par A B C D /\ Par A D B C)) by (conclude_def PG ).
+assert (nCol A B D) by (forward_using lemma_parallelNC).
+assert (nCol B A D) by (forward_using lemma_NCorder).
+assert (Triangle B A D) by (conclude_def Triangle ).
 assert (ET B A D D C B) by (conclude axiom_congruentequal).
+assert ((Par a b c d /\ Par a d b c)) by (conclude_def PG ).
+assert (nCol a b d) by (forward_using lemma_parallelNC).
+assert (nCol b a d) by (forward_using lemma_NCorder).
+assert (Triangle b a d) by (conclude_def Triangle ).
 assert (ET b a d d c b) by (conclude axiom_congruentequal).
 assert (ET B A D B D C) by (forward_using axiom_ETpermutation).
 assert (ET B D C B A D) by (conclude axiom_ETsymmetric).
@@ -63,6 +75,8 @@ assert (~ Lt a b A B).
  assert (Cong F E d b) by (conclude proposition_04).
  assert (Cong F A d a) by (forward_using lemma_congruenceflip).
  assert (Cong_3 F A E d a b) by (conclude_def Cong_3 ).
+ assert (nCol F A E) by (conclude lemma_rightangleNC).
+ assert (Triangle F A E) by (conclude_def Triangle ).
  assert (ET F A E d a b) by (conclude axiom_congruentequal).
  assert (ET F A E a b d) by (forward_using axiom_ETpermutation).
  assert (ET a b d A B D) by (conclude axiom_ETsymmetric).
@@ -97,6 +111,8 @@ assert (~ Lt A B a b).
  assert (Cong f e D B) by (conclude proposition_04).
  assert (Cong f a D A) by (forward_using lemma_congruenceflip).
  assert (Cong_3 f a e D A B) by (conclude_def Cong_3 ).
+ assert (nCol f a e) by (conclude lemma_rightangleNC).
+ assert (Triangle f a e) by (conclude_def Triangle ).
  assert (ET f a e D A B) by (conclude axiom_congruentequal).
  assert (ET f a e A B D) by (forward_using axiom_ETpermutation).
  assert (ET A B D f a e) by (conclude axiom_ETsymmetric).

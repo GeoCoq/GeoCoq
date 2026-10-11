@@ -12,7 +12,7 @@ description:  "This subpackage contains the main developments from Hilbert's and
 
 build:   ["dune" "build" "-p" name "-j" jobs]
 depends: [
-  "coq-geocoq-axioms" { = version }
+  "coq-geocoq-elements" { = version }
 ]
 
 tags: [

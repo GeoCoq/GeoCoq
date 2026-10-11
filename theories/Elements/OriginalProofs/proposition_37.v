@@ -4,10 +4,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_35.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_37 : 
-   forall A B C D, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_37 :
+   forall A B C D,
    Par A D B C ->
    ET A B C D B C.
 Proof.
@@ -53,10 +55,14 @@ assert (nCol D F B) by (forward_using lemma_parallelNC).
 assert (nCol B D F) by (forward_using lemma_NCorder).
 assert (TS F B D C) by (conclude_def TS ).
 assert (TS C B D F) by (conclude lemma_oppositesidesymmetric).
+assert (nCol B E A) by (forward_using lemma_NCorder).
+assert (Triangle B E A) by (conclude_def Triangle ).
 assert (ET B E A A C B) by (conclude axiom_congruentequal).
 assert (ET B E A C B A) by (forward_using axiom_ETpermutation).
 assert (ET C B A B E A) by (conclude axiom_ETsymmetric).
 assert (ET C B A B A E) by (forward_using axiom_ETpermutation).
+assert (nCol B F D) by (forward_using lemma_NCorder).
+assert (Triangle B F D) by (conclude_def Triangle ).
 assert (ET B F D D C B) by (conclude axiom_congruentequal).
 assert (ET B F D C B D) by (forward_using axiom_ETpermutation).
 assert (ET C B D B F D) by (conclude axiom_ETsymmetric).
@@ -74,5 +80,3 @@ close.
 Qed.
 
 End Euclid.
-
-

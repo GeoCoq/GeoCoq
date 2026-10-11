@@ -9,10 +9,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_43B.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_44A : 
-   forall A B D E F G J N, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_44A :
+   forall A B D E F G J N,
    PG B E F G -> CongA E B G J D N -> BetS A B E ->
    exists X Y, PG A B X Y /\ CongA A B X J D N /\ EF B E F G Y X B A /\ BetS G B X.
 Proof.
@@ -260,5 +262,3 @@ close.
 Qed.
 
 End Euclid.
-
-

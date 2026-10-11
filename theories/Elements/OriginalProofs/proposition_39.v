@@ -3,10 +3,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_39A.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_39 : 
-   forall A B C D, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_39 :
+   forall A B C D,
    Triangle A B C -> Triangle D B C -> OS A D B C -> ET A B C D B C -> neq A D ->
    Par A D B C.
 Proof.
@@ -111,5 +113,3 @@ close.
 Qed.
 
 End Euclid.
-
-

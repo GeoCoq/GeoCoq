@@ -1,3 +1,5 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_squareparallelogram.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_samesideflip.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_erectedperpendicularunique.
@@ -7,7 +9,9 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_altitudeofrighttriangle.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax:euclidean_euclidean}.
+
+Existing Instance area_follows_Euclid.
 
 Lemma proposition_47A : 
    forall A B C D E, 

@@ -1,10 +1,14 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_NCorder.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_collinear4.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_TCreflexive.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
+
+Existing Instance area_follows_Euclid.
 
 Lemma lemma_EFreflexive : 
    forall a b c d p, 

@@ -1,12 +1,15 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_squarerectangle.
 
 Section Euclid.
 
-Context `{Ax1:area}.
+Context `{Ax : euclidean_euclidean}.
 
+Existing Instance area_follows_Euclid.
 
-Lemma lemma_squaresequal : 
-   forall A B C D a b c d, 
+Lemma lemma_squaresequal :
+   forall A B C D a b c d,
    Cong A B a b -> SQ A B C D -> SQ a b c d ->
    EF A B C D a b c d.
 Proof.
@@ -70,5 +73,3 @@ close.
 Qed.
 
 End Euclid.
-
-

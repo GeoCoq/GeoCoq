@@ -5,10 +5,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_38.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_42 : 
-   forall A B C D E J K, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_42 :
+   forall A B C D E J K,
    Triangle A B C -> nCol J D K -> Midpoint B E C ->
    exists X Z, PG X E C Z /\ EF A B E C X E C Z /\ CongA C E X J D K /\ Col X Z A.
 Proof.
@@ -225,6 +227,8 @@ assert (nCol A E B) by (forward_using lemma_NCorder).
 assert (TS B A E C) by (conclude_def TS ).
 assert (PG E F G C) by (conclude lemma_PGflip).
 assert (Cong_3 F E C C G F) by (conclude proposition_34).
+assert (nCol F E C) by (forward_using lemma_parallelNC).
+assert (Triangle F E C) by (conclude_def Triangle ).
 assert (ET F E C C G F) by (conclude axiom_congruentequal).
 assert (ET F E C F C G) by (forward_using axiom_ETpermutation).
 assert (ET F C G F E C) by (conclude axiom_ETsymmetric).
@@ -318,7 +322,6 @@ by cases on (eq E f \/ eq E F \/ eq f F \/ BetS f E F \/ BetS E f F \/ BetS E F 
  assert (Out E F f) by (conclude lemma_ray4).
  close.
  }
-(** cases *)
 assert (CongA C E F c E f) by (conclude lemma_equalangleshelper).
 assert (CongA F E C f E c) by (conclude lemma_equalanglesflip).
 assert (CongA F E C J D K) by (conclude lemma_equalanglestransitive).
@@ -328,5 +331,3 @@ close.
 Qed.
 
 End Euclid.
-
-
