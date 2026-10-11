@@ -9,11 +9,12 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_EFreflexive.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
+Existing Instance area_follows_Euclid.
 
-Lemma proposition_35A : 
-   forall A B C D E F, 
+Lemma proposition_35A :
+   forall A B C D E F,
    PG A B C D -> PG E B C F -> BetS A D F -> Col A E F ->
    EF A B C D E B C F.
 Proof.
@@ -88,7 +89,6 @@ by cases on (BetS A D E \/ BetS A E D \/ eq D E).
  assert (Out A D E) by (conclude cn_equalitysub).
  close.
  }
-(** cases *)
 assert (nCol A D B) by (forward_using lemma_parallelNC).
 assert (nCol D A B) by (forward_using lemma_NCorder).
 assert (CongA D A B D A B) by (conclude lemma_equalanglesreflexive).
@@ -118,7 +118,6 @@ by cases on (BetS A D E \/ BetS A E D \/ eq D E).
  assert (Cong A E D F) by (conclude cn_equalitysub).
  close.
  }
-(** cases *)
 assert (Cong D F A E) by (conclude lemma_congruencesymmetric).
 assert (Cong D C A B) by (conclude lemma_congruencesymmetric).
 assert ((Cong F C E B /\ CongA D F C A E B /\ CongA D C F A B E)) by (conclude proposition_04).
@@ -340,12 +339,7 @@ by cases on (BetS A D E \/ BetS A E D \/ eq D E).
  assert (EF A B C D E B C F) by (conclude axiom_EFsymmetric).
  close.
  }
-(** cases *)
 close.
 Qed.
 
-
 End Euclid.
-
-
-

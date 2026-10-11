@@ -1,11 +1,15 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_TCreflexive.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma lemma_ETreflexive : 
-   forall A B C, 
+Existing Instance area_follows_Euclid.
+
+Lemma lemma_ETreflexive :
+   forall A B C,
    Triangle A B C ->
    ET A B C A B C.
 Proof.
@@ -17,5 +21,3 @@ close.
 Qed.
 
 End Euclid.
-
-

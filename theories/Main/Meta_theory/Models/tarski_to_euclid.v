@@ -11,7 +11,6 @@ Section Tarski_neutral_to_Euclid_neutral.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-
 Definition Tcircle : Type := Tpoint*Tpoint*Tpoint %type.
 
 Definition OnCirc P (C:Tcircle) :=
@@ -68,7 +67,6 @@ inversion H1; subst;split; auto.
 exists x; exists x0;auto.
 Qed.
 
-
 Lemma outside : forall A B C J P,
   CI J C A B /\ OutCirc P J <->
   exists X, CI J C A B /\ Definitions.BetS C X P /\
@@ -87,8 +85,6 @@ decompose [ex and] H;clear H.
 inversion H0; subst;split; auto.
 exists x;auto.
 Qed.
-
-
 
 End Tarski_neutral_to_Euclid_neutral.
 
@@ -378,7 +374,6 @@ Defined.
 
 End Neutral.
 
-
 Section RulerAndCompass.
 
 Context `{TRC:Tarski_ruler_and_compass}.
@@ -574,7 +569,6 @@ spliter.
 inversion H;subst.
 exists X;auto.
 Qed.
-
 
 Lemma InCircCenter: forall U V W, V<>W -> InCirc U (U, V, W).
 Proof.

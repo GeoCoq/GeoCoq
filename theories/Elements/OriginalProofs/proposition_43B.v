@@ -1,3 +1,5 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_paralleldef2B.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_samesideflip.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_29C.
@@ -8,10 +10,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_28D.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_43B : 
-   forall A B C D E F G H K, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_43B :
+   forall A B C D E F G H K,
    PG A B C D -> BetS A H D -> BetS A E B -> BetS D F C -> BetS B G C -> PG E A H K -> PG G K F C ->
    PG E K G B.
 Proof.
@@ -149,5 +153,3 @@ close.
 Qed.
 
 End Euclid.
-
-

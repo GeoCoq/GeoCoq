@@ -5,10 +5,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_35.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_36 : 
-   forall A B C D E F G H, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_36 :
+   forall A B C D E F G H,
    PG A B C D -> PG E F G H -> Col A D E -> Col A D H -> Col B C F -> Col B C G -> Cong B C F G ->
    EF A B C D E F G H.
 Proof.
@@ -96,10 +98,7 @@ by cases on (CR E C B H \/ CR E B H C).
  assert (EF A B C D E F G H) by (forward_using axiom_EFpermutation).
  close.
  }
-(** cases *)
 close.
 Qed.
 
 End Euclid.
-
-

@@ -7,7 +7,9 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_08.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax:euclidean_euclidean}.
+
+Existing Instance area_follows_Euclid.
 
 Lemma proposition_48 : 
    forall A B C D E F G H K L M, 

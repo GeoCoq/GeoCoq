@@ -1,22 +1,38 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_PGflip.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_34.
+Require Export GeoCoq.Elements.OriginalProofs.lemma_parallelNC.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_43 : 
-   forall A B C D E F G H K, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_43 :
+   forall A B C D E F G H K,
    PG A B C D -> BetS A H D -> BetS A E B -> BetS D F C -> BetS B G C -> BetS A K C -> PG E A H K -> PG G K F C ->
    EF K G B E D F K H.
 Proof.
 intros.
 assert (PG B A D C) by (conclude lemma_PGflip).
 assert (Cong_3 A B C C D A) by (conclude proposition_34).
+assert ((Par A B C D /\ Par A D B C)) by (conclude_def PG ).
+assert (nCol A B C) by (forward_using lemma_parallelNC).
+assert (Triangle A B C) by (conclude_def Triangle ).
 assert (ET A B C C D A) by (conclude axiom_congruentequal).
 assert (Cong_3 A E K K H A) by (conclude proposition_34).
+assert ((Par E A H K /\ Par E K A H)) by (conclude_def PG ).
+assert (nCol E A K) by (forward_using lemma_parallelNC).
+assert (nCol A E K) by (forward_using lemma_NCorder).
+assert (Triangle A E K) by (conclude_def Triangle ).
 assert (ET A E K K H A) by (conclude axiom_congruentequal).
 assert (Cong_3 K G C C F K) by (conclude proposition_34).
+assert ((Par G K F C /\ Par G C K F)) by (conclude_def PG ).
+assert (nCol G K C) by (forward_using lemma_parallelNC).
+assert (nCol K G C) by (forward_using lemma_NCorder).
+assert (Triangle K G C) by (conclude_def Triangle ).
 assert (ET K G C C F K) by (conclude axiom_congruentequal).
 assert (ET K G C K C F) by (forward_using axiom_ETpermutation).
 assert (ET K C F K G C) by (conclude axiom_ETsymmetric).
@@ -46,5 +62,3 @@ close.
 Qed.
 
 End Euclid.
-
-

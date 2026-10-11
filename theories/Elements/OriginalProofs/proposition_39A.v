@@ -2,10 +2,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_37.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_39A : 
-   forall A B C D M, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_39A :
+   forall A B C D M,
    Triangle A B C -> ET A B C D B C -> BetS A M C -> Out B D M ->
    Par A D B C.
 Proof.
@@ -140,10 +142,7 @@ by cases on (BetS B E D \/ eq D E \/ BetS B D E).
   }
  close.
  }
-(** cases *)
 close.
 Qed.
 
 End Euclid.
-
-

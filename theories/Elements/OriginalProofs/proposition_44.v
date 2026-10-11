@@ -3,10 +3,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_44A.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_44 : 
-   forall A B D J N R a b c, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_44 :
+   forall A B D J N R a b c,
    Triangle a b c -> nCol J D N -> nCol A B R ->
    exists X Y Z, PG A B X Y /\ CongA A B X J D N /\ EF a b Z c A B X Y /\ Midpoint b Z c /\ TS X A B R.
 Proof.
@@ -78,5 +80,3 @@ close.
 Qed.
 
 End Euclid.
-
-

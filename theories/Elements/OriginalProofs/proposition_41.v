@@ -2,10 +2,12 @@ Require Export GeoCoq.Elements.OriginalProofs.proposition_37.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_41 : 
-   forall A B C D E, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_41 :
+   forall A B C D E,
    PG A B C D -> Col A D E ->
    ET A B C E B C.
 Proof.
@@ -32,10 +34,7 @@ by cases on (eq A E \/ neq A E).
  assert (ET A B C E B C) by (conclude proposition_37).
  close.
  }
-(** cases *)
 close.
 Qed.
 
 End Euclid.
-
-
