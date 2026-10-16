@@ -191,18 +191,18 @@ elim (eq_dec_points A C); intro.
 
   assert_all.
   split; Cong.
-  perm_apply col_par.
+  cut (Par B Q Q P); [Par|apply col_par; Col].
 
 elim (eq_dec_points B C); intro.
   assert_all.
   split; Cong.
-  perm_apply col_par.
+  cut (Par A P P R); [Par|apply col_par; Col].
 
 elim (eq_dec_points A P); intro.
   assert_all.
   assert (Col A B Q) by ColR.
   split.
-  perm_apply col_par.
+  cut (Par B A A Q); [Par|apply col_par; Col].
   assert_congs_perm.
   split; Cong.
 
@@ -339,15 +339,16 @@ Lemma triangle_mid_par_cong_1 : forall A B C P Q R,
  Midpoint R A B ->
  Par B C Q R /\ Cong B P Q R .
 Proof.
-intros.
+intros A B C P Q R B_NEC HM1 HM2 HM3.
 split.
-perm_apply (triangle_mid_par B C A Q R).
-induction (col_dec A B C).
+cut (Par B C R Q); [Par|].
+apply (triangle_mid_par B C A Q R); Midpoint.
+elim (col_dec A B C); [intro HC|intro HNC].
  assert (Par C B Q R /\ Cong B P R Q).
   apply (triangle_mid_par_flat_cong_2 C B A R Q P); Midpoint; Col.
   spliter.
   Cong.
- assert (HTMT := triangle_mid_par_strict_cong A B C P Q R H3 H0 H1 H2); spliter.
+ assert (HTMT := triangle_mid_par_strict_cong A B C P Q R HNC HM1 HM2 HM3); spliter.
  assumption.
 Qed.
 

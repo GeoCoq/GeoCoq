@@ -145,10 +145,7 @@ Qed.
 (** out symmetry. *)
 
 Lemma l6_6 : forall P A B, Out P A B -> Out P B A.
-Proof.
-    unfold Out.
-    intuition.
-Qed.
+Proof. intros P A B H; destruct H as [HAP [HBP [HB|HB]]]; split; Between. Qed.
 
 (** out transitivity. *)
 
@@ -234,13 +231,13 @@ Proof.
 Qed.
 
 Lemma l6_11_existence : forall A B C R,
-  R<>A -> B<>C -> exists X, Out A X R /\ Cong A X B C.
+  R <> A -> B <> C -> exists X, Out A X R /\ Cong A X B C.
 Proof.
     intros.
     assert (exists X : Tpoint, (Bet A R X \/ Bet A X R) /\ Cong A X B C) by (apply (segment_construction_2);assumption).
     ex_and H1 X.
     exists X.
-    unfold Out; repeat split; try intro;treat_equalities; intuition.
+    unfold Out; repeat split; try intro;treat_equalities; tauto.
 Qed.
 
 Lemma segment_construction_3 : forall A B X Y, A <> B -> X <> Y -> exists C, Out A B C /\ Cong A C X Y.

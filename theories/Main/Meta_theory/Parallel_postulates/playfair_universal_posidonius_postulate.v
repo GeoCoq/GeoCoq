@@ -28,16 +28,18 @@ destruct (segment_construction_2 B3 A3 A1' B1) as [B3' [HC4 HCong]];
 [assert_diffs; auto|]; elim (eq_dec_points A1' A3); intro HD; treat_equalities.
   {
   assert (HC1 : Col A1' B1 B3).
-    apply cop_perp2__col with A1 A2; Perp.
-    assert_diffs; apply col_cop__cop with B2; Col.
-    apply par__coplanar, HPar.
-  assert (B1 = B3); treat_equalities; Cong.
+    {
+    apply cop_perp2__col with A1 A2; [|Perp..].
+    apply col_cop__cop with B2; [|assert_diffs; easy|Col].
+    apply par__coplanar,par_strict_par, HParS.
+    }
+  assert (B1 = B3); [|treat_equalities; Cong].
   assert_diffs; apply l6_21 with B1 B2 A1' B1; Col.
   elim (eq_dec_points A1' A1); intro HD1.
-   treat_equalities; apply par_strict_not_col_1 with A2;
-   apply par_strict_col2_par_strict with A1' A2; Col; Par.
-   apply par_strict_not_col_1 with A1;
-   apply par_strict_col2_par_strict with A1 A2; Col; Par.
+   - treat_equalities; apply par_strict_not_col_1 with A2;
+     apply par_strict_col2_par_strict with A1' A2; Col; Par.
+   - apply par_strict_not_col_1 with A1;
+     apply par_strict_col2_par_strict with A1 A2; Col; Par.
   }
 
   {

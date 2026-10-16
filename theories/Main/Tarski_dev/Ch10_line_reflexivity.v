@@ -121,9 +121,9 @@ Qed.
 
 Lemma is_image_is_image_spec : forall P P' A B, A<>B -> (Reflect P' P A B <-> ReflectL P' P A B).
 Proof.
-    intros.
-    unfold Reflect.
-    tauto.
+intros P P' A B HAB; split.
+- intro HE; destruct HE as [[_ H]|[HF _]]; [exact H|easy].
+- intro H; left; split; easy.
 Qed.
 
 Lemma ex_sym1 : forall A B X, A<>B -> exists Y, (Perp A B X Y \/ X = Y) /\
@@ -1400,11 +1400,7 @@ Proof.
 Qed.
 
 Lemma image__midpoint : forall A P P', Reflect P P' A A -> Midpoint A P' P.
-Proof.
-    induction 1; spliter.
-      contradiction.
-      assumption.
-Qed.
+Proof. intros A P P' HE; destruct HE as [[HF _]|[_ H]]; easy. Qed.
 
 Lemma is_image_spec_dec :
   forall A B C D, ReflectL A B C D \/ ~ ReflectL A B C D.

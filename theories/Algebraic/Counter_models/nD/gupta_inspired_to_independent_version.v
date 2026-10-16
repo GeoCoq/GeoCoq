@@ -2,7 +2,7 @@ Require Import GeoCoq.Algebraic.Counter_models.nD.independent_version.
 Require Import GeoCoq.Algebraic.coplanarity.
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Main.Meta_theory.Models.gupta_inspired_to_tarski.
-Require Export GeoCoq.Main.Tarski_dev.Ch12_parallel_inter_dec.
+Require Export GeoCoq.Main.Meta_theory.Parallel_postulates.parallel_postulates.
 
 From mathcomp Require Import ssreflect ssrfun ssrbool eqtype ssrnat.
 From mathcomp Require Import tuple fintype bigop.
@@ -27,20 +27,19 @@ Ltac assert_cols :=
       assert (Col X1 X2 X3) by (apply bet_col;apply H)
     end.
 
-Global Instance GI_to_IT : independent_Tarski_neutral_dimensionless TpointG.
+Global Instance PredGIT : predicates.
+Proof. exact (Build_predicates TpointG BetG CongG). Defined.
+
+Global Instance GI_to_IT : independent_Tarski_neutral_dimensionless PredGIT.
 Proof.
-apply (Build_independent_Tarski_neutral_dimensionless
-         TpointG BetG CongG
-         cong_pseudo_reflexivityG cong_inner_transitivityG cong_identityG);
-[|exact five_segmentG| |exact bet_symmetryG|exact bet_inner_transitivityG].
-
-  {
-  intros A B C D HAB; destruct (segment_constructionG A B C D) as [E []].
+split; simpl.
+- exact cong_pseudo_reflexivityG.
+- exact cong_inner_transitivityG.
+- exact cong_identityG.
+- intros A B C D HAB; destruct (segment_constructionG A B C D) as [E []].
   exists E; auto.
-  }
-
-  {
-  intros A B C P Q HAPC HBQC HAP HPC HBQ HQC H.
+- exact five_segmentG.
+- intros A B C P Q HAPC HBQC HAP HPC HBQ HQC H.
   assert (HNC : ~ Col A B C) by (unfold Col, independence.Col in *; tauto).
   clear H.
   assert (HAC : A <> C) by (intro; treat_equalities; Col).
@@ -51,7 +50,8 @@ apply (Build_independent_Tarski_neutral_dimensionless
     apply col_permutation_3, col_transitivity_1 with P; Col.
     }
   destruct (inner_paschG A B C P Q) as [X []]; auto; exists X; split; auto.
-  }
+- exact bet_symmetryG.
+- exact bet_inner_transitivityG.
 Defined.
 
 End Gupta_inspired_variant_of_Tarski_neutral_dimensionless_to_independent_Tarski_neutral_dimensionless.
@@ -61,7 +61,7 @@ Section Gupta_inspired_variant_of_Tarski_euclidean_to_Tarski_euclidean.
 Context `{GTE : Gupta_inspired_variant_of_Tarski_euclidean}.
 
 Global Instance GI_euclidean_to_IT_euclidean :
-  independent_Tarski_euclidean GI_to_IT.
+  independent_Tarski_euclidean PredGIT GI_to_IT.
 Proof.
 assert (HC : forall A B C,
            independence.Col Tpoint Bet A B C <-> @Col GI_to_T A B C).
@@ -154,10 +154,10 @@ destruct (exists_cong_per_f U1 GPA GPA GPB GPC) as [U2 [HP [HC2 _]]]; auto;
   }
 Qed.
 
-Global Instance GI2D_to_T2D : independent_Tarski_nD 2 GI_to_IT.
+Global Instance GI2D_to_T2D : independent_Tarski_nD PredGIT GI_to_IT {| n := 2 |}.
 Proof.
 destruct basisG as [b Hb].
-apply (Build_independent_Tarski_nD 2 TpointG GI_to_IT GPA GPB b).
+apply (Build_independent_Tarski_nD PredGIT GI_to_IT {| n := 2 |} GPA GPB b).
 
   {
   assert (HNC := lower_dimG); split.

@@ -7,9 +7,10 @@ From mathcomp Require Import tuple fintype bigop.
 
 Section Stability_properties.
 
-Variable n : nat.
-
-Context `{ITnD : independent_Tarski_nD(n.+1)}.
+Context {Pred : predicates}
+        {ITn  : independent_Tarski_neutral_dimensionless Pred}
+        {Dim  : dimension}
+        {ITnD : independent_Tarski_nD Pred ITn (incr Dim)}.
 
 Definition BetS A B C := A <> B /\ B <> C /\ Bet A B C.
 
@@ -34,8 +35,8 @@ for convenience, let us prove that O <> I. *)
 
 Lemma two_points : O <> I.
 Proof.
-pose I1aux := (tnth basis (inord 0)); pose I1 := I1aux n Tpoint H ITnD.
-intro HE; destruct lower_dim as [HF [HB [HBC1 _]]].
+pose I1aux := (@tnth (@n (incr Dim)) Tpoint basis (inord 0)).
+pose I1 := I1aux _ _ ITnD; intro HE; destruct lower_dim as [HF [HB [HBC1 _]]].
 assert (HC : Cong O I O I1)
   by (rewrite big_ltn in HBC1; [destruct HBC1 as [HC _]|]; auto).
 apply HF; rewrite HE in HC; apply cong_identity with I, g2_2, HC.

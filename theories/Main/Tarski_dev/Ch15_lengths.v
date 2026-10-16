@@ -964,7 +964,6 @@ right;auto.
 Cong.
 Qed.
 
-
 Lemma triangular_equality_bis : forall O E E' A B C AB BC AC,
   A <> B \/ A <> C \/ B <> C -> O<>E -> Bet A B C ->
   Length O E E' A B AB -> Length O E E' B C BC -> Length O E E' A C AC ->
@@ -1412,109 +1411,23 @@ right.
 apply (image_preserves_bet1 X Y A C B); auto.
 Qed.
 
-
 Lemma project_preserves_out : forall A B C A' B' C' P Q X Y,
-  Out A B C -> ~Par A B X Y ->
+  Out A B C -> ~ Par A B X Y ->
   Proj A A' P Q X Y -> Proj B B' P Q X Y -> Proj C C' P Q X Y ->
   Out A' B' C'.
 Proof.
-intros.
-repeat split.
-intro.
-subst B'.
-unfold Out in H.
-spliter.
-unfold Proj in H1.
-unfold Proj in H2.
-spliter.
-induction H9; induction H13.
-assert(Par A A' B A').
-apply (par_trans _ _ X Y); auto.
-apply par_symmetry.
-assumption.
-induction H14.
-apply H14.
-exists A'.
-split; Col.
-spliter.
-apply H0.
-apply par_symmetry.
-apply(par_col_par X Y A A' B).
-intro.
-subst B.
-tauto.
-apply par_symmetry.
-assumption.
-Col.
-subst A'.
-apply H0.
-apply par_left_comm.
-assumption.
-subst A'.
-contradiction.
-subst A'.
-contradiction.
-
-assert(HC:Col A B C).
-apply out_col in H.
-assumption.
-unfold Out in H.
-spliter.
-intro.
-subst C'.
-unfold Proj in H1 ,H3.
-spliter.
-induction H9; induction H13.
-assert(Par A A' C A').
-apply (par_trans _ _ X Y).
-assumption.
-apply par_symmetry.
-assumption.
-induction H14.
-apply H14.
-exists A'.
-split; Col.
-spliter.
-
-apply H0.
-apply par_symmetry.
-apply (par_col_par X Y A A' B).
-intro.
-subst B.
-tauto.
-apply par_symmetry.
-assumption.
-ColR.
-subst A'.
-apply H0.
-apply par_symmetry.
-apply(par_col_par X Y A C B).
-intro.
-subst B.
-tauto.
-apply par_symmetry.
-apply par_left_comm.
-assumption.
-Col.
-subst A'.
-apply H0.
-apply par_symmetry.
-apply(par_col_par X Y A C B).
-intro.
-subst B.
-tauto.
-apply par_symmetry.
-assumption.
-Col.
-subst A'.
-contradiction.
-unfold Out in H.
-spliter.
-induction H5.
-left.
-apply (project_preserves_bet P Q X Y A B C A' B' C'); assumption.
-right.
-apply (project_preserves_bet P Q X Y A C B A' C' B'); assumption.
+intros A B C A' B' C' P Q X Y HOut HNP HPj1 HPj2 HPj3.
+split; [|split].
+- intro; treat_equalities.
+  apply (ker_par A B) in HPj1; [|assert_diffs; easy|easy].
+  exact (HNP HPj1).
+- intro; treat_equalities.
+  apply (ker_par A C) in HPj1; [|assert_diffs; easy|easy].
+  apply HNP, (par_col_par_2 A C); [assert_diffs; easy| |easy].
+  assert_cols; Col.
+- destruct HOut as [HBA [HCA [HB|HB]]]; [left|right].
+  + apply (project_preserves_bet P Q X Y A B C A' B' C'); assumption.
+  + apply (project_preserves_bet P Q X Y A C B A' C' B'); assumption.
 Qed.
 
 Lemma conga_bet_conga : forall A B C D E F A' C' D' F',
@@ -3007,7 +2920,6 @@ apply H8.
 assumption.
 Qed.
 
-
 Lemma length_sym : forall O E E' A B AB,
   Length O E E' A B AB -> Length O E E' B A AB.
 Proof.
@@ -3117,7 +3029,6 @@ assert(HD:=distr_l O E E' AB AP BP AB AC2 BC2 AB2 H20 H21 H22 H6).
 assumption.
 Qed.
 
-
 Lemma is_length_exists : forall O E E' X Y,
   ~ Col O E E' -> exists XY, Is_length O E E' X Y XY.
 Proof.
@@ -3126,8 +3037,6 @@ elim (eq_dec_points X Y); intro HXY;
 [treat_equalities; exists O; left; apply length_id_2; assert_diffs; auto|
 destruct (length_existence O E E' X Y) as [XY HLength]; Col; exists XY; left; auto].
 Qed.
-
-(********************************************************)
 
 Lemma lt_to_ltp : forall O E E' A B L C D M, Length O E E' A B L -> Length O E E' C D M 
               -> Lt A B C D -> LtP O E E' L M.
@@ -3166,7 +3075,6 @@ intros.
 unfold LeP.
 left; auto.
 Qed.
-
 
 Lemma ltp_to_lt : forall O E E' A B L C D M, Length O E E' A B L -> Length O E E' C D M 
               -> LtP O E E' L M -> Lt A B C D.
@@ -3207,7 +3115,6 @@ unfold Out in H4.
 tauto.
 Qed.
 
-
 Lemma prod_col : forall O E E' A B AB ,Ar2 O E E' A B A -> Prod O E E' A B AB -> Col O E AB.
 Proof.
 intros.
@@ -3216,7 +3123,6 @@ spliter.
 unfold Ar2 in H0.
 tauto.
 Qed.
-
 
 Lemma square_increase_strict : forall O E E' A B A2 B2, Ar2 O E E' A B A ->  Ps O E A -> Ps O E B 
                               -> LtP O E E' A B
@@ -3296,7 +3202,6 @@ subst B2.
 unfold LeP.
 right; auto.
 Qed.
-
 
 Lemma signeq__prod_pos : forall O E E' A B C, SignEq O E A B -> Prod O E E' A B C -> Ps O E C.
 Proof.
@@ -3547,7 +3452,6 @@ induction H12;
 eBetween.
 Qed.
 
-
 Lemma sign_dec : forall O E A, Col O E A -> O <> E -> A = O \/ Ps O E A \/ Ng O E A.
 Proof.
 intros.
@@ -3569,7 +3473,6 @@ induction HH.
     repeat split; auto.
   }
 Qed.
-
 
 Lemma not_signEq_prod_neg : forall O E E' A B C, A <> O -> B <> O -> ~SignEq O E A B -> Prod O E E' A B C -> Ng O E C.
 Proof.
@@ -3608,8 +3511,6 @@ induction H8;induction H9.
   right; auto.
 }
 Qed.
-
-
 
 Lemma prod_pos__signeq : forall O E E' A B C, A <> O -> B <> O -> Prod O E E' A B C -> Ps O E C -> SignEq O E A B.
 Proof.
@@ -3745,13 +3646,11 @@ exists D.
 split; auto.
 Qed.
 
-
 Lemma square_increase_rev : forall O E E' A B A2 B2, Ps O E A -> Ps O E B 
                               -> LtP O E E' A2 B2
                               -> Prod O E E' A A A2 -> Prod O E E' B B B2
                               -> LtP O E E' A B.
 Proof.
-
 intros.
 assert(HP2:= H2).
 assert(HP3:=H3).
@@ -3848,7 +3747,6 @@ unfold Out in H12.
 tauto.
 Qed.
 
-
 Lemma ltp__ltps: forall O E E' A B, LtP O E E' A B -> LtPs O E E' A B.
 Proof.
 intros.
@@ -3902,7 +3800,6 @@ unfold Out in H0.
 tauto.
 Qed.
 
-
 Lemma lep_neq__ltp : forall O E E' A B,  LeP O E E' A B /\ A <> B -> LtP O E E' A B.
 Proof.
 intros.
@@ -3912,7 +3809,6 @@ induction H.
 assumption.
 contradiction.
 Qed.
-
 
 Lemma sum_preserves_ltp : forall O E E' A B C AC BC, LtP O E E' A B -> Sum O E E' A C AC -> Sum O E E' B C BC -> LtP O E E' AC BC.
 Proof.
@@ -4004,7 +3900,6 @@ assert(HS:=sum_A_O_eq O E E' H2 B D H22).
 subst D.
 apply(sum_preserves_ltp O E E'  AC BC C' A B H1 H12 H19).
 Qed.
-
 
 Lemma sum_preserves_lep_rev : forall O E E' A B C AC BC, Sum O E E' A C AC -> Sum O E E' B C BC -> LeP O E E' AC BC
                                 ->  LeP O E E' A B.
@@ -4100,7 +3995,6 @@ intro.
 apply H4.
 apply (l11_10 A' B C' D' E F'); auto.
 Qed.
-
 
 Lemma pythagoras_obtuse : forall O E E' A B C AC BC AB AC2 BC2 AB2 S2,
   O<>E -> Obtuse A C B ->
@@ -4488,7 +4382,6 @@ exists SS.
 tauto.
 Qed.
 
-
 Lemma length_pos_or_null : forall O E E' A B AB, Length O E E' A B AB -> Ps O E AB \/ A = B.
 Proof.
 intros.
@@ -4601,9 +4494,6 @@ induction H6; induction H7.
 }
 Qed.
 
-
-
-
 Lemma length_not_neg : forall O E E' A B AB, Length O E E' A B AB -> ~Ng O E AB.
 Proof.
 intros.
@@ -4673,7 +4563,6 @@ induction HP.
   contradiction.
 }
 Qed.
-
 
 Lemma root_uniqueness : forall O E E' A B C, ~Ng O E A -> ~Ng O E B -> Prod O E E' A A C -> Prod O E E' B B C -> A = B.
 Proof.
@@ -4815,471 +4704,189 @@ apply eq_sym.
 apply (l4_18 P Q O M); Cong; Col.
 Qed.
 
-Lemma inter_circle_per : forall P Q A T M, Cong P A Q A 
-                          -> Le P M P A -> Le Q M Q A 
-                          ->  Projp A T P Q -> Per P T M -> Le T M T A.
-
+Lemma inter_circle_per : forall P Q A T M,
+  Cong P A Q A -> Le P M P A -> Le Q M Q A ->
+  Projp A T P Q -> Per P T M ->
+  Le T M T A.
 Proof.
-intros.
-assert(HH:=lower_dim).
-set(O:=PA) in *.
-set(E:=PB) in *.
-set(E':=PC) in *.
-assert(HD:~Col O E E').
-intro.
-apply HH.
-unfold Col in H4.
-tauto.
-clear HH.
-
-induction(eq_dec_points P T).
-{
-  subst T.
-  auto.
-}
-
-{
-  unfold Projp in H2.
-  spliter.
-  induction H5.
-  spliter.
-
-  assert(HX:O<>E).
+intros P Q A T M HCong HLe1 HLe2 HPj HPer1.
+assert(HH := lower_dim).
+set(O := PA) in *; set(E := PB) in *; set(E' := PC) in *.
+assert(HD :~ Col O E E')
+  by (intro HC; apply HH; unfold Col in HC; easy).
+clear HH; destruct (eq_dec_points P T) as [|HPT]; [treat_equalities; easy|].
+destruct HPj as [HPQ [[HC HPerp]|[HC HPerp]]];
+[|assert(M = A); [apply (inter_tangent_circle P Q A M); Col|
+                  subst M; apply le_reflexivity]].
+assert(HOE : O <> E) by (assert_diffs; easy).
+assert(HPer2 : Per P T A)
+  by (apply (perp_col _ _ _ _ T) in HPerp; [Perp|easy..]).
+destruct (pyth_context O E E' P T A HD) as [PT  [TA [AP [PT2  [TA2 [AP2 [SS  HSS1]]]]]]].
+destruct (pyth_context O E E' P T M HD) as [PT' [TM [PM [PT2' [TM2 [PM2 [SS' HSS2]]]]]]].
+assert(PT = PT')
+  by (spliter; apply (length_uniqueness O E E' P T); easy).
+subst PT'; assert (PT2 = PT2')
+  by (apply (prod_uniqueness O E E' PT PT); easy).
+subst PT2'; assert(Pyth : Sum O E E' PT2 TA2 AP2).
   {
-    assert_diffs; auto.
+  spliter; apply (pythagoras O E E' P A T PT TA AP PT2 TA2 AP2 HOE);
+  [..|apply length_sym| | |]; easy.
   }
-  assert(Per P T A).
+assert(SS = AP2)
+  by (apply(sum_uniqueness O E E' PT2 TA2); easy).
+subst SS; assert (PythM : Sum O E E' PT2 TM2 PM2)
+  by (apply (pythagoras O E E' P M T PT TM PM); [| | | |apply length_sym|..]; easy).
+destruct (eq_dec_points T M) as [|HTM]; [treat_equalities; apply le_trivial|].
+assert (HI : P = M -> Le T M T A).
   {
-    apply (perp_col _ _ _ _ T) in H6; auto.
-    apply perp_left_comm in H6.
-    apply perp_perp_in in H6.
-    apply perp_in_comm in H6.
-    apply perp_in_per in H6.
-    assumption.
+  intro; subst M.
+  assert(HH := length_id_2 O E E' P HOE).
+  assert(PM = O)
+    by (apply (length_uniqueness O E E' P P); easy).
+  subst PM; assert (PM2 = O)
+    by (apply(prod_O_l_eq O E E' O); easy).
+  subst PM2; apply sum_pos_null in PythM;
+  [|apply (square_not_neg O E E' PT); easy|apply (square_not_neg O E E' TM); easy].
+  destruct PythM as [HPT2O HTM2O]; subst PT2.
+  destruct HSS1 as [_ [_ [_ [_ [_ [_ [HL [_ [_ [HProd _]]]]]]]]]].
+  apply prod_null in HProd; apply length_cong in HL.
+  destruct HProd as [|]; subst PT; treat_equalities; easy.
   }
-
-  assert(Py:= pyth_context O E E' P T A HD).
-  ex_and Py PT .
-  ex_and H8 TA .
-  ex_and H9 AP.
-  ex_and H8 PT2.
-  ex_and H9 TA2.
-  ex_and H8 AP2.
-  ex_and H9 SS.
-
-  assert(Pyth : Sum O E E' PT2 TA2 AP2).
+destruct (eq_dec_points P M) as [HPM|HPM]; [exact (HI HPM)|clear HI].
+assert (HLeP1 : LeP O E E' PM AP)
+  by (apply(length_leP_le_2 O E E' P M P A PM AP); easy).
+assert (HLeP2 : LeP O E E' PM2 AP2).
   {
-    apply(pythagoras O E E' P A T PT TA AP PT2 TA2 AP2 HX); auto.
-    apply length_sym;auto.
+  apply(square_increase O E E' PM AP); [easy| | |spliter; easy..].
+  - destruct HSS2 as [_ [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]]].
+    apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+    treat_equalities; easy.
+  - destruct HSS1 as [_ [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]]].
+    apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+    treat_equalities; easy.
   }
-  assert(HE: SS = AP2).
+assert (HLeP3 : LeP O E E' TM2 TA2).
   {
-    apply(sum_uniqueness O E E' PT2 TA2); auto.
+  apply(sum_preserves_lep_rev O E E' TM2 TA2 PT2 PM2 AP2);
+  [apply sum_comm; easy..|easy].
   }
-  subst SS.
-  apply sum_comm in Pyth; auto.
-  apply sum_diff in Pyth.
-
-  assert(Py:= pyth_context O E E' P T M HD).
-  ex_and Py PT' .
-  ex_and H21 TM .
-  ex_and H22 PM.
-  ex_and H21 PT2'.
-  ex_and H22 TM2.
-  ex_and H21 PM2.
-  ex_and H22 SS'.
-  assert(PT=PT').
-  {
-    apply (length_uniqueness O E E' P T); auto.
-  }
-  subst PT'.
-  assert(PT2=PT2').
-  {
-    apply (prod_uniqueness O E E' PT PT); auto.
-  }
-  subst PT2'.
-  clean_duplicated_hyps.
-  assert(PythM : Sum O E E' PT2 TM2 PM2).
-  {
-    apply(pythagoras O E E' P M T PT TM PM PT2 TM2 PM2 HX); auto.
-    apply length_sym;auto.
-  }
-  assert(SS'=PM2).
-  {
-    apply (sum_uniqueness O E E' PT2 TM2); auto.
-  }
-  subst SS'.
-  induction(eq_dec_points T M).
-  {
-    subst T.
-    apply le_trivial.
-  }
-  
-  {
-    induction(eq_dec_points P M).
-    {
-      subst M.
-
-      assert(HH:= length_id_2 O E E' P HX).
-      assert(PM = O).
-      {
-        apply (length_uniqueness O E E' P P); auto.
-      }
-      subst PM.
-      assert(PM2=O).
-      {
-         apply(prod_O_l_eq O E E' O);auto.
-      }
-      subst PM2.
-      apply(sum_pos_null) in H33.
-      spliter.
-      subst PT2.
-      apply prod_null in H17.
-      induction H17.
-      {
-        subst PT.
-        apply length_cong in H14.
-        treat_equalities.
-        tauto.
-      }
-      {
-        subst PT.
-        apply length_cong in H14.
-        treat_equalities.
-        tauto.
-      }
-       apply (square_not_neg O E E' PT); auto.
-       apply (square_not_neg O E E' TM); auto.
-    }
-    {
-      assert(LeP O E E' PM AP).
-      {
-        apply(length_leP_le_2 O E E' P M P A PM AP); auto.
-      }
-      assert(LeP O E E' PM2 AP2).
-      {
-        apply(square_increase O E E' PM AP); auto.
-        unfold Ar2.
-        repeat split; auto.
-        apply (length_Ps O E E' P M); auto.
-        intro.
-        treat_equalities.
-        set(O:=PA) in *.
-        subst PM.
-        assert(PM2=O).
-        {
-          apply(prod_O_l_eq O E E' O);auto.
-        }
-        subst PM2.
-        apply length_id_1 in H29.
-        contradiction.
-        apply length_pos_or_null in H16.
-        induction H16.
-        {
-          assumption.
-        }
-        {
-          treat_equalities.
-          assert(HH:= length_id_2 O E E' Q  HX).
-          assert(HP:=length_uniqueness O E E' Q Q O PM HH H29).
-          treat_equalities.
-          apply(prod_O_l_eq)in H32.
-          subst PM2.
-          apply sum_pos_null in H33.
-          spliter; tauto.
-          apply(square_not_neg O E E' PT PT2 H17).
-          apply(square_not_neg O E E' TM TM2 H31).
-        }
-      }
-      apply sum_comm in H33; auto.
-      apply sum_comm in H20; auto.
-      assert(HH:=sum_preserves_lep_rev O E E' TM2 TA2 PT2 PM2 AP2 H33 H20 H30).
-      induction(eq_dec_points TA TM).
-      {
-        treat_equalities.
-        assert(Cong T M T A).
-        {
-          apply(length_eq_cong_1 O E E' _ _ _ _ TA); auto.
-        }
-        apply cong__le; auto.
-      }
-      assert(LtP O E E' TM2 TA2).
-      {
-        apply(lep_neq__ltp O E E').
-        split; auto.
-        intro.
-        apply H34.
-        subst TM2.
-        apply(root_uniqueness O E E' TA TM TA2); auto.
-        apply(length_not_neg O E E' T A); auto.
-        apply(length_not_neg O E E' T M); auto.
-      }
-
-      assert(LtP O E E' TM TA).
-      {
-        apply (square_increase_rev O E E' TM TA TM2 TA2); auto.
-        apply length_Ps in H28; auto.
-        intro.
-        subst TM.
-        apply length_id_1 in H28.
-        tauto.
-        apply length_Ps in H15; auto.
-        intro.
-        subst TA.
-        apply length_id_1 in H15.
-        subst T.
-        apply perp_distinct in H6.
-        tauto.
-      }
-      apply lt__le.
-      apply (ltp_to_lt O E E' T M TM T A TA); auto.
-    }
-  }
-  {
-    spliter.
-    assert(HH:=(inter_tangent_circle P Q A M H2 H)).
-    assert(M = A).
-    {
-      apply HH; Col.
-    }
-    subst M.
-    apply le_reflexivity.
-  }
-}
+destruct (eq_dec_points TM TA) as [|HTMTA];
+[treat_equalities; cut (Cong T M T A);
+ [apply cong__le|apply (length_eq_cong_1 O E E' T M T A TM); easy]|].
+apply lt__le, (ltp_to_lt O E E' T M TM T A TA); [easy..|].
+apply (square_increase_rev O E E' TM TA TM2 TA2); [..|easy|easy].
+- assert (HL : Length O E E' T M TM) by easy.
+  apply length_Ps in HL; [easy|].
+  intro; subst TM; apply length_id_1 in HL; easy.
+- assert (HL : Length O E E' T A TA) by easy.
+  apply length_Ps in HL; [easy|].
+  intro; subst TA; apply length_id_1 in HL; subst T.
+  apply perp_distinct in HPerp; easy.
+- apply (lep_neq__ltp O E E'); split; [easy|].
+  intro; apply HTMTA; subst TM2.
+  apply(root_uniqueness O E E' TM TA TA2); [| |easy..].
+  + apply(length_not_neg O E E' T M); easy.
+  + apply(length_not_neg O E E' T A); easy.
 Qed.
 
-Lemma inter_circle_obtuse : forall P Q A T M, Cong P A Q A 
-                          -> Le P M P A -> Le Q M Q A 
-                          ->  Projp A T P Q -> Obtuse P T M \/ Per P T M -> Le T M T A.
-
+Lemma inter_circle_obtuse : forall P Q A T M,
+  Cong P A Q A  -> Le P M P A -> Le Q M Q A ->
+  Projp A T P Q ->
+  Obtuse P T M \/ Per P T M ->
+  Le T M T A.
 Proof.
-intros.
-assert(HH:=lower_dim).
-set(O:=PA) in *.
-set(E:=PB) in *.
-set(E':=PC) in *.
-assert(HD:~Col O E E').
-intro.
-apply HH.
-unfold Col in H4.
-tauto.
-clear HH.
-
-induction(eq_dec_points P T).
-{
-  subst T.
-  auto.
-}
-{
-  unfold Projp in H2.
+intros P Q A T M HCong HLe1 HLe2 HPj HE.
+assert(HH := lower_dim).
+set(O := PA) in *; set(E := PB) in *; set(E' := PC) in *.
+assert(HD :~ Col O E E')
+  by (intro HC; apply HH; unfold Col in HC; easy).
+clear HH; destruct (eq_dec_points P T) as [|HPT]; [treat_equalities; easy|].
+destruct HPj as [HPQ [[HC HPerp]|[HC HPerp]]];
+[|assert(M = A); [apply (inter_tangent_circle P Q A M); Col|
+                  subst M; apply le_reflexivity]].
+assert(HOE : O <> E) by (assert_diffs; easy).
+assert(HPer : Per P T A)
+  by (apply (perp_col _ _ _ _ T) in HPerp; [Perp|easy..]).
+destruct (pyth_context O E E' P T A HD) as [PT  [TA [AP [PT2  [TA2 [AP2 [SS  HSS1]]]]]]].
+destruct (pyth_context O E E' P T M HD) as [PT' [TM [PM [PT2' [TM2 [PM2 [SS' HSS2]]]]]]].
+assert(PT = PT')
+  by (spliter; apply (length_uniqueness O E E' P T); easy).
+subst PT'; assert (PT2 = PT2')
+  by (apply (prod_uniqueness O E E' PT PT); easy).
+subst PT2'; assert(Pyth : Sum O E E' PT2 TA2 AP2).
+  {
+  spliter; apply (pythagoras O E E' P A T PT TA AP PT2 TA2 AP2 HOE);
+  [..|apply length_sym| | |]; easy.
+  }
+assert(SS = AP2)
+  by (apply(sum_uniqueness O E E' PT2 TA2); easy).
+subst SS; assert(Pyth1 : LeP O E E' SS' PM2).
+  {
   spliter.
-  induction H5.
-  spliter.
-
-  assert(HX:O<>E).
-  {
-    assert_diffs; auto.
+  apply (pythagoras_obtuse_or_per O E E' P M T PT TM PM PT2 TM2 PM2 SS');
+  [..|apply length_sym| | | |]; easy.
   }
-  assert(Per P T A).
+destruct (eq_dec_points T M) as [|HTM]; [treat_equalities; apply le_trivial|].
+assert (HI : P = M -> Le T M T A).
   {
-    apply (perp_col _ _ _ _ T) in H6; auto.
-    apply perp_left_comm in H6.
-    apply perp_perp_in in H6.
-    apply perp_in_comm in H6.
-    apply perp_in_per in H6.
-    assumption.
-  }
-
-  assert(Py:= pyth_context O E E' P T A HD).
-  ex_and Py PT .
-  ex_and H8 TA .
-  ex_and H9 AP.
-  ex_and H8 PT2.
-  ex_and H9 TA2.
-  ex_and H8 AP2.
-  ex_and H9 SS.
-
-  assert(Py:= pyth_context O E E' P T M HD).
-  ex_and Py PT' .
-  ex_and H21 TM .
-  ex_and H22 PM.
-  ex_and H21 PT2'.
-  ex_and H22 TM2.
-  ex_and H21 PM2.
-  ex_and H22 SS'.
-  assert(PT=PT').
-  {
-    apply (length_uniqueness O E E' P T); auto.
-  }
-  subst PT'.
-  assert(PT2=PT2').
-  {
-    apply (prod_uniqueness O E E' PT PT); auto.
-  }
-  subst PT2'.
-  clean_duplicated_hyps.
-
-  assert(Pyth : Sum O E E' PT2 TA2 AP2).
-  {
-    apply(pythagoras O E E' P A T PT TA AP PT2 TA2 AP2 HX); auto.
-    apply length_sym;auto.
-  }
-  assert(HE: SS = AP2).
-  {
-    apply(sum_uniqueness O E E' PT2 TA2); auto.
-  }
-  subst SS.
-  assert(Pyth1 : LeP O E E' SS' PM2).
-  {
-    apply(pythagoras_obtuse_or_per O E E' P M T PT TM PM PT2 TM2 PM2 SS'); auto.
-    apply length_sym; auto.
-  }
-  induction(eq_dec_points T M).
-  {
-    subst M.
-    apply le_trivial.
-  }
-  {
-    induction(eq_dec_points P M).
+  intro; subst M.
+  assert(HH := length_id_2 O E E' P HOE).
+  assert(PM = O)
+    by (apply (length_uniqueness O E E' P P); easy).
+  subst PM; assert (PM2 = O)
+    by (apply(prod_O_l_eq O E E' O); easy).
+  subst PM2; assert (HPs : Ps O E SS').
     {
-      subst M.
-      assert(HH:= length_id_2 O E E' P HX).
-      assert(PM = O).
-      {
-        apply (length_uniqueness O E E' P P); auto.
-      }
-      subst PM.
-      assert(PM2=O).
-      {
-         apply(prod_O_l_eq O E E' O);auto.
-      }
-      subst PM2.
-
-      assert(Ps O E SS').
-      {
-        apply(sum_pos_pos O E E' PT2 TM2 SS'); auto.
-        apply (square_pos O E E' PT); auto.
-        intro.
-        subst PT.
-        apply length_cong in H14.
-        apply cong_identity in H14.
-        contradiction.
-
-        apply (square_pos O E E' TM); auto.
-        intro.
-        subst TM.
-        apply length_cong in H28.
-        apply cong_identity in H28.
-        contradiction.
-      }
-      unfold LeP in Pyth1.
-      induction Pyth1.
-      apply (ltP_neg) in H27.
-      apply pos_not_neg in H24.
-      contradiction.
-      subst SS'.
-      unfold Ps in H24.
-      unfold Out in H24;tauto.
+    apply(sum_pos_pos O E E' PT2 TM2 SS'); [..|easy].
+    - apply (square_pos O E E' PT); [|easy].
+      intro; subst PT; assert (HF : P <> T) by easy.
+      apply HF, (cong_identity P T O), (length_cong O E E'); easy.
+    - apply (square_pos O E E' TM); [|easy].
+      intro; subst TM; assert (HF : T <> P) by easy.
+      apply HF, (cong_identity T P O), (length_cong O E E'); easy.
     }
-    assert(LeP O E E' PM AP).
-    {
-      apply(length_leP_le_2 O E E' P M P A PM AP); auto.
-    }
-    assert(LeP O E E' PM2 AP2).
-    {
-      apply(square_increase O E E' PM AP); auto.
-      repeat split; auto.
-      apply length_pos_or_null in H29.
-      induction H29.
-      {
-        auto.
-      }
-      {
-        treat_equalities; tauto.
-      }
-
-      apply length_pos_or_null in H16.
-      induction H16.
-      {
-        auto.
-      }
-      {
-        treat_equalities; tauto.
-      }
-    }
-    assert(LeP O E E' SS' AP2).
-    {
-      apply (leP_trans O E E' SS' PM2 AP2); auto.
-    }
-    assert(LeP O E E' TM2 TA2).
-    {
-      apply(sum_preserves_lep_rev O E E' TM2 TA2 PT2 SS' AP2); auto.
-      apply sum_comm; auto.
-      apply sum_comm; auto.
-    }
-
-    assert(Ps O E  TM).
-    {
-      apply length_pos_or_null in H28.
-      induction H28.
-      {
-        auto.
-      }
-      {
-        treat_equalities; tauto.
-      }
-    }
-    assert(Ps O E  TA).
-    {
-      apply length_pos_or_null in H15.
-      induction H15.
-      {
-        auto.
-      }
-      {
-        subst T.
-        apply perp_distinct in H6; tauto.
-      }
-    }
-
-
-    assert(LeP  O E E' TM TA).
-    {
-      induction(eq_dec_points TM TA).
-      {
-        subst TM.
-        apply leP_refl.
-      }
-      {
-        apply ltp_to_lep.
-        apply (square_increase_rev O E E' TM TA TM2 TA2); auto.
-        apply(lep_neq__ltp O E E').
-        split; auto.
-        intro.
-        apply H38.
-        subst TM2.
-        apply (root_uniqueness O E E' TM TA TA2); auto.
-        intro.
-        apply pos_not_neg in H36.
-        contradiction.
-        intro.
-        apply pos_not_neg in H37.
-        contradiction.
-      }
-    }
-    apply(length_leP_le_1 O E E' T M  T A TM TA); auto.
+  destruct Pyth1 as [HLtP|]; [|subst SS'; destruct HPs; easy].
+  apply ltP_neg in HLtP; apply pos_not_neg in HPs; easy.
   }
+destruct (eq_dec_points P M) as [HPM|HPM]; [exact (HI HPM)|clear HI].
+assert (HLeP1 : LeP O E E' PM AP)
+  by (apply(length_leP_le_2 O E E' P M P A PM AP); easy).
+assert (HLeP2 : LeP O E E' PM2 AP2).
   {
-    spliter.
-    assert(HH:=(inter_tangent_circle P Q A M H2 H)).
-    assert(M = A).
-    {
-      apply HH; Col.
-    }
-    subst M.
-    apply le_reflexivity.
+  apply(square_increase O E E' PM AP); [easy| | |spliter; easy..].
+  - destruct HSS2 as [_ [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]]].
+    apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+    treat_equalities; easy.
+  - destruct HSS1 as [_ [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]]].
+    apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+    treat_equalities; easy.
   }
-}
+assert (HLe3 : LeP O E E' SS' AP2)
+  by (apply (leP_trans O E E' SS' PM2 AP2); easy).
+assert (HLe4 : LeP O E E' TM2 TA2).
+  {
+  apply(sum_preserves_lep_rev O E E' TM2 TA2 PT2 SS' AP2);
+  [apply sum_comm; easy..|easy].
+  }
+assert (HPs1 : Ps O E TM).
+  {
+  destruct HSS2 as [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]].
+  apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+  treat_equalities; easy.
+  }
+assert (HPs2 : Ps O E TA).
+  {
+  destruct HSS1 as [_ [_ [_ [_ [_ [_ [_ [HL _]]]]]]]].
+  apply length_pos_or_null in HL; destruct HL as [|]; [easy|].
+  treat_equalities; assert_diffs; easy.
+  }
+cut (LeP O E E' TM TA); [intro; apply(length_leP_le_1 O E E' T M  T A TM TA); easy|].
+destruct (eq_dec_points TM TA) as [|HTMTA]; [treat_equalities; apply leP_refl|].
+apply ltp_to_lep, (square_increase_rev O E E' TM TA TM2 TA2); [easy|easy| |easy..].
+apply(lep_neq__ltp O E E'); split; [easy|].
+intro; apply HTMTA; subst TM2.
+apply pos_not_neg in HPs1; apply pos_not_neg in HPs2.
+apply (root_uniqueness O E E' TM TA TA2); easy.
 Qed.
 
 Lemma circle_projp_between : forall P Q A T, Cong P A Q A 
@@ -5376,7 +4983,6 @@ induction(eq_dec_points P T).
 }
 Qed.
 
-
 Lemma inter_circle : forall P Q A T M, Cong P A Q A 
                           -> Le P M P A -> Le Q M Q A 
                           ->  Projp A T P Q -> Le T M T A.
@@ -5431,7 +5037,6 @@ induction(eq_dec_points T M).
     }
   }
 Qed.
-
 
 Lemma projp_lt : forall P Q A T, Cong P A Q A 
                           ->  Projp A T P Q -> Lt T A P A.
@@ -5488,7 +5093,5 @@ induction H1.
   apply lt1123; auto.
 }
 Qed.
-
-
 
 End T15.

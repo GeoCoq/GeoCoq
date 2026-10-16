@@ -3,12 +3,15 @@ From mathcomp Require Import tuple fintype bigop.
 
 Require Import GeoCoq.Algebraic.Counter_models.nD.independence.
 
-Class independent_Tarski_neutral_dimensionless (Tpoint : Type) :=
+Class predicates :=
 {
-  Bet :
-    Tpoint -> Tpoint -> Tpoint -> Prop;
-  Cong :
-    Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop;
+  Tpoint : Type;
+  Bet : Tpoint -> Tpoint -> Tpoint -> Prop;
+  Cong : Tpoint -> Tpoint -> Tpoint -> Tpoint -> Prop
+}.
+
+Class independent_Tarski_neutral_dimensionless (Pred : predicates) :=
+{
   cong_pseudo_reflexivity : cong_pseudo_reflexivityP Tpoint Cong;
   cong_inner_transitivity : cong_inner_transitivityP Tpoint Cong;
   cong_identity           : cong_identityP Tpoint Cong;
@@ -19,8 +22,16 @@ Class independent_Tarski_neutral_dimensionless (Tpoint : Type) :=
   bet_inner_transitivity  : bet_inner_transitivityP Tpoint Bet
 }.
 
+Class dimension :=
+{
+  n : nat
+}.
+
+Instance incr (Dim : dimension) : dimension := {| n := n.+1 |}.
+
 Class independent_Tarski_nD
-      (n : nat) `(independent_Tarski_neutral_dimensionless) :=
+  (Pred : predicates) (ITn : independent_Tarski_neutral_dimensionless Pred)
+  (Dim : dimension) :=
 {
   O : Tpoint;
   I : Tpoint;
@@ -30,18 +41,20 @@ Class independent_Tarski_nD
 }.
 
 Class independent_Tarski_euclidean
-      `(independent_Tarski_neutral_dimensionless) :=
+  (Pred : predicates) (ITn : independent_Tarski_neutral_dimensionless Pred) :=
 {
   euclid : euclidP Tpoint Bet Cong
 }.
 
-Class Eq_stability `(independent_Tarski_neutral_dimensionless) :=
+Class Eq_stability
+  (Pred : predicates) (ITn : independent_Tarski_neutral_dimensionless Pred) :=
 {
   point_equality_stability : (* Model given by Beeson *)
     forall (A B : Tpoint), ~ ~ A = B -> A = B
 }.
 
-Class Eq_decidability `(independent_Tarski_neutral_dimensionless) :=
+Class Eq_decidability
+  (Pred : predicates) (ITn : independent_Tarski_neutral_dimensionless Pred) :=
 {
   point_equality_decidability : (* Model given by Beeson *)
     forall (A B : Tpoint), A = B \/ A <> B

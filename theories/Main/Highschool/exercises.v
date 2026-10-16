@@ -109,10 +109,12 @@ intros.
 assert_diffs_by_cases.
 assert (Parallelogram I J K L)
   by (apply (varignon A B C D I J K L);finish).
-assert (Midpoint X J L)
-  by (perm_apply (plg_mid_2 I J K L X)).
+assert (Midpoint X J L).
+  {
+  cut (Midpoint X J L); [Midpoint|].
+  apply (plg_mid_2 I J K L X); finish.
+  }
 treat_equalities;trivial.
 Qed.
-
 
 End Exercises.

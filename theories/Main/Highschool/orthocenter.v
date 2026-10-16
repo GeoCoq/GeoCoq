@@ -57,7 +57,8 @@ apply cop_npar__inter_exists.
 intro HNPar; apply HNC.
 assert (HFalsePar : Par B C A C)
   by (apply (par_trans B C B X1 A C); finish; apply (par_trans B C A X3 B); finish).
-perm_apply (par_id C B A).
+cut (Col C B A); [Col|].
+apply (par_id C B A); finish.
 Qed.
 
 Lemma not_col_par_col_diff : forall A B C D E,
@@ -278,15 +279,14 @@ unfold is_orthocenter in *;spliter.
 assert_diffs.
 assert (Perp A B B C) by (apply per_perp;finish).
 assert (Par A H A B)
- by (apply l12_9 with B C;Cop).
+  by (apply l12_9 with B C;Cop).
 assert (Col A B H)
- by (perm_apply (par_id A B H)).
-
+  by (apply (par_id A B H); Par).
 assert (Par C H B C)
- by (apply l12_9 with A B;finish).
+  by (apply l12_9 with A B; finish).
 assert (Col B C H)
- by (perm_apply (par_id C B H)).
-apply l6_21 with A B C B;finish.
+  by (cut (Col C B H); [|apply (par_id C B H)]; finish).
+apply l6_21 with A B C B; finish.
 Qed.
 
 Lemma orthocenter_col :
@@ -307,7 +307,7 @@ assert (Perp A H B H)
 assert (Par A H A C)
   by (apply l12_9 with B H;finish).
 assert (Col H A C)
-  by (perm_apply (par_id A C H)).
+  by (cut (Col A C H); [|apply (par_id A C H)]; finish).
 assert (H=C).
 assert_diffs.
 apply l6_21 with B C A C;finish.

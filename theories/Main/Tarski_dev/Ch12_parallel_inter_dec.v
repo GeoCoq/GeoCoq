@@ -62,14 +62,13 @@ split.
 split; Col.
 Qed.
 
-Lemma parallel_uniqueness :
- forall A1 A2 B1 B2 C1 C2 P : Tpoint,
+Lemma parallel_uniqueness : forall A1 A2 B1 B2 C1 C2 P,
   Par A1 A2 B1 B2 -> Col P B1 B2 ->
   Par A1 A2 C1 C2 -> Col P C1 C2 ->
   Col C1 B1 B2 /\ Col C2 B1 B2.
 Proof.
-    apply tarski_s_euclid_implies_playfair.
-    unfold tarski_s_parallel_postulate; apply euclid.
+apply tarski_s_euclid_implies_playfair.
+unfold tarski_s_parallel_postulate; apply euclid.
 Qed.
 
 Lemma par_trans : forall A1 A2 B1 B2 C1 C2,
@@ -84,12 +83,11 @@ Qed.
 Lemma inter__npar : forall A1 A2 B1 B2 X,
   Inter A1 A2 B1 B2 X -> ~ Par A1 A2 B1 B2.
 Proof.
-    intros.
-    destruct H as [HA [[P []] []]].
-    induction 1.
-    apply (par_not_col A1 A2 B1 B2 X); Col.
-    spliter.
-    apply H0, (col3 B1 B2); Col.
+intros A1 A2 B1 B2 X H.
+destruct H as [HA [[P [HC1 HNC]] [HC2 HC3]]].
+intro HP; destruct HP as [HParS|[HNE1 [HNE2 [HC4 HC5]]]].
+- apply (par_not_col A1 A2 B1 B2 X); Col.
+- apply HNC, (col3 B1 B2); Col.
 Qed.
 
 Lemma l12_16 : forall A1 A2 B1 B2 C1 C2 X,
@@ -291,7 +289,10 @@ Lemma l12_21_a :
   TS A C B D ->
   (Par A B C D -> CongA B A C D C A).
 Proof.
-    apply postulates_in_euclidean_context; simpl; repeat (try (left; reflexivity); right).
+cut alternate_interior_angles_postulate;
+[unfold alternate_interior_angles_postulate; tauto|].
+apply playfair__alternate_interior.
+exact parallel_uniqueness.
 Qed.
 
 Lemma l12_21 : forall A B C D,
@@ -530,12 +531,83 @@ Proof.
     Col.
 Qed.
 
-Lemma cop_par_perp__perp : forall A B C D P Q, Par A B C D -> Perp A B P Q -> Coplanar C D P Q ->
+Lemma cop_par_perp__perp : forall A B C D P Q,
+  Par A B C D -> Perp A B P Q -> Coplanar C D P Q ->
   Perp C D P Q.
 Proof.
-    apply universal_posidonius_postulate__perpendicular_transversal_postulate.
-    apply playfair__universal_posidonius_postulate.
-    unfold playfair_s_postulate; apply parallel_uniqueness.
+intros A B C D P Q HPar1 HPerp1 HCop1.
+destruct HPar1 as [HParS|[HAB [HCD [HC1 HC2]]]];
+[|apply (perp_col2 A B); ColR].
+assert (HPar1 : Par A B C D) by Par.
+assert (HX : exists X, Inter A B P Q X); [|destruct HX as [X HX]].
+  {
+  assert (HNCD : ~ Col A B P \/ ~ Col A B Q)
+    by (exact (perp_not_col2 A B P Q HPerp1)).
+  destruct HNCD as [HNC|HNC];
+  destruct HPerp1 as [X [HAB [HPQ [HC1 [HC2 _]]]]]; exists X.
+  - split; [exact HPQ|split; [|split; Col]].
+    exists P; split; Col.
+  - split; [exact HPQ|split; [|split; Col]].
+    exists Q; split; Col.
+  }
+assert (HY : exists Y, Inter C D P Q Y)
+  by (apply (l12_16 A B C D P Q X HPar1); [Cop|exact HX]).
+destruct HY as [Y HY].
+assert (HXY : X <> Y).
+  {
+  intro; treat_equalities.
+  destruct HX as [_ [_ [HC1 _]]].
+  destruct HY as [_ [_ [HC2 _]]].
+  apply (par_not_col A B C D X HParS); Col.
+  }
+assert (HE : exists E, E <> X /\ Col A B E).
+  {
+  destruct (eq_dec_points A X) as [HAX|HAX]; [|exists A; Col].
+  destruct (eq_dec_points B X) as [HBX|HBX]; [|exists B; Col].
+  exfalso; treat_equalities; assert_diffs; auto.
+  }
+destruct HE as [E [HEX HABE]].
+destruct (ex_perp_cop X Y C E HXY) as [F [HPerp2 HCop2]].
+assert (HPar2 : Par A B C F).
+  {
+  assert (HCop3: Coplanar A B C X)
+    by (destruct HX as [_ [_ [HC _]]]; Cop).
+  assert (HCop4: Coplanar A B C Y).
+    {
+    destruct HY as [_ [_ [HC _]]].
+    apply (col_cop__cop A B C D); Cop.
+    assert_diffs; auto.
+    }
+  destruct (par_strict_not_cols A B C D HParS) as [HNC1 [HNC2 [HNC3 HNC4]]].
+  assert (HCop5 : Coplanar X Y A C)
+    by (apply (coplanar_pseudo_trans X Y A C A B C); Col; Cop).
+  assert (HCop6 : Coplanar X Y B C)
+    by (apply (coplanar_pseudo_trans X Y B C A B C); Col; Cop).
+  assert (HCop7 : Coplanar X Y A F).
+    {
+    cut (Coplanar F Y X A); [Cop|].
+    apply (col_cop__cop F Y X E A); [Cop|auto|].
+    destruct HX as [_ [_ [HC _]]]; ColR.
+    }
+  assert (HCop8 : Coplanar X Y B F).
+    {
+    cut (Coplanar F Y X B); [Cop|].
+    apply (col_cop__cop F Y X E B); [Cop|auto|].
+    destruct HX as [_ [_ [HC _]]]; ColR.
+    }
+  apply (l12_9 A B C F X Y); Perp; Cop.
+  destruct HX as [_ [_ [_ HC1]]].
+  destruct HY as [_ [_ [_ HC2]]].
+  apply (perp_col4 A B P Q);
+  [assert_diffs; auto|assert_diffs; auto|Col..|Perp].
+  }
+assert (HC : Col C C D /\ Col F C D)
+  by (apply (parallel_uniqueness A B C D C F C); Col).
+destruct HX as [_ [_ [HC1 HC2]]].
+destruct HY as [_ [_ [HC3 HC4]]].
+destruct HC as [_ HC5].
+apply (perp_col4 C F X Y);
+[assert_diffs; auto|assert_diffs; auto|Col|Col|ColR|ColR|Perp].
 Qed.
 
 Lemma cop4_par_perp2__par : forall A B C D E F G H,

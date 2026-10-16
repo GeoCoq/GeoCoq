@@ -900,196 +900,69 @@ apply(opp_same_square O E E' B OB B2 H22 H1).
 apply(opp_same_square O E E' C OC C2 H16 H2).
 Qed.
 
-
-
 Lemma PythRel_uniqueness : forall O E E' A B C1 C2,
- PythRel O E E' A B C1 ->
- PythRel O E E' A B C2 ->
- ((Ps O E C1 /\ Ps O E C2) \/ C1 = O)->
- C1 = C2.
-
+  PythRel O E E' A B C1 ->
+  PythRel O E E' A B C2 ->
+  ((Ps O E C1 /\ Ps O E C2) \/ C1 = O)->
+  C1 = C2.
 Proof.
-intros.
-unfold PythRel in *.
-spliter.
-unfold Ar2 in *.
-spliter.
-clean_duplicated_hyps;
-induction H2; induction H3.
-spliter.
-subst B.
-
-induction H4; induction H3.
-subst C1.
-subst C2.
-auto.
-subst A.
-induction H1.
-spliter.
-unfold Opp in H3.
-apply sum_comm in H3; auto.
-
-assert(HP:=sum_pos_pos O E E' C1 C2 O H1 H2 H3).
-assert(HQ:=O_not_positive O E).
-contradiction.
-
-
-subst C1.
-unfold Opp in H3.
-
-apply (sum_A_O_eq O E E') in H3; auto.
-
-subst C2.
-induction H1.
-spliter.
-unfold Opp in H2.
-assert(HP:=sum_pos_pos O E E' C1 A O H1 H3 H2).
-assert(HQ:=O_not_positive O E).
-contradiction.
-
-subst C1.
-unfold Opp in H2.
-apply(sum_O_B_eq O E E') in H2; auto.
-unfold Opp in *.
-eapply (sum_uniquenessA O E E' H A C1 C2 O); auto.
-
-
-ex_and H2 B'.
-spliter.
-subst B.
-apply perp_distinct in H2.
-tauto.
-ex_and H0 B'.
-spliter.
-subst B.
-apply perp_distinct in H0.
-tauto.
-
-ex_and H0 B1.
-ex_and H2 B2.
-assert(Cong O B1 O B2).
-apply cong_transitivity with O B; Cong.
-
-assert (O <> E).
-intro.
-subst E.
-apply H;Col.
-
-assert(HH:= perp2__col O B1 B2 O B H0 H2).
-
-assert(B1 = B2 \/ Midpoint O B1 B2).
-apply l7_20; Col.
-
-induction H13.
-subst B2.
-clean_duplicated_hyps.
-clean_trivial_hyps.
-
-assert(Cong O C2 O C1).
-apply cong_transitivity with A B1; Cong.
-
-assert(C1 = C2 \/ Midpoint O C1 C2).
-apply l7_20.
-ColR.
-Cong.
-induction H5.
-assumption.
-
-induction H1.
-
-unfold Ps in H1.
-unfold Ps in H2.
-spliter.
-assert(Out O C1 C2).
-apply (l6_7 _ _ E); Out.
-unfold Midpoint in H5.
-spliter.
-apply l6_4_1 in H5; auto.
-tauto.
-
-subst C1.
-unfold Midpoint in H5.
-spliter.
-apply cong_symmetry in H5.
-apply (cong_identity O C2 O);auto.
-
-induction(eq_dec_points A O).
-subst A.
-
-assert(Cong O C1 O C2).
-apply cong_transitivity with O B2; trivial.
-apply cong_transitivity with O B1; Cong.
-assert(C1 = C2 \/ Midpoint O C1 C2).
-apply l7_20; eCol.
-
-induction H15.
-assumption.
-
-induction H1.
-
-unfold Ps in H1.
-unfold Ps in H2.
-spliter.
-assert(Out O C1 C2).
-apply (l6_7 _ _ E); Out.
-unfold Midpoint in H15.
-spliter.
-apply l6_4_1 in H15; auto.
-tauto.
-
-subst C1.
-apply cong_symmetry in H5.
-apply (cong_identity O C2 O);auto.
-Cong.
-
-assert(Per A O B1).
-apply perp_in_per.
-apply perp_in_comm.
-apply perp_perp_in.
-
-apply (perp_col O B ).
-auto.
-Perp.
-ColR.
-
-unfold Per in H15.
-ex_and H15 B2'.
-assert(B2 = B2').
-apply (symmetric_point_uniqueness B1 O); auto.
-subst B2'.
-
-assert(Cong O C1 O C2).
-apply cong_transitivity with A B2; trivial.
-apply cong_transitivity with A B1; Cong.
-
-assert(C1 = C2 \/ Midpoint O C1 C2).
-apply l7_20.
-ColR.
-Cong.
-
-induction H18.
-assumption.
-
-induction H1.
-spliter.
-
-unfold Ps in H1.
-unfold Ps in H19.
-assert(Out O C1 C2).
-apply (l6_7 _ _ E); Out.
-unfold Midpoint in H18.
-spliter.
-apply l6_4_1 in H18; auto.
-tauto.
-
-subst C1.
-apply cong_symmetry in H17.
-apply (cong_identity O C2 O);auto.
+intros O E E' A B C1 C2 HP1 HP2 HE3.
+destruct HP1 as [HAr1 HE1].
+destruct HP2 as [HAr2 HE2].
+destruct HE1 as [[E1 HE1]|HE1]; destruct HE2 as [[E2 HE2]|HE2]; treat_equalities.
+- clear E2; destruct HE1 as [E1|HOpp1];
+  destruct HE2 as [E2|HOpp2]; treat_equalities; [easy|..].
+  + destruct HE3 as [[HPs1 HPs2]|HE]; treat_equalities.
+    * apply sum_comm in HOpp2; [|unfold Ar2 in *; spliter; easy].
+      assert(HP := sum_pos_pos O E E' A C2 O HPs1 HPs2 HOpp2).
+      assert(HQ := O_not_positive O E); easy.
+    * apply (sum_A_O_eq A E E') in HOpp2; [|unfold Ar2 in *; spliter]; easy.
+  + destruct HE3 as [[HPs1 HPs2]|HE]; treat_equalities.
+    * assert(HP := sum_pos_pos O E E' C1 A O HPs1 HPs2 HOpp1).
+      assert(HQ := O_not_positive O E); easy.
+    * apply(sum_O_B_eq C1 E E') in HOpp1; [|unfold Ar2 in *; spliter]; easy.
+  + assert (HNC : ~ Col O E E') by (unfold Ar2 in *; spliter; Col).
+    eapply (sum_uniquenessA O E E' HNC A C1 C2 O); easy.
+- destruct HE2 as [B' HE2]; spliter; assert_diffs; easy.
+- destruct HE1 as [B' HE1]; spliter; assert_diffs; easy.
+- destruct HE1 as [B1 HE1]; destruct HE2 as [B2 HE2].
+  assert(HC1 : Cong O B1 O B2)
+    by (spliter; apply cong_transitivity with O B; Cong).
+  assert (HOE : O <> E) by (intro; unfold Ar2 in *; spliter; treat_equalities; Col).
+  destruct HE1 as [HPerp1 HE1]; destruct HE2 as [HPerp2 HE2].
+  assert(HH := perp2__col O B1 B2 O B HPerp1 HPerp2).
+  assert(HE4 : B1 = B2 \/ Midpoint O B1 B2) by (apply l7_20; Col).
+  destruct HE4 as [HE4|HMid1].
+  + assert(HC2 : Cong O C2 O C1)
+      by (treat_equalities; spliter; apply cong_transitivity with A B1; Cong).
+    assert(HE5 : C1 = C2 \/ Midpoint O C1 C2)
+      by (apply l7_20 ; [unfold Ar2 in *; spliter; ColR|Cong]).
+    destruct HE5 as [HE5|HMid1]; [easy|].
+    destruct HE3 as [[HPs1 HPs2]|HE3]; [|treat_equalities; easy].
+    assert (HOut : Out O C1 C2) by (apply (l6_7 _ _ E); Out).
+    destruct HMid1 as [HB HC3].
+    apply l6_4_1 in HB; easy.
+  + assert(HE4 : C1 = C2 \/ Midpoint O C1 C2).
+      {
+      apply l7_20; [unfold Ar2 in *; spliter; ColR|].
+      destruct (eq_dec_points A O) as [HAO|HAO].
+      - treat_equalities; spliter; CongR.
+      - assert (HPer : Per A O B1).
+          {
+          apply perp_in_per, perp_in_comm, perp_perp_in.
+          apply (perp_col O B); [easy|Perp|unfold Ar2 in *; spliter; ColR].
+          }
+        destruct HPer as [B2' [HMid2 HC2]].
+        assert (HE: B2 = B2') by (apply (symmetric_point_uniqueness B1 O); auto).
+        treat_equalities.
+        spliter; CongR.
+      }
+      destruct HE4 as [|HMid2]; [easy|].
+      destruct HE3 as [[HPs1 HPs2]|HE]; [|treat_equalities; easy].
+      assert(HOut : Out O C1 C2) by (apply (l6_7 _ _ E); Out).
+      apply l6_4_1 in HOut.
+      destruct HOut as [_ HNB].
+      exfalso; apply HNB; Between.
 Qed.
 
-
-
 End PythagoreanFun.
-
-
-

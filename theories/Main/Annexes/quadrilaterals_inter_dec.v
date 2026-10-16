@@ -11,14 +11,14 @@ Ltac image A B P P':=
 
 Ltac perp A B C X :=
  match goal with
-   | H:(~Col A B C) |- _ =>
+   | H : ~ Col A B C |- _ =>
     let T:= fresh in assert (T:= l8_18_existence A B C H);
     ex_and T X
  end.
 
 Ltac parallel A B C D P :=
  match goal with
-   | H:(A <> B) |- _ =>
+   | H: A <> B |- _ =>
     let T := fresh in assert(T:= parallel_existence A B P H);
     ex_and T C
  end.
@@ -39,19 +39,19 @@ repeat
 Ltac clean_trivial_hyps :=
   repeat
   match goal with
-   | H:(Cong ?X1 ?X1 ?X2 ?X2) |- _ => clear H
-   | H:(Cong ?X1 ?X2 ?X2 ?X1) |- _ => clear H
-   | H:(Cong ?X1 ?X2 ?X1 ?X2) |- _ => clear H
-   | H:(Bet ?X1 ?X1 ?X2) |- _ => clear H
-   | H:(Bet ?X2 ?X1 ?X1) |- _ => clear H
-   | H:(Col ?X1 ?X1 ?X2) |- _ => clear H
-   | H:(Col ?X2 ?X1 ?X1) |- _ => clear H
-   | H:(Col ?X1 ?X2 ?X1) |- _ => clear H
-   | H:(Par ?X1 ?X2 ?X1 ?X2) |- _ => clear H
-   | H:(Par ?X1 ?X2 ?X2 ?X1) |- _ => clear H
-   | H:(Per ?X1 ?X2 ?X2)     |- _ => clear H
-   | H:(Per ?X1 ?X1 ?X2)     |- _ => clear H
-   | H:(Midpoint ?X1 ?X1 ?X1) |- _ => clear H
+   | H : Cong ?X1 ?X1 ?X2 ?X2 |- _ => clear H
+   | H : Cong ?X1 ?X2 ?X2 ?X1 |- _ => clear H
+   | H : Cong ?X1 ?X2 ?X1 ?X2 |- _ => clear H
+   | H : Bet ?X1 ?X1 ?X2      |- _ => clear H
+   | H : Bet ?X2 ?X1 ?X1      |- _ => clear H
+   | H : Col ?X1 ?X1 ?X2      |- _ => clear H
+   | H : Col ?X2 ?X1 ?X1      |- _ => clear H
+   | H : Col ?X1 ?X2 ?X1      |- _ => clear H
+   | H : Par ?X1 ?X2 ?X1 ?X2  |- _ => clear H
+   | H : Par ?X1 ?X2 ?X2 ?X1  |- _ => clear H
+   | H : Per ?X1 ?X2 ?X2      |- _ => clear H
+   | H : Per ?X1 ?X1 ?X2      |- _ => clear H
+   | H : Midpoint ?X1 ?X1 ?X1 |- _ => clear H
 end.
 
 Ltac show_distinct2 := unfold not;intro;treat_equalities; try (solve [intuition]).
@@ -82,76 +82,46 @@ Ltac sfinish := spliter; repeat match goal with
  | |- _ => try assumption
 end.
 
-Ltac clean_reap_hyps :=
-  clean_duplicated_hyps;
-  repeat
+Ltac clean_reap_hyps_new_quad :=
   match goal with
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?B ?C ?D ?A |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?C ?D ?A ?B |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?D ?A ?B ?C |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?D ?C ?B ?A |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?C ?B ?A ?D |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?B ?A ?D ?C |- _ => clear H2
-   | H:(Parallelogram ?A ?B ?C ?D), H2 : Parallelogram ?A ?D ?C ?B |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?A ?B ?D ?C |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?C ?D ?A ?B |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?C ?D ?B ?A |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?D ?C ?B ?A |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?D ?C ?A ?B |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?B ?A ?C ?D |- _ => clear H2
-   | H:(Par ?A ?B ?C ?D), H2 : Par ?B ?A ?D ?C |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?A ?B ?D ?C |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?C ?D ?A ?B |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?C ?D ?B ?A |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?D ?C ?B ?A |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?D ?C ?A ?B |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?B ?A ?C ?D |- _ => clear H2
-   | H:(Par_strict ?A ?B ?C ?D), H2 : Par_strict ?B ?A ?D ?C |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?A ?B ?D ?C |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?C ?D ?A ?B |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?C ?D ?B ?A |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?D ?C ?B ?A |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?D ?C ?A ?B |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?B ?A ?C ?D |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?B ?A ?D ?C |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?A ?B ?D ?C |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?C ?D ?A ?B |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?C ?D ?B ?A |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?D ?C ?B ?A |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?D ?C ?A ?B |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?B ?A ?C ?D |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?B ?A ?D ?C |- _ => clear H2
-   | H:(Per ?A ?B ?C), H2 : Per ?C ?B ?A |- _ => clear H2
-   | H:(Midpoint ?A ?B ?C), H2 : Midpoint ?A ?C ?B |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : (~Col ?B ?A ?C) |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : (~Col ?B ?C ?A) |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : (~Col ?C ?B ?A) |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : (~Col ?C ?A ?B) |- _ => clear H2
-   | H:(~Col ?A ?B ?C), H2 : (~Col ?A ?C ?B) |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?A ?C |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?C ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?B ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?A ?B |- _ => clear H2
-   | H:(Bet ?A ?B ?C), H2 : Bet ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?D ?C |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?C ?D |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?D ?C |- _ => clear H2
-   | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
-end.
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?B ?C ?D ?A |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?C ?D ?A ?B |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?D ?A ?B ?C |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?D ?C ?B ?A |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?C ?B ?A ?D |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?B ?A ?D ?C |- _ => clear H2
+  | H : Parallelogram ?A ?B ?C ?D, H2 : Parallelogram ?A ?D ?C ?B |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?A ?B ?D ?C           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?C ?D ?A ?B           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?C ?D ?B ?A           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?D ?C ?B ?A           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?D ?C ?A ?B           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?B ?A ?C ?D           |- _ => clear H2
+  | H : Par ?A ?B ?C ?D,           H2 : Par ?B ?A ?D ?C           |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?A ?B ?D ?C    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?C ?D ?A ?B    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?C ?D ?B ?A    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?D ?C ?B ?A    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?D ?C ?A ?B    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?B ?A ?C ?D    |- _ => clear H2
+  | H : Par_strict ?A ?B ?C ?D,    H2 : Par_strict ?B ?A ?D ?C    |- _ => clear H2
+  | H : ~ Col ?A ?B ?C,            H2 : ~ Col ?B ?A ?C            |- _ => clear H2
+  | H : ~ Col ?A ?B ?C,            H2 : ~ Col ?B ?C ?A            |- _ => clear H2
+  | H : ~ Col ?A ?B ?C,            H2 : ~ Col ?C ?B ?A            |- _ => clear H2
+  | H : ~ Col ?A ?B ?C,            H2 : ~ Col ?C ?A ?B            |- _ => clear H2
+  | H : ~ Col ?A ?B ?C,            H2 : ~ Col ?A ?C ?B            |- _ => clear H2
+  end.
 
-Ltac clean := clean_trivial_hyps;clean_reap_hyps.
+Ltac clean_reap_hyps_step_quad := first [clean_reap_hyps_step_ch09|clean_reap_hyps_new_quad].
+
+Ltac clean_reap_hyps := clean_duplicated_hyps; repeat clean_reap_hyps_step_quad.
 
 Ltac smart_subst X := subst X;clean.
 
 Ltac treat_equalities_aux :=
   repeat
   match goal with
-   | H:(?X1 = ?X2) |- _ => smart_subst X2
+   | H: ?X1 = ?X2 |- _ => smart_subst X2
 end.
 
 Ltac tag_hyps :=
@@ -170,27 +140,6 @@ Ltac tag_hyps :=
     | H : Par ?A ?B ?C ?D |- _ => apply Par_Par_tagged in H
     | H : Parallelogram ?A ?B ?C ?D |- _ => apply Plg_Plg_tagged in H
   end.
-
-Ltac permutation_intro_in_goal :=
- match goal with
- | |- Par ?A ?B ?C ?D => apply Par_cases
- | |- Par_strict ?A ?B ?C ?D => apply Par_strict_cases
- | |- Perp ?A ?B ?C ?D => apply Perp_cases
- | |- Perp_at ?X ?A ?B ?C ?D => apply Perp_in_cases
- | |- Per ?A ?B ?C => apply Per_cases
- | |- Midpoint ?A ?B ?C => apply Mid_cases
- | |- ~ Col ?A ?B ?C => apply NCol_cases
- | |- Col ?A ?B ?C => apply Col_cases
- | |- Bet ?A ?B ?C => apply Bet_cases
- | |- Cong ?A ?B ?C ?D => apply Cong_cases
- | |- Out ?A ?B ?C => apply Out_cases
- | |- Le ?A ?B ?C ?D => apply Le_cases
- | |- Lt ?A ?B ?C ?D => apply Lt_cases
- end.
-
-Ltac perm_apply t :=
- permutation_intro_in_goal;
- try_or ltac:(apply t;solve [finish]).
 
 Ltac assert_ncols :=
 repeat
@@ -2211,211 +2160,24 @@ Ltac diag_plg_intersection M A B C D H :=
 Tactic Notation "Name" ident(M) "the" "intersection" "of" "the" "diagonals" "(" ident(A) ident(C) ")" "and" "(" ident(B) ident(D) ")" "of" "the" "parallelogram" ident(H) :=
  diag_plg_intersection M A B C D H.
 
+Ltac assert_diffs_new_quad :=
+  match goal with
+  | H : Inter ?A ?B ?C ?D ?X             |- _ => let T := fresh in
+                                                 not_exist_hyp2 A B C D;
+                                                 assert (T := inter_distincts A B C D X H);
+                                                 decompose [and] T; clear T
+  | H : Parallelogram_strict ?A ?B ?C ?D |- _ => let T := fresh in
+                                                 not_exist_hyp6 A B B C C D D A A C B D;
+                                                 assert (T := plgs_diff A B C D H);
+                                                 decompose [and] T; clear T
+  end.
+
+Ltac assert_diffs_step_quad :=
+  first [assert_diffs_step_ch12|assert_diffs_new_suma|assert_diffs_new_quad].
+
 Ltac assert_diffs :=
-repeat
- match goal with
-      | H:(~Col ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp3 X1 X2 X1 X3 X2 X3;
-      assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps 
-
-      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp2 X1 X2 X2 X3;
-      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
-
-      | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff_2 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?C <> ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_3 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?D <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
-
-      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
-      | H:Le ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= le_diff A B C D (swap_diff B A H2) H);clean_reap_hyps
-      | H:Lt ?A ?B ?C ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= lt_diff A B C D H);clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B I A);
-       assert (T:= midpoint_distinct_1 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?B<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B I A);
-       assert (T:= midpoint_distinct_1 I A B (swap_diff B A H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?I<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B A B);
-       assert (T:= midpoint_distinct_2 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?A<>?I |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B A B);
-       assert (T:= midpoint_distinct_2 I A B (swap_diff A I H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?I<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp2 I A A B);
-       assert (T:= midpoint_distinct_3 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?B<>?I |- _ =>
-      let T:= fresh in (not_exist_hyp2 I A A B);
-       assert (T:= midpoint_distinct_3 I A B (swap_diff B I H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Per ?A ?B ?C, H2 : ?A<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct A B C H H2); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?B<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct A B C H (swap_diff B A H2)); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?B<>?C |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct_1 A B C H H2); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?C<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct_1 A B C H (swap_diff C B H2)); clean_reap_hyps
-
-      | H:Perp ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_distinct A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp_at ?X ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_in_distinct X A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Out ?A ?B ?C |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B A C);
-       assert (T:= out_distinct A B C H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:TS ?A ?B ?C ?D |- _ =>
-      let h := fresh in
-      not_exist_hyp6 A B A C A D B C B D C D;
-      assert (h := ts_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
-      | H:OS ?A ?B ?C ?D |- _ =>
-      let h := fresh in
-      not_exist_hyp5 A B A C A D B C B D;
-      assert (h := os_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
-      | H:~ Coplanar ?A ?B ?C ?D |- _ =>
-      let h := fresh in
-      not_exist_hyp6 A B A C A D B C B D C D;
-      assert (h := ncop_distincts A B C D H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= conga_diff1 A B C A' B' C' H);clean_reap_hyps
-      | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
-      let T:= fresh in (not_exist_hyp_comm B C);
-        assert (T:= conga_diff2 A B C A' B' C' H);clean_reap_hyps
-      | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A' B');
-        assert (T:= conga_diff45 A B C A' B' C' H);clean_reap_hyps
-      | H:CongA ?A ?B ?C ?A' ?B' ?C' |- _ =>
-      let T:= fresh in (not_exist_hyp_comm B' C');
-        assert (T:= conga_diff56 A B C A' B' C' H);clean_reap_hyps
-
-      | H:(InAngle ?P ?A ?B ?C) |- _ =>
-      let h := fresh in
-      not_exist_hyp3 A B C B P B;
-      assert (h := inangle_distincts A B C P H);decompose [and] h;clear h;clean_reap_hyps
-      | H:LeA ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B B C D E E F;
-      assert (h := lea_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
-      | H:LtA ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B B C D E E F;
-      assert (h := lta_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
-      | H:(Acute ?A ?B ?C) |- _ =>
-      let h := fresh in
-      not_exist_hyp2 A B B C;
-      assert (h := acute_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
-      | H:(Obtuse ?A ?B ?C) |- _ =>
-      let h := fresh in
-      not_exist_hyp2 A B B C;
-      assert (h := obtuse_distincts A B C H);decompose [and] h;clear h;clean_reap_hyps
-      | H:SuppA ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B B C D E E F;
-      assert (h := suppa_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:(Orth_at ?X ?A ?B ?C ?U ?V) |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B A C B C U V;
-      assert (h := orth_at_distincts A B C U V X H);decompose [and] h;clear h;clean_reap_hyps
-      | H:(Orth ?A ?B ?C ?U ?V) |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B A C B C U V;
-      assert (h := orth_distincts A B C U V H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:Inter ?A ?B ?C ?D ?X |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= inter_distincts A B C D X H);decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Par_strict ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp6 A B A C A D B C B D C D);
-       assert (T:= par_strict_distinct A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Par ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= par_distincts A B C D H);decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_distinct A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp_at ?X ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_in_distinct X A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Out ?A ?B ?C |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B A C);
-       assert (T:= out_distinct A B C H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:SumA ?A ?B ?C ?D ?E ?F ?G ?I ?J |- _ =>
-      let h := fresh in
-      not_exist_hyp6 A B B C D E E F G I I J;
-      assert (h := suma_distincts A B C D E F G I J H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:TriSumA ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp5 A B B C A C D E E F;
-      assert (h := trisuma_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:SAMS ?A ?B ?C ?D ?E ?F |- _ =>
-      let h := fresh in
-      not_exist_hyp4 A B B C D E E F;
-      assert (h := sams_distincts A B C D E F H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:Parallelogram_strict ?A ?B ?C ?D |- _ =>
-      let T := fresh in
-      not_exist_hyp6 A B B C C D D A A C B D;
-       assert (T:= plgs_diff A B C D H);decompose [and] T;clear T;clean_reap_hyps
- end.
+  try (assert_diffs_step_quad; clean_reap_hyps;
+       repeat (assert_diffs_step_quad; clean_new_diffs)).
 
 Ltac ColR :=
  let tpoint := constr:(Tpoint) in
@@ -3085,80 +2847,20 @@ Context `{TE:Tarski_euclidean}.
 
 Lemma par_cong_cong : forall A B C D, Par A B C D -> Cong A B C D -> Cong A C B D \/ Cong A D B C.
 Proof.
-intros.
-
-induction(eq_dec_points A B).
-subst B.
-apply cong_symmetry in H0.
-apply cong_identity in H0.
-subst D.
-left.
-Cong.
-
-induction(eq_dec_points A D).
-subst D.
-
-assert(B = C \/ Midpoint A B C).
-eapply l7_20.
-unfold Par in H.
-induction H.
-apply False_ind.
-unfold Par_strict in H.
-spliter.
-apply H2.
-exists A.
-split; Col.
-spliter.
-Col.
-Cong.
-induction H2.
-subst C.
-left.
-Cong.
-unfold Midpoint in H2.
-spliter.
-left.
-Cong.
-
-assert(HH:=par_cong_mid A B C D H H0).
-ex_and HH M.
-induction H3.
-spliter.
-right.
-
-assert(HH:=mid_par_cong A B C D M H1 H2 H3 H4).
-spliter.
-Cong.
-
-induction(eq_dec_points A C).
-subst C.
-assert(B = D \/ Midpoint A B D).
-eapply l7_20.
-unfold Par in H.
-induction H.
-apply False_ind.
-unfold Par_strict in H.
-spliter.
-apply H5.
-exists A.
-split; Col.
-spliter.
-Col.
-Cong.
-induction H4.
-subst D.
-right.
-Cong.
-unfold Midpoint in H4.
-spliter.
-right.
-Cong.
-
-left.
-spliter.
-assert(HH:=mid_par_cong A B D C M H1 H4 H3 H5).
-spliter.
-Cong.
+intros A B C D HP1 HC1.
+elim (eq_dec_points A B); intro HAB; [treat_equalities; Cong|].
+elim (eq_dec_points A D); intro HAD; [left|].
+- treat_equalities.
+  assert (HE1 : B = C \/ Midpoint A B C) by (apply l7_20; Cong; Col).
+  destruct HP1 as [HF|HE2]; [exfalso; apply HF; exists B; Col|].
+  destruct HE2 as [_ [HCA _]].
+  destruct HE1 as [|HMid]; [treat_equalities; Cong|].
+  unfold Midpoint in *; spliter; Cong.
+- destruct (par_cong_mid A B C D HP1 HC1) as [M HM].
+  destruct HM as [[HMid1 HMid2]|[HMid1 HMid2]]; [right|].
+  + destruct (mid_par_cong A B C D M HAB HAD HMid1 HMid2) as [_ [HC2 _]]; Cong.
+  + elim (eq_dec_points A C); intro HAC; [treat_equalities; Cong|].
+    destruct (mid_par_cong A B D C M HAB HAC HMid1 HMid2) as [_ [HC2 _]]; Cong.
 Qed.
 
 Lemma col_cong_cong : forall A B C D, Col A B C -> Col A B D -> Cong A B C D -> Cong A C B D \/ Cong A D B C.
@@ -4583,7 +4285,7 @@ apply Plg_perm in H4.
 apply Plg_perm in H5.
 assert_diffs.
 spliter.
-apply plg_not_comm in H8.
+destruct (plg_not_comm D B C A); auto.
 intuition.
 auto.
 apply Plg_perm in H5.

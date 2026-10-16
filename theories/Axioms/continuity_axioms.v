@@ -177,7 +177,6 @@ Definition pres_cong {Tm: Tarski_neutral_dimensionless}
 
 Definition extension {Tm: Tarski_neutral_dimensionless} f := inj f /\ pres_bet f /\ pres_cong f.
 
-
 Definition completeness_for_planes := forall (Tm: Tarski_neutral_dimensionless)
   (Tm2 : Tarski_neutral_dimensionless_with_decidable_point_equality Tm)
   (M : Tarski_2D Tm2)
@@ -215,7 +214,6 @@ Definition pres_cong_line {Tm: Tarski_neutral_dimensionless}
 
 Definition line_extension {Tm: Tarski_neutral_dimensionless} f P Q :=
   P <> Q /\ inj_line f P Q /\ pres_bet_line f P Q /\ pres_cong_line f P Q.
-
 
 Definition line_completeness := forall (Tm: Tarski_neutral_dimensionless)
   (Tm2 : Tarski_neutral_dimensionless_with_decidable_point_equality Tm)

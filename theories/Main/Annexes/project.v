@@ -2105,29 +2105,18 @@ assumption.
 Qed.
 
 Lemma projp_id : forall P P' Q' A B, Projp P P' A B -> Projp P Q' A B -> P' = Q'.
-intros.
-unfold Projp in *.
-spliter.
-induction H1; induction H2.
-spliter.
-apply (l8_18_uniqueness A B P); Col.
-apply perp_not_col2 in H4.
-induction H4.
-assumption.
-contradiction.
-spliter.
-subst P'.
-apply perp_not_col2 in H3.
-
-induction H3; contradiction.
-spliter.
-subst Q'.
-apply perp_not_col2 in H4.
-induction H4; contradiction.
-spliter.
-subst P'.
-subst Q'.
-auto.
+Proof.
+intros P P' Q' A B HP1 HP2.
+destruct HP1 as [HAB HE1]; destruct HP2 as [_ HE2].
+destruct HE1 as [[HC1 HP1]|[HC1 HE1]]; destruct HE2 as [[HC2 HP2]|[HC2 HE2]].
+- apply (l8_18_uniqueness A B P); [|Col..].
+  apply perp_not_col2 in HP1; destruct HP1 as [|HNC]; [Col|].
+  intro; apply HNC; ColR.
+- treat_equalities; apply perp_not_col2 in HP1.
+  destruct HP1 as [HF|HF]; exfalso; apply HF; Col.
+- treat_equalities; apply perp_not_col2 in HP2.
+  destruct HP2 as [HF|HF]; exfalso; apply HF; Col.
+- treat_equalities; easy.
 Qed.
 
 Lemma projp_preserves_bet :

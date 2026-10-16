@@ -427,7 +427,7 @@ Qed.
 Lemma reflect__coplanar : forall A B C D,
   Reflect A B C D -> Coplanar A B C D.
 Proof.
-intros A B C D [[_ HR]|[Heq]].
+intros A B C D H; destruct H as [[_ HR]|[Heq]].
   apply reflectl__coplanar, HR.
 subst; apply coplanar_perm_16, coplanar_trivial.
 Qed.
@@ -461,28 +461,28 @@ Qed.
 Lemma plg__coplanar : forall A B C D,
   Plg A B C D -> Coplanar A B C D.
 Proof.
-  intros A B C D [H [M [[H1 _] [H2 _]]]].
+  intros A B C D H; destruct H as [H [M [[H1 _] [H2 _]]]].
   exists M; right; left; split; Col.
 Qed.
 
 Lemma plgs__coplanar : forall A B C D,
   Parallelogram_strict A B C D -> Coplanar A B C D.
 Proof.
-  intros A B C D [_ [HPar _]].
+  intros A B C D H; destruct H as [_ [HPar _]].
   apply par__coplanar, HPar.
 Qed.
 
 Lemma plgf__coplanar : forall A B C D,
   Parallelogram_flat A B C D -> Coplanar A B C D.
 Proof.
-  intros A B C D [HCol _].
+  intros A B C D H; destruct H as [HCol _].
   apply col__coplanar, HCol.
 Qed.
 
 Lemma parallelogram__coplanar : forall A B C D,
   Parallelogram A B C D -> Coplanar A B C D.
 Proof.
-  intros A B C D [Hs|Hf].
+  intros A B C D H; destruct H as [Hs|Hf].
     apply plgs__coplanar, Hs.
     apply plgf__coplanar, Hf.
 Qed.

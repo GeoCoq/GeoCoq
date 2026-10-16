@@ -5,11 +5,11 @@ Require Import GeoCoq.Algebraic.Counter_models.nD.stability_properties.
 
 Section pasch_ndc.
 
-Variable n : nat.
-
-Context `{ITn : independent_Tarski_neutral_dimensionless}.
-Context {ES : Eq_stability(ITn)}.
-Context {ITnD : independent_Tarski_nD(S (S n))(ITn)}.
+Context {Pred : predicates}
+        {ITn  : independent_Tarski_neutral_dimensionless Pred}
+        {ES   : Eq_stability Pred ITn}
+        {Dim  : dimension}
+        {ITnD : independent_Tarski_nD Pred ITn (incr (incr Dim))}.
 
 Lemma addition_segments : forall A A' B B' C C',
   Cong A B A' B' -> Cong B C B' C'->
@@ -17,7 +17,7 @@ Lemma addition_segments : forall A A' B B' C C',
   Cong A C A' C'.
 Proof.
 intros A A' B B' C C' HC1 HC2 HB1 HB2.
-apply (point_equality_stability__cong_stability (S n) point_equality_stability).
+apply (point_equality_stability__cong_stability point_equality_stability).
 cut ((A = B -> ~ ~ Cong A C A' C') /\ (~ A = B -> ~ ~ Cong A C A' C'));
 [tauto|split; intro; [subst; apply g2_5 in HC1|apply g2_7_2 with B B'; auto]].
 assert (A' = B') by (apply HC1; auto); subst; auto.
@@ -29,11 +29,11 @@ Lemma g2_24 : forall A A' B B' C C' D D',
   Cong B D B' D'.
 Proof.
 intros A A' B B' C C' D D' ? ? ? ? HB1 HB2.
-apply (point_equality_stability__cong_stability (S n) point_equality_stability).
+apply (point_equality_stability__cong_stability point_equality_stability).
 assert (HC1 : Cong A C A' C') by (apply addition_segments with B B'; auto).
 cut ((A = C -> ~ ~ Cong B D B' D') /\ (~ A = C -> ~ ~ Cong B D B' D'));
 [tauto|split; intro HAC; [subst; apply g2_2, cong_identity in HC1; subst|]];
-[apply (bet_identity_aux n) in HB1; apply (bet_identity_aux n) in HB2;
+[apply bet_identity_aux in HB1; apply bet_identity_aux in HB2;
  intro HF; apply HB1; intro; apply HB2; intro; subst; auto|].
 destruct (segment_construction A C A C HAC) as [E [? HC2]].
 destruct (segment_construction A' C' A C) as [E' [? ?]];
@@ -63,66 +63,66 @@ split; intro HBD; [subst; tauto|].
 cut ((C = D -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
      (~ C = D -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
 split; intro HCD; [subst; intros [HF _]; apply HF|];
-[apply g2_6_1; intro; subst; apply (bet_identity_aux n) in HB1; auto|].
+[apply g2_6_1; intro; subst; apply bet_identity_aux in HB1; auto|].
 assert (HAC : A <> C)
-  by (intro; subst; apply (bet_identity_aux n) in HB1; auto).
+  by (intro; subst; apply bet_identity_aux in HB1; auto).
 assert (HAD : A <> D)
-  by (intro; subst; apply (bet_identity_aux n) in HB2; auto).
+  by (intro; subst; apply bet_identity_aux in HB2; auto).
 destruct (segment_construction A D C D HAD) as [C' [HB3 HC1]].
 assert (HAC' : A <> C')
-  by (intro; subst; apply (bet_identity_aux n) in HB3; auto).
+  by (intro; subst; apply bet_identity_aux in HB3; auto).
 assert (HB4 : Bet B D C').
   {
   apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
   }
 assert (HBC' : B <> C')
-  by (intro; subst; apply (bet_identity_aux n) in HB4; auto).
+  by (intro; subst; apply bet_identity_aux in HB4; auto).
 assert (HDC' : D <> C')
   by (intro; subst; apply HCD, (g2_5 _ _ _ _ HC1); auto).
 destruct (segment_construction A C C D HAC) as [D' [HB5 HC2]].
 assert (HAD' : A <> D')
-  by (intro; subst; apply (bet_identity_aux n) in HB5; auto).
+  by (intro; subst; apply bet_identity_aux in HB5; auto).
 assert (HB6 : Bet B C D').
   {
   apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
   }
 assert (HBD' : B <> D')
-  by (intro; subst; apply (bet_identity_aux n) in HB6; auto).
+  by (intro; subst; apply bet_identity_aux in HB6; auto).
 assert (HCD' : C <> D')
   by (intro; subst; apply HCD, (g2_5 _ _ _ _ HC2); auto).
 destruct (segment_construction A C' C B HAC') as [B' [HB7 HC3]].
 assert (HAB' : A <> B')
-  by (intro; subst; apply (bet_identity_aux n) in HB7; auto).
+  by (intro; subst; apply bet_identity_aux in HB7; auto).
 assert (HB8 : Bet B C' B').
   {
   apply bet_outer_trans with D; auto.
   apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
   }
 assert (HBB' : B <> B')
-  by (intro; subst; apply (bet_identity_aux n) in HB8; auto).
+  by (intro; subst; apply bet_identity_aux in HB8; auto).
 assert (HDB' : D <> B').
   {
   intro; subst; assert (HF : Bet B' C' B')
     by (apply bet_inner_transitivity with A; apply bet_symmetry; auto).
-  apply (bet_identity_aux n) in HF; auto.
+  apply bet_identity_aux in HF; auto.
   }
 assert (HC'B' : C' <> B')
   by (intro; subst; apply HBC, eq_sym, (g2_5 _ _ _ _ HC3); auto).
 destruct (segment_construction A D' D B HAD') as [B'' [HB9 HC4]].
 assert (HAB'' : A <> B'')
-  by (intro; subst; apply (bet_identity_aux n) in HB9; auto).
+  by (intro; subst; apply bet_identity_aux in HB9; auto).
 assert (HB10 : Bet B D' B'').
   {
   apply bet_outer_trans with C; auto.
   apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
   }
 assert (HBB'' : B <> B'')
-  by (intro; subst; apply (bet_identity_aux n) in HB10; auto).
+  by (intro; subst; apply bet_identity_aux in HB10; auto).
 assert (HCB' : C <> B'').
   {
   intro; subst; assert (HF : Bet B'' D' B'')
     by (apply bet_inner_transitivity with A; apply bet_symmetry; auto).
-  apply (bet_identity_aux n) in HF; auto.
+  apply bet_identity_aux in HF; auto.
   }
 assert (HD'B'' : D' <> B'')
   by (intro; subst; apply HBD, eq_sym, (g2_5 _ _ _ _ HC4); auto).
@@ -176,7 +176,7 @@ assert (HC : Col Tpoint Bet C D B' -> ~ (~ Bet A C D /\ ~ Bet A D C)).
       }
     assert (HF : Bet C B' C)
       by (apply bet_inner_transitivity with A; apply bet_symmetry; auto).
-    apply (bet_identity_aux n) in HF; auto.
+    apply bet_identity_aux in HF; auto.
     }
 
     {
@@ -270,12 +270,12 @@ destruct (inner_pasch A B C P Q) as [X []]; [auto..|]; [split; auto..|].
 assert (HAC : A <> C).
   {
   intro; subst; apply HNC; intros [_ [HF _]]; apply HF, g2_6_1; intro; subst.
-  apply (bet_identity_aux n) in HB1; auto.
+  apply bet_identity_aux in HB1; auto.
   }
 assert (HBC : B <> C).
   {
   intro; subst; apply HNC; intros [HF _]; apply HF, g2_6_1; intro; subst.
-  apply (bet_identity_aux n) in HB1; auto.
+  apply bet_identity_aux in HB1; auto.
   }
 exists X; split; split; try split; auto; intro; subst;
 [|apply HNC; intros [HF _]; apply HF;

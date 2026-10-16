@@ -122,20 +122,25 @@ show_distinct' A D.
 permutation_intro_in_hyps.
 assert (Par A D J G) by (apply (triangle_mid_par A D C G J H3 H14 H1)).
 show_distinct' B G.
-assert (Par G B A D)
-     by (perm_apply (par_col_par A D G J B)).
+assert (Par G B A D).
+  {
+  cut (Par A D G B); [Par|].
+  apply (par_col_par A D G J B); finish.
+  }
 show_distinct' B D.
 assert (Par B D I G) by (apply (triangle_mid_par B D C G I H104 H14 H0)).
 show_distinct' A G.
-assert (Par G A D B)
-     by (perm_apply (par_col_par B D G I A))...
+assert (Par G A D B).
+  {
+  cut (Par B D G A); [Par|].
+  apply (par_col_par B D G I A); finish.
+  }
 show_distinct' D G.
 assert (~ Col G A D)
      by (intro; search_contradiction).
-assert (Parallelogram G A D B)
+assert (HPara : Parallelogram G A D B)
      by (apply (par_2_plg G A D B); finish).
-Name Z the intersection of the diagonals (G D)
-     and (A B) of the parallelogram H17...
+destruct (plg_mid G A D B HPara) as [Z []].
 ColR.
 Qed.
 

@@ -2683,13 +2683,8 @@ contradiction.
 Qed.
 
 Lemma Rectangle_not_triv : forall A,
- ~ Rectangle A A A A.
-Proof.
-intros.
-unfold Rectangle.
-unfold Plg.
-intuition.
-Qed.
+  ~ Rectangle A A A A.
+Proof. intros A H; destruct H as [[[HF|HF] _] _]; apply HF; reflexivity. Qed.
 
 Lemma Rectangle_triv : forall A B,
  A<>B ->
@@ -2708,15 +2703,8 @@ tauto.
 Qed.
 
 Lemma Rectangle_not_triv_2 : forall A B,
- ~ Rectangle A B A B.
-Proof.
-intros.
-unfold Rectangle.
-intro.
-spliter.
-unfold Plg in H.
-intuition.
-Qed.
+  ~ Rectangle A B A B.
+Proof. intros A B H; destruct H as [[[HF|HF] _] _]; apply HF; reflexivity. Qed.
 
 Lemma Square_not_triv : forall A,
  ~ Square A A A A.

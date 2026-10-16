@@ -4,39 +4,34 @@ Section T4_1.
 
 Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma col_permutation_1 : forall A B C,Col A B C -> Col B C A.
+Lemma col_permutation_1 : forall A B C, Col A B C -> Col B C A.
 Proof.
-    unfold Col.
-    intros.
-    intuition.
+intros A B C HC; destruct HC as [HB|HC]; [right; right; Between|].
+destruct HC as [HB|HB]; [left|right; left]; Between.
 Qed.
 
 Lemma col_permutation_2 : forall A B C, Col A B C -> Col C A B.
 Proof.
-    unfold Col.
-    intros.
-    intuition.
+intros A B C HC; destruct HC as [HB|HC]; [right; left; apply HB|].
+destruct HC as [HB|HB]; [right; right|left]; Between.
 Qed.
 
 Lemma col_permutation_3 : forall A B C, Col A B C -> Col C B A.
 Proof.
-    unfold Col.
-    intros.
-    intuition auto with between.
+intros A B C HC; destruct HC as [HB|HC]; [left; Between|].
+destruct HC as [HB|HB]; [right; right|right; left]; Between.
 Qed.
 
 Lemma col_permutation_4 : forall A B C, Col A B C -> Col B A C.
 Proof.
-    unfold Col.
-    intros.
-    intuition auto with between.
+intros A B C HC; destruct HC as [HB|HC]; [right; right; Between|].
+destruct HC as [HB|HB]; [right; left|left]; Between.
 Qed.
 
 Lemma col_permutation_5 : forall A B C, Col A B C -> Col A C B.
 Proof.
-    unfold Col.
-    intros.
-    intuition auto with between.
+intros A B C HC; destruct HC as [HB|HC]; [right; left; Between|].
+destruct HC as [HB|HB]; [left|right; right]; Between.
 Qed.
 
 End T4_1.
@@ -108,46 +103,26 @@ Section T4_3.
 Context `{Tn:Tarski_neutral_dimensionless}.
 
 (** This lemma is used by tactics for trying several permutations. *)
-Lemma Col_cases :
- forall A B C,
- Col A B C \/ Col A C B \/ Col B A C \/
- Col B C A \/ Col C A B \/ Col C B A ->
- Col A B C.
-Proof.
-    intros.
-    decompose [or] H; Col.
-Qed.
+Lemma Col_cases : forall A B C,
+  Col A B C \/ Col A C B \/ Col B A C \/
+  Col B C A \/ Col C A B \/ Col C B A ->
+  Col A B C.
+Proof. intros A B C HCS; repeat (destruct HCS as [HC|HCS]; Col). Qed.
 
-Lemma Col_perm :
- forall A B C,
- Col A B C ->
- Col A B C /\ Col A C B /\ Col B A C /\
- Col B C A /\ Col C A B /\ Col C B A.
-Proof.
-    intros.
-    repeat split; Col.
-Qed.
+Lemma Col_perm : forall A B C,
+  Col A B C ->
+  Col A B C /\ Col A C B /\ Col B A C /\
+  Col B C A /\ Col C A B /\ Col C B A.
+Proof. intros A B C HC; repeat split; Col. Qed.
 
 Lemma col_trivial_1 : forall A B, Col A A B.
-Proof.
-    unfold Col.
-    intros.
-    Between.
-Qed.
+Proof. unfold Col; intros; Between. Qed.
 
 Lemma col_trivial_2 : forall A B, Col A B B.
-Proof.
-    unfold Col.
-    intros.
-    Between.
-Qed.
+Proof. unfold Col; intros; Between. Qed.
 
 Lemma col_trivial_3 : forall A B, Col A B A.
-Proof.
-    unfold Col.
-    intros.
-    right;Between.
-Qed.
+Proof. unfold Col; intros; Between. Qed.
 
 End T4_3.
 
@@ -161,10 +136,8 @@ Context `{TnEQD:Tarski_neutral_dimensionless_with_decidable_point_equality}.
 Lemma l4_13 : forall A B C A' B' C',
  Col A B C -> Cong_3 A B C A' B' C' -> Col A' B' C'.
 Proof.
-    unfold Col.
-    intros.
-    decompose [or] H;
-      eauto 6  using l4_6 with cong3.
+unfold Col; intros A B C A' B' C' HC.
+repeat (destruct HC as [HB|HC]; eauto 6  using l4_6 with cong3).
 Qed.
 
 Lemma l4_14 : forall A B C A' B',

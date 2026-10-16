@@ -10,15 +10,15 @@ From mathcomp Require Import tuple fintype bigop.
 
 Section altIT_to_IT.
 
-Variable n : nat.
-
-Context `{ITn : independent_Tarski_neutral_dimensionless}.
-Context {ES : Eq_stability(ITn)}.
-Context {ITnD : independent_Tarski_nD(S (S n))(ITn)}.
+Context {Pred : predicates}
+        {ITn  : independent_Tarski_neutral_dimensionless Pred}
+        {ES   : Eq_stability Pred ITn}
+        {Dim  : dimension}
+        {ITnD : independent_Tarski_nD Pred ITn (incr (incr Dim))}.
 
 Lemma cong_stability : forall A B C D, ~ ~ Cong A B C D -> Cong A B C D.
 Proof.
-exact (point_equality_stability__cong_stability (S n) point_equality_stability).
+exact (point_equality_stability__cong_stability point_equality_stability).
 Qed.
 
 Lemma bet_stability : forall A B C,
@@ -64,7 +64,7 @@ try (subst; apply HB, g2_6_1; assumption); destruct HF as [_ [_ HF]]; auto.
 Qed.
 
 Lemma ITbetween_identity : forall A B, ~ BetS A B A.
-Proof. intros A B [HAB [_ HABA]]; apply (bet_identity_aux n) in HABA; auto. Qed.
+Proof. intros A B [HAB [_ HABA]]; apply bet_identity_aux in HABA; auto. Qed.
 
 Lemma ITbetween_symmetry : forall A B C,
   BetS A B C -> BetS C B A.
@@ -86,7 +86,7 @@ Lemma ITinner_pasch : forall A B C P Q,
   exists X, BetS P X B /\ BetS Q X A.
 Proof.
 intros A B C P Q [? [? HB1]] [? [? HB2]] HNC.
-destruct (stronger_inner_pasch n A B C P Q) as [X []]; [..|exists X]; auto.
+destruct (stronger_inner_pasch A B C P Q) as [X []]; [..|exists X]; auto.
 intros HF; apply HNC; clear HNC; intros [HI1 [HI2 HI3]].
 apply HF; clear HF; split; [intro HB|split; intro HB];
 [apply HI3|apply HI2|apply HI1]; intros [HNE1 [HNE2 HF]]; apply HF;
@@ -108,12 +108,12 @@ assert (HC3 : Cong IPB IPC I IPC)
   by (rewrite 2?big_ltn // in HBC2; destruct HBC2 as [[HC _] _]; auto).
 assert (HAB : IPA <> IPB).
   {
-  intro HR; apply (two_points (S n)), cong_identity with IPA, g2_2.
+  intro HR; apply two_points, cong_identity with IPA, g2_2.
   rewrite -HR in HC1; apply g2_2, HC1.
   }
 assert (HAC : IPA <> IPC).
   {
-  intro HR; apply (two_points (S n)), cong_identity with IPA, g2_2.
+  intro HR; apply two_points, cong_identity with IPA, g2_2.
   rewrite -HR in HC2; apply g2_2, HC2.
   }
 assert (HBC : IPB <> IPC).
@@ -133,14 +133,14 @@ clear HT; intros [_ [_ HB1]].
   }
 
   {
-  assert (HOI := two_points (S n)).
+  assert (HOI := two_points).
   apply HBC, g2_8 with I O; auto;
   [apply bet_inner_transitivity with IPB; auto|
    apply cong_inner_transitivity with IPA I; apply g2_2; auto].
   }
 
   {
-  assert (HOI := two_points (S n)).
+  assert (HOI := two_points).
   apply HBC, g2_8 with I O; auto;
   [|apply cong_inner_transitivity with IPA I; apply g2_2; auto].
   apply bet_symmetry.

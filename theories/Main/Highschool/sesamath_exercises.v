@@ -567,7 +567,7 @@ treat_equalities.
 intuition.
 }
 assert (~ Col I M C)
-  by (intro;apply H14; ColR).
+  by (intro;apply H15; ColR).
 assert_diffs.
 assert(Midpoint K C I).
  (apply(triangle_par_mid C A I J K);finish).

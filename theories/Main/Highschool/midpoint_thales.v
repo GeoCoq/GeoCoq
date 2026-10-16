@@ -13,16 +13,22 @@ Lemma midpoint_thales : forall O A B C : Tpoint,
 Proof.
 intros.
 Name X the midpoint of C and A.
-assert (Par_strict O X B C)
- by perm_apply (triangle_mid_par_strict_cong_simp C B A O X).
+assert (Par_strict O X B C).
+  {
+  cut (Par_strict C B X O); [Par|].
+  apply (triangle_mid_par_strict_cong_simp C B A O X); finish.
+  }
 assert(Per O X A)
  by (exists C;split;finish).
 assert_diffs.
 assert_cols.
-assert(Hid2 : Perp O X C A)
- by perm_apply (col_per_perp O X A C).
+assert(Hid2 : Perp O X C A).
+  {
+  cut (Perp A C O X); [Perp|].
+  apply (col_per_perp O X A C); finish.
+  }
 assert (Perp B C C A).
- apply (cop_par_perp__perp O X B C C A);finish.
+ apply (cop_par_perp__perp O X B C C A); finish.
 apply perp_per_1;Perp.
 Qed.
 

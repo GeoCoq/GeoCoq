@@ -1,143 +1,55 @@
 Require Export GeoCoq.Main.Tarski_dev.Ch08_orthogonality.
 Require Export GeoCoq.Main.Annexes.coplanar.
 
-Ltac clean_reap_hyps :=
-  clean_duplicated_hyps;
-  repeat
+Ltac clean_reap_hyps_new_ch09 :=
   match goal with
-   | H:(Midpoint ?A ?B ?C), H2 : Midpoint ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?A ?C ?B |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?A ?C |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?B ?C ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?B ?A |- _ => clear H2
-   | H:(Col ?A ?B ?C), H2 : Col ?C ?A ?B |- _ => clear H2
-   | H:(Bet ?A ?B ?C), H2 : Bet ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?A ?B ?D ?C |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?C ?D ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?B ?A |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?D ?C ?A ?B |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?C ?D |- _ => clear H2
-   | H:(Cong ?A ?B ?C ?D), H2 : Cong ?B ?A ?D ?C |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?A ?B ?D ?C |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?C ?D ?A ?B |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?C ?D ?B ?A |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?D ?C ?B ?A |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?D ?C ?A ?B |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?B ?A ?C ?D |- _ => clear H2
-   | H:(Perp ?A ?B ?C ?D), H2 : Perp ?B ?A ?D ?C |- _ => clear H2
-   | H:(?A<>?B), H2 : (?B<>?A) |- _ => clear H2
-   | H:(Per ?A ?D ?C), H2 : (Per ?C ?D ?A) |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?A ?B ?D ?C |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?C ?D ?A ?B |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?C ?D ?B ?A |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?D ?C ?B ?A |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?D ?C ?A ?B |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?B ?A ?C ?D |- _ => clear H2
-   | H:(Perp_at ?X ?A ?B ?C ?D), H2 : Perp_at ?X ?B ?A ?D ?C |- _ => clear H2
-end.
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?A ?B ?D ?C       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?C ?D ?A ?B       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?C ?D ?B ?A       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?D ?C ?B ?A       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?D ?C ?A ?B       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?B ?A ?C ?D       |- _ => clear H2
+  | H : Perp ?A ?B ?C ?D,       H2 : Perp ?B ?A ?D ?C       |- _ => clear H2
+  | H : Per ?A ?D ?C,           H2 : Per ?C ?D ?A           |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?A ?B ?D ?C |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?C ?D ?A ?B |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?C ?D ?B ?A |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?D ?C ?B ?A |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?D ?C ?A ?B |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?B ?A ?C ?D |- _ => clear H2
+  | H : Perp_at ?X ?A ?B ?C ?D, H2 : Perp_at ?X ?B ?A ?D ?C |- _ => clear H2
+  end.
+
+Ltac clean_reap_hyps_step_ch09 :=
+  first [clean_reap_hyps_step_ch08|clean_reap_hyps_new_ch09].
+
+Ltac clean_reap_hyps := clean_duplicated_hyps; repeat clean_reap_hyps_step_ch09.
+
+Ltac assert_diffs_new_ch09 :=
+  match goal with
+  | H : Le ?A ?B ?C ?D, H2 : ?B <> ?A |- _ => let T := fresh in (not_exist_hyp_comm C D);
+                                              assert (T := le_diff A B C D (swap_diff B A H2) H)
+  | H : Per ?A ?B ?C,   H2 : ?A <> ?B |- _ => let T := fresh in (not_exist_hyp_comm A C);
+                                              assert (T := per_distinct A B C H H2)
+  | H : Per ?A ?B ?C,   H2 : ?B<>?A   |- _ => let T := fresh in (not_exist_hyp_comm A C);
+                                              assert (T := per_distinct A B C H (swap_diff B A H2))
+  | H : Per ?A ?B ?C,   H2 : ?B<>?C   |- _ => let T := fresh in (not_exist_hyp_comm A C);
+                                              assert (T := per_distinct_1 A B C H H2)
+  | H : Per ?A ?B ?C,   H2 : ?C<>?B   |- _ => let T := fresh in (not_exist_hyp_comm A C);
+                                              assert (T := per_distinct_1 A B C H (swap_diff C B H2))
+  | H : Perp ?A ?B ?C ?D              |- _ => let T := fresh in (not_exist_hyp2 A B C D);
+                                              assert (T := perp_distinct A B C D H);
+                                              decompose [and] T;clear T
+  | H : Perp_at ?X ?A ?B ?C ?D        |- _ => let T := fresh in (not_exist_hyp2 A B C D);
+                                              assert (T := perp_in_distinct X A B C D H);
+                                              decompose [and] T;clear T
+  end.
+
+Ltac assert_diffs_step_ch09 := first [assert_diffs_step_ch08|assert_diffs_new_ch09].
 
 Ltac assert_diffs :=
-repeat
- match goal with
-      | H:(~Col ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp3 X1 X2 X1 X3 X2 X3;
-      assert (h := not_col_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
-
-      | H:(~Bet ?X1 ?X2 ?X3) |- _ =>
-      let h := fresh in
-      not_exist_hyp2 X1 X2 X2 X3;
-      assert (h := not_bet_distincts X1 X2 X3 H);decompose [and] h;clear h;clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq12__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq21__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?B <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq23__neq A B C H H2);clean_reap_hyps
-      | H:Bet ?A ?B ?C, H2 : ?C <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= bet_neq32__neq A B C H H2);clean_reap_hyps
-
-      | H:Cong ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= cong_diff_2 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?C <> ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_3 A B C D H2 H);clean_reap_hyps
-      | H:Cong ?A ?B ?C ?D, H2 : ?D <> ?C |-_ =>
-      let T:= fresh in (not_exist_hyp_comm A B);
-        assert (T:= cong_diff_4 A B C D H2 H);clean_reap_hyps
-
-      | H:Le ?A ?B ?C ?D, H2 : ?A <> ?B |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= le_diff A B C D H2 H);clean_reap_hyps
-      | H:Le ?A ?B ?C ?D, H2 : ?B <> ?A |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= le_diff A B C D (swap_diff B A H2) H);clean_reap_hyps
-      | H:Lt ?A ?B ?C ?D |-_ =>
-      let T:= fresh in (not_exist_hyp_comm C D);
-        assert (T:= lt_diff A B C D H);clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?A<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B I A);
-       assert (T:= midpoint_distinct_1 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?B<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B I A);
-       assert (T:= midpoint_distinct_1 I A B (swap_diff B A H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?I<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B A B);
-       assert (T:= midpoint_distinct_2 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?A<>?I |- _ =>
-      let T:= fresh in (not_exist_hyp2 I B A B);
-       assert (T:= midpoint_distinct_2 I A B (swap_diff A I H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Midpoint ?I ?A ?B, H2 : ?I<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp2 I A A B);
-       assert (T:= midpoint_distinct_3 I A B H2 H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Midpoint ?I ?A ?B, H2 : ?B<>?I |- _ =>
-      let T:= fresh in (not_exist_hyp2 I A A B);
-       assert (T:= midpoint_distinct_3 I A B (swap_diff B I H2) H);
-       decompose [and] T;clear T;clean_reap_hyps
-
-      | H:Per ?A ?B ?C, H2 : ?A<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct A B C H H2); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?B<>?A |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct A B C H (swap_diff B A H2)); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?B<>?C |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct_1 A B C H H2); clean_reap_hyps
-      | H:Per ?A ?B ?C, H2 : ?C<>?B |- _ =>
-      let T:= fresh in (not_exist_hyp_comm A C);
-        assert (T:= per_distinct_1 A B C H (swap_diff C B H2)); clean_reap_hyps
-
-      | H:Perp ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_distinct A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Perp_at ?X ?A ?B ?C ?D |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B C D);
-       assert (T:= perp_in_distinct X A B C D H);
-       decompose [and] T;clear T;clean_reap_hyps
-      | H:Out ?A ?B ?C |- _ =>
-      let T:= fresh in (not_exist_hyp2 A B A C);
-       assert (T:= out_distinct A B C H);
-       decompose [and] T;clear T;clean_reap_hyps
- end.
+  try (assert_diffs_step_ch09; clean_reap_hyps;
+       repeat (assert_diffs_step_ch09; clean_new_diffs)).
 
 Ltac ColR :=
  let tpoint := constr:(Tpoint) in
@@ -147,20 +59,20 @@ Ltac ColR :=
 Ltac clean_trivial_hyps :=
   repeat
   match goal with
-   | H:(Cong ?X1 ?X1 ?X2 ?X2) |- _ => clear H
-   | H:(Cong ?X1 ?X2 ?X2 ?X1) |- _ => clear H
-   | H:(Cong ?X1 ?X2 ?X1 ?X2) |- _ => clear H
-   | H:(Bet ?X1 ?X1 ?X2) |- _ => clear H
-   | H:(Bet ?X2 ?X1 ?X1) |- _ => clear H
-   | H:(Col ?X1 ?X1 ?X2) |- _ => clear H
-   | H:(Col ?X2 ?X1 ?X1) |- _ => clear H
-   | H:(Col ?X1 ?X2 ?X1) |- _ => clear H
-   | H:(Per ?X1 ?X2 ?X2)     |- _ => clear H
-   | H:(Per ?X1 ?X1 ?X2)     |- _ => clear H
-   | H:(Midpoint ?X1 ?X1 ?X1) |- _ => clear H
+  | H : Cong ?X1 ?X1 ?X2 ?X2 |- _ => clear H
+  | H : Cong ?X1 ?X2 ?X2 ?X1 |- _ => clear H
+  | H : Cong ?X1 ?X2 ?X1 ?X2 |- _ => clear H
+  | H : Bet ?X1 ?X1 ?X2      |- _ => clear H
+  | H : Bet ?X2 ?X1 ?X1      |- _ => clear H
+  | H : Col ?X1 ?X1 ?X2      |- _ => clear H
+  | H : Col ?X2 ?X1 ?X1      |- _ => clear H
+  | H : Col ?X1 ?X2 ?X1      |- _ => clear H
+  | H : Per ?X1 ?X2 ?X2      |- _ => clear H
+  | H : Per ?X1 ?X1 ?X2      |- _ => clear H
+  | H : Midpoint ?X1 ?X1 ?X1 |- _ => clear H
 end.
 
-Ltac clean := clean_trivial_hyps;clean_reap_hyps.
+Ltac clean := clean_trivial_hyps; clean_reap_hyps.
 
 Section T9.
 
@@ -3103,147 +3015,82 @@ Qed.
 Lemma cop_per2__col : forall A X Y Z,
   Coplanar A X Y Z ->  A <> Z -> Per X Z A -> Per Y Z A -> Col X Y Z.
 Proof.
-intros A X Y Z HC HAZ HPer1 HPer2.
-destruct HPer1 as [B' [HMid1 HCong1]]; destruct HPer2 as [B [HMid2 HCong2]]; treat_equalities.
-elim (eq_dec_points X Y); intro HXY; treat_equalities; Col.
-elim (eq_dec_points X Z); intro HXZ; treat_equalities; Col.
-elim (eq_dec_points Y Z); intro HYZ; treat_equalities; Col.
-destruct HC as [I HC].
-elim HC; clear HC; intro HC; try (elim HC; clear HC);
-try (intros HCol1 HCol2); try (intro H; destruct H as [HCol1 HCol2]).
-
+assert (HC : forall A B I X Y Z,
+               Cong X A X B -> Midpoint Z A B -> Cong Y A Y B ->
+               X <> Y -> X <> Z -> Y <> Z -> A <> Z ->
+               Col A X I -> Col Y Z I ->
+               Col X Y Z).
   {
-  elim (eq_dec_points X I); intro HXI; treat_equalities; Col.
-  assert (HCong3 : Cong I A I B) by (apply l4_17 with Y Z; unfold Midpoint in *; spliter; Cong).
-  elim HCol1; clear HCol1; intro HCol1; try (elim HCol1; clear HCol1; intro HCol1).
+  intros A B I X Y Z HCong1 HMid HCong2 HXY HXZ HYZ HAZ HC1 HC2.
+  elim (eq_dec_points X I); intro HXI; [treat_equalities; Col|].
+  assert (HCong3 : Cong I A I B) by (apply l4_17 with Y Z; Cong).
+  destruct HC1 as [HB1|[HB1|HB1]].
 
     {
     assert (HLe : Le A X B I).
       {
       apply l5_6 with A X A I; Cong.
       apply l6_13_2; Col.
-      split; try (intro; treat_equalities; Col).
-      split; try (intro; treat_equalities; Col); Col.
+      split; [intro; treat_equalities; Col|].
+      split; [intro; treat_equalities; Col|].
+      left; Between.
       }
-    assert (H := le_bet B I A X HLe); destruct H as [X' [HBet HCong4]]; clear HLe.
+    destruct (le_bet B I A X HLe) as [X' [HBet HCong4]]; clear HLe.
     assert (HCong5 : Cong A X' B X).
       {
-      apply five_segment with I I X X'; Cong; Between.
-      apply l4_3 with A B; Cong; Between.
-      apply l4_3 with B A; Cong; Between.
+      apply five_segment with I I X X'; [|Cong| |Cong|Between|Between|easy].
+      - apply l4_3 with A B; Cong; Between.
+      - apply l4_3 with B A; Cong; Between.
       }
-    assert (H : X = X'); treat_equalities.
+    assert (H : X = X'); [|treat_equalities].
       {
-      apply l4_18 with A I; try (intro; treat_equalities); Col.
-        apply cong_transitivity with B X; Cong.
-      apply l4_3 with A B; Cong; Between.
+      apply l4_18 with A I; [intro; treat_equalities; easy|Col|..].
+      - apply cong_transitivity with B X; Cong.
+      - apply l4_3 with A B; Cong; Between.
       }
-    assert (H : A = B) by (apply construction_uniqueness with I X X A; Cong; Between);
-    treat_equalities; intuition.
+    assert (H : A = B) by (apply construction_uniqueness with I X X A; Cong; Between).
+    treat_equalities; easy.
     }
 
     {
-    assert (H := segment_construction B I I X); destruct H as [X' [HBet HCong4]].
-    assert (HCong5 : Cong A X' B X).
+    destruct (segment_construction B I I X) as [X' [HBet HCong4]].
+    assert (HCong5 : Cong A X' B X)
+      by (apply five_segment with X X' I I; Cong; Between).
+    assert (H : X = X'); [|treat_equalities].
       {
-      apply five_segment with X X' I I; Cong; Between.
-      }
-    assert (H : X = X'); treat_equalities.
-      {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; Cong.
+      apply l4_18 with A I; [intro; treat_equalities; easy|Col| |Cong].
       apply cong_transitivity with B X; Cong.
       }
     assert (H : A = B) by (apply construction_uniqueness with X I I A; Cong; Between);
-    treat_equalities; intuition.
+    treat_equalities; easy.
     }
 
     {
-    assert (H := segment_construction I B A X); destruct H as [X' [HBet HCong4]].
-    assert (HCong5 : Cong X B X' A).
+    destruct (segment_construction I B A X) as [X' [HBet HCong4]].
+    assert (HCong5 : Cong X B X' A)
+      by (apply five_segment with I I A B; Cong; intro; treat_equalities; Col).
+    assert (H : X = X'); [|treat_equalities].
       {
-      apply five_segment with I I A B; Cong; intro; treat_equalities; Col.
-      }
-    assert (H : X = X'); treat_equalities.
-      {
-      apply l4_18 with A I; try (intro; treat_equalities); Col.
-        apply cong_transitivity with B X; Cong.
-      apply l2_11 with A B; Cong.
+      apply l4_18 with A I; [intro; treat_equalities; easy|Col|..].
+      - apply cong_transitivity with B X; Cong.
+      - apply l2_11 with A B; Cong.
       }
     assert (H : A = B) by (apply between_cong_2 with I X; Col).
-    treat_equalities; intuition.
+    treat_equalities; easy.
     }
   }
-
-  {
-  elim (eq_dec_points Y I); intro HYI; treat_equalities; Col.
-  assert (HCong3 : Cong I A I B) by (apply l4_17 with X Z; unfold Midpoint in *; spliter; Cong).
-  elim HCol1; clear HCol1; intro HCol1; try (elim HCol1; clear HCol1; intro HCol1).
-
-    {
-    assert (HLe : Le A Y B I).
-      {
-      apply l5_6 with A Y A I; Cong.
-      apply l6_13_2; Col.
-      split; try (intro; treat_equalities; Col).
-      split; try (intro; treat_equalities; Col); Col.
-      }
-    assert (H := le_bet B I A Y HLe); destruct H as [Y' [HBet HCong4]]; clear HLe.
-    assert (HCong5 : Cong A Y' B Y).
-      {
-      apply five_segment with I I Y Y'; Cong; Between.
-      apply l4_3 with A B; Cong; Between.
-      apply l4_3 with B A; Cong; Between.
-      }
-    assert (H : Y = Y'); treat_equalities.
-      {
-      apply l4_18 with A I; try (intro; treat_equalities); Col.
-        apply cong_transitivity with B Y; Cong.
-      apply l4_3 with A B; Cong; Between.
-      }
-    assert (H : A = B) by (apply construction_uniqueness with I Y Y A; Cong; Between);
-    treat_equalities; intuition.
-    }
-
-    {
-    assert (H := segment_construction B I I Y); destruct H as [Y' [HBet HCong4]].
-    assert (HCong5 : Cong A Y' B Y).
-      {
-      apply five_segment with Y Y' I I; Cong; Between.
-      }
-    assert (H : Y = Y'); treat_equalities.
-      {
-      apply l4_18 with A I; try (intro; treat_equalities); Col; Cong.
-      apply cong_transitivity with B Y; Cong.
-      }
-    assert (H : A = B) by (apply construction_uniqueness with Y I I A; Cong; Between);
-    treat_equalities; intuition.
-    }
-
-    {
-    assert (H := segment_construction I B A Y); destruct H as [Y' [HBet HCong4]].
-    assert (HCong5 : Cong Y B Y' A).
-      {
-      apply five_segment with I I A B; Cong; intro; treat_equalities; Col.
-      }
-    assert (H : Y = Y'); treat_equalities.
-      {
-      apply l4_18 with A I; try (intro; treat_equalities); Col.
-        apply cong_transitivity with B Y; Cong.
-      apply l2_11 with A B; Cong.
-      }
-    assert (H : A = B) by (apply between_cong_2 with I Y; Col).
-    treat_equalities; intuition.
-    }
-  }
-
-  {
-  elim (eq_dec_points Z I); intro HZI; treat_equalities; Col.
+intros A X Y Z HCol HAZ HPer1 HPer2.
+destruct HPer1 as [B' [HMid1 HCong1]]; destruct HPer2 as [B [HMid2 HCong2]]; treat_equalities.
+elim (eq_dec_points X Y); intro HXY; [treat_equalities; Col|].
+elim (eq_dec_points X Z); intro HXZ; [treat_equalities; Col|].
+elim (eq_dec_points Y Z); intro HYZ; [treat_equalities; Col|].
+destruct HCol as [I HCol]; destruct HCol as [[HC1 HC2]|[[HC1 HC2]|[HC1 HC2]]].
+- apply (HC A B I); Col.
+- cut (Col Y X Z); [Col|apply (HC A B I); Col].
+- elim (eq_dec_points Z I); intro HZI; [treat_equalities; Col|].
   assert (HCong3 : Cong I A I B) by (apply l4_17 with X Y; unfold Midpoint in *; spliter; Cong).
-  assert (H := l7_20 I A B).
-  elim H; [| |ColR..]; intro.
-    treat_equalities; exfalso; auto.
-  ColR.
-  }
+  destruct (l7_20 I A B); [ColR|easy| |ColR].
+  treat_equalities; exfalso; auto.
 Qed.
 
 Lemma cop_perp2__col : forall X Y Z A B,

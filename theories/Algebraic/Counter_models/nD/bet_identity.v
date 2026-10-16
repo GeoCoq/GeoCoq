@@ -2,7 +2,8 @@ Require Import GeoCoq.Algebraic.Counter_models.nD.independent_version.
 
 Section bet_identity_1.
 
-Context `{ITn : independent_Tarski_neutral_dimensionless}.
+Context {Pred : predicates}
+        {ITn  : independent_Tarski_neutral_dimensionless Pred}.
 
 Lemma g2_1 : forall A B, Cong A B A B.
 Proof.
@@ -185,14 +186,16 @@ From mathcomp Require Import tuple fintype bigop.
 
 Section bet_identity_2.
 
-Variable n : nat.
-
-Context `{ITnD : independent_Tarski_nD(n.+2)}.
+Context {Pred : predicates}
+        {ITn  : independent_Tarski_neutral_dimensionless Pred}
+        {Dim  : dimension}
+        {ITnD : independent_Tarski_nD Pred ITn (incr (incr Dim))}.
 
 Lemma bet_identity_aux : forall A B, Bet A B A -> ~ ~ A = B.
 Proof.
-pose I1aux := (tnth basis (inord 0)); pose I2aux := (tnth basis (inord 1)).
-pose I1 := I1aux n.+1 Tpoint H ITnD; pose I2 := I2aux n.+1 Tpoint H ITnD.
+pose I1aux := (@tnth (@n (incr (incr Dim))) Tpoint basis (inord 0)).
+pose I2aux := (@tnth (@n (incr (incr Dim))) Tpoint basis (inord 1)).
+pose I1 := I1aux _ _ ITnD; pose I2 := I2aux _ _ ITnD.
 intros A B; apply g2_16 with I1 O I2; clear A B.
 intro HB1; destruct lower_dim as [HF [HB2 [HBC1 HBC2]]].
 assert (HC1 : Cong O I O I1)

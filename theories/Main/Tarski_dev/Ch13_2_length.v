@@ -197,7 +197,7 @@ Qed.
 Lemma ex_point_lg : forall l A, Q_Cong l -> exists B, l A B.
 Proof.
     intros.
-    induction(lg_null_dec l).
+    destruct (lg_null_dec l); [assumption|..].
       exists A.
       apply lg_null_instance.
       auto.
@@ -228,11 +228,7 @@ Proof.
       destruct HH.
       apply H9.
       Cong.
-    auto.
 Qed.
-
-
-
 
 Lemma ex_point_lg_out : forall l A P, A <> P -> Q_Cong l -> ~ Q_Cong_Null l -> exists B, l A B /\ Out A B P.
 Proof.
@@ -532,6 +528,5 @@ apply H13 in H3.
 apply cong_transitivity with A2 B2; trivial.
 apply cong_transitivity with A B; Cong.
 Qed.
-
 
 End Length_4.

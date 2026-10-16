@@ -36,11 +36,15 @@ Qed.
 
 Lemma exists_grid_spec : exists S U1 U2, Cs PA PB S U1 U2.
 Proof.
-assert (~ Col PA PB PC) by (apply lower_dim).
-assert_diffs.
-destruct (ex_per_cong PB PA PA PC PA PB) as [J HJ]; Col; spliter.
+assert (HNC : ~ Col PA PB PC) by (apply lower_dim).
+assert (HPBPA : PB <> PA) by (assert_diffs; easy).
+assert (HPAPB : PA <> PB) by (assert_diffs; easy).
+assert (HC : Col PB PA PA) by Col.
+assert (HNC' : ~ Col PB PA PC) by Col.
+destruct (ex_per_cong PB PA PA PC PA PB HPBPA HPAPB HC HNC') as [J HJ].
 exists PA; exists PB; exists J.
-repeat (split; finish).
+destruct HJ as [HP [HCong HOS]].
+split; [|split; [|split]]; [easy|Cong..|Perp].
 Qed.
 
 Lemma coord_exchange_axes : forall O E S U1 U2 P X Y,
@@ -1648,7 +1652,7 @@ assert (HColAX : Col O E AX)
   by (apply l4_13 with S U1 PXA; Cong; apply projp_col with A; auto).
 eapply col_cong_3_cong_3_eq in HCongB; [| | |apply HCongA]; treat_equalities; auto.
 eapply col_cong_3_cong_3_eq in HCongC; [| | |apply HCongA]; treat_equalities; auto.
-clear HCongA; elim (eq_dec_points A PXA); intro HDiff2; treat_equalities;
+clear HCongA; destruct (eq_dec_points A PXA) as [|HDiff2]; treat_equalities;
 [apply projp2_col with S U1; auto|].
 eapply projp2_col in HProjpB; [|apply HProjpA].
 eapply projp2_col in HProjpC; [|apply HProjpA].
@@ -1718,14 +1722,14 @@ assert (HColYProd : Col O E YProd) by (unfold Prod, Ar2 in *; spliter; Col).
 split; intro HCol; treat_equalities.
 
   {
-  elim (eq_dec_points A B); intro HDiff1; elim (eq_dec_points A C); intro HDiff2;
-  elim (eq_dec_points B C); intro HDiff3; treat_equalities;
-  [|intuition|intuition| |intuition| | |].
+  destruct (eq_dec_points A B) as [|HDiff1];
+  destruct (eq_dec_points A C) as [|HDiff2];
+  destruct (eq_dec_points B C) as [|HDiff3];
+  treat_equalities; [|easy|easy| |easy| | |].
 
     {
     apply eq_points_coordinates with O E S U1 U2 B AX AY B BX BY in HCdA; auto.
-    destruct HCdA as [H H']; clear H';
-    elim H; clear H; auto; intros; treat_equalities.
+    destruct HCdA as [[HE1 HE2] _]; [easy|treat_equalities].
     assert (O = AXMBX)
       by (apply diff_uniqueness with O E E' AX AX; auto; apply diff_null; Col).
     assert (O = AYMBY)
@@ -1740,8 +1744,7 @@ split; intro HCol; treat_equalities.
 
     {
     apply eq_points_coordinates with O E S U1 U2 A AX AY A BX BY in HCdA; auto.
-    destruct HCdA as [H H']; clear H';
-    elim H; clear H; auto; intros; treat_equalities.
+    destruct HCdA as [[HE1 HE2] _]; [easy|treat_equalities].
     assert (O = AXMBX)
       by (apply diff_uniqueness with O E E' AX AX; auto; apply diff_null; Col).
     assert (O = AYMBY)
@@ -1756,8 +1759,7 @@ split; intro HCol; treat_equalities.
 
     {
     apply eq_points_coordinates with O E S U1 U2 A AX AY A CX CY in HCdC; auto.
-    destruct HCdC as [H H']; clear H';
-    elim H; clear H; auto; intros; treat_equalities.
+    destruct HCdC as [[HE1 HE2] _]; [easy|treat_equalities].
     destruct (opp_exists O E E' HNC E) as [ME HME]; Col.
     apply prod_uniqueness with O E E' AXMBX BYMCY; auto.
     apply prod_assoc1 with BXMCX ME AYMBY; auto;
@@ -1767,8 +1769,7 @@ split; intro HCol; treat_equalities.
 
     {
     apply eq_points_coordinates with O E S U1 U2 B BX BY B CX CY in HCdC; auto.
-    destruct HCdC as [H H']; clear H';
-    elim H; clear H; auto; intros; treat_equalities.
+    destruct HCdC as [[HE1 HE2] _]; [easy|treat_equalities].
     assert (O = BXMCX)
       by (apply diff_uniqueness with O E E' BX BX; auto; apply diff_null; Col).
     assert (O = BYMCY)
@@ -1850,7 +1851,7 @@ split; intro HCol; treat_equalities.
         {
         apply prod_uniquenessB with O E E' P2 XProd''; auto.
         intro H; apply eq_sym in H; treat_equalities; apply prod_null in HP2.
-        elim HP2; clear HP2; intro HFalse; apply eq_sym in HFalse; treat_equalities;
+        destruct HP2 as [HFalse|HFalse]; apply eq_sym in HFalse; treat_equalities;
         [apply HDiff4; apply opp_uniqueness with O E E' O;
          try apply opp0; Col; apply opp_comm; auto|].
         assert (O = BXMAX)
@@ -1964,13 +1965,13 @@ split; intro HCol; treat_equalities.
   }
 
   {
-  elim (eq_dec_points O AXMBX); intro HDiff1;
+  destruct (eq_dec_points O AXMBX) as [|HDiff1];
   treat_equalities; try apply diff_null_eq in HAXMBX;
-  elim (eq_dec_points O AYMBY); intro HDiff2;
+  destruct (eq_dec_points O AYMBY) as [|HDiff2];
   treat_equalities; try apply diff_null_eq in HAYMBY;
-  elim (eq_dec_points O BXMCX); intro HDiff3;
+  destruct (eq_dec_points O BXMCX) as [|HDiff3];
   treat_equalities; try apply diff_null_eq in HBXMCX;
-  elim (eq_dec_points O BYMCY); intro HDiff4;
+  destruct (eq_dec_points O BYMCY) as [|HDiff4];
   treat_equalities; try apply diff_null_eq in HBYMCY; treat_equalities.
 
     {
@@ -2004,14 +2005,14 @@ split; intro HCol; treat_equalities.
 
     {
     apply prod_O_l_eq in HXProd; apply eq_sym in HXProd; treat_equalities.
-    apply prod_null in HYProd; elim HYProd; clear HYProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HYProd; destruct HYProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
     apply prod_O_l_eq in HXProd; apply eq_sym in HXProd; treat_equalities.
-    apply prod_null in HYProd; elim HYProd; clear HYProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HYProd; destruct HYProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
@@ -2021,8 +2022,8 @@ split; intro HCol; treat_equalities.
 
     {
     apply prod_O_l_eq in HYProd; apply eq_sym in HYProd; treat_equalities.
-    apply prod_null in HXProd; elim HXProd; clear HXProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HXProd; destruct HXProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
@@ -2032,8 +2033,8 @@ split; intro HCol; treat_equalities.
 
     {
     apply prod_O_l_eq in HYProd; apply eq_sym in HYProd; treat_equalities.
-    apply prod_null in HXProd; elim HXProd; clear HXProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HXProd; destruct HXProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
@@ -2043,14 +2044,14 @@ split; intro HCol; treat_equalities.
 
     {
     apply prod_O_r_eq in HYProd; apply eq_sym in HYProd; treat_equalities.
-    apply prod_null in HXProd; elim HXProd; clear HXProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HXProd; destruct HXProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
     apply prod_O_r_eq in HXProd; apply eq_sym in HXProd; treat_equalities.
-    apply prod_null in HYProd; elim HYProd; clear HYProd; intro H;
-    apply eq_sym in H; treat_equalities; intuition.
+    apply prod_null in HYProd; destruct HYProd as [H|H];
+    apply eq_sym in H; treat_equalities; easy.
     }
 
     {
@@ -2070,8 +2071,9 @@ split; intro HCol; treat_equalities.
         by (apply col_2_le_or_ge; Col).
       assert (H3 : LeP O E E' L2 L3 \/ LeP O E E' L3 L2)
         by (apply col_2_le_or_ge; Col).
-      elim H1; clear H1; intro HLe1; elim H2; clear H2; intro HLe2;
-      elim H3; clear H3; intro HLe3; auto.
+      destruct H1 as [HLe1|HLe1];
+      destruct H2 as [HLe2|HLe2];
+      destruct H3 as [HLe3|HLe3]; auto.
 
         {
         left; split; [apply leP_trans with L2|]; assumption.
@@ -2129,7 +2131,7 @@ split; intro HCol; treat_equalities.
         {
         apply prod_assoc1 with L2 IBC E; auto; try apply prod_1_r; Col.
         }
-      elim (eq_dec_points O L2); intro HDiff7; treat_equalities.
+      destruct (eq_dec_points O L2) as [|HDiff7]; treat_equalities.
 
         {
         assert (O = T)
@@ -2159,10 +2161,10 @@ split; intro HCol; treat_equalities.
         }
 
         {
-        elim (length_eq_or_opp O E E' AX CX L2 AXMCX); auto;
-        try apply length_sym; auto; intro HOpp; treat_equalities.
+        destruct (length_eq_or_opp O E E' AX CX L2 AXMCX) as [|HOpp]; [easy..| |].
 
           {
+          treat_equalities.
           assert (HLe6 : LtP O E E' CX AX).
             {
             assert (H : LeP O E E' CX AX).
@@ -2170,7 +2172,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L2 CX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_uniqueness with O E E' CX CX; auto.
             apply diff_null; Col.
             }
@@ -2195,7 +2197,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L2 AX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_uniqueness with O E E' AX AX; auto.
             apply diff_null; Col.
             }
@@ -2285,7 +2287,7 @@ split; intro HCol; treat_equalities.
         {
         apply prod_assoc1 with L1 IAC E; auto; try apply prod_1_r; Col.
         }
-      elim (eq_dec_points O L1); intro HDiff7; treat_equalities.
+      destruct (eq_dec_points O L1) as [|HDiff7]; treat_equalities.
 
         {
         apply length_id in HL1; spliter; treat_equalities.
@@ -2295,10 +2297,10 @@ split; intro HCol; treat_equalities.
         }
 
         {
-        elim (length_eq_or_opp O E E' AX BX L1 AXMBX); auto;
-        try apply length_sym; auto; intro HOpp; treat_equalities.
+        destruct (length_eq_or_opp O E E' AX BX L1 AXMBX) as [|HOpp]; [easy..| |].
 
           {
+          treat_equalities.
           assert (HLe6 : LtP O E E' BX AX).
             {
             assert (H : LeP O E E' BX AX).
@@ -2306,7 +2308,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L1 BX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff1; apply diff_uniqueness with O E E' BX BX; auto.
             apply diff_null; Col.
             }
@@ -2346,7 +2348,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L1 AX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_uniqueness with O E E' AX AX; auto.
             apply diff_null; Col.
             }
@@ -2401,7 +2403,7 @@ split; intro HCol; treat_equalities.
         {
         apply prod_assoc1 with L3 IAB E; auto; try apply prod_1_r; Col.
         }
-      elim (eq_dec_points O L3); intro HDiff7; treat_equalities.
+      destruct (eq_dec_points O L3) as [|HDiff7]; treat_equalities.
 
         {
         apply length_id in HL3; spliter; treat_equalities.
@@ -2411,10 +2413,10 @@ split; intro HCol; treat_equalities.
         }
 
         {
-        elim (length_eq_or_opp O E E' BX CX L3 BXMCX); auto;
-        try apply length_sym; auto; intro HOpp; treat_equalities.
+        destruct (length_eq_or_opp O E E' BX CX L3 BXMCX) as [|HOpp]; [easy..| |].
 
           {
+          treat_equalities.
           assert (HLe6 : LtP O E E' CX BX).
             {
             assert (H : LeP O E E' CX BX).
@@ -2422,7 +2424,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L3 CX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff3; apply diff_uniqueness with O E E' CX CX; auto.
             apply diff_null; Col.
             }
@@ -2460,7 +2462,7 @@ split; intro HCol; treat_equalities.
               apply compatibility_of_sum_with_order with O L3 BX; auto;
               try apply sum_O_B; Col; apply sum_comm; Col; apply diff_sum; auto.
               }
-            elim H; clear H; intro H; auto; treat_equalities.
+            destruct H as [|H]; auto; treat_equalities.
             exfalso; apply HDiff7; apply diff_uniqueness with O E E' BX BX; auto.
             apply diff_null; Col.
             }

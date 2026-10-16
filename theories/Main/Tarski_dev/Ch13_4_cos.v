@@ -897,7 +897,7 @@ Proof.
       apply (lg_cong l); auto.
     assert(CongA B A C B' A' C').
       apply (anga_conga a); auto.
-    induction(is_null_anga_dec a).
+    destruct (is_null_anga_dec a); [assumption|..].
       assert(HP := null_lcos_eql lp l a H H12).
       unfold Q_CongA_Null_Acute in H12.
       spliter.
@@ -947,7 +947,6 @@ Proof.
       spliter.
       apply (lg_cong_lg lp A' B');auto.
       Cong.
-    assumption.
 Qed.
 
 Lemma l13_7 : forall a b l la lb lab lba, Lcos la l a -> Lcos lb l b ->
@@ -960,7 +959,7 @@ Proof.
     apply lcos_lg_anga in H2.
     spliter.
     clean_duplicated_hyps.
-    induction (is_null_anga_dec a).
+    destruct (is_null_anga_dec a); [assumption|..].
       assert(HH:=null_lcos_eql lba lb  a H2 H3).
       assert(HP:=null_lcos_eql la l  a H H3).
       assert(Lcos lab l b) by (rewrite HP;assumption).
@@ -1128,7 +1127,6 @@ Proof.
         unfold Len.
         split; auto.
       assumption.
-    assumption.
 Qed.
 
 Lemma out_acute : forall A B C, Out B A C -> Acute A B C.
@@ -1280,7 +1278,7 @@ Lemma lcos_exists : forall l a, Q_CongA_Acute a -> Q_Cong l -> ~ Q_Cong_Null l -
 Proof.
     intros.
     lg_instance l A B.
-    induction(is_null_anga_dec a).
+    destruct (is_null_anga_dec a); [assumption|..].
       exists l.
       apply null_lcos; auto.
       anga_instance1 a A B C.
@@ -1357,9 +1355,7 @@ Proof.
       subst B.
       exists A.
       auto.
-    assumption.
 Qed.
-
 
 Lemma lcos_uniqueness : forall l a l1 l2, Lcos l1 l a-> Lcos l2 l a -> EqL l1 l2.
 Proof.

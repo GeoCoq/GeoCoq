@@ -346,9 +346,8 @@ Proof.
     assert_all.
     assert(Coplanar C' B D D'). Cop.
     assert(~ Par_strict C' B D D') by (apply LEM3 with A C B';auto).
-    assert(exists X, Col X C' B /\ Col X D D') by (apply cop_npars__inter_exists;auto).
-    destruct H9 as [X].
-    destruct H9.
+    assert(HX : exists X, Col X C' B /\ Col X D D') by (apply cop_npars__inter_exists;auto).
+    destruct HX as [X []].
     assert(Midpoint X B C').
     {
      assert(Par D' D C' C). Par.

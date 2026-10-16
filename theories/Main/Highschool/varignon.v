@@ -25,26 +25,34 @@ Lemma varignon :
 Proof.
 intros.
 assert_diffs.
-assert (Par I L B D) (** Applying the midpoint theorem in the triangle BDA. *)
-  by perm_apply (triangle_mid_par B D A L I).
-assert (Par J K B D) (** Applying the midpoint theorem in the triangle BDC. *)
-  by perm_apply (triangle_mid_par B D C K J).
-assert (Par I L J K) (** Transitivity of parallelism *)
-  by (apply par_trans with B D;finish).
-assert (Par I J A C) (** Applying the midpoint theorem in the triangle ACB. *)
-  by perm_apply (triangle_mid_par A C B J I). 
-assert (Par L K A C) (** Applying the midpoint theorem in the triangle ACD. *)
-  by perm_apply (triangle_mid_par A C D K L).
-assert (Par I J K L) (** Transitivity of parallelism *)
-  by (apply par_trans with A C;finish).
-apply par_2_plg;finish. (** If in the opposite side of quadrilatral are parallel and two opposite side are distinct
-                            then it is a parallelogram. *)
+assert (Par I L B D).
+  {
+  cut (Par B D I L); Par.
+  apply (triangle_mid_par B D A L I); finish.
+  }
+assert (Par J K B D).
+  {
+  cut (Par B D J K); [Par|].
+  apply (triangle_mid_par B D C K J); finish.
+  }
+assert (Par I L J K) by (apply par_trans with B D; finish).
+assert (Par I J A C).
+  {
+  cut (Par A C I J); [Par|].
+  apply (triangle_mid_par A C B J I); finish.
+  }
+assert (Par L K A C).
+  {
+  cut (Par A C L K); [Par|].
+  apply (triangle_mid_par A C D K L); finish.
+  }
+assert (Par I J K L) by (apply par_trans with A C; finish).
+apply par_2_plg; finish.
 Qed.
 
 (** We propose here a more complex proof to simplify the ndg. 
 If we know that a quadrilateral has its pairs of opposite side congruent and parallel
  then it is a parallelogram. *)
-
 
 Lemma varignon_aux_aux :
  forall A B C D I J K L,
@@ -215,10 +223,8 @@ induction (eq_dec_points I K).
   assert (Parallelogram A D B C) by (apply mid_plg with I;Midpoint).
   assert (Parallelogram A B D C) by (apply mid_plg with L;Midpoint).
   exfalso.
-  apply Plg_perm in H35.
-  apply Plg_perm in H39.
-  spliter.
-  apply (plg_not_comm_1 B D A C);auto.
+  apply (plg_not_comm_1 B D A C); [auto| |apply plg_permut; auto].
+  apply plg_permut, plg_sym, plg_comm2; auto.
 
 apply cong_col_mid.
  auto.
@@ -234,7 +240,5 @@ intuition.
 
 apply (varignon_aux A B C D);auto.
 Qed.
-
-
 
 End Varignon.

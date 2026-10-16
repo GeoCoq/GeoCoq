@@ -295,7 +295,8 @@ Proof.
     intuition.
 Qed.
 
-Lemma bet_dec : forall A B C, Bet A B C  \/  ~ Bet A B C.
+Lemma bet_dec : forall A B C,
+  Bet A B C \/ ~ Bet A B C.
 Proof.
     intros.
     elim (segment_construction A B B C); intros C' HC'.
@@ -307,13 +308,13 @@ Proof.
     right; intro; apply H1; apply between_cong_3 with A B; Cong.
 Qed.
 
-Lemma col_dec : forall A B C, Col A B C \/ ~ Col A B C.
+Lemma col_dec : forall A B C,
+  Col A B C \/ ~ Col A B C.
 Proof.
     intros.
     unfold Col.
     elim (bet_dec A B C); intro; elim (bet_dec B C A); intro; elim (bet_dec C A B); intro; tauto.
 Qed.
-
 
 Lemma le_trivial : forall A C D, Le A A C D .
 Proof.
@@ -335,7 +336,7 @@ Proof.
     right; unfold Le; exists X; split; Cong.
 Qed.
 
-Lemma le_zero : forall A B C, Le A B C C -> A=B.
+Lemma le_zero : forall A B C, Le A B C C -> A = B.
 Proof.
     intros.
     assert (Le C C A B) by apply le_trivial.
@@ -358,8 +359,7 @@ Proof.
   subst B; Cong.
 Qed.
 
-Lemma bet_cong_eq :
- forall A B C D,
+Lemma bet_cong_eq : forall A B C D,
   Bet A B C ->
   Bet A C D ->
   Cong B C A D ->
@@ -508,7 +508,7 @@ Proof.
 Qed.
 
 Lemma cong2_lt__lt : forall A B C D A' B' C' D',
- Lt A B C D -> Cong A B A' B' -> Cong C D C' D' -> Lt A' B' C' D'.
+  Lt A B C D -> Cong A B A' B' -> Cong C D C' D' -> Lt A' B' C' D'.
 Proof.
   intros A B C D A' B' C' D' Hlt HCong1 HCong2.
   destruct Hlt as [Hle HNCong].
@@ -859,16 +859,6 @@ assert(Le a' b' A B).
 apply(l5_6 a' b' A B a b A B); Cong.
 apply (l2_11 a' O b' a o b);
 eBetween; Cong.
-Qed.
-
-Lemma Le_cases : forall A B C D, Le A B C D \/ Le B A C D \/ Le A B D C \/ Le B A D C -> Le A B C D.
-Proof.
-    intros A B C D [|[|[|]]]; [|apply le_left_comm|apply le_right_comm|apply le_comm]; assumption.
-Qed.
-
-Lemma Lt_cases : forall A B C D, Lt A B C D \/ Lt B A C D \/ Lt A B D C \/ Lt B A D C -> Lt A B C D.
-Proof.
-    intros A B C D [|[|[|]]]; [|apply lt_left_comm|apply lt_right_comm|apply lt_comm]; assumption.
 Qed.
 
 End T5.

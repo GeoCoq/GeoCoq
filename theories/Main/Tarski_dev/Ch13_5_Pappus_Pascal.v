@@ -207,7 +207,7 @@ Qed.
 Lemma l13_6_bis : forall lp l1 l2 a, Lcos lp l1 a -> Lcos lp l2 a -> EqL l1 l2.
 Proof.
     intros.
-    induction(is_null_anga_dec a).
+    destruct (is_null_anga_dec a); [unfold Lcos in *; intuition|..].
       apply lcos_lg_anga in H.
       apply lcos_lg_anga in H0.
       spliter.
@@ -262,7 +262,6 @@ Proof.
         split; auto.
       split; auto.
       eapply (lg_cong_lg _ A C); auto.
-    unfold Lcos in *;intuition.
 Qed.
 
 
