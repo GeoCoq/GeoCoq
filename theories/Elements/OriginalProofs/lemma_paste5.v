@@ -1,3 +1,5 @@
+Require Export GeoCoq.Axioms.euclidean_area_axioms.
+Require Export GeoCoq.Elements.euclid_to_area.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_rectangleparallelogram.
 Require Export GeoCoq.Elements.OriginalProofs.proposition_34.
 Require Export GeoCoq.Elements.OriginalProofs.lemma_crossimpliesopposite.
@@ -6,10 +8,12 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_crisscross.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma lemma_paste5 : 
-   forall B C D E L M b c d e l m, 
+Existing Instance area_follows_Euclid.
+
+Lemma lemma_paste5 :
+   forall B C D E L M b c d e l m,
    EF B M L D b m l d -> EF M C E L m c e l -> BetS B M C -> BetS b m c -> BetS E L D -> BetS e l d -> RE M C E L -> RE m c e l ->
    EF B C E D b c e d.
 Proof.
@@ -26,7 +30,11 @@ assert (Par m c e l) by (conclude_def PG ).
 assert (nCol m c l) by (forward_using lemma_parallelNC).
 assert (Cong_3 C M L L E C) by (conclude proposition_34).
 assert (Cong_3 c m l l e c) by (conclude proposition_34).
+assert (nCol C M L) by (forward_using lemma_NCorder).
+assert (Triangle C M L) by (conclude_def Triangle ).
 assert (ET C M L L E C) by (conclude axiom_congruentequal).
+assert (nCol c m l) by (forward_using lemma_NCorder).
+assert (Triangle c m l) by (conclude_def Triangle ).
 assert (ET c m l l e c) by (conclude axiom_congruentequal).
 assert (CR M E C L) by (conclude_def RE ).
 assert (CR m e c l) by (conclude_def RE ).
@@ -313,5 +321,3 @@ close.
 Qed.
 
 End Euclid.
-
-

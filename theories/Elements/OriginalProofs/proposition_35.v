@@ -3,10 +3,12 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_parallelPasch.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_35 : 
-   forall A B C D E F, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_35 :
+   forall A B C D E F,
    PG A B C D -> PG E B C F -> Col A D E -> Col A D F ->
    EF A B C D E B C F.
 Proof.
@@ -237,7 +239,6 @@ assert (~ ~ EF A B C D E B C F).
     }
    close.
    }
-(** cases *)
   contradict.
   }
  assert (~ eq D F).
@@ -324,7 +325,6 @@ assert (~ ~ EF A B C D E B C F).
     }
    close.
    }
-(** cases *)
   contradict.
   }
  assert (BetS A F D).
@@ -372,7 +372,6 @@ assert (~ ~ EF A B C D E B C F).
  {
   close.
   }
-(** cases *)
  assert (BetS A E D).
  by cases on (eq A D \/ eq A E \/ eq D E \/ BetS D A E \/ BetS A D E \/ BetS A E D).
  {
@@ -431,7 +430,6 @@ assert (~ ~ EF A B C D E B C F).
  {
   close.
   }
-(** cases *)
  assert (~ BetS A E F).
   {
   intro.
@@ -476,5 +474,3 @@ close.
 Qed.
 
 End Euclid.
-
-

@@ -43,7 +43,7 @@ Qed.
 
 Lemma Col_nCol_False : forall A B C, nCol A B C -> Col A B C -> False.
 Proof.
-unfold Col, nCol;intuition.
+unfold Col, nCol;intuition (auto with *).
 Qed.
 
 Lemma nCol_notCol :
@@ -51,7 +51,7 @@ Lemma nCol_notCol :
 Proof.
 intros.
 unfold nCol, Col, neq in *.
-intuition.
+intuition (auto with *).
 Qed.
 
 Lemma not_nCol_Col : forall A B C,
@@ -98,7 +98,7 @@ Ltac forward_using thm :=
  end.
 
 Ltac contradict :=
- (solve [eauto using Col_nCol_False]) || contradiction || (unfold nCol in *;intuition).
+ (solve [eauto using Col_nCol_False]) || contradiction || (unfold nCol in *;intuition (auto with *)).
 
 Ltac conclude t :=
  spliter;
@@ -106,9 +106,9 @@ Ltac conclude t :=
  solve [unfold eq in *;mysubst;assumption |
         pose t; eauto |
         eapply t;eauto |
-        eapply t;intuition |
+        eapply t;intuition (auto with *) |
         apply <- t;remove_exists;eauto  |
-        unfold neq,eq in *;intuition |
+        unfold neq,eq in *;intuition (auto with *) |
         unfold neq,eq in *;remove_double_neg;congruence |
         apply t;tauto
 ].
@@ -126,7 +126,7 @@ Ltac conclude_def_aux t := (remove_double_neg;
           remove_exists;splits;eauto  |
           remove_exists;eauto 11 |
           one_of_disjunct |
-          intuition
+          intuition (auto with *)
          ]))
  ||
  solve [unfold t in *;spliter;assumption |

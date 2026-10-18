@@ -3,10 +3,12 @@ Require Export GeoCoq.Elements.OriginalProofs.lemma_samesideflip.
 
 Section Euclid.
 
-Context `{Ax:area}.
+Context `{Ax : euclidean_euclidean}.
 
-Lemma proposition_42B : 
-   forall B C D E J K R a b c e, 
+Existing Instance area_follows_Euclid.
+
+Lemma proposition_42B :
+   forall B C D E J K R a b c e,
    Triangle a b c -> Midpoint b e c -> nCol J D K -> Midpoint B E C -> Cong E C e c -> nCol R E C ->
    exists X Z, PG X E C Z /\ EF a b e c X E C Z /\ CongA C E X J D K /\ OS R X E C.
 Proof.
@@ -116,10 +118,7 @@ by cases on (eq A F \/ neq A F).
  assert (OS R F E C) by (forward_using lemma_samesidesymmetric).
  close.
  }
-(** cases *)
 close.
 Qed.
 
 End Euclid.
-
-
