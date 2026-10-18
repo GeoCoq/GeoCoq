@@ -1,7 +1,7 @@
 Require GeoCoq.Axioms.euclidean_axioms.
 Require GeoCoq.Axioms.euclidean_area_axioms.
 Require GeoCoq.Elements.OriginalProofs.euclidean_defs.
-Require Import GeoCoq.Main.Meta_theory.Models.euclid_to_tarski.
+Require Import GeoCoq.Elements.euclid_to_tarski.
 Require Import GeoCoq.Main.Tarski_dev.Ch13_6_Desargues_Hessenberg.
 Require Import GeoCoq.Main.Highschool.orthocenter.
 Require Import GeoCoq.Elements.equal_figures.

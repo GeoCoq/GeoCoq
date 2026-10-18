@@ -12,7 +12,7 @@ description:  "This subpackage contains a formalization of Euclid's proofs from 
 
 build:   ["dune" "build" "-p" name "-j" jobs]
 depends: [
-  "coq-geocoq-axioms" { = version }
+  "coq-geocoq-main" { = version }
 ]
 
 tags: [
