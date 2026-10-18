@@ -2,6 +2,7 @@
  (name GeoCoq.Elements)
  (package coq-geocoq-elements)
  (synopsis "This subpackage contains a formalization of Euclid's proofs from Book I of the Elements.")
+ (flags -w -notation-overridden -w -ambiguous-paths)
  (theories GeoCoq.Coinc GeoCoq.Axioms))
 
 (include_subdirs qualified)

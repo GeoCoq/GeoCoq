@@ -1419,11 +1419,11 @@ Proof.
 intros A B C A' B' C' P Q X Y HOut HNP HPj1 HPj2 HPj3.
 split; [|split].
 - intro; treat_equalities.
-  apply (ker_par A B) in HPj1; [|assert_diffs; easy|easy].
+  apply (ker_par A B) in HPj1; [|assert_diffs; auto|easy].
   exact (HNP HPj1).
 - intro; treat_equalities.
-  apply (ker_par A C) in HPj1; [|assert_diffs; easy|easy].
-  apply HNP, (par_col_par_2 A C); [assert_diffs; easy| |easy].
+  apply (ker_par A C) in HPj1; [|assert_diffs; auto|easy].
+  apply HNP, (par_col_par_2 A C); [assert_diffs; auto| |easy].
   assert_cols; Col.
 - destruct HOut as [HBA [HCA [HB|HB]]]; [left|right].
   + apply (project_preserves_bet P Q X Y A B C A' B' C'); assumption.

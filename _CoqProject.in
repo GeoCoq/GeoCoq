@@ -3,5 +3,6 @@
 
 -arg -w -arg -ambiguous-paths
 -arg -w -arg -notation-overridden
+-arg -w -arg -deprecated-syntactic-definition-since-mathcomp-2.0.0
 
 # Coq files (filled by the configure)

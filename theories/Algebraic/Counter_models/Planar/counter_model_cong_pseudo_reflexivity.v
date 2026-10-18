@@ -1,6 +1,4 @@
-(* This file proves that axiom cong_pseudo_reflexivity
-is independent from the other axioms *)
-Require Import mathcomp.ssreflect.ssreflect.
+From mathcomp Require Import ssreflect.
 From mathcomp
 Require Import ssrbool ssrfun ssrnat eqtype choice seq.
 From mathcomp
@@ -51,28 +49,20 @@ Lemma five_segment : five_segmentP Point bet' cong'.
 Proof. by move=> ? ? ? ? ? ? ? ?; rewrite /cong'=> /eqP ->. Qed.
 
 Lemma inner_pasch : inner_paschP Point bet'.
-Proof.
-move=> a b c p q Hb1 Hb2 ? ? ? ? HNC.
-destruct (@inner_pasch _ _ a b c p q) as [x [Hb3 Hb4]]; rewrite -?bet_betS //.
-by exists x; rewrite /bet'.
-Qed.
+Proof. exact: inner_pasch. Qed.
 
 Lemma bet_symmetry : bet_symmetryP Point bet'.
-Proof. unfold bet_symmetryP; apply bet_symmetry. Qed.
+Proof. exact: bet_symmetry. Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point bet'.
-Proof. unfold bet_inner_transitivityP; apply bet_inner_transitivity. Qed.
+Proof. exact: bet_inner_transitivity. Qed.
 
 Definition a' := (@a R 0).
 Definition b' := (@b R 0).
 Definition c' := (@c R 0).
 
 Lemma lower_dim : lower_dimP Point bet' a' b' c'.
-Proof.
-rewrite /lower_dimP /Col /bet' /bet /betE ab_neq bc_neq ca_neq /= => H; move: H.
-rewrite /betS betR_abc betR_bca; elim ((@betR_cab R 0))=> [->|->];
-rewrite !ltxx ltr01 /= ![_ && false]andbC /=; firstorder.
-Qed.
+Proof. exact: (@POF_to_Tarski.lower_dim R 0). Qed.
 
 Lemma upper_dim : upper_dimP Point bet' cong'.
 Proof.

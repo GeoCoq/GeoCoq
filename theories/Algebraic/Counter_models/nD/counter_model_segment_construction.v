@@ -1,4 +1,4 @@
-Require Import mathcomp.ssreflect.ssreflect.
+From mathcomp Require Import ssreflect.
 From mathcomp
 Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
 From mathcomp
@@ -38,66 +38,35 @@ Definition cong' a b c d := cong a b c d.
    as five segment implies forall a b, cong a a b b *)
 
 Lemma cong_abab a b : cong' a b a b.
-Proof. by rewrite /cong' /cong. Qed.
+Proof. by rewrite /cong' !congE. Qed.
 
-Definition midpoint a b := 2%:R^-1 *: (a + b).
-
-Lemma midpointLR a b : midpoint a b = midpoint b a.
-Proof. by rewrite /midpoint addrC. Qed.
-
-Lemma midpointBL a b : midpoint a b - a = 2%:R^-1 *: (b - a).
+Lemma bet'_midpoint a b (m := midpoint a b) : bet' a m b.
 Proof.
-rewrite /midpoint -{2}[a]scale1r scalerDr scalerBr addrAC -scalerBl addrC.
-apply /eqP; rewrite add2r_eq -addr_eq0 -scalerDl scaler_eq0 addrAC.
-by rewrite -div1r addf_divrr ?add11_neq0// divff ?add11_neq0// subrr eqxx.
+rewrite /m /bet'; have [<-|ab_neq] := eqVneq a b.
+  by rewrite midpointxx eqxx orbT.
+by rewrite betS_midpoint.
 Qed.
 
-Lemma midpointBR a b : midpoint a b - b = 2%:R^-1 *: (a - b).
-Proof. by rewrite midpointLR midpointBL. Qed.
-
-Lemma midpointxx a : midpoint a a = a.
-Proof.
-rewrite /midpoint -{-3}[a]scale1r -scalerDl scalerA.
-by rewrite mulrC divff ?add11_neq0// scale1r.
-Qed.
-
-Lemma betR_midpoint a b : a <> b -> betR a (midpoint a b) b = 2%:R^-1.
-Proof.
-move=> /eqP ab_neq; rewrite /betR midpointBL.
-by apply ratio_eq; rewrite // subr_eq0 eq_sym.
-Qed.
-
-Lemma bet_midpoint a b (m := midpoint a b) : bet' a m b.
-Proof.
-rewrite /m /bet'; case: (a =P b)=> [->|]; first by rewrite midpointxx eqxx orbT.
-move=> ab_neq; rewrite /betS betR_midpoint// midpointBL eqxx.
-rewrite invr_gte0 addr_gt0 ?ltr01// invf_lt1 ?addr_gt0 ?ltr01//.
-by rewrite -subr_gt0 -addrA subrr addr0 ltr01.
-Qed.
-
-Lemma cong_midpoint a b (m := midpoint a b) : cong' a m b m.
-Proof.
-rewrite /m /cong' /cong midpointBL midpointBR.
-by rewrite -opprB scalerN mulNmx dotC -mulNmx opprK.
-Qed.
+Lemma cong'_midpoint a b (m := midpoint a b) : cong' a m b m.
+Proof. exact: cong_midpoint. Qed.
 
 Lemma Col_aaa a : independence.Col Point bet' a a a.
 Proof. by rewrite /independence.Col /bet' eqxx orbT; intuition. Qed.
 
 Lemma cong_pseudo_reflexivity : cong_pseudo_reflexivityP Point cong'.
-Proof. by unfold cong_pseudo_reflexivityP; apply cong_pseudo_reflexivity. Qed.
+Proof. exact: cong_pseudo_reflexivity. Qed.
 
 Lemma cong_inner_transitivity : cong_inner_transitivityP Point cong'.
-Proof. by unfold cong_inner_transitivityP; apply cong_inner_transitivity. Qed.
+Proof. exact: cong_inner_transitivity. Qed.
 
 Lemma cong_identity : cong_identityP Point cong'.
-Proof. by unfold cong_identityP; apply cong_identity. Qed.
+Proof. exact: cong_identity. Qed.
 
 Lemma five_segment : five_segmentP Point bet' cong'.
 Proof.
 move => a a' b b' c c' d d'; rewrite /bet'; move=> HCab HCbc HCad HCbd.
 move=> /orP[Hb1|/andP[/eqP->/eqP->//]] /orP[Hb2|/andP[/eqP Ha'b' /eqP Hb'c']];
-last by move: HCab; rewrite Ha'b' Hb'c' /cong' => HCab; move: (cong_eq HCab).
+last by move: HCab; rewrite Ha'b' Hb'c' /cong' => /POF_to_Tarski.cong_identity.
 by apply (@five_segment R n a a' b b' c c' d d'); rewrite /bet ?Hb1 ?Hb2 ?orbT.
 Qed.
 
@@ -179,31 +148,17 @@ Section RcfTarskinD.
 Variable n : nat.
 Variable R : rcfType.
 
-Lemma onemx_neq0 :
-  @const_mx (Num.RealField.sort R) (S O) (S n) 0 !=
-  @const_mx (Num.RealField.sort R) (S O) (S n) 1.
-Proof.
-by apply/eqP=> /matrixP/(_ 0 0)/eqP; rewrite /const_mx !mxE eq_sym oner_eq0.
-Qed.
-
 Lemma segment_construction :
   ~ segment_constructionP (@Point n.+1 R) (@bet' n.+1 R) (@cong' n.+1 R).
 Proof.
-move/eqP: onemx_neq0 => HD HF; move: (HF _ _ (const_mx 0) (const_mx 0) HD).
+move/eqP: (@onemx_neq0 R n) => HD HF.
+move: (HF _ _ (const_mx 0) (const_mx 0) HD).
 rewrite /bet'; move=> [x [Hb Hc]]; move: Hb; apply /negP; rewrite Bool.negb_orb.
 by rewrite Bool.negb_andb onemx_neq0 (cong_identity Hc) betS_neq23 eqxx andbF.
 Qed.
 
 Lemma bet'__bet a b c : bet' a b c -> (@bet R n.+2) a b c.
 Proof. by rewrite /bet /betE; move=> /orP[->|/andP[-> ->//]]; rewrite orbT. Qed.
-
-Lemma Midpoint_midpoint a b (m := midpoint a b) :
-  @Definitions.Midpoint (Rcf_to_T R n) m a b.
-Proof.
-split; [apply bet'__bet, bet_midpoint|suff: cong a m m b=> [//|]].
-move: (cong_midpoint a b); rewrite -/m /cong => /eqP ->.
-by rewrite -{1}[m - b]opprB mulNmx dotC -mulNmx opprB.
-Qed.
 
 Lemma col__ColT a b c :
   @col R n a b c <-> @Definitions.Col (Rcf_to_T R n) a b c.
@@ -229,8 +184,7 @@ Proof. by move=> HF HNC; apply HF, Col'__Col. Qed.
 Lemma ncol__nCol a b c :
   ~ @col R n a b c -> ~ independence.Col (@Point n.+2 R) (@bet R n.+2) a b c.
 Proof.
-rewrite /col /independence.Col.
-by case: (bet a b c); case: (bet b c a); case: (bet c a b); intuition.
+by move=> HNC HC; apply/HNC/col__colI; exact: HC.
 Qed.
 
 Lemma nCol__ncol a b c :
@@ -266,18 +220,12 @@ repeat split; [by apply nCol__nCol', ncol__nCol, ncol__nColT|..];
 by destruct Hx as [[? [? []]] [? [? []]]]; exists x; split; apply ColT__Col.
 Qed.
 
-Lemma col__colI a b c : @col R n a b c <-> colI a b c.
-Proof.
-by rewrite /col /colI; case: (bet a b c);
-case: (bet b c a); case: (bet c a b); intuition.
-Qed.
-
 Lemma euclid : euclidP (@Point (n.+2) R) (@bet' (n.+2) R) (@cong' (n.+2) R).
 Proof.
 move => a b c HNC; apply nCol__ncol in HNC.
 destruct HNC as [HNC1|[-> HNE]|[-> HNE]|[-> HNE]];
 [|set m := midpoint b c|set m := midpoint a b|set m := midpoint a c];
-[|exists m..]; rewrite ?cong_abab ?cong_midpoint; [|repeat split..];
+[|exists m..]; rewrite ?cong_abab ?cong'_midpoint; [|repeat split..];
 [| |apply coplanar_1324|apply coplanar_3214]; [|apply coplanar_midpoint..|];
 auto; last by rewrite /m midpointLR; apply coplanar_midpoint; auto.
 destruct (@tcp R n a b c) as [x [HC1 [HC2 HCop]]]; rewrite -?col__colI //.

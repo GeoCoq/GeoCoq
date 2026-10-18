@@ -42,7 +42,8 @@ Context {ITE : independent_Tarski_euclidean(IT)}.
 Global Instance IT_euclidean_to_GI_euclidean :
   Gupta_inspired_variant_of_Tarski_euclidean (@IT_to_GI Tpoint IT ED IT2D).
 Proof.
-assert (HP : @tarski_s_parallel_postulate (@GI_to_T (@IT_to_GI Tpoint IT ED IT2D))).
+assert (HP : @tarski_s_parallel_postulate
+                (@GI_to_T (@IT_to_GI Tpoint IT ED IT2D))).
   {
   assert (H : @proclus_postulate (@GI_to_T (@IT_to_GI Tpoint IT ED IT2D))).
     {
@@ -56,7 +57,8 @@ assert (HP : @tarski_s_parallel_postulate (@GI_to_T (@IT_to_GI Tpoint IT ED IT2D
     split; [intuition|clear HCop].
     intros [X [HC1 HC2]]; apply HNI; exists X; intuition.
     }
-  revert H; apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
+  revert H;
+  apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
   simpl; tauto.
   }
 split; intros A B C D T HBet1 HBet2 HBD HDC HNC.

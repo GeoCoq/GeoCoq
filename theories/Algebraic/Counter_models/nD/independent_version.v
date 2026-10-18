@@ -27,7 +27,7 @@ Class dimension :=
   n : nat
 }.
 
-Instance incr (Dim : dimension) : dimension := {| n := n.+1 |}.
+#[global] Instance incr (Dim : dimension) : dimension := {| n := n.+1 |}.
 
 Class independent_Tarski_nD
   (Pred : predicates) (ITn : independent_Tarski_neutral_dimensionless Pred)

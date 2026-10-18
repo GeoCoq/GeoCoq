@@ -1,4 +1,4 @@
-Require Import mathcomp.ssreflect.ssreflect.
+From mathcomp Require Import ssreflect.
 From mathcomp
 Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
 From mathcomp
@@ -34,11 +34,18 @@ Definition bet' a b c :=
   bet a b c && ((a == b) ==> (b == c)).
 Definition cong' a b c d := cong a b c d.
 
-Lemma onemx_neq0 :
-  @const_mx (Num.RealField.sort R) (S O) (S n) 0 !=
-  @const_mx (Num.RealField.sort R) (S O) (S n) 1.
+Lemma bet__bet' a b c : bet a b c -> bet' a b c || bet' c a b.
 Proof.
-by apply/eqP=> /matrixP/(_ 0 0)/eqP; rewrite /const_mx !mxE eq_sym oner_eq0.
+move=> Hb; have [<-|ab] := eqVneq a b; last by rewrite /bet' Hb (negPf ab).
+by rewrite /bet' bet_axx eqxx implybT orbT.
+Qed.
+
+Lemma bet3__Col a b c :
+  bet a b c \/ bet b c a \/ bet c a b -> independence.Col _ bet' a b c.
+Proof.
+move=> HC [H1 [H2 H3]];
+by case: HC => [/bet__bet'|[/bet__bet'|/bet__bet']] /orP[];
+   [apply: H1|apply: H3|apply: H2|apply: H1|apply: H3|apply: H2].
 Qed.
 
 Lemma cong_pseudo_reflexivity : cong_pseudo_reflexivityP Point cong'.
@@ -59,23 +66,17 @@ Qed.
 Lemma inner_pasch : inner_paschP Point bet'.
 Proof.
 move=> a b c p q /andP[Hb1 _] /andP[Hb2 _] Hap Hpc Hbq Hqc HNC.
-rewrite bet_betS in Hb1 => //; rewrite bet_betS in Hb2 => //.
-destruct (inner_pasch' Hb1 Hb2) as [x [Hb3 Hb4]]=> //.
-  move=> [HC|[HC|HC]]; apply HNC; rewrite /independence.Col /bet' HC;
-  rewrite [c == a]eq_sym; case: (a =P b)=> [<-|_]; case: (a =P c)=> [->|_];
-  case: (b =P c)=> [<-|_]; rewrite ?bet_axx ?bet_xxa !andbT ?andbF; intuition.
-exists x; rewrite /bet' /bet Hb3 Hb4 !orbT /=; move: Hb3 Hb4.
-rewrite betS_neq12 betS_neq23=> /andP[/andP[Hb3 /eqP xb_neq] /eqP px_neq].
-rewrite betS_neq12 betS_neq23=> /andP[/andP[Hb4 /eqP xa_neq] /eqP qx_neq].
-move: px_neq qx_neq; case: (p =P x)=> [//|_]; case: (q =P x)=> [//|_ //=].
+rewrite bet_betS // in Hb1; rewrite bet_betS // in Hb2.
+have [x []] := inner_pasch' Hb1 Hb2 (fun HC => HNC (bet3__Col HC)).
+rewrite betS_neq12 [betS q x a]betS_neq12 => /andP[Hb3 px] /andP[Hb4 qx].
+by exists x; rewrite /bet' /bet Hb3 Hb4 (negPf px) (negPf qx) !orbT.
 Qed.
 
 Lemma bet_symmetry : ~ bet_symmetryP Point bet'.
 Proof.
-move => HF; move: (HF (const_mx 1) (const_mx 0) (const_mx 0)).
-rewrite /bet' bet_axx bet_xxa eqxx eq_sym.
-move: onemx_neq0; case: (const_mx 0 =P const_mx 1) => //= _ _.
-by apply /implyP.
+move=> HF; have := HF (const_mx 1) (const_mx 0) (const_mx 0).
+rewrite /bet' bet_axx bet_xxa eqxx implybT (negPf onemx_neq0).
+by move=> /(_ isT).
 Qed.
 
 Lemma bet_inner_transitivity : bet_inner_transitivityP Point bet'.
@@ -113,9 +114,8 @@ Lemma upper_dim :
   upper_dimP (@Point n.+1 R) (@bet' n.+1 R) (@cong' n.+1 R) n.+2 o i basis.
 Proof.
 have bet'P : forall a b c, @betS R n.+2 a b c -> bet' a b c.
-- move => a b c; rewrite /bet' /bet betS_neq12 => /andP[-> ab_nz].
-  rewrite ab_nz orbT; suff -> : (a == b) = false by [].
-  by apply /negbTE.
+- move=> a b c; rewrite /bet' /bet betS_neq12 => /andP[-> /negPf->].
+  by rewrite orbT.
 move => p ob1P [_ [_ [HC1 HC2]]] pP; apply bet'P, upper_dimS => //.
 - by rewrite nth_new_basis //; apply i_neq_basis_nth0.
 - by rewrite nth_new_basis // bet_o_i_basis_nth0.
@@ -138,20 +138,11 @@ Qed.
 
 Lemma ColP a b c : @col R n a b c <-> independence.Col _ (@bet' (n.+1) R) a b c.
 Proof.
-rewrite /col /Col /bet'; case: (a =P b) => [->|] /=.
-- case: (b =P c) => [->|] /=; first by rewrite eqxx andbT bet_axx; intuition.
-  by rewrite bet_axx bet_xxa bet_xax (eq_sym c) => /eqP/negPf ->; intuition.
-rewrite (eq_sym c); case: (b =P c) => [-> /eqP/negPf E|] /=.
-- by rewrite bet_axx bet_xxa bet_xax eq_sym E; intuition.
-case: (a =P c) => /= [->|]; rewrite !andbT ?andbF.
-- by rewrite bet_xxa bet_axx bet_xax eq_sym => /eqP/negPf -> _; intuition.
-by case: (bet a b c); case: (bet b c a); case: (bet c a b) => _ _ _; intuition.
-Qed.
-
-Lemma col__colI a b c : @col R n a b c <-> colI a b c.
-Proof.
-by rewrite /col /colI; case: (bet a b c);
-case: (bet b c a); case: (bet c a b); intuition.
+split=> [|HC]; first exact: bet3__Col.
+case Hb1: (bet a b c); first by left.
+case Hb2: (bet b c a); first by right; left.
+case Hb3: (bet c a b); first by right; right.
+by exfalso; apply: HC; rewrite /bet' Hb1 Hb2 Hb3.
 Qed.
 
 Lemma CopP a b c d : cop a b c d -> Coplanar _ (@bet' (n.+1) R) a b c d.

@@ -1,9 +1,4 @@
-(* This file proves that axiom cong_inner_transitivity
-is independent from the other axioms *)
-
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
-
-(* Definition of the counter-model *)
 
 Inductive Point := P0 | P1 | P2.
 Definition Bet (A B C : Point) := A = B \/ B = C.
@@ -12,15 +7,11 @@ Definition PA := P0.
 Definition PB := P1.
 Definition PC := P2.
 
-(* Proof that the following axiom does not hold in the given model *)
-
 Lemma cong_inner_transitivity : ~ cong_inner_transitivityP Point Cong.
 Proof.
 unfold cong_inner_transitivityP, Cong; intro H.
 elim (H P0 P1 P2 P2 P1 P0); try tauto; [intro HF|intros [H1 H2]]; discriminate.
 Qed.
-
-(* Proof that the following axioms hold in the given model *)
 
 Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof.
@@ -90,7 +81,6 @@ destruct HPar as [HParS|[HAB [HCD [HC1 HC2]]]].
   }
 Qed.
 
-
 Lemma five_segment : five_segmentP Point Bet Cong.
 Proof.
 unfold five_segmentP, Bet, Cong.
@@ -120,28 +110,12 @@ Require Import Classical.
 
 Lemma continuity : continuityP Point Bet.
 Proof.
-unfold continuityP, Bet; intros Xi Upsilon.
-elim (classic (Xi P0)); intro HXiP0;
-elim (classic (Xi P1)); intro HXiP1;
-elim (classic (Xi P2)); intro HXiP2;
-elim (classic (Upsilon P0)); intro HUpsilonP0;
-elim (classic (Upsilon P1)); intro HUpsilonP1;
-elim (classic (Upsilon P2)); intros HUpsilonP2 [A H];
-destruct A;
-try (exfalso;
-     try assert (HP0P0 := H _ _ HXiP0 HUpsilonP0);
-     try assert (HP0P1 := H _ _ HXiP0 HUpsilonP1);
-     try assert (HP0P2 := H _ _ HXiP0 HUpsilonP2);
-     try assert (HP1P0 := H _ _ HXiP1 HUpsilonP0);
-     try assert (HP1P1 := H _ _ HXiP1 HUpsilonP1);
-     try assert (HP1P2 := H _ _ HXiP1 HUpsilonP2);
-     try assert (HP2P0 := H _ _ HXiP2 HUpsilonP0);
-     try assert (HP2P1 := H _ _ HXiP2 HUpsilonP1);
-     try assert (HP2P2 := H _ _ HXiP2 HUpsilonP2); intuition discriminate);
-try (exists P0; intros X Y HX HY; destruct X, Y; try tauto;
-     assert (HFalse := H _ _ HX HY); simpl in *; contradiction);
-try (exists P1; intros X Y HX HY; destruct X, Y; try tauto;
-     assert (HFalse := H _ _ HX HY); simpl in *; contradiction);
-exists P2; intros X Y HX HY; destruct X, Y; try tauto;
-assert (HFalse := H _ _ HX HY); simpl in *; contradiction.
+unfold continuityP, Bet; intros Xi Upsilon [A H].
+elim (classic (exists Z, Xi Z /\ Upsilon Z /\ Z <> A)).
+- intros [Z [HXZ [HUZ HZA]]]; exists Z; intros X Y HX HY.
+  destruct (H Z Y HXZ HY) as [HAZ|HZY]; [congruence|auto].
+- intro HN; exists A; intros X Y HX HY.
+  destruct (H X Y HX HY) as [HAX|HXY]; [auto|subst Y].
+  elim (classic (A = X)); [auto|intro HAX; exfalso].
+  apply HN; exists X; split; [|split]; auto; congruence.
 Qed.

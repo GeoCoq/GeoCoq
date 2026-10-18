@@ -1,6 +1,3 @@
-(* This file proves that axiom cong_identity
-   is independent from the other axioms *)
-
 From mathcomp Require Import ssreflect ssrfun ssrbool eqtype ssrnat.
 From mathcomp Require Import tuple fintype bigop.
 
@@ -37,7 +34,7 @@ Qed.
 Lemma bet_symmetry : bet_symmetryP point bet.
 Proof. by rewrite /bet_symmetryP /bet. Qed.
 
-Lemma bet_inner_transitivityP : bet_inner_transitivityP point bet.
+Lemma bet_inner_transitivity : bet_inner_transitivityP point bet.
 Proof. by rewrite /bet_inner_transitivityP /bet. Qed.
 
 Lemma lower_dim : forall n, lower_dimP point bet cong n ord0 ord0

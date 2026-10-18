@@ -1,4 +1,4 @@
-Require Import mathcomp.ssreflect.ssreflect.
+From mathcomp Require Import ssreflect.
 From mathcomp
 Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
 From mathcomp
@@ -42,7 +42,7 @@ Definition cong' a b c d := cong a b c d.
 Lemma row2_cong_nD (a b c d :'rV[R]_2) :
   cong (to_nD n a) (to_nD n b) (to_nD n c) (to_nD n d) = cong a b c d.
 Proof.
-rewrite /cong /to_nD !opp_row_mx !add_row_mx subr0.
+rewrite !congE /to_nD !opp_row_mx !add_row_mx subr0.
 by rewrite !tr_row_mx !mul_row_col mul0mx !addr0.
 Qed.
 
@@ -94,9 +94,8 @@ rewrite /bet' {1}/bet betS_neq13; case: (a =P c)=> [->|/eqP neq_ac].
 rewrite /betE; case: (a =P b)=> [->|/eqP neq_ab]; first by rewrite !bet_xxa.
 case: (b =P c)=> [->|/eqP neq_bc /=]; first by rewrite !bet_axx.
 rewrite andbT /bet /betE /betS eq_head_behead => /andP[/andP[headP beheadP] bP].
-have: (@eq_op (GRing.Zmodule.eqType (matrix_zmodType R 1 1))
-              ((head b)%:M - (head a)%:M)
-              (betR a b c *: ((head c)%:M - (head a)%:M))).
+have: ((head b)%:M - (head a)%:M ==
+        betR a b c *: ((head c)%:M - (head a)%:M) :> 'M[R]_1).
   by apply /eqP/rowP => i; move/eqP: headP; rewrite ord1 /head !mxE eqxx.
 have: (behead b - behead a == betR a b c *: (behead c - behead a)).
   by apply /eqP/rowP => i; move/eqP/rowP/(_ i): beheadP; rewrite /behead !mxE.

@@ -37,8 +37,8 @@ Qed.
 Lemma exists_grid_spec : exists S U1 U2, Cs PA PB S U1 U2.
 Proof.
 assert (HNC : ~ Col PA PB PC) by (apply lower_dim).
-assert (HPBPA : PB <> PA) by (assert_diffs; easy).
-assert (HPAPB : PA <> PB) by (assert_diffs; easy).
+assert (HPBPA : PB <> PA) by (assert_diffs; auto).
+assert (HPAPB : PA <> PB) by (assert_diffs; auto).
 assert (HC : Col PB PA PA) by Col.
 assert (HNC' : ~ Col PB PA PC) by Col.
 destruct (ex_per_cong PB PA PA PC PA PB HPBPA HPAPB HC HNC') as [J HJ].

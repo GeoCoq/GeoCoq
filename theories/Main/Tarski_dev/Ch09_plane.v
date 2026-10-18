@@ -3038,7 +3038,7 @@ assert (HC : forall A B I X Y Z,
     destruct (le_bet B I A X HLe) as [X' [HBet HCong4]]; clear HLe.
     assert (HCong5 : Cong A X' B X).
       {
-      apply five_segment with I I X X'; [|Cong| |Cong|Between|Between|easy].
+      apply five_segment with I I X X'; [|Cong| |Cong|Between|Between|auto].
       - apply l4_3 with A B; Cong; Between.
       - apply l4_3 with B A; Cong; Between.
       }

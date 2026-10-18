@@ -1,9 +1,4 @@
-(* This file proves that axiom lower_dim
-is independent from the other axioms. *)
-
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
-
-(* Definition of the counter-model *)
 
 Inductive Point := P0.
 Definition Bet (A B C : Point) := True.
@@ -12,12 +7,8 @@ Definition PA := P0.
 Definition PB := P0.
 Definition PC := P0.
 
-(* Proof that the following axiom does not hold in the given model *)
-
 Lemma lower_dim : ~ lower_dimP Point Bet PA PB PC.
 Proof. unfold lower_dimP, Col, Bet; tauto. Qed.
-
-(* Proof that the following axioms hold in the given model *)
 
 Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof. unfold point_equality_decidabilityP; destruct A, B; auto. Qed.

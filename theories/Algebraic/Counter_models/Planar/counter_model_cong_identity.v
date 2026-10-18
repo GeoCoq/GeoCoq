@@ -1,9 +1,4 @@
-(* This file proves that axiom cong_identity
-is independent from the other axioms *)
-
 Require Import GeoCoq.Algebraic.Counter_models.Planar.independence.
-
-(* Definition of the counter-model *)
 
 Inductive Point := P0 | P1 | P2.
 Definition Bet (A B C : Point) :=
@@ -28,12 +23,8 @@ Definition PA := P0.
 Definition PB := P1.
 Definition PC := P1.
 
-(* Proof that the following axiom does not hold in the given model *)
-
 Lemma cong_identity : ~ cong_identityP Point Cong.
 Proof. intro H; assert (HFalse := H P0 P1 P2); firstorder; discriminate. Qed.
-
-(* Proof that the following axioms hold in the given model *)
 
 Lemma point_equality_decidability : point_equality_decidabilityP Point.
 Proof.

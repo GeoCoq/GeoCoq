@@ -13,7 +13,8 @@ description:  "This subpackage contains a model of Tarski's axioms and some coun
 build:   ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "coq-geocoq-main"    { = version              }
-  "coq-mathcomp-field" { >= "1.11.0" & < "2.0~" }
+  "coq-mathcomp-field"           { >= "2.0~" & < "2.6~" }
+  "coq-mathcomp-algebra-tactics" { >= "1.2.0"           }
 ]
 
 tags: [

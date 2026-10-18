@@ -1,5 +1,6 @@
 _CoqProject
 .lia.cache
+.nra.cache
 Makefile
 .Makefile.d
 Makefile.conf

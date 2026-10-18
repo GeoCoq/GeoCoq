@@ -1,7 +1,4 @@
-(* This file proves that axiom cong_inner_transitivity
-   is independent from the other axioms *)
-
-Require Import mathcomp.ssreflect.ssreflect.
+From mathcomp Require Import ssreflect.
 From mathcomp Require Import ssrbool ssrfun ssrnat eqtype choice seq.
 From mathcomp Require Import tuple fintype bigop.
 From mathcomp Require Import ssralg ssrnum matrix.
@@ -28,9 +25,8 @@ Proof. by move=> ? ?; rewrite /cong_pseudo_reflexivityP /cong !eqxx orbT. Qed.
 
 Lemma cong_inner_transitivity : ~ cong_inner_transitivityP point cong.
 Proof.
-move=> HF; have: ((@ord0 1 == @ord_max 1) = false) => [|H]; first by apply /eqP.
-move: (HF ord0 ord_max ord_max ord_max ord_max ord0); clear HF.
-by rewrite /cong !eqxx orbT /= H => HF; have: false by apply HF.
+move=> /(_ ord0 ord_max ord_max ord_max ord_max ord0).
+by rewrite /cong !eqxx orbT => /(_ isT isT).
 Qed.
 
 Lemma cong_identity : cong_identityP point cong.
@@ -40,8 +36,7 @@ Qed.
 
 Lemma segment_construction : segment_constructionP point bet cong.
 Proof.
-rewrite /segment_constructionP /bet /cong=> ? b.
-exists b; rewrite eqxx; intuition auto with bool.
+by move=> a b c d; exists b; rewrite /bet /cong !eqxx orbT.
 Qed.
 
 Lemma five_segment : five_segmentP point bet cong.
@@ -78,9 +73,8 @@ Lemma upper_dim : forall n,
 Proof.
 move => n p; case: n => // [[HNC _]|n]; first by apply HNC; rewrite /bet eqxx.
 rewrite /no_more_orthogonal_point /orthonormal_basis !tnth_nseq /bet.
-case: p => p; case: p => [pP|p] ; [|case: p => // pP].
-- by rewrite (@ord_inj _ (Ordinal pP) ord0) // eqxx orbT.
-by rewrite (@ord_inj _ (Ordinal pP) ord_max).
+case: p => [[|[|//]] pP] _ _ H; last by exfalso; apply: H; apply: val_inj.
+by apply/orP; right; apply/eqP; apply: val_inj.
 Qed.
 
 Lemma cong_axay a b c : cong a b a c -> a = b.
@@ -88,16 +82,11 @@ Proof. by move=> /orP[/eqP->|/andP[/eqP-> ?]]. Qed.
 
 Lemma euclid : euclidP point bet cong.
 Proof.
-move=> a b c Hnc; exfalso; apply Hnc; rewrite /Col /bet; clear Hnc.
-case: a => []; case: b => []; case: c => [].
-move=> [|[|//]] pa; [rewrite (@ord_inj _ (Ordinal pa) 0) //|].
-  move=> [|[|//]] pb; [rewrite (@ord_inj _ (Ordinal pb) 0) ?eqxx; intuition|].
-  move=> [|[|//]] pc; [rewrite (@ord_inj _ (Ordinal pc) 0) ?eqxx; intuition|].
-  by rewrite 2?(@ord_inj _ (Ordinal _) 1) ?eqxx; intuition.
-move=> [|[|//]] pb; [|rewrite 2?(@ord_inj _ (Ordinal _) 1) ?eqxx; intuition].
-rewrite (@ord_inj _ (Ordinal pa) 1) 1?(@ord_inj _ (Ordinal pb) 0) //.
-move => [|[|//]] pc; [rewrite (@ord_inj _ (Ordinal _) 0) ?eqxx; intuition|].
-by rewrite (@ord_inj _ (Ordinal pc) 1) ?eqxx; intuition.
+move=> a b c Hnc; exfalso; apply: Hnc.
+have: [|| a == b, b == c | c == a].
+  by move: a b c => [[|[|//]] ?] [[|[|//]] ?] [[|[|//]] ?].
+rewrite /bet => + [H1 [H2 _]].
+by case/or3P => E; [apply: H1|apply: H1|apply: H2]; rewrite E ?orbT.
 Qed.
 
 Lemma continuity : continuityP point bet.

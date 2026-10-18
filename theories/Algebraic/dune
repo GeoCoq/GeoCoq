@@ -2,7 +2,10 @@
  (name GeoCoq.Algebraic)
  (package coq-geocoq-algebraic)
  (synopsis "This subpackage contains a model of Tarski's axioms and some counter-models.")
- (flags -w -notation-overridden -w -ambiguous-paths)
- (theories GeoCoq.Coinc GeoCoq.Axioms GeoCoq.Main mathcomp))
+ (flags -w -notation-overridden -w -ambiguous-paths
+        -w -deprecated-syntactic-definition-since-mathcomp-2.0.0
+        -w -cannot-open-path
+        -Q %{coq:coqlib}/user-contrib/elpi_elpi elpi_elpi)
+ (theories GeoCoq.Coinc GeoCoq.Axioms GeoCoq.Main mathcomp HB elpi))
 
 (include_subdirs qualified)

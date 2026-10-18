@@ -950,7 +950,7 @@ destruct HE1 as [[E1 HE1]|HE1]; destruct HE2 as [[E2 HE2]|HE2]; treat_equalities
       - assert (HPer : Per A O B1).
           {
           apply perp_in_per, perp_in_comm, perp_perp_in.
-          apply (perp_col O B); [easy|Perp|unfold Ar2 in *; spliter; ColR].
+          apply (perp_col O B); [auto|Perp|unfold Ar2 in *; spliter; ColR].
           }
         destruct HPer as [B2' [HMid2 HC2]].
         assert (HE: B2 = B2') by (apply (symmetric_point_uniqueness B1 O); auto).

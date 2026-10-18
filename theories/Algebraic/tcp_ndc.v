@@ -143,16 +143,6 @@ apply bet__ts; [intro; treat_equalities; Col| |finish].
 intro; apply (tcp_ncol_midpoints A B C MAB MAC MBC); finish; ColR.
 Qed.
 
-Lemma tcp_ts_mab_mac_a_sa : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  TS MAB MAC A SA.
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-assert (HTS : TS MAB MAC A MBC) by (apply tcp_ts_mab_mac_a_mbc with B C; auto).
-apply bet_ts__ts with MBC; finish.
-Qed.
-
 Lemma tcp_ts_a_mbc_mab_mac : forall A B C MAB MAC MBC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
   ~ Col A B C ->
@@ -165,304 +155,6 @@ apply l9_8_2 with B; [|apply out_one_side_1 with A];
 apply l9_2, l9_8_2 with C; [|apply out_one_side_1 with A];
 [|intro; apply HNC; ColR|Col|assert_diffs; repeat split; finish].
 repeat split; [intro; apply HNC; ColR..|exists MBC; finish].
-Qed.
-
-Lemma tcp_ts_a_sa_mab_mac : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  TS A SA MAB MAC.
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-assert (HNE : A <> SA) by (intro; treat_equalities; Col).
-assert (HTS : TS A MBC MAB MAC) by (apply tcp_ts_a_mbc_mab_mac with B C; auto).
-apply col_two_sides with MBC; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_1_1 : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SA A Y /\ SA <> A /\ SA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-assert (HTS1 : TS MAB MAC A SA)
-  by (apply tcp_ts_mab_mac_a_sa with B C MBC; auto).
-assert (HTS2 : TS A SA MAB MAC)
-  by (apply tcp_ts_a_sa_mab_mac with B C MBC; auto).
-destruct (ts2__ex_bet2 MAB A MAC SA) as [Y [HBet1 HBet2]]; auto.
-apply (l9_18 _ _ _ _ Y) in HTS1; apply (l9_18 _ _ _ _ Y) in HTS2; Col.
-destruct HTS1 as [_ [HNC3 HNC4]]; destruct HTS2 as [_ [HNC5 HNC6]].
-exists Y; repeat split; Col; intro ; treat_equalities; Col;
-[apply HNC5|apply HNC6|apply HNC4|apply HNC3]; Col.
-Qed.
-
-Lemma tcp_ts_mab_mac_a_ssa : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  TS MAB MAC A SSA.
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC.
-assert (HTS : TS MAB MAC A SA)
-  by (apply tcp_ts_mab_mac_a_sa with B C MBC; auto).
-apply l9_2, l9_8_2 with SA; [finish|].
-assert (HNE1 : MBC <> SA) by (intro; treat_equalities; Col).
-destruct HTS as [_ [? [Y []]]]; apply out_one_side_1 with Y; Col.
-assert (HNE2 : SSA <> Y).
-  {
-  intro; treat_equalities; cut (SA = SSA); [assert_diffs; auto|].
-  apply between_equality with MBC; [|finish].
-  apply between_inner_transitivity with A; [finish|apply between_symmetry].
-  apply outer_transitivity_between with SA; finish.
-  }
-repeat split; [intro; treat_equalities; Col|auto|left; apply between_symmetry].
-apply between_inner_transitivity with A; [apply between_symmetry|finish].
-apply between_exchange2 with MBC; [|finish].
-apply outer_transitivity_between with SA; finish.
-Qed.
-
-Lemma tcp_ts_a_ssa_mab_mac : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  TS A SSA MAB MAC.
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC.
-assert (HNE : MBC <> SA) by (intro; treat_equalities; Col).
-assert (HTS : TS A SA MAB MAC)
-  by (apply tcp_ts_a_sa_mab_mac with B C MBC; auto).
-apply col_two_sides with SA; [ColR| |finish].
-intro; treat_equalities; apply HNE.
-apply between_equality with A; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_1_2 : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SSA A Y /\ SSA <> A /\ SSA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC1.
-assert (HTS1 : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HTS2 : TS A SSA MAB MAC)
-  by (apply tcp_ts_a_ssa_mab_mac with B C MBC SA; auto).
-destruct (ts2__ex_bet2 MAB A MAC SSA) as [Y [HBet1 HBet2]]; auto.
-apply (l9_18 _ _ _ _ Y) in HTS1; apply (l9_18 _ _ _ _ Y) in HTS2; Col.
-destruct HTS1 as [_ [HNC2 HNC3]]; destruct HTS2 as [_ [HNC4 HNC5]].
-exists Y; repeat split; Col; intro ; treat_equalities; Col;
-[apply HNC4|apply HNC5|apply HNC3|apply HNC2]; Col.
-Qed.
-
-Lemma tcp_ncol_inplane_1_3 : forall A B C MAB MAC MBC SA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SA A Y /\ SA <> A /\ SA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC1 HMMAB.
-assert (HTS1 : TS MAB MAC A SA)
-  by (apply tcp_ts_mab_mac_a_sa with B C MBC; auto).
-assert (HTS2 : TS A SA MAB MAC)
-  by (apply tcp_ts_a_sa_mab_mac with B C MBC; auto).
-destruct (ts2__ex_bet2 MAB A MAC SA) as [Y [HBet1 HBet2]]; auto.
-destruct (inner_pasch A MAC MAB MMAB Y) as [Z [HBet3 HBet4]]; finish.
-apply (l9_18 _ _ _ _ Y) in HTS1; apply (l9_18 _ _ _ _ Y) in HTS2; Col.
-destruct HTS1 as [_ [HNC2 HNC3]]; destruct HTS2 as [_ [HNC4 HNC5]].
-assert (HNE : A <> Y) by (intro; apply HNC2; ColR).
-exists Z; repeat split; [ColR| | | |ColR|..]; intro; treat_equalities; Col;
-[apply HNC4..|apply HNC5|apply HNC3|apply HNC2]; ColR.
-Qed.
-
-Lemma tcp_ncol_inplane_1_4 : forall A B C MAB MAC MBC SA SSA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SSA A Y /\ SSA <> A /\ SSA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAB HMAB HMAC HMBC HSA HSSA HNC1 HMMAB.
-assert (HTS1 : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HTS2 : TS A SSA MAB MAC)
-  by (apply tcp_ts_a_ssa_mab_mac with B C MBC SA; auto).
-destruct (ts2__ex_bet2 MAB A MAC SSA) as [Y [HBet1 HBet2]]; auto.
-destruct (inner_pasch A MAC MAB MMAB Y) as [Z [HBet3 HBet4]]; finish.
-apply (l9_18 _ _ _ _ Y) in HTS1; apply (l9_18 _ _ _ _ Y) in HTS2; Col.
-destruct HTS1 as [_ [HNC2 HNC3]]; destruct HTS2 as [_ [HNC4 HNC5]].
-assert (HNE : A <> Y) by (intro; apply HNC2; ColR).
-exists Z; repeat split; [ColR| | | |ColR|..]; intro; treat_equalities; Col;
-[apply HNC4..|apply HNC5|apply HNC3|apply HNC2]; ColR.
-Qed.
-
-Lemma tcp_ncol_inplane_1_5 : forall A B C MAB MAC MBC SA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SA A Y /\ SA <> A /\ SA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC HMMAC.
-destruct (tcp_ncol_inplane_1_3 A C B MAC MAB MBC SA MMAC) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_1_6 : forall A B C MAB MAC MBC SA SSA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SSA A Y /\ SSA <> A /\ SSA <> Y /\ A <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
-destruct (tcp_ncol_inplane_1_4 A C B MAC MAB MBC SA SSA MMAC) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
-
-Lemma tcp_os_mab_mac_b_sa : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  OS MAB MAC B SA.
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC1.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SA)
-  by (apply tcp_ts_mab_mac_a_sa with B C MBC; auto).
-exists A; split; [|finish].
-split; [intro; apply HNC2; ColR|].
-split; [intro; apply HNC2; ColR|].
-exists MAB; finish.
-Qed.
-
-Lemma tcp_os_b_sa_mab_mac : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  OS B SA MAB MAC.
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC1.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : B <> SA) by (intro; treat_equalities; Col).
-apply one_side_transitivity with A; [apply out_one_side_1 with B|];
-[intro; apply HNC2; ColR|Col|assert_diffs; repeat split; finish|].
-apply l9_17 with C; [apply one_side_transitivity with MBC|finish];
-[apply out_one_side_1 with SA|apply out_one_side_1 with B]; Col;
-[intro; apply HNC2; ColR| |intro; apply HNC2; ColR|];
-repeat split; finish; intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_npars_mab_mac_b_sa : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  ~ Par_strict MAB MAC B SA.
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-assert (HP : Par_strict MAB MAC MBC B) by (apply tcp_pars with A C; finish).
-intro HPF; assert (HC : Col B MBC SA)
-  by (destruct (parallel_uniqueness MAB MAC B MBC B SA B); finish).
-cut (MBC = SA); [intro; treat_equalities; Col|].
-apply l6_21 with B C A SA; finish; [|ColR].
-intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_ncol_inplane_2_1 : forall A B C MAB MAC MBC SA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SA B Y /\ SA <> B /\ SA <> Y /\ B <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-assert (HOS1 : OS MAB MAC B SA)
-  by (apply tcp_os_mab_mac_b_sa with A C MBC; auto).
-assert (HOS2 : OS B SA MAB MAC)
-  by (apply tcp_os_b_sa_mab_mac with A C MBC; auto).
-assert (HNP : ~ Par_strict MAB MAC B SA)
-  by (apply tcp_npars_mab_mac_b_sa with A C MBC; auto).
-assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
-assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
-assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
-assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-destruct (cop_npars__inter_exists MAB MAC B SA) as [Y [HC1 HC2]]; finish.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_os_mab_mac_b_ssa : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  OS MAB MAC B SSA.
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC1.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-exists A; split; [|finish].
-split; [intro; apply HNC2; ColR|].
-split; [intro; apply HNC2; ColR|].
-exists MAB; finish.
-Qed.
-
-Lemma tcp_os_b_ssa_mab_mac : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  OS B SSA MAB MAC.
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC1.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : A <> SSA) by (assert_diffs; auto).
-assert (HNE3 : MBC <> SA) by (intro; treat_equalities; Col).
-assert (HNE4 : B <> SSA) by (intro; treat_equalities; apply HNC2; ColR).
-apply one_side_transitivity with A; [apply out_one_side_1 with B|];
-[intro; apply HNC2; ColR|Col|assert_diffs; repeat split; finish|].
-apply l9_17 with C; [|finish].
-apply one_side_transitivity with MBC;
-[apply out_one_side_1 with SSA|apply out_one_side_1 with B]; Col;
-[intro; apply HNC2; ColR| |intro; apply HNC2; ColR|];
-repeat split; finish; try solve [intro; treat_equalities; Col].
-right; apply between_symmetry, outer_transitivity_between with SA; finish.
-Qed.
-
-Lemma tcp_npars_mab_mac_b_ssa : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  ~ Par_strict MAB MAC B SSA.
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC1.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : A <> SSA) by (assert_diffs; auto).
-assert (HP : Par_strict MAB MAC MBC B) by (apply tcp_pars with A C; finish).
-intro HPF; assert (HC : Col B MBC SSA)
-  by (destruct (parallel_uniqueness MAB MAC B MBC B SSA B); finish).
-cut (MBC = SSA); [intro; treat_equalities; Col|].
-apply l6_21 with B C A SSA; finish; ColR.
-Qed.
-
-Lemma tcp_ncol_inplane_2_2 : forall A B C MAB MAC MBC SA SSA,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SSA B Y /\ SSA <> B /\ SSA <> Y /\ B <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC.
-assert (HOS1 : OS MAB MAC B SSA)
-  by (apply tcp_os_mab_mac_b_ssa with A C MBC SA; auto).
-assert (HOS2 : OS B SSA MAB MAC)
-  by (apply tcp_os_b_ssa_mab_mac with A C MBC SA; auto).
-assert (HNP : ~ Par_strict MAB MAC B SSA)
-  by (apply tcp_npars_mab_mac_b_ssa with A C MBC SA; auto).
-assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
-assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
-assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
-assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-destruct (cop_npars__inter_exists MAB MAC B SSA) as [Y [HC3 HC4]]; finish.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
 Qed.
 
 Lemma tcp_ts_mmab_mac_a_mbc : forall A B C MAB MAC MBC MMAB,
@@ -486,27 +178,211 @@ split; [intro; apply HNC2; ColR|].
 split; [intro; apply HNC2; ColR|exists Z; split; finish].
 Qed.
 
-Lemma tcp_ts_mmab_mac_a_sa : forall A B C MAB MAC MBC SA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  TS MMAB MAC A SA.
+Local Notation "'Lines_meet' A1 A2 B1 B2" :=
+  (exists Y, (Col A1 A2 Y /\ A1 <> A2 /\ A1 <> Y /\ A2 <> Y) /\
+             (Col B1 B2 Y /\ B1 <> B2 /\ B1 <> Y /\ B2 <> Y))
+  (at level 10, A1, A2, B1, B2 at level 0).
+
+Local Ltac contra_ncol :=
+  match goal with H : ~ Col _ _ _ |- _ => exfalso; apply H; solve [Col] end.
+
+Lemma tcp_meet_swapl : forall A1 A2 B1 B2,
+  Lines_meet A1 A2 B1 B2 -> Lines_meet A2 A1 B1 B2.
 Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC1 HMMAB.
-assert (HTS : TS MMAB MAC A MBC)
-  by (apply tcp_ts_mmab_mac_a_mbc with B C MAB; auto).
-apply bet_ts__ts with MBC; finish.
+intros A1 A2 B1 B2 [Y [HA HB]]; exists Y; spliter; repeat split; finish.
 Qed.
 
-Lemma tcp_os_mmab_mac_b_sa : forall A B C MAB MAC MBC SA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  OS MMAB MAC B SA.
+Lemma tcp_meet_swapr : forall A1 A2 B1 B2,
+  Lines_meet A1 A2 B1 B2 -> Lines_meet A1 A2 B2 B1.
 Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC HMMAB.
+intros A1 A2 B1 B2 [Y [HA HB]]; exists Y; spliter; repeat split; finish.
+Qed.
+
+Lemma tcp_ncol_inplane_4 : forall A1 A2 B1 B2,
+  Coplanar A1 A2 B1 B2 -> ~ Par_strict A1 A2 B1 B2 -> A1 <> A2 ->
+  ~ Col A1 B1 B2 -> ~ Col A2 B1 B2 -> ~ Col B1 A1 A2 -> ~ Col B2 A1 A2 ->
+  Lines_meet A1 A2 B1 B2.
+Proof.
+intros A1 A2 B1 B2 HCop HNP HNE HNC1 HNC2 HNC3 HNC4.
+destruct (cop_npars__inter_exists A1 A2 B1 B2) as [Y []]; auto.
+exists Y; repeat split; Col; intro; treat_equalities; Col.
+Qed.
+
+Lemma tcp_ts2__meet : forall A1 A2 B1 B2,
+  TS A1 A2 B1 B2 -> TS B1 B2 A1 A2 -> Lines_meet A1 A2 B1 B2.
+Proof.
+intros A1 A2 B1 B2 HTS1 HTS2.
+destruct (ts2__ex_bet2 A1 B1 A2 B2) as [Y [HBet1 HBet2]]; auto.
+destruct HTS1 as [HNC1 [HNC2 _]]; destruct HTS2 as [HNC3 [HNC4 _]].
+exists Y; repeat split; Col; intro; treat_equalities; contra_ncol.
+Qed.
+
+Lemma tcp_os2_npars__meet : forall A1 A2 B1 B2,
+  OS A1 A2 B1 B2 -> OS B1 B2 A1 A2 -> ~ Par_strict A1 A2 B1 B2 ->
+  Lines_meet A1 A2 B1 B2.
+Proof.
+intros A1 A2 B1 B2 HOS1 HOS2 HNP.
+assert (HNC1 := one_side_not_col123 _ _ _ _ HOS1).
+assert (HNC2 := one_side_not_col124 _ _ _ _ HOS1).
+assert (HNC3 := one_side_not_col123 _ _ _ _ HOS2).
+assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
+apply tcp_ncol_inplane_4; Col; [apply os__coplanar; auto|].
+intro; treat_equalities; Col.
+Qed.
+
+Lemma tcp_ts_mab_mac_a_p : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  TS MAB MAC A P.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+apply bet_ts__ts with MBC; [apply tcp_ts_mab_mac_a_mbc with B C; auto|].
+apply between_exchange4 with SA; finish.
+Qed.
+
+Lemma tcp_ts_a_p_mab_mac : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  TS A P MAB MAC.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
+assert (HNE2 : A <> P) by (intro; treat_equalities; Col).
+apply col_two_sides with MBC; [ColR|auto|].
+apply tcp_ts_a_mbc_mab_mac with B C; auto.
+Qed.
+
+Lemma tcp_meet_mab_mac_a : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  Lines_meet MAB MAC P A.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+apply tcp_meet_swapr, tcp_ts2__meet;
+[apply tcp_ts_mab_mac_a_p with B C MBC SA|
+ apply tcp_ts_a_p_mab_mac with B C MBC SA]; auto.
+Qed.
+
+Lemma tcp_meet_mmab_mac_a : forall A B C MAB MAC MBC SA P MMAB,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  Lines_meet MMAB MAC P A.
+Proof.
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
+apply tcp_meet_swapr, tcp_ts2__meet.
+- apply bet_ts__ts with MBC; [apply tcp_ts_mmab_mac_a_mbc with B C MAB; auto|].
+  apply between_exchange4 with SA; finish.
+- apply l9_5 with MAB A; [apply tcp_ts_a_p_mab_mac with B C MBC SA; auto|Col|].
+  apply l6_6, bet_out; [intro; treat_equalities; Col|finish].
+Qed.
+
+Lemma tcp_meet_mab_mmac_a : forall A B C MAB MAC MBC SA P MMAC,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  Lines_meet MAB MMAC P A.
+Proof.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
+apply tcp_meet_swapl, (tcp_meet_mmab_mac_a A C B MAC MAB MBC SA); finish.
+Qed.
+
+Lemma tcp_os_mab_mac_b_p : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  OS MAB MAC B P.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC1 HBP.
 assert (HNC2 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MMAB MAC A SA)
-  by (apply tcp_ts_mmab_mac_a_sa with B C MAB MBC; auto).
+assert (HTS : TS MAB MAC A P)
+  by (apply tcp_ts_mab_mac_a_p with B C MBC SA; auto).
+exists A; split; [|finish].
+split; [intro; apply HNC2; ColR|].
+split; [intro; apply HNC2; ColR|].
+exists MAB; finish.
+Qed.
+
+Lemma tcp_os_b_p_mab_mac : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  OS B P MAB MAC.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC1 HBP.
+assert (HNC2 : ~ Col MAB MAC MBC)
+  by (apply tcp_ncol_midpoints with A B C; auto).
+assert (HTS : TS MAB MAC A P)
+  by (apply tcp_ts_mab_mac_a_p with B C MBC SA; auto).
+assert (HBP' : Bet MBC SA P) by (apply between_exchange3 with A; finish).
+assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
+assert (HNE2 : A <> P) by (intro; treat_equalities; Col).
+assert (HNE3 : MBC <> SA) by (intro; treat_equalities; Col).
+assert (HNE4 : B <> P) by (intro; treat_equalities; apply HNC2; ColR).
+apply one_side_transitivity with A; [apply out_one_side_1 with B|];
+[intro; apply HNC2; ColR|Col|assert_diffs; repeat split; finish|].
+apply l9_17 with C; [|finish].
+apply one_side_transitivity with MBC;
+[apply out_one_side_1 with P|apply out_one_side_1 with B]; Col;
+[intro; apply HNC2; ColR| |intro; apply HNC2; ColR|];
+repeat split; finish; try solve [intro; treat_equalities; Col].
+right; apply between_symmetry, outer_transitivity_between with SA; finish.
+Qed.
+
+Lemma tcp_npars_mab_mac_b_p : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  ~ Par_strict MAB MAC B P.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
+assert (HNE2 : A <> P) by (intro; treat_equalities; Col).
+assert (HPar : Par_strict MAB MAC MBC B) by (apply tcp_pars with A C; finish).
+intro HPF; assert (HC : Col B MBC P)
+  by (destruct (parallel_uniqueness MAB MAC B MBC B P B); finish).
+cut (MBC = P); [intro; subst P|apply l6_21 with B C A P; finish; ColR].
+assert (SA = MBC) by (apply between_equality with A; finish).
+treat_equalities; Col.
+Qed.
+
+Lemma tcp_meet_mab_mac_b : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  Lines_meet MAB MAC P B.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+apply tcp_meet_swapr, tcp_os2_npars__meet;
+[apply tcp_os_mab_mac_b_p with A C MBC SA|
+ apply tcp_os_b_p_mab_mac with A C MBC SA|
+ apply tcp_npars_mab_mac_b_p with A C MBC SA]; auto.
+Qed.
+
+Lemma tcp_meet_mab_mac_c : forall A B C MAB MAC MBC SA P,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P ->
+  Lines_meet MAB MAC P C.
+Proof.
+intros A B C MAB MAC MBC SA P HMAB HMAC HMBC HSA HNC HBP.
+apply tcp_meet_swapl, (tcp_meet_mab_mac_b A C B MAC MAB MBC SA); finish.
+Qed.
+
+Lemma tcp_ts_mmab_mac_a_p : forall A B C MAB MAC MBC SA P MMAB,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  TS MMAB MAC A P.
+Proof.
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
+apply bet_ts__ts with MBC; [apply tcp_ts_mmab_mac_a_mbc with B C MAB; auto|].
+apply between_exchange4 with SA; finish.
+Qed.
+
+Lemma tcp_os_mmab_mac_b_p : forall A B C MAB MAC MBC SA P MMAB,
+  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  OS MMAB MAC B P.
+Proof.
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
+assert (HNC2 : ~ Col MAB MAC MBC)
+  by (apply tcp_ncol_midpoints with A B C; auto).
+assert (HTS : TS MMAB MAC A P)
+  by (apply tcp_ts_mmab_mac_a_p with B C MAB MBC SA; auto).
 assert (HNE1 : A <> MMAB) by (intro; treat_equalities; Col).
 assert (HNE2 : B <> MMAB).
   {
@@ -520,18 +396,19 @@ exists MMAB; split; [finish|].
 apply between_symmetry, between_exchange4 with MAB; finish.
 Qed.
 
-Lemma tcp_os_b_sa_mmab_mac : forall A B C MAB MAC MBC SA MMAB,
+Lemma tcp_os_b_p_mmab_mac : forall A B C MAB MAC MBC SA P MMAB,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  OS B SA MMAB MAC.
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  OS B P MMAB MAC.
 Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC HMMAB.
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
 assert (HNC2 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
+assert (HOS : OS B P MAB MAC)
+  by (apply tcp_os_b_p_mab_mac with A C MBC SA; auto).
 assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : B <> SA) by (intro; treat_equalities; Col).
-apply one_side_transitivity with MAB;
-[|apply tcp_os_b_sa_mab_mac with A C MBC; auto].
+assert (HNE2 : B <> P) by (apply one_side_not_col123 in HOS; assert_diffs; auto).
+apply one_side_transitivity with MAB; [|auto].
 apply out_one_side; [right; intro; apply HNC2; ColR|].
 repeat split; [intro; treat_equalities..|right]; Col;
 [cut (MAB = MMAB); [assert_diffs; auto|apply between_equality with A; finish]|].
@@ -564,77 +441,17 @@ apply par_col4__par with MAMBC MAC MBC C; finish; [|assert_diffs; auto].
 intro; treat_equalities; assert_diffs; auto.
 Qed.
 
-Lemma tcp_ncol_inplane_2_3 : forall A B C MAB MAC MBC SA MMAB,
+Lemma tcp_meet_mmab_mac_b_sa : forall A B C MAB MAC MBC SA MMAB,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
   Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SA B Y /\ SA <> B /\ SA <> Y /\ B <> Y)).
+  Lines_meet MMAB MAC SA B.
 Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC1 HMMAB.
-assert (HOS1 : OS MMAB MAC B SA)
-  by (apply tcp_os_mmab_mac_b_sa with A C MAB MBC; auto).
-assert (HOS2 : OS B SA MMAB MAC)
-  by (apply tcp_os_b_sa_mmab_mac with A C MAB MBC; auto).
-assert (HNP : ~ Par_strict MMAB MAC B SA)
-  by (apply tcp_npars_mmab_mac_b_sa with A C MAB MBC; auto).
-assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
-assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
-assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
-assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-destruct (cop_npars__inter_exists MMAB MAC B SA) as [Y [HC1 HC2]]; finish.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_os_mmab_mac_b_ssa : forall A B C MAB MAC MBC SA SSA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAB A MAB ->
-  OS MMAB MAC B SSA.
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAB HMAB HMAC HMBC HSA HSSA HNC HMMAB.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MMAB MAC A SSA).
-  {
-  apply bet_ts__ts with SA;
-  [apply tcp_ts_mmab_mac_a_sa with B C MAB MBC; auto|].
-  apply outer_transitivity_between2 with MBC; finish.
-  intro; treat_equalities; Col.
-  }
-assert (HNE1 : A <> MMAB) by (intro; treat_equalities; Col).
-assert (HNE2 : B <> MMAB).
-  {
-  intro; treat_equalities; cut (B = MAB); [assert_diffs; auto|].
-  apply between_equality with A; finish.
-  }
-exists A; split; [|finish].
-split; [intro; apply HNC2; ColR|].
-split; [intro; apply HNC2; ColR|].
-exists MMAB; split; [finish|].
-apply between_symmetry, between_exchange4 with MAB; finish.
-Qed.
-
-Lemma tcp_os_b_ssa_mmab_mac : forall A B C MAB MAC MBC SA SSA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAB A MAB ->
-  OS B SSA MMAB MAC.
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAB HMAB HMAC HMBC HSA HSSA HNC HMMAB.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : A <> SSA) by (assert_diffs; auto).
-assert (HNE3 : B <> SA) by (intro; treat_equalities; Col).
-assert (HNE4 : B <> SSA) by (intro; treat_equalities; apply HNC2; ColR).
-apply one_side_transitivity with MAB;
-[|apply tcp_os_b_ssa_mab_mac with A C MBC SA; auto].
-apply out_one_side; [right; intro; apply HNC2; ColR|].
-repeat split; [intro; treat_equalities..|right]; Col;
-[cut (MAB = MMAB); [assert_diffs; auto|apply between_equality with A; finish]|].
-apply between_inner_transitivity with A; finish.
+intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC HMMAB.
+apply tcp_meet_swapr, tcp_os2_npars__meet;
+[apply tcp_os_mmab_mac_b_p with A C MAB MBC SA|
+ apply tcp_os_b_p_mmab_mac with A C MAB MBC SA|
+ intro; apply (tcp_npars_mmab_mac_b_sa A B C MAB MAC MBC SA MMAB)];
+finish.
 Qed.
 
 Lemma tcp_bet_sa_b_inter_mab_mac_b_sa : forall A B C MAB MAC MBC SA MMAB I,
@@ -651,7 +468,7 @@ assert (HTS : TS MMAB MAC A MBC)
 destruct HTS as [_ [_ [T [HC2 HBet1]]]].
 destruct (symmetric_point_construction A T) as [ST HST].
 assert (HNC2 : OS MMAB MAC B SA)
-  by (apply tcp_os_mmab_mac_b_sa with A C MAB MBC; auto).
+  by (apply tcp_os_mmab_mac_b_p with A C MAB MBC SA; finish).
 apply one_side_not_col123 in HNC2.
 assert (HNE : A <> T) by (intro; treat_equalities; apply HNC2; ColR).
 assert (HNE8 : MAB <> ST).
@@ -703,296 +520,135 @@ apply par_strict_trans with MAB C;
 intro; apply HNC2; ColR.
 Qed.
 
-Lemma tcp_ncol_inplane_2_4 : forall A B C MAB MAC MBC SA SSA MMAB,
+Lemma tcp_meet_mmab_mac_b : forall A B C MAB MAC MBC SA P MMAB,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SSA B Y /\ SSA <> B /\ SSA <> Y /\ B <> Y)).
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  Lines_meet MMAB MAC P B.
 Proof.
-intros A B C MAB MAC MBC SA SSA MMAB HMAB HMAC HMBC HSA HSSA HNC HMMAB.
-assert (HOS1 : OS MMAB MAC B SSA)
-  by (apply tcp_os_mmab_mac_b_ssa with A C MAB MBC SA; auto).
-assert (HOS2 : OS B SSA MMAB MAC)
-  by (apply tcp_os_b_ssa_mmab_mac with A C MAB MBC SA; auto).
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
+assert (HOS1 : OS MMAB MAC B P)
+  by (apply tcp_os_mmab_mac_b_p with A C MAB MBC SA; auto).
+assert (HOS2 : OS B P MMAB MAC)
+  by (apply tcp_os_b_p_mmab_mac with A C MAB MBC SA; auto).
 assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
 assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
 assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
 assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-cut (exists Z, Col MMAB MAC Z /\ Col SSA B Z);
+cut (exists Z, Col MMAB MAC Z /\ Col P B Z);
 [intros [Y []]; exists Y; repeat split; Col; intro; treat_equalities; Col|].
-destruct (tcp_ncol_inplane_2_3 A B C MAB MAC MBC SA MMAB) as [Y HY]; auto.
-destruct (tcp_ts_mmab_mac_a_sa A B C MAB MAC MBC SA MMAB) as [_ [_ HX]]; auto.
-destruct HX as [X HX]; assert (HBet : Bet X SA SSA).
+destruct (tcp_meet_mmab_mac_b_sa A B C MAB MAC MBC SA MMAB) as [Y HY]; auto.
+destruct (tcp_ts_mmab_mac_a_p A B C MAB MAC MBC SA SA MMAB) as [_ [_ HX]];
+[finish..|].
+destruct HX as [X HX]; assert (HBet : Bet X SA P)
+  by (apply between_exchange3 with A; spliter; auto).
+assert (HNE : X <> Y).
   {
-  apply between_exchange3 with A; [spliter; auto|].
-  apply outer_transitivity_between2 with MBC; finish.
-  intro; treat_equalities; Col.
+  intro; treat_equalities; spliter.
+  assert (HOS3 : OS MMAB MAC B SA)
+    by (apply tcp_os_mmab_mac_b_p with A C MAB MBC SA; finish).
+  apply (one_side_not_col124 _ _ _ _ HOS3); ColR.
   }
-assert (HNE : X <> Y) by (intro; treat_equalities; spliter; apply HNC5; ColR).
-cut (Bet Y B SA); [intro; destruct (outer_pasch X Y SA SSA B) as [Z []]; auto|];
+cut (Bet Y B SA); [intro; destruct (outer_pasch X Y SA P B) as [Z []]; auto|];
 [spliter; exists Z; split; ColR|apply between_symmetry; spliter].
 apply tcp_bet_sa_b_inter_mab_mac_b_sa with A C MAB MAC MBC MMAB; finish.
 Qed.
 
-Lemma tcp_ts_mab_mmac_a_sa : forall A B C MAB MAC MBC SA MMAC,
+Lemma tcp_ts_mab_mmac_a_p : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  TS MAB MMAC A SA.
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  TS MAB MMAC A P.
 Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC1 HMMAC.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-apply bet_ts__ts with MBC; [|finish].
-assert (HTS1 : TS MAB MAC A MBC) by (apply tcp_ts_mab_mac_a_mbc with B C; auto).
-assert (HTS2 : TS A MBC MAB MAC) by (apply tcp_ts_a_mbc_mab_mac with B C; auto).
-destruct (ts2__ex_bet2 MAB A MAC MBC) as [Y [HBet1 HBet2]]; auto.
-destruct (inner_pasch A MAB MAC MMAC Y) as [Z [HBet3 HBet4]]; finish.
-apply (l9_18 _ _ _ _ Y) in HTS1; apply (l9_18 _ _ _ _ Y) in HTS2; Col.
-assert (HNE1 : A <> Y) by (intro; apply HNC2; ColR).
-assert (HNE2 : MAB <> MMAC) by (intro; apply HNC2; ColR).
-assert (HBet : Bet A Z MBC) by (apply between_exchange4 with Y; finish).
-assert (HNE3 : MBC <> Z) by (intro; treat_equalities; apply HNC2; Col).
-split; [intro; apply HNC2; ColR|].
-split; [intro; apply HNC2; ColR|exists Z; split; finish].
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
+apply invert_two_sides, (tcp_ts_mmab_mac_a_p A C B MAC MAB MBC SA); finish.
 Qed.
 
-Lemma tcp_os_mab_mmac_b_sa : forall A B C MAB MAC MBC SA MMAC,
+Lemma tcp_os_mab_mmac_b_p : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  OS MAB MMAC B SA.
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  OS MAB MMAC B P.
 Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC HMMAC.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
 assert (HNC2 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MMAC A SA)
-  by (apply tcp_ts_mab_mmac_a_sa with B C MAC MBC; auto).
-assert (HNE1 : A <> MMAC) by (intro; treat_equalities; Col).
-assert (HNE2 : C <> MMAC).
-  {
-  intro; treat_equalities; cut (C = MAC); [assert_diffs; auto|].
-  apply between_equality with A; finish.
-  }
+assert (HTS : TS MAB MMAC A P)
+  by (apply tcp_ts_mab_mmac_a_p with B C MAC MBC SA; auto).
 exists A; split; [|finish].
 split; [intro; apply HNC2; ColR|].
 split; [intro; apply HNC2; ColR|].
-exists MAB; split; finish.
+exists MAB; finish.
 Qed.
 
-Lemma tcp_os_b_sa_mab_mmac : forall A B C MAB MAC MBC SA MMAC,
+Lemma tcp_os_b_p_mab_mmac : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  OS B SA MAB MMAC.
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  OS B P MAB MMAC.
 Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC HMMAC.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
 assert (HNC2 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
+assert (HBP' : Bet MBC SA P) by (apply between_exchange3 with A; finish).
 assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : B <> SA) by (intro; treat_equalities; Col).
-apply one_side_transitivity with MAC;
-[apply tcp_os_b_sa_mab_mac with A C MBC; auto|].
-apply l9_17 with A; [apply one_side_symmetry|finish].
-apply l9_17 with C; [|finish].
-apply one_side_transitivity with MBC; [apply invert_one_side|];
-apply out_one_side; [left; intro| |right; intro|]; try solve [apply HNC2; ColR];
-repeat split; finish; intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_npars_mab_mmac_b_sa : forall A B C MAB MAC MBC SA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  ~ Par_strict MAB MMAC B SA.
-Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC1 HMMAC.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HP : Par_strict B MAC MAB MMAC)
-  by (apply triangle_mid_par_strict with A; finish; intro; apply HNC2; ColR).
-cut (~ Par B MAC B SA);
-[intros HF ?; apply HF; apply par_trans with MAB MMAC; finish|].
-clear HP; intros [[_ HF]|[HNE2 [HNE3 [_ HC]]]]; [apply HF; exists B; finish|].
-assert (HOS : OS B SA MAB MAC)
-  by (apply tcp_os_b_sa_mab_mac with A C MBC; auto).
-apply (one_side_not_col124 _ _ _ _ HOS); Col.
-Qed.
-
-Lemma tcp_ncol_inplane_2_5 : forall A B C MAB MAC MBC SA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SA B Y /\ SA <> B /\ SA <> Y /\ B <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC HMMAC.
-assert (HOS1 : OS MAB MMAC B SA)
-  by (apply tcp_os_mab_mmac_b_sa with A C MAC MBC; auto).
-assert (HOS2 : OS B SA MAB MMAC)
-  by (apply tcp_os_b_sa_mab_mmac with A C MAC MBC; auto).
-assert (HNP : ~ Par_strict MAB MMAC B SA)
-  by (apply tcp_npars_mab_mmac_b_sa with A C MAC MBC; auto).
-assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
-assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
-assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
-assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-destruct (cop_npars__inter_exists MAB MMAC B SA) as [Y [HC1 HC2]]; finish.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_os_mab_mmac_b_ssa : forall A B C MAB MAC MBC SA SSA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  OS MAB MMAC B SSA.
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MMAC A SA)
-  by (apply tcp_ts_mab_mmac_a_sa with B C MAC MBC; auto).
-assert (HNE1 : A <> MMAC) by (intro; treat_equalities; Col).
-assert (HNE2 : C <> MMAC).
-  {
-  intro; treat_equalities; cut (C = MAC); [assert_diffs; auto|].
-  apply between_equality with A; finish.
-  }
-exists A; split; [repeat split|apply l9_2, bet_ts__ts with SA];
-[intro; apply HNC2; ColR..|exists MAB; finish|finish|].
-apply outer_transitivity_between2 with MBC; finish.
-intro; treat_equalities; Col.
-Qed.
-
-Lemma tcp_os_b_ssa_mab_mmac : forall A B C MAB MAC MBC SA SSA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  OS B SSA MAB MMAC.
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
-assert (HNC2 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HTS : TS MAB MAC A SSA)
-  by (apply tcp_ts_mab_mac_a_ssa with B C MBC SA; auto).
-assert (HNE1 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE2 : A <> SSA) by (assert_diffs; auto).
+assert (HNE2 : A <> P) by (intro; treat_equalities; Col).
 assert (HNE3 : B <> SA) by (intro; treat_equalities; Col).
+assert (HNE4 : MBC <> SA) by (intro; treat_equalities; Col).
 apply one_side_transitivity with MAC;
-[apply tcp_os_b_ssa_mab_mac with A C MBC SA; auto|].
+[apply tcp_os_b_p_mab_mac with A C MBC SA; auto|].
 apply l9_17 with A; [apply one_side_symmetry|finish].
 apply l9_17 with C; [|finish].
 apply one_side_transitivity with MBC; [apply invert_one_side|];
 apply out_one_side; [left; intro| |right; intro|]; try solve [apply HNC2; ColR];
 repeat split; finish; try solve [intro; treat_equalities; Col].
 right; apply between_symmetry, outer_transitivity_between with SA; finish.
-intro; treat_equalities; Col.
 Qed.
 
-Lemma tcp_npars_mab_mmac_b_ssa : forall A B C MAB MAC MBC SA SSA MMAC,
+Lemma tcp_npars_mab_mmac_b_p : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  ~ Par_strict MAB MMAC B SSA.
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  ~ Par_strict MAB MMAC B P.
 Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
 assert (HNC2 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
 assert (HP : Par_strict B MAC MAB MMAC)
   by (apply triangle_mid_par_strict with A; finish; intro; apply HNC2; ColR).
-cut (~ Par B MAC B SSA);
+cut (~ Par B MAC B P);
 [intros HF ?; apply HF; apply par_trans with MAB MMAC; finish|].
 clear HP; intros [[_ HF]|[HNE2 [HNE3 [_ HC]]]]; [apply HF; exists B; finish|].
-assert (HOS : OS B SSA MAB MAC)
-  by (apply tcp_os_b_ssa_mab_mac with A C MBC SA; auto).
+assert (HOS : OS B P MAB MAC)
+  by (apply tcp_os_b_p_mab_mac with A C MBC SA; auto).
 apply (one_side_not_col124 _ _ _ _ HOS); Col.
 Qed.
 
-Lemma tcp_ncol_inplane_2_6 : forall A B C MAB MAC MBC SA SSA MMAC,
+Lemma tcp_meet_mab_mmac_b : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SSA B Y /\ SSA <> B /\ SSA <> Y /\ B <> Y)).
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  Lines_meet MAB MMAC P B.
 Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
-assert (HOS1 : OS MAB MMAC B SSA)
-  by (apply tcp_os_mab_mmac_b_ssa with A C MAC MBC SA; auto).
-assert (HOS2 : OS B SSA MAB MMAC)
-  by (apply tcp_os_b_ssa_mab_mmac with A C MAC MBC SA; auto).
-assert (HNP : ~ Par_strict MAB MMAC B SSA)
-  by (apply tcp_npars_mab_mmac_b_ssa with A C MAC MBC SA; auto).
-assert (HNC2 := one_side_not_col123 _ _ _ _ HOS1).
-assert (HNC3 := one_side_not_col124 _ _ _ _ HOS1).
-assert (HNC4 := one_side_not_col124 _ _ _ _ HOS2).
-assert (HNC5 := one_side_not_col123 _ _ _ _ HOS2).
-destruct (cop_npars__inter_exists MAB MMAC B SSA) as [Y [HC1 HC2]]; finish.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
+apply tcp_meet_swapr, tcp_os2_npars__meet;
+[apply tcp_os_mab_mmac_b_p with A C MAC MBC SA|
+ apply tcp_os_b_p_mab_mmac with A C MAC MBC SA|
+ apply tcp_npars_mab_mmac_b_p with A C MAC MBC SA]; auto.
 Qed.
 
-Lemma tcp_ncol_inplane_3_1 : forall A B C MAB MAC MBC SA,
+Lemma tcp_meet_mmab_mac_c : forall A B C MAB MAC MBC SA P MMAB,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SA C Y /\ SA <> C /\ SA <> Y /\ C <> Y)).
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAB A MAB ->
+  Lines_meet MMAB MAC P C.
 Proof.
-intros A B C MAB MAC MBC SA HMAB HMAC HMBC HSA HNC.
-destruct (tcp_ncol_inplane_2_1 A C B MAC MAB MBC SA) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
+intros A B C MAB MAC MBC SA P MMAB HMAB HMAC HMBC HSA HNC HBP HMMAB.
+apply tcp_meet_swapl, (tcp_meet_mab_mmac_b A C B MAC MAB MBC SA); finish.
 Qed.
 
-Lemma tcp_ncol_inplane_3_2 : forall A B C MAB MAC MBC SA SSA,
+Lemma tcp_meet_mab_mmac_c : forall A B C MAB MAC MBC SA P MMAC,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  (exists Y, (Col MAB MAC Y /\ MAB <> MAC /\ MAB <> Y /\ MAC<> Y) /\
-             (Col SSA C Y /\ SSA <> C /\ SSA <> Y /\ C <> Y)).
+  Midpoint MBC SA A -> ~ Col A B C -> Bet A SA P -> Midpoint MMAC A MAC ->
+  Lines_meet MAB MMAC P C.
 Proof.
-intros A B C MAB MAC MBC SA SSA HMAB HMAC HMBC HSA HSSA HNC.
-destruct (tcp_ncol_inplane_2_2 A C B MAC MAB MBC SA SSA) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
+intros A B C MAB MAC MBC SA P MMAC HMAB HMAC HMBC HSA HNC HBP HMMAC.
+apply tcp_meet_swapl, (tcp_meet_mmab_mac_b A C B MAC MAB MBC SA); finish.
 Qed.
 
-Lemma tcp_ncol_inplane_3_3 : forall A B C MAB MAC MBC SA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SA C Y /\ SA <> C /\ SA <> Y /\ C <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA MMAB HMAB HMAC HMBC HSA HNC HMMAB.
-destruct (tcp_ncol_inplane_2_5 A C B MAC MAB MBC SA MMAB) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_3_4 : forall A B C MAB MAC MBC SA SSA MMAB,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAB A MAB ->
-  (exists Y, (Col MMAB MAC Y /\ MMAB <> MAC /\ MMAB <> Y /\ MAC<> Y) /\
-             (Col SSA C Y /\ SSA <> C /\ SSA <> Y /\ C <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAB HMAB HMAC HMBC HSA HSSA HNC HMMAB.
-destruct (tcp_ncol_inplane_2_6 A C B MAC MAB MBC SA SSA MMAB) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_3_5 : forall A B C MAB MAC MBC SA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> ~ Col A B C -> Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SA C Y /\ SA <> C /\ SA <> Y /\ C <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA MMAC HMAB HMAC HMBC HSA HNC HMMAC.
-destruct (tcp_ncol_inplane_2_3 A C B MAC MAB MBC SA MMAC) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
-
-Lemma tcp_ncol_inplane_3_6 : forall A B C MAB MAC MBC SA SSA MMAC,
-  Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
-  Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
-  Midpoint MMAC A MAC ->
-  (exists Y, (Col MAB MMAC Y /\ MAB <> MMAC /\ MAB <> Y /\ MMAC<> Y) /\
-             (Col SSA C Y /\ SSA <> C /\ SSA <> Y /\ C <> Y)).
-Proof.
-intros A B C MAB MAC MBC SA SSA MMAC HMAB HMAC HMBC HSA HSSA HNC HMMAC.
-destruct (tcp_ncol_inplane_2_4 A C B MAC MAB MBC SA SSA MMAC) as [Y]; finish.
-spliter; exists Y; repeat split; finish.
-Qed.
 
 Lemma tcp_ncol_ndc_ncol : forall A B C MAB MAC MBC SA MMAB MMAC X P,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C ->
@@ -1003,359 +659,59 @@ Lemma tcp_ncol_ndc_ncol : forall A B C MAB MAC MBC SA MMAB MMAC X P,
   ~ Col MMAB MAC P -> ~ Col MAC P X -> ~ Col MAB MMAC X ->
   ~ Col MAB P X.
 Proof.
-intros A B C MAB MAC MBC SA MMAB MMAC X P HMAB HMAC HMBC MSA HNC1 HMMAB HMMAC.
+intros A B C MAB MAC MBC SA MMAB MMAC X P HMAB HMAC HMBC HSA HNC1 HMMAB HMMAC.
 intros HNC2 HC1 HC2 HCop HBet1 HNE1 HCol1 HNC4 HNC5 HNC6 HCol2.
-assert (HNC3 : ~ Col MAB MAC MBC)
-  by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HOS1 : OS A B MAC P).
+assert (HXMAB : X <> MAB) by (intro; subst; apply HNC6; Col).
+assert (HXMAC : X <> MAC) by (intro; subst; apply HNC5; Col).
+assert (HMMABMAC : MMAB <> MAC) by (intro; subst; apply HNC4; Col).
+assert (HCong : Cong P A P B).
   {
-  apply one_side_transitivity with MBC.
-  - apply l12_6; apply triangle_mid_par_strict_cong_simp with C; auto.
-  - apply out_one_side; [left; intro; apply HNC3; ColR|].
-    split; [|split]; [intro; treat_equalities; Col..|left].
-    apply between_exchange4 with SA; Between.
+  apply per_double_cong with MAB; [|Midpoint].
+  apply l8_2, per_col with X; auto; [apply l8_2; exists B; split; Cong|Col].
   }
-destruct (symmetric_point_construction P MAB) as [SP HSP].
-assert (HNE2 : A <> SA) by (intro; treat_equalities; Col).
-assert (HNE3 : MAB <> P) by (intro; treat_equalities; apply HNC4; ColR).
-destruct (symmetric_point_construction MAC MMAB) as [SMAC HSMAC].
-assert (HP1 : Per SP MAB MMAB).
+assert (HPer1 : Per A C MAB).
   {
-  apply perp_per_2, perp_col2_bis with A B; [|Col|ColR|].
-  - apply perp_col2 with X MAB; [..|Col|ColR].
-    + apply perp_bisect_perp, cong_mid_perp_bisect; [..|Cong|Midpoint].
-      * intro; treat_equalities; apply HNC2; Col.
-      * intro; treat_equalities; apply HNC1; Col.
-    + intro; treat_equalities; apply HNE3; auto.
-  - intro; treat_equalities; apply HNC1; Col.
-  }
-assert (HCongA : CongA A MAB C MAB MMAB SMAC).
-  {
-  apply conga_trans with A MMAB MAC.
-  - apply conga_comm, par_preserves_conga_os; [|Between| |].
-    + apply par_left_comm, triangle_mid_par with A; Midpoint.
-      intro; treat_equalities; apply HNC4; Col.
-    + intro; treat_equalities; apply HNC1; Col.
-    + apply out_one_side_1 with A; [intro; apply HNC3; ColR|Col|].
-      split; [|split; [|right; Between]]; intro; treat_equalities;
-      [apply HNC3|apply HNC1]; Col.
-  - apply l11_14; Between; intro; treat_equalities;
-    [apply HNC1..|apply HNC4|apply HNC4]; Col.
-  }
-assert (HLeA : LeA A MAB C A MAB MBC).
-  {
-  apply inangle__lea; split; [|split; [|split]];
-  [intro; treat_equalities..|]; [apply HNC1..|apply HNC4|]; Col.
-  destruct (inner_pasch A C B MAB MBC) as [I []]; [Between..|].
-  exists I; split; [Between|right].
-  apply bet_out_1; [|Between].
-  intro; treat_equalities; apply HNC3; ColR.
-  }
-assert (HNE4 : MBC <> P).
-  {
-  intro; cut (MBC = SA); [intro; treat_equalities; apply HNE2; auto|].
-  treat_equalities; apply between_equality with A; Between.
-  }
-assert (HAcute1 : Acute A MAB MBC).
-  {
-  exists A, MAB, P; split.
-  - apply col_col_per_per with MMAB SP; [| |Col..|Perp];
-    intro; treat_equalities; [apply HNC1|apply HNE3]; Col.
-  - apply inangle__lta; [intro; apply HNC3; ColR|].
-    split; [|split; [|split]]; [intro; treat_equalities..|];
-    [apply HNC1|apply HNE3|apply HNC1|]; [Col..|].
-    exists MBC; split; [apply between_exchange4 with SA; Between|].
-    right; apply out_trivial; intro; treat_equalities; apply HNC1; Col.
-  }
-assert (HAcute2 : Acute MAB MMAB SMAC).
-  {
-  apply acute_conga__acute with A MAB C; [|CongA].
-  apply acute_lea_acute with A MAB MBC; auto.
-  }
-assert (HOS2 : OS MAB MMAB SP SMAC).
-  {
-  apply col2_os__os with A B; [|Col|ColR|].
-  - intro; treat_equalities; apply HNC1; Col.
-  - exists P; split; [split; [|split]|]; [intro; apply HNC1; ColR..| |].
-    + exists MAB; split; [Col|Between].
-    + apply l9_2, l9_8_2 with MAC; [|auto].
-      split; [|split]; [intro; apply HNC1; ColR..|].
-      exists MMAB; split; [ColR|Between].
-  }
-assert (HPara : Parallelogram A MAB MBC MAC).
-  {
-  destruct (triangle_mid_par_cong A B C MBC MAC MAB);
-  [intro; treat_equalities; apply HNC1; Col..|Midpoint|Midpoint|Midpoint|].
-  spliter; apply par_par_cong_cong_parallelogram;
-  [intro; treat_equalities; apply HNC1; Col|Cong..| |].
-  - apply par_col4__par with MAB MBC A C; [| |Par|Col..];
-    intro; treat_equalities; apply HNC1; Col.
-  - apply par_col4__par with A B MBC MAC; [| |Par|Col..];
-    intro; treat_equalities; apply HNC1; Col.
-  }
-assert (HX : euclid_s_parallel_postulate)
-  by (apply postulates_in_euclidean_context; simpl; tauto).
-destruct (ex_suma SP MAB MMAB MAB MMAB SMAC) as [E [F [G HSumA]]];
-[intro; treat_equalities..|]; [apply HNE3|apply HNC1..|apply HNC4|]; [Col..|].
-assert (HI : SAMS SP MAB MMAB MAB MMAB SMAC).
-  {
-  apply acute_per__sams; [| |auto..];
-  intro; treat_equalities; [apply HNE3|apply HNC1]; Col.
-  }
-assert (HB : ~ Bet E F G).
-  {
-  apply acute_per_suma__nbet with SP MAB MMAB MAB MMAB SMAC; [| |auto..];
-  intro; treat_equalities; [apply HNE3|apply HNC1]; Col.
-  }
-destruct (HX SP MAB MMAB SMAC E F G) as [I [HOut1 HOut2]]; [auto..|].
-clear E F G HSumA HI HB HAcute2 HCongA HOS1 HOS2 HLeA.
-assert (X = I); [|treat_equalities].
-  {
-  apply l6_21 with MMAB SMAC MAB SP; [| |ColR|Col|ColR|Col].
-  - intro; apply HNC3; ColR.
-  - intro; treat_equalities; apply HNE3; auto.
-  }
-cut (Out MAB X P).
-  {
-  intro HF; apply (l6_7 _ _ _ _ HOut1) in HF.
-  apply l6_4_1 in HF; destruct HF as [_ HF]; apply HF; Between.
-  }
-assert (HTS1 : TS MAB P B C).
-  {
-  apply bet_ts__ts with MBC; [|Between].
-  apply l9_2, l9_8_2 with A; [|apply invert_one_side, out_one_side].
-  - split; [|split; [|exists MAB; split; [Col|Between]]].
-    + intro; apply HNC2; ColR.
-    + intro; apply HNC2; ColR.
-  - left; intro; apply HNC3; ColR.
-  - split; [|split; [|right; apply between_exchange2 with SA; Between]].
-    + intro; treat_equalities; apply HNE2; auto.
-    + intro; treat_equalities; apply HNE4; auto.
-  }
-destruct (l8_18_existence MAB X C) as [PC [HCol3 HPC]];
-[destruct HTS1 as [_ [HF _]]; intro; apply HF; ColR|].
-assert (HNE5 : MAB <> PC).
-  {
-  intro; treat_equalities; cut (Par A MAB C MAB); [intro HF|].
-  - apply HNC3; apply (not_strict_par1 A MAB C MAB MAB) in HF; ColR.
-  - apply l12_9 with MAB X; [CopR|Cop|Cop|Cop| |Perp].
-    apply perp_col4 with MMAB MAB MAB SP; [| |Col..|apply per_perp; Perp].
-    + intro; treat_equalities; apply HNC1; Col.
-    + apply perp_not_eq_1 in HPC; auto.
-    + intro; treat_equalities; apply HNC1; Col.
-    + intro; treat_equalities; apply HNE3; auto.
-  }
-assert (HP2 : Per C PC MAB)
-  by (apply perp_per_1, perp_col4 with PC C MAB X; finish; assert_diffs; auto).
-destruct (ex_suma MAB PC C PC C A) as [E [F [G HSumA]]];
-[|apply perp_not_eq_2 in HPC..|intro; treat_equalities; apply HNC1|]; Col.
-assert (HPS1 : Par_strict MAB A PC C).
-  {
-  apply par_not_col_strict with C; Col; [|intro; apply HNC3; ColR].
-  apply l12_9 with MAB X; [Cop|Cop|Cop|CopR| |Perp].
-  apply perp_col4 with MMAB MAB MAB SP; [| |Col..|apply per_perp; Perp].
-  - intro; treat_equalities; apply HNC1; Col.
-  - apply perp_not_eq_1 in HPC; auto.
-  - intro; treat_equalities; apply HNC1; Col.
-  - intro; treat_equalities; apply HNE3; auto.
-  }
-assert (HPS2 : Par_strict A B C SA)
-  by (apply par_strict_right_comm, midpoint_par_strict with MBC; finish).
-assert (HCol4 : Col C SA PC).
-  {
-  destruct (parallel_uniqueness A B C SA C PC C); [Par|Col| |Col..].
-  apply par_col4__par with A MAB C PC; [| |Par|Col..].
-  - intro; treat_equalities; apply HNC1; Col.
-  - apply perp_not_eq_2 in HPC; auto.
-  }
-assert (HOS : OS MAB P A C).
-  {
-  exists B; split; [|Side].
-  split; [|split; [|exists MAB; split; [Col|Between]]].
-  - intro; apply HNC1; ColR.
-  - intro; apply HNC2; ColR.
-  }
-assert (HBet2 : Bet MAB PC P).
-  {
-  elim (eq_dec_points P PC); [intro; treat_equalities; Between|intro HNE7].
-  apply col_two_sides_bet with C; [ColR|].
-  apply l9_8_2 with A; [|Side].
-  split; [|split; [|exists SA; split; [Col|Between]]].
-  - intro; apply HNC1; ColR.
-  - intro; apply HNE7, l6_21 with C PC MAB P; [|Col..|ColR].
-    apply par_strict_not_col_3 in HPS1; Col.
-  }
-assert (HBet3 : Bet C SA PC).
-  {
-  elim (eq_dec_points SA PC); [intro; treat_equalities; Between|intro HNE7].
-  apply col_two_sides_bet with A; [Col|].
-  apply l9_2, l9_8_2 with B.
-  - split; [|split; [|exists MBC; split; [Col|Between]]].
-    + intro; apply HNC2; ColR.
-    + intro; apply HNC1; ColR.
-  - apply one_side_transitivity with MAB.
-    + apply invert_one_side, out_one_side; [left; intro; apply HNC1; ColR|].
-      split; [|split; [|right; Between]];
-      intro; treat_equalities; apply HNC1; Col.
-    + apply out_one_side_1 with P; [intro; apply HNC3; ColR|Col|].
-      split; [|split; [|right; Between]].
-      * apply os_distincts in HOS; spliter; auto.
-      * intro; treat_equalities; apply HNC2; ColR.
-  }
-assert (HAcute2 : Acute PC C A).
-  {
-  apply acute_conga__acute with A MAB MBC; [assumption|].
-  assert (HOS5 : OS A MAC MBC PC).
+  assert (HPer : Per MMAB MAC A).
     {
-    apply one_side_transitivity with SA; [apply out_one_side|].
-    - left; intro; apply HNC1; ColR.
-    - split; [|split; [|left; Between]].
-      + intro; apply HNC3; ColR.
-      + intro; treat_equalities; apply HNC1; Col.
-    - apply out_one_side_1 with C; [intro; apply HNC3; ColR|Col|].
-      split; [|split; [|left; Between]].
-      + apply par_strict_distinct in HPS2; spliter; auto.
-      + apply par_strict_distinct in HPS1; spliter; auto.
+    apply l8_2, per_col with X; auto; [apply l8_2; exists C; split; Cong|Col].
     }
-  apply conga_trans with A MAC MBC; [apply conga_right_comm|].
-  - apply plg_conga in HPara; [spliter; auto|].
-    split; [|split]; intro; treat_equalities; apply HNC1; Col.
-  - apply conga_left_comm, l12_22; [|auto|].
-    + split; [|split; [|left; Between]];
-      intro; treat_equalities; apply HNC1; Col.
-    + apply par_trans with A MAB; [|Par].
-      apply plg_par in HPara; [spliter; Par|..];
-      intro; treat_equalities; apply HNC1; Col.
-  }
-assert (HD : MAB <> PC /\ PC <> C)
-  by (apply par_strict_distinct in HPS1; spliter; auto).
-destruct HD as [HD1 HD2].
-destruct (HX MAB PC C A E F G) as [I [HOut3 HOut4]]; [Side| |auto|..];
-[apply acute_per__sams|apply acute_per_suma__nbet with MAB PC C PC C A|];
-[| |Perp|assumption| | |Perp|assumption..|]; [assumption..|].
-clear E F G HSumA HD1 HD2.
-assert (HNE6 : MAC <> I) by (intro; treat_equalities; apply HNC1; ColR).
-destruct (l10_15 I MAC MAC P) as [J HJ]; [Col|intro; apply HNC3; ColR|].
-destruct HJ as [HJ HOS3].
-assert (HBet4 : Bet I A C).
-  {
-  apply (l9_19 _ _ _ _ I) in HOS; [|ColR|Col].
-  destruct HOS as [HOut7 _].
-  cut (Bet C A I); [|apply out2__bet]; [Between|assumption|].
-  apply l6_6; assumption.
-  }
-assert (HTS2 : TS MAB A I P).
-  {
-  apply l9_2, l9_8_2 with PC; [|apply out_one_side].
-  - apply l9_8_2 with C; [|Side].
-    apply (l9_19 _ _ _ _ I) in HOS; [|ColR|Col].
-    destruct HOS as [HOut7 _].
-    split; [|split; [|exists A; split; [Col|Between]]];
-    intro; apply HNC3; ColR.
-  - right; intro; apply HNC3; ColR.
-  - split; [|split; [|left; Between]];
-    apply par_strict_distinct in HPS1; spliter; auto.
-  }
-assert (HBet5 : Bet I MAB P)
-  by (apply col_two_sides_bet with A; [ColR|auto]).
-assert (HAcute3 : Acute MAC I P).
-  {
-  assert (HD1 : PC <> C) by (apply par_strict_distinct in HPS1; spliter; auto).
-  assert (HD2 : PC <> I) by (apply out_diff2 in HOut3; auto).
-  apply acute_out2__acute with C PC.
-  - apply out_bet_out_2 with A; [|Between].
-    split; [|split; [|left; Between]].
-    + apply ts_distincts in HTS2; spliter; assumption.
-    + apply out_diff2 in HOut4; auto.
-  - apply l6_6, out_bet_out_2 with MAB; [|Between].
-    split; [|split; [|left; Between]].
-    + apply ts_distincts in HTS2; spliter; auto.
-    + apply os_distincts in HOS3; spliter; auto.
-  - apply acute_sym; destruct (l11_43 PC C I); [auto..|left|auto].
-    apply perp_per_1, perp_col4 with PC C MAB X; [Col..|Perp]; ColR.
-  }
-assert (HD : J <> MAC /\ MAC <> I /\ I <> P)
-  by (apply os_distincts in HOS3; spliter; auto).
-destruct (ex_suma J MAC I MAC I P) as [E [F [G HSumA]]]; [spliter; auto..|].
-destruct (HX J MAC I P E F G) as [Y [HOut5 HOut6]]; [Side|auto..];
-[apply acute_per__sams|apply acute_per_suma__nbet with J MAC I MAC I P|]; Perp;
-[spliter; auto..|clear HD HX E F G HSumA].
-assert (HNE7 : MAB <> I).
-  {
-  intro; treat_equalities; cut (A = MAC);
-  [intro; treat_equalities; apply HNC1; Col|].
-  apply l6_21 with A B C MAC; Col; [|ColR].
+  assert (HPerp : Perp MMAB MAC C A).
+    {
+    apply perp_col4 with MMAB MAC MAC A; Col; [intro; subst; Col|].
+    apply per_perp; auto; intro; treat_equalities; Col.
+    }
+  apply perp_per_1, perp_sym, cop_par_perp__perp with MMAB MAC; [|auto|Cop].
+  apply par_symmetry, triangle_mid_par with A; Midpoint.
   intro; treat_equalities; apply HNC1; Col.
   }
-split; [intro; treat_equalities; apply HNC2; Col|].
-split; [intro; treat_equalities; apply out_diff1 in HOut3; auto|].
-apply l5_2 with I; Between.
-assert (HBet6 : Bet I MAB Y).
+assert (HCSA : C <> SA)
+  by (intro; subst SA; apply HNC1;
+      assert (A = B) by (apply symmetric_point_uniqueness with C MBC; Midpoint);
+      subst; Col).
+assert (HLt1 : Lt C A A SA).
   {
-  assert (HTS3 : TS MAC MBC MAB P).
+  destruct (inner_pasch A C B MAB MBC) as [I [HI1 HI2]]; Between.
+  assert (HCI : C <> I) by (intro; subst; apply HNC1; ColR).
+  assert (HLeA : LeA A C MAB A C SA).
     {
-    apply l9_8_2 with A.
-    - split; [intro; apply HNC1; ColR|].
-      split; [intro; apply HNC2; ColR|].
-      exists MBC; split; [Col|apply between_exchange4 with SA; Between].
-    - apply ncol134_plg__pars1234 in HPara; [Side|].
-      intro; apply HNC3; ColR.
+    apply inangle__lea; repeat split; [intro; subst; Col|auto|
+                                       intro; subst; apply HNC1; Col|].
+    exists I; split; [apply between_exchange4 with MBC; Between|right].
+    apply bet_out; Between.
     }
-  destruct HTS3 as [_ [_ [K [HCol5 HK]]]].
-  assert (HBet6 : Bet I MAB K)
-    by (apply between_inner_transitivity with P; finish).
-  assert (HNE8 : MAB <> K) by (intro; treat_equalities; apply HNC3; ColR).
-  cut (Bet I K Y); [intro; apply between_exchange4 with K; Between|].
-  apply col_two_sides_bet with MAC; [ColR|].
-  cut (Acute I MAC K); [intro HAcute4|].
-  - apply invert_two_sides, lta_os__ts; [intro; apply HNC3; ColR|..].
-    + assert (HD : MAC <> Y) by (apply out_diff2 in HOut5; auto).
-      apply acute_per__lta; Col.
-      apply perp_per_1, perp_col4 with MAC I MAC J; Col; Perp.
-    + apply invert_one_side, one_side_transitivity with P; apply out_one_side.
-      * right; intro; apply HNC3; ColR.
-      * apply l6_6; assumption.
-      * left; intro; apply HNC3; ColR.
-      * split; [apply ts_distincts in HTS2; spliter; auto|].
-        split; [|right; apply outer_transitivity_between2 with MAB; Between].
-        intro; treat_equalities; auto.
-  - assert (HOut7 : Out MAC I A).
-      {
-      split; [apply perp_not_eq_1 in HJ; auto|].
-      split; [intro; treat_equalities; apply HNC1; Col|].
-      right; apply between_exchange3 with C; Between.
-      }
-    assert (HOut8 : Out MAC K MBC).
-      {
-      split; [intro; treat_equalities; apply HNC3; ColR|].
-      split; [intro; treat_equalities; apply HNC1; Col|].
-      right; apply col_two_sides_bet with A; [Col|].
-      apply l9_2, l9_8_2 with MAB; [|apply out_one_side_1 with P]; [..|ColR|].
-      - apply ncol124_plg__plgs in HPara; [|intro; apply HNC3; ColR].
-        apply plgs_two_sides in HPara; spliter; Side.
-      - intro; apply HNC3; ColR.
-      - split; [apply os_distincts in HOS; spliter; auto|].
-        split; [|right; Between].
-        intro; treat_equalities; apply HNC3; ColR.
-      }
-    apply acute_out2__acute with A MBC; [Between..|].
-    apply acute_conga__acute with A MAB MBC; [auto|].
-    apply plg_conga in HPara; [spliter; CongA|].
-    split; [|split]; intro; treat_equalities; apply HNC1; Col.
+  assert (HAC : A <> C) by (intro; subst; Col).
+  apply l11_46; auto.
+  elim (angle_partition A C SA HAC HCSA); [intro HAcute; exfalso|auto].
+  apply (lea__nlta A C MAB A C SA); auto.
+  apply acute_per__lta; auto; intro; treat_equalities; apply HNC1; Col.
   }
-cut (X = Y); [intro; treat_equalities; Between|].
-apply l6_21 with MAB P MAC J; Col; [| |ColR|].
-- intro; apply HNC3; ColR.
-- apply out_diff1 in HOut5; auto.
-- apply cong_cop2_perp_bisect_col with A C; [Cop| |Cong|].
-  + clear HMAB HMBC MSA HNC1 HNC2 HMMAB HMMAC HCol1 HCol2 HCol4 HC1 HC2.
-    clear HNC3 HNC4 HNC5 HNC6 HCop HSP HNE1 HNE2 HNE3 HNE4 HNE5 HNE6 HNE7.
-    clear HSMAC HP1 HP2 HPC HJ HPS2 HPara HOut1 HOut2 HOut3 HOut4 HOut5 HOut6.
-    clear HAcute1 HAcute2 HAcute3 HOS HBet1 HBet2 HBet3 HBet5 HBet6; CopR.
-  + apply perp_mid_perp_bisect; [Midpoint|].
-    apply perp_col4 with MAC J I MAC; [..|Perp]; Col; [| |ColR..].
-    * apply out_diff1 in HOut5; auto.
-    * intro; treat_equalities; apply HNC1; Col.
+destruct (segment_construction P SA SA B) as [D [HBet2 HCong2]].
+apply (lt__nle P B P A); [|apply cong__le; Cong].
+apply le1234_lt__lt with P D; [apply triangle_inequality with SA; Cong|].
+apply bet2_lt_le__lt with SA SA; Between; Cong.
+apply cong2_lt__lt with C A A SA; Cong.
+apply cong_transitivity with SA B; Cong.
+apply cong_right_commutativity, l7_13 with MBC; Midpoint.
 Qed.
 
 Lemma tcp_ncol_ndc_choice_col : forall A B C MAB MAC MBC SA MMAB MMAC X P,
@@ -1470,16 +826,12 @@ Lemma tcp_ncol_ndc_choice : forall A B C MAB MAC MBC SA SSA MMAB MMAC X,
   Midpoint MBC SA A -> Midpoint SA MBC SSA -> ~ Col A B C ->
   Midpoint MMAB A MAB -> Midpoint MMAC A MAC -> ~ Col MAB MAC X ->
   Cong A X B X -> Cong A X C X -> Coplanar A B C X ->
-  ~ Col MAB SA X /\ ~ Col MAC SA X /\ ~ Par_strict MAB MAC SA X \/
-  ~ Col MAB SSA X /\ ~ Col MAC SSA X /\ ~ Par_strict MAB MAC SSA X \/
-  ~ Col MMAB SA X /\ ~ Col MAC SA X /\
-  ~ Par_strict MMAB MAC SA X /\ ~ Col MMAB MAC X \/
-  ~ Col MMAB SSA X /\ ~ Col MAC SSA X /\
-  ~ Par_strict MMAB MAC SSA X /\ ~ Col MMAB MAC X \/
-  ~ Col MAB SA X /\ ~ Col MMAC SA X /\
-  ~ Par_strict MAB MMAC SA X /\ ~ Col MAB MMAC X \/
-  ~ Col MAB SSA X /\ ~ Col MMAC SSA X /\
-  ~ Par_strict MAB MMAC SSA X /\ ~ Col MAB MMAC X.
+  exists P, Bet A SA P /\
+  (~ Col MAB P X /\ ~ Col MAC P X /\ ~ Par_strict MAB MAC P X \/
+   ~ Col MMAB P X /\ ~ Col MAC P X /\
+   ~ Par_strict MMAB MAC P X /\ ~ Col MMAB MAC X \/
+   ~ Col MAB P X /\ ~ Col MMAC P X /\
+   ~ Par_strict MAB MMAC P X /\ ~ Col MAB MMAC X).
 Proof.
 intros A B C MAB MAC MBC SA SSA MMAB MMAC X.
 intros HMAB HMAC HMBC MSA HSSA HNC1 HMMAB HMMAC HNC2 HC1 HC2 HCop.
@@ -1499,8 +851,8 @@ cut (forall P, Bet A SA P -> P <> X ->
                ~ Par_strict MMAB MAC P X /\ ~ Col MMAB MAC X \/
                ~ Col MAB P X /\ ~ Col MMAC P X /\
                ~ Par_strict MAB MMAC P X /\ ~ Col MAB MMAC X);
-[intro HP; destruct HNEE|clear dependent SSA; intros P HBet HNE1];
-[destruct (HP SA) as [|[|]]|destruct (HP SSA) as [|[|]]|]; finish; auto 7.
+[intro HP; destruct HNEE; [exists SA|exists SSA]; split; finish|
+ clear dependent SSA; intros P HBet HNE1].
 assert (HNE2 : A <> MBC) by (intro; treat_equalities; Col).
 assert (HNC3 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
@@ -1585,136 +937,79 @@ destruct HE as [[HNC7 HNC8]|HE].
   }
 Qed.
 
-Lemma tcp_ncol_inplane_4 : forall A1 A2 B1 B2,
-  Coplanar A1 A2 B1 B2 -> ~ Par_strict A1 A2 B1 B2 -> A1 <> A2 ->
-  ~ Col A1 B1 B2 -> ~ Col A2 B1 B2 -> ~ Col B1 A1 A2 -> ~ Col B2 A1 A2 ->
-  exists Y, (Col A1 A2 Y /\ A1 <> A2 /\ A1 <> Y /\ A2 <> Y) /\
-            (Col B1 B2 Y /\ B1 <> B2 /\ B1 <> Y /\ B2 <> Y).
-Proof.
-intros A1 A2 B1 B2 HCop HNP HNE HNC1 HNC2 HNC3 HNC4.
-destruct (cop_npars__inter_exists A1 A2 B1 B2) as [Y []]; auto.
-exists Y; repeat split; Col; intro; treat_equalities; Col.
-Qed.
-
 Lemma tcp_ncol_inplane_aux : forall A B C MAB MAC MBC X,
   Midpoint MAB A B -> Midpoint MAC A C -> Midpoint MBC B C -> ~ Col A B C ->
   ~ Col MAB MAC X -> Cong A X B X -> Cong A X C X -> Coplanar A B C X ->
   exists E F G, ~ Col E F G /\
-                (exists Y, (Col E F Y /\ E <> F /\ E <> Y /\ F <> Y) /\
-                           (Col G A Y /\ G <> A /\ G <> Y /\ A <> Y)) /\
-                (exists Y, (Col E F Y /\ E <> F /\ E <> Y /\ F <> Y) /\
-                           (Col G B Y /\ G <> B /\ G <> Y /\ B <> Y)) /\
-                (exists Y, (Col E F Y /\ E <> F /\ E <> Y /\ F <> Y) /\
-                           (Col G C Y /\ G <> C /\ G <> Y /\ C <> Y)) /\
-                (exists Y, (Col E F Y /\ E <> F /\ E <> Y /\ F <> Y) /\
-                           (Col G X Y /\ G <> X /\ G <> Y /\ X <> Y)).
+                Lines_meet E F G A /\ Lines_meet E F G B /\
+                Lines_meet E F G C /\ Lines_meet E F G X.
 Proof.
 intros A B C MAB MAC MBC X HMAB HMAC HMBC HNC1 HNC2 HC1 HC2 HCop.
 destruct (symmetric_point_construction A MBC) as [SA HSA].
 destruct (symmetric_point_construction MBC SA) as [SSA HSSA].
 destruct (midpoint_existence A MAB) as [MMAB HMMAB].
 destruct (midpoint_existence A MAC) as [MMAC HMMAC].
-assert (HE := tcp_ncol_ndc_choice A B C MAB MAC MBC SA SSA MMAB MMAC X).
+destruct (tcp_ncol_ndc_choice A B C MAB MAC MBC SA SSA MMAB MMAC X)
+  as [P [HBP HE]]; finish; clear dependent SSA.
 assert (HNC3 : ~ Col MAB MAC MBC)
   by (apply tcp_ncol_midpoints with A B C; auto).
-assert (HNC4 : ~ Col MAB MAC SA).
+assert (HNE : A <> SA) by (intro; treat_equalities; Col).
+assert (HCop1 : forall Q, Col A MBC Q -> Coplanar MAB MAC MBC Q).
   {
-  cut (OS MAB MAC B SA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mab_mac_b_sa A B C MAB MAC MBC SA); finish.
+  intros Q HQ; apply col_cop__cop with A; [|intro; treat_equalities; Col|Col].
+  assert (HPar : Par_strict MAC MBC MAB A).
+    {
+    apply par_strict_col2_par_strict with A B; Col;
+    [intro; treat_equalities; Col|].
+    apply par_strict_symmetry, triangle_mid_par_strict with C; finish.
+    }
+  apply pars__coplanar in HPar; Cop.
   }
-assert (HNC5 : ~ Col MAB MAC SSA).
+assert (HCop2 : forall Q, Coplanar A B C Q -> Coplanar MAB MAC MBC Q).
   {
-  cut (OS MAB MAC B SSA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mab_mac_b_ssa A B C MAB MAC MBC SA SSA); finish.
+  intros Q HQ; apply coplanar_pseudo_trans with A B C; Cop;
+  apply coplanar_pseudo_trans with MAB MAC MBC; Cop.
   }
-assert (HNC6 : ~ Col MMAB MAC SA).
+assert (HCopP : Coplanar MAB MAC MBC P) by (apply HCop1; ColR).
+assert (HCopX : Coplanar MAB MAC MBC X) by (apply HCop2; Cop).
+assert (HCopMMAB : Coplanar MAB MAC MBC MMAB).
   {
-  cut (OS MMAB MAC B SA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mmab_mac_b_sa A B C MAB MAC MBC SA); finish.
+  apply HCop2; assert (Col A B MMAB); [|Cop].
+  assert (A <> MAB) by (intro; treat_equalities; Col); ColR.
   }
-assert (HNC7 : ~ Col MMAB MAC SSA).
+assert (HCopMMAC : Coplanar MAB MAC MBC MMAC).
   {
-  cut (OS MMAB MAC B SSA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mmab_mac_b_ssa A B C MAB MAC MBC SA SSA); finish.
+  apply HCop2; assert (Col A C MMAC); [|Cop].
+  assert (A <> MAC) by (intro; treat_equalities; Col); ColR.
   }
-assert (HNC8 : ~ Col MAB MMAC SA).
-  {
-  cut (OS MAB MMAC B SA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mab_mmac_b_sa A B C MAB MAC MBC SA); finish.
-  }
-assert (HNC9 : ~ Col MAB MMAC SSA).
-  {
-  cut (OS MAB MMAC B SSA); [intro HOS; apply one_side_not_col124 in HOS; Col|].
-  apply (tcp_os_mab_mmac_b_ssa A B C MAB MAC MBC SA SSA); finish.
-  }
-assert (HPS : Par_strict MAB MBC MAC A /\ Par_strict MAB MBC MAC A /\
-             Par_strict MAB MAC MBC B /\ Par_strict MAB MAC MBC C /\
-             Par_strict MAC MBC MAB A /\ Par_strict MAC MBC MAB B).
-  {
-  split; [|split; [|split; [|split; [|split]]]];
-  eapply par_strict_col2_par_strict; try apply par_strict_symmetry;
-  try solve [apply triangle_mid_par_strict with A; eCol; finish];
-  try solve [apply triangle_mid_par_strict with B; eCol; finish];
-  try solve [apply triangle_mid_par_strict with C; eCol; finish];
-  finish; intro; treat_equalities; Col.
-  }
-assert (HCS : Coplanar MAB MAC MBC A /\ Coplanar MAB MAC MBC B /\
-              Coplanar MAB MAC MBC C).
-  {
-  spliter; repeat split; [apply coplanar_perm_2|..];
-  apply pars__coplanar; auto.
-  }
-assert (HCMMAB : Coplanar MAB MAC MBC MMAB).
-  {
-  spliter; apply coplanar_perm_12, col_cop__cop with A; finish.
-  intro; treat_equalities; Col.
-  }
-assert (HCMMAC : Coplanar MAB MAC MBC MMAC).
-  {
-  spliter; apply coplanar_perm_2, col_cop__cop with A; finish.
-  intro; treat_equalities; Col.
-  }
-assert (HCSA : Coplanar MAB MAC MBC SA)
-  by (spliter; apply col_cop__cop with A; Col; intro; treat_equalities; Col).
-assert (HCSSA : Coplanar MAB MAC MBC SSA).
-  {
-  spliter; apply col_cop__cop with A; Col; [|ColR].
-  intro; treat_equalities; Col.
-  }
-destruct (tcp_ncol_inplane_1_1 A B C MAB MAC MBC SA) as [Y11 HY11]; finish.
-destruct (tcp_ncol_inplane_2_1 A B C MAB MAC MBC SA) as [Y21 HY21]; finish.
-destruct (tcp_ncol_inplane_3_1 A B C MAB MAC MBC SA) as [Y31 HY31]; finish.
-destruct (tcp_ncol_inplane_1_2 A B C MAB MAC MBC SA SSA) as [Y12 HY12]; finish.
-destruct (tcp_ncol_inplane_2_2 A B C MAB MAC MBC SA SSA) as [Y22 HY22]; finish.
-destruct (tcp_ncol_inplane_3_2 A B C MAB MAC MBC SA SSA) as [Y32 HY32]; finish.
-destruct (tcp_ncol_inplane_1_3 A B C MAB MAC MBC SA MMAB) as [Y13 HY13]; finish.
-destruct (tcp_ncol_inplane_2_3 A B C MAB MAC MBC SA MMAB) as [Y23 HY23]; finish.
-destruct (tcp_ncol_inplane_3_3 A B C MAB MAC MBC SA MMAB) as [Y33 HY33]; finish.
-destruct (tcp_ncol_inplane_1_4 A B C MAB MAC MBC SA SSA MMAB) as [Y14 HY14]; finish.
-destruct (tcp_ncol_inplane_2_4 A B C MAB MAC MBC SA SSA MMAB) as [Y24 HY24]; finish.
-destruct (tcp_ncol_inplane_3_4 A B C MAB MAC MBC SA SSA MMAB) as [Y34 HY34]; finish.
-destruct (tcp_ncol_inplane_1_5 A B C MAB MAC MBC SA MMAC) as [Y15 HY15]; finish.
-destruct (tcp_ncol_inplane_2_5 A B C MAB MAC MBC SA MMAC) as [Y25 HY25]; finish.
-destruct (tcp_ncol_inplane_3_5 A B C MAB MAC MBC SA MMAC) as [Y35 HY35]; finish.
-destruct (tcp_ncol_inplane_1_6 A B C MAB MAC MBC SA SSA MMAC) as [Y16 HY16]; finish.
-destruct (tcp_ncol_inplane_2_6 A B C MAB MAC MBC SA SSA MMAC) as [Y26 HY26]; finish.
-destruct (tcp_ncol_inplane_3_6 A B C MAB MAC MBC SA SSA MMAC) as [Y36 HY36]; finish.
-destruct HE as [HE|[HE|[HE|[HE|[HE|HE]]]]]; finish;
-[exists MAB, MAC, SA|exists MAB, MAC, SSA|exists MMAB, MAC, SA|
- exists MMAB, MAC, SSA|exists MAB, MMAC, SA|exists MAB, MMAC, SSA];
-repeat split; Col;
- [exists Y11|exists Y21|exists Y31| |
-  exists Y12|exists Y22|exists Y32| |
-  exists Y13|exists Y23|exists Y33| |
-  exists Y14|exists Y24|exists Y34| |
-  exists Y15|exists Y25|exists Y35| |
-  exists Y16|exists Y26|exists Y36|]; try solve [spliter; auto];
-clear Y11 HY11 Y21 HY21 Y31 HY31 Y12 HY12 Y22 HY22 Y32 HY32;
-clear Y13 HY13 Y23 HY23 Y33 HY33 Y14 HY14 Y24 HY24 Y34 HY34;
-clear Y15 HY15 Y25 HY25 Y35 HY35 Y16 HY16 Y26 HY26 Y36 HY36;
-apply tcp_ncol_inplane_4; spliter; Col; try solve [assert_diffs; auto];
-apply coplanar_pseudo_trans with MAB MAC MBC; Cop; Col;
-apply coplanar_pseudo_trans with A B C; Cop.
+destruct HE as [HE|[HE|HE]]; spliter.
+- assert (HNC4 : ~ Col MAB MAC P)
+    by (apply (one_side_not_col124 _ _ B), tcp_os_mab_mac_b_p with A C MBC SA;
+        finish).
+  exists MAB, MAC, P; split; [auto|].
+  split; [apply tcp_meet_mab_mac_a with B C MBC SA; finish|].
+  split; [apply tcp_meet_mab_mac_b with A C MBC SA; finish|].
+  split; [apply tcp_meet_mab_mac_c with A B MBC SA; finish|].
+  apply tcp_ncol_inplane_4; Col; [|intro; treat_equalities; Col].
+  apply coplanar_pseudo_trans with MAB MAC MBC; Cop.
+- assert (HNC4 : ~ Col MMAB MAC P)
+    by (apply (one_side_not_col124 _ _ B), tcp_os_mmab_mac_b_p
+          with A C MAB MBC SA; finish).
+  exists MMAB, MAC, P; split; [auto|].
+  split; [apply tcp_meet_mmab_mac_a with B C MAB MBC SA; finish|].
+  split; [apply tcp_meet_mmab_mac_b with A C MAB MBC SA; finish|].
+  split; [apply tcp_meet_mmab_mac_c with A B MAB MBC SA; finish|].
+  apply tcp_ncol_inplane_4; Col; [|intro; treat_equalities; Col].
+  apply coplanar_pseudo_trans with MAB MAC MBC; Cop.
+- assert (HNC4 : ~ Col MAB MMAC P)
+    by (apply (one_side_not_col124 _ _ B), tcp_os_mab_mmac_b_p
+          with A C MAC MBC SA; finish).
+  exists MAB, MMAC, P; split; [auto|].
+  split; [apply tcp_meet_mab_mmac_a with B C MAC MBC SA; finish|].
+  split; [apply tcp_meet_mab_mmac_b with A C MAC MBC SA; finish|].
+  split; [apply tcp_meet_mab_mmac_c with A B MAC MBC SA; finish|].
+  apply tcp_ncol_inplane_4; Col; [|intro; treat_equalities; Col].
+  apply coplanar_pseudo_trans with MAB MAC MBC; Cop.
 Qed.
 
 Lemma tcp_ncol_inplane : forall A B C X,

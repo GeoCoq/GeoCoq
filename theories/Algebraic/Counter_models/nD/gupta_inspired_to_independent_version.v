@@ -11,22 +11,6 @@ Section Gupta_inspired_variant_of_Tarski_neutral_dimensionless_to_independent_Ta
 
 Context `{GTnEQD : Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality}.
 
-Lemma bet__col : forall A B C, BetG A B C -> Col A B C.
-Proof. intros A B C HABC; left; auto. Qed.
-
-Ltac not_exist_hyp_perm_col A B C :=
-  not_exist_hyp (Col A B C); not_exist_hyp (Col A C B);
-  not_exist_hyp (Col B A C); not_exist_hyp (Col B C A);
-  not_exist_hyp (Col C A B); not_exist_hyp (Col C B A).
-
-Ltac assert_cols :=
-  repeat
-    match goal with
-    | H:BetG ?X1 ?X2 ?X3 |- _ =>
-      not_exist_hyp_perm_col X1 X2 X3;
-      assert (Col X1 X2 X3) by (apply bet_col;apply H)
-    end.
-
 Global Instance PredGIT : predicates.
 Proof. exact (Build_predicates TpointG BetG CongG). Defined.
 
@@ -46,7 +30,9 @@ split; simpl.
   assert (HBC : B <> C) by (intro; treat_equalities; Col).
   assert (HPQ : P <> Q).
     {
-    intro; treat_equalities; apply HNC; assert_cols;
+    intro; subst Q; apply HNC.
+    assert (Col A P C) by (apply bet_col; auto).
+    assert (Col B P C) by (apply bet_col; auto).
     apply col_permutation_3, col_transitivity_1 with P; Col.
     }
   destruct (inner_paschG A B C P Q) as [X []]; auto; exists X; split; auto.
@@ -154,7 +140,8 @@ destruct (exists_cong_per_f U1 GPA GPA GPB GPC) as [U2 [HP [HC2 _]]]; auto;
   }
 Qed.
 
-Global Instance GI2D_to_T2D : independent_Tarski_nD PredGIT GI_to_IT {| n := 2 |}.
+Global Instance GI2D_to_T2D :
+  independent_Tarski_nD PredGIT GI_to_IT {| n := 2 |}.
 Proof.
 destruct basisG as [b Hb].
 apply (Build_independent_Tarski_nD PredGIT GI_to_IT {| n := 2 |} GPA GPB b).

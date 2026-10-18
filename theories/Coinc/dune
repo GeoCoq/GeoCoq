@@ -1,6 +1,7 @@
 (coq.theory
  (name GeoCoq.Coinc)
  (package coq-geocoq-coinc)
- (synopsis "This subpackage contains some tactics to deal with incidence properties."))
+ (synopsis "This subpackage contains some tactics to deal with incidence properties.")
+ (flags -w -notation-overridden -w -ambiguous-paths))
 
 (include_subdirs qualified)

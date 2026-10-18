@@ -1,12 +1,7 @@
-Require Import mathcomp.ssreflect.ssreflect.
-From mathcomp
-Require Import ssrbool ssrfun ssrnat eqtype choice seq order.
-From mathcomp
-Require Import fintype finset finfun bigop.
-From mathcomp
-Require Import ssralg ssrnum path generic_quotient matrix mxalgebra algC.
-From mathcomp
-Require Import zmodp.
+From mathcomp Require Import ssreflect ssrbool ssrfun ssrnat eqtype choice seq.
+From mathcomp Require Import order finset finfun ssralg ssrnum path.
+From mathcomp Require Import generic_quotient matrix mxalgebra algC zmodp.
+From mathcomp Require Import ring lra.
 From mathcomp Require Import tuple fintype bigop.
 
 Set Implicit Arguments.
@@ -21,10 +16,21 @@ Require Import GeoCoq.Algebraic.coplanarity.
 Require Import GeoCoq.Algebraic.Counter_models.nD.dimensional_axioms.
 Require Import GeoCoq.Axioms.gupta_inspired_variant_axioms.
 Require Import GeoCoq.Main.Meta_theory.Models.tarski_to_gupta_inspired.
-Require Import GeoCoq.Main.Tarski_dev.Ch06_out_lines.
-Require Import GeoCoq.Main.Tarski_dev.Ch11_angles.
 Require Export GeoCoq.Main.Meta_theory.Parallel_postulates.parallel_postulates.
 Require Import GeoCoq.Algebraic.POF_to_Tarski.
+
+Section Numerals.
+Variable R : ringType.
+
+Lemma add11E : 1 + 1 = 2 :> R. Proof. by []. Qed.
+
+Lemma add1111E : 1 + 1 + 1 + 1 = 4 :> R. Proof. by rewrite -!addrA. Qed.
+
+End Numerals.
+
+Ltac fold_num := rewrite ?add1111E ?add11E.
+Ltac num_lra := fold_num; lra.
+Ltac num_field := fold_num; field.
 
 Section rcfTarski.
 
@@ -32,46 +38,16 @@ Variable R : rcfType.
 Variable n : nat.
 
 Lemma quarter : (1 / (1 + 1)) * (1 / (1 + 1)) = (1 / (1 + 1 + 1 + 1)) :> R.
-Proof. by rewrite mulf_div mulr1 mulrDl mulrDr !mulr1 !addrA. Qed.
+Proof. by rewrite add1111E add11E !mul1r -invfM -natrM. Qed.
 
 Lemma one_half_gt0 : 0 < 1 / (1 + 1) :> R.
-Proof. by rewrite divr_gt0 ?addr_gt0 ?ltr01. Qed.
-
-Lemma one_half_ge0 : 0 <= 1 / (1 + 1) :> R.
-Proof. by rewrite ltW ?one_half_gt0. Qed.
+Proof. by num_lra. Qed.
 
 Lemma one_half_lt1 : 1 / (1 + 1) < 1 :>R.
-Proof.
-by rewrite ltr_pdivrMr ?mul1r ?cprD ?addr_gt0 ?ltr01.
-Qed.
+Proof. by num_lra. Qed.
 
 Lemma one_half_neq0 : (1 / (1 + 1) == 0 :> R) = false.
-Proof.
-by rewrite mulf_eq0 invr_eq0 paddr_eq0 ?oner_eq0 ?lter01.
-Qed.
-
-Lemma one_quarter_lt_one_half :
-  (1 / (1 + 1)) * (1 / (1 + 1)) < 1 / (1 + 1) :> R.
-Proof.
-rewrite quarter ltr_pdivlMr ?addr_gt0 ?ltr01 //.
-rewrite mulrC mulrA ltr_pdivrMr ?addr_gt0 ?ltr01 //.
-rewrite mul1r mulr1 -subr_lt0 !opprD !addrA -[_+1-1]addrA subrr addr0.
-rewrite subrr add0r subr_lt0.
-by apply lt_trans with 0; first rewrite ltrNl; rewrite ?oppr0 ?ltr01.
-Qed.
-
-Lemma one_eighth_lt_one_quarter :
-  (1 / (1 + 1 + 1 + 1)) * (1 / (1 + 1 + 1 + 1)) <
-  (1 / (1 + 1)) * (1 / (1 + 1)):> R.
-Proof.
-apply ltr_pM.
-rewrite mul1r ltW // ?invr_gt0 ?addr_gt0 ?ltr01 //.
-rewrite mul1r ltW // ?invr_gt0 ?addr_gt0 ?ltr01 //.
-rewrite -quarter.
-exact: one_quarter_lt_one_half.
-rewrite -quarter.
-exact: one_quarter_lt_one_half.
-Qed.
+Proof. by apply: gt_eqF; num_lra. Qed.
 
 Definition Point' n : Type := {p : 'rV[R]_n | (p *m p^T) 0 0 < 1}.
 
@@ -81,7 +57,32 @@ Notation "#" := proj1_sig.
 
 Implicit Types (a b c d: Point).
 
-Implicit Types (v w x y z : 'rV[R]_n).
+Implicit Types (u v w x y z : 'rV[R]_n).
+
+Definition dotp u v := (u *m v^T) 0 0.
+
+Lemma dotpDl u v w : dotp (u + v) w = dotp u w + dotp v w.
+Proof. by rewrite /dotp mulmxDl mxE. Qed.
+
+Lemma dotpDr u v w : dotp u (v + w) = dotp u v + dotp u w.
+Proof. by rewrite /dotp linearD mulmxDr mxE. Qed.
+
+Lemma dotpZl k u v : dotp (k *: u) v = k * dotp u v.
+Proof. by rewrite /dotp -scalemxAl mxE. Qed.
+
+Lemma dotpZr k u v : dotp u (k *: v) = k * dotp u v.
+Proof. by rewrite /dotp linearZ -scalemxAr mxE. Qed.
+
+Lemma dotpNl u v : dotp (- u) v = - dotp u v.
+Proof. by rewrite /dotp mulNmx mxE. Qed.
+
+Lemma dotpNr u v : dotp u (- v) = - dotp u v.
+Proof. by rewrite /dotp linearN mulmxN mxE. Qed.
+
+Lemma dotpC u v : dotp u v = dotp v u.
+Proof. by rewrite /dotp mulmx_trC. Qed.
+
+Definition dotpE := (dotpDl, dotpDr, dotpZl, dotpZr, dotpNl, dotpNr).
 
 Definition omd_v v w := (1 - (v *m (w)^T) 0 0).
 
@@ -110,100 +111,44 @@ Definition bet_dist a b c := bet_dist_v (#a) (#b) (#c).
 
 Lemma point_vector_eq a b : a == b = (#a == #b).
 Proof.
-apply /eqP /eqP.
-by move->.
-induction a, b.
-rewrite /=.
-move=> eq_x_x0.
-move: eq_x_x0 p i=>-> p p0.
-have: (p=p0) by apply eq_irrelevance.
-by move->.
+apply /eqP /eqP; first by move ->.
+move: a b => [a aP] [b bP] /= eq_a_b; move: eq_a_b aP i =>-> aP _.
+by have -> : (aP = bP) by apply eq_irrelevance.
 Qed.
 
 Lemma point_vector_neq a b : a != b = (#a != #b).
 Proof. by rewrite point_vector_eq. Qed.
 
-Lemma cauchy_schwartz v w :
+Lemma cauchy_schwarz_sqr v w :
   ((v *m w^T) 0 0) ^+ 2 <= (v *m v^T) 0 0 * (w *m w^T) 0 0.
 Proof.
-case: ((w *m w^T) =P 0).
-  move=>/eqP. rewrite quad_eq0=>/eqP ->.
-  by rewrite linear0 !mulmx0 !mxE expr2 !mulr0 lexx.
-move=> /eqP; rewrite quad_eq0 => w_neq0.
-set r := (v *m (w)^T) 0 0/(w*m(w)^T) 0 0.
-suffices: 0 <= ((v - r *: w)*m(v - r *: w)^T) 0 0.
-rewrite mulmxBl ![_ *m (v - r *: w)^T]dotC !mulmxBl.
-rewrite [v*m (r *: w)^T]dotC -!scalemxAl [_*m(r*:w)^T]dotC -scalemxAl.
-rewrite scalerA mxE /= mxE /= opprB.
-  have: ((r * r) *: (w *m w^T) - r *: (w *m v^T)) 0 0 == 0.
-  rewrite mxE /= mxE /= [X in _ + X]mxE /= subr_eq0.
-  rewrite {2}/r mulrA mulrAC -!mulrA divff ?quad_neq0 //.
-  by rewrite [w *m v ^T]dotC /r !mxE /= !mulrA mulr1 eqxx.
-move=> /eqP ->.
-rewrite addr0 [X in _ +X]mxE subr_ge0 /r mxE.
-rewrite [w*m v^T]dotC mulrC mulrA -expr2 ler_pdivrMr //.
-by rewrite lt0r quad_ge0 quad_neq0 w_neq0.
-by rewrite quad_ge0.
+rewrite -!/(dotp _ _).
+have [->|w_neq0] := eqVneq w 0.
+  by rewrite /dotp linear0 !mulmx0 mxE expr0n mulr0.
+have ww_gt0 : 0 < dotp w w by rewrite lt0r dot2_eq0 w_neq0 dot2_ge0.
+set r := dotp v w / dotp w w.
+have := dot2_ge0 (v - r *: w); rewrite dotE -/(dotp _ _).
+have -> : dotp (v - r *: w) (v - r *: w) =
+          (dotp v v * dotp w w - dotp v w ^+ 2) / dotp w w.
+  by rewrite !dotpE [dotp w v]dotpC /r; field; rewrite lt0r_neq0.
+by rewrite pmulr_lge0 ?invr_gt0 // subr_ge0.
 Qed.
 
-Lemma cauchy_schwartz' v w :
+Lemma cauchy_schwarz v w :
   - norm v * norm w <= (v *m w^T) 0 0 <= norm v * norm w.
 Proof.
 case: (v*m v^T =P 0).
-  move=> /eqP ;rewrite quad_eq0 => /eqP->.
+  move => /eqP ;rewrite quad_eq0 => /eqP->.
   by rewrite /norm !mul0mx !mxE /= !sqrtr0 oppr0 mul0r lexx.
-move=> /eqP; rewrite quad_eq0 => v_neq0.
+move => /eqP; rewrite quad_eq0 => v_neq0.
 case: (w*m w^T =P 0).
-  move=> /eqP ;rewrite quad_eq0 => /eqP->.
+  move => /eqP ;rewrite quad_eq0 => /eqP->.
   by rewrite /norm linear0 !mulmx0 !mxE /= !sqrtr0 !mulr0 lexx.
-move=> /eqP; rewrite quad_eq0 => w_neq0.
-move: (cauchy_schwartz v w).
+move => /eqP; rewrite quad_eq0 => w_neq0.
+move: (cauchy_schwarz_sqr v w).
 rewrite -[_ ^+ 2 <= _]ler_sqrt.
-- by rewrite sqrtr_sqr ler_norml  !sqrtrM !/norm -?mulNr ?quad_ge0.
-- by rewrite ?mulr_ge0 ?mulr_gt0 ?lt0r ?quad_ge0 ?quad_neq0 ?w_neq0 ?v_neq0.
-Qed.
-
-Lemma cauchy_schwartz_eq v w (r := ((v *m w^T) 0 0) / ((w *m w^T) 0 0)) :
-  w != 0 ->
-  ((v *m w^T) 0 0 ^+ 2 == ((v*m v^T) 0 0 * (w*m w^T)0 0)) = (v ==  r *: w).
-Proof.
-move=> w_neq0.
-apply /eqP /eqP.
-move=> H.
-suffices: (((v - r *: w) *m (v - r *: w)^T) == 0).
- by rewrite quad_eq0 subr_eq0 => /eqP.
-rewrite [X in X == 0]mx11_scalar.
-rewrite mulmxBl ![_ *m (v-r*:w)^T]dotC !mulmxBl.
-rewrite -!scalemxAl ![_*m(r*:w)^T]dotC -!scalemxAl scalerA.
-rewrite opprB mxE /=.
-  have: ((r * r) *: (w *m w^T) - r *: (w *m v^T)) 0 0 == 0.
-  rewrite mxE /= mxE /= [X in _ + X]mxE /= subr_eq0.
-  rewrite {2}/r mulrA mulrAC -!mulrA divff ?quad_neq0 //.
-  by rewrite [w *m v ^T]dotC /r !mxE /= !mulrA mulr1 eqxx.
-move=> /eqP->.
-rewrite addr0 mxE /= [X in _ + X]mxE /=.
-rewrite /r [ X in _ - X]mxE /= [w*m(v)^T]dotC.
-rewrite mulrAC -expr2 H -mulrA divff ?quad_neq0 //.
-rewrite mulr1 subrr.
-by rewrite [X in _ == X]mx11_scalar !mxE /=.
-move->.
-rewrite -scalemxAl mxE /= expr2.
-rewrite -scalemxAl [_*m(r*:w)^T]dotC -scalemxAl scalerA.
-rewrite [((r * r) *: (w *m w^T)) 0 0]mxE /=.
-by rewrite mulrAC !mulrA.
-Qed.
-
-Lemma cauchy_schwartz_eq' v w (r := (v *m w^T) 0 0 / (w *m w^T) 0 0) :
-  w != 0 ->
-  (`|(v *m w^T) 0 0| == norm v * norm w) = (v ==  r *: w).
-Proof.
-move => w_neq0.
-suffices: (`|(v *m w^T) 0 0| == norm v * norm w) =
- (((v *m w^T) 0 0) ^+ 2 == ((v*m v^T) 0 0 * (w*m w^T)0 0)).
-  move->.
-  by apply cauchy_schwartz_eq.
-rewrite -[X in _ = X]eqr_sqrt ?sqr_ge0 ?mulr_ge0 ?quad_ge0 //.
-by rewrite sqrtr_sqr sqrtrM -!/(norm _) ?quad_ge0.
+- by rewrite sqrtr_sqr ler_norml  !sqrtrM !/norm -?mulNr ?dot2_ge0.
+- by rewrite ?mulr_ge0 ?mulr_gt0 ?lt0r ?dot2_ge0 ?dot2_eq0 ?w_neq0 ?v_neq0.
 Qed.
 
 Lemma p_scalar_lt1 v w :
@@ -212,105 +157,34 @@ Lemma p_scalar_lt1 v w :
   (w *m w^T) 0 0 < 1 ->
   (v *m w^T) 0 0 < 1.
 Proof.
-move => v_in_disk w_in_disk ?.
-apply lt_trans with ( ((v *m v^T) 0 0 + (w *m w^T) 0 0)/(1+1)).
-rewrite ltr_pdivlMr ?addr_gt0 ?ltr01 //.
-rewrite mulrDr mulr1.
-assert (0 < ((v - w) *m (v - w)^T) 0 0).
-by rewrite lt_def quad_ge0 quad_neq0 subr_eq0 andbT.
-move: H.
-rewrite mulmxBl [X in X - _]dotC [X in _ - X]dotC !mulmxBl 2!mxE /=.
-rewrite addrC mxE /= !addrA [X in _+X]mxE subr_gt0 [X in -X+_]mxE.
-rewrite addrC opprD [X in _ - X]mxE opprK -addrCA addrC.
-by rewrite ltrBrDr dotC.
-rewrite ltr_pdivrMr ?addr_gt0 ?ltr01 //.
-by rewrite mulrDr mulr1 ltrD.
+move => vw_neq; rewrite -!/(dotp _ _).
+have : 0 < dotp (v - w) (v - w).
+  by rewrite lt_def dot2_ge0 dot2_eq0 subr_eq0 vw_neq.
+rewrite !dotpE [dotp w v]dotpC; lra.
 Qed.
 
 Lemma p_scalar_point_lt1 a b : (#a *m (#b)^T) 0 0 < 1.
 Proof.
-case: ((#a)=P(#b)).
-  by move->; destruct b.
-move=> /eqP ab_neq.
-apply p_scalar_lt1.
-by [].
-by destruct a.
-by destruct b.
+case: ((#a)=P(#b)); first by move ->; destruct b.
+by move => /eqP ab_neq; apply p_scalar_lt1; [|by destruct a|by destruct b].
 Qed.
 
 Lemma invf_eq (a b : R) : b != 0 -> (a == b) = (a^-1 == b^-1).
-Proof.
-move=> /negPf b_neq0.
-have: (a==b = (a/b == b/b)).
-by rewrite -[X in _ = X]subr_eq0 -mulrBl
- mulf_eq0 invr_eq0 b_neq0 orbF subr_eq0.
-move->.
-rewrite divff ?b_neq0// -invr_eq1 invf_div.
-have: (b/a == 1 = (b/a * b^-1 == b^-1)).
-by rewrite -[X in _ = X]subr_eq0 -{2}[b^-1]mul1r -mulrBl
- mulf_eq0 invr_eq0 b_neq0 orbF subr_eq0.
-move->.
-by rewrite mulrAC divff ?b_neq0// mul1r.
-Qed.
-
-Lemma divf_lt1 (a b : R) : 0 < b -> (a / b < 1) = (a < b).
-Proof.
-move=> b_gt0.
-suffices: (a/b < b/b) = (a < b).
-  by move<- ; rewrite divff ?lt0r_neq0.
-by rewrite -subr_lt0 -mulrBl pmulr_llt0 ?invr_gt0 ?subr_lt0.
-Qed.
+Proof. by move => _; rewrite (inj_eq invr_inj). Qed.
 
 Lemma divf_le1 (a b : R) : 0 < b -> (a / b <= 1) = (a <= b).
-Proof.
-move=> b_g0.
-suffices: (a / b <= b / b) = (a <= b).
-  by move<- ; rewrite divff ?lt0r_neq0.
-by rewrite -subr_le0 -mulrBl pmulr_lle0 ?invr_gt0 ?subr_le0.
-Qed.
+Proof. by move => b_gt0; rewrite ler_pdivrMr ?mul1r. Qed.
 
 Lemma divf_eq1 (a b : R) : b != 0 -> (a / b == 1) = (a == b).
-Proof.
-move=> /negPf b_neq0.
-suffices: (a/b == b/b) = (a == b).
-  by move<-; rewrite divff ?b_neq0.
-by rewrite -subr_eq0 -mulrBl mulf_eq0 invr_eq0 b_neq0 subr_eq0 orbF.
-Qed.
-
-Lemma invf_lt_invf (a b : R) :
-  0 < a ->
-  0 < b ->
-  (a^-1 < b^-1) = (b < a).
-Proof. by move=> a_gt0 b_gt0; rewrite ltf_pV2. Qed.
-
-Lemma scaler_eq v w k :
-  k != 0 ->
-  (v == w) = (k *: v == k *: w).
-Proof.
-move=> /negPf k_neq0.
-apply Logic.eq_sym.
-by rewrite -subr_eq0 -scalerBr scaler_eq0 k_neq0 orFb subr_eq0.
-Qed.
+Proof. by move => b_neq0; apply/eqP/eqP => [/divr1_eq|->]; rewrite ?divff. Qed.
 
 Lemma omd_gt0 a b : 0 < omd a b.
-Proof.
-by rewrite /omd subr_gt0 p_scalar_point_lt1.
-Qed.
-
-Lemma norm_ge0 v : 0 <= norm v.
-Proof. by rewrite /norm sqrtr_ge0. Qed.
-
-Lemma norm_sqr v : norm v ^+2 = (v *m v^T) 0 0.
-Proof. by rewrite /norm sqr_sqrtr ?quad_ge0. Qed.
+Proof. by rewrite /omd subr_gt0 p_scalar_point_lt1. Qed.
 
 Lemma norm_point_lt1 a : norm (#a) < 1.
 Proof.
-rewrite /norm -[X in _ < X]sqrtr1 ltr_sqrt ?ltr01 //.
-by destruct a.
+by rewrite /norm -[X in _ < X]sqrtr1 ltr_sqrt ?ltr01 //; destruct a.
 Qed.
-
-Lemma norm_point_le1 a : norm (#a) <= 1.
-Proof. by rewrite ltW ?norm_point_lt1. Qed.
 
 Lemma omd_ge0 a b : 0 <= omd a b.
 Proof. by rewrite ltW ?omd_gt0. Qed.
@@ -319,100 +193,63 @@ Lemma omd_eq0 a b : omd a b == 0 = false.
 Proof. by rewrite gt_eqF ?omd_gt0. Qed.
 
 Lemma omd_v_reflexivity v w : omd_v v w = omd_v w v.
-Proof. by rewrite /omd_v dotC. Qed.
+Proof. by rewrite /omd_v mulmx_trC. Qed.
 
 Lemma omd_reflexivity a b : omd a b = omd b a.
 Proof. by rewrite /omd omd_v_reflexivity. Qed.
 
-Lemma dist_v_reflexivity v w : dist_v v w = dist_v w v.
-Proof.
-by rewrite /dist_v omd_v_reflexivity [X in X/_]mulrC.
-Qed.
-
-Lemma dist_reflexivity a b : dist a b = dist b a.
-Proof. by rewrite /dist dist_v_reflexivity. Qed.
-
 Lemma dist_aa_eq1 a : dist a a = 1.
 Proof.
-by rewrite /dist/dist_v expr2 divff //mulf_neq0//;
-rewrite -/(omd a a) omd_eq0.
-Qed.
-
-Lemma cong_identity_holds_aux v w :
-  (1 - norm v * norm w) ^+ 2 - (1 - norm v ^+ 2) * (1 - norm w ^+ 2) =
-  (norm v - norm w) ^+ 2.
-Proof.
-apply /eqP.
-rewrite -subr_eq0 ![(_-_)^+2]expr2.
-rewrite !mulrBl !mulrBr !mul1r !mulr1 !opprD !opprK !addrA.
-rewrite mulrA -mulrAC [_*_*_*_]mulrC !mulrA ![norm w * norm v]mulrC.
-rewrite -expr2 -mulrA -expr2.
-set n_v2 := norm v^+2.
-set n_w2 := norm w^+2.
-set n_vw := norm v * norm w.
-rewrite [1 - n_vw - n_vw + n_v2 * n_w2 - 1]addrC.
-rewrite !addrA [-1+1]addrC subrr add0r.
-rewrite [- n_vw - n_vw + n_v2 * n_w2 + n_w2 + n_v2 - n_v2 * n_w2 - n_v2 + n_vw]addrC.
-rewrite !addrA subrr add0r.
-rewrite [- n_vw + n_v2 * n_w2 + n_w2 + n_v2 - n_v2 * n_w2 - n_v2 + n_vw ]addrC.
-rewrite !addrA subrr add0r.
-rewrite [n_v2 * n_w2 + n_w2 + n_v2 - n_v2 * n_w2]addrC.
-rewrite !addrA [- (n_v2 * n_w2) + n_v2 * n_w2 ]addrC subrr add0r.
-by rewrite -addrC !addrA -addrA subrr addr0 addrC subrr.
+by rewrite /dist/dist_v expr2 divff ?mulf_neq0 // -/(omd a a) omd_eq0.
 Qed.
 
 Lemma addr_ge_gt0 (x y : R) : 0 < x -> 0 <= y -> 0 < x + y.
-Proof.
-move=> x_gt0 y_ge0.
-apply lt_le_trans with x.
-by [].
-by rewrite -subr_ge0 addrAC subrr add0r.
-Qed.
+Proof. lra. Qed.
 
-Lemma triangle_ineq v w : norm (v + w) <= norm v + norm w.
+Lemma omd_disc a b :
+  omd a b ^+ 2 - omd a a * omd b b =
+  dotp (#a) (#b - #a) ^+ 2 + omd a a * dotp (#b - #a) (#b - #a).
 Proof.
-case: (w =P 0).
-  move ->.
-  by rewrite {3}/norm mul0mx mxE sqrtr0 !addr0 lexx.
-move=>/eqP w_neq0.
-suffices : (norm (v + w))^+2 <= (norm v + norm w)^+2.
-- rewrite -ler_sqrt ?le0r.
-  + by rewrite !sqrtr_sqr !ger0_norm ?addr_ge0 ?norm_ge0.
-  rewrite addrC expr2 ?mulr_gt0 ?addr_ge_gt0 ?orbT ?norm_ge0 // lt_def;
-  rewrite norm_ge0 /norm lt0r_neq0 //;
-  by rewrite sqrtr_gt0 lt_def quad_ge0 quad_neq0 w_neq0.
-rewrite norm_sqr mulmxDl ![_*m(v+w)^T]dotC !mulmxDl mxE.
-rewrite ![(_*m_^T+_*m_^T) 0 0]mxE expr2 mulrDr !mulrDl -!norm_sqr -!expr2.
-rewrite ?lerD ?lexx //.
-by move: (cauchy_schwartz' w v) => /andP[_ ].
-by move: (cauchy_schwartz' v w) => /andP[_ ].
-Qed.
-
-Lemma sqrt_invf (a : R) : (Num.sqrt a)^-1 = Num.sqrt a^-1.
-Proof.
-apply /eqP.
-case: (Num.sqrt a =P 0).
-  move=> sqrt_a_eq0.
-  by rewrite sqrt_a_eq0 eq_sym invr0 sqrtr_eq0 invr_le0
-   -sqrtr_eq0 sqrt_a_eq0.
-move=>/eqP sqrt_a_neq0.
-have: 0 < a by
-  move: sqrt_a_neq0; rewrite sqrtr_eq0 -ltNge.
-move=> a_gt0.
-rewrite eq_sym -divf_eq1 ?invr_eq0 // invrK -sqrtrM ?invr_ge0 ?ltW //.
-rewrite mulrC divff ?sqrtr1 ?lt0r_neq0  //.
+by rewrite /omd /omd_v -!/(dotp _ _) !dotpE [dotp (#b) (#a)]dotpC; ring.
 Qed.
 
 Lemma dist'_ge0 a b : 0 <= omd a b ^+ 2 - omd a a * omd b b.
+Proof. by rewrite omd_disc addr_ge0 ?sqr_ge0 ?mulr_ge0 ?omd_ge0 ?dot2_ge0. Qed.
+
+Lemma omd_neq0 a b : omd a b != 0.
+Proof. by rewrite omd_eq0. Qed.
+
+Lemma sqrt_div_sqr (x y : R) : 0 < y -> Num.sqrt (x / y ^+ 2) = Num.sqrt x / y.
 Proof.
-apply le_trans with
-((1-norm(#a) * norm(#b))^+2 - (1-(norm(#a))^+2) * (1-(norm(#b))^+2)).
-by rewrite cong_identity_holds_aux sqr_ge0.
-rewrite !norm_sqr -!/(omd_v _ _) -!/(omd _ _).
-rewrite lerB ?lexx //.
-move: (cauchy_schwartz' (#a) (#b)) => /andP [_ ?].
-by rewrite expr2 ler_pM ?subr_ge0 ?mulr_ile1 ?norm_ge0 ?norm_point_le1 //;
-rewrite /omd/omd_v lerB ?lexx.
+move => y_gt0; case: (leP 0 x) => [x_ge0|x_lt0].
+  by rewrite sqrtrM // -exprVn sqrtr_sqr ger0_norm // invr_ge0 ltW.
+rewrite (ler0_sqrtr (ltW x_lt0)) mul0r ler0_sqrtr //.
+by rewrite pmulr_lle0 ?invr_gt0 ?exprn_gt0 ?ltW.
+Qed.
+
+Lemma one_sub_dist a b :
+  1 - dist a b = (omd a b ^+ 2 - omd a a * omd b b) / omd a b ^+ 2.
+Proof. by rewrite /dist /dist_v -!/(omd _ _); field; rewrite omd_neq0. Qed.
+
+Lemma sqrt_one_sub_dist a b :
+  Num.sqrt (1 - dist a b) =
+  Num.sqrt (omd a b ^+ 2 - omd a a * omd b b) / omd a b.
+Proof. by rewrite one_sub_dist sqrt_div_sqr ?omd_gt0. Qed.
+
+Lemma extension_affine u v k : k *: (v - u) + u = (1 - k) *: u + k *: v.
+Proof. by rewrite scalerBr scalerBl scale1r addrC addrA addrAC. Qed.
+
+Lemma omd_affine a b (x : Point) l :
+  omd_v (#x) ((1 - l) *: #a + l *: #b) = (1 - l) * omd x a + l * omd x b.
+Proof. by rewrite /omd /omd_v -!/(dotp _ _) !dotpE; ring. Qed.
+
+Lemma omd_disc_affine a b c l :
+  #c = (1 - l) *: #a + l *: #b ->
+  omd a c ^+ 2 - omd a a * omd c c =
+  l ^+ 2 * (omd a b ^+ 2 - omd a a * omd b b).
+Proof.
+move => c_eq; rewrite /omd /omd_v c_eq -!/(dotp _ _) !dotpE.
+by rewrite [dotp (#b) (#a)]dotpC; ring.
 Qed.
 
 Lemma dist_le1 a b : dist a b <= 1.
@@ -424,8 +261,7 @@ Qed.
 
 Lemma dist_gt0 a b : 0 < dist a b.
 Proof.
-by rewrite /dist /dist_v -!/(omd _ _) expr2 invfM
-  ?mulr_gt0 ?invr_gt0 ?omd_gt0.
+by rewrite /dist /dist_v -!/(omd _ _) expr2 invfM ?mulr_gt0 ?invr_gt0 ?omd_gt0.
 Qed.
 
 Lemma dist_cong' a b c d : (dist a b == dist c d) = cong' a b c d.
@@ -434,225 +270,45 @@ by rewrite !invf_div.
 by rewrite expr2 ?mulf_neq0 ?invr_neq0 ?mulf_neq0 -?/(omd _ _) ?omd_eq0.
 Qed.
 
-Lemma omd_cb a b l :
-  1 - (((1 - l) *: # a + l *: # b) *m (# b)^T) 0 0 =
-  (1 - l) * omd a b + l * omd b b.
-Proof.
-apply /eqP.
-rewrite mulmxDl mxE -!scalemxAl ![(_ *: (_ *m (_)^T)) 0 0]mxE  opprD.
-rewrite eq_sym.
-rewrite /omd/omd_v !mulrBr !mulr1.
-rewrite !addrA addrAC addrC !addrA [l + 1]addrC.
-by rewrite -!addrA addrC addrA subrr add0r addrC  !addrA eqxx.
-Qed.
-
-Lemma omd_ca a b l :
-  1 - (((1 - l) *: # a + l *: # b) *m (# a)^T) 0 0 =
-  (1 - l) * omd a a + l * omd a b.
-Proof.
-apply /eqP.
-rewrite mulmxDl mxE -!scalemxAl ![(_ *: (_ *m (_)^T)) 0 0]mxE  opprD.
-rewrite [# b *m (# a)^T]dotC eq_sym.
-rewrite /omd/omd_v !mulrBr !mulr1.
-rewrite !addrA addrAC addrC !addrA [l + 1]addrC.
-by rewrite -!addrA addrC addrA subrr add0r addrC  !addrA eqxx.
-Qed.
-
-Lemma omd_cc a b l :
-  1 - (((1 - l) *: # a + l *: # b) *m ((1 - l) *: # a + l *: # b)^T) 0 0 =
-  (1 - l) ^+ 2 * omd a a + l ^+ 2 * omd b b + l * (1 - l) * omd a b *+ 2.
-Proof.
-apply /eqP.
-rewrite mulmxDl mxE -!scalemxAl ![(_ *: (_ *m (_)^T)) 0 0]mxE  opprD.
-rewrite ![#_*m_^T]dotC addrA.
-have: 1 == (l*1+(1-l)*1) by
-  rewrite !mulr1 addrCA subrr addr0.
-move=> /eqP l_eq.
-rewrite {1}l_eq -[l*1 + _ + _]addrA -mulrBr addrAC -mulrBr.
-rewrite omd_ca omd_cb mulrDr mulrDr.
-rewrite addrACA [X in X + _]addrC mulrA -expr2.
-rewrite addrA addrAC [(1 - l) * (l * omd a b)]mulrCA.
-rewrite -[X in X +_ == _]addrA addrAC mulrA -expr2.
-by rewrite !addrA !mulrA eqxx.
-Qed.
-
 Lemma bet_dist_bet' a b c : bet' a b c -> bet_dist a b c.
 Proof.
-rewrite /bet_dist /bet_dist_v.
-move=>/orP[|betS_abc]. (* We first do the betE case *)
-  by move=>/betEP[[-> <-]|->|->] ; rewrite -!/(dist _ _);
-  rewrite dist_aa_eq1 subrr sqrtr0 ?mulr0 ?mul0r
-  addr0 expr1n invr1 ?mulr1 ?mul1r.
-rewrite /dist_v -!/(omd _ _) -subr_eq0.
-rewrite -!mulrA -mulrBr mulf_eq0 omd_eq0 orFb.
-rewrite [X in _ - X]mulrC -!mulrA.
-rewrite [X in _ - X]mulrC -!mulrA.
-rewrite [X in _ - X]mulrC -!mulrA.
-rewrite -mulrBr mulf_eq0 omd_eq0 orFb.
-rewrite subr_eq0 !mulrA mulrAC mulrC -!mulrA -expr2.
-rewrite -!exprVn -!exprMn eqf_sqr.
-suffices: ((omd a c)^-1 == (* We now this is the right equality *)
-  ((omd a b)^-1 *
-   ((omd b c)^-1 *
-    ((1 +
-      Num.sqrt (1 - omd a a * (omd b b * (omd a b)^-1 ^+ 2)) *
-      Num.sqrt (1 - omd b b * (omd c c * (omd b c)^-1 ^+ 2)))^-1 *
-     omd b b)))) = true.
-  by move->.
-apply /eqP /eqP.
-rewrite !exprVn.
-rewrite invf_eq ;
-  last by rewrite ?mulf_neq0 ?invr_eq0 ?omd_eq0
-  ?lt0r_neq0 ?addr_ge_gt0 ?ltr01 ?mulr_ge0 ?sqrtr_ge0.
-rewrite !invfM !invrK.
-rewrite !mulrA mulrDr mulr1.
-rewrite eq_sym -divf_eq1 ?omd_eq0 //.
-rewrite -!mulrA -!invfM divf_eq1 ?mulf_neq0 ?omd_eq0 //.
-rewrite -subr_eq0 addrAC addr_eq0.
-move: betS_abc=> /betSP[bet_eq betR_gt0 betR_lt1].
-move/eqP: bet_eq.
-rewrite eq_sym scalerBr -subr_eq0.
-rewrite  -addrA addr_eq0 opprD !opprK.
-have: (betR (#a) (#b) (#c))^-1 != 0
-  by rewrite lt0r_neq0 ?invr_gt0.
-move=> l_neq0.
-rewrite (scaler_eq _ _ l_neq0).
-rewrite scalerDr !scalerA mulrC divff ?lt0r_neq0 // !scale1r.
-rewrite scalerBr [_ - _]addrC addrA -{1}[#a]scale1r -scalerBl.
-move: l_neq0 ;
-set l := (betR (#a) (#b) (#c))^-1 => l_neq0 /eqP c_eq.
-have: (omd a b * omd b c - omd b b * omd a c ==
-  (1 - l) * (omd a b ^+ 2 - omd a a * omd b b)).
-  rewrite ![omd _ c]omd_reflexivity.
-  rewrite ![omd c _]/omd/omd_v c_eq.
-  rewrite omd_cb omd_ca.
-  rewrite [omd _ _ * (_ + _)]mulrDr [omd _ _ * (_ + _)]mulrDr.
-  rewrite opprD addrAC !addrA -addrA addrC.
-  rewrite [- (omd b b * (l * omd a b)) + omd a b * (l * omd b b)]addrC.
-  rewrite mulrCA [X in _- X]mulrC mulrA subrr add0r.
-  rewrite mulrCA -expr2 [X in _ -X]mulrCA -mulrBr.
-  by rewrite [omd b b * _]mulrC eqxx.
-move /eqP ->.
-rewrite eq_sym mulrA mulrACA.
-rewrite -{1}[omd a b]ger0_norm ?omd_ge0 //.
-rewrite -{1}[omd b c]ger0_norm ?omd_ge0 //.
-rewrite -!sqrtr_sqr.
-rewrite -sqrtrM; last by rewrite expr2 mulr_ge0 ?omd_ge0.
-rewrite -sqrtrM; last by rewrite expr2 mulr_ge0 ?omd_ge0.
-rewrite ![_^+2 * (_ - _)]mulrBr !mulr1.
-rewrite [_^+2 * (_)]mulrC.
-rewrite [_^+2 * (_)]mulrC.
-rewrite -!expr2 !mulrA -!mulrA -!expr2.
-rewrite ![_^-2 * _^+2]mulrC ?divff ?expr2 ?mulf_neq0 ?omd_eq0 //.
-rewrite !mulr1 -sqrtrM -!expr2 ?dist'_ge0 //.
-have: (omd b c ^+ 2 - omd b b * omd c c) ==
-  ((1-l)^+2 * (omd a b ^+ 2 - omd a a * omd b b)).
-  rewrite [omd b c]omd_reflexivity.
-  have: omd c c == (
-    (1-l)^+2 * (omd a a)
-    + l^+2 * omd b b
-    + (1-l) * l * omd a b
-    + (1-l) * l * omd a b).
-    rewrite [omd c c]/omd/omd_v c_eq.
-    rewrite mulmxDl mxE -!scalemxAl mxE [X in 1 - (_  + X)]mxE ![(#_)*m(_)^T]dotC.
-    have:  1 == (1-l)*1 +(l*1)
-      by rewrite !mulr1  addrAC -addrA subrr addr0.
-    move=> /eqP one_eq ; rewrite{1}one_eq.
-    rewrite !opprD !addrA addrAC addrC !addrA -!addrA -mulrBr.
-    rewrite !addrA [ X in X + _]addrC -mulrBr.
-    rewrite omd_cb omd_ca mulrDr mulrDr.
-    rewrite mulrA -expr2 [l * ((1 - l) * omd a b)]mulrCA.
-    rewrite [l * (l * omd b b)]mulrA -expr2.
-    rewrite [(1 - l) * (l * omd a b)]mulrA.
-    by rewrite addrA addrAC -addrA addrAC addrA eqxx.
-  move/eqP ->.
-  rewrite [omd c b]/omd/omd_v c_eq omd_cb.
-  rewrite sqrrD !exprMn.
-  rewrite [omd b b * _]mulrDr [omd b b * _]mulrDr [omd b b * _]mulrDr.
-  rewrite !opprD.
-  rewrite [-(omd b b * ((1 - l) ^+ 2 * omd a a)) - omd b b * (l ^+ 2 * omd b b)]addrC.
-  rewrite !addrA -!addrA addrC !addrA -!addrA addrC.
-  rewrite !addrA -!addrA addrC !addrA.
-  rewrite [omd b b * (l ^+ 2 * omd b b)]mulrC expr2 expr2 mulrA.
-  rewrite subrr sub0r addrC !addrA -!addrA.
-  rewrite addrCA !addrA -!addrA addrC !addrA.
-  rewrite mulrAC [ omd b b * ((1 - l) * l * omd a b)]mulrC.
-  rewrite -mulrA -[(1 - l) * l * omd a b * omd b b]mulrA.
-  rewrite [omd a b * omd b b]mulrC mulrA mulrA mulrA.
-  rewrite subrr sub0r addrAC addrC !addrA subrr add0r.
-  rewrite [X in _ - X]mulrC.
-  by rewrite -[X in _ - X]mulrA -mulrBr eqxx.
-move /eqP ->.
-rewrite mulrCA -expr2 -exprMn sqrtr_sqr.
-rewrite ler0_norm ;
-last rewrite nmulr_rle0 ?subr_lt0 ?invf_gt1 ?dist'_ge0 //.
-by rewrite opprK eqxx.
+rewrite /bet_dist /bet_dist_v => /orP[|betS_abc].
+  by move => /betEP[[-> <-]|->|->]; rewrite -!/(dist _ _) dist_aa_eq1 subrr
+    sqrtr0 ?mulr0 ?mul0r addr0 expr1n invr1 ?mulr1 ?mul1r.
+rewrite -!/(dist _ _).
+have c_eq := betS_extension betS_abc.
+move: betS_abc => /betSP[_ k_gt0 k_lt1].
+set k := betR _ _ _ in c_eq k_gt0 k_lt1; set l := k^-1.
+have l_ge1 : 1 <= l by rewrite ltW // invf_gt1.
+have c_aff : #c = (1 - l) *: #a + l *: #b.
+  by rewrite c_eq /extension extension_affine.
+have Eac : omd a c = (1 - l) * omd a a + l * omd a b.
+  by rewrite {1}/omd c_aff omd_affine.
+have Ebc : omd b c = (1 - l) * omd a b + l * omd b b.
+  by rewrite {1}/omd c_aff omd_affine [omd b a]omd_reflexivity.
+set D := omd a b ^+ 2 - omd a a * omd b b.
+have D_ge0 : 0 <= D by apply: dist'_ge0.
+have Dbc : omd b c ^+ 2 - omd b b * omd c c = (l - 1) ^+ 2 * D.
+  rewrite (@omd_disc_affine b a c (1 - l)); last by rewrite c_aff subKr addrC.
+  by rewrite [omd b a]omd_reflexivity /D; ring.
+have den : 1 + Num.sqrt (1 - dist a b) * Num.sqrt (1 - dist b c) =
+           omd b b * omd a c / (omd a b * omd b c).
+  rewrite !sqrt_one_sub_dist -/D Dbc sqrtrM ?sqr_ge0 // sqrtr_sqr.
+  rewrite ger0_norm ?subr_ge0 //.
+  have <- : omd a b * omd b c + (l - 1) * D = omd b b * omd a c.
+    by rewrite Eac Ebc /D; ring.
+  by rewrite -[D in RHS](sqr_sqrtr D_ge0); field; rewrite !omd_neq0.
+rewrite den /dist /dist_v -!/(omd _ _); apply/eqP.
+by field; rewrite !omd_neq0.
 Qed.
 
 Lemma dist_eq1' a b : dist a b == 1 -> a = b.
 Proof.
-move=>  dist_ab.
-apply /eqP.
-move: dist_ab.
-rewrite /dist /dist_v -!/(omd _ _).
-rewrite divf_eq1 ?expr2 ?mulf_neq0 ?omd_eq0 //.
-rewrite -expr2.
-case: (((#a)*m(#b)^T) 0 0 =P norm(#a) * norm(#b)).
-  rewrite /omd/omd_v point_vector_eq => pab_eq.
-  case: (#b =P 0).
-    move ->.
-    rewrite [#a*m 0^T]dotC !mul0mx [X in _*(1 - X)]mxE [X in (1-X)^+2]mxE /=.
-    rewrite subr0 expr2 !mulr1 subr_eq -subr_eq0 opprD.
-    rewrite addrA subrr sub0r oppr_eq0.
-    by rewrite quad_eq0'.
-  move=> /eqP b_neq0 H.
-  suffices: (norm(#a) - norm(#b))^+2 == 0.
-    rewrite sqrf_eq0 subr_eq0 /norm eqr_sqrt ?quad_ge0 // => /eqP na_nb_eq.
-    have: (# a *m (# b)^T) 0 0 == `|(# a *m (# b)^T) 0 0|.
-      rewrite eq_sym -ger0_def.
-      by rewrite pab_eq mulr_ge0 ?norm_ge0.
-    move=> /eqP pab_abs.
-    assert (pab_eq2 := pab_eq).
-    move/eqP: pab_eq.
-    rewrite pab_abs cauchy_schwartz_eq' //.
-    move => /eqP ->.
-    rewrite pab_eq2.
-    have: norm(#a) == norm(#b)
-      by rewrite /norm eqr_sqrt ?quad_ge0 ?na_nb_eq.
-    move => /eqP ->.
-    rewrite /norm -sqrtrM -?expr2 ?quad_ge0 //.
-    rewrite sqrtr_sqr.
-    have: `|(# b *m (# b)^T) 0 0| == (# b *m (# b)^T) 0 0.
-      by rewrite -ger0_def quad_ge0.
-    move=> /eqP ->.
-    by rewrite divff ?scale1r ?quad_neq0.
-  rewrite -cong_identity_holds_aux.
-  by rewrite subr_eq0 eq_sym !norm_sqr -pab_eq H.
-rewrite -divf_eq1 ; last by rewrite expr2 mulf_eq0 omd_eq0.
-move=> /eqP pab_neq /eqP dist_eq1.
-exfalso.
-suffices: 1 < (1-(norm(#a))^+2) * (1-(norm(#b))^+2)/(1-norm(#a) * norm(#b))^+2.
-  rewrite -invf_lt1;
-    last by rewrite ?mulr_gt0 -?exprVn ?exprn_gt0 ?invr_gt0 ?subr_gt0
-    ?expr2 ?mulr_ilt1 ?norm_ge0 ?norm_point_lt1.
-  rewrite invf_div divf_lt1;
-    last by rewrite mulr_gt0 ?subr_gt0 ?expr2 ?mulr_ilt1 ?norm_ge0 ?norm_point_lt1.
-  rewrite -subr_lt0 cong_identity_holds_aux.
-  move=> H_lt0.
-  suffices: (norm(#a) - norm(#b))^+2 < 0 <= (norm(#a) - norm(#b))^+2.
-    by rewrite lt_le_asym.
-  by rewrite H_lt0 sqr_ge0.
-rewrite -[X in X < _]dist_eq1.
-rewrite !norm_sqr -!/(omd_v _ _) -!/(omd _ _).
-have : (omd a b)^-1 < (1 - norm (# a) * norm (# b))^-1.
-rewrite invf_lt_invf ?subr_gt0 ?mulr_ilt1 ?norm_ge0 ?norm_point_lt1 ?p_scalar_point_lt1 //.
-rewrite /omd /omd_v -subr_gt0 opprB !addrA addrC !addrA [-1+1]addrC.
-rewrite subrr sub0r addrC subr_gt0 lt_def.
-rewrite eq_sym pab_neq.
-by move:(cauchy_schwartz' (#a) (#b))=> /andP[_ ->].
-move=> ?.
-rewrite -subr_gt0 -mulrBr ?mulr_gt0 ?omd_gt0 //.
-by rewrite subr_gt0 -!exprVn !expr2 ltr_pM ?invr_ge0 ?omd_ge0.
+rewrite /dist /dist_v -!/(omd _ _) divf_eq1 ?expf_neq0 ?omd_neq0 //.
+rewrite eq_sym -subr_eq0 omd_disc paddr_eq0
+        ?sqr_ge0 ?mulr_ge0 ?omd_ge0 ?dot2_ge0 //.
+rewrite [omd a a * _ == 0]mulf_eq0 omd_eq0 /= /dotp dot2_eq0 subr_eq0.
+by move => /andP[_ /eqP ba]; apply: val_inj.
 Qed.
 
 Lemma cong_identity_holds a b c : cong' a b c c -> a = b.
@@ -663,11 +319,8 @@ Qed.
 
 Lemma dist_eq1 a b : (dist a b == 1) = (a == b).
 Proof.
-apply /eqP /eqP.
-move=> /eqP.
-exact: dist_eq1'.
-move->.
-rewrite dist_aa_eq1 //.
+apply /eqP /eqP; first by move => /eqP; exact: dist_eq1'.
+by move ->; rewrite dist_aa_eq1.
 Qed.
 
 Lemma dist_neq1 a b : (dist a b != 1) = (a != b).
@@ -677,6 +330,12 @@ Lemma dist_lt1 a b:
   dist a b < 1 = (a!=b).
 Proof.
 by rewrite -dist_neq1 lt_def dist_le1 andbT eq_sym.
+Qed.
+
+Lemma omd_disc_gt0 a b : a != b -> 0 < omd a b ^+ 2 - omd a a * omd b b.
+Proof.
+rewrite -dist_lt1 -subr_gt0 one_sub_dist.
+by rewrite pmulr_lgt0 // invr_gt0 exprn_gt0 ?omd_gt0.
 Qed.
 
 Lemma cong_inner_transitivity_vector (a b c d e f : 'rV[R]_n) :
@@ -689,47 +348,16 @@ Lemma bet_in_disk (a b c : 'rV[R]_n) :
   (c *m c^T) 0 0 < 1 ->
   (b *m b^T) 0 0 < 1.
 Proof.
-rewrite /bet => /orP[/betEP [ [H _] | H | H ] |H ] ;
-rewrite -?H ?a_in_disk ?H ?c_in_disk //.
-move=> a_in_disk c_in_disk.
-move: H.
-rewrite betS_neq13=> /andP [/betSP [H1 H2 H3] H4].
-have: (c *m a^T) 0 0 < 1 by rewrite dotC p_scalar_lt1 //.
-move=> ca_lt1.
-move/eqP:  H1;rewrite subr_eq => /eqP ->.
-set r := betR a b c.
-rewrite -[X in _ + X]scale1r scalerBr addrAC -addrA -scalerBl.
-rewrite mulmxDl -!scalemxAl dotC [X in _ + (_ *: X)]dotC.
-rewrite !mulmxDl -!scalemxAl [a *m c^T]dotC !scalerDr !scalerA.
-rewrite addrA.
-apply lt_le_trans with
- (r * r * 1 + r * (1 - r) * 1 + (1 - r) * r * 1 + (1 - r) * (1 - r) * 1).
-rewrite !mxE ?ltrD //;
-rewrite -subr_gt0 -mulrBr ?pmulr_rgt0 ?subr_gt0 //.
-move: c_in_disk ; rewrite !mxE //.
-move: ca_lt1 ; rewrite !mxE //.
-move: ca_lt1 ; rewrite !mxE //.
-move: a_in_disk ; rewrite !mxE //.
-rewrite !mulr1 !mulrBl !mulrBr !mul1r !mulr1.
-rewrite [r * r + (r -r * r)]addrCA subrr addr0.
-rewrite [(1 - r) - (r - r * r)]addrC addrA addrC.
-rewrite -[r + (r - r * r) - (r - r * r)]addrA subrr addr0.
-by rewrite addrAC -addrA subrr addr0 lexx.
-Qed.
-
-Lemma X_in_disk (a b p q : Point) :
-  (exists X' : 'rV[R]_n, bet (# p) X'    (# b) /\ bet (# q) X'    (# a)) ->
-  (exists X  : Point,    bet (# p) (# X) (# b) /\ bet (# q) (# X) (# a)).
-Proof.
-move => H.
-destruct H.
-assert ((x *m x^T) 0 0 < 1).
-apply bet_in_disk with (#p) (#b).
-by destruct H as [H _].
-by destruct p.
-by destruct b.
-exists (exist (fun p => (p *m p^T) 0 0 < 1) x H0).
-exact: H.
+rewrite /bet => /orP[/betEP[[-> _]|->|->] //|].
+rewrite betS_neq13 => /andP[/betSP[b_eq r_gt0 r_lt1] ac_neq] aa_lt1 cc_lt1.
+have := p_scalar_lt1 ac_neq aa_lt1 cc_lt1.
+move: aa_lt1 cc_lt1; move/eqP: b_eq; rewrite subr_eq => /eqP ->.
+set r := betR a b c in r_gt0 r_lt1 *.
+rewrite -!/(dotp _ _) !dotpE [dotp c a]dotpC => aa_lt1 cc_lt1 ac_lt1.
+have h1 : 0 < (1 - r) ^+ 2 * (1 - dotp a a) by rewrite mulr_gt0 ?exprn_gt0; lra.
+have h2 : 0 < r ^+ 2 * (1 - dotp c c) by rewrite mulr_gt0 ?exprn_gt0; lra.
+have h3 : 0 < r * (1 - r) * (1 - dotp a c) by rewrite !mulr_gt0; lra.
+nra.
 Qed.
 
 Lemma segment_addition' (a b c a' b' c' : Point):
@@ -737,7 +365,7 @@ Lemma segment_addition' (a b c a' b' c' : Point):
   cong' a c a' c'.
 Proof.
 rewrite -!dist_cong'.
-move=> /eqP cong'_aba'b' /eqP cong'_bcb'c' bet'_abc bet'_a'b'c'.
+move => /eqP cong'_aba'b' /eqP cong'_bcb'c' bet'_abc bet'_a'b'c'.
 apply bet_dist_bet' in bet'_abc.
 apply bet_dist_bet' in bet'_a'b'c'.
 move: bet'_abc bet'_a'b'c'.
@@ -748,185 +376,46 @@ Qed.
 Lemma cong_v_aabc a b c : cong_v (#a) (#a) (#b) (#c) = ((#b) == (#c)).
 Proof.
 apply /eqP /eqP.
-move=>/eqP.
-rewrite eq_sym -/(cong_v _ _ _ _) -/(cong' _ _ _ _) => H.
-rewrite (@cong_identity_holds b c a) //.
-move->.
-rewrite -!expr2 -!/(omd _ _) !divff ?mulf_eq0 ?omd_eq0 //.
+  move =>/eqP; rewrite eq_sym -/(cong_v _ _ _ _) -/(cong' _ _ _ _) => H.
+  by rewrite (@cong_identity_holds b c a).
+by move ->; rewrite -!expr2 -!/(omd _ _) !divff ?mulf_eq0 ?omd_eq0.
 Qed.
 
 Lemma cong_v_bcaa a b c : cong_v (#b) (#c) (#a) (#a) = ((#b) == (#c)).
+Proof. by rewrite /cong_v eq_sym -/(cong_v _ _ _ _) cong_v_aabc. Qed.
+
+Definition ch a b := (Num.sqrt (dist a b))^-1.
+
+Lemma chE a b : ch a b = omd a b / (Num.sqrt (omd a a) * Num.sqrt (omd b b)).
 Proof.
-apply /eqP /eqP.
-move=>/eqP.
-rewrite -/(cong_v _ _ _ _) -/(cong' _ _ _ _) => H.
-rewrite (@cong_identity_holds b c a) //.
-move->.
-rewrite -!expr2 -!/(omd _ _) !divff ?mulf_eq0 ?omd_eq0 //.
+rewrite /ch /dist /dist_v -!/(omd _ _) sqrt_div_sqr ?omd_gt0 //.
+by rewrite sqrtrM ?omd_ge0 // invf_div.
 Qed.
 
-Lemma five_segment_holds_aux a c d :
-  dist c d = dist a d * (omd c c / omd a a) * (omd a d / omd c d) ^+ 2.
+Lemma ch_affine a b c d l :
+  #c = (1 - l) *: #a + l *: #b -> a != b ->
+  ch c d = ((ch a c - ch a b * ch b c) * ch a d +
+            (ch b c - ch a b * ch a c) * ch b d) / (1 - ch a b ^+ 2).
 Proof.
-apply /eqP.
-rewrite eq_sym /dist /dist_v -!/(omd _ _) exprMn exprVn.
-rewrite mulrACA mulrC -[omd a a * omd d d / omd a d ^+ 2 * omd a d ^+ 2]mulrA.
-rewrite [omd a d ^- 2 * omd a d ^+ 2]mulrC divff;
-  last by rewrite expr2 mulf_eq0 omd_eq0.
-rewrite mulr1 mulrACA mulrC -[omd c c / omd a a * omd a a]mulrA.
-rewrite [(omd a a)^-1 * omd a a]mulrC divff ?omd_eq0 //.
-by rewrite mulr1 mulrAC -mulrA mulrC eqxx.
-Qed.
-
-Lemma five_segment_holds_aux2 a b c l mu :
-  (#c) == (1 - l) *: #a + l*: #b ->
-  mu == l * Num.sqrt(omd b b/ omd a a) ->
-  mu != 0 ->
-  omd c c /omd a a =
-  mu ^+ 2 *(((1 - l) / mu) ^+ 2 + (1 - l) / mu * 2%:R/Num.sqrt (dist a b) + 1).
-Proof.
-move=> /eqP c_eq /eqP mu_eq mu_neq0.
-have: omd c c == (
-  (1 - l)^+2 * (omd a a)
-  + l^+2 * omd b b
-  + (1 - l) * l * omd a b
-  + (1 - l) * l * omd a b).
-  rewrite [omd c c]/omd/omd_v c_eq.
-  rewrite mulmxDl mxE -!scalemxAl mxE [X in 1 - (_  + X)]mxE ![(#_)*m(_)^T]dotC.
-  have:  1 == (1-l)*1 +(l*1)
-    by rewrite !mulr1  addrAC -addrA subrr addr0.
-  move=> /eqP one_eq ; rewrite{1}one_eq.
-  rewrite !opprD !addrA addrAC addrC !addrA -!addrA -mulrBr.
-  rewrite !addrA [ X in X + _]addrC -mulrBr.
-  rewrite omd_cb omd_ca mulrDr mulrDr.
-  rewrite mulrA -expr2 [l * ((1 - l) * omd a b)]mulrCA.
-  rewrite [l * (l * omd b b)]mulrA -expr2.
-  rewrite [(1 - l) * (l * omd a b)]mulrA.
-  by rewrite addrA addrAC -addrA addrAC addrA eqxx.
-move=> /eqP ->.
-apply /eqP.
-rewrite mulrDl mulrDl mulrDl -mulrA divff ?omd_eq0 //.
-rewrite mulr1 eq_sym.
-rewrite mulrDr mulrDr exprMn exprVn mulrCA divff; last by rewrite expr2 mulf_neq0.
-rewrite !mulr1 mulrA mulrA mulrCA {1}[mu^+2]expr2.
-rewrite -[mu * mu/mu]mulrA divff //.
-rewrite mulr1 mulrAC mu_eq exprMn sqr_sqrtr ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-rewrite mulrA -[ _ * _ * Num.sqrt _ / Num.sqrt _]mulrA.
-rewrite sqrt_invf -sqrtrM /dist/dist_v -!/(omd _ _) ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-rewrite !invfM !invrK -expr2.
-rewrite [X in Num.sqrt X]mulrCA ![X in Num.sqrt X]mulrA.
-rewrite [(omd a a)^-1 / omd b b * (omd b b / omd a a)]mulrA.
-rewrite -[_ /omd b b * omd b b]mulrA [(omd b b)^-1 * omd b b]mulrC.
-rewrite divff ?omd_eq0 // mulr1 -expr2 -[ _ *omd a b * omd a b]mulrA.
-rewrite -expr2 -exprMn sqrtr_sqr ger0_norm ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-rewrite [_^-1 * _]mulrC /GRing.natmul /= mulrDr !mulr1.
-by rewrite addrAC !mulrA !addrA eqxx.
-Qed.
-
-Lemma five_segment_holds_aux3 a b c d l mu :
-  (#c) == (1 - l) *: #a + l *: (#b) ->
-  mu == l * Num.sqrt(omd b b/ omd a a) ->
-  mu != 0 ->
-  (omd a d/ omd c d) ^+2 =
-  (mu^+2 *
-  (((1 - l)/mu) ^+ 2 +
-   (1 - l) / mu * 2%:R * Num.sqrt (dist a d / dist b d) +
-   dist a d / dist b d))^-1.
-Proof.
-move=> /eqP c_eq /eqP mu_eq mu_neq0; apply /eqP.
-rewrite eq_sym invf_eq ?expr2 ?mulf_eq0 ?invr_eq0 ?omd_eq0 //.
-rewrite -!expr2 invrK eq_sym -exprVn invf_div.
-have: omd c d == (1-l) * omd a d + l * (omd b d).
-  rewrite /omd c_eq /omd_v mulmxDl dotC mxE dotC -scalemxAl.
-  rewrite -scalemxAl opprD [(l *: (_*m (_)^T)) 0 0]mxE.
-  rewrite addrA eq_sym mulrBr mulrBr !mulr1.
-  by rewrite addrCA !addrA [l + 1 - l]addrAC subrr add0r !mxE eqxx.
-move=> /eqP ->.
-rewrite [(_ + _)/omd a d]mulrDl -[X in (X+_)^+2]mulrA.
-rewrite divff ?omd_eq0 // mulr1 expr2 mulrDl mulrDr -expr2.
-rewrite mulrDr -expr2 -[l* omd _ _ / omd _ _]mulrA exprMn.
-rewrite [X in _ + _ + (X + _)]mulrC eq_sym.
-rewrite ![mu^+2 * (_ +_)]mulrDr exprMn exprVn mulrCA.
-rewrite divff; last by rewrite expr2 mulf_neq0.
-rewrite mulrA mulrA mulrCA {1}[mu^+2]expr2 -[mu*(mu)/mu]mulrA.
-rewrite divff // !mulr1 mulrAC mu_eq mulrA mulrA mulrA.
-rewrite -[_ * _* Num.sqrt _ *Num.sqrt _]mulrA -sqrtrM
-  ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-rewrite exprMn sqr_sqrtr ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-rewrite -[X in _+ _+X]mulrA -[X in _+ _+X]mulrA.
-have: omd b b / omd a a * (dist a d / dist b d) ==
-  (omd b d / omd a d)^+2.
-  rewrite /dist/dist_v -!/(omd _ _).
-  rewrite invf_div !mulrA [omd b b / omd a a * omd a a]mulrAC.
-  rewrite -[omd b b * omd a a / omd a a]mulrA divff ?omd_eq0 //.
-  rewrite !invfM !mulrA -mulrAC mulrC !mulrA [(omd b b)^-1 * omd b b]mulrC.
-  rewrite divff ?omd_eq0 // !mul1r mulrC !mulrA [_^-1 *_]mulrC.
-  rewrite divff ?omd_eq0 // mul1r -invfM -expr2.
-  by rewrite -mulrA -expr2 mulrC exprMn exprVn.
-move=> /eqP ->.
-rewrite sqrtr_sqr ger0_norm ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-by rewrite /GRing.natmul /= mulrDr !mulr1 !mulrA !addrA eqxx.
-Qed.
-
-Lemma five_segment_holds_aux4 a b :
-  omd a a / omd a b = Num.sqrt (omd a a * dist a b / omd b b).
-Proof.
-apply /eqP.
-rewrite /dist/dist_v -!/(omd _ _) eq_sym !mulrA mulrAC.
-rewrite mulrC !mulrA -mulrA divff ?omd_eq0 //.
-rewrite mulr1 mulrC mulrCA -expr2 mulrC -exprVn -exprMn.
-by rewrite sqrtr_sqr ger0_norm ?mulr_ge0 ?invr_ge0 ?omd_ge0.
-Qed.
-
-Lemma five_segment_holds_aux5 a b c l :
-  (#c) == (1 - l) *: #a + l *: (#b) ->
-  l != 0 ->
-  a != b ->
-  a != c ->
-  (omd a c / l / omd a b) ^+ 2 = (1 - dist a b) / (1 - dist a c).
-Proof.
-move=> /eqP c_eq l_neq0 ab_neq bc_neq.
-apply /eqP.
-rewrite -divf_eq1;
-last by rewrite mulf_neq0 ?invr_eq0 ?subr_eq0 1?eq_sym ?dist_neq1.
-rewrite invf_div mulrA divf_eq1 ;
-last by rewrite subr_eq0 eq_sym dist_neq1.
-rewrite mulrDr mulr1 mulrN /(dist a c)/dist_v -!/(omd _ _).
-rewrite -{2}mulrA [(omd a c * _)^+2]exprMn mulrA.
-rewrite [X in _ -X]mulrAC [X in _ -X*_]mulrAC divff;
-  last by rewrite expr2 mulf_eq0 omd_eq0.
-rewrite omd_reflexivity {1}/omd/omd_v c_eq omd_ca.
-rewrite mulrDl [l * omd a b / l]mulrAC divff //.
-rewrite mulrDl mul1r divff ?omd_eq0 //.
-rewrite sqrrD [1^+2]expr2 !mul1r !mulr1.
-rewrite addrC !addrA mulrC -[(1 - l) * omd a a / l / omd a b]mulrA.
-rewrite [(_*(l^-1 / omd a b))^+2]exprMn -mulNr.
-rewrite -mulrDl /(omd c c)/omd_v c_eq omd_cc.
-rewrite mulrDr mulrDr [omd a a * ((1 - l) ^+ 2 * omd a a)]mulrCA.
-rewrite -expr2 -exprMn !opprD [_ + _^+2] addrC addrA.
-rewrite addrA subrr sub0r -opprD mulNr.
-rewrite [(_)*(l^-1/omd a b)^+2]mulrDl exprMn !exprVn.
-rewrite mulrA mulrAC mulrA -[omd a a * l ^+ 2 / l ^+ 2]mulrA.
-rewrite divff; last by rewrite expr2 mulf_neq0 ?l_neq0.
-rewrite mulr1 mulrAC {1}/omd {1}/omd {1}/omd.
-rewrite -/(dist_v _ _) -/(dist _ _).
-rewrite [X in dist a b + X]mulrA [l * (1 - l) * omd a b *+ 2]addrC.
-rewrite mulrDr [X in dist a b + X/_]mulrDl [X in dist a b + X]mulrDl.
-rewrite mulrA mulrAC mulrC [omd a b ^+2]expr2.
-rewrite invfM invfM mulrA mulrA mulrA mulrA mulrC mulrA.
-rewrite mulrA mulrA -mulrA divff ?omd_eq0 // mulr1.
-rewrite mulrACA mulrA mulrC mulrA mulrA mulrA mulrC.
-rewrite mulrA mulrA mulrA mulrA -mulrA divff ?l_neq0 //.
-rewrite mulr1 mulrC mulrA mulrA mulrAC mulrC mulrA mulrA.
-rewrite !opprD addrA -[-_-_-_+_]addrA [X in -_-_+X]addrC.
-rewrite subrr addr0 addrC addrA addrA -addrA [X in 1 -_+X]addrC.
-by rewrite subrr addr0 eqxx.
-Qed.
-
-Lemma betR_neq0 a b c : betS (#a) (#b) (#c) -> betR (#a) (#b) (#c) != 0.
-Proof.
-move => /betSP[_ ? _].
-by rewrite lt0r_neq0.
+move => c_eq ab_neq.
+have Eac : omd a c = (1 - l) * omd a a + l * omd a b.
+  by rewrite {1}/omd c_eq omd_affine.
+have Ebc : omd b c = (1 - l) * omd a b + l * omd b b.
+  by rewrite {1}/omd c_eq omd_affine [omd b a]omd_reflexivity.
+have Ecd : omd c d = (1 - l) * omd a d + l * omd b d.
+  by rewrite omd_reflexivity {1}/omd c_eq omd_affine !(omd_reflexivity d).
+have D_neq0 := lt0r_neq0 (omd_disc_gt0 ab_neq).
+rewrite !chE Ecd Eac Ebc.
+have s_neq0 (p : Point) : Num.sqrt (omd p p) != 0.
+  by rewrite sqrtr_eq0 -ltNge omd_gt0.
+have sq (p : Point) : omd p p = Num.sqrt (omd p p) ^+ 2.
+  by rewrite sqr_sqrtr ?omd_ge0.
+move: (s_neq0 a) (s_neq0 b) (s_neq0 c) (s_neq0 d) D_neq0 (sq a) (sq b).
+set sa := Num.sqrt (omd a a); set sb := Num.sqrt (omd b b).
+set sc := Num.sqrt (omd c c); set sd := Num.sqrt (omd d d).
+move => sa_neq0 sb_neq0 sc_neq0 sd_neq0 D_neq0 Eaa Ebb.
+move: D_neq0; rewrite Eaa Ebb -oppr_eq0 opprB -exprMn => D_neq0; field.
+by rewrite D_neq0 sa_neq0 sb_neq0 sc_neq0 sd_neq0.
 Qed.
 
 Lemma five_segment_holds a a' b b' c c' d d' :
@@ -934,223 +423,67 @@ Lemma five_segment_holds a a' b b' c c' d d' :
   bet' a b c -> bet' a' b' c' -> a <> b ->
   cong' c d c' d'.
 Proof.
-move=> cong1 cong2 cong3 cong4 bet1 bet2  /eqP /negPf ab_neq.
+move => cong1 cong2 cong3 cong4 bet1 bet2 /eqP /negPf ab_neq.
 move: bet1 cong1 cong2 cong3 cong4.
 rewrite point_vector_eq in ab_neq.
-rewrite /bet /cong' => /orP[/betEP[[/eqP]|/eqP|->]|];
-rewrite ?ab_neq //.
+rewrite /bet /cong' => /orP[/betEP[[/eqP]|/eqP|->]|]; rewrite ?ab_neq //.
 rewrite cong_v_aabc=> _ /eqP -> //.
-move=> betS_abc.
-move:bet2.
-rewrite /bet => /orP[/betEP[[-> _]|->|->]|];
-rewrite ?cong_v_bcaa ?ab_neq //.
-move=> _ /eqP -> //.
-move=> betS_a'b'c'.
-rewrite -!/(cong' _ _ _ _)-!dist_cong'.
-move=> /eqP dist_ab /eqP dist_bc /eqP dist_ad /eqP dist_bd.
-have: (#c) = extension (#a) (#b) (betR (#a) (#b) (#c))
-  by apply betS_extension.
-have: (#c') = extension (#a') (#b') (betR (#a') (#b') (#c'))
-  by apply betS_extension.
-rewrite /extension.
-set l := (betR (#a) (#b) (#c))^-1.
-set l' := (betR (#a') (#b') (#c'))^-1.
-rewrite scalerBr addrAC -[X in _ + X -_]scale1r -addrA.
-rewrite -scalerBl addrC.
-move => c'_eq.
-rewrite scalerBr addrAC -[X in _ + X -_]scale1r -addrA.
-rewrite -scalerBl addrC.
-move => c_eq.
-rewrite (five_segment_holds_aux a c d) (five_segment_holds_aux a' c' d').
-set mu := l * Num.sqrt(omd b b/ omd a a).
-set mu' := l' * Num.sqrt(omd b' b'/ omd a' a').
-have: mu != 0 by
-  rewrite /mu /l mulf_neq0 ?invr_neq0 ?betR_neq0 ?lt0r_neq0 ?sqrtr_gt0
-   ?mulr_gt0 ?invr_gt0 ?omd_gt0.
-have: mu' != 0 by
-  rewrite /mu /l mulf_neq0 ?invr_neq0 ?betR_neq0 ?lt0r_neq0 ?sqrtr_gt0
-   ?mulr_gt0 ?invr_gt0 ?omd_gt0.
-move=> mu'_neq0 mu_neq0.
-rewrite (@five_segment_holds_aux2 a b c l mu) ?c_eq //.
-rewrite (@five_segment_holds_aux2 a' b' c' l' mu') ?c'_eq //.
-rewrite (@five_segment_holds_aux3 a b c d l mu) ?c_eq //.
-rewrite (@five_segment_holds_aux3 a' b' c' d' l' mu') ?c'_eq //.
-have : (1-l)/mu == (1-l')/mu'.
-  suffices: (1-l)/l * (omd a a/ omd a b) ==
-    (1-l')/l' * (omd a' a'/ omd a' b').
-    rewrite (@five_segment_holds_aux4 a b).
-    rewrite (@five_segment_holds_aux4 a' b').
-    rewrite [omd a a * dist a b / omd b b]mulrAC.
-    rewrite [omd a' a' * dist a' b' / omd b' b']mulrAC.
-    rewrite sqrtrM ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-    rewrite [Num.sqrt (omd a' a' / omd b' b' * dist a' b')]sqrtrM
-    ?mulr_ge0 ?invr_ge0 ?omd_ge0 //.
-    rewrite -subr_eq0 dist_ab mulrA mulrA -mulrBl mulf_eq0.
-    rewrite sqrtr_eq0 /dist/dist_v -!/(omd _ _) -{2}(mul1r (omd a' a')).
-    rewrite expr2 invfM mulrA.
-    rewrite !pmulr_lle0 ?invr_gt0 ?omd_gt0 //.
-    rewrite ler10 orbF subr_eq0 /mu/mu' !invfM.
-    by rewrite !sqrt_invf !invf_div !mulrA.
-  suffices: (omd a c/l/omd a b)^+2 ==
-           (omd a' c'/l'/omd a' b')^+2.
-    rewrite eqf_sqr =>/orP[|].
-    rewrite [omd a c]omd_reflexivity  [omd c a]/omd/omd_v c_eq.
-    rewrite omd_ca.
-    rewrite [omd a' c']omd_reflexivity  [omd c' a']/omd/omd_v c'_eq.
-    rewrite omd_ca mulrDl mulrDl.
-    rewrite [X in _ == X/_]mulrDl [X in _ == X]mulrDl.
-    rewrite addrC mulrAC mulrC mulrA mulrA -mulrA divff ?omd_eq0 //.
-    rewrite mulr1 mulrC divff; last by rewrite invr_eq0 betR_neq0.
-    rewrite eq_sym.
-    rewrite addrC mulrAC mulrC mulrA mulrA -mulrA divff ?omd_eq0 //.
-    rewrite mulr1 mulrC divff ; last by rewrite invr_eq0 betR_neq0.
-    rewrite add2r_eq.
-    rewrite mulrAC mulrC mulrA mulrA [_^-1*_]mulrC.
-    rewrite eq_sym.
-    by rewrite [X in X == _]mulrAC mulrC !mulrA [_^-1*_]mulrC.
-    rewrite -subr_eq0 opprK => /negPn /negPf H1.
-    move: H1.
-    rewrite lt0r_neq0 //.
-    rewrite addr_gt0 ?mulr_gt0 ?invr_gt0 ?omd_gt0 //.
-    move: betS_abc => /betSP[] //.
-    move: betS_a'b'c' => /betSP[] //.
-  have : dist a c == dist a' c'
-    by rewrite dist_cong' (@segment_addition' a b c a' b' c') -?dist_cong'
-    /bet'/bet ?betS_abc ?betS_a'b'c' ?orbT ?dist_ab ?dist_bc.
-  move=> /eqP dist_ac.
-  rewrite (@five_segment_holds_aux5 a b c l)
-    ; rewrite ?c_eq ?invr_eq0 ?betR_neq0 //.
-  rewrite (@five_segment_holds_aux5 a' b' c' l')
-    ; rewrite ?c'_eq ?invr_eq0 ?betR_neq0 //.
-  by rewrite dist_ab dist_ac eqxx.
-  move:betS_a'b'c'.
-  by rewrite betS_neq12 -point_vector_neq=> /andP [_ ].
-  move:betS_a'b'c'.
-  by rewrite betS_neq13 -point_vector_neq=> /andP [_ ].
-  move:betS_abc.
-  by rewrite betS_neq12 -point_vector_neq=> /andP [_ ].
-  move:betS_abc.
-  by rewrite betS_neq13 -point_vector_neq=> /andP [_ ].
-move=> /eqP ->.
-rewrite [(_^+2 * _)^-1]invfM mulrA mulrA.
-rewrite mulrACA -[dist a d * mu ^+ 2 / mu ^+ 2]mulrA divff;
-  last by rewrite expr2 mulf_neq0.
-rewrite eq_sym.
-rewrite [(_^+2 * _)^-1]invfM mulrA mulrA.
-rewrite [X in X == _]mulrAC mulrC.
-rewrite mulrA mulrA mulrCA [_^-2 * _^+2]mulrC divff;
-  last by rewrite expr2 mulf_neq0.
-by rewrite dist_ad dist_bd dist_ab eqxx.
+move => betS_abc; move: bet2.
+rewrite /bet => /orP[/betEP[[-> _]|->|->]|]; rewrite ?cong_v_bcaa ?ab_neq //.
+move => _ /eqP -> //.
+move => betS_a'b'c'.
+rewrite -!/(cong' _ _ _ _) -!dist_cong'.
+move => /eqP dist_ab /eqP dist_bc /eqP dist_ad /eqP dist_bd.
+have /eqP dist_ac : dist a c == dist a' c'.
+  by rewrite dist_cong' (@segment_addition' a b c a' b' c') -?dist_cong'
+             /bet' /bet ?betS_abc ?betS_a'b'c' ?orbT ?dist_ab ?dist_bc.
+have line (x y z : Point) :
+  betS (#x) (#y) (#z) -> exists l, #z = (1 - l) *: #x + l *: #y.
+  by move => /betS_extension ->; eexists; rewrite /extension extension_affine.
+have [[l1 l1E] [l2 l2E]] := (line _ _ _ betS_abc, line _ _ _ betS_a'b'c').
+have a'b'_neq : a' != b'.
+  by move: betS_a'b'c'; rewrite betS_neq12 -point_vector_neq => /andP[].
+have : ch c d = ch c' d'.
+  by rewrite (ch_affine d  l1E) ?point_vector_neq ?ab_neq //
+             (ch_affine d' l2E) // /ch dist_ab dist_ac dist_bc dist_ad dist_bd.
+rewrite /ch => /invr_inj /(congr1 (fun r : R => r ^+ 2)).
+by rewrite !sqr_sqrtr ?ltW ?dist_gt0 // => ->.
 Qed.
 
-Lemma E_in_disk_aux b c d E' :
+Lemma cong_v_in_disk b c d E' :
   cong_v (#b) E' (#c) (#d) -> (E' *m E'^T) 0 0 < 1.
 Proof.
-move=> cong_v_bE'cd.
-rewrite -subr_gt0.
-move:cong_v_bE'cd.
-rewrite /cong_v -!/(omd _ _) eq_sym.
-have: 0 < omd c d ^+ 2 / (omd c c * omd d d)
-  by rewrite mulr_gt0 ?invr_gt0 ?expr2 ?mulr_gt0 ?omd_gt0.
-move => H1 /eqP H2.
-move: H1 ; rewrite H2 lt0r.
-rewrite lt0r invfM mulrA.
-move => /andP[neq0 ge0].
-apply /andP.
-split.
-  move: neq0.
-  by rewrite mulf_eq0 negb_or invr_eq0 => /andP[_ ->].
-move: ge0.
-rewrite pmulr_rge0 ?invr_ge0 //.
-rewrite lt0r mulr_ge0 ?invr_ge0 ?omd_ge0 ?sqr_ge0 // andbT.
-move: neq0.
-by rewrite mulf_eq0 negb_or=> /andP[-> _].
+rewrite /cong_v -!/(omd _ _) => /eqP H; rewrite -subr_gt0 -/(omd_v _ _) ltNge.
+apply/negP => EE_le0.
+have : 0 < omd c d ^+ 2 / (omd c c * omd d d).
+  by rewrite divr_gt0 ?exprn_gt0 ?mulr_gt0 ?omd_gt0.
+rewrite -H invfM mulrA ltNge mulr_ge0_le0 // ?invr_le0 //.
+by rewrite divr_ge0 ?sqr_ge0 ?omd_ge0.
 Qed.
 
 Lemma E_in_disk (a b c d : Point) :
   (exists E' : 'rV[R]_n, bet (#a) (#b) E' /\ cong_v (#b) E' (#c) (#d)) ->
   (exists E : Point,     bet' a   b    E  /\ cong'  b    E  c    d).
 Proof.
-move=> H.
-destruct H as [E' [bet cong_v]].
+move => [E' [bet cong_v]].
 assert (E'_in_disk := cong_v).
-apply E_in_disk_aux in E'_in_disk.
+apply cong_v_in_disk in E'_in_disk.
 set E := (exist (fun p => (p *m p^T) 0 0 < 1) E' E'_in_disk).
 exists E.
 by rewrite /bet' bet /cong' cong_v.
 Qed.
 
-Lemma roots_poly2 (a b c: R) (d := b ^+ 2 - 4%:R * a * c):
-  a != 0 -> d >= 0 ->
-  let r1 := (- b - Num.sqrt d) / 2%:R / a in
-  let r2 := (- b + Num.sqrt d) / 2%:R / a in
-  a * r1 ^+ 2 + b * r1 + c == 0 /\
-  a * r2 ^+ 2 + b * r2 + c == 0.
-Proof.
-move=> a_neq0 d_ge0 r1 r2.
-have: 4%:R * a * c * (2%:R^-1 / a) ^+ 2 == c / a.
-  rewrite exprMn !exprVn mulrCA !mulrA [2%:R ^- 2 * 4%:R]mulrC.
-  rewrite /GRing.natmul /= expr2 mulrDl mul1r !addrA.
-  rewrite divff ?lt0r_neq0 ?addr_gt0 ?ltr01 //.
-  rewrite mul1r expr2 mulrAC invfM mulrA divff //.
-  by rewrite mul1r mulrC.
-move => /eqP H1.
-have: (2%:R^-1 + 2%:R^-1) == 1 :> R.
-  by rewrite /GRing.natmul /= -[(1 + 1)^-1]mul1r -mulrDl divff
-  ?lt0r_neq0 ?addr_gt0 ?ltr01.
-move=> /eqP H2.
-have: a * ((r1+b/2%:R/a)^+2-d* (2%:R^-1 / a) ^+ 2 ) == 0.
-  rewrite /r1 -!mulrDl [(- b - Num.sqrt d + b)]addrC addrA subrr.
-  by rewrite add0r -mulrA exprMn sqrrN sqr_sqrtr ?subrr ?mulr0.
-rewrite sqrrD /d mulrBl H1 -exprMn mulrA mulrA mulrA opprD opprK !addrA.
-rewrite mulrDr [a * (c / a)]mulrCA divff // mulr1.
-rewrite -!addrA subrr addr0 -mulrDl -mulrDr H2 mulr1.
-rewrite mulrDr [a * (r1 * b / a)]mulrCA divff // mulr1.
-rewrite !addrA [r1*b]mulrC => ->.
-
-have: a * ((r2+b/2%:R/a)^+2-d* (2%:R^-1 / a) ^+ 2 ) == 0.
-  rewrite /r2 -!mulrDl [(- b + Num.sqrt d + b)]addrC addrA subrr.
-  by rewrite add0r -mulrA exprMn sqr_sqrtr ?subrr ?mulr0.
-rewrite sqrrD /d mulrBl H1 -exprMn mulrA mulrA mulrA opprD opprK !addrA.
-rewrite mulrDr [a * (c / a)]mulrCA divff // mulr1.
-rewrite -!addrA subrr addr0 -mulrDl -mulrDr H2 mulr1.
-rewrite mulrDr [a * (r2 * b / a)]mulrCA divff // mulr1.
-by rewrite !addrA [r2*b]mulrC => ->.
-Qed.
+Lemma dot_omd a b : dotp (#a) (#b) = 1 - omd a b.
+Proof. by rewrite /dotp /omd /omd_v opprB addrC subrK. Qed.
 
 Lemma cong_aaxx (a x : 'rV[R]_n) : cong a a x x.
-Proof. by rewrite /cong !subrr eqxx. Qed.
+Proof. by rewrite !congE !subrr eqxx. Qed.
 
 Lemma cong_cdab (a b c d : 'rV[R]_n) : cong c d a b = cong a b c d.
-Proof. by rewrite /cong eq_sym. Qed.
-
-Lemma cong_id (a b c d: 'rV[R]_n) : cong a b c d -> (a == b) = (c == d).
-Proof.
-move=> cong_abcd.
-apply /eqP/eqP.
-  move=> ab_eq.
-  move: cong_abcd.
-  rewrite ab_eq cong_cdab.
-  exact: cong_identity.
-move=> cd_eq.
-move: cong_abcd.
-rewrite cd_eq.
-exact: cong_identity.
-Qed.
-
-Lemma cong_inner_transitivity' (a b c d e f : 'rV[R]_n):
-  cong a b c d -> cong a b e f -> cong c d e f.
-Proof.
-move => ? ?.
-by apply cong_inner_transitivity with a b;
-rewrite cong_cdab.
-Qed.
-
-Lemma cong_abab (a b : 'rV[R]_n) : cong a b a b.
-Proof. by rewrite /cong. Qed.
+Proof. by rewrite !congE eq_sym. Qed.
 
 Lemma cong_bacd (a b c d : 'rV[R]_n) : cong b a c d = cong a b c d.
-Proof. by rewrite /cong -opprB mulNmx dotC mulNmx opprK. Qed.
+Proof. by rewrite !congE -opprB mulNmx mulmx_trC mulNmx opprK. Qed.
 
 Lemma cong_abdc (a b c d : 'rV[R]_n) : cong a b d c = cong a b c d.
 Proof. by rewrite cong_cdab cong_bacd cong_cdab. Qed.
@@ -1163,7 +496,7 @@ case: (a =P b).
   move ->.
   rewrite cong_cdab=> H.
   by rewrite (cong_identity H).
-move=> /eqP ab_neq cong_aba'b' cong_bcb'c' bet_abc bet_a'b'c'.
+move => /eqP ab_neq cong_aba'b' cong_bcb'c' bet_abc bet_a'b'c'.
 rewrite cong_bacd cong_abdc.
 apply five_segment with a a' b b'=> //.
 by rewrite cong_aaxx.
@@ -1171,546 +504,71 @@ by rewrite cong_bacd cong_abdc.
 by apply /eqP.
 Qed.
 
-Lemma one_side_cong_eq (a b c d : 'rV[R]_n) :
-  bet a b c -> bet a b d -> cong b c b d -> a != b -> c == d.
+Lemma cong_v_omd b c d E :
+  omd_v (#b) E ^+ 2 = omd b b / dist c d * omd_v E E -> cong_v (#b) E (#c) (#d).
 Proof.
-move=> bet_abc bet_abd cong_bcbd ab_neq.
-apply /eqP ; apply cong_identity with c.
-apply five_segment with a a b b;
-rewrite ?cong_abab 1?cong_cdab //;
-last by apply /eqP.
-by apply segment_addition with b b;
-rewrite ?cong_abab.
+move=> bE; have EE_neq0 : omd_v E E != 0.
+  apply/eqP => EE0; move: bE; rewrite EE0 mulr0 => /eqP; rewrite sqrf_eq0.
+  have nE : norm E = 1.
+    move/eqP: EE0; rewrite /omd_v subr_eq0 eq_sym /norm => /eqP ->.
+    by rewrite sqrtr1.
+  move: (cauchy_schwarz (#b) E) => /andP[_ /le_lt_trans].
+  rewrite nE mulr1 => /(_ _ (norm_point_lt1 b)) /lt_eqF bE_neq1.
+  by rewrite /omd_v subr_eq0 eq_sym bE_neq1.
+rewrite /cong_v bE /dist /dist_v -!/(omd _ _); apply/eqP; field.
+by rewrite EE_neq0 !omd_neq0.
 Qed.
 
-Lemma bet_outer_transitivity (a b c d: 'rV[R]_n) :
-  b != c -> bet a b c -> bet b c d -> bet a c d.
-Proof.
-move=> bc_neq bet_abc bet_bcd.
-destruct (segment_construction a c c d) as [e [? ?]].
-suffices: (e == d) => [/eqP <- //|].
-apply one_side_cong_eq with b c=> //.
-rewrite bet_sym.
-by apply bet_inner_transitivity with a;
-rewrite bet_sym.
-Qed.
-
-Lemma bet_outer_transitivity' (a b c d: 'rV[R]_n) :
-  b != c -> bet a b c -> bet b c d -> bet a b d.
-Proof.
-move=> ? ? ?.
-rewrite bet_sym.
-by apply bet_outer_transitivity with c;
-rewrite 1?eq_sym 1?bet_sym.
-Qed.
-
-Lemma cong'_cdab (a b c d : Point) : cong' c d a b = cong' a b c d.
-Proof. by rewrite /cong'/cong_v eq_sym. Qed.
-
-Lemma cong'_abab (a b : Point) : cong' a b a b.
-Proof. by rewrite /cong'/cong_v. Qed.
-
-Lemma one_side_cong'_eq (a b c d : Point):
-  bet' a b c -> bet' a b d -> cong' b c b d -> a != b -> c == d.
-Proof.
-move=> bet_abc bet_abd cong_bcbd ab_neq.
-apply /eqP ; apply cong_identity_holds with c.
-apply five_segment_holds with a a b b;
-rewrite ?cong'_abab 1?cong'_cdab //;
-last by apply /eqP.
-by apply segment_addition' with b b;
-rewrite ?cong'_abab.
-Qed.
-
-Lemma one_sub_half : 1 - 2^-1 = 2^-1 :> R.
-Proof.
-apply /eqP.
-rewrite /GRing.natmul /= -subr_eq0 -[(1+1)^-1]mul1r -addrA -opprD.
-by rewrite -mulrDl divff ?subrr // lt0r_neq0 // addr_gt0 ?ltr01.
-Qed.
-
-Lemma norm_point_subr_gt0 a b : (a != b) -> 0 < norm(#b - #a).
-Proof.
-by rewrite sqrtr_gt0 lt_def quad_ge0 quad_neq0 subr_eq0
- eq_sym point_vector_neq => ->.
-Qed.
-
-Lemma poly_cong a b c d r (K :=  omd b b / dist c d) :
-  ((norm (# b) ^+ 2 - (#a *m (#b)^T) 0 0) ^+ 2 + K * norm (#a - #b) ^+ 2) * r ^+ 2 +
-  2 * (K * ((#a *m (#b)^T) 0 0 - norm (#a) ^+ 2) +
-       omd a b * ((#a *m (#b)^T) 0 0 - norm (#b) ^+ 2)) * r +
-  (omd a b ^+ 2 - K * omd a a) == 0 ->
-  cong_v (#b) (extension (#a) (#b) r^-1) (#c) (#d).
-Proof.
-set E := (extension (#a) (#b) r^-1).
-have : 2%:R == (1+1 ) :> R.
-  by rewrite /GRing.natmul /=.
-move=> /eqP rew2.
-have :
-((norm (# b) ^+ 2 - (# a *m (# b)^T) 0 0) ^+ 2 + K * norm (# a - # b) ^+ 2) *
-r ^+ 2 +
-2%:R *
-(K * ((# a *m (# b)^T) 0 0 - norm (# a) ^+ 2) +
- omd a b * ((# a *m (# b)^T) 0 0 - norm (# b) ^+ 2)) * r +
-(omd a b ^+ 2 - K * omd a a)
-==
-(omd_v (#b) E)^+2 - K * (1-norm(E)^+2).
-  rewrite eq_sym /omd_v.
-    have : norm(E)^+2 == norm(#a)^+2
-                         + r^+2 * norm(#b-#a)^+2
-                         + r * (2%:R *( (#a*m(#b)^T) 0 0-norm(#a)^+2)).
-    rewrite /E /extension invrK norm_sqr mulmxDl.
-    rewrite ![_*m(r*:_+_)^T]dotC !mulmxDl.
-    rewrite -!scalemxAl ![_*m(r*:(_-_))^T]dotC -!scalemxAl scalerA.
-    rewrite [(# b - # a) *m (# a)^T]mulmxDl mulNmx.
-    rewrite !addrA mxE mxE mxE mxE -norm_sqr -expr2 mxE mxE.
-    rewrite [(- (# a *m (# a)^T)) 0 0]mxE -norm_sqr addrC !addrA -addrA.
-    rewrite -mulrDr  [(#b)*m(#a)^T]dotC.
-    by rewrite /GRing.natmul /= mulrDl mul1r !addrA eqxx.
-  move=> /eqP ->.
-  rewrite {1}/E /extension invrK dotC [X in X *m _^T]addrC.
-  rewrite mulmxDl -scalemxAl mulmxDl mxE [X in (1 -(_ + X))^+ 2]mxE.
-  rewrite [(# b *m (# b)^T + - # a *m (# b)^T) 0 0]mxE.
-  rewrite -norm_sqr opprD addrA -/(omd_v  _ _) -/(omd  _ _).
-  rewrite mulNmx mxE.
-  rewrite !opprD addrA addrA addrA [norm(#a)^+2]norm_sqr.
-  rewrite -/(omd_v (#a) (#a)) -/(omd _ _) -norm_sqr.
-  rewrite sqrrB exprMn [K *(_)]mulrBr [K *(_)]mulrBr.
-  rewrite !opprD !addrA !opprK addrC.
-  rewrite !addrA addrAC addrC [K * (r ^+ 2 *_)]mulrC.
-  rewrite -[r ^+ 2 * _ * K]mulrA !addrA -addrA -mulrDr.
-  rewrite [omd a b * (r * (_ - _))]mulrC.
-  rewrite addrC !addrA -addrA -opprD.
-  rewrite -[r*(norm(#b)^+2-_)]mul1r -!mulrDl -rew2.
-  rewrite addrAC addrC !addrA -addrA.
-  rewrite [K * (r * (2%:R * ((_-_^+ 2))))]mulrCA.
-  rewrite [2%:R * ( r * _)]mulrCA [r * (2%:R  * _)]mulrA.
-  rewrite -[r * 2%:R * _ * _]mulrA -[r * 2%:R * _ ]mulrA -mulrBr.
-  rewrite [K * (2%:R * _)]mulrCA -mulrBr.
-  rewrite addrAC -addrA -addrA addrC !addrA.
-  rewrite -addrA [- (K * omd a a) + omd a b ^+ 2]addrC addrA.
-  rewrite [r^+2 *_]mulrC  [norm (# b - # a) ^+ 2 * K]mulrC.
-  have : norm(#b - #a)^+2 ==  norm(#a - #b)^+2.
-    rewrite !norm_sqr !mulmxBl ![_*m(_+_)^T]dotC !mulmxBl.
-    rewrite [#b*m(#a)^T]dotC !opprB !addrA.
-    rewrite -addrA addrACA [#b*m(#b)^T+# a *m (# a)^T]addrC.
-    by rewrite addrACA !addrA eqxx.
-  move=> /eqP ->.
-  rewrite [r * (2%:R * _)]mulrC -[-(_*omd a b)]mulNr.
-  by rewrite  opprB [(_*omd a b)]mulrC eqxx.
-move=> /eqP ->.
-case:(norm(E)^+2 =P 1).
-  move=> /eqP.
-  rewrite sqr_norm_eq1 ger0_norm ?norm_ge0 // => /eqP normE_eq1.
-  rewrite normE_eq1 [1^+2]expr2 mulr1 subrr mulr0 subr0 sqrf_eq0 => omdBE_eq0.
-  exfalso.
-  suffices: 0 < omd_v (#b) E
-    by rewrite lt_def omdBE_eq0.
-  rewrite /omd_v subr_gt0.
-  apply le_lt_trans with (norm(#b) * norm(E)).
-    by move: (cauchy_schwartz' (#b) E) => /andP[_ ->].
-  by rewrite normE_eq1 mulr1 norm_point_lt1.
-move=> /eqP normE_neq1.
-rewrite subr_eq0 -divf_eq1;
-last by rewrite mulf_neq0 ?subr_eq0 ?lt0r_neq0 /K
-    ?mulr_gt0 ?invr_gt0 ?omd_gt0 ?dist_gt0 //
-  eq_sym.
-rewrite /cong_v  -[_==(_/_)]divf_eq1;
-last by rewrite invfM ?mulf_neq0 ?invr_neq0 -/(omd _ _) ?omd_eq0.
-rewrite norm_sqr -/(omd_v _ _) => H.
-rewrite invf_div -/(dist_v _ _) -/(dist _ _).
-rewrite -!/(omd _ _) -[dist c d]invrK -mulrA -invfM.
-by rewrite [omd b b * _ /_]mulrAC -/K.
-Qed.
-
-Lemma seg_aux7 a b c d :
-  (#a *m (#b)^T) 0 0 - (#c *m (#d)^T) 0 0 = omd c d - omd a b.
-Proof.
-apply /eqP.
-rewrite eq_sym /omd/omd_v opprB addrA addrC !addrA.
-by rewrite [-1+1]addrC subrr sub0r addrC.
-Qed.
-
-Lemma seg_aux8 a b :
-  norm(#a - #b) ^+ 2 = omd a b - omd a a + omd a b - omd b b.
-Proof.
-rewrite norm_sqr -seg_aux7 -addrA -seg_aux7 mulmxBl mxE.
-rewrite [(-(_*m_) )0 0]mxE ![_*m(_-_)^T]dotC !mulmxBl.
-rewrite mxE [X in _ + _ -X]mxE ![(-(_*m_) )0 0]mxE.
-by rewrite opprB [#b *m (#a)^T]dotC.
-Qed.
-
-Lemma segment_construction_holds_aux1 a b c d :
-  2 * ((omd b b / dist c d) * ((#a *m (#b)^T) 0 0 - norm (# a) ^+ 2) +
-        omd a b * ((#a *m (#b)^T) 0 0 - norm (# b) ^+ 2)) /
-  2 / (omd a a * omd b b) =
-  1 / dist c d * (1 - omd a b / omd a a) + omd a b / omd a a - 1 / dist a b.
-Proof.
-apply /eqP.
-rewrite [2%:R*_/_]mulrAC divff ?lt0r_neq0 ?ltr0n //.
-rewrite !mul1r !norm_sqr !seg_aux7 mulrBr.
-rewrite [omd b b /dist c d]mulrC.
-rewrite -![(dist c d)^-1 * _ * _]mulrA.
-rewrite -mulrBr [omd a b * ( _ -_)]mulrBr.
-rewrite mulrDl mulrBl -expr2 -[_^+2/_]invrK.
-rewrite [(_^+2/_)^-1]invf_div /omd -/(dist_v _ _).
-rewrite -!/(omd _ _) -/(dist _ _).
-rewrite -mulrA mulrBl [omd b b * _]mulrC divff ?mulf_neq0 ?omd_eq0 //.
-rewrite mulrAC [_ * omd b b]mulrC [(omd b b * _)^-1]invfM.
-rewrite mulrA divff ?omd_eq0 // mul1r mulrC.
-rewrite mulrA -[_*_/omd b b]mulrA divff ?omd_eq0 //.
-by rewrite mulr1 addrA eqxx.
-Qed.
-
-Lemma segment_construction_holds_aux2 a b c d :
-  ((norm (#b) ^+ 2 - (#a *m (#b)^T) 0 0) ^+ 2 +
-   omd b b / dist c d * norm (#a - #b) ^+ 2) / (omd a a * omd b b) =
-  1 / dist a b - omd a b / omd a a + omd b b / omd a a - omd a b / omd a a +
-  1 / dist c d * (omd a b / omd a a - 1 +
-                  omd a b / omd a a - omd b b / omd a a).
-Proof.
-rewrite norm_sqr seg_aux7 sqrrB /GRing.natmul /= seg_aux8.
-rewrite !mul1r [omd b b/_]mulrC -[_*_*_]mulrA.
-rewrite [omd b b * _]mulrBr.
-rewrite [omd b b * _]mulrDr.
-rewrite [omd b b * _]mulrBr.
-rewrite mulrDl mulrDl mulrBl -[_^+2/_]invrK invf_div.
-rewrite /omd -/(dist_v _ _) -/(dist _ _) -!/(omd _ _).
-rewrite mulrDl [omd a a * omd b b]mulrC.
-rewrite [(omd b b*_)^-1]invfM expr2 mulrA mulrA.
-rewrite -![_*_*(omd b b)^-1]mulrA divff ?omd_eq0 //.
-rewrite !mulr1 -mulrA [_*(_/_)]mulrBl [_*(_/_)]mulrDl.
-rewrite [_*(_/_)]mulrBl ![_*omd a _]mulrC !mulrA.
-rewrite -![_*_*(omd b b)^-1]mulrA divff ?omd_eq0 //.
-rewrite !mulr1 divff ?omd_eq0 //.
-by rewrite opprD addrA [_ - _ -_ +_]addrAC.
-Qed.
-
-Lemma segment_construction_holds_aux3 a b c d :
-  (omd a b ^+ 2 - omd b b / dist c d * omd a a) / (omd a a * omd b b) =
-  1 / dist a b - 1 / dist c d.
-Proof.
-rewrite mulrBl -[_^+2/_]invrK invf_div.
-rewrite /omd -/(dist_v _ _) -/(dist _ _) -!/(omd _ _).
-rewrite [(omd a a *_)^-1]invfM mulrA -[_/_*_/_]mulrA.
-rewrite divff ?omd_eq0 // !mul1r mulr1.
-by rewrite mulrAC divff ?omd_eq0 // mul1r.
-Qed.
-
-Lemma segment_construction_holds_aux4 a b c d :
-  ((dist c d)^-1 * (1 - omd a b / omd a a) +
-   omd a b / omd a a - (dist a b)^-1) ^+ 2 =
-  ((dist c d)^-1 * (omd a b / omd a a)) ^+ 2 -
-  (dist c d)^-1 * (omd a b / omd a a) ^+ 2 -
-  (dist c d)^-1 * (omd a b / omd a a) ^+ 2 +
-  (omd a b / omd a a) ^+ 2 -
-  2 / dist c d/dist a b * (1 - omd a b / omd a a) +
-  2 / dist c d * (omd a b / omd a a) -
-  2 / dist a b * omd a b / omd a a +
-  dist c d ^- 2 * (1 - 2 * omd a b / omd a a) +
-  (dist a b) ^- 2.
-Proof.
-apply /eqP.
-rewrite eq_sym.
-rewrite exprMn exprVn ![_ + dist c d ^-2 * _]addrAC.
-rewrite -mulrDr /GRing.natmul /= mulrDl mulrDl -{1}[1]mulr1.
-rewrite opprD addrA -mulrA -mulrBr addrA.
-rewrite [_-1* (omd a b /omd a a)]addrAC.
-rewrite [(omd a b/omd a a)^+2]expr2 -mulrBl.
-rewrite [_ + (1 * _)]addrC -[X in (1*_)+X]opprK.
-rewrite -[- ((omd a b/omd a a -1) * _)]mulNr opprB.
-rewrite [X in 1 * _ - X]mulrC -mulrBl -expr2 -exprVn.
-rewrite ![_+ (1 + 1) / dist c d * (omd a b / omd a a)]addrAC.
-rewrite mulrDl mulrDl mul1r addrA.
-rewrite  -[_ + _ + (dist c d)^-1 * _ -_]addrA -mulrBr.
-rewrite -{3}[omd a b / omd a a]mul1r -mulrBl.
-rewrite [_+_+ (dist c d)^-1 * _]addrAC -[_+_+_-(dist c d)^-1 * _]addrA.
-rewrite -mulrBr -{4}[omd a b / omd a a]mul1r -mulrBl.
-rewrite -expr2 [((dist c d)^-1  + _)*_]mulrDl.
-rewrite [((dist c d)^-1*_  + _)*_]mulrDl.
-rewrite [(1+1)/_]mulrDl [(1/_+_)*_]mulrDl [(1/_*_+_)*_]mulrDl.
-rewrite ![_/dist a b * _]mulrAC opprD addrA opprD addrA.
-rewrite -[X in X - 1 * omd a b / omd a a / dist a b]addrA.
-rewrite -opprD -mulrDl mul1r [_-omd a b / omd a a / dist a b]addrAC.
-rewrite -[_-omd a b / omd a a / dist a b]addrA -opprD.
-rewrite -mulrDl.
-rewrite -exprMn.
-rewrite eq_sym sqrrB sqrrD /GRing.natmul /=  opprD !addrA.
-by rewrite exprVn !mulrA eqxx.
-Qed.
-
-Lemma segment_construction_holds_aux5 a b c d :
-  ((dist a b)^-1 - omd a b / omd a a + omd b b / omd a a -
-  omd a b / omd a a +
-  (dist c d)^-1 *
-  (omd a b / omd a a - 1 + omd a b / omd a a - omd b b / omd a a)) *
-  ((dist a b)^-1 - (dist c d)^-1) =
-  (dist a b)^-2 +
-  dist c d ^-2 * ( 1 - 2 * omd a b / omd a a) -
-  2 /dist a b * omd a b / omd a a +
-  2 /dist c d * (omd a b/ omd a a) -
-  2 /dist c d / dist a b * (1 - omd a b / omd a a) +
-  (dist a b)^-1 * omd b b /omd a a -
-  (dist c d)^-1 * ((dist a b) ^-1 * omd b b /omd a a) +
-  (dist c d)^-2 * (omd b b / omd a a) -
-  (dist c d)^-1 * (omd b b / omd a a).
-Proof.
-apply /eqP.
-rewrite eq_sym /GRing.natmul /=.
-rewrite ![(1+1)*_]mulrDl ![(1*_+_)*_]mulrDl ![(1*_*_+_)*_]mulrDl.
-rewrite !opprD !mul1r !addrA.
-rewrite -[_- (dist a b)^-1 * omd a b / omd a a +
-(dist c d)^-1 * (omd a b / omd a a)]addrA.
-rewrite [- ((dist a b)^-1 * omd a b / omd a a) +
- (dist c d)^-1 * (omd a b / omd a a)]addrC.
-rewrite -[_*omd a b/omd a a]mulrA -mulrBl.
-rewrite -[_ + (dist c d)^-1 * (omd a b / omd a a)]addrAC.
-rewrite -[_ + (dist c d)^-1 * (omd a b / omd a a)]addrAC.
-rewrite -[_ + (dist c d)^-1 * (omd a b / omd a a) - _]addrA.
-rewrite -mulrBl.
-rewrite ![_+ dist c d ^-2 *(omd b b / omd a a)]addrAC.
-rewrite -[_+_+dist c d^-2 * _]addrA -mulrDr.
-rewrite addrAC !addrA -[_-(dist c d)^-1*(omd b b/omd a a)]addrA.
-rewrite -[_ * omd b b/ omd a a]mulrA -mulrBl.
-rewrite -[((dist c d)^-1 - (dist a b)^-1)]opprB mulNr.
-rewrite [_+((dist a b)^-1 - (dist c d)^-1) * _]addrAC.
-rewrite [_+((dist a b)^-1 - (dist c d)^-1) * _]addrAC.
-rewrite [_+((dist a b)^-1 - (dist c d)^-1) * _]addrAC.
-rewrite [_+((dist a b)^-1 - (dist c d)^-1) * _]addrAC.
-rewrite -[_-((dist a b)^-1 - (dist c d)^-1) * _]addrA.
-rewrite -mulrBr.
-rewrite -[X in _+_+X+_+_+_+_]mulrN.
-rewrite -[_+((dist a b)^-1 - (dist c d)^-1) * _]addrA.
-rewrite -mulrDr.
-rewrite {1}[(dist c d)^-1 / dist a b * _]mulrDr mulr1.
-rewrite opprD !addrA ![_-(dist c d)^-1 / dist a b]addrAC.
-rewrite -exprVn expr2 -mulrBl.
-rewrite ![_+((dist a b)^-1 - (dist c d)^-1)*_]addrAC.
-rewrite -mulrDr !addrA.
-rewrite [X in _-X==_]mulrA -addrA.
-rewrite -![- ((dist c d)^-1 / dist a b * _)]mulrN.
-rewrite -mulrDr -addrA -mulrDr !opprD !opprK !addrA.
-rewrite -[dist c d ^- 2 *_]opprK -[-(dist c d ^- 2 *_)]mulrN.
-rewrite !opprB opprD !addrA addrAC.
-rewrite [(_-_)-1]addrAC [(_+_)-1]addrAC.
-rewrite -exprVn expr2 [(dist c d)^-1 / dist a b]mulrC.
-by rewrite -mulrA -mulrA -addrA -mulrBl -mulrDr mulrC.
-Qed.
-
-Lemma segment_construction_holds_aux6 a b :
-  (dist a b)^-1 * omd b b / omd a a = (omd a b / omd a a) ^+ 2.
-Proof.
-rewrite /dist/dist_v -!/(omd _ _) invf_div invfM.
-rewrite mulrA -[X in X / omd a a]mulrA [_^-1*_]mulrC.
-rewrite divff ?omd_eq0 // mulr1 -mulrA -invfM -expr2.
-by rewrite -exprVn -exprMn.
-Qed.
-
-Lemma segment_construction_holds_aux a b c d :
+Lemma segment_construction_vector a b c d :
   a != b -> c != d ->
   exists E' : 'rV[R]_n, bet (#a) (#b) E' /\ cong_v (#b) E' (#c) (#d).
 Proof.
 move=> ab_neq cd_neq.
-set K := omd b b/dist c d.
-set pab := ((#a)*m(#b)^T) 0 0.
-set c1 := (norm(#b)^+2 - pab)^+2
-        + K * norm(#a - #b)^+2.
-set c2 := 2%:R * (
-                    K * (pab - norm(#a)^+2)
-                  + omd a b * (pab - norm(#b)^+2)
-                  ).
-set c3 := (omd a b)^+2 - K* omd a a.
-set delta := c2^+2 - 4%:R * c1 * c3.
-have: 0 < delta.
-  suffices : 0 < delta / 4%:R / (omd a a * omd b b) ^+ 2.
-    rewrite !pmulr_lgt0 ?invr_gt0 ?ltr0n //.
-    by rewrite expr2 ?mulr_gt0 ?omd_gt0.
-  have: delta/4%:R/(omd a a* omd b b)^+2 ==
-  ((omd a b/omd a a)^+2 - omd b b/ omd a a) *
-                ((1/dist c d)^+2 - 1/dist c d).
-    rewrite /delta [X in X/_==_]mulrBl [4%:R * c1 * c3 /4%:R]mulrC.
-    rewrite mulrA mulrA [_^-1*_]mulrC divff ?lt0r_neq0 ?ltr0n //.
-    rewrite !mul1r [X in X==_]mulrBl.
-    have: 4%:R == (2%:R)^+2 :> R
-      by rewrite expr2 /GRing.natmul /= mulrDl !mul1r !addrA.
-    move=> /eqP ->.
-    rewrite -exprVn -exprMn -exprVn -exprMn.
-    rewrite [X in _ - c1 *_ *X]expr2 mulrA.
-    rewrite [c1 * c3 /_]mulrAC -[c1/_*_/_]mulrA.
-    rewrite segment_construction_holds_aux1.
-    rewrite segment_construction_holds_aux2.
-    rewrite segment_construction_holds_aux3.
-    rewrite !mul1r.
-    rewrite segment_construction_holds_aux4.
-    rewrite segment_construction_holds_aux5.
-    rewrite !opprD !opprK !addrA.
-    rewrite -[_+ dist a b ^- 2 - dist a b ^- 2]addrA subrr addr0.
-    rewrite -[_ -dist c d ^- 2 * (1 - 2%:R * omd a b / omd a a)]addrA.
-    rewrite subrr addr0.
-    rewrite -[ _ + 2%:R / dist a b * omd a b / omd a a ]addrA.
-    rewrite [_ + 2%:R / dist a b * omd a b / omd a a ]addrC.
-    rewrite subrr addr0.
-    rewrite -[ _ - 2%:R / dist c d * (omd a b / omd a a)]addrA subrr addr0.
-    rewrite -[_+2%:R / dist c d / dist a b * (1 - omd a b / omd a a)]addrA.
-    rewrite [_+2%:R / dist c d / dist a b * (1 - omd a b / omd a a)]addrC.
-    rewrite subrr addr0.
-    rewrite segment_construction_holds_aux6.
-    rewrite -[_ - (omd a b/ omd a a)^+2]addrA subrr addr0.
-    rewrite exprMn /GRing.natmul /=.
-    rewrite -[_ + (dist c d)^-1 * (omd a b / omd a a) ^+ 2]addrA.
-    rewrite [_ + (dist c d)^-1 * (omd a b / omd a a) ^+ 2]addrC.
-    rewrite subrr addr0 -mulrBl addrAC -addrA -mulrBl exprVn.
-    rewrite -[(dist c d)^-1 - dist c d ^- 2]opprB.
-    by rewrite mulNr -mulrBr mulrC eqxx.
-  move=> /eqP ->.
-  rewrite mulr_gt0 // exprMn !expr2 mulrA -mulrBl.
-  rewrite -expr2 mulr_gt0 ?invr_gt0 ?omd_gt0 //.
-  rewrite -[_/omd a a]mulr1 -(@divff R (omd b b)) ?omd_eq0 //.
-  rewrite mulrA mulrAC -[X in _ -X]mul1r -mulrBl.
-  rewrite mulr_gt0 ?omd_gt0 // -mulrA -invfM.
-  rewrite subr_gt0 -invf_lt1;
-  last by rewrite expr2 invfM ?mulr_gt0 ?invr_gt0 ?omd_gt0.
-  by rewrite invf_div -/(dist_v _ _) -/(dist _ _) dist_lt1.
-  rewrite !mul1r mulr_gt0 ?invr_gt0 ?dist_gt0 //.
-  by rewrite subr_gt0 invf_gt1 ?dist_gt0 ?dist_lt1.
-move => delta_gt0.
-set r1 := (- c2 - Num.sqrt delta) / 2%:R / c1.
-set r2 := (- c2 + Num.sqrt delta) / 2%:R / c1.
-set E1' := extension (#a) (#b) r1^-1.
-set E2' := extension (#a) (#b) r2^-1.
-have: cong_v (#b) E1' (#c) (#d) /\ cong_v (#b) E2' (#c) (#d).
-  move: (@roots_poly2 c1 c2 c3) => H.
-  destruct H as [Hr1 Hr2].
-    rewrite lt0r_neq0 // /c1 addrC addr_ge_gt0 ?sqr_ge0//.
-    by rewrite /K ?mulr_gt0 ?invr_gt0 ?dist_gt0 ?omd_gt0 ?norm_point_subr_gt0 //;
-    rewrite eq_sym ab_neq.
-    by rewrite -/delta ltW.
-  by rewrite (@poly_cong a b c d r1)  ?(@poly_cong a b c d r2).
-have: E1' != E2'.
-  rewrite /E1' /E2' /extension -subr_eq0.
-  rewrite addrAC opprD !addrA -addrA [-#a +#a]addrC subrr addr0.
-  rewrite -scalerBl scaler_eq0 Bool.negb_orb !subr_eq0.
-  rewrite [#b == #a]eq_sym ab_neq andbT.
-  rewrite /r1/r2 !invf_div.
-  apply /negPf.
-  rewrite -subr_eq0 -!mulrBl.
-  apply /eqP /eqP.
-  rewrite ?mulf_neq0 ?invr_neq0 ?[2%:R!=0]lt0r_neq0 ?ltr0n //.
-  case: (c2 =P 0).
-    move->.
-    rewrite oppr0 !add0r subr_eq0 eq_sym -subr_eq0.
-    by rewrite opprK lt0r_neq0 ?addr_gt0 ?sqrtr_gt0.
-  move=> /eqP c2_neq0.
-  rewrite subr_eq0.
-  move: (lt_total c2_neq0).
-  move=>/orP[c2_lt0|c2_gt0].
-    rewrite ?invr_eq0 ?lt0r_neq0 ?addr_gt0 ?oppr_gt0 ?sqrtr_gt0 //.
-    rewrite -subr_eq0 opprD opprK addrCA !addrA subrr add0r -opprD.
-    by rewrite oppr_eq0 lt0r_neq0 ?addr_gt0 ?sqrtr_gt0.
-  rewrite eq_sym -opprD  ?invr_eq0 ?oppr_eq0 ?lt0r_neq0 ?addr_gt0 ?oppr_gt0 ?sqrtr_gt0 //.
-  rewrite -subr_eq0 opprK addrCA !addrA subrr add0r.
-  by rewrite lt0r_neq0 ?addr_gt0 ?sqrtr_gt0.
-  rewrite lt0r_neq0 // /c1 addrC addr_ge_gt0 ?sqr_ge0//.
-  by rewrite /K ?mulr_gt0 ?invr_gt0  ?dist_gt0 ?omd_gt0 ?norm_point_subr_gt0 //;
-  rewrite eq_sym ab_neq.
-move => /eqP E1'E2'_neq [cong1 cong2].
-suffices: bet (#a) (#b) E1' \/ bet (#a) (#b) E2'.
-  move => [? | ?] ; [by exists E1' | by exists E2'].
-apply /orP.
-have:  bet (# a) (# b) E1' \/ bet (# b) E1' (# a) \/ bet E1' (# a) (# b)
-  by apply (@extension_col R n (#a) (#b) E1' r1^-1);
-  rewrite /E1'.
-move=>[-> //|one_side_E1'].
-have:  bet (# a) (# b) E2' \/ bet (# b) E2' (# a) \/ bet E2' (# a) (# b)
-  by apply (@extension_col R n (#a) (#b) E2' r2^-1);
-  rewrite /E2'.
-move=>[-> |one_side_E2'].
-  by rewrite orbT.
-exfalso.
-(* E1 and E2 are equal because they both are:
-    on the line (AB)
-    at the same side of B
-    at the same distance of B *)
-apply E1'E2'_neq; apply /eqP.
-set eps := ((1-norm(#b))/2%:R/norm(#b-#a)).
-have: 0 < eps
-  by rewrite /eps ?mulr_gt0 ?subr_gt0 ?invr_gt0 ?norm_point_lt1
-    ?ltr0n ?norm_point_subr_gt0.
-move=> eps_gt0.
-set f' := extension (#a) (#b) ((eps+1)^-1).
-  (* f will help us proof that E1 = E2 *)
-have: (f' *m (f')^T)0 0 <1.
-  suffices: norm(f') < 1.
-    move=> ?.
-    by rewrite -norm_sqr expr2 mulr_ilt1 ?norm_ge0.
-  rewrite /f'/extension invrK scalerDl scale1r addrA.
-  rewrite -addrA [-#a+#a]addrC subrr addr0.
-  apply le_lt_trans with (norm(eps*:(#b-#a)) + norm(#b)).
-    exact: triangle_ineq.
-  rewrite /norm -scalemxAl dotC -scalemxAl scalerA mxE.
-  rewrite sqrtrM; last by rewrite mulr_ge0 ?ltW.
-  rewrite sqrtr_sqr ger0_norm ?ltW // /eps -/(norm _).
-  rewrite -mulrA [(norm (_))^-1 * norm (_)]mulrC divff;
-    last by rewrite lt0r_neq0 ?norm_point_subr_gt0.
-  rewrite mulr1 -/(norm _) mulrBl -addrA [X in _ + (X)]addrC.
-  rewrite -{1}[norm(#b)]mulr1 -mulrBr one_sub_half -mulrDl divf_lt1 ?ltr0n //.
-  rewrite /GRing.natmul /= -subr_lt0 opprD addrAC addrA subrr.
-  by rewrite sub0r addrC subr_lt0 norm_point_lt1.
-move=> f'_in_disk.
-set f := (exist (fun p => (p *m p^T) 0 0 < 1) f' f'_in_disk).
-have: bet' f b a
-  by rewrite /bet' bet_sym extension_bet ?invr_gt0 ?invf_lt1 ?addr_gt0 //
-   -subr_gt0 -addrA subrr addr0.
-move=> bet_fba.
-set E1 := (exist (fun p => (p *m p^T) 0 0 < 1) E1' (E_in_disk_aux cong1)).
-set E2 := (exist (fun p => (p *m p^T) 0 0 < 1) E2' (E_in_disk_aux cong2)).
-suffices: (E1 == E2)
-  by rewrite point_vector_eq /=.
-apply one_side_cong'_eq with f b.
-move: one_side_E1' => [|bet_E1'ab].
-    by apply bet_inner_transitivity.
-  rewrite bet_sym in bet_E1'ab.
-  apply bet_outer_transitivity' with (#a)=> //.
-  by rewrite eq_sym -point_vector_neq.
-move: one_side_E2'=> [|bet_E2'ab].
-    by apply bet_inner_transitivity.
-  rewrite bet_sym in bet_E2'ab.
-  apply bet_outer_transitivity' with (#a)=>//.
-  by rewrite eq_sym -point_vector_neq.
-exact: (@cong_inner_transitivity_vector (# b) E1' (# b) E2' (#c) (#d)).
-rewrite point_vector_neq.
-rewrite /=/f'/extension invrK scalerDl scale1r.
-rewrite !addrA -addrA [-#a+#a]addrC subrr addr0 -subr_eq0.
-rewrite -addrA subrr addr0 scaler_eq0 subr_eq0 [#b==#a]eq_sym.
-by rewrite Bool.negb_orb lt0r_neq0.
+set A := omd a a; set B := omd b b; set C := omd a b; set K := B / dist c d.
+set N := C *+ 2 - A - B.
+have N_gt0 : 0 < N.
+  have -> : N = dotp (#b - #a) (#b - #a).
+    rewrite /N /A /B /C !dotpE [dotp (#b) (#a)]dotpC !dot_omd; ring.
+  by rewrite lt0r dot2_ge0 dot2_eq0 subr_eq0 eq_sym -point_vector_neq ab_neq.
+have K_gt : B < K.
+  by rewrite /K ltr_pdivlMr ?dist_gt0 // gtr_pMr ?omd_gt0 // dist_lt1.
+set al := (B - C) ^+ 2 + K * N; set be := (B - C) * (B - K).
+set ga := B * (B - K).
+have al_gt0 : 0 < al.
+  rewrite /al addrC addr_ge_gt0 ?sqr_ge0 //.
+  by rewrite mulr_gt0 // (lt_trans (omd_gt0 b b)).
+have ga_lt0 : ga < 0 by rewrite /ga pmulr_rlt0 ?omd_gt0 // subr_lt0.
+set D := be ^+ 2 - al * ga; set s := (- be + Num.sqrt D) / al.
+have D_gt0 : be ^+ 2 < D by rewrite /D; nra.
+have s_gt0 : 0 < s.
+  rewrite divr_gt0 // addrC subr_gt0; apply: le_lt_trans (ler_norm be) _.
+  by rewrite -sqrtr_sqr ltr_sqrt // (le_lt_trans _ D_gt0) ?sqr_ge0.
+have Ps : al * s ^+ 2 + 2 * be * s + ga = 0.
+  have -> : ga = (be ^+ 2 - Num.sqrt D ^+ 2) / al.
+    by rewrite sqr_sqrtr ?(le_trans _ (ltW D_gt0)) ?sqr_ge0 // /D; field;
+       rewrite lt0r_neq0.
+  by rewrite /s; field; rewrite lt0r_neq0.
+exists (extension (#a) (#b) (1 + s)^-1); split.
+  by rewrite extension_bet ?invr_gt0 ?invf_lt1 ?ltrDl ?addr_gt0.
+apply: cong_v_omd; rewrite /extension invrK /omd_v -!/(dotp _ _) !dotpE.
+rewrite ![dotp _ (#a)]dotpC !dot_omd -/A -/B -/C.
+apply/eqP; rewrite -subr_eq0 -Ps /al /be /ga /N /K; apply/eqP; ring.
 Qed.
 
 Lemma segment_construction_holds a b c d :
   exists x : Point, bet' a b x /\ cong' b x c d.
 Proof.
-rewrite /bet' /cong'.
-apply E_in_disk.
+rewrite /bet' /cong'; apply E_in_disk.
 case: (c =P d).
-  move->.
-  exists (#b).
-  by rewrite bet_axx /cong_v -!expr2 -!/(omd _ _)
-    !divff ?expr2 ?mulf_neq0 ?omd_eq0 .
-move=> /eqP cd_neq.
-case: (a =P b).
-  case: (c =P b).
-    move=> <- ->.
-    exists (#d).
-    by rewrite bet_xxa /cong_v.
-  move => /eqP cb_neq ->.
-  move: (@segment_construction_holds_aux c b c d).
-  rewrite cd_neq cb_neq.
-  move => H.
-  destruct H => //.
-  destruct H as  [_ H2].
-  exists x.
-  by rewrite bet_xxa H2.
-move=> /eqP ab_neq.
-apply segment_construction_holds_aux => //.
+  move ->; exists (#b).
+  by rewrite bet_axx /cong_v -!expr2 -!/(omd _ _) !divff
+             ?expr2 ?mulf_neq0 ?omd_eq0 .
+move => /eqP cd_neq.
+case: (a =P b); last by move => /eqP ab_neq; apply segment_construction_vector.
+case: (c =P b); first by move => <- ->; exists (#d); rewrite bet_xxa /cong_v.
+move => /eqP cb_neq ->; move: (@segment_construction_vector c b c d).
+rewrite cd_neq cb_neq => H; destruct H => //; destruct H as  [_ HC].
+by exists x; rewrite bet_xxa HC.
 Qed.
 
 Lemma cong_pseudo_reflexivity_vector (v w : 'rV[R]_n) : cong_v v w w v.
@@ -1722,7 +580,7 @@ Lemma inner_pasch_vector (a b c p q : 'rV[R]_n) :
   ~ ~ (~ bet a b c /\ ~ bet b c a /\ ~ bet c a b) ->
   exists x : 'rV[R]_n, bet p x b /\ bet q x a.
 Proof.
-move=> Hb1 Hb2 ? ? ? ?; move: Hb1 Hb2; rewrite 2?bet_betS //.
+move => Hb1 Hb2 ? ? ? ?; move: Hb1 Hb2; rewrite 2?bet_betS //.
 move => Hb1 Hb2 HNC; destruct (inner_pasch' Hb1 Hb2) as [x [Hb3 Hb4]];
   last by exists x; rewrite /bet Hb3 Hb4 !orbT.
 by move => [|[|]] Hb3; apply HNC; rewrite Hb3; intuition.
@@ -1738,7 +596,7 @@ rewrite /bet' => Hb1 Hb2 /eqP ? /eqP ? /eqP ? /eqP ? Hnc.
 destruct (inner_pasch_vector Hb1 Hb2) as [x [Hb3 Hb4]];
 [..|by move: Hnc; rewrite /independence.Col|] => //; [by apply /eqP..|].
 by assert (Hx := Hb3); apply bet_in_disk in Hx;
-[exists (exist (fun p => (p *m p^T) 0 0 < 1) x Hx)|by destruct p|by destruct b].
+[exists (exist (fun p => (p *m p^T) 0 0 < 1) x Hx)|destruct p|destruct b].
 Qed.
 
 Lemma bet_symmetry_vector (a b c : 'rV[R]_n) : bet a b c -> bet c b a.
@@ -1748,7 +606,7 @@ Lemma bet_inner_transitivity_vector (a b c d : 'rV[R]_n) :
   bet a b d -> bet b c d -> bet a b c.
 Proof. exact: bet_inner_transitivity. Qed.
 
-Lemma euclid_aux :
+Lemma euclid_fails_of_witness :
   (exists a b c d t,
     bet' a d t /\ bet' b d c /\
     b <> d /\ d <> c /\
@@ -1762,7 +620,7 @@ Lemma euclid_aux :
        ~ (bet' a b c \/ bet' b c a \/ bet' c a b) ->
        exists (x y : Point), bet' a b x /\ bet' a c y /\ bet' x t y).
 Proof.
-move=> [a [b [c [d [t [bADT [bBDC [bd_neq [dc_neq [ncol H]]]]]]]]]] HF.
+move => [a [b [c [d [t [bADT [bBDC [bd_neq [dc_neq [ncol H]]]]]]]]]] HF.
 destruct  (HF a b c d t) as [x [y [bABX [bACY bXTY]]]] => //; clear HF.
 assert (Y_out_of_disk:= H x bABX (#y) bACY bXTY); destruct y as [yC Y_in_disk].
 by move:(le_lt_asym 1 ((yC *m yC^T) 0 0)); rewrite Y_in_disk Y_out_of_disk.
@@ -1780,40 +638,30 @@ Definition b'nD := to_nD n b'.
 
 Definition c'nD := to_nD n c'.
 
+Lemma row2_dot (x y : R) : (row2 x y *m (row2 x y)^T) 0 0 = x * x + y * y.
+Proof. by rewrite mxE !big_ord_recr /= big_ord0 !mxE /= add0r. Qed.
+
+Lemma unit_disk_nD_2D (p : 'rV[R]_2) :
+  ((to_nD n p) *m (to_nD n p)^T) 0 0 = (p *m p^T) 0 0.
+Proof. by rewrite /to_nD tr_row_mx mul_row_col mul0mx addr0. Qed.
+
 Lemma a'_in_unit_disk : (a' *m a'^T) 0 0 < 1.
-Proof. by rewrite mxE !big_ord_recr /= big_ord0 !mxE /= mulr0 !addr0 ltr01. Qed.
+Proof. by rewrite /a' row2_dot mulr0 addr0 ltr01. Qed.
 
 Lemma a'nD_in_unit_disk : (a'nD *m a'nD^T) 0 0 < 1.
-Proof.
-by rewrite /a'nD /to_nD tr_row_mx mul_row_col mul0mx addr0 a'_in_unit_disk.
-Qed.
+Proof. by rewrite unit_disk_nD_2D a'_in_unit_disk. Qed.
 
 Lemma b'_in_unit_disk : (b' *m b'^T) 0 0 < 1.
-Proof.
-rewrite mxE !big_ord_recr /= big_ord0 !mxE /= mulr0 addr0 add0r.
-by apply mulr_ilt1 ; rewrite ?one_half_ge0 ?one_half_lt1.
-Qed.
+Proof. by rewrite /b' row2_dot; num_lra. Qed.
 
 Lemma b'nD_in_unit_disk : (b'nD *m b'nD^T) 0 0 < 1.
-Proof.
-by rewrite /b'nD /to_nD tr_row_mx mul_row_col mul0mx addr0 b'_in_unit_disk.
-Qed.
+Proof. by rewrite unit_disk_nD_2D b'_in_unit_disk. Qed.
 
 Lemma c'_in_unit_disk : (c' *m c'^T) 0 0 < 1.
-Proof.
-rewrite mxE !big_ord_recr /= big_ord0 !mxE /= mulr0 addr0 add0r.
-by apply mulr_ilt1 ; rewrite ?one_half_ge0 ?one_half_lt1.
-Qed.
+Proof. by rewrite /c' row2_dot; num_lra. Qed.
 
 Lemma c'nD_in_unit_disk : (c'nD *m c'nD^T) 0 0 < 1.
-Proof.
-by rewrite /c'nD /to_nD tr_row_mx mul_row_col mul0mx addr0 c'_in_unit_disk.
-Qed.
-
-Lemma c'_norm : (c' *m c'^T) 0 0 = 1/(1+1+1+1).
-Proof.
-by rewrite mxE !big_ord_recr /= big_ord0 !mxE mulr0 addrC !add0r quarter.
-Qed.
+Proof. by rewrite unit_disk_nD_2D c'_in_unit_disk. Qed.
 
 Definition to_2D (p : 'rV[R]_(2 + n)) : 'rV[R]_2 := row2 (p 0 0) (p 0 1).
 
@@ -1826,17 +674,14 @@ apply /rowP => i; rewrite /to_nD /row_mx mxE; case: (splitP i) => [i0|i1].
   rewrite /to_2D /row2 !mxE /=; case: i0 => [] [|[|//]] /= iP1 iP2.
     by rewrite (@ord_inj _ i 0).
   by rewrite (@ord_inj _ i 1).
-move=> iP; move: Hb; have -> : i = rshift 2 i1 :> 'I_(2+n) by apply val_inj.
+move => iP; move: Hb; have -> : i = rshift 2 i1 :> 'I_(2+n) by apply val_inj.
 case: (to_nD n b =P c) => [<- _|/= _]; rewrite ?row_mxEr //.
-move=> /andP[] E /andP[L G]; move/eqP/rowP/(_ (rshift 2 i1)): E; rewrite /to_nD.
-rewrite mxE row_mxEr mxE opp_row_mx row_mxEr 2?mxE subr0 2?mxE row_mxEr !mxE.
-rewrite subr0; move=> /eqP; rewrite eq_sym mulf_eq0 => /orP[/eqP HF|/eqP-> //].
+move => /andP[] E /andP[L G]; move/eqP/rowP/(_ (rshift 2 i1)): E;
+rewrite /to_nD mxE row_mxEr mxE opp_row_mx row_mxEr
+        2?mxE subr0 2?mxE row_mxEr !mxE subr0.
+move => /eqP; rewrite eq_sym mulf_eq0 => /orP[/eqP HF|/eqP-> //].
 by move: L; rewrite HF ltxx.
 Qed.
-
-Lemma unit_disk_nD_2D (p : 'rV[R]_2) :
-  ((to_nD n p) *m (to_nD n p)^T) 0 0 = (p *m p^T) 0 0.
-Proof. by rewrite /to_nD tr_row_mx mul_row_col mul0mx addr0. Qed.
 
 Definition a_nD : (Point' (2+n)) :=
   exist (fun p => (p *m p^T) 0 0 < 1) a'nD a'nD_in_unit_disk.
@@ -1943,24 +788,34 @@ Definition o := exist (fun p => (p *m p^T) 0 0 < 1) o' o'_in_unit_disk.
 
 Definition i' := (1 / 2) *: i n R.
 
-Lemma i'_in_unit_disk : (i' *m i'^T) 0 0 < 1.
+Lemma omd_v_half m (u : 'rV[R]_m) :
+  (u *m u^T) 0 0 = 1 -> omd_v ((1 / 2) *: u) ((1 / 2) *: u) = 3 / 4.
+Proof. by rewrite /omd_v -!/(dotp _ _) dotpZl dotpZr => ->; field. Qed.
+
+Lemma half_in_unit_disk m (u : 'rV[R]_m) :
+  (u *m u^T) 0 0 = 1 -> (((1 / 2) *: u) *m ((1 / 2) *: u)^T) 0 0 < 1.
 Proof.
-rewrite /i' /i -scalemxAl dotC -scalemxAl scalerA mxE unit_disk_nD_2D.
-rewrite mxE !big_ord_recr /= big_ord0 !mxE /= mulr0 addr0 add0r.
-rewrite mulrN -mulNr opprK !mulr1.
-by apply mulr_ilt1 ; rewrite ?one_half_ge0 ?one_half_lt1.
+by move => /omd_v_half; rewrite /omd_v -subr_gt0 => ->; rewrite divr_gt0.
 Qed.
 
+Lemma dot_i : (dimensional_axioms.i n R *m
+              (dimensional_axioms.i n R)^T) 0 0 = 1.
+Proof. by rewrite iP mulNmx mulmx_trC mulNmx opprK trmx_delta mul_delta_mx mxE. Qed.
+
+Lemma i'_in_unit_disk : (i' *m i'^T) 0 0 < 1.
+Proof. exact: half_in_unit_disk dot_i. Qed.
+
 Definition i := exist (fun p => (p *m p^T) 0 0 < 1) i' i'_in_unit_disk.
+
+Lemma dot_detla_mx i :
+  (@delta_mx R 1 n.+2 0 (inord i) *m
+  (@delta_mx R 1 n.+2 0 (inord i))^T) 0 0 = 1.
+Proof. by rewrite trmx_delta mul_delta_mx mxE. Qed.
 
 Lemma basis'_in_unit_disk i :
   (((1 / 2) *: @delta_mx R 1 n.+2 0 (@inord (S n) i)) *m
    ((1 / 2) *: @delta_mx R 1 n.+2 0 (@inord (S n) i))^T) 0 0 < 1.
-Proof.
-rewrite -scalemxAl dotC -scalemxAl scalerA mxE.
-rewrite trmx_delta mul_delta_mx mxE mulr1.
-by apply mulr_ilt1 ; rewrite ?one_half_ge0 ?one_half_lt1.
-Qed.
+Proof. exact: half_in_unit_disk (dot_detla_mx i). Qed.
 
 Definition basis : n.+2.-tuple Point2pn :=
   map_tuple (fun i => exist (fun p => (p *m p^T) 0 0 < 1)
@@ -1984,19 +839,14 @@ rewrite /bet' nth_basis /i /o //= /i' /o' scaler_bet.
 by apply /eqP; rewrite one_half_neq0.
 Qed.
 
+Lemma mx11_eq (A B : 'M[R]_1) : (A == B) = (A 0 0 == B 0 0).
+Proof. by apply/eqP/eqP => [-> //|E]; apply/rowP => k; rewrite (ord1 k). Qed.
+
 Lemma cong'oaob a b : cong' o a o b = cong (#o) (#a) (#o) (#b).
 Proof.
-rewrite /cong' /cong_v /o /= /o' oP scaler0 /omd_v !mul0mx.
-rewrite mxE subr0 expr1n !mul1r; apply /eqP/eqP; last by rewrite !subr0 => ->.
-rewrite !subr0; case: ((# b *m (# b)^T) =P 1) => [->/eqP|/rowP bP /eqP].
-- rewrite eq_sym mxE /= subrr invr0 eq_sym invr_eq0 subr_eq0 eq_sym.
-  by move => /eqP aP; apply /rowP => i; rewrite [i]ord1 aP mxE.
-rewrite -invf_eq; last first.
-- rewrite subr_eq0 eq_sym; apply /eqP => HF.
-  by apply bP => i; rewrite [i]ord1 HF mxE.
-rewrite -subr_eq -addrA addrC opprK -subr_eq0 -addrA subrr addr0 addrC.
-rewrite subr_eq0 eq_sym => /eqP abE; apply /rowP =>i.
-by rewrite [i]ord1 abE.
+rewrite /cong' /cong_v !congE /o /= /o' oP scaler0 !subr0 /omd_v !mul0mx mxE.
+by rewrite subr0 expr1n !mul1r (inj_eq invr_inj)
+           (inj_eq (addrI 1)) eqr_opp mx11_eq.
 Qed.
 
 Lemma i_neq_basis_nth0 : i <> tnth basis (inord 0).
@@ -2014,20 +864,12 @@ move => jP; rewrite  cong'oaob /o /i nth_basis //= /o' /i'.
 by rewrite scaler_cong ?lower_dim_all1 //; apply /eqP; rewrite one_half_neq0.
 Qed.
 
-Lemma dot_detla_mx i :
-  (@delta_mx R 1 n.+2 0 (inord i) *m (@delta_mx R 1 n.+2 0 (inord i))^T) 0 0 = 1.
-Proof. by rewrite trmx_delta mul_delta_mx mxE. Qed.
-
 Lemma omd_v_basis i :
   (0 <= i < n.+2)%N ->
   omd_v (# (tnth basis (inord i))) (# (tnth basis (inord i))) = 3 / 4.
 Proof.
-move => iP; rewrite /omd_v nth_basis //; apply /eqP.
-rewrite -scalemxAl dotC -scalemxAl scalerA mxE.
-rewrite dimensional_axioms.nth_basis // dot_detla_mx.
-rewrite mulr1 subr_eq mulf_div mul1r.
-have -> : 2 * 2 = 4 :> R by rewrite mulrDr mulr1 -!addrA.
-by rewrite addf_divrr -?addrA ?divff // lt0r_neq0 // ?addr_gt0.
+move => iP; rewrite nth_basis //; apply: omd_v_half.
+by rewrite dimensional_axioms.nth_basis // dot_detla_mx.
 Qed.
 
 Lemma lower_dim_all2 j k :
@@ -2037,12 +879,7 @@ Lemma lower_dim_all2 j k :
 Proof.
 move => jkP kP; rewrite /cong' /cong_v.
 have jP : (j < n.+2)%N by rewrite (ltn_trans _ kP).
-have -> : omd_v (# i) (# i) = 3 / 4.
-- rewrite /omd_v /i /= /i' iP -scalemxAl dotC -scalemxAl scalerA mxE.
-  rewrite mulNmx dotC mulNmx opprK trmx_delta mul_delta_mx mxE mulr1.
-  apply /eqP; rewrite subr_eq mulf_div mul1r.
-  have -> : 2 * 2 = 4 :> R by rewrite mulrDr mulr1 -!addrA.
-  by rewrite addf_divrr -?addrA ?divff // lt0r_neq0 // ?addr_gt0.
+have -> : omd_v (# i) (# i) = 3 / 4 by apply: omd_v_half dot_i.
 rewrite !omd_v_basis // ?(ltn_trans _ kP) //=.
 rewrite -subr_eq0 -mulrBl mulf_eq0 subr_eq0.
 have -> : ((3 / 4 * (3 / 4))^-1 == 0 :> R) = false.
@@ -2050,15 +887,10 @@ have -> : ((3 / 4 * (3 / 4))^-1 == 0 :> R) = false.
   by rewrite eqbF_neg !negb_or !lt0r_neq0.
 rewrite orbF eqf_sqr /omd_v /i' !nth_basis //.
 rewrite !dimensional_axioms.nth_basis // iP.
-rewrite -!scalemxAl mulNmx dotC (dotC (delta_mx 0 0)) -!scalemxAl.
+rewrite -!scalemxAl mulNmx mulmx_trC (mulmx_trC (delta_mx 0 0)) -!scalemxAl.
 rewrite !trmx_delta !mul_delta_mx_0 ?mxE ?(mulr0, oppr0) ?addr0 ?eqxx //.
-- apply /eqP => HF.
-  have: val (@inord n.+1 j) = val (@inord n.+1 k) by rewrite HF.
-  rewrite !val_insubd jP kP => jkE.
-  by suff // : (j < k)%N by rewrite jkE ltnn.
-apply /eqP => HF.
-have: val (@inord n.+1 1) = @ord0 n.+1 by rewrite HF.
-by rewrite val_insubd.
+all: apply /eqP => /(congr1 val); rewrite !val_insubd ?jP ?kP //=.
+all: by move=> E; move: jkP; rewrite E ltnn andbF.
 Qed.
 
 Lemma lower_dim_holds :
@@ -2077,146 +909,66 @@ Lemma nth_nbasisE i p p' :
   (i < n.+2)%N ->
   # p = (1 / 2) *: p' ->
   # (tnth (rot_tuple 1 (belast_tuple p basis)) (inord i)) =
-  (1 / 2) *: tnth (rot_tuple 1 (belast_tuple p' (dimensional_axioms.basis n R)))
-                  (inord i).
+  (1 / 2) *:
+  tnth (rot_tuple 1 (belast_tuple p' (dimensional_axioms.basis n R)))
+       (inord i).
 Proof.
-set b1 := (rot_tuple 1 (belast_tuple p basis)).
-set b2 := (rot_tuple 1 (belast_tuple p' (dimensional_axioms.basis n R))).
-move => iP pE; move: iP; case: (i =P n.+1) => [-> _|iP].
-- rewrite /tnth.
-  have {1}-> : nat_of_ord (@inord n.+1 n.+1) = (size b1).-1.
-  + by rewrite inordK // size_rot size_belast size_map size_iota.
-  rewrite nth_last last_cat pE.
-  have -> : nat_of_ord (@inord n.+1 n.+1) = (size b2).-1.
-  + by rewrite inordK // size_rot size_belast size_map size_iota.
-  by rewrite nth_last last_cat.
-move => iP'; have {iP iP'} : (i < n.+1)%N.
-- by rewrite ltn_neqAle; apply /andP; split => //; apply /eqP.
-move => iP; rewrite /b2 nth_new_basis //; move: iP.
-case: i => /= [|m i]; first by rewrite /tnth inordK.
-rewrite /b1 /b2 /tnth /rot /= !belast_map /rot /= inordK ?(ltn_trans i) //=.
-rewrite !nth_cat !(size_map, size_belast, size_iota).
-have m_lt_n : (m < n)%N by move: i; rewrite -ltn_predRL.
-rewrite m_lt_n !(@nth_map nat 0%N) ?size_belast ?size_iota //=.
-apply /eqP; rewrite -scaler_eq ?one_half_neq0 //.
-suff -> : nth O (belast (S O) (iota 2 n)) m = m.+1 by [].
-suff: forall l, (m < l)%N -> nth O (belast (S O) (iota 2 l)) m = m.+1.
-- by move => lP; rewrite (lP n).
-move => {p p' b1 b2 pE i m_lt_n} l; elim l => // {}l IHl m_lt_lp1.
-rewrite -(addn1 l) iotaD belast_cat nth_cat size_belast size_iota.
-case: (m =P l) => [-> {IHl m_lt_lp1 m}|/eqP lm_neq]; last first.
-- suff m_lt_l : (m < l)%N by rewrite m_lt_l IHl.
-  by move: (ltnSE m_lt_lp1) lm_neq; rewrite leq_eqVlt => /orP[/eqP ->/eqP|->].
-rewrite ltnn subnn /= -nth_last size_iota.
-case: (l =P O) => [-> //|/eqP l_nz]; rewrite nth_iota ?ltn_predL ?lt0n //.
-by move: l_nz; case: l.
+move => _ pE; rewrite -[LHS](tnth_map (fun x : Point2pn => # x)).
+rewrite -[RHS](tnth_map (fun x => (1 / 2) *: x)) !(tnth_nth 0) /=.
+by rewrite !map_cat -!belast_map -!map_comp /= pE.
+Qed.
+
+Lemma big_and_impl (r : seq nat) (P Q : nat -> Prop) :
+  (forall j, j \in r -> P j -> Q j) ->
+  \big[and/True]_(j <- r) P j -> \big[and/True]_(j <- r) Q j.
+Proof.
+elim: r => [|x r IH] PQ; rewrite ?big_nil ?big_cons // => -[Px Pr]; split.
+  by apply: PQ; rewrite ?mem_head.
+by apply: IH => // j jr; apply: PQ; rewrite inE jr orbT.
+Qed.
+
+Lemma cong'_center_omd (a b : Point2pn) : cong' o a o b -> omd a a = omd b b.
+Proof.
+rewrite cong'oaob !congE /o /= /o' oP scaler0 !subr0 => /eqP ab.
+by rewrite /omd /omd_v ab.
+Qed.
+
+Lemma cong'_cong (a b c d : Point2pn) :
+  omd a a = omd c c -> omd b b = omd c c -> omd d d = omd c c ->
+  cong' a b c d = cong (#a) (#b) (#c) (#d).
+Proof.
+move => Ea Eb Ed; have cc_neq0 := omd_neq0 c c.
+have -> : cong' a b c d = (omd a b == omd c d).
+  rewrite /cong' /cong_v -!/(omd _ _) Ea Eb Ed.
+  by rewrite (inj_eq (can_inj (divfK _))) ?mulf_neq0 // eqrXn2 ?omd_ge0.
+rewrite !congE mx11_eq -!/(dotp _ _) !dotpE [dotp (#b) (#a)]dotpC
+       [dotp (#d) (#c)]dotpC !dot_omd Ea Eb Ed.
+by apply/eqP/eqP => E; lra.
 Qed.
 
 Lemma upper_dim_holds :
   upper_dimP _ (@bet' R (n.+2)) (@cong' R (n.+2)) n.+2 o i basis.
 Proof.
 have halfP : 1 / 2 <> 0 :> R by apply /eqP; rewrite one_half_neq0.
-move => p basisP; set nbasis := rot_tuple 1 (belast_tuple p basis).
-move => nbasisP p_neq; rewrite /bet'.
-have [p' pE] : exists p', p = p' by exists p.
-rewrite pE; destruct p' as [p' pP] => /=.
-have [p'' p'E] : exists p'', p' = (1 / 2) *: p''.
-- exists (2 *: p'); rewrite scalerA mulrC mulrA mulr1.
-  by rewrite divff ?lt0r_neq0 // scale1r.
-rewrite p'E nth_basis // /o'.
-rewrite scaler_bet; last by apply /eqP; rewrite one_half_neq0.
-have p''P : tnth (dimensional_axioms.basis n R) (inord n.+1) <> p''.
-- move/eqP: p_neq; rewrite point_vector_eq nth_basis ?pE //= p'E.
-  by rewrite -subr_eq0 -scalerBr scaler_eq0 one_half_neq0 /= subr_eq0 => /eqP.
-apply dimensional_axioms.upper_dim => //;
-first by apply dimensional_axioms.lower_dim.
-rewrite /orthonormal_basis dimensional_axioms.nth_new_basis //.
-split; first by apply dimensional_axioms.i_neq_basis_nth0.
-rewrite bet_o_i_basis_nth0; split => //.
-set new_basis := rot_tuple 1 (belast_tuple p'' (dimensional_axioms.basis n R)).
-have pE' : tnth nbasis (inord n.+1) = p.
-- rewrite /nbasis /tnth /=.
-  have -> : nat_of_ord (@inord n.+1 n.+1) = (size nbasis).-1.
-  + by rewrite inordK // size_rot size_belast size_map size_iota.
-  by rewrite nth_last last_cat.
-have p''E : tnth new_basis (inord n.+1) = p''.
-- rewrite /new_basis /tnth /=.
-  have -> : nat_of_ord (@inord n.+1 n.+1) = (size new_basis).-1.
-  + by rewrite inordK // size_rot size_belast size_map size_iota.
-  by rewrite nth_last last_cat.
-split; [apply big_andb_and|apply big_pairs_andb_and]; rewrite big_all.
-- apply /allP => j jP; rewrite mem_index_iota in jP.
-  case: (j =P n.+1) => [{jP} ->|jP'].
-  + rewrite p''E -(scaler_cong _ _ _ _ halfP).
-    suff: cong o' i' o' p' by rewrite /o' /i' p'E.
-    destruct nbasisP as [_ [_ [HC _]]]; rewrite -big_andb_and big_all in HC.
-    have nP : n.+1 \in index_iota 0 n.+2 by rewrite mem_index_iota leq0n ltnSn.
-    by move/allP: HC => HC; move: (HC n.+1 nP); rewrite pE' cong'oaob /o /i pE.
-  have {}jP' : (j < n.+1)%N.
-  + by rewrite ltn_neqAle; apply /andP; split => //; apply /eqP.
-  rewrite nth_new_basis -?dimensional_axioms.nth_basis //.
-  by rewrite dimensional_axioms.lower_dim_all1.
-apply /allP => j jP; rewrite mem_index_iota in jP.
-rewrite big_all; apply /allP => k kP; rewrite mem_index_iota in kP.
-have {}jP : (0 <= j < n.+1)%N.
-- suff -> : (j < n.+1)%N by rewrite leq0n.
-  move: kP; case: (k =P n.+1) => [-> /andP[] //|k_neq /andP[jkP kP]].
-  by rewrite (ltn_trans jkP) // ltn_neqAle -ltnS kP andbT; apply /eqP.
-destruct nbasisP as [_ [_ [HC1 HC2]]].
-rewrite -big_andb_and in HC1; rewrite -big_pairs_andb_and in HC2.
-rewrite big_all in HC1; rewrite big_all in HC2; move/allP: HC2 => HC2.
-have jP' : j \in index_iota 0 n.+2.
-- by rewrite mem_index_iota /= (ltn_trans _ (ltnSn n.+1)).
-move: (HC2 j jP'); rewrite big_all => /allP {}HC2.
-have kP' : k \in index_iota j.+1 n.+2 by rewrite mem_index_iota.
-move: (HC2 k kP'); rewrite /cong' /cong_v /omd_v /i /=.
-move/allP: HC1 => {kP' HC2} HC; have P : (0 <= 1 < n.+2)%N by [].
-move: (HC (S O) P) => {P}; rewrite /cong' /cong_v /o /o' /= oP scaler0.
-have iP : 1 - (i' *m i'^T) 0 0 != 0.
-- by rewrite lt0r_neq0 // subr_gt0 i'_in_unit_disk.
-rewrite /omd_v !mul0mx mxE subr0 expr1n !mul1r eq_sym -invf_eq ?iP //.
-move => /eqP iE1; move: (HC j jP'); rewrite /cong' /cong_v /o /o' /= oP scaler0.
-rewrite /omd_v !mul0mx mxE subr0 expr1n !mul1r eq_sym -invf_eq ?iP //.
-move => /eqP iE2; have {jP'} kP' : k \in index_iota 0 n.+2.
-- by rewrite mem_index_iota /=; move: kP => /andP[_ ->].
-move: (HC k kP'); rewrite /cong' /cong_v /o /o' /= oP scaler0.
-rewrite /omd_v !mul0mx mxE subr0 expr1n !mul1r eq_sym -invf_eq ?iP //.
-move => /eqP iE3; rewrite iE1 iE2 iE3 eqr_div ?mulf_neq0 ?iP //.
-rewrite -subr_eq0 -mulrBl mulf_eq0 subr_eq0 mulf_eq0; move/negPf: iP => ->.
-move/eqP: iE3; move/eqP: iE2; move/eqP: iE1.
-rewrite !orbF eqrXn2 // ?add2r_eq ?eqr_opp ?subr_ge0.
-- have {jP kP} /andP[jP kP] : (j < n.+2)%N && (k < n.+2)%N.
-  + by move/andP: kP => [jkP kP]; rewrite kP (ltn_trans jkP).
-  rewrite !(@nth_nbasisE _ _ p'') ?pE // -/new_basis /cong => iE1 iE2 iE3 jkP.
-  have iP : 1 = dimensional_axioms.i n R *m (dimensional_axioms.i n R)^T.
-  + rewrite iP mulNmx dotC mulNmx opprK trmx_delta mul_delta_mx.
-    by apply /rowP => l; rewrite ord1 !mxE eq_sym.
-  have: tnth new_basis (inord 1) *m (tnth new_basis (inord 1))^T = 1 /\
-        tnth new_basis (inord j) *m (tnth new_basis (inord j))^T = 1 /\
-        tnth new_basis (inord k) *m (tnth new_basis (inord k))^T = 1.
-    split; [|split]; apply /rowP => i; rewrite !ord1 iP;
-    [move: iE1|move: iE2|move: iE3];  rewrite /i' -!scalemxAl;
-    rewrite dotC (dotC (dimensional_axioms.i n R))  -!scalemxAl 2?mxE eq_sym;
-    rewrite 2?mxE !mulrA -subr_eq0 -mulrBr mulf_eq0 subr_eq0;
-    by rewrite -mulrA mulf_eq0 one_half_neq0 /= => /eqP.
-  move => {iE1 iE2 iE3}.
-  rewrite (cosine_rule o') [X in _ == X](cosine_rule o').
-  rewrite /o' oP scaler0 !subr0 -iP; move => [] -> [] -> ->.
-  move: jkP; rewrite -!scalemxAl dotC (dotC (dimensional_axioms.i n R)).
-  rewrite -!scalemxAl 2?mxE eq_sym 2?mxE !mulrA -subr_eq0 -mulrBr -mulrA.
-  rewrite 2?mulf_eq0 one_half_neq0 subr_eq0 /= dotC => /eqP jkP.
-  have -> : tnth new_basis (inord j) *m (tnth new_basis (inord k))^T =
-            dimensional_axioms.i n R *m (tnth new_basis (inord 1))^T.
-  + by apply /rowP => l; rewrite !ord1 jkP dotC.
-  by rewrite eqxx.
-- move: (cauchy_schwartz' (# (tnth nbasis (inord j)))
-                          (# (tnth nbasis (inord k)))).
-  move => /andP[_ csP]; rewrite (le_trans csP) //.
-  by rewrite mulr_ile1 ?norm_ge0 ?norm_point_le1.
-- move: (cauchy_schwartz' i'(# (tnth nbasis (inord 1)))).
-  move => /andP[_ csP]; rewrite (le_trans csP) //.
-  have -> : i' = # i by rewrite /i.
-  by rewrite mulr_ile1 ?norm_ge0 ?norm_point_le1.
+move => p _ [_ [_ [HC1 HC2]]] p_neq; rewrite /bet'.
+set p'' := 2 *: #p.
+have pE : #p = (1 / 2) *: p''.
+  by rewrite /p'' scalerA mul1r mulVf ?scale1r // lt0r_neq0 ?ltr0n.
+have omdE j : (j < n.+2)%N ->
+  omd (tnth (rot_tuple 1 (belast_tuple p basis)) (inord j))
+      (tnth (rot_tuple 1 (belast_tuple p basis)) (inord j)) = omd i i.
+  move => jP; apply/esym/cong'_center_omd; move: HC1.
+  by rewrite -big_andb_and big_all => /allP; apply; rewrite mem_index_iota.
+rewrite nth_basis // pE /= /o' scaler_bet // /bet; apply/orP; right.
+apply: dimensional_axioms.upper_dimS.
+- by rewrite nth_new_basis //; apply: dimensional_axioms.i_neq_basis_nth0.
+- by rewrite nth_new_basis // bet_o_i_basis_nth0.
+- apply: big_and_impl HC1 => j; rewrite mem_index_iota => /andP[_ jP].
+  by rewrite cong'oaob (nth_nbasisE _ pE) // /o /i /= /o' /i' scaler_cong.
+- apply: big_and_impl HC2 => j; rewrite mem_index_iota => /andP[_ jP].
+  apply: big_and_impl => k; rewrite mem_index_iota => /andP[_ kP].
+  by rewrite cong'_cong ?omdE // !(nth_nbasisE _ pE) // /i /= /i' scaler_cong.
+by move => E; apply: p_neq; apply: val_inj; rewrite /= nth_basis // pE E.
 Qed.
 
 End rcfTarski2pnD.
@@ -2235,75 +987,15 @@ Definition b : (Point R 2) :=
 Definition c : (Point R 2) :=
   exist (fun p => (p *m p^T) 0 0 < 1) (@c' R) (@c'_in_unit_disk R).
 
-Lemma upper_dim_aux_2 (a p q : @Point R 2) (k := Num.sqrt(omd p p / omd q q)) :
-  cong' a p a q -> (omd a p / omd a q == k).
-Proof.
-rewrite /cong'/cong_v=> cong_apaq .
-have: omd a p ^+ 2 / (omd a a * omd p p) * (omd a a * omd p p)/omd a q ^+ 2 ==
-omd a q ^+ 2 / (omd a a * omd q q) * (omd a a * omd p p)/omd a q ^+ 2
-by rewrite -subr_eq0 -mulrBl -mulrBl !mulf_eq0 !omd_eq0 invr_eq0 sqrf_eq0
-  omd_eq0 !orbF subr_eq0 cong_apaq.
-set t_ap := omd a p. set t_aq := omd a q. set t_aa := omd a a.
-set t_pp := omd p p. set t_qq := omd q q.
-rewrite -[ (_ *_) *(_* _)]mulrA [((t_aa * t_pp)^-1*(t_aa*t_pp))]mulrC.
-rewrite divff ?mulf_neq0 ?omd_eq0//.
-rewrite eq_sym mulrC !mulrA expr2.
-rewrite -[(t_aq * t_aq)^-1 * t_aq * t_aq ]mulrC mulrA.
-rewrite -[t_aq/(t_aq*t_aq)*t_aq]mulrC mulrA divff ?mulf_neq0 ?omd_eq0 //.
-rewrite mul1r invfM mulrC !mulrA mulrAC mulrC !mulrA mulrAC.
-rewrite -!mulrA divff ?omd_eq0 //.
-rewrite mulr1 eq_sym !mulrA mulr1 -!expr2 /k.
-rewrite -eqr_sqrt ?mulr_ge0 ?invr_ge0 ?expr2 ?mulr_ge0 ?omd_ge0 //.
-rewrite [X in _ == Num.sqrt(X)]mulrC => /eqP <-.
-rewrite sqrtrM ?mulr_ge0 ?omd_ge0 //.
-rewrite -!expr2 -exprVn !sqrtr_sqr !ger0_norm ?omd_ge0 //.
-by rewrite invr_ge0 omd_ge0.
-Qed.
-
-Lemma upper_dim_aux (a p q : @Point R 2)
-                    (k := Num.sqrt(omd p p / omd q q))
-                    (e := #p - k *: #q) :
-  cong' a p a q -> #a 0 0 * e 0 0  + #a 0 1 * e 0 1 = (1 - k).
-Proof.
-move=> cong_apaq.
-apply upper_dim_aux_2 in cong_apaq.
-suffices: omd a p == k * omd a q ; [move => H1|].
-suffices: (#a *m e^T) 0 0 == 1 - k ; [move => /eqP <-|].
-rewrite !mxE !big_ord_recr /= big_ord0 add0r !mxE.
-congr (# a 0 _ * (# p 0 _ - k * # q 0 _) + # a 0 _ * (# p 0 _ - k * # q 0 _)) ;
-by apply: val_inj.
-rewrite /e dotC mulmxBl mxE eq_sym subr_eq addrC addrA addrC addrA -subr_eq.
-move/eqP: H1.
-rewrite /omd/omd_v dotC => ->.
-rewrite mulrBr mulr1 -subr_eq0 opprD addrA addrC.
-rewrite !addrA [- k + k]addrC subrr add0r -scalemxAl.
-by rewrite dotC !mxE /= subrr eqxx.
-move/eqP: cong_apaq.
-rewrite /e /k=> <-.
-by rewrite mulrAC -mulrA divff ?mulr1 ?eqxx ?omd_eq0.
-Qed.
-
 Definition d' : 'rV[R]_2 := row2 (1 / (1 + 1 + 1 + 1)) (1 / (1 + 1 + 1 + 1)).
 
 Definition t' : 'rV[R]_2 := row2 (1 / (1 + 1)) (1 / (1 + 1)).
 
 Lemma d'_in_unit_disk : (d' *m d'^T) 0 0 < 1.
-Proof.
-rewrite /d' !mxE !big_ord_recr /= big_ord0 !mxE /= add0r.
-apply lt_trans with ((1/(1+1))*(1/(1+1))+(1/(1+1))*(1/(1+1))).
-apply ltrD ; exact: one_eighth_lt_one_quarter.
-apply lt_le_trans with ((1/(1+1))+(1/(1+1))).
-apply ltrD ; exact: one_quarter_lt_one_half.
-rewrite -mulrDl divff ?add11_neq0 //.
-Qed.
+Proof. by rewrite /d' row2_dot; num_lra. Qed.
 
 Lemma t'_in_unit_disk : (t' *m t'^T) 0 0 < 1.
-Proof.
-rewrite /t' !mxE !big_ord_recr /= big_ord0 !mxE /= add0r.
-apply lt_le_trans with ((1/(1+1))+(1/(1+1))).
-apply ltrD ; exact: one_quarter_lt_one_half.
-rewrite -mulrDl divff ?add11_neq0 //.
-Qed.
+Proof. by rewrite /t' row2_dot; num_lra. Qed.
 
 Definition d : (@Point R 2) :=
   exist (fun p => (p *m p^T) 0 0 < 1) d' d'_in_unit_disk.
@@ -2314,86 +1006,27 @@ Definition t : (@Point R 2) :=
 Lemma bet_adt : bet' a d t.
 Proof.
 rewrite /bet' /bet /betS /a /d /t /=.
-have: betR (@a' R) d' t' = 1/(1+1).
-rewrite /betR /ratio a'_eq0 /= subr0.
-case: pickP => /= [x|/all_v_neq0 H].
- rewrite /t' /d' !mxE /=; case: x => [] [|[| //]] //= p;
-  rewrite -quarter subr0 -!mulrA !mul1r divff ?mulr1 ?invr_eq0 ?add11_neq0 ?eqxx //.
-by exfalso; apply H; rewrite  -a'_eq0 /a' /t' row2_eq one_half_neq0.
-move ->.
-rewrite one_half_lt1 one_half_gt0  /= /a' /d' /t' vector2_eq.
-rewrite !mxE /= !subr0 quarter eqxx.
-by rewrite orbT.
+have -> : betR (@a' R) d' t' = 1/(1+1).
+  rewrite /betR /ratio a'_eq0 /= subr0.
+  case: pickP => /= [x|/all_v_neq0 H].
+    by rewrite /t' /d' !mxE /=; case: x => [] [|[| //]] //= p _; num_field.
+  by exfalso; apply H; rewrite -a'_eq0 /a' /t' row2_eq one_half_neq0.
+rewrite one_half_lt1 one_half_gt0 /= /a' /d' /t' vector2_eq !mxE /= !subr0.
+by apply/orP; right; rewrite andbT; apply/andP; split; apply/eqP; num_field.
 Qed.
 
 Lemma bet_bdc : bet' b d c.
 Proof.
 rewrite /bet' /bet /betS /b /c /d.
-have: betR (@b' R) d' (@c' R) == 1/(1+1).
-rewrite /betR /ratio /=.
-case: pickP => /= [x|/all_v_neq0 H].
-  rewrite /b' /c' /d' !mxE /=; case: x => [] [|[| //]] //= p;
-  rewrite -quarter ?subr0 ?sub0r.
-  rewrite !mul1r -!mulrA divff ?mulr1 ?invr_eq0 add11_neq0 //.
-  rewrite invrN mulrN mulrBl divff; last by rewrite mul1r invr_neq0 ?add11_neq0.
-  rewrite opprB.
-  rewrite mul1r mulrAC divff; last by rewrite invr_neq0 ?add11_neq0.
-  rewrite subr_eq.
-  rewrite -[X in _==X+_]mul1r.
-  rewrite addf_divrr ?divff ?eqxx ?add11_neq0  //.
-by exfalso; apply H; rewrite  /c' /b' subr_eq0 row2_eq one_half_neq0 eq_sym one_half_neq0.
-move /eqP ->.
-rewrite one_half_lt1 one_half_gt0  /= /b' /c' /d' vector2_eq.
-rewrite !mxE /= !subr0 !sub0r quarter eqxx.
-rewrite -quarter -subr_eq0 mulrN opprK addrC !addrA.
-rewrite -mulrDl addf_div ?add11_neq0 //.
-rewrite !mul1r [((1 + 1) * (1 + 1))]mulrDl !mul1r.
-rewrite divff; last by rewrite lt0r_neq0 ?addr_gt0 ?ltr01.
-by rewrite mul1r subrr eqxx orbT.
-Qed.
-
-Lemma  betR_akb (a b: 'rV[R]_2) (k : R) :
-  0 < k -> k < 1 -> b != a -> betR a (k *: (b - a) + a) b = k.
-Proof.
-move=> kgt0 klt1 bneqa.
-rewrite /betR /ratio.
-case: pickP => /= [x|/all_v_neq0 H].
-  rewrite -addrA subrr addr0.
-  rewrite !mxE /=.
-  move=> ba_neq0.
-  by rewrite -mulrA divff ?mulr1.
-by exfalso; apply H; rewrite subr_eq0 bneqa.
-Qed.
-
-Lemma betR_abk (a b: 'rV[R]_2) (k : R) :
-  0 < k -> k < 1 -> b != a -> betR a b ((1 / k) *: (b - a) + a) = k.
-Proof.
-move => kgt0 klt1 bneqa.
-set c := ((1/k) *: (b - a) + a).
-have: (b = k*:(c-a)+a).
-  rewrite /c -addrA subrr addr0 scalerA mul1r.
-  rewrite divff ?lt0r ?lt0r_neq0 ?kgt0 //.
-  by rewrite scale1r addrAC -addrA subrr addr0.
-move->.
-apply betR_akb; rewrite //.
-rewrite /c -subr_eq0 -addrA subrr addr0 scalemx_eq0.
-rewrite subr_eq0.
-move/negPf: bneqa ->.
-rewrite mul1r invr_eq0.
-move:kgt0.
-rewrite lt0r.
-by move=> /andP[/negPf -> _].
-Qed.
-
-Lemma euclid_fails_aux (a b c : 'rV[R]_2) :
-  bet a b c -> bet a (c + a - b) c.
-Proof.
-move=> bet_abc.
-rewrite (bet_trans _ _ _(-c)) subrr.
-rewrite [X in bet _ X _]addrC !addrA -[-c+c]addrC subrr add0r.
-rewrite bet_opp !opprB (bet_trans _ _ _ a).
-rewrite -!addrA [-a+a]addrC subrr !addr0 addrC subr0.
-by rewrite bet_sym.
+have -> : betR (@b' R) d' (@c' R) = 1/(1+1).
+  rewrite /betR /ratio /=.
+  case: pickP => /= [x|/all_v_neq0 H].
+    by rewrite /b' /c' /d' !mxE /=; case: x => [] [|[| //]] //= p _; num_field.
+  exfalso; apply H; rewrite /c' /b' subr_eq0 row2_eq.
+  by rewrite one_half_neq0 eq_sym one_half_neq0.
+rewrite one_half_lt1 one_half_gt0 /= /b' /c' /d' vector2_eq !mxE /=.
+rewrite !subr0 !sub0r.
+by apply/orP; right; rewrite andbT; apply/andP; split; apply/eqP; num_field.
 Qed.
 
 Global Instance Rcf_to_GI_PED :
@@ -2410,268 +1043,43 @@ exact
   (@three_non_collinear_points_vector R 0)).
 Defined.
 
-Global Instance Rcf_to_GI2D : Gupta_inspired_variant_of_Tarski_2D Rcf_to_GI_PED.
+Global Instance Rcf_to_GI2D :
+  Gupta_inspired_variant_of_Tarski_2D Rcf_to_GI_PED.
 Proof. split; exact (@upper_dim R). Defined.
 
-Lemma bet_intersect (a b c d  e x y  : 'rV[R]_2) :
-  ~ (bet c e d \/ bet e d c \/ bet d c e) ->
-  a != b -> c != d -> bet a e c ->
-  bet a b x -> bet c d x ->
-  bet a b y -> bet c d y ->
-  x = y.
+Lemma bet_a'b' (x' : 'rV[R]_2) :
+  bet (a' R) (b' R) x' -> exists2 l, 1 <= l & x' = l *: b' R.
 Proof.
-move=> ncol /eqP ab_neq /eqP cd_neq bet_aec bet_abx bet_cdx bet_aby bet_cdy.
-apply l6_21 with a b c d; try apply Ch03_bet.bet_col ; auto.
-move=> col ; apply ncol.
-apply col_transitivity_1 with x; Col.
-move=> cx_eq; treat_equalities.
-have: c=d by exact (between_identity _ _ bet_cdx). by [].
-apply col_transitivity_1 with a; Col.
-move=> ca_eq; treat_equalities.
-have: c=e by exact (between_identity _ _ bet_aec).
-by move=> ce_eq; treat_equalities; apply ncol; left; rewrite bet_xxa.
-apply col_permutation_4; apply col_transitivity_1 with b; Col.
+rewrite /bet => /orP[/betEP[[_ <-]|/eqP|<-]|/betSP[]].
+- by exists 1; rewrite ?scale1r.
+- by rewrite /a' /b' row2_eq [X in _ && X]eq_sym one_half_neq0 andbF.
+- by exists 1; rewrite ?scale1r.
+set k := betR _ _ _; rewrite a'_eq0 !subr0 => b_kx k_gt0 k_lt1.
+exists k^-1; first by rewrite ltW // invf_gt1.
+by rewrite b_kx scalerA mulVf ?scale1r // lt0r_neq0.
 Qed.
 
 Lemma bet_abx_x00_eq0 (x' :'rV[R]_2) :
   bet (a' R) (b' R) x' -> x' 0 0 = 0.
+Proof. by case/bet_a'b' => l _ ->; rewrite /b' !mxE /= mulr0. Qed.
+
+Lemma dot2 (u v : 'rV[R]_2) : (u *m v^T) 0 0 = u 0 0 * v 0 0 + u 0 1 * v 0 1.
 Proof.
-rewrite /bet=> /orP[/betEP[[_ <-]|/eqP ab_eq |<- ] |/betSP[P1 k_gt0 k_lt1]].
-by rewrite /b'!mxE /=.
-exfalso; move:ab_eq.
-by rewrite /a' /b' row2_eq [X in _ && X]eq_sym one_half_neq0 andbF.
-by rewrite /b'!mxE /=.
-move/eqP:P1.
-rewrite a'_eq0 !subr0 -subr_eq0 vector2_eq0 !mxE /= add0r oppr_eq0.
-move: k_gt0.
-rewrite lt0r mulf_eq0 a'_eq0=>/andP[/negPf -> _].
-by rewrite orFb=>/andP[/eqP -> _].
+rewrite mxE !big_ord_recr big_ord0 /= add0r !mxE.
+by congr (u 0 _ * v 0 _ + u 0 _ * v 0 _); apply: val_inj.
 Qed.
 
 Lemma bet_abx_x01_lt1 (x: @Point R 2) :
   bet (a' R) (b' R) (#x) -> (#x) 0 1 < 1.
 Proof.
-move=> bet_abx.
-have: ((#x) *m (#x)^T) 0 0 < 1 by destruct x.
-have: ((0<= (#x) 0 1) || ((#x) 0 1<= 0)) by apply: le_total .
-move=>/orP[x01_ge0| x01_le0 _].
-rewrite !mxE !big_ord_recr !big_ord0 !mxE /= add0r.
-suffices:  (#x) 0 0 * (#x) 0 0 + (#x) 0 1 * (#x) 0 1 =
-  # x 0 (widen_ord (leqnSn 1) ord_max) * # x 0 (widen_ord (leqnSn 1) ord_max) +
-# x 0 ord_max * # x 0 ord_max.
-move=><-.
-by rewrite bet_abx_x00_eq0 // mulr0 add0r -expr2 expr_lt1.
-by congr ((#x) 0 _ * (#x) 0 _ + (#x) 0 _ * (#x) 0 _); apply val_inj.
-apply le_lt_trans with 0;
-rewrite ?ltr01 //.
+move=> /bet_abx_x00_eq0 x00; have /= := svalP x.
+by rewrite dot2 x00 mulr0 add0r; move: (#x 0 1) => y; nra.
 Qed.
 
-Lemma bet_abx_x01_gt (x': 'rV[R]_2) :
-  bet (a' R) (b' R) x'->  x' != (b' R) -> 1 / (1 + 1) < x' 0 1 .
+Lemma abc_ncol : ~ (bet' a b c \/ bet' b c a \/ bet' c a b).
 Proof.
-rewrite /bet=> /orP[/betEP[[_ <-]| /eqP ab_eq |<- ] |/betSP[]].
-by rewrite eqxx.
-exfalso; move:ab_eq.
-by rewrite /a' /b' row2_eq [X in _ && X]eq_sym one_half_neq0 andbF.
-by rewrite eqxx.
-set k := betR (@a' R) (@b' R) x'.
-rewrite a'_eq0 !subr0.
-move=> b_kx k_gt0 k_lt1.
-have: k^-1 *: (@b' R) = x'.
-rewrite b_kx scalerA mulrC divff.
-by rewrite scale1r.
-move:k_gt0.
-by rewrite lt0r=>/andP[? ?].
-move=><- _.
-rewrite !mxE /=.
-rewrite -[X in X < _]mul1r.
-rewrite -subr_lt0 -mulrBl.
-rewrite pmulr_llt0.
-by rewrite subr_lt0 invf_gt1.
-exact: one_half_gt0.
-Qed.
-
-Lemma x_neq0 (x': 'rV[R]_2) :
-  bet (a' R) (b' R) x'->  x' != (b' R) -> x' != 0.
-Proof.
-move=> ? ?.
-rewrite vector2_neq0 [x' 0 1 != 0]lt0r_neq0 ?orbT //.
-apply lt_trans with (1/(1+1)).
-rewrite one_half_gt0 //.
-by apply bet_abx_x01_gt.
-Qed.
-
-Lemma xt_neq (x': 'rV[R]_2) :
-  bet (a' R) (b' R) x' -> x' != (b' R) -> x' != t'.
-Proof.
-move=> ? ?.
-rewrite -subr_eq0 vector2_neq0 !mxE /= bet_abx_x00_eq0 //.
-by rewrite add0r oppr_eq0 one_half_neq0 orTb.
-Qed.
-
-Lemma bet_b1d1c A B B' C D D' T X :
-  Bet A B X -> Bet A B' X -> Bet B D C -> Bet A D T -> Bet A D' T ->
-  B <> D -> D <> C -> ~ Col A B C ->
-  Cong X T B' C -> Cong X B A B' -> Cong A C B T -> CongA A X T A B' D' ->
-  Bet B' D' C.
-Proof.
-intros Hb1 Hb2 Hb3 Hb4 Hb5 HBD HDC HNC Hc1 Hc2 Hc3 HConga1.
-assert (HAT : A <> T) by (intro; treat_equalities; apply HNC; Col).
-assert (HC : Col B' D' C).
- {
- assert (Out B' D' C); [|assert_cols; auto].
- assert (HConga2 : CongA A X T A B' C).
-   {
-   apply l11_10 with B T A C; try apply out_trivial; try apply l6_6, bet_out;
-   try solve [assert_diffs; auto]; Between.
-   apply cong3_conga; try solve [assert_diffs; auto]; split; Cong;
-   split ; Cong.
-   }
- assert (HOS1 : OS B' A D' D).
-   {
-   apply invert_one_side, out_one_side;
-   try (right; intro; apply HNC; assert_diffs; ColR).
-   apply bet2_out_out with T T; Between;
-   [|intro; subst; treat_equalities; apply HNC; ColR|
-     apply out_trivial; intro; treat_equalities;
-     apply HNC; assert_diffs; ColR].
-   intro; subst; treat_equalities; apply HNC.
-   assert (Col A B' C); [|ColR].
-   apply col_conga_col with A X T; auto.
-   apply col_conga_col with A B' A; try apply conga_sym; Col.
-   }
- assert (HOS2 : OS B' A C D).
-   {
-   apply l9_19 with B; try split; try solve [assert_diffs; ColR];
-   try (intro; apply HNC; assert_diffs; ColR);
-   repeat split; assert_diffs; Between.
-   }
- destruct (l11_15 A X T A B' D) as [_ [_ [_ H]]];
- try (intro; apply HNC; assert_diffs; ColR).
- apply H; repeat (split; auto).
- }
-assert (HD'' : TS A T B' C).
- {
- apply l9_8_2 with B.
-
-   {
-   split; try (intro; apply HNC; assert_diffs; ColR).
-   split; try (intro; apply HNC; assert_diffs; ColR).
-   exists D; assert_diffs; split; Col.
-   }
-
-   {
-   apply out_one_side; try (right; intro; apply HNC; assert_diffs; ColR).
-   apply bet2_out_out with X X; try apply out_trivial; assert_diffs; auto.
-   }
- }
-destruct HD'' as [_ [_ [D'' [HC' Hb6]]]].
-assert (D' = D''); [|subst; auto].
-apply l6_21 with B' C A T; Col; intro; apply HNC; assert_diffs; ColR.
-Qed.
-
-Lemma addcb_eqt : c' R + b' R = t'.
-Proof.
-apply /eqP.
-by rewrite /c'/b' vector2_eq !mxE /= addr0 add0r eqxx.
-Qed.
-
-Lemma quad_kNN (a b : 'rV[R]_2) k :
-  k *: (a - b) *m (k *: (a - b))^T = k *: (b - a) *m (k *: (b - a))^T.
-Proof.
-by rewrite -opprB scalerN mulNmx dotC mulNmx opprK.
-Qed.
-
-Lemma quad_NN (a b : 'rV[R]_2) :
-  (a - b) *m (a - b)^T = (b - a) *m (b - a)^T.
-Proof.
-by rewrite -opprB mulNmx dotC mulNmx opprK.
-Qed.
-
-Lemma congA_axt_ab1d1 (a b1 d1 t x : 'rV[R]_2) :
-  betS a b1 x -> betS a d1 t -> betR a b1 x == betR a d1 t ->
-  a != x -> t != x -> a != b1 -> d1 != b1 ->
-  CongA a x t a b1 d1.
-Proof.
-rewrite /CongA.
-move=> /betSP[bet_eq_ab1x k_gt0 k_lt1] /betSP[bet_eq_ad1t _ _] /eqP betR_eq
-/eqP ax_neq /eqP tx_neq /eqP ab1_neq /eqP d1b1_neq.
-repeat (split; first by []).
-clear ax_neq tx_neq ab1_neq d1b1_neq.
-set k := betR a b1 x.
-rewrite -/k in k_gt0.
-rewrite -/k in k_lt1.
-set k2 := (k / (k+1)).
-set k3 := (1 / (k+1)).
-have: (k2 > 0)
-  by rewrite /k2 mulr_gt0 ?invr_gt0 ?addr_gt0 ?ltr01.
-have: (k2 < 1).
-  by rewrite /k2 divf_lt1 ?cprD ?addr_gt0 ?ltr01.
-have: (k3 > 0)
-  by rewrite /k3 mulr_gt0 ?invr_gt0 ?addr_gt0 ?ltr01.
-have: (k3 < 1)
-  by rewrite /k2 divf_lt1 ?cprD ?addr_gt0 ?ltr01.
-have: k != 0 by rewrite lt0r_neq0. move=>k_neq0.
-have: d1 - b1 == k *: (t - x).
-  have: d1 - b1 = (d1 - a) + (a - b1).
-    by rewrite addrA [X in _ = X]addrC !addrA
-      [X in _ = X]addrAC -!addrA subrr addr0 addrC.
-  have: t - x = (t - a) - ( x - a)
-    by rewrite opprB addrA [X in _ = X]addrC !addrA
-     [X in _ = X]addrAC -!addrA subrr addr0 addrC.
-  move=> -> ->.
-  rewrite scalerDr -[a - b1]opprB scalerN.
-  rewrite bet_eq_ad1t bet_eq_ab1x.
-  by rewrite /k betR_eq.
-move=> /eqP keq_d1b1_tx.
-exists (extension x a k3).
-exists (extension x t k3).
-exists (extension b1 a k2).
-exists (extension b1 d1 k2).
-rewrite /= !extension_bet //.
-repeat (split; first try (by [])).
-rewrite /extension /k3 invf_div mulrDl divff ?oner_neq0 //.
-rewrite divr1 scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- x + x]addrC subrr addr0 !addrA addrAC.
-rewrite /cong -!addrA subrr addr0 -!scalerBr.
-by rewrite quad_NN quad_kNN bet_eq_ab1x.
-
-rewrite /extension /k3 invf_div mulrDl divff ?oner_neq0 //.
-rewrite divr1 scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- x + x]addrC subrr addr0 !addrA addrAC.
-rewrite /cong -!addrA subrr addr0 -!scalerBr.
-by rewrite keq_d1b1_tx eqxx.
-
-rewrite /extension /k2 invf_div mulrDl divff ?k_neq0 //.
-rewrite mul1r scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- b1 + (- (k^-1 *: b1) + b1)]addrC -!addrA subrr addr0.
-rewrite addrC /cong -!addrA subrr addr0 -!scalerBr.
-rewrite quad_kNN quad_NN bet_eq_ab1x.
-by rewrite scalerA mulrC divff ?k_neq0 ?scale1r.
-
-rewrite /extension /k2 invf_div mulrDl divff ?k_neq0 //.
-rewrite mul1r scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- b1 + (- (k^-1 *: b1) + b1)]addrC -!addrA subrr addr0.
-rewrite addrC /cong -!addrA subrr addr0 -!scalerBr.
-by rewrite keq_d1b1_tx scalerA mulrC divff ?k_neq0 ?scale1r.
-
-rewrite /extension /k3 invf_div mulrDl divff ?oner_neq0 //.
-rewrite divr1 scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- x + x]addrC subrr !addr0.
-rewrite /extension /k2 invf_div mulrDl divff ?k_neq0 //.
-rewrite mul1r !scalerBr !scalerDl !scale1r opprD -!addrA.
-rewrite [- b1 + (- (k^-1 *: b1) + b1)]addrC -!addrA subrr addr0.
-rewrite !addrA addrC [X in cong _ X _ _]addrAC.
-rewrite [X in cong _ _ X _]addrC.
-rewrite /cong !opprD !opprK !addrA.
-rewrite addrC !addrA addrC !addrA addrAC -!addrA subrr addr0.
-rewrite !addrA addrAC addrC !addrA -scalerBr addrAC.
-rewrite eq_sym.
-rewrite addrC !addrA addrC !addrA.
-rewrite addrAC -!addrA subrr addr0.
-rewrite !addrA addrAC addrC !addrA addrAC -!addrA -scalerBr.
-rewrite !addrA bet_eq_ad1t -betR_eq -/k.
-by rewrite scalerA -!addrA mulrC divff ?k_neq0 ?scale1r.
+rewrite /bet' /a /b /c /=; move: (@three_non_collinear_points_vector R 0).
+by rewrite /a'nD /b'nD /c'nD !bet_nD_2D.
 Qed.
 
 Lemma euclid_fails_2D :
@@ -2687,121 +1095,25 @@ Lemma euclid_fails_2D :
           (y' *m y'^T) 0 0 >= 1)).
 Proof.
 exists a, b, c, d, t.
-split ; [exact:bet_adt|].
-split ; [exact:bet_bdc|].
-split.
-  apply /eqP; rewrite point_vector_neq /a /b /a' /b' row2_eq.
-  by rewrite eqxx eq_sym one_half_neq0.
-split.
-  apply /eqP; rewrite point_vector_neq /a /c /a' /c' row2_eq.
-  by rewrite eq_sym one_half_neq0 eqxx.
-split.
-  apply /eqP; rewrite point_vector_neq /b /d /b' /d' row2_eq.
-  by rewrite -quarter eq_sym mulf_eq0 one_half_neq0.
-split.
-  apply /eqP.
-  by rewrite point_vector_neq /c/d/c'/d' row2_eq
-    -quarter eq_sym mulf_eq0 one_half_neq0 andbF.
-have: ~ (bet' a b c \/ bet' b c a \/ bet' c a b)=> [|ncol].
-  rewrite /bet' /a /b /c /=; move: (@three_non_collinear_points_vector R 0).
-  by rewrite /a'nD /b'nD /c'nD !bet_nD_2D.
-split=> // x.
-case ((#x) =P (b' R)).
-  move=>-> ? y' bet_acy bet_bty.
-  exfalso.
-  move: (col_2D' (bet_col bet_acy)).
-  move: (col_2D' (bet_col bet_bty)).
-  rewrite /b' /t' !mxE /= !add0r subrr oppr0 mul0r.
-  rewrite mulf_eq0 oppr_eq0 one_half_neq0 orFb subr_eq0.
-  move=> /eqP <-.
-  by rewrite mulf_eq0 oppr_eq0 one_half_neq0.
-move => /eqP neq_xb bet_abx y' bet_acy bet_xty.
-set b1' : 'rV[R]_2 := (#x) + (@a' R) - (@b' R).
-set k1 := betR (@a' R) b1' (#x).
-have: betS (@a' R) b1' (#x).
-  rewrite -bet_betS /b1' ?euclid_fails_aux //; apply /eqP;rewrite a'_eq0.
-  by rewrite addr0 eq_sym subr_eq0.
-  rewrite addr0 -subr_eq0 addrAC subrr sub0r oppr_eq0.
-  by rewrite /b' row2_eq0 one_half_neq0 andbF.
-move=>/betSP[/eqP ratio_b1_xa k1_gt0 k1_lt1].
-rewrite -/k1 in k1_gt0 k1_lt1.
-set y1' := extension (#a) (#c) k1.
-suffices: y' = y1'; [move->|].
-rewrite /y1' /extension /a /= a'_eq0 addr0 subr0.
-rewrite -scalemxAl dotC -scalemxAl scalerA mxE.
-suffices: ((@c' R) *m (@c' R)^T) 0 0 = 1/(1+1+1+1).
-  move->.
-  apply le_trans with ((1+1) * (1+1) * (1 / (1 + 1 + 1 + 1))).
-  rewrite -quarter !mul1r !mulrA mulrC -!mulrA.
-  rewrite divff ?add11_neq0 //.
-  by rewrite mulr1 mulrC divff ?add11_neq0 ?lexx.
-apply ler_pM ; rewrite -?quarter ?mulr_ge0 ?invr_ge0 ?addr_ge0 ?ler01 //.
-suffices: (1+1) <= k1^-1.
-  move=>?.
-  rewrite ler_pM ?addr_ge0 ?ler01 //.
-rewrite /k1 /betR /b1' /ratio.
-case: pickP => /= [z|/all_v_neq0 H].
-  rewrite a'_eq0 !mxE /= !subr0 invf_div; case: z => [] [|[| //]] //= p.
-  rewrite (@ord_inj _ (Ordinal p) 0) // => /eqP x00_neq0 .
-  exfalso.
-  apply x00_neq0; apply /eqP.
-  rewrite bet_abx_x00_eq0 //.
-  rewrite (@ord_inj _ (Ordinal p) 1) // =>_.
-  rewrite addr0 ler_pdivlMr.
-  rewrite mulrBr mul1r divff ?add11_neq0 //.
-  rewrite -subr_le0 mulrDl !mul1r addrAC -!addrA subrr addr0.
-  rewrite subr_le0 ltW // bet_abx_x01_lt1 //.
-  by rewrite subr_gt0 bet_abx_x01_gt.
-exfalso; apply H; rewrite subr_eq0 a'_eq0.
-by apply x_neq0.
-exact: c'_norm.
-apply bet_intersect with (#x) (#t) (#a) (#c) (#b).
-move: ncol; rewrite /bet'=> //.
-by apply xt_neq.
-by rewrite eq_sym /a /c /= /a' /c' row2_eq one_half_neq0.
-by move: bet_abx ; rewrite /bet' bet_sym.
-by [].
-by [].
-set d1':= contraction (@a' R) t' k1.
-set k2:=betR b1' d1' (@c' R).
-have: extension (#a) d1' k1 == t' ; [|rewrite /t/= => /eqP<-].
-by rewrite extension_contraction ?lt0r_neq0.
-have: extension (#a) b1' k1 == (#x) ; [|clear ratio_b1_xa;move/eqP<-].
-  rewrite extension_contraction ?lt0r_neq0// /contraction.
-  by rewrite eq_sym -subr_eq.
-apply euclid''; try by [].
-case: (d1' =P b1') ; [by move ->; rewrite bet_xxa |move=> d1b1_neq].
-apply (@bet_b1d1c (@a' R) (@b' R) b1' (@c' R) d' d1' t' (#x)) ;rewrite /=.
-by [].
-by rewrite /b1' euclid_fails_aux.
-by rewrite -/(bet' b d c) bet_bdc.
-by rewrite -/(bet' a d t) bet_adt.
-by rewrite /d1' contraction_bet.
-apply /eqP.
-by rewrite eq_sym row2_eq -quarter mulf_eq0 one_half_neq0 andFb.
-apply /eqP.
-by rewrite row2_eq -quarter mulf_eq0 one_half_neq0 andbF.
-by move: ncol ;rewrite /Col /bet' /=.
-by rewrite /b1' a'_eq0 addr0 /cong opprB addrA addcb_eqt.
-by rewrite /b1' a'_eq0 /cong addr0 subr0 quad_NN.
-by rewrite a'_eq0 /cong -addcb_eqt -addrA subrr addr0 subr0 eqxx.
-apply congA_axt_ab1d1.
-  rewrite -bet_betS.
-  by rewrite /b1' euclid_fails_aux.
-  by apply /eqP; rewrite eq_sym /b1' a'_eq0 addr0 subr_eq0.
-  apply /eqP; rewrite /b1' a'_eq0 addr0 -subr_eq0 addrAC subrr.
-  by rewrite add0r oppr_eq0 row2_eq0 one_half_neq0 andbF.
-  rewrite /d1' contraction_betS //.
-  by rewrite a'_eq0 row2_eq0 one_half_neq0.
-  by rewrite /d1' contraction_betR ?eqxx ?row2_eq ?one_half_neq0.
-  by rewrite eq_sym a'_eq0 x_neq0.
-  by rewrite eq_sym xt_neq.
-  by rewrite /b1' a'_eq0 addr0 eq_sym subr_eq0.
-  by apply /eqP.
-rewrite /b1' /c/= a'_eq0 addr0 -subr_eq0 vector2_neq0.
-rewrite !mxE /= bet_abx_x00_eq0 //.
-by rewrite oppr0 !add0r oppr_eq0 one_half_neq0 orTb.
-by rewrite extension_bet.
+split; first exact: bet_adt.
+split; first exact: bet_bdc.
+split; [|split; [|split; [|split]]];
+  try (apply /eqP; rewrite point_vector_neq /=).
+- by rewrite /a' /b' row2_eq eqxx eq_sym one_half_neq0.
+- by rewrite /a' /c' row2_eq eq_sym one_half_neq0 eqxx.
+- by rewrite /b' /d' row2_eq -quarter eq_sym mulf_eq0 one_half_neq0.
+- by rewrite /c' /d' row2_eq -quarter eq_sym mulf_eq0 one_half_neq0 andbF.
+split; first exact: abc_ncol.
+move=> x bet_abx y' bet_acy bet_xty.
+have x01_lt1 := bet_abx_x01_lt1 bet_abx.
+move: bet_abx => /bet_a'b' [l l_ge1 xE].
+move: (col_2D' (or_introl bet_acy)) (col_2D' (or_introl bet_xty)) x01_lt1.
+rewrite /= xE /a' /c' /t' /b' dot2 !mxE /= => /eqP H1 /eqP H2 H3.
+move: H1 H2 H3 l_ge1; move: (y' 0 0) (y' 0 1) => y0 y1.
+fold_num => H1 H2 H3 l_ge1.
+have y1E : y1 = 0 by nra.
+have y0_ge1 : 1 <= y0 by rewrite y1E in H2; nra.
+nra.
 Qed.
 
 End rcfTarski2D.
@@ -2813,24 +1125,24 @@ Variable n : nat.
 
 Lemma cong_pseudo_reflexivity :
   cong_pseudo_reflexivityP (Point R n) (@cong' R n).
-Proof. by move=> a b; apply cong_pseudo_reflexivity_vector. Qed.
+Proof. by move => a b; apply cong_pseudo_reflexivity_vector. Qed.
 
 Lemma cong_inner_transitivity :
   cong_inner_transitivityP (Point R n) (@cong' R n).
-Proof. by move=> ? ? ? ? ? ?; apply cong_inner_transitivity_vector. Qed.
+Proof. by move => ? ? ? ? ? ?; apply cong_inner_transitivity_vector. Qed.
 
 Lemma cong_identity : cong_identityP (Point R n) (@cong' R n).
-Proof. by move => ? ? ?; rewrite -dist_cong' dist_aa_eq1; apply dist_eq1'. Qed.
+Proof. move => ? ? ?; exact: cong_identity_holds. Qed.
 
 Lemma segment_construction :
   segment_constructionP (Point R n) (@bet' R n) (@cong' R n).
-Proof. move=> ? ? ? ? _; apply segment_construction_holds. Qed.
+Proof. move => ? ? ? ? _; apply segment_construction_holds. Qed.
 
 Lemma five_segment : five_segmentP (Point R n) (@bet' R n) (@cong' R n).
-Proof. move=> ?; apply five_segment_holds. Qed.
+Proof. move => ?; apply five_segment_holds. Qed.
 
 Lemma inner_pasch : inner_paschP (Point R n) (@bet' R n).
-Proof. move=> ?; apply inner_pasch_holds. Qed.
+Proof. move => ?; apply inner_pasch_holds. Qed.
 
 Lemma bet_symmetry : bet_symmetryP (Point R n) (@bet' R n).
 Proof. by rewrite /bet' => ? ? ?; apply bet_symmetry_vector. Qed.
@@ -2856,7 +1168,7 @@ Variable n : nat.
 
 Lemma point_equality_decidability :
   forall (a b : Point R (2 + n)), a = b \/ a <> b.
-Proof. by move=> a b; case: (a =P b); tauto. Qed.
+Proof. by move => a b; case: (a =P b); tauto. Qed.
 
 Lemma pasch : forall (a b c p q : Point R (2 + n)),
   bet' a p c -> bet' b q c ->
@@ -2864,7 +1176,7 @@ Lemma pasch : forall (a b c p q : Point R (2 + n)),
   ~ (bet' a b c \/ bet' b c a \/ bet' c a b) ->
   exists x, bet' p x b /\ bet' q x a.
 Proof.
-move=> a b c p q ? ? ? ? ? ? Hnc.
+move => a b c p q ? ? ? ? ? ? Hnc.
 destruct (@inner_pasch R (2 + n) a b c p q) as [x []] => //; last by exists x.
 rewrite /independence.Col; intuition.
 Qed.
@@ -2883,7 +1195,8 @@ Global Instance Rcf_to_GI_PED' :
 Proof.
 exact
 (Build_Gupta_inspired_variant_of_Tarski_neutral_dimensionless_with_decidable_point_equality
-  (Point R (2 + n)) (@bet' R (2 + n)) (@cong' R (2 + n)) point_equality_decidability
+  (Point R (2 + n)) (@bet' R (2 + n)) (@cong' R (2 + n))
+  point_equality_decidability
   (@cong_pseudo_reflexivity R (2 + n)) (@cong_inner_transitivity R (2 + n))
   (@cong_identity R (2 + n))
   (@segment_construction_holds R (2 + n)) (@five_segment R (2 + n))
@@ -2906,7 +1219,8 @@ Lemma euclid_fails :
        ~ (bet' a b c \/ bet' b c a \/ bet' c a b) ->
        exists x y : Point R (2 + n), bet' a b x /\ bet' a c y /\ bet' x t y).
 Proof.
-apply euclid_aux; move: (@euclid_fails_2D R); move=> [a [b [c [d [t H]]]]].
+apply euclid_fails_of_witness; move: (@euclid_fails_2D R).
+move => [a [b [c [d [t H]]]]].
 destruct a as [a aP]; destruct b as [b bP]; destruct c as [c cP].
 destruct d as [d dP]; destruct t as [t tP]; move: H; rewrite /bet' /=.
 move => [? [? [/eqP HNE1 [/eqP HNE2 [/eqP HNE3 [/eqP HNE4 [? H]]]]]]].
@@ -2926,14 +1240,15 @@ Qed.
 
 Lemma euclid : ~ euclidP (Point R (2 + n)) (@bet' R (2 + n)) (@cong' R (2 + n)).
 Proof.
-move=> HP; apply euclid_fails; cut (tarski_s_parallel_postulate).
-  rewrite /tarski_s_parallel_postulate; move=> HT A B C D T H1 H2 HBD HDC HNCol.
+move => HP; apply euclid_fails; cut (tarski_s_parallel_postulate).
+  rewrite /tarski_s_parallel_postulate.
+  move => HT A B C D T H1 H2 HBD HDC HNCol.
   apply HT with D; auto; intro; subst; apply HNCol; right; right.
   apply bet_symmetry, H2.
 cut (triangle_circumscription_principle); [|rewrite /proclus_postulate].
   apply equivalent_postulates_without_decidability_of_intersection_of_lines_bis;
   simpl; try tauto.
-move=> a b c Hnc; destruct (HP a b c) as [x [? [? HCop]]];
+move => a b c Hnc; destruct (HP a b c) as [x [? [? HCop]]];
 [intro; subst; Col..|rewrite /independence.Col; intuition auto with col|].
 exists x; split; [|split] => //; apply Cop__Coplanar.
 destruct HCop as [E [F [G [? [HCopA [HCopB [HCopC HCopD]]]]]]]; exists E, F, G.

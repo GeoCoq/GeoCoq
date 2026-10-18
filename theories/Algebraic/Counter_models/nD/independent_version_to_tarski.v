@@ -45,6 +45,16 @@ Instance altIT_to_T_PED :
   Tarski_neutral_dimensionless_with_decidable_point_equality altIT_to_T.
 Proof. split; simpl; apply point_equality_decidability. Defined.
 
+Lemma BetT_Bet : forall A B C,
+  @tarski_axioms.Bet altIT_to_T A B C <-> Bet A B C.
+Proof.
+intros A B C; unfold tarski_axioms.Bet; simpl; unfold BetT; simpl; unfold BetS.
+split; [intros [[_ [_ HB]]|[<-|<-]]|intro HB]; auto;
+[apply bet_symmetry, bet_axx|apply bet_axx|].
+elim (point_equality_decidability A B); [auto|intro HAB].
+elim (point_equality_decidability B C); auto.
+Qed.
+
 End altITn_to_Tn.
 
 Section altIT2D_to_T2D.
@@ -56,7 +66,8 @@ Context {Pred : predicates}
 
 Definition Col := independence.Col Tpoint Bet.
 
-Instance altIT2D_to_T2D : Tarski_2D (@altIT_to_T_PED Pred ITn ED {| n := 0 |} IT2D).
+Instance altIT2D_to_T2D :
+  Tarski_2D (@altIT_to_T_PED Pred ITn ED {| n := 0 |} IT2D).
 Proof.
 pose T := (@altIT_to_T Pred ITn ED {| n := 0 |} IT2D).
 pose TED := (@altIT_to_T_PED Pred ITn ED {| n := 0 |} IT2D).
@@ -67,12 +78,6 @@ pose IPA := @O _ _ _ IT2D; pose IPB := (tnth (@basis _ _ _ IT2D) (inord 0)).
 pose IPC := (tnth (@basis _ _ _ IT2D) (inord 1)).
 assert (HNC : ~ @Definitions.Col T IPA IPB IPC).
 - assert (HNC := @ITlower_dim Pred ITn {| n := 0 |} IT2D).
-  assert (E : @independent_version_to_beeson.IPA _ _ {| n := 0 |} IT2D = IPA)
-    by auto; rewrite E in HNC; clear E.
-  assert (E : @independent_version_to_beeson.IPB _ _ {| n := 0 |} IT2D = IPB)
-    by auto; rewrite E in HNC; clear E.
-  assert (E : @independent_version_to_beeson.IPC _ _ {| n := 0 |} IT2D = IPC)
-    by auto; rewrite E in HNC; clear E.
   cut (forall A B C, @tarski_axioms.Bet T A B C ->
                      IT A B C).
   + intro HBIT; destruct HNC as [HNB1 [HNB2 HNB3]].
@@ -99,10 +104,7 @@ clear HE; cut (@Definitions.Col T IPC IPA IPC').
                                 _ _ _ _ IPB IPA IPC'); Cop.
   by apply (@os__coplanar _ TED); auto.
 cut (Bet IPC IPA IPC').
-- unfold Definitions.Col, tarski_axioms.Bet; simpl; left.
-  unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS.
-  elim (point_equality_decidability IPC IPA); [tauto|].
-  elim (point_equality_decidability IPA IPC'); tauto.
+- by intro; left; apply (@BetT_Bet Pred ITn ED {| n := 0 |} IT2D).
 assert (H := @upper_dim Pred ITn {| n := 2 |} IT2D IPC').
 revert H; unfold upper_dimP; clear HNE.
 assert (HNE : IPC <> IPC').
@@ -113,19 +115,16 @@ assert (HNE : IPC <> IPC').
 pose new_basis := rot_tuple 1 (belast_tuple IPC' (@basis _ _ _ IT2D)).
 have basisP : (@basis _ _ _ IT2D) =
   cons_tuple IPB (cons_tuple IPC (nil_tuple Tpoint)).
-- apply eq_from_tnth => i; suff: (i == inord 0) || (i == inord 1)
-    by move => /orP[/eqP->|/eqP->]; rewrite -?/IPB -?/IPC /tnth inordK.
-  rewrite /inord /ord0; case i => [] [|[|//]] p /=.
-  + suff /eqP-> : Ordinal (n:=2) (m:=0) p =
-                  insubd (Ordinal (n:=2) (m:=0) (ltn0Sn 1)) 0 by rewrite orTb.
-    by apply: val_inj; rewrite val_insubd p.
-  + suff /eqP-> : Ordinal (n:=2) (m:=1) p =
-                   insubd (Ordinal (n:=2) (m:=0) (ltn0Sn 1)) 1 by rewrite orbT.
-    by apply: val_inj; rewrite val_insubd p.
+- apply eq_from_tnth => -[[|[|//]] p].
+  + have -> : Ordinal p = inord 0 by apply: val_inj; rewrite /= inordK.
+    by rewrite -/IPB /tnth inordK.
+  + have -> : Ordinal p = inord 1 by apply: val_inj; rewrite /= inordK.
+    by rewrite -/IPC /tnth inordK.
 cut (orthonormal_basis tarski_axioms.Tpoint Bet independent_version.Cong 2 IPA
                                             (@I Pred ITn {| n := 2|} IT2D)
                                             new_basis);
-first by move => nbP udP; apply udP; destruct (@lower_dim Pred ITn {| n := 2 |} IT2D) as [LD1 LD2].
+first by move=> nbP udP; apply udP;
+  destruct (@lower_dim Pred ITn {| n := 2 |} IT2D) as [LD1 LD2].
 rewrite /orthonormal_basis /new_basis 2?big_ltn // big_geq // 2?big_ltn //.
 rewrite big_geq // big_ltn // !big_geq //; clear new_basis OS.
 have [-> ->] : tnth (rot_tuple 1 (belast_tuple IPC' (@basis _ _ _ IT2D)))
@@ -147,10 +146,8 @@ first by rewrite /tarski_axioms.Cong /=.
 destruct Per as [I' [HI' HC5]].
 assert (HI : (@I Pred ITn {| n := 2|} IT2D) = I'); [|by rewrite HI; Cong].
 apply (@symmetric_point_uniqueness _ TED IPB IPA); auto.
-split; Cong; apply between_symmetry; unfold IPA, IPB, tarski_axioms.Bet.
-simpl; unfold BetT, beeson_s_axioms.IBet; simpl; unfold BetS.
-elim (point_equality_decidability (@I Pred ITn {| n := 2|} IT2D) IPA); [tauto|].
-elim (point_equality_decidability IPA (tnth (@basis _ _ _ IT2D) (inord 0))); tauto.
+split; Cong; apply between_symmetry.
+by apply (@BetT_Bet Pred ITn ED {| n := 0 |} IT2D).
 Qed.
 
 End altIT2D_to_T2D.
@@ -164,6 +161,8 @@ Context {Pred : predicates}
         {ITnD : independent_Tarski_nD Pred ITn (incr (incr Dim))}
         {TE   : independent_Tarski_euclidean Pred ITn}.
 
+Let TED := @altIT_to_T_PED Pred ITn ED Dim ITnD.
+
 Lemma Col_TCol : forall A B C,
   Col A B C <->
   @Definitions.Col altIT_to_T A B C.
@@ -171,19 +170,14 @@ Proof.
 intros A B C; split; [intro HC|].
 
   {
-  elim (@col_dec altIT_to_T altIT_to_T_PED A B C); auto.
+  elim (@col_dec altIT_to_T TED A B C); auto.
   intro HNC; exfalso; apply HC; clear HC; split; [|split]; intro HB;
-  apply HNC; [left|right; left|right; right]; simpl; left; split; try split;
-  try solve [intro; subst; Col]; auto.
+  apply HNC; [left|right; left|right; right]; apply BetT_Bet; auto.
   }
 
   {
-  intros [HB|[HB|HB]]; intros [HB1 [HB2 HB3]];
-  [apply HB1|apply HB2|apply HB3];
-  simpl in HB; unfold BetT in HB;
-  destruct HB as [[_ [_ HB]]|[HE|HE]]; auto; subst;
-  try apply (@bet_axx _ ITn ED Dim ITnD); auto;
-  apply bet_symmetry, (@bet_axx _ ITn ED Dim ITnD); auto.
+  intros [HB|[HB|HB]] [HB1 [HB2 HB3]]; [apply HB1|apply HB2|apply HB3];
+  apply BetT_Bet; auto.
   }
 Qed.
 
@@ -193,8 +187,7 @@ Proof. intros A B C; split; intros HNC1 HNC2; apply HNC1, Col_TCol, HNC2. Qed.
 
 Lemma Col_dec : forall A B C, Col A B C \/ ~ Col A B C.
 Proof.
-intros A B C; elim (@col_dec altIT_to_T
-                             (@altIT_to_T_PED Pred ITn ED Dim ITnD) A B C);
+intros A B C; elim (@col_dec altIT_to_T TED A B C);
 intro HC; [left; apply Col_TCol|right; apply NCol_TNCol]; auto.
 Qed.
 
@@ -208,10 +201,8 @@ assert (HX : forall (P A B C : Tpoint),
   intros P A B C; split; intros [Q []]; exists Q; split; apply Col_TCol; auto.
   }
 intros A B C D; split; intro HCop;
-[apply (@Cop__Coplanar altIT_to_T
-                       (@altIT_to_T_PED Pred ITn ED Dim ITnD))|
- apply (@Cop__Coplanar altIT_to_T
-                       (@altIT_to_T_PED Pred ITn ED Dim ITnD)) in HCop];
+[apply (@Cop__Coplanar altIT_to_T TED)|
+ apply (@Cop__Coplanar altIT_to_T TED) in HCop];
 destruct HCop as [E [F [G HCop]]]; exists E, F, G;
 split; [spliter; apply NCol_TNCol; auto| |spliter; apply NCol_TNCol; auto|];
 spliter; repeat split; apply HX; auto.
@@ -224,22 +215,16 @@ intros A B C D; elim (Col_dec A B C); intro HC1;
 [left; apply Cop_TCop, col__coplanar, Col_TCol; auto|].
 elim (Col_dec A B D); intro HC2;
 [left; apply Cop_TCop, coplanar_perm_1, col__coplanar, Col_TCol; auto|].
-elim (@two_sides_dec altIT_to_T
-                     (@altIT_to_T_PED Pred ITn ED Dim ITnD)
-                     A B C D); intro HTS;
+elim (@two_sides_dec altIT_to_T TED A B C D); intro HTS;
 [left; apply Cop_TCop, ts__coplanar; auto|].
-elim (@one_side_dec altIT_to_T
-                    (@altIT_to_T_PED Pred ITn ED Dim ITnD)
-                    A B C D); intro HOS;
+elim (@one_side_dec altIT_to_T TED A B C D); intro HOS;
 [left; apply Cop_TCop|
  right; intro HC; apply HOS;
- apply (@cop_nts__os altIT_to_T
-                     (@altIT_to_T_PED Pred ITn ED Dim ITnD)); auto];
+ apply (@cop_nts__os altIT_to_T TED); auto];
 [|apply Cop_TCop|cut (~ @Definitions.Col altIT_to_T A B C); Col|
  cut (~ @Definitions.Col altIT_to_T A B D); Col]; auto;
 [|apply NCol_TNCol; auto..].
-apply (@os__coplanar altIT_to_T
-                     (@altIT_to_T_PED Pred ITn ED Dim ITnD)); auto.
+apply (@os__coplanar altIT_to_T TED); auto.
 Qed.
 
 Instance altIT_euclidean_to_T_euclidean :
@@ -249,7 +234,7 @@ split; cut (@tarski_s_parallel_postulate altIT_to_T);
 [rewrite /tarski_s_parallel_postulate //|].
 cut (@triangle_circumscription_principle altIT_to_T);
 [apply (@equivalent_postulates_without_decidability_of_intersection_of_lines_bis
-          altIT_to_T (@altIT_to_T_PED Pred ITn ED Dim ITnD));
+          altIT_to_T TED);
  simpl; tauto|intros A B C HNC].
 elim (point_equality_decidability A B); elim (point_equality_decidability A C);
 elim (point_equality_decidability B C); intros; [subst; exfalso; apply HNC..|];

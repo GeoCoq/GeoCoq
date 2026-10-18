@@ -11,6 +11,17 @@ Context {Pred : predicates}
         {Dim  : dimension}
         {ITnD : independent_Tarski_nD Pred ITn (incr (incr Dim))}.
 
+Lemma neg_cases (Q P : Prop) : (Q -> ~ P) -> (~ Q -> ~ P) -> ~ P.
+Proof. tauto. Qed.
+
+Lemma bet_exchange3 : forall A B C D, Bet A B C -> Bet A C D -> Bet B C D.
+Proof.
+intros; apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry;
+auto.
+Qed.
+
+Local Ltac bet_neq H := intro; subst; apply bet_identity_aux in H; auto.
+
 Lemma addition_segments : forall A A' B B' C C',
   Cong A B A' B' -> Cong B C B' C'->
   Bet A B C -> Bet A' B' C' ->
@@ -18,8 +29,8 @@ Lemma addition_segments : forall A A' B B' C C',
 Proof.
 intros A A' B B' C C' HC1 HC2 HB1 HB2.
 apply (point_equality_stability__cong_stability point_equality_stability).
-cut ((A = B -> ~ ~ Cong A C A' C') /\ (~ A = B -> ~ ~ Cong A C A' C'));
-[tauto|split; intro; [subst; apply g2_5 in HC1|apply g2_7_2 with B B'; auto]].
+apply (neg_cases (A = B)); intro;
+[subst; apply g2_5 in HC1|apply g2_7_2 with B B'; auto].
 assert (A' = B') by (apply HC1; auto); subst; auto.
 Qed.
 
@@ -31,10 +42,12 @@ Proof.
 intros A A' B B' C C' D D' ? ? ? ? HB1 HB2.
 apply (point_equality_stability__cong_stability point_equality_stability).
 assert (HC1 : Cong A C A' C') by (apply addition_segments with B B'; auto).
-cut ((A = C -> ~ ~ Cong B D B' D') /\ (~ A = C -> ~ ~ Cong B D B' D'));
-[tauto|split; intro HAC; [subst; apply g2_2, cong_identity in HC1; subst|]];
-[apply bet_identity_aux in HB1; apply bet_identity_aux in HB2;
- intro HF; apply HB1; intro; apply HB2; intro; subst; auto|].
+apply (neg_cases (A = C)); intro HAC.
+  {
+  subst; apply g2_2, cong_identity in HC1; subst.
+  apply bet_identity_aux in HB1; apply bet_identity_aux in HB2.
+  intro HF; apply HB1; intro; apply HB2; intro; subst; auto.
+  }
 destruct (segment_construction A C A C HAC) as [E [? HC2]].
 destruct (segment_construction A' C' A C) as [E' [? ?]];
 [intro; subst; apply cong_identity in HC1; auto|].
@@ -54,52 +67,32 @@ Lemma bet_outer_connectivity : forall A B C D,
   Bet A B C -> Bet A B D -> A <> B -> ~ (~ Bet A C D /\ ~ Bet A D C).
 Proof.
 intros A B C D HB1 HB2 HAB.
-cut ((B = C -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ B = C -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; intro HBC; [subst; tauto|].
-cut ((B = D -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ B = D -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; intro HBD; [subst; tauto|].
-cut ((C = D -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ C = D -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; intro HCD; [subst; intros [HF _]; apply HF|];
-[apply g2_6_1; intro; subst; apply bet_identity_aux in HB1; auto|].
-assert (HAC : A <> C)
-  by (intro; subst; apply bet_identity_aux in HB1; auto).
-assert (HAD : A <> D)
-  by (intro; subst; apply bet_identity_aux in HB2; auto).
+apply (neg_cases (B = C)); intro HBC; [subst; tauto|].
+apply (neg_cases (B = D)); intro HBD; [subst; tauto|].
+apply (neg_cases (C = D)); intro HCD;
+[subst; intros [HF _]; apply HF, g2_6_1; bet_neq HB1|].
+assert (HAC : A <> C) by bet_neq HB1.
+assert (HAD : A <> D) by bet_neq HB2.
 destruct (segment_construction A D C D HAD) as [C' [HB3 HC1]].
-assert (HAC' : A <> C')
-  by (intro; subst; apply bet_identity_aux in HB3; auto).
-assert (HB4 : Bet B D C').
-  {
-  apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
-  }
-assert (HBC' : B <> C')
-  by (intro; subst; apply bet_identity_aux in HB4; auto).
+assert (HAC' : A <> C') by bet_neq HB3.
+assert (HB4 : Bet B D C') by (apply bet_exchange3 with A; auto).
+assert (HBC' : B <> C') by bet_neq HB4.
 assert (HDC' : D <> C')
   by (intro; subst; apply HCD, (g2_5 _ _ _ _ HC1); auto).
 destruct (segment_construction A C C D HAC) as [D' [HB5 HC2]].
-assert (HAD' : A <> D')
-  by (intro; subst; apply bet_identity_aux in HB5; auto).
-assert (HB6 : Bet B C D').
-  {
-  apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
-  }
-assert (HBD' : B <> D')
-  by (intro; subst; apply bet_identity_aux in HB6; auto).
+assert (HAD' : A <> D') by bet_neq HB5.
+assert (HB6 : Bet B C D') by (apply bet_exchange3 with A; auto).
+assert (HBD' : B <> D') by bet_neq HB6.
 assert (HCD' : C <> D')
   by (intro; subst; apply HCD, (g2_5 _ _ _ _ HC2); auto).
 destruct (segment_construction A C' C B HAC') as [B' [HB7 HC3]].
-assert (HAB' : A <> B')
-  by (intro; subst; apply bet_identity_aux in HB7; auto).
+assert (HAB' : A <> B') by bet_neq HB7.
 assert (HB8 : Bet B C' B').
   {
   apply bet_outer_trans with D; auto.
-  apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
+  apply bet_exchange3 with A; auto.
   }
-assert (HBB' : B <> B')
-  by (intro; subst; apply bet_identity_aux in HB8; auto).
+assert (HBB' : B <> B') by bet_neq HB8.
 assert (HDB' : D <> B').
   {
   intro; subst; assert (HF : Bet B' C' B')
@@ -109,15 +102,13 @@ assert (HDB' : D <> B').
 assert (HC'B' : C' <> B')
   by (intro; subst; apply HBC, eq_sym, (g2_5 _ _ _ _ HC3); auto).
 destruct (segment_construction A D' D B HAD') as [B'' [HB9 HC4]].
-assert (HAB'' : A <> B'')
-  by (intro; subst; apply bet_identity_aux in HB9; auto).
+assert (HAB'' : A <> B'') by bet_neq HB9.
 assert (HB10 : Bet B D' B'').
   {
   apply bet_outer_trans with C; auto.
-  apply bet_symmetry, bet_inner_transitivity with A; apply bet_symmetry; auto.
+  apply bet_exchange3 with A; auto.
   }
-assert (HBB'' : B <> B'')
-  by (intro; subst; apply bet_identity_aux in HB10; auto).
+assert (HBB'' : B <> B'') by bet_neq HB10.
 assert (HCB' : C <> B'').
   {
   intro; subst; assert (HF : Bet B'' D' B'')
@@ -187,9 +178,8 @@ assert (HC : Col Tpoint Bet C D B' -> ~ (~ Bet A C D /\ ~ Bet A D C)).
     apply bet_inner_transitivity with A; apply bet_symmetry; auto.
     }
   }
-cut ((Col Tpoint Bet C D B' -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ Col Tpoint Bet C D B' -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; [auto|intro HNC]; destruct (inner_pasch C D B' D' C') as [E [HB13 HB14]];
+apply (neg_cases (Col Tpoint Bet C D B')); [auto|intro HNC].
+destruct (inner_pasch C D B' D' C') as [E [HB13 HB14]];
 [auto; apply bet_symmetry..| |]; auto;
 [apply bet_inner_transitivity with A; apply bet_symmetry; auto|clear HC].
 assert (HC7 : Cong E C E C').
@@ -202,9 +192,7 @@ assert (HC8 : Cong E D E D').
   apply g2_24 with C' C' C C; auto; [apply g2_1..| |]; apply g2_2; auto.
   apply g2_4, cong_inner_transitivity with C D; auto.
   }
-cut ((C' = C -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ C' = C -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; intro HCC'; [subst; intuition|].
+apply (neg_cases (C' = C)); intro HCC'; [subst; intuition|].
 destruct (segment_construction C' C C D' HCC') as [P [HB15 HC9]].
 destruct (segment_construction D' C C E) as [R [HB16 HC10]]; [auto|].
 assert (HC11 : Cong P R E D).
@@ -214,9 +202,7 @@ assert (HC11 : Cong P R E D).
   [apply g2_2, g2_4; auto|apply g2_1|].
   apply bet_inner_transitivity with C'; apply bet_symmetry; auto.
   }
-cut ((D = D' -> ~ (~ Bet A C D /\ ~ Bet A D C)) /\
-     (~ D = D' -> ~ (~ Bet A C D /\ ~ Bet A D C))); [tauto|].
-split; intro HDD'; [subst; intuition|].
+apply (neg_cases (D = D')); intro HDD'; [subst; intuition|].
 destruct (segment_construction P R P R) as [Q [HB17 HC12]];
 [intro; subst; apply g2_2, cong_identity in HC11; subst;
  apply g2_2, cong_identity in HC8; subst; auto|].
